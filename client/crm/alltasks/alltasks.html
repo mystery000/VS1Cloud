@@ -1,10 +1,12 @@
 <template name="alltasks">
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js'></script>
 
   <div class="row justify-content-center">
 
     {{> tasklist_sidebar}}
 
     <div class="col-8">
+
       <div class="card shadow mb-4">
         <div class="card-header" style="display: inline-flex; padding-bottom: 0px;">
           <h3>Today</h3>
@@ -12,15 +14,14 @@
         </div>
         <div class="card-body">
 
-
           {{#if overdueRecords}}
           <div class="row">
             <div class="col-12" style=" border-bottom: 1px solid #e3e6f0;">
               <h6 class="overdueHeader">Overdue</h6>
               <div class="dropdown dropdownReschedule">
                 <button class="btn btn-link dropdown-toggle text-danger btnReschedule"
-                  style="background-color: rgba(0,0,0,0) !important;" type="button" id="dropdownMenuButton"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  style="background-color: rgba(0,0,0,0) !important;" type="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
                   Reschedule
                 </button>
                 <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu"
@@ -59,99 +60,348 @@
                 </div>
               </div>
             </div>
+          </div>
+          {{/if}}
 
+
+          <div id="task_items_wrapper">
             {{#each item in overdueRecords}}
-            <div class="col-12 taskCol mainTaskCol" id="task_1">
+            <div class="col-12 taskCol mainTaskCol ui-state-default" id="ttodo_{{item.fields.ID}}">
               <div class="row justify-content-between">
                 <div style="display: inline-flex;">
-                  <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
-                  <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin: 4px;">
-                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="taskitem_1"
-                      value="">
-                    <label class="custom-control-label chkBox pointer" for="taskitem_1"></label>
+                  <i class="fas fa-grip-vertical taskActionButton taskDrag no-modal"></i>
+                  <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; margin: 4px;">
+                    <input class="custom-control-input chkBox chkPaymentCard pointer no-modal" type="checkbox"
+                      id="taskitem_{{item.fields.ID}}" value="">
+                    <label class="custom-control-label chkBox pointer no-modal chk_complete"
+                      data-id="{{item.fields.ID}}" for="taskitem_{{item.fields.ID}}"></label>
                   </div>
                   <span class="taskName">Task {{item.fields.ID}}</span>
                 </div>
                 <div style="display: inline-flex;">
-                  <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Edit task..."></i>
-                  <i class="far fa-calendar-plus taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Set due date..."></i>
-                  <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Comment on task..."></i>
-                  <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="More task actions..."></i>
-                </div>
-              </div>
-              <div class="row justify-content-between">
-              </div>
-              <div class="row justify-content-between">
-                <div class="dueDateTags" style="display: inline-flex;">
-                  <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus"
-                      style="margin-right: 5px;"></i>{{getTodoDate item.fields.ToDoByDate}}</span>
-                  <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                        style="margin-right: 5px;"></i>[label]</a></span>
-                </div>
-                <div style="display: inline-flex;">
-                  <span class="taskLocation"><a class="taganchor" href="">All Tasks<i class="fas fa-inbox text-primary"
-                        style="margin-left: 5px;"></i></a></span>
-                </div>
-              </div>
-            </div>
-            {{/each}}
-          </div>
-          {{/if}}
-
-          {{#if todayRecords}}
-          <div class="row mt-4">
-            <div class="col-12" style=" border-bottom: 1px solid #e3e6f0;">
-              <h6 class="todayHeader">{{getTodayDate 'ddd D MMM'}} - Today</h6>
-            </div>
-
-            {{#each item in todayRecords}}
-
-            <div class="col-12 taskCol mainTaskCol" id="task_3">
-              <div class="row justify-content-between">
-                <div style="display: inline-flex;">
-                  <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
-                  <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin: 4px;">
-                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="taskitem_1"
-                      value="">
-                    <label class="custom-control-label chkBox pointer" for="taskitem_1"></label>
+                  <i class="far fa-edit taskActionButton ttodo-edit no-modal" data-toggle="tooltip"
+                    data-placement="bottom" title="Edit task..." data-id="{{item.fields.ID}}"></i>
+                  <i class="far fa-calendar-plus taskActionButton ttodo-schedule no-modal" data-toggle="dropdown"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Set due date..."></i>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Wed</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-sun text-warning no-modal"
+                        style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Thu</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-couch text-primary no-modal"
+                        style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-alt text-danger no-modal"
+                        style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Mon Apr 11
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-ban text-secondary no-modal"
+                        style="margin-right: 8px;"></i>No
+                      Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" class="form-control hasDatepicker no-modal" id="dtRescheduleDate"
+                          name="dtRescheduleDate" autocomplete="off"><img class="ui-datepicker-trigger no-modal"
+                          src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <span class="taskName">Task #3</span>
-                </div>
-                <div style="display: inline-flex;">
-                  <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Edit task..."></i>
-                  <i class="far fa-calendar-plus taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Set due date..."></i>
-                  <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="Comment on task..."></i>
-                  <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                    title="More task actions..."></i>
+                  <i class="far fa-comment-alt taskActionButton ttodo-comment" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Comment on task..."></i>
+                  <i class="fas fa-ellipsis-h taskActionButton ttodo-action no-modal" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="More task actions..."></i>
                 </div>
               </div>
               <div class="row justify-content-between">
               </div>
               <div class="row justify-content-between">
-                <div class="dueDateTags" style="display: inline-flex;">
-                  <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                        style="margin-right: 5px;"></i>[label]</a></span>
-                  <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                        style="margin-right: 5px;"></i>[label]</a></span>
+                <div class="dueDateTags no-modal" style="display: inline-flex;">
+                  <span class="taskDueDate taskOverdue no-modal" data-toggle="dropdown"><i
+                      class="far fa-calendar-plus no-modal" style="margin-right: 5px;"></i>
+                    {{getTodoDate item.fields.ToDoByDate 'D MMM'}}
+                  </span>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Wed</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-sun text-warning no-modal"
+                        style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Thu</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-couch text-primary no-modal"
+                        style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-alt text-danger no-modal"
+                        style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Mon Apr 11
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-ban text-secondary no-modal"
+                        style="margin-right: 8px;"></i>No
+                      Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" class="form-control hasDatepicker no-modal" id="dtRescheduleDate"
+                          name="dtRescheduleDate" autocomplete="off"><img class="ui-datepicker-trigger no-modal"
+                          src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {{#if item.fields.label}}
+                  <span class="taskTag no-modal"><a class="taganchor no-modal" href=""><i class="fas fa-tag no-modal"
+                        style="margin-right: 5px;"></i>{{item.fields.label}}</a>
+                  </span>
+                  {{/if}}
                 </div>
                 <div style="display: inline-flex;">
-                  <span class="taskLocation"><a class="taganchor" href="">All Tasks<i class="fas fa-inbox text-primary"
-                        style="margin-left: 5px;"></i></a></span>
+                  <span class="taskLocation no-modal"><a class="taganchor no-modal" href="">All Tasks<i
+                        class="fas fa-inbox text-primary no-modal" style="margin-left: 5px;"></i></a></span>
                 </div>
               </div>
             </div>
+            {{/each}}
 
+
+            {{#if todayRecords}}
+            <div class="row mt-4">
+              <div class="col-12" style=" border-bottom: 1px solid #e3e6f0;">
+                <h6 class="todayHeader">{{getTodayDate 'ddd D MMM'}} - Today</h6>
+              </div>
+            </div>
+            {{/if}}
+            {{#each item in todayRecords}}
+            <div class="col-12 taskCol mainTaskCol" id="ttodo_{{item.fields.ID}}">
+              <div class="row justify-content-between">
+                <div style="display: inline-flex;" class="">
+                  <i class="fas fa-grip-vertical taskActionButton taskDrag no-modal"></i>
+                  <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; margin: 4px;">
+                    <input class="custom-control-input chkBox chkPaymentCard pointer no-modal" type="checkbox"
+                      id="taskitem_{{item.fields.ID}}" value="">
+                    <label class="custom-control-label chkBox pointer no-modal chk_complete"
+                      data-id="{{item.fields.ID}}" for="taskitem_{{item.fields.ID}}"></label>
+                  </div>
+                  <span class="taskName no-modal">Task {{item.fields.ID}}</span>
+                </div>
+                <div style="display: inline-flex;">
+                  <i class="far fa-edit taskActionButton ttodo-edit no-modal" data-toggle="tooltip"
+                    data-placement="bottom" title="Edit task..." data-id="{{item.fields.ID}}"></i>
+                  <i class="far fa-calendar-plus taskActionButton ttodo-schedule no-modal" data-toggle="dropdown"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Set due date..."></i>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Wed</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-sun text-warning no-modal"
+                        style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Thu</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-couch text-primary no-modal"
+                        style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-alt text-danger no-modal"
+                        style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Mon Apr 11
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-ban text-secondary no-modal"
+                        style="margin-right: 8px;"></i>No
+                      Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" class="form-control hasDatepicker no-modal" id="dtRescheduleDate"
+                          name="dtRescheduleDate" autocomplete="off"><img class="ui-datepicker-trigger no-modal"
+                          src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <i class="far fa-comment-alt taskActionButton ttodo-comment" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Comment on task..."></i>
+                  <i class="fas fa-ellipsis-h taskActionButton ttodo-action no-modal" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="More task actions..."></i>
+                </div>
+              </div>
+              <div class="row justify-content-between">
+                <span class="taskDescription text-secondary">{{getDescription item.fields.Description}}</span>
+              </div>
+              <div class="row justify-content-between">
+                <div class="dueDateTags" style="display: inline-flex;">
+                  {{#if item.fields.label}}
+                  <span class="taskTag no-modal"><a class=" taganchor no-modal" href=""><i class="fas fa-tag no-modal"
+                        style="margin-right: 5px;"></i>{{item.fields.label}}</a>
+                  </span>
+                  {{/if}}
+                </div>
+                <div style="display: inline-flex;">
+                  <span class="taskLocation no-modal"><a class="taganchor no-modal" href="">All Tasks<i
+                        class="fas fa-inbox text-primary no-modal" style="margin-left: 5px;"></i></a></span>
+                </div>
+              </div>
+            </div>
+            {{/each}}
+
+
+            {{#if upcomingRecords}}
+            <div class="row mt-4">
+              <div class=" col-12" style=" border-bottom: 1px solid #e3e6f0;">
+                <h6 class="overdueHeader">Upcoming</h6>
+              </div>
+            </div>
+            {{/if}}
+            {{#each item in upcomingRecords}}
+            <!-- <div class="row mt-4">
+              <div class="col-12" style=" border-bottom: 1px solid #e3e6f0;">
+                <h6 class="todayHeader">{{getTodoDate item.fields.ToDoByDate 'MMM D - dddd'}}</h6>
+              </div>
+            </div> -->
+
+            <div class="col-12 taskCol mainTaskCol" id="ttodo_{{item.fields.ID}}">
+              <div class="row justify-content-between">
+                <div style="display: inline-flex;" class="">
+                  <i class="fas fa-grip-vertical taskActionButton taskDrag no-modal"></i>
+                  <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; margin: 4px;">
+                    <input class="custom-control-input chkBox chkPaymentCard pointer no-modal" type="checkbox"
+                      id="taskitem_{{item.fields.ID}}" value="">
+                    <label class="custom-control-label chkBox pointer no-modal chk_complete"
+                      data-id="{{item.fields.ID}}" for="taskitem_{{item.fields.ID}}"></label>
+                  </div>
+                  <span class="taskName no-modal">Task {{item.fields.ID}}</span>
+                </div>
+                <div style="display: inline-flex;">
+                  <i class="far fa-edit taskActionButton ttodo-edit no-modal" data-toggle="tooltip"
+                    data-placement="bottom" title="Edit task..." data-id="{{item.fields.ID}}"></i>
+                  <i class="far fa-calendar-plus taskActionButton ttodo-schedule no-modal" data-toggle="dropdown"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Set due date..."></i>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Wed</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-sun text-warning no-modal"
+                        style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Thu</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-couch text-primary no-modal"
+                        style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-alt text-danger no-modal"
+                        style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Mon Apr 11
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-ban text-secondary no-modal"
+                        style="margin-right: 8px;"></i>No
+                      Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" class="form-control hasDatepicker no-modal" id="dtRescheduleDate"
+                          name="dtRescheduleDate" autocomplete="off"><img class="ui-datepicker-trigger no-modal"
+                          src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <i class="far fa-comment-alt taskActionButton ttodo-comment" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="Comment on task..."></i>
+                  <i class="fas fa-ellipsis-h taskActionButton ttodo-action no-modal" data-toggle="tooltip"
+                    data-placement="bottom" data-id="{{item.fields.ID}}" title="More task actions..."></i>
+                </div>
+              </div>
+              <div class="row justify-content-between">
+                <span class="taskDescription text-secondary">{{getDescription item.fields.Description}}</span>
+              </div>
+              <div class="row justify-content-between">
+                <div class="dueDateTags no-modal" style="display: inline-flex;">
+                  <span class="taskDueDate no-modal" data-toggle="dropdown"><i class="far fa-calendar-plus no-modal"
+                      style="margin-right: 5px;"></i>
+                    {{getTodoDate item.fields.ToDoByDate 'D MMM'}}
+                  </span>
+                  <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+                    aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-day text-success no-modal"
+                        style="margin-right: 8px;"></i>Today
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Wed</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-sun text-warning no-modal"
+                        style="margin-right: 8px;"></i>Tomorrow
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Thu</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-couch text-primary no-modal"
+                        style="margin-right: 8px;"></i>This Weekend
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-calendar-alt text-danger no-modal"
+                        style="margin-right: 8px;"></i>Next Week
+                      <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Mon Apr 11
+                      </div>
+                    </a>
+                    <a class="dropdown-item no-modal" href="#"><i class="fas fa-ban text-secondary no-modal"
+                        style="margin-right: 8px;"></i>No
+                      Date</a>
+                    <div class="dropdown-divider no-modal"></div>
+                    <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+                      title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                      <div class="input-group date no-modal" style="cursor: pointer;">
+                        <input type="text" class="form-control hasDatepicker no-modal" id="dtRescheduleDate"
+                          name="dtRescheduleDate" autocomplete="off"><img class="ui-datepicker-trigger no-modal"
+                          src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                        <div class="input-group-addon no-modal">
+                          <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {{#if item.fields.label}}
+                  <span class="taskTag no-modal"><a class="taganchor no-modal" href=""><i class="fas fa-tag no-modal"
+                        style="margin-right: 5px;"></i>{{item.fields.label}}</a>
+                  </span>
+                  {{/if}}
+                </div>
+                <div style="display: inline-flex;">
+                  <span class="taskLocation no-modal"><a class="taganchor no-modal" href="">All Tasks<i
+                        class="fas fa-inbox text-primary no-modal" style="margin-left: 5px;"></i></a></span>
+                </div>
+              </div>
+            </div>
             {{/each}}
           </div>
-          {{/if}}
 
+          <div>
+
+          </div>
 
         </div>
       </div>
@@ -355,6 +605,8 @@
     }
 
     .taskCol {
+      border: none;
+      background: white;
       border-bottom: 1px solid #e3e6f0;
       padding-top: 8px;
       padding-bottom: 8px;
