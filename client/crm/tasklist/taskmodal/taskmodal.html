@@ -1,0 +1,533 @@
+<template name="taskmodal">
+
+  <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content" style="min-height: 90vh;">
+        <div class="modal-header">
+          <div style="display: grid;">
+            <span class="taskLocation"><a class="taganchor" href=""><i class="fas fa-inbox text-primary"
+                  style="margin-right: 5px;"></i>All Tasks</a></span>
+            <div style="display: inline-flex;">
+              <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin-top: 3px;">
+                <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="taskitem_id"
+                  value="">
+                <label class="custom-control-label chkBox pointer" for="taskitem_id"></label>
+              </div>
+              <h5 class="modal-title" id="taskNameLabel">[Task Name]</h5>
+            </div>
+          </div>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i>Apr
+                4</span>
+              <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
+                    style="margin-right: 5px;"></i>[label]</a></span>
+              <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
+                    style="margin-right: 5px;"></i>[label]</a></span>
+            </div>
+            <div class="col-12" style="display: inline-flex; justify-content: end;">
+              <!-- <i class="fas fa-Select a project-ul taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Select a project..."></i> -->
+              <div class="dropdown">
+                <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                  style="width: 200px;">
+                  <a class="dropdown-item" href="#"><i class="fas fa-inbox text-primary"
+                      style="margin-right: 8px;"></i>All Tasks</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                      style="margin-right: 8px; color: purple;"></i>Project #1</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 1</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 2</a>
+
+                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                      style="margin-right: 8px; color: purple;"></i>Project #2</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 1</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 2</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 3</a>
+
+                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                      style="margin-right: 8px; color: purple;"></i>Project #3</a>
+                  <a class="dropdown-item dropdown-project-section" href="#"><i class="far fa-folder-open text-primary"
+                      style="margin-right: 8px;"></i>Section 1</a>
+                </div>
+              </div>
+              <!-- <i class="fas fa-tag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Add label(s)..."></i> -->
+              <div class="dropdown">
+                <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" title="Add label(s)..."></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                  style="width: 200px;">
+                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                      style="margin-right: 8px;"></i>[label 1]
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_1"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                      style="margin-right: 8px;"></i>[label 2]
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_2"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_2"></label>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                      style="margin-right: 8px;"></i>[label 3]
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_3"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_3"></label>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <!-- <i class="far fa-flag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Set the priority..."></i> -->
+              <div class="dropdown">
+                <i class="far fa-flag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                  style="width: 200px;">
+                  <a class="dropdown-item text-danger" href="#"><i class="fas fa-tag"
+                      style="margin-right: 8px;"></i>Priority 1
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_1"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item text-warning" href="#"><i class="fas fa-tag"
+                      style="margin-right: 8px;"></i>Priority 2
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_1"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item text-primary" href="#"><i class="fas fa-tag"
+                      style="margin-right: 8px;"></i>Priority 3
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_1"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item text-secondary" href="#"><i class="fas fa-tag"
+                      style="margin-right: 8px;"></i>Priority 4
+                    <div style="width: 20%; float: right;">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                        <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="label_1"
+                          value="">
+                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
+                title="Add reminder(s)..."></i>
+              <!-- <i class="fas fa-ellipsis-h taskModalAction" data-toggle="tooltip" data-placement="bottom" title="More task actions..."></i> -->
+              <div class="dropdown">
+                <i class="fas fa-ellipsis-h taskModalAction taskModalActionDropdown dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More task actions..."></i>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                  style="width: 275px;">
+                  <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Rename
+                    Task</a>
+                  <a class="dropdown-item" href="#"><i class="far fa-comment-alt" style="margin-right: 8px;"></i>Add
+                    Comments Via Email</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-link" style="margin-right: 8px;"></i>Copy Link
+                    to Task</a>
+                  <a class="dropdown-item" href="#"><i class="far fa-check-circle" style="margin-right: 8px;"></i>Hide
+                    Complete Sub-Tasks</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="far fa-trash-alt" style="margin-right: 8px;"></i>Delete
+                    Task</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="nav-subtasks-tab" data-toggle="tab" href="#nav-subtasks" type="button"
+                    role="tab" aria-controls="subtasks" aria-selected="true">Sub-Tasks</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="nav-comments-tab" data-toggle="tab" href="#nav-comments" type="button"
+                    role="tab" aria-controls="comments" aria-selected="false">Comments</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="nav-activity-tab" data-toggle="tab" href="#nav-activity" type="button"
+                    role="tab" aria-controls="activity" aria-selected="false">Activity</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="nav-tabContent"
+                style="border: 1px solid #dddfeb; border-top: 0px solid #dddfeb;">
+                <div class="tab-pane fade show active" id="nav-subtasks" style="height: 60vh;" role="tabpanel"
+                  aria-labelledby="nav-subtasks-tab">
+                  <div class="row no-gutters">
+                    <div class="col-12 taskCol subtaskCol" id="subtask_1">
+                      <div class="row justify-content-between">
+                        <div style="display: inline-flex;">
+                          <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
+                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin: 4px;">
+                            <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                              id="subtaskitem_1" value="">
+                            <label class="custom-control-label chkBox pointer" for="subtaskitem_1"></label>
+                          </div>
+                          <span class="taskName">Sub-Task #1</span>
+                        </div>
+                        <div style="display: inline-flex;">
+                          <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
+                            title="Edit task..."></i>
+                          <i class="far fa-calendar-plus taskActionButton" data-toggle="tooltip" data-placement="bottom"
+                            title="Set due date..."></i>
+                          <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
+                            title="Comment on task..."></i>
+                          <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
+                            title="More task actions..."></i>
+                        </div>
+                      </div>
+                      <div class="row justify-content-between">
+                      </div>
+                      <div class="row justify-content-between">
+                        <div class="dueDateTags" style="display: inline-flex;">
+                          <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus"
+                              style="margin-right: 5px;"></i>Apr 4</span>
+                          <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
+                                style="margin-right: 5px;"></i>[label]</a></span>
+                        </div>
+                        <div style="display: inline-flex;">
+                          <!-- <span class="taskLocation"><a class="taganchor" href="">All Tasks<i class="fas fa-inbox text-primary" style="margin-left: 5px;"></i></a></span> -->
+                        </div>
+                      </div>
+                      <hr />
+                    </div>
+                    <div class="col-12">
+                      <div class="row newTaskRow" style="display: none;">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>Task Name</label>
+                            <input class="form-control" type="text" id="" name="" autocomplete="off">
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label>Task Description</label>
+                            <textarea class="form-control" rows="4" id="" name="" autocomplete="off"></textarea>
+                          </div>
+                        </div>
+                        <div class="col-6" style="display: inline-flex;">
+                          <div class="dropdown taskDropdownSchedule">
+                            <button class="btn btn-primary dropdown-toggle btnSchedule" type="button" id=""
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="far fa-calendar-minus" style="margin-right: 8px;"></i>Schedule
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                              <a class="dropdown-item" href="#"><i class="fas fa-calendar-day text-success"
+                                  style="margin-right: 8px;"></i>Today
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Wed
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-sun text-warning"
+                                  style="margin-right: 8px;"></i>Tomorrow
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Thu
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-couch text-primary"
+                                  style="margin-right: 8px;"></i>This Weekend
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Sat
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-calendar-alt text-danger"
+                                  style="margin-right: 8px;"></i>Next Week
+                                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Mon
+                                  Apr 11</div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-ban text-secondary"
+                                  style="margin-right: 8px;"></i>No Date</a>
+                              <div class="dropdown-divider"></div>
+                              <div class="form-group" data-toggle="tooltip" data-placement="bottom"
+                                title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                                <div class="input-group date" style="cursor: pointer;">
+                                  <input type="text" class="form-control hasDatepicker" id="dtScheduleDate"
+                                    name="dtScheduleDate" autocomplete="off"><img class="ui-datepicker-trigger"
+                                    src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                                  <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="dropdown taskDropdownFilter">
+                            <button class="btn btn-primary dropdown-toggle btnSchedule"
+                              style="background-color: rgba(0,0,0,0);" type="button" id="" data-toggle="dropdown"
+                              aria-haspopup="true" aria-expanded="false">
+                              <span class="dropdownFilter"><i class="fas fa-inbox text-primary"
+                                  style="margin-right: 5px;"></i>All Tasks</span>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
+                              <a class="dropdown-item" href="#"><i class="fas fa-inbox text-primary"
+                                  style="margin-right: 8px;"></i>All Tasks</a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                                  style="margin-right: 8px; color: purple;"></i>Project #1</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                1</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                2</a>
+
+                              <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                                  style="margin-right: 8px; color: purple;"></i>Project #2</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                1</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                2</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                3</a>
+
+                              <a class="dropdown-item" href="#"><i class="fas fa-circle"
+                                  style="margin-right: 8px; color: purple;"></i>Project #3</a>
+                              <a class="dropdown-item dropdown-project-section" href="#"><i
+                                  class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
+                                1</a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-6" style="display: inline-flex; justify-content: end;">
+                          <div class="dropdown">
+                            <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                              title="Add label(s)..."></i>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                              style="width: 200px;">
+                              <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                                  style="margin-right: 8px;"></i>[label 1]
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                                  style="margin-right: 8px;"></i>[label 2]
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_2" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_2"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
+                                  style="margin-right: 8px;"></i>[label 3]
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_3" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_3"></label>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                          <div class="dropdown">
+                            <i class="far fa-flag taskModalAction taskModalActionDropdown dropdown-toggle"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                              title="Set the priority..."></i>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                              style="width: 200px;">
+                              <a class="dropdown-item text-danger" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 1
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item text-warning" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 2
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item text-primary" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 3
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item text-secondary" href="#"><i class="fas fa-tag"
+                                  style="margin-right: 8px;"></i>Priority 4
+                                <div style="width: 20%; float: right;">
+                                  <div class="custom-control custom-checkbox chkBox pointer"
+                                    style="width: 15px; float: right;">
+                                    <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
+                                      id="label_1" value="">
+                                    <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                          <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
+                            title="Add reminder(s)..."></i>
+                        </div>
+                        <div class="col-12" style="margin-top: 12px;">
+                          <button class="btn btn-success" type="button" style=""><i class="fa fa-save"
+                              style="margin-right: 5px;"></i>Add Task</button>
+                          <button class="btn btn-secondary btnCancelAddTask" type="button" style="margin-left: 8px;"><i
+                              class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <button type="button" class="btn btn-link btnAddSubTask" style="margin: 16px;"><i
+                          class="fas fa-plus" style="margin-right: 8px;"></i> Add Sub-Task</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="nav-comments" style="height: 60vh;" role="tabpanel"
+                  aria-labelledby="nav-comments-tab">
+                  <div class="row">
+                    <div class="col-12 taskComment" style="padding: 16px 32px;">
+                      <div class="row commentRow">
+                        <div class="col-1">
+                          <div class="commentUser">BB</div>
+                        </div>
+                        <div class="col-11" style="padding-left: 24px;">
+                          <div class="row">
+                            <div>
+                              <span class="commenterName">Bruno Braga</span>
+                              <span class="commentDateTime">Apr 6 2:28 PM</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <span class="commentText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                              do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 taskComment" style="padding: 16px 32px;">
+                      <div class="row commentRow">
+                        <div class="col-1">
+                          <div class="commentUser">AR</div>
+                        </div>
+                        <div class="col-11" style="padding-left: 24px;">
+                          <div class="row">
+                            <div>
+                              <span class="commenterName">Ariyibi Rasheed</span>
+                              <span class="commentDateTime">Apr 6 2:32 PM</span>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <span class="commentText">Lorem ipsum dolor sit amet, consectetur adipiscing
+                              elit.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 commentSection" style="padding: 16px 42px; position: absolute; bottom: 0;">
+                      <div class="row">
+                        <div class="form-group" style="width: 100%;">
+                          <label>Comment</label>
+                          <textarea class="form-control" rows="4" id="" name="" autocomplete="off"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary">Comment</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="nav-activity" style="height: 60vh;" role="tabpanel"
+                  aria-labelledby="nav-activity-tab">
+                  <div class="row">
+                    <span class="activityAdded">Added on Apr 5 1:42 PM</span>
+                    <hr style="width: 100%; margin: 0px 32px;" />
+                  </div>
+                  <div class="row" style="padding: 16px;">
+                    <div class="col-12">
+                      <span class="activityDate">Apr 6 - Today</span>
+                    </div>
+                    <hr style="width: 100%; margin: 8px 16px;" />
+                    <div class="col-1">
+                      <div class="commentUser">AR</div>
+                    </div>
+                    <div class="col-11" style="padding-left: 24px;">
+                      <div class="row">
+                        <span class="activityName">Ariyibi Rasheed </span> <span class="activityAction">added a
+                          comment to </span> <span class="activityTaskName">Task #1:</span>
+                      </div>
+                      <div class="row">
+                        <span class="activityComment">Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit.</span>
+                      </div>
+                      <div class="row">
+                        <span class="activityTime">2:32 PM</span>
+                      </div>
+                    </div>
+                    <hr style="width: 100%; margin: 16px;" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"
+              style="margin-right: 5px;"></i>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

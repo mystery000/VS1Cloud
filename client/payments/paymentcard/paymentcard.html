@@ -534,9 +534,7 @@
                                                         .thcheckbox {
                                                             width: 3% !important;
                                                         }
-                                                        .colPaymentDate {
-                                                            width: 5% !important;
-                                                        }
+
                                                         .colPaymentAmount {
                                                             width: 7% !important;
                                                         }
@@ -545,6 +543,13 @@
                                                         }
                                                         .colBalancePop {
                                                             width: 7% !important;
+                                                        }
+                                                        .colPaymentDate {
+                                                            width: 80px !important;
+                                                        }
+
+                                                        .colCustomerName {
+                                                            width: 200px !important;
                                                         }
                                                     </style>
                                                     <table id="tblcustomerAwaitingPayment" name="tblcustomerAwaitingPayment" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblcustomerAwaitingPayment">
@@ -555,21 +560,23 @@
                                                                         <label class="custom-control-label chkBoxAll" for="formCheck-All"></label></div>
                                                                 </th>
                                                                 <th class="th colSortDate hiddenColumn">id</th>
-                                                                <th class="th colPaymentDate" style="width:;">Date</th>
-                                                                <th class="th colReceiptNo" style="width:;">Ref No.</th>
+                                                                <th class="th colPaymentDate" style="width:50px;">Date</th>
+                                                                <th class="th colReceiptNo" style="width:85px;">Ref No.</th>
+                                                                <th class="th colSaleNumber " style="width:80px;">Sale No.</th>
                                                                 <th class="th colPaymentAmount" style="width: 7% !important;">Paid</th>
                                                                 <th class="th colApplied colAppliedPop" style="wwidth: 7% !important;">Original</th>
                                                                 <th class="th colBalance colBalancePop" style="width: 7% !important;">Outstanding</th>
-                                                                <th class="th colCustomerName" style="width:;">Customer Name</th>
+                                                                <th class="th colCustomerName" style="width:200px;">Customer Name</th>
                                                                 <!-- <th class="th colBankAccount" style="width:80px;">Bank Account</th> -->
-                                                                <th class="th colDepartment" style="width:;">Department</th>
-                                                                <th class="th colRefNo hiddenColumn">Custom Field 1</th>
-                                                                <th class="th colPaymentMethod hiddenColumn">Custom Field 2</th>
+                                                                <!-- <th class="th colDepartment" style="width:;">Department</th> -->
+                                                                <!-- <th class="th colRefNo hiddenColumn">Custom Field 1</th> -->
+                                                                <!-- <th class="th colPaymentMethod hiddenColumn">Custom Field 2</th> -->
+                                                                <th class="th colTypePayment hiddenColumn">Type</th>
                                                                 <th class="th colNotes">Comments</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{#if datatablerecords}}
+                                                            <!-- {{#if datatablerecords}}
                                                                 {{#each item in datatablerecords}}
                                                                     <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                                                         <td contenteditable="false" class="chkBox pointer">
@@ -583,14 +590,13 @@
                                                                         <td contenteditable="false" class="colApplied" style="text-align: right!important;">{{item.originalamount}}</td>
                                                                         <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.outsandingamount}}</td>
                                                                         <td contenteditable="false" class="colCustomerName" id="colCustomerName{{item.id}}">{{item.customername}}</td>
-                                                                        <!-- <td contenteditable="false" class="colBankAccount">{{item.bankaccount}}</td> -->
                                                                         <td contenteditable="false" class="colDepartment">{{item.department}}</td>
                                                                         <td contenteditable="false" class="colRefNo hiddenColumn">{{item.refno}}</td>
                                                                         <td contenteditable="false" class="colPaymentMethod hiddenColumn">{{item.paymentmethod}}</td>
                                                                         <td contenteditable="false" class="colNotes">{{item.notes}}</td>
                                                                     </tr>
                                                                 {{/each}}
-                                                            {{/if}}
+                                                            {{/if}} -->
 
                                                         </tbody>
                                                     </table>
@@ -602,7 +608,7 @@
 
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-primary btnSelectSuppliers" id="btnSelectSuppliers" type="button">Select</button>
+                                        <button class="btn btn-primary btnSelectCustomers" id="btnSelectCustomers" type="button">Select</button>
                                         <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
                                     </div>
                                 </div>

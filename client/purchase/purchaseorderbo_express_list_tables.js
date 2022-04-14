@@ -129,6 +129,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                         let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
                         let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
                         let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
+                        let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
                         if(data.tpurchasesbackorderreport[i].Deleted == true){
                           orderstatus = "Deleted";
                         }else if(data.tpurchasesbackorderreport[i].SupplierName == ''){
@@ -140,6 +141,14 @@ Template.purchaseorderlistBO.onRendered(function() {
                             sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
                             orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
                             suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
+                            productname: data.tpurchasesbackorderreport[i].ProductName || '',
+                            purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
+                            etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
+                            etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
+                            customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
+                            qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                            originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                            prodcost: productCost,
                             totalamountex: totalAmountEx || 0.00,
                             totaltax: totalTax || 0.00,
                             totalamount: totalAmount || 0.00,
@@ -420,6 +429,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                     let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmountInc)|| 0.00;
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
+                    let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
                     let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
                     if(data.tpurchasesbackorderreport[i].Deleted == true){
                       orderstatus = "Deleted";
@@ -432,6 +442,14 @@ Template.purchaseorderlistBO.onRendered(function() {
                         sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
                         orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
                         suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
+                        productname: data.tpurchasesbackorderreport[i].ProductName || '',
+                        purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
+                        etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
+                        etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
+                        customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
+                        qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        prodcost: productCost,
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: totalTax || 0.00,
                         totalamount: totalAmount || 0.00,
@@ -709,6 +727,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
                     let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
+                    let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
                     if(data.tpurchasesbackorderreport[i].Deleted == true){
                       orderstatus = "Deleted";
                     }else if(data.tpurchasesbackorderreport[i].SupplierName == ''){
@@ -720,6 +739,14 @@ Template.purchaseorderlistBO.onRendered(function() {
                         sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
                         orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
                         suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
+                        productname: data.tpurchasesbackorderreport[i].ProductName || '',
+                        purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
+                        etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
+                        etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
+                        customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
+                        qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        prodcost: productCost,
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: totalTax || 0.00,
                         totalamount: totalAmount || 0.00,

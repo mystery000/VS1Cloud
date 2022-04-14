@@ -11,18 +11,18 @@ export class ReconService extends BaseService {
 
     getToBeReconciledDeposit(accountid,dateTo, ignoreDate) {
         let options = '';
-        if(ignoreDate == true){
-           options = {
-              IgnoreDates:true,
-              AccountId: accountid,
+        if (ignoreDate === true) {
+            options = {
+                IgnoreDates:true,
+                AccountId: accountid,
             };
-        }else{
-          options = {
-             IgnoreDates: false,
-             AccountId: accountid,
-             // DateFrom:'"'+dateFrom+'"',
-             DateTo:'"'+dateTo+'"'
-         };
+        } else {
+            options = {
+                IgnoreDates: false,
+                AccountId: accountid,
+                // DateFrom:'"'+dateFrom+'"',
+                DateTo:'"'+dateTo+'"'
+            };
         }
 
         return this.getList(this.ERPObjects.TToBeReconciledDeposit, options);
@@ -33,18 +33,18 @@ export class ReconService extends BaseService {
         //     AccountId: accountid
         // };
         let options = '';
-        if(ignoreDate == true){
-           options = {
-              IgnoreDates:true,
-              AccountId: accountid,
+        if (ignoreDate === true) {
+            options = {
+                IgnoreDates:true,
+                AccountId: accountid,
             };
         }else{
-          options = {
-             IgnoreDates: false,
-             AccountId: accountid,
-             // DateFrom:'"'+dateFrom+'"',
-             DateTo:'"'+dateTo+'"'
-         };
+            options = {
+                IgnoreDates: false,
+                AccountId: accountid,
+                // DateFrom:'"'+dateFrom+'"',
+                DateTo:'"'+dateTo+'"'
+            };
         }
         return this.getList(this.ERPObjects.TToBeReconciledWithDrawal, options);
     }

@@ -353,7 +353,7 @@ Template.appointmentlist.onRendered(function () {
                       $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
-                  console.log('1 =====================> ', data.tappointmentlist[4]);
+
                   for (let i = 0; i < data.tappointmentlist.length; i++) {
                      appStatus = data.tappointmentlist[i].Status || '';
                       // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
@@ -660,7 +660,7 @@ Template.appointmentlist.onRendered(function () {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                console.log('2 =====================> ', data.tappointmentlist[4]);
+
                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                    appStatus = data.tappointmentlist[i].Status || '';
                     // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
@@ -964,7 +964,7 @@ Template.appointmentlist.onRendered(function () {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                console.log('3 =====================> ', data.tappointmentlist[4]);
+
                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                    appStatus = data.tappointmentlist[i].Status || '';
                     // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
@@ -1336,7 +1336,7 @@ Template.appointmentlist.events({
         var checkbox = document.querySelector("#hideConverted");
         if (checkbox.checked) {
             if (useData.length > 0) {
-                console.log('4 =====================> ', useData[4]);
+
                 for (let i = 0; i < useData.length; i++) {
                     if (useData[i].finished != "Converted" || useData[i].finished == "Completed") {
                         var dataList = {
@@ -1394,7 +1394,7 @@ Template.appointmentlist.events({
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tappointmentex;
                 if (useData.length > 0) {
-                    console.log('5 =====================> ', useData[4].fields);
+
                     for (let i = 0; i < useData.length; i++) {
                         if (useData[i].fields.Status == "Converted" || useData[i].fields.Status == "Completed") {
                             color = "#1cc88a";

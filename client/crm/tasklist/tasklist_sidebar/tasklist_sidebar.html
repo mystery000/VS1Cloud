@@ -1,0 +1,153 @@
+<template name="tasklist_sidebar">
+
+  <div class="col-2">
+    <div class="card shadow">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item taskmenuoption">
+          <i class="fas text-success fa-inbox" style="margin-right: 8px; width: 25px;"></i>
+          All Tasks
+          <span class="menuItems inboxItems crm_all_count">0</span>
+        </li>
+        <li class="list-group-item taskmenuoption">
+          <i class="fas text-primary fa-calendar-day" style="margin-right: 8px; width: 25px;"></i>
+          Today
+          <span class="menuItems todayItems crm_today_count">0</span>
+        </li>
+        <li class="list-group-item taskmenuoption">
+          <i class="fas text-danger fa-calendar-alt" style="margin-right: 8px; width: 25px;"></i>
+          Upcoming
+          <span class="menuItems upcomingItems crm_upcoming_count">0</span>
+        </li>
+        <li class="list-group-item taskmenuoption">
+          <i class="fas text-warning fa-project-diagram" style="margin-right: 8px; width: 25px;"></i>
+          Filters & Labels
+        </li>
+        <li class="list-group-item taskmenuoption" id="projectsMenuOption" data-toggle="collapse"
+          href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+          <i class="fas text-secondary fa-angle-right" style="margin-right: 8px; width: 25px;"></i>
+          Projects
+          <button type="button" class="btn btn-link newProject" data-toggle="modal" data-target="#newProject"><i
+              class="fas fa-plus"></i></button>
+        </li>
+      </ul>
+      <div class="collapse multi-collapse" id="multiCollapseExample1">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item projectmenuoption" id="projectName">
+            <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: purple;"></i>
+            <span class="projectName">Project #1</span>
+            <span class="projectMenu" id="projectonemenu">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu project-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add
+                    Project Above</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add
+                    Project Below</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Edit
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-user-plus" style="margin-right: 8px;"></i>Share
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="far fa-heart" style="margin-right: 8px;"></i>Add to
+                    Favorites</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-copy" style="margin-right: 8px;"></i>Duplicate
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-envelope" style="margin-right: 8px;"></i>Emals
+                    Tasks to this Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-list" style="margin-right: 8px;"></i>Project
+                    Calendar Feed</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-archive" style="margin-right: 8px;"></i>Archive
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
+                    Project</a>
+                </div>
+              </div>
+            </span>
+            <span class="projectItems" id="projectone">7</span>
+          </li>
+          <li class="list-group-item projectmenuoption">
+            <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: pink;"></i>
+            <span class="projectName">Project #2</span>
+            <span class="projectMenu" id="projecttwomenu">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu project-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add
+                    Project Above</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add
+                    Project Below</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Edit
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-user-plus" style="margin-right: 8px;"></i>Share
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="far fa-heart" style="margin-right: 8px;"></i>Add to
+                    Favorites</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-copy" style="margin-right: 8px;"></i>Duplicate
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-envelope" style="margin-right: 8px;"></i>Emals
+                    Tasks to this Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-list" style="margin-right: 8px;"></i>Project
+                    Calendar Feed</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-archive" style="margin-right: 8px;"></i>Archive
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
+                    Project</a>
+                </div>
+              </div>
+            </span>
+            <span class="projectItems" id="projecttwo">10</span>
+          </li>
+          <li class="list-group-item projectmenuoption">
+            <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: teal;"></i>
+            <span class="projectName">Project #3</span>
+            <span class="projectMenu" id="projectthreemenu">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button" id="dropdownMenuButton"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu project-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add
+                    Project Above</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add
+                    Project Below</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Edit
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-user-plus" style="margin-right: 8px;"></i>Share
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="far fa-heart" style="margin-right: 8px;"></i>Add to
+                    Favorites</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-copy" style="margin-right: 8px;"></i>Duplicate
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-envelope" style="margin-right: 8px;"></i>Emals
+                    Tasks to this Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-list" style="margin-right: 8px;"></i>Project
+                    Calendar Feed</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#"><i class="fas fa-archive" style="margin-right: 8px;"></i>Archive
+                    Project</a>
+                  <a class="dropdown-item" href="#"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
+                    Project</a>
+                </div>
+              </div>
+            </span>
+            <span class="projectItems" id="projectthree">5</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>

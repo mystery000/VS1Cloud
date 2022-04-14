@@ -397,6 +397,9 @@ Template.supplierpaymentcard.onRendered(() => {
               let balance = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
               let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
               let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
+              if (data.tbillreport[i].Type == "Credit") {
+                totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
+              }
               let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
               if (data.tbillreport[i].Balance != 0) {
                   if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
@@ -487,7 +490,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         $(td).attr('id', 'colSupplierName' + rowData[4]);
                       }
                   }, {
-                      className: "colTypePayment hiddenColumn",
+                      className: "colTypePayment",
                       "targets": [9],    // this will invoke the below function on all cells
                       'createdCell': function(td, cellData, rowData, row, col) {
                         // this will give each cell an ID
@@ -8305,8 +8308,13 @@ Template.supplierpaymentcard.events({
         templateObject.selectedAwaitingPayment.set([]);
         $('#supplierPaymentListModal').modal('hide');
 
+        setTimeout(function() {
+          $('td').each(function () {
+              if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+          });
+        }, 1000);
     },
-    'keydown #edtPaymentAmount': function(event) {
+    'keydown #edtPaymentAmount, keydown .linePaymentamount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             // Allow: Ctrl+A, Command+A
             (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
@@ -8334,8 +8342,18 @@ Template.supplierpaymentcard.events({
         $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
     },
     'blur .linePaymentamount': function(event) {
-        let paymentAmt = $(event.target).val();
+        let paymentAmt = $(event.target).val()||0;
+        let oustandingAmt = $(event.target).closest('tr').find('.lineOutstandingAmount').text()||0;
         let formatedpaymentAmt = Number(paymentAmt.replace(/[^0-9.-]+/g, "")) || 0;
+        let formatedoustandingAmt = Number(oustandingAmt.replace(/[^0-9.-]+/g, "")) || 0;
+        if(formatedpaymentAmt > 0){
+        if(formatedpaymentAmt > formatedoustandingAmt){
+          $(event.target).closest('tr').find('.lineOutstandingAmount').text(Currency + 0);
+        }else{
+          let getUpdateOustanding = formatedoustandingAmt - formatedpaymentAmt;
+          $(event.target).closest('tr').find('.lineOutstandingAmount').text(utilityService.modifynegativeCurrencyFormat(getUpdateOustanding));
+        }
+       }
         $(event.target).val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
         let $tblrows = $("#tblSupplierPaymentcard tbody tr");
         let appliedGrandTotal = 0;

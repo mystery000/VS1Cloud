@@ -8588,6 +8588,8 @@ Template.appointments.events({
                     $('.fullScreenSpin').css('display', 'none');
                 });
 
+            } else {
+                $('#btnCloseStartAppointmentModal').trigger('click');
             }
         } else {
           $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
@@ -8640,7 +8642,7 @@ Template.appointments.events({
                     $('#startAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
-                    const companyName = $('#employee_name').val();
+                    const companyName = Session.get('vs1companyName');
                     const productService = $('#product-list').val();
                     const startAppointmentSMS = templateObject.defaultSMSSettings.get().startAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
@@ -8696,7 +8698,7 @@ Template.appointments.events({
                     $('#stopAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
-                    const companyName = $('#employee_name').val();
+                    const companyName = Session.get('vs1companyName');
                     const productService = $('#product-list').val();
                     const stopAppointmentSMS = templateObject.defaultSMSSettings.get().stopAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
@@ -8752,9 +8754,9 @@ Template.appointments.events({
                     $('#saveAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
                     const employeeName = $('#employee_name').val();
-                    const companyName = $('#employee_name').val();
+                    const companyName = Session.get('vs1companyName');
                     const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
-                    const bookedTime = $('#tActualStartTime').val() + $('#tActualEndTime').val() ? ' - ' + $('#tActualEndTime').val() : '';
+                    const bookedTime = $('#startTime').val() + $('#endTime').val() ? $('#startTime').val() + ' - ' + $('#endTime').val() : '';
                     const productService = $('#product-list').val();
                     const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)
@@ -8775,13 +8777,13 @@ Template.appointments.events({
     'click #btnCloseSaveAppointmentModal': function() {
         $('#saveAppointmentModal').modal('hide');
     },
-    'click #btnSaveAppointmentSubmit': function() {
+    'click #btnSaveAppointmentSubmit': function(e) {
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
         const smsSettings = templateObject.defaultSMSSettings.get();
-        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) templateObject.sendSMSMessage('stop', '+' + customerPhone);
+        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) templateObject.sendSMSMessage('save', '+' + customerPhone);
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {

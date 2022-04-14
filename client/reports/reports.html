@@ -41,401 +41,278 @@
                     display: none;
                 }
             }
+
+            .reportCard {
+                margin: 16px;
+                min-width: 100%;
+                height: 450px;
+            }
         </style>
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
                 <div class="row justify-content-center">
-                    {{#if isFavorite}}
-                        <div class="col-12 col-md-3" id="favorites">
-                            <div class="card shadow mb-3" style="margin: 16px;min-width: 100%;">
-                                <div class="card-header py-3" style="background-color: #00a3d3!important;">
-                                    <p class="text-success m-0 font-weight-bold" style="color: rgb(255, 255, 255)!important;">Favorites</p>
-                                </div>
-                                <div class="card-body">
-                                    {{#if is1099Transaction}}
-                                        <div class="row favorite one" id="one">
-                                            <div class="col flex-grow-1"><a href="/1099report">1099 Contractor Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chk1099Transaction" type="checkbox" id="formCheck-20">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-20"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite one" id="one">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/1099report" class="text-nowrap">1099 Contractor Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chk1099Transaction" type="checkbox" id="formCheck-20" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-20"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isAgedPayables}}
-                                        <div class="row two" id="twohr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite two" id="two">
-                                            <div class="col flex-grow-1"><a href="/agedpayables">Aged Payables</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkAgedPayables" type="checkbox" id="formCheck-21">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-21"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite two" id="two">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/agedpayables" class="text-nowrap">Aged Payables</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkAgedPayables" type="checkbox" id="formCheck-21" checked><label style="cursor: pointer;" class="custom-control-label"
-                                                            for="formCheck-21"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isAgedPayablesSummary}}
-                                        <div class="row two" id="twohr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite two" id="two">
-                                            <div class="col flex-grow-1"><a href="/agedpayablessummary">Aged Payables Summary</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkAgedPayablesSummary" type="checkbox" id="formCheck-Summary">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-Summary"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite two" id="two">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/agedpayablessummary" class="text-nowrap">Aged Payables Summary</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkAgedPayablesSummary" type="checkbox" id="formCheck-Summary" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-Summary"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isAgedReceivables}}
-                                        <div class="row three" id="threehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite three" id="three">
-                                            <div class="col flex-grow-1"><a href="/agedreceivables">Aged Receivables</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkAgedReceivables" type="checkbox" id="formCheck-21">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-21"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite three" id="three">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/agedreceivables" class="text-nowrap">Aged Receivables</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkAgedReceivables" type="checkbox" id="formCheck-21" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-21"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isAgedReceivablesSummary}}
-                                        <div class="row three" id="threehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite three" id="three">
-                                            <div class="col flex-grow-1"><a href="/agedreceivablessummary">Aged Receivables Summary</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkAgedReceivablesSummary" type="checkbox" id="formCheck-agedreceivablesummary">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-agedreceivablesummary"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite three" id="three">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/agedreceivablessummary" class="text-nowrap">Aged Receivables Summary</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkAgedReceivablesSummary" type="checkbox" id="formCheck-agedreceivablesummary" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-agedreceivablesummary"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isBalanceSheet}}
-                                        <div class="row four" id="fourhr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite four" id="four">
-                                            <div class="col flex-grow-1"><a href="/balancesheetreport">Balance Sheet</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkBalanceSheet" type="checkbox" id="formCheck-21">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-21"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite four" id="four">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/balancesheetreport" class="text-nowrap">Balance Sheet</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkBalanceSheet" type="checkbox" id="formCheck-21" checked><label style="cursor: pointer;" class="custom-control-label"
-                                                            for="formCheck-21"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isGeneralLedger}}
-                                        <div class="row five" id="fivehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite five" id="five">
-                                            <div class="col flex-grow-1"><a href="/generalledger">General Ledger</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkGeneralLedger" type="checkbox" id="formCheck-23Ledger">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-23Ledger"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite five" id="five">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/generalledger" class="text-nowrap">General Ledger</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkGeneralLedger" type="checkbox" id="formCheck-23Ledger" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-23Ledger"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isPrintStatement}}
-                                        <div class="row six" id="sixhr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite six" id="six">
-                                            <div class="col flex-grow-1"><a href="/statementlist">Print Statements</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkPrintStatement" type="checkbox" id="formCheck-23">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-23"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite six" id="six">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/statementlist" class="text-nowrap">Print Statements</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkPrintStatement" type="checkbox" id="formCheck-23" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-23"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isProfitLoss}}
-                                        <div class="row seven" id="sevenhr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite seven" id="seven">
-                                            <div class="col flex-grow-1"><a href="/newprofitandloss">Profit and Loss</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkProfitLoss" type="checkbox" id="formCheck-23">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-23"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite seven" id="seven">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/newprofitandloss" class="text-nowrap">Profit and Loss</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkProfitLoss" type="checkbox" id="formCheck-23" checked><label style="cursor: pointer;" class="custom-control-label"
-                                                            for="formCheck-23"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isPurchaseReport}}
-                                        <div class="row eight" id="eighthr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite eight" id="eight">
-                                            <div class="col flex-grow-1"><a href="/purchasesreport">Purchase Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkPurchaseReport" type="checkbox" id="formCheck-24">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-24"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite eight" id="eight">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/purchasesreport" class="text-nowrap">Purchase Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkPurchaseReport" type="checkbox" id="formCheck-24" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-24"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isPurchaseSummaryReport}}
-                                        <div class="row eight" id="eighthr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite eight" id="eight">
-                                            <div class="col flex-grow-1"><a href="/purchasesummaryreport">Purchase Summary Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkPurchaseSummaryReport" type="checkbox" id="formCheck-PurchaseSummary">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PurchaseSummary"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite eight" id="eight">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/purchasesummaryreport" class="text-nowrap">Purchase Summary Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkPurchaseSummaryReport" type="checkbox" id="formCheck-PurchaseSummary" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-PurchaseSummary"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isProductSalesReport}}
-                                        <div class="row nine" id="ninehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite nine" id="nine">
-                                            <div class="col flex-grow-1"><a href="/productsalesreport">Product Sales Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkProductSalesReport" type="checkbox" id="formCheck-25ProductSales">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-25ProductSales"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite nine" id="nine">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/productsalesreport" class="text-nowrap">Product Sales Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkProductSalesReport" type="checkbox" id="formCheck-25ProductSales" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-25ProductSales"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isSalesReport}}
-                                        <div class="row nine" id="ninehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite nine" id="nine">
-                                            <div class="col flex-grow-1"><a href="/salesreport">Sales Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkSalesReport" type="checkbox" id="formCheck-25">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-25"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite nine" id="nine">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/salesreport" class="text-nowrap">Sales Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkSalesReport" type="checkbox" id="formCheck-25" checked><label style="cursor: pointer;" class="custom-control-label"
-                                                            for="formCheck-25"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isSalesSummaryReport}}
-                                        <div class="row nine" id="ninehr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite nine" id="nine">
-                                            <div class="col flex-grow-1"><a href="/salessummaryreport">Sales Summary Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkSalesSummaryReport" type="checkbox" id="formCheck-25Summary">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-25Summary"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite nine" id="nine">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/salessummaryreport" class="text-nowrap">Sales Summary Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkSalesSummaryReport" type="checkbox" id="formCheck-25Summary" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-25Summary"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isTaxSummaryReport}}
-                                        <div class="row ten" id="tenhr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite ten" id="ten">
-                                            <div class="col flex-grow-1"><a href="/taxsummaryreport">Tax Summary Report</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkTaxSummaryReport" type="checkbox" id="formCheck-TaxSummaryReport2">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TaxSummaryReport2"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite ten" id="ten">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/taxsummaryreport" class="text-nowrap">Tax Summary Report</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkTaxSummaryReport" type="checkbox" id="formCheck-TaxSummaryReport2" checked><label style="cursor: pointer;"
-                                                            class="custom-control-label" for="formCheck-TaxSummaryReport2"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                    {{#if isTrialBalance}}
-                                        <div class="row ten" id="tenhr">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row favorite ten" id="ten">
-                                            <div class="col flex-grow-1"><a href="/trialbalance">Trial Balance</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input chkTrialBalance" type="checkbox" id="formCheck-25">
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-25"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="favorite ten" id="ten">
-                                            <div class="row d-xl-flex flex-nowrap align-items-xl-center">
-                                                <div class="col flex-grow-1" style="margin-right: 150px;"><a href="/trialbalance" class="text-nowrap">Trial Balance</a></div>
-                                                <div class="col d-xl-flex flex-grow-0 justify-content-xl-end">
-                                                    <div class="custom-control custom-checkbox"><input class="custom-control-input chkTrialBalance" type="checkbox" id="formCheck-25" checked><label style="cursor: pointer;" class="custom-control-label"
-                                                            for="formCheck-25"></label></div>
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                    {{/if}}
-                                </div>
-                            </div>
-                        </div>
-                    {{/if}}
-                    <div class="col-12 col-md-9">
+                    <div class="col-12">
+                        <!-- <div class="row justify-content-center"> -->
                         <div class="row">
+                            {{#if isFavorite}}
+                                <div class="col-12 col-md-3" id="favorites">
+                                    <div class="card shadow mb-3 reportCard">
+                                        <div class="card-header py-3" style="background-color: #00a3d3!important;">
+                                            <p class="text-success m-0 font-weight-bold" style="color: rgb(255, 255, 255)!important;">Favorites</p>
+                                        </div>
+                                        <div class="card-body">
+                                            {{#if is1099Transaction}}
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/1099report">1099 Contractor Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chk1099Transaction" type="checkbox" id="formCheck-1099Fave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-1099Fave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isAccountsLists}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/accountsoverview">Accounts List</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkAccountsLists" type="checkbox" id="formCheck-AccountsListsFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-AccountsListsFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isAgedPayables}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/agedpayables">Aged Payables</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkAgedPayables" type="checkbox" id="formCheck-agedPayablesFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-agedPayablesFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isAgedPayablesSummary}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/agedpayablessummary">Aged Payables Summary</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkAgedPayablesSummary" type="checkbox" id="formCheck-AgedPayablesSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-AgedPayablesSummaryFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isAgedReceivables}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/agedreceivables">Aged Receivables</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkAgedReceivables" type="checkbox" id="formCheck-agedReceivablesFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-agedReceivablesFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isAgedReceivablesSummary}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/agedreceivablessummary">Aged Receivables Summary</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkAgedReceivablesSummary" type="checkbox" id="formCheck-agedreceivablesummary" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-agedreceivablesummary"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isBalanceSheet}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/balancesheetreport">Balance Sheet</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkBalanceSheet" type="checkbox" id="formCheck-balanceSheetFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-balanceSheetFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isGeneralLedger}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/generalledger">General Ledger</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkGeneralLedger" type="checkbox" id="formCheck-generalLedgerFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-generalLedgerFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPrintStatement}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/statementlist">Print Statements</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkPrintStatement" type="checkbox" id="formCheck-printStatementsFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-printStatementsFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isProfitLoss}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/newprofitandloss">Profit and Loss</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkProfitLoss" type="checkbox" id="formCheck-profitAndLossFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-profitAndLossFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPurchaseReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/purchasesreport">Purchase Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkPurchaseReport" type="checkbox" id="formCheck-purchaseReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-purchaseReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPurchaseSummaryReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/purchasesummaryreport">Purchase Summary Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkPurchaseSummaryReport" type="checkbox" id="formCheck-purchaseSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-purchaseSummaryFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isProductSalesReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/productsalesreport">Product Sales Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkProductSalesReport" type="checkbox" id="formCheck-productSalesFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-productSalesFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isSalesReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/salesreport">Sales Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkSalesReport" type="checkbox" id="formCheck-salesReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-salesReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isSalesSummaryReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/salessummaryreport">Sales Summary Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkSalesSummaryReport" type="checkbox" id="formCheck-salesSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-salesSummaryFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isTaxSummaryReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/taxsummaryreport">Tax Summary Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkTaxSummaryReport" type="checkbox" id="formCheck-taxSummaryReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-taxSummaryReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isTrialBalance}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/trialbalance">Trial Balance</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkTrialBalance" type="checkbox" id="formCheck-trialBalanceFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-trialBalanceFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
                             <!-- Accounting -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Accounting</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
                                     </div>
                                     <div class="card-body">
-                                        <div class="row ">
+                                        <div class="row">
                                             <div class="col flex-grow-1"><a href="/accountsoverview">Accounts List</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkAccountsLists" type="checkbox" id="formCheck-AccountsLists" disabled>
+                                                    <input class="custom-control-input favCheckBox chkAccountsLists" type="checkbox" id="formCheck-AccountsLists">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-AccountsLists"></label>
                                                 </div>
                                             </div>
@@ -455,8 +332,10 @@
                                         <div class="row">
                                             <div class="col flex-grow-1"><a href="/balancesheetreport">Balance Sheet</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox"><input class="custom-control-input favCheckBox chkBalanceSheet" type="checkbox" id="formCheck-1"><label style="cursor: pointer;" class="custom-control-label"
-                                                        for="formCheck-1"></label></div>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkBalanceSheet" type="checkbox" id="formCheck-1">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-1"></label>
+                                                </div>
                                             </div>
                                         </div>
                                         {{#if isBalanceSheet}}
@@ -655,8 +534,8 @@
                                 </div>
                             </div>
                             <!-- Contacts -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Contacts</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -747,8 +626,8 @@
                                 </div>
                             </div>
                             <!-- General -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">General</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -923,8 +802,8 @@
                                 </div>
                             </div>
                             <!-- Inventory -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Inventory</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1057,8 +936,8 @@
                                 </div>
                             </div>
                             <!-- Payments -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Payments</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1203,8 +1082,8 @@
                                 </div>
                             </div>
                             <!-- Payroll -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Payroll</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1316,8 +1195,8 @@
                                 </div>
                             </div>
                             <!-- Purchases -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Purchases</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1326,8 +1205,10 @@
                                         <div class="row d-xl-flex align-items-xl-center">
                                             <div class="col flex-grow-1"><a href="/1099report">1099 Contractor Report</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox"><input class="custom-control-input favCheckBox chk1099Transaction" type="checkbox" id="formCheck-11"><label style="cursor: pointer;"
-                                                        class="custom-control-label" for="formCheck-11"></label></div>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chk1099Transaction" type="checkbox" id="formCheck-11">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-11"></label>
+                                                </div>
                                             </div>
                                         </div>
                                         {{#if is1099Transaction}}
@@ -1420,8 +1301,8 @@
                                 </div>
                             </div>
                             <!-- Repairs -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Repairs</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1491,8 +1372,8 @@
                                 </div>
                             </div>
                             <!-- Sales -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Sales</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
@@ -1636,8 +1517,8 @@
                                 </div>
                             </div>
                             <!-- Transactions -->
-                            <div class="col-12 col-md-4">
-                                <div class="card shadow mb-3" style="margin: 16px;min-width: 100%; height: 450px;">
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
                                     <div class="card-header py-3">
                                         <p class="text-primary m-0 font-weight-bold" style="float: left;">Transactions</p>
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>

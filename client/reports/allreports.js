@@ -23,6 +23,8 @@ Template.allreports.onCreated(function(){
    templateObject.isTrialBalance.set(false);
    templateObject.is1099Transaction = new ReactiveVar();
    templateObject.is1099Transaction.set(false);
+   templateObject.isAccountsLists = new ReactiveVar();
+   templateObject.isAccountsLists.set(false);
    templateObject.isAgedPayables = new ReactiveVar();
    templateObject.isAgedPayables.set(false);
    templateObject.isAgedPayablesSummary = new ReactiveVar();
@@ -47,6 +49,7 @@ Template.allreports.onRendered(() => {
   let isTaxSummaryReport = Session.get('cloudTaxSummaryReport');
   let isTrialBalance = Session.get('cloudTrialBalance');
   let is1099Transaction = Session.get('cloud1099Transaction');
+  let isAccountsLists = Session.get('cloudAccountList');
   let isAgedPayables = Session.get('cloudAgedPayables');
   let isAgedPayablesSummary = Session.get('cloudAgedPayablesSummary');
   let isPurchaseReport = Session.get('cloudPurchaseReport');
@@ -86,6 +89,9 @@ Template.allreports.onRendered(() => {
     if(is1099Transaction == true){
     templateObject.is1099Transaction.set(true);
     }
+    if(isAccountsLists == true){
+    templateObject.isAccountsLists.set(true);
+    }
     if(isAgedPayables == true){
     templateObject.isAgedPayables.set(true);
     }
@@ -124,13 +130,6 @@ Template.allreports.events({
             Session.setPersistent('cloudBalanceSheet', false);
             templateObject.isBalanceSheet.set(false);
         }
-
-          // $('.favCheckBox').each(function(){
-          //   if(this.checked){
-          //     localStorage.setItem('cloudshowFavorite', true);
-          //   }
-          //
-          // });
     },
     'click .chkProfitLoss': function (event) {
         let templateObject = Template.instance();
@@ -230,6 +229,16 @@ Template.allreports.events({
         } else {
             Session.setPersistent('cloud1099Transaction', false);
             templateObject.is1099Transaction.set(false);
+        }
+    },
+    'click .chkAccountsLists': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudAccountList', true);
+            templateObject.isAccountsLists.set(true);
+        } else {
+            Session.setPersistent('cloudAccountList', false);
+            templateObject.isAccountsLists.set(false);
         }
     },
     'click .chkAgedPayables': function (event) {
@@ -337,6 +346,9 @@ Template.allreports.helpers({
   isBalanceSheet: function() {
         return Template.instance().isBalanceSheet.get();
   },
+  isAccountsLists: function() {
+        return Template.instance().isAccountsLists.get();
+  },
   isProfitLoss: function() {
         return Template.instance().isProfitLoss.get();
   },
@@ -367,6 +379,9 @@ Template.allreports.helpers({
   is1099Transaction: function() {
         return Template.instance().is1099Transaction.get();
   },
+  isAccountsLists: function() {
+        return Template.instance().isAccountsLists.get();
+  },
   isAgedPayables: function() {
         return Template.instance().isAgedPayables.get();
   },
@@ -394,6 +409,7 @@ Template.allreports.helpers({
       let isTaxSummaryReport =  Template.instance().isTaxSummaryReport.get();
       let isTrialBalance =  Template.instance().isTrialBalance.get();
       let is1099Transaction =  Template.instance().is1099Transaction.get();
+      let isAccountsLists =  Template.instance().isAccountsLists.get();
       let isAgedPayables =  Template.instance().isAgedPayables.get();
       let isAgedPayablesSummary =  Template.instance().isAgedPayablesSummary.get();
       let isPurchaseReport =  Template.instance().isPurchaseReport.get();
@@ -402,7 +418,7 @@ Template.allreports.helpers({
       let isShowFavorite = false;
 
       if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport
-      || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAgedPayables
+      || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables
       || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary){
         isShowFavorite = true;
       }
