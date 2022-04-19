@@ -1436,6 +1436,16 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       return this.getList(this.ERPObjects.TAPReport, options);
   }
 
+  getTAPReportByName(contactName){
+    let options = '';
+      options = {
+        IgnoreDates: true,
+        Search:'Name = "'+contactName+'"'
+     };
+
+      return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
   getTTransactionListReport(msTimeStamp){
     let options = '';
     if(msTimeStamp){

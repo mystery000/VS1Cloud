@@ -121,7 +121,7 @@ export class ReportService extends BaseService {
         PeriodType: '"' + periodType + '"',
       };
     }
-   
+
     return this.getList(
       this.ERPObjects.TProfitAndLossPeriodCompareReport,
       options
@@ -177,11 +177,17 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate) {
+  getAgedReceivableDetailsData(dateFrom, dateTo, ignoreDate, contactName) {
     let options = "";
-    if (ignoreDate == true) {
+    if(contactName != ''){
       options = {
         IgnoreDates: true,
+        Search:'Name = "'+contactName+'"'
+      };
+    }else{
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true
       };
     } else {
       options = {
@@ -190,6 +196,7 @@ export class ReportService extends BaseService {
         DateTo: '"' + dateTo + '"',
       };
     }
+  }
     return this.getList(this.ERPObjects.TARReport, options);
   }
 

@@ -4593,7 +4593,7 @@ Template.customerscard.events({
             if(customerName.indexOf('^') > 0) {
               customerName = customerName.split('^')[0]
             }
-            window.open('/statementlist?name='+customerName, '_self');
+            window.open('/agedreceivables?contact='+customerName, '_self');
         } else {
             window.open('/agedreceivables','_self');
         }

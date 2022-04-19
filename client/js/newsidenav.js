@@ -119,7 +119,7 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
     var countObjectTimes = 0;
-    let allDataToLoad = 68;
+    let allDataToLoad = 69;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();

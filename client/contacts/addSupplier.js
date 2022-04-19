@@ -2132,6 +2132,17 @@ Template.supplierscard.events({
             $('.supplierShipping-2').css('display','block');
         }
     },
+    'click .openBalance': function (event) {
+        let supplierName = $('#edtSupplierCompany').val() || '';
+        if(supplierName != "") {
+            // if(supplierName.indexOf('^') > 0) {
+            //   supplierName = supplierName.split('^')[0]
+            // }
+            window.open('/agedpayables?contact='+supplierName, '_self');
+        } else {
+            window.open('/agedpayables','_self');
+        }
+    },
     'click .btnBack':function(event){
         event.preventDefault();
         history.back(1);
