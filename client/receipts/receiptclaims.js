@@ -123,7 +123,7 @@ Template.receiptsoverview.onRendered(function () {
         }
     }
     function showEditEmployeeView(data) {
-        $('.fullScreenSpin').css('display', 'none');
+        $('#fullScreenSpin').css('display', 'none');
         $('#add-customer-title').text('Edit Customer');
         let popCustomerID = data.ID || '';
         let popCustomerName = data.EmployeeName || '';
@@ -201,11 +201,11 @@ Template.receiptsoverview.onRendered(function () {
             if (supplierDataName.replace(/\s/g, '') != '') {
                 getVS1Data('TSupplierVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        $('#fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
                             showEditSupplierView(data.tsuppliervs1[0].fields);
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -218,11 +218,11 @@ Template.receiptsoverview.onRendered(function () {
                         }
 
                         if (!added) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
+                            $('#fullScreenSpin').css('display', 'inline-block');
                             sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
                                 showEditSupplierView(data.tsuppliervs1[0].fields);
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                $('#fullScreenSpin').css('display', 'none');
                             });
                         }
                     }
@@ -230,7 +230,7 @@ Template.receiptsoverview.onRendered(function () {
                     sideBarService.getOneSupplierDataExByName(supplierDataName).then(function(data) {
                         showEditSupplierView(data.tsuppliervs1[0].fields);
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        $('#fullScreenSpin').css('display', 'none');
                     });
                 });
             } else {
@@ -247,7 +247,7 @@ Template.receiptsoverview.onRendered(function () {
         }
     }
     function showEditSupplierView(data) {
-        $('.fullScreenSpin').css('display', 'none');
+        $('#fullScreenSpin').css('display', 'none');
 
         $('#add-supplier-title').text('Edit Supplier');
         let popSupplierID = data.ID || '';
@@ -332,7 +332,7 @@ Template.receiptsoverview.onRendered(function () {
                 $('#sedtCountry').prop('readonly', true);
                 getVS1Data('TCurrency').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        $('#fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getCurrencies().then(function(data) {
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
@@ -340,7 +340,7 @@ Template.receiptsoverview.onRendered(function () {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                $('#fullScreenSpin').css('display', 'none');
                                 $('#newCurrencyModal').modal('toggle');
                                 $('#sedtCountry').attr('readonly', true);
                             }, 200);
@@ -354,13 +354,13 @@ Template.receiptsoverview.onRendered(function () {
                             }
                         }
                         setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                             $('#newCurrencyModal').modal('toggle');
                         }, 200);
                     }
 
                 }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    $('#fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getCurrencies().then(function(data) {
                         for (let i in data.tcurrency) {
                             if (data.tcurrency[i].Code === currencyDataName) {
@@ -368,7 +368,7 @@ Template.receiptsoverview.onRendered(function () {
                             }
                         }
                         setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                             $('#newCurrencyModal').modal('toggle');
                             $('#sedtCountry').attr('readonly', true);
                         }, 200);
@@ -433,7 +433,7 @@ Template.receiptsoverview.onRendered(function () {
                             showEditAccountView(data.taccountvs1[0]);
 
                         }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -461,7 +461,7 @@ Template.receiptsoverview.onRendered(function () {
                               showEditAccountView(data.taccountvs1[0]);
 
                             }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
+                                $('#fullScreenSpin').css('display', 'none');
                             });
                         }
 
@@ -480,7 +480,7 @@ Template.receiptsoverview.onRendered(function () {
                       showEditAccountView(data.taccountvs1[0]);
 
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        $('#fullScreenSpin').css('display', 'none');
                     });
 
                 });
@@ -504,7 +504,7 @@ Template.receiptsoverview.onRendered(function () {
         }
     }
     function showEditAccountView(data) {
-        $('.fullScreenSpin').css('display', 'none');
+        $('#fullScreenSpin').css('display', 'none');
         var accountid = data.fields.ID || '';
         var accounttype = data.fields.AccountTypeName || '';
         var accountname = data.fields.AccountName || '';
@@ -579,7 +579,7 @@ Template.receiptsoverview.onRendered(function () {
 
                 getVS1Data('TPaymentMethod').then(function(dataObject) {
                     if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
+                        $('#fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getPaymentMethodDataVS1().then(function(data) {
                             for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                                 if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -593,7 +593,7 @@ Template.receiptsoverview.onRendered(function () {
                                 }
                             }
                             setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
+                                $('#fullScreenSpin').css('display', 'none');
                                 $('#newPaymentMethodModal').modal('toggle');
                             }, 200);
                         });
@@ -613,12 +613,12 @@ Template.receiptsoverview.onRendered(function () {
                             }
                         }
                         setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                             $('#newPaymentMethodModal').modal('toggle');
                         }, 200);
                     }
                 }).catch(function(err) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
+                    $('#fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getPaymentMethodDataVS1().then(function(data) {
                         for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
                             if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
@@ -632,7 +632,7 @@ Template.receiptsoverview.onRendered(function () {
                             }
                         }
                         setTimeout(function() {
-                            $('.fullScreenSpin').css('display', 'none');
+                            $('#fullScreenSpin').css('display', 'none');
                             $('#newPaymentMethodModal').modal('toggle');
                         }, 200);
                     });
@@ -936,7 +936,7 @@ Template.receiptsoverview.onRendered(function () {
         })
 
     templateObject.getExpenseClaims = function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#fullScreenSpin').css('display', 'inline-block');
         accountService.getExpenseClaim().then(function (data) {
             let lineItems = [];
             console.log('expense', data)
@@ -1030,7 +1030,7 @@ Template.receiptsoverview.onRendered(function () {
                         MakeNegative();
                     }, 100);
                 });
-                $('.fullScreenSpin').css('display', 'none');
+                $('#fullScreenSpin').css('display', 'none');
 
                 templateObject.setTimeFilter('lastMonth');
             }, 0);
@@ -1049,25 +1049,25 @@ Template.receiptsoverview.onRendered(function () {
     }
 
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
-        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
             console.log('ocrresult', data);
-            $('.fullScreenSpin').css('display', 'none');
+            $('#fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
 
             if (from == 'ViewReceipt') {
                 $('#viewReceiptModal .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#viewReceiptModal #edtTotal').val(data.total);
+                $('#viewReceiptModal .edtTotal').val('$' + data.total);
             } else if (from == 'NavExpense') {
                 $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#nav-expense #edtTotal').val(data.total);
+                $('#nav-expense .edtTotal').val('$' + data.total);
             } else if (from == 'NavTime') {
                 $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#nav-expense #edtTotal').val(data.total);
+                $('#nav-expense .edtTotal').val('$' + data.total);
             }
         }).catch(function (err) {
             console.log('ocrresult err', err);
-            $('.fullScreenSpin').css('display', 'none');
+            $('#fullScreenSpin').css('display', 'none');
         });
     }
 
@@ -1134,10 +1134,12 @@ Template.receiptsoverview.events({
         $('#nav-expense .chart-accounts').attr('data-id', '');
         $('#nav-expense .chart-accounts').val('');
         $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date());
-        $('#nav-expense #edtTotal').val('');
+        $('#nav-expense .edtTotal').val('');
         $('#nav-expense .swtReiumbursable').attr('checked', false);
         $('#nav-expense #sltLinkedReport').val('');
         $('#nav-expense #txaDescription').val('');
+
+        $('#nav-expense .img-placeholder').css('opacity', 1);
     },
     'click a#showMultiple': function () {
         $('a.nav-link.active').removeClass('active');
@@ -1166,10 +1168,12 @@ Template.receiptsoverview.events({
         $('#nav-time .chart-accounts').attr('data-id', '');
         $('#nav-time .chart-accounts').val('');
         $('#nav-time .dtReceiptDate').datepicker('setDate', new Date());
-        $('#nav-time #edtTotal').val('');
+        $('#nav-time .edtTotal').val('');
         $('#nav-time .swtReiumbursable').attr('checked', false);
         $('#nav-time #sltLinkedReport').val('');
         $('#nav-time #txaDescription').val('');
+
+        $('#nav-time .img-placeholder').css('opacity', 1);
     },
     'click #nav-expense .btn-upload': function (event) {
         $('#nav-expense .attachment-upload').trigger('click');
@@ -1247,6 +1251,7 @@ Template.receiptsoverview.events({
         $('#employeeListModal').attr('data-from', 'ViewReceipt');
 
         $('#viewReceiptModal').modal('toggle');
+        $('#viewReceiptModal .img-placeholder').css('opacity', 1);
 
         $('#viewReceiptModal .employees').val(selectedClaim.EmployeeName);
         $('#viewReceiptModal .employees').attr('data-id', selectedClaim.EmployeeID);
@@ -1356,8 +1361,18 @@ Template.receiptsoverview.events({
         $('#paymentMethodModal').modal('toggle');
     },
 
+    'change .edtTotal': function(e) {
+        var val = e.target.value;
+        val = val.replace('$', '');
+        e.target.value = '$' + val;
+    },
+
     // update receipt record
     'click #viewReceiptModal .btnSave': function (e) {
+
+        imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
+        console.log('imageData', imageData);
+        return;
 
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
@@ -1373,7 +1388,7 @@ Template.receiptsoverview.events({
         let chartAccountId = $('#viewReceiptModal .chart-accounts').attr('data-id');
         let chartAccountName = $('#viewReceiptModal .chart-accounts').val() || ' ';
         let claimDate = $('#viewReceiptModal .dtReceiptDate').val() || ' ';
-        let totalAmount = $('#viewReceiptModal #edtTotal').val().replace('$', '');
+        let totalAmount = $('#viewReceiptModal .edtTotal').val().replace('$', '');
         let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
         let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
         let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
@@ -1446,7 +1461,7 @@ Template.receiptsoverview.events({
         let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
 
         var totalAmount = 0;
-        totalAmount = $(parentElement + ' #edtTotal').val();
+        totalAmount = $(parentElement + ' .edtTotal').val();
         if (from == 'NavExpense') {
             
         } else if (from == 'NavTime') {
@@ -1527,7 +1542,7 @@ Template.receiptsoverview.events({
                 let chartAccountId = $('#viewReceiptModal .chart-accounts').attr('data-id');
                 let chartAccountName = $('#viewReceiptModal .chart-accounts').val() || ' ';
                 let claimDate = $('#viewReceiptModal .dtReceiptDate').val() || ' ';
-                let totalAmount = $('#viewReceiptModal #edtTotal').val().replace('$', '');
+                let totalAmount = $('#viewReceiptModal .edtTotal').val().replace('$', '');
                 let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
                 let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
                 let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
@@ -1679,7 +1694,7 @@ Template.receiptsoverview.events({
             return;
         }
 
-        $('.fullScreenSpin').css('display', 'inline-block');
+        $('#fullScreenSpin').css('display', 'inline-block');
         for (i = 0; i < lineItems.length; i++) {
             let lineItem = lineItems[i];
             lineItem.DateTime = moment(lineItem.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD');
@@ -1760,7 +1775,7 @@ Template.receiptsoverview.events({
                     }, 500);
                 }
             }).catch ( err => {
-                $('.fullScreenSpin').css('display', 'none');
+                $('#fullScreenSpin').css('display', 'none');
             });
         }
     },

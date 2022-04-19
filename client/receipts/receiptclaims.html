@@ -1,6 +1,6 @@
 <template name="receiptsoverview">
     <div style="margin-top: -24px;">
-        <div class="fullScreenSpin" style="display:none;">
+        <div id="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <!-- <style>
@@ -345,7 +345,7 @@
                                 <div class="col-8">
                                     <div class="form-group">
                                         <label>Total Amount</label>
-                                        <input class="form-control form-control" type="text" id="edtTotal" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
+                                        <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -755,7 +755,7 @@
                                         <div class="col-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
-                                                <input class="form-control form-control" type="text" id="edtTotal" name="edtTotal" value="">
+                                                <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
                                         <div class="col-4">
@@ -889,7 +889,7 @@
                                         <div class="col-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
-                                                <input class="form-control form-control" type="text" id="edtTotal" name="edtTotal" value="">
+                                                <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
                                         <div class="col-4">
