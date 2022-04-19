@@ -951,8 +951,8 @@
                                         {{/if}}
                                         <!-- <th class="th colUnitPrice" style="width: 110px; text-align: left!important;">Unit Price</th> -->
 
-                                        <th class="th colUnitPrice colUnitPriceEx" style="width: 155px; text-align: left!important;">Unit Price (Ex) <i class="fas fa-random"></i></th>
-                                        <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 155px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        <th class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Price (Ex) <i class="fas fa-random"></i></th>
+                                        <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Price (Inc) <i class="fas fa-random fa-trans"></i></th>
 
                                         <th data-toggle="tooltip" data-placement="top" title="Only the highest discount is applied" class="th colDiscount" style="width: 95px; text-align: left!important;">Disc %</th>
                                         <th class="th colCostPrice thLinceCostPrice hiddenColumn" style="width: 110px; text-align: left!important;">Cost Price</th>
@@ -962,11 +962,11 @@
                                         <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
                                         <!-- <th class="th colAmount " style="width: 110px; text-align: left!important;">Amount</th> -->
                                         {{#if isBatchSerialNoTracking 'true'}}
-                                            <th class="th colSerialNo" style="width: 10%;">Serial No</th>
-                                            <th class="th colLotNo" style="width: 10%;">Lot No</th>
+                                            <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                                            <!-- <th class="th colLotNo" style="width: 10%;">Lot No</th> -->
                                         {{/if}}
-                                        <th class="th colAmount colAmountEx" style="width: 150px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
-                                        <th class="th colAmount colAmountInc hiddenColumn" style="width: 150px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                        <th class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
+                                        <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
                                         <!-- <th class="th">Tax Price</th> -->
                                         <th class="th" style="width: 25px;"></th>
                                     </tr>
@@ -1005,8 +1005,7 @@
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                                             {{#if isBatchSerialNoTracking 'true'}}
-                                                <td class="th colSerialNo"><input class="es-input highlightSelect lineSerialNo" type="search" value=""></td>
-                                                <td class="th colLotNo"><input class="es-input highlightSelect lineLotNo" type="search" value=""></td>
+                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
                                             {{/if}}
                                             <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
                                             <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
@@ -1628,12 +1627,8 @@
             {{> customfieldformpop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
+        <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
             {{> serialnumberpop}}
-        </div>
-
-        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
-            {{> lotnumberpop}}
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
