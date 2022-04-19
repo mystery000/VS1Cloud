@@ -1509,10 +1509,46 @@ authenticatedRoutes.route('/receiptsoverview', {
 });
 
 authenticatedRoutes.route('/tasklist', {
-    name: 'tasklist',
+  name: 'tasklist',
+  action() {
+      BlazeLayout.render('layout', {
+          yield: 'tasklist'
+      });
+  }
+});
+
+authenticatedRoutes.route('/tasktoday', {
+    name: 'tasktoday',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'tasklist'
+            yield: 'tasktoday'
+        });
+    }
+});
+
+authenticatedRoutes.route('/taskupcoming', {
+    name: 'taskupcoming',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'taskupcoming'
+        });
+    }
+});
+
+authenticatedRoutes.route('/filterslabels', {
+    name: 'filterslabels',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'filterslabels'
+        });
+    }
+});
+
+authenticatedRoutes.route('/projects', {
+    name: 'projects',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'projects'
         });
     }
 });
