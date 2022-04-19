@@ -2,7 +2,7 @@ import {BaseService} from '../js/base-service.js';
 
 export class AccountService extends BaseService {
     getExpenseClaim() {
-        return this.GET(this.erpGet.ERPTExpense);
+        return this.GET(this.erpGet.ERPTExpenseEx);
     }
 
     getFixedAssets(type) {
@@ -19,7 +19,7 @@ export class AccountService extends BaseService {
     }
 
     getOneExpenseClaim(id){
-        return this.getOneById(this.ERPObjects.TExpenseClaim, id);
+        return this.getOneById(this.ERPObjects.TExpenseClaimEx, id);
     }
 
     getAccountTypes() {
@@ -86,7 +86,7 @@ export class AccountService extends BaseService {
         return this.POST(this.ERPObjects.TFixedAssetType, data);
     }
     saveReceipt(data){
-        return this.POST(this.ERPObjects.TExpenseClaim, data);
+        return this.POST(this.ERPObjects.TExpenseClaimEx, data);
     }
     saveLineAttachment(data){
         return this.POST(this.ERPObjects.TAttachment,data);
@@ -94,7 +94,7 @@ export class AccountService extends BaseService {
     getLineAttachmentList(lineID){
         let options = {
             PropertyList: "Attachment,AttachmentName,Description,TableId,TableName",
-            select: "[TableName]='tblexpenseclaimline' and [TableID]="+lineID
+            select: "[TableName]='tblexpenseclaimlineex' and [TableID]="+lineID
         };
         return this.getList(this.ERPObjects.TAttachment, options);
     }

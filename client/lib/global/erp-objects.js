@@ -84,6 +84,7 @@ ERPObjects = function () {
         TToDo: "TToDo",
         TUser: "TUser",
         TExpenseClaim: "TExpenseClaim",
+        TExpenseClaimEx: "TExpenseClaimEx",
         TFixedAssets: "TFixedAssets",
         TProductSalesDetailsReport:"TProductSalesDetailsReport",
         ERPTaxCode: "TTaxCode",

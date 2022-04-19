@@ -940,7 +940,7 @@ Template.receiptsoverview.onRendered(function () {
         accountService.getExpenseClaim().then(function (data) {
             let lineItems = [];
             console.log('expense', data)
-            data.texpenseclaim.forEach(expense => {
+            data.texpenseclaimex.forEach(expense => {
                 if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
                     expense.fields.Lines.forEach(claim => {
                         let lineItem = claim.fields;
@@ -1188,6 +1188,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#viewReceiptModal .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
@@ -1199,6 +1200,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-expense .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#nav-expense .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
@@ -1210,6 +1212,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-time .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#nav-time .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
@@ -1251,6 +1254,8 @@ Template.receiptsoverview.events({
         $('#viewReceiptModal .merchants').attr('data-id', selectedClaim.SupplierID);
         $('#viewReceiptModal .chart-accounts').val(selectedClaim.AccountName);
         $('#viewReceiptModal .chart-accounts').attr('data-id', selectedClaim.AccountId);
+        $('#viewReceiptModal .transactionTypes').val(selectedClaim.Paymethod);
+        $('#viewReceiptModal .txaDescription').val(selectedClaim.Description);
 
         // $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + selectedClaim.attachmentData + "')");
     },
@@ -1371,10 +1376,10 @@ Template.receiptsoverview.events({
         let totalAmount = $('#viewReceiptModal #edtTotal').val().replace('$', '');
         let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
         let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
-        let description = $('#viewReceiptModal #txaDescription').val() || ' ';
+        let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
 
         let expenseClaimLine = {
-            type: "TExpenseClaimLine",
+            type: "TExpenseClaimLineEx",
             fields: {
                 ID: receipt.ID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
@@ -1387,6 +1392,7 @@ Template.receiptsoverview.events({
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
+                Paymethod: transactionTypeName
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
@@ -1396,7 +1402,7 @@ Template.receiptsoverview.events({
         };
 
         let expenseClaim = {
-            type: "TExpenseClaim",
+            type: "TExpenseClaimEx",
             fields: {
                 ID: receipt.ExpenseClaimID,
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
@@ -1413,9 +1419,7 @@ Template.receiptsoverview.events({
 
         accountService.saveReceipt(expenseClaim).then(function (data) {
             $('#viewReceiptModal').modal('toggle');
-            setTimeout(() => {
-                template.getExpenseClaims();
-            }, 200);
+            window.open('/receiptsoverview', '_self');
         });
     },
 
@@ -1439,7 +1443,7 @@ Template.receiptsoverview.events({
         let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
         let reimbursement = $(parentElement + ' .swtReiumbursable').prop('checked');
         let groupReport = $(parentElement + ' #sltLinkedReport').val() || ' ';
-        let description = $(parentElement + ' #txaDescription').val() || ' ';
+        let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
 
         var totalAmount = 0;
         totalAmount = $(parentElement + ' #edtTotal').val();
@@ -1452,7 +1456,7 @@ Template.receiptsoverview.events({
         }
 
         let expenseClaimLine = {
-            type: "TExpenseClaimLine",
+            type: "TExpenseClaimLineEx",
             fields: {
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
@@ -1464,6 +1468,7 @@ Template.receiptsoverview.events({
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
+                Paymethod: transactionTypeName
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
@@ -1473,7 +1478,7 @@ Template.receiptsoverview.events({
         };
 
         let expenseClaim = {
-            type: "TExpenseClaim",
+            type: "TExpenseClaimEx",
             fields: {
                 EmployeeID: employeeId ? parseInt(employeeId) : 0,
                 EmployeeName: employeeName,
@@ -1489,16 +1494,15 @@ Template.receiptsoverview.events({
 
         accountService.saveReceipt(expenseClaim).then(function (data) {
             console.log('update receipt result', data);
-            $('#newReceiptModal').modal('toggle');
-            setTimeout(() => {
-                template.getExpenseClaims();
-            }, 200);
+            window.open('/receiptsoverview', '_self');
         });
     },
     'click #btnShowSplitModal': function(e) {
         let template = Template.instance();
         $('#splitExpenseModal').modal('toggle');
-        template.refreshSplitTable([template.editExpenseClaim.get()]);
+        let receipt = Object.assign({}, template.editExpenseClaim.get());
+        console.log('receipt', receipt);
+        template.refreshSplitTable([receipt]);
     },
     'click #btnDeleteReceipt': function(e) {
         let template = Template.instance();
@@ -1526,10 +1530,10 @@ Template.receiptsoverview.events({
                 let totalAmount = $('#viewReceiptModal #edtTotal').val().replace('$', '');
                 let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
                 let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
-                let description = $('#viewReceiptModal #txaDescription').val() || ' ';
+                let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
         
                 let expenseClaimLine = {
-                    type: "TExpenseClaimLine",
+                    type: "TExpenseClaimLineEx",
                     fields: {
                         ID: receipt.ID,
                         EmployeeID: employeeId ? parseInt(employeeId) : 0,
@@ -1542,6 +1546,7 @@ Template.receiptsoverview.events({
                         Reimbursement: reimbursement,
                         DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                         Description: description,
+                        Paymethod: transactionTypeName,
                         Active: false
                         // GroupReport: groupReport,
                         // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
@@ -1552,7 +1557,7 @@ Template.receiptsoverview.events({
                 };
         
                 let expenseClaim = {
-                    type: "TExpenseClaim",
+                    type: "TExpenseClaimEx",
                     fields: {
                         ID: receipt.ExpenseClaimID,
                         EmployeeID: employeeId ? parseInt(employeeId) : 0,
@@ -1608,13 +1613,13 @@ Template.receiptsoverview.events({
         let receipt = template.editExpenseClaim.get();
 
         var receiptList = [];
-        let amount = Math.trunc(receipt.AmountInc*100 / diffDays)/100;
+        let amount = Math.round(receipt.AmountInc*100 / diffDays)/100;
         for (i = 0; i < diffDays; i++) {
             let lineItem = Object.assign({}, receipt);
             lineItem.DateTime = moment(lineItem.DateTime, "DD/MM/YYYY").add(i, 'days').format("DD/MM/YYYY");
 
             if (i == diffDays - 1) {
-                lineItem.AmountInc = receipt.AmountInc - amount * i
+                lineItem.AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
             } else {
                 lineItem.AmountInc = amount;
             }
@@ -1643,11 +1648,11 @@ Template.receiptsoverview.events({
         splitDataTable = $('#tblSplitExpense').DataTable();        
         var lineItems = splitDataTable.rows().data();
 
-        let amount = Math.trunc(receipt.AmountInc*100 / (lineItems.length))/100;
+        let amount = Math.round(receipt.AmountInc*100 / (lineItems.length))/100;
         
         for (i = 0; i < lineItems.length; i++) {
             if (i == lineItems.length - 1) {
-                lineItems[i].AmountInc = receipt.AmountInc - amount * i
+                lineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
             } else {
                 lineItems[i].AmountInc = amount;
             }
@@ -1658,6 +1663,7 @@ Template.receiptsoverview.events({
     'click #splitExpenseModal .btnSave': function(e) {
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
+        receipt.Description = receipt.Description ? receipt.Description : "Receipt Claim";
 
         splitDataTable = $('#tblSplitExpense').DataTable();
         var lineItems = splitDataTable.rows().data();
@@ -1673,45 +1679,86 @@ Template.receiptsoverview.events({
             return;
         }
 
-        console.log('splited items', lineItems);
-
-        // var receiptList = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         for (i = 0; i < lineItems.length; i++) {
             let lineItem = lineItems[i];
+            lineItem.DateTime = moment(lineItem.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD');
 
             if (i > 0) {
-                delete lineItem.ID;
+                let expenseClaimLine = {
+                    type: "TExpenseClaimLineEx",
+                    fields: {
+                        EmployeeID: lineItem.EmployeeID,
+                        EmployeeName: lineItem.EmployeeName,
+                        SupplierID: lineItem.SupplierID,
+                        SupplierName: lineItem.SupplierName,
+                        AccountId: lineItem.AccountId,
+                        AccountName: lineItem.AccountName,
+                        AmountInc: lineItem.AmountInc,
+                        Reimbursement: lineItem.Reimbursement,
+                        DateTime: lineItem.DateTime,
+                        Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
+                        Paymethod: lineItem.Paymethod
+                        // GroupReport: groupReport,
+                        // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
+                        // TransactionTypeName: transactionTypeName,
+                        // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                        // CurrencyName: currencyName,                
+                    }
+                };
                 expenseClaim = {
-                    type: "TExpenseClaim",
+                    type: "TExpenseClaimEx",
                     fields: {
                         EmployeeID: receipt.EmployeeID,
                         EmployeeName: receipt.EmployeeName,
-                        DateTime: moment(receipt.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        DateTime: lineItem.DateTime,
                         Description: receipt.Description,
-                        Lines: [lineItem],
-                        RequestToEmployeeID: receipt.RequestToEmployeeID,
-                        RequestToEmployeeName: receipt.RequestToEmployeeName,
+                        Lines: [expenseClaimLine],
+                        RequestToEmployeeID: receipt.EmployeeID,
+                        RequestToEmployeeName: receipt.EmployeeName,
                     }
                 }
             } else {
+                let expenseClaimLine = {
+                    type: "TExpenseClaimLineEx",
+                    fields: {
+                        ID: receipt.ID,
+                        EmployeeID: lineItem.EmployeeID,
+                        EmployeeName: lineItem.EmployeeName,
+                        SupplierID: lineItem.SupplierID,
+                        SupplierName: lineItem.SupplierName,
+                        AccountId: lineItem.AccountId,
+                        AccountName: lineItem.AccountName,
+                        AmountInc: lineItem.AmountInc,
+                        Reimbursement: lineItem.Reimbursement,
+                        DateTime: lineItem.DateTime,
+                        Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
+                        Paymethod: lineItem.Paymethod
+                        // GroupReport: groupReport,
+                        // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
+                        // TransactionTypeName: transactionTypeName,
+                        // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                        // CurrencyName: currencyName,                
+                    }
+                };
                 expenseClaim = {
-                    type: "TExpenseClaim",
+                    type: "TExpenseClaimEx",                    
                     fields: {
                         ID: receipt.ExpenseClaimID,
-                        Lines: [lineItem],
+                        DateTime: lineItem.DateTime,
+                        Lines: [expenseClaimLine],
                     }
                 }
             }
 
-            // receiptList.push(expenseClaim);
+            console.log('splited item', expenseClaim);
             accountService.saveReceipt(expenseClaim).then(function (data) {
 
-                setTimeout(() => {
-                    $('#splitExpenseModal').modal('toggle');
-                    $('.fullScreenSpin').css('display', 'none');
-                    template.getExpenseClaims();
-                }, 500);
+                if (i == lineItems.length - 1) {
+                    setTimeout(() => {
+                        window.open('/receiptsoverview', '_self');
+                    }, 500);
+                }
             }).catch ( err => {
                 $('.fullScreenSpin').css('display', 'none');
             });
@@ -1731,28 +1778,79 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.setAccountSelect(e);
     },
-    'click #btnDuplicate': function(e) {
+    'click button[id^="splitRemove-"]': function(e) {
+        let index = e.target.id.split('-')[1];
         let template = Template.instance();
-        let receipt = Object.assign({}, template.editExpenseClaim.get());
-        delete receipt.ID;
+        let receipt = template.editExpenseClaim.get();
 
-        expenseClaim = {
-            type: "TExpenseClaim",
-            fields: {
-                EmployeeID: receipt.EmployeeID,
-                EmployeeName: receipt.EmployeeName,
-                DateTime: moment(receipt.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-                Description: receipt.Description,
-                Lines: [receipt],
-                RequestToEmployeeID: receipt.RequestToEmployeeID,
-                RequestToEmployeeName: receipt.RequestToEmployeeName,
+        splitDataTable = $('#tblSplitExpense').DataTable();
+        var lineItems = splitDataTable.rows().data();
+
+        var newLineItems = [];
+        for (i = 0; i < lineItems.length; i++) {
+            if (i == index) {
+                continue;
+            }
+            newLineItems.push(lineItems[i]);
+        }
+
+        let amount = Math.round(receipt.AmountInc*100 / (newLineItems.length))/100;
+        
+        for (i = 0; i < newLineItems.length; i++) {
+            if (i == newLineItems.length - 1) {
+                newLineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
+            } else {
+                newLineItems[i].AmountInc = amount;
             }
         }
 
+        template.refreshSplitTable(newLineItems);
+    },
+    'click #btnDuplicate': function(e) {
+        let template = Template.instance();
+        let lineItem = Object.assign({}, template.editExpenseClaim.get());
+        lineItem.Description = lineItem.Description ? lineItem.Description : "Receipt Claim";
+        lineItem.DateTime = moment(lineItem.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD')
+
+        let expenseClaimLine = {
+            type: "TExpenseClaimLineEx",
+            fields: {
+                EmployeeID: lineItem.EmployeeID,
+                EmployeeName: lineItem.EmployeeName,
+                SupplierID: lineItem.SupplierID,
+                SupplierName: lineItem.SupplierName,
+                AccountId: lineItem.AccountId,
+                AccountName: lineItem.AccountName,
+                AmountInc: lineItem.AmountInc,
+                Reimbursement: lineItem.Reimbursement,
+                DateTime: lineItem.DateTime,
+                Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
+                Paymethod: lineItem.Paymethod
+                // GroupReport: groupReport,
+                // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
+                // TransactionTypeName: transactionTypeName,
+                // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                // CurrencyName: currencyName,                
+            }
+        };
+        expenseClaim = {
+            type: "TExpenseClaimEx",
+            fields: {
+                EmployeeID: lineItem.EmployeeID,
+                EmployeeName: lineItem.EmployeeName,
+                DateTime: lineItem.DateTime,
+                Description: lineItem.Description,
+                Lines: [expenseClaimLine],
+                RequestToEmployeeID: lineItem.EmployeeID,
+                RequestToEmployeeName: lineItem.EmployeeName,
+            }
+        }
+
+        console.log('duplicate object', expenseClaim);
         accountService.saveReceipt(expenseClaim).then(function (data) {
             $('#viewReceiptModal').modal('toggle');
             setTimeout(() => {
-                template.getExpenseClaims();
+                window.open('/receiptsoverview', '_self');
             }, 200);
         });
     }
@@ -1761,14 +1859,17 @@ Template.receiptsoverview.events({
 
 Template.receiptsoverview.helpers({
     expenseClaimList: () => {
-        return Template.instance().expenseClaimList.get().sort(function (a, b) {
-            if (a.claimDate == 'NA') {
-                return 1;
-            } else if (b.claimDate == 'NA') {
-                return -1;
-            }
-            return (a.claimDate > b.claimDate) ? 1 : -1;
-        });
+        return Template.instance().expenseClaimList.get();
+        // .sort(function (a, b) {
+        //     if (a.claimDate == 'NA') {
+        //         return 1;
+        //     } else if (b.claimDate == 'NA') {
+        //         return -1;
+        //     }
+        //     let aDateString = moment(a.DateTime, "DD/MM/YYYY").format("YYYY-MM-DD");
+        //     let bDateString = moment(b.DateTime, "DD/MM/YYYY").format("YYYY-MM-DD");
+        //     return (aDateString > bDateString) ? 1 : -1;
+        // });
     },
     editExpenseClaim: () => {   
         return Template.instance().editExpenseClaim.get();

@@ -144,6 +144,7 @@ var erpConnection = {
     ERPInvSalesOweObj: "TInvoice?PropertyList==ID,TotalAmountInc,CustomerName,DueDate&select=[IsPaid]=false and [deleted]=false & LimitCount='5'",
     ERPShipMethodObj : "TShippingMethod?PropertyList==ID,ShippingMethod&select=[Active]=true",
     ERPTExpense: "TExpenseClaim?select=[Active]=true&ListType=Detail",
+    ERPTExpenseEx: "TExpenseClaimEx?select=[Active]=true&ListType=Detail",
     ERPEmpProfileSetting: "TEmployee?PropertyList==ID,GlobalRef,Country,EmployeeName,Email,FirstName,LastName,Notes,Position,Mobile,Active&select=[EmployeeName]=" + "'" + Session.get('mySessionEmployee') + "'",
     ERPEmpID: "TEmployee?PropertyList==ID,EmployeeName&select=[EmployeeName]=" + "'" + Session.get('mySessionEmployee') + "'",
     ERPEmpFormAccessDetail: "TEmployeeFormAccessDetail?ListType=Detail&Select=[TabGroup]=26 and [EmployeeId]=" + "'" + Session.get('mySessionEmployeeLoggedID') + "'",
