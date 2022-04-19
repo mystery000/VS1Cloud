@@ -933,7 +933,20 @@ Template.receiptsoverview.onRendered(function () {
                 // .children('.receiptPhoto').css({
                 //     'background-image': 'url(' + $(this).attr('data-image') + ')'
                 // });
-        })
+        });
+
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "extract-date-pre": function(date) {
+            date = date.split('/');
+            return Date.parse(date[1] + '/' + date[0] + '/' + date[2])
+        },
+        "extract-date-asc": function(a, b) {
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        },
+        "extract-date-desc": function(a, b) {
+            return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+        }
+    });
 
     templateObject.getExpenseClaims = function () {
         $('#fullScreenSpin').css('display', 'inline-block');
@@ -963,7 +976,7 @@ Template.receiptsoverview.onRendered(function () {
                         "orderable": false,
                         "targets": 0
                     }, {
-                        type: 'date',
+                        type: 'extract-date',
                         targets: 1
                     }],
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1040,13 +1053,6 @@ Template.receiptsoverview.onRendered(function () {
     }
 
     templateObject.getExpenseClaims();
-
-
-    templateObject.getLineAttachmentList = function(lineId) {
-        accountService.getLineAttachmentList(lineId).then(function (data) {
-            console.log('attachmentdata', data);
-        })
-    }
 
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('#fullScreenSpin').css('display', 'inline-block');
@@ -1136,9 +1142,10 @@ Template.receiptsoverview.events({
         $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date());
         $('#nav-expense .edtTotal').val('');
         $('#nav-expense .swtReiumbursable').attr('checked', false);
-        $('#nav-expense #sltLinkedReport').val('');
         $('#nav-expense #txaDescription').val('');
 
+        $('#nav-expense .receiptPhoto').css('background-image', "");
+        $('#nav-expense .receiptPhoto').attr('data-name', "");
         $('#nav-expense .img-placeholder').css('opacity', 1);
     },
     'click a#showMultiple': function () {
@@ -1170,9 +1177,10 @@ Template.receiptsoverview.events({
         $('#nav-time .dtReceiptDate').datepicker('setDate', new Date());
         $('#nav-time .edtTotal').val('');
         $('#nav-time .swtReiumbursable').attr('checked', false);
-        $('#nav-time #sltLinkedReport').val('');
         $('#nav-time #txaDescription').val('');
 
+        $('#nav-time .receiptPhoto').css('background-image', "");
+        $('#nav-time .receiptPhoto').attr('data-name', "");
         $('#nav-time .img-placeholder').css('opacity', 1);
     },
     'click #nav-expense .btn-upload': function (event) {
@@ -1188,12 +1196,13 @@ Template.receiptsoverview.events({
     'change #viewReceiptModal .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
-        console.log('file changed', imageFile);
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#viewReceiptModal .receiptPhoto').attr('data-name', imageFile.name);
             $('#viewReceiptModal .img-placeholder').css('opacity', 0);
-            template.getOCRResultFromImage(imageData, imageFile.name);
+            console.log('selected image', imageData);
+            // template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
 
@@ -1204,6 +1213,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-expense .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#nav-expense .receiptPhoto').attr('data-name', imageFile.name);
             $('#nav-expense .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
@@ -1216,6 +1226,7 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-time .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#nav-time .receiptPhoto').attr('data-name', imageFile.name);
             $('#nav-time .img-placeholder').css('opacity', 0);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
@@ -1246,12 +1257,9 @@ Template.receiptsoverview.events({
         let selectedClaim = template.expenseClaimList.get().filter(claim => claim.ID == selectedId)[0];
         template.editExpenseClaim.set(selectedClaim);
 
-        template.getLineAttachmentList(selectedClaim.ID);
-
         $('#employeeListModal').attr('data-from', 'ViewReceipt');
 
         $('#viewReceiptModal').modal('toggle');
-        $('#viewReceiptModal .img-placeholder').css('opacity', 1);
 
         $('#viewReceiptModal .employees').val(selectedClaim.EmployeeName);
         $('#viewReceiptModal .employees').attr('data-id', selectedClaim.EmployeeID);
@@ -1262,7 +1270,17 @@ Template.receiptsoverview.events({
         $('#viewReceiptModal .transactionTypes').val(selectedClaim.Paymethod);
         $('#viewReceiptModal .txaDescription').val(selectedClaim.Description);
 
-        // $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + selectedClaim.attachmentData + "')");
+        if (selectedClaim.Attachments) {
+            imageData = selectedClaim.Attachments[0].fields.Description + "," + selectedClaim.Attachments[0].fields.Attachment;
+            $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + imageData + "')");
+            $('#viewReceiptModal .receiptPhoto').attr('data-name', selectedClaim.Attachments[0].fields.AttachmentName);
+            $('#viewReceiptModal .img-placeholder').css('opacity', 0);
+        } else {
+            $('#viewReceiptModal .receiptPhoto').css('background-image', "");
+            $('#viewReceiptModal .receiptPhoto').attr('data-name', "");
+            $('#viewReceiptModal .img-placeholder').css('opacity', 1);
+        }
+        
     },
     'click #tblEmployeelist tbody tr': function (e) {
         let employeeName = $(e.target).closest('tr').find(".colEmployeeName").text() || '';
@@ -1371,8 +1389,25 @@ Template.receiptsoverview.events({
     'click #viewReceiptModal .btnSave': function (e) {
 
         imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
-        console.log('imageData', imageData);
-        return;
+        imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
+
+        var attachment;
+        if (imageData) {
+            imageData = imageData.split(/"/)[1];
+            imageBase64 = imageData.split(',')[1];
+            imageDescryption = imageData.split(',')[0];
+            attachment = [
+                {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: imageBase64,
+                        AttachmentName: imageName,
+                        Description: imageDescryption,
+                        TableName: "tblexpenseclaimline"
+                    }
+                }
+            ]
+        }
 
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
@@ -1390,7 +1425,6 @@ Template.receiptsoverview.events({
         let claimDate = $('#viewReceiptModal .dtReceiptDate').val() || ' ';
         let totalAmount = $('#viewReceiptModal .edtTotal').val().replace('$', '');
         let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
-        let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
         let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
 
         let expenseClaimLine = {
@@ -1407,7 +1441,8 @@ Template.receiptsoverview.events({
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
-                Paymethod: transactionTypeName
+                Paymethod: transactionTypeName,
+                Attachments: attachment
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
@@ -1432,9 +1467,12 @@ Template.receiptsoverview.events({
 
         console.log('ExpenseClaim', expenseClaim)
 
+        $('#fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function (data) {
-            $('#viewReceiptModal').modal('toggle');
-            window.open('/receiptsoverview', '_self');
+            // $('#fullScreenSpin').css('display', 'none');
+            // setTimeout(() => {
+                window.open('/receiptsoverview', '_self');
+            // }, 200);
         });
     },
 
@@ -1444,6 +1482,27 @@ Template.receiptsoverview.events({
 
         let from = $('#employeeListModal').attr('data-from');
         let parentElement = from == 'NavExpense' ? '#nav-expense' : '#nav-time'
+
+        imageData = $(parentElement + ' .receiptPhoto').css('background-image');
+        imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
+
+        var attachment;
+        if (imageData) {
+            imageData = imageData.split(/"/)[1];
+            imageBase64 = imageData.split(',')[1];
+            imageDescryption = imageData.split(',')[0];
+            attachment = [
+                {
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: imageBase64,
+                        AttachmentName: imageName,
+                        Description: imageDescryption,
+                        TableName: "tblexpenseclaimline"
+                    }
+                }
+            ]
+        }
 
         let employeeId = $(parentElement + ' .employees').attr('data-id');
         let employeeName = $(parentElement + ' .employees').val()  || ' ';
@@ -1457,7 +1516,6 @@ Template.receiptsoverview.events({
         let chartAccountName = $(parentElement + ' .chart-accounts').val() || ' ';
         let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
         let reimbursement = $(parentElement + ' .swtReiumbursable').prop('checked');
-        let groupReport = $(parentElement + ' #sltLinkedReport').val() || ' ';
         let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
 
         var totalAmount = 0;
@@ -1483,7 +1541,8 @@ Template.receiptsoverview.events({
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
-                Paymethod: transactionTypeName
+                Paymethod: transactionTypeName,
+                Attachments: attachment
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
@@ -1507,9 +1566,13 @@ Template.receiptsoverview.events({
 
         console.log('ExpenseClaim', expenseClaim)
 
+        $('#fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function (data) {
             console.log('update receipt result', data);
-            window.open('/receiptsoverview', '_self');
+            // $('#fullScreenSpin').css('display', 'none');
+            // setTimeout(() => {
+                window.open('/receiptsoverview', '_self');
+            // }, 200);
         });
     },
     'click #btnShowSplitModal': function(e) {
@@ -1544,7 +1607,6 @@ Template.receiptsoverview.events({
                 let claimDate = $('#viewReceiptModal .dtReceiptDate').val() || ' ';
                 let totalAmount = $('#viewReceiptModal .edtTotal').val().replace('$', '');
                 let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
-                let groupReport = $('#viewReceiptModal #sltLinkedReport').val() || ' ';
                 let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
         
                 let expenseClaimLine = {
@@ -1588,8 +1650,10 @@ Template.receiptsoverview.events({
         
                 console.log('ExpenseClaim', expenseClaim)
         
+                $('#fullScreenSpin').css('display', 'inline-block');
                 accountService.saveReceipt(expenseClaim).then(function (data) {
-                    window.open('/receiptsoverview', '_self');
+                    // $('#fullScreenSpin').css('display', 'none');
+                    window.open('/receiptsoverview', '_self');                    
                 });
             } else if (result.dismiss === 'cancel') {
 
@@ -1748,7 +1812,8 @@ Template.receiptsoverview.events({
                         Reimbursement: lineItem.Reimbursement,
                         DateTime: lineItem.DateTime,
                         Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
-                        Paymethod: lineItem.Paymethod
+                        Paymethod: lineItem.Paymethod,
+                        Attachments: lineItem.Attachments
                         // GroupReport: groupReport,
                         // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                         // TransactionTypeName: transactionTypeName,
@@ -1768,12 +1833,10 @@ Template.receiptsoverview.events({
 
             console.log('splited item', expenseClaim);
             accountService.saveReceipt(expenseClaim).then(function (data) {
-
-                if (i == lineItems.length - 1) {
-                    setTimeout(() => {
-                        window.open('/receiptsoverview', '_self');
-                    }, 500);
-                }
+                // $('#fullScreenSpin').css('display', 'none');
+                setTimeout(() => {                    
+                    window.open('/receiptsoverview', '_self');
+                }, 500);
             }).catch ( err => {
                 $('#fullScreenSpin').css('display', 'none');
             });
@@ -1840,7 +1903,8 @@ Template.receiptsoverview.events({
                 Reimbursement: lineItem.Reimbursement,
                 DateTime: lineItem.DateTime,
                 Description: lineItem.Description ? lineItem.Description : "Receipt Claim",
-                Paymethod: lineItem.Paymethod
+                Paymethod: lineItem.Paymethod,
+                Attachments: lineItem.Attachments
                 // GroupReport: groupReport,
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
@@ -1862,11 +1926,12 @@ Template.receiptsoverview.events({
         }
 
         console.log('duplicate object', expenseClaim);
+        $('#fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function (data) {
-            $('#viewReceiptModal').modal('toggle');
-            setTimeout(() => {
+            // $('#fullScreenSpin').css('display', 'none');
+            // setTimeout(() => {
                 window.open('/receiptsoverview', '_self');
-            }, 200);
+            // }, 200);
         });
     }
     
