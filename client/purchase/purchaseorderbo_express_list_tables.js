@@ -122,32 +122,32 @@ Template.purchaseorderlistBO.onRendered(function() {
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                     }
-                    for(let i=0; i<data.tpurchasesbackorderreport.length; i++){
-                        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmount)|| 0.00;
-                        let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalTax) || 0.00;
-                        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmountInc)|| 0.00;
-                        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
-                        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
-                        let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
-                        let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
-                        if(data.tpurchasesbackorderreport[i].Deleted == true){
-                          orderstatus = "Deleted";
-                        }else if(data.tpurchasesbackorderreport[i].SupplierName == ''){
-                          orderstatus = "Deleted";
-                        };
+                    for(let i=0; i<data.tpurchaseorderlist.length; i++){
+                      let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmount)|| 0.00;
+                      let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalTax) || 0.00;
+                      let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmountInc)|| 0.00;
+                      let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Payment)|| 0.00;
+                      let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Balance)|| 0.00;
+                      let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].LineCost)|| 0.00;
+                      let orderstatus = data.tpurchaseorderlist[i].OrderStatus || '';
+                      if(data.tpurchaseorderlist[i].Deleted == true){
+                        orderstatus = "Deleted";
+                      }else if(data.tpurchaseorderlist[i].SupplierName == ''){
+                        orderstatus = "Deleted";
+                      };
                         var dataList = {
-                            id: data.tpurchasesbackorderreport[i].PurchaseOrderID || '',
-                            employee:data.tpurchasesbackorderreport[i].EmployeeName || '',
-                            sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
-                            orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
-                            suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
-                            productname: data.tpurchasesbackorderreport[i].ProductName || '',
-                            purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
-                            etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
-                            etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
-                            customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
-                            qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
-                            originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                            id: data.tpurchaseorderlist[i].PurchaseOrderID || '',
+                            employee:data.tpurchaseorderlist[i].EmployeeName || '',
+                            sortdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].OrderDate,
+                            orderdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].OrderDate,
+                            suppliername: data.tpurchaseorderlist[i].SupplierName || '',
+                            productname: data.tpurchaseorderlist[i].ProductName || '',
+                            purchasedesc: data.tpurchaseorderlist[i].Product_Description || '',
+                            etasortdate:data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].ETADate,
+                            etadate: data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].ETADate,
+                            customerjob: data.tpurchaseorderlist[i].CustomerJob || '',
+                            qtybackorder: data.tpurchaseorderlist[i].BackOrder || 0,
+                            originalqty: data.tpurchaseorderlist[i].BackOrder || 0,
                             prodcost: productCost,
                             totalamountex: totalAmountEx || 0.00,
                             totaltax: totalTax || 0.00,
@@ -157,7 +157,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                             orderstatus: orderstatus || '',
                             custfield1: '' || '',
                             custfield2: '' || '',
-                            comments: data.tpurchasesbackorderreport[i].Comments || '',
+                            comments: data.tpurchaseorderlist[i].Comments || '',
                         };
                             dataTableList.push(dataList);
 
@@ -414,7 +414,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 let lineItems = [];
                 let lineItemObj = {};
-
+                console.log(data);
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
@@ -423,32 +423,32 @@ Template.purchaseorderlistBO.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                for(let i=0; i<data.tpurchasesbackorderreport.length; i++){
-                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmount)|| 0.00;
-                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalTax) || 0.00;
-                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmountInc)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
-                    let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
-                    let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
-                    if(data.tpurchasesbackorderreport[i].Deleted == true){
+                for(let i=0; i<data.tpurchaseorderlist.length; i++){
+                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmount)|| 0.00;
+                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalTax) || 0.00;
+                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmountInc)|| 0.00;
+                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Payment)|| 0.00;
+                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Balance)|| 0.00;
+                    let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].LineCost)|| 0.00;
+                    let orderstatus = data.tpurchaseorderlist[i].OrderStatus || '';
+                    if(data.tpurchaseorderlist[i].Deleted == true){
                       orderstatus = "Deleted";
-                    }else if(data.tpurchasesbackorderreport[i].SupplierName == ''){
+                    }else if(data.tpurchaseorderlist[i].SupplierName == ''){
                       orderstatus = "Deleted";
                     };
                     var dataList = {
-                        id: data.tpurchasesbackorderreport[i].PurchaseOrderID || '',
-                        employee:data.tpurchasesbackorderreport[i].EmployeeName || '',
-                        sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
-                        orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
-                        suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
-                        productname: data.tpurchasesbackorderreport[i].ProductName || '',
-                        purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
-                        etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
-                        etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
-                        customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
-                        qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
-                        originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        id: data.tpurchaseorderlist[i].PurchaseOrderID || '',
+                        employee:data.tpurchaseorderlist[i].EmployeeName || '',
+                        sortdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].OrderDate,
+                        orderdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].OrderDate,
+                        suppliername: data.tpurchaseorderlist[i].SupplierName || '',
+                        productname: data.tpurchaseorderlist[i].ProductName || '',
+                        purchasedesc: data.tpurchaseorderlist[i].Product_Description || '',
+                        etasortdate:data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].ETADate,
+                        etadate: data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].ETADate,
+                        customerjob: data.tpurchaseorderlist[i].CustomerJob || '',
+                        qtybackorder: data.tpurchaseorderlist[i].BackOrder || 0,
+                        originalqty: data.tpurchaseorderlist[i].BackOrder || 0,
                         prodcost: productCost,
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: totalTax || 0.00,
@@ -458,7 +458,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                         orderstatus: orderstatus || '',
                         custfield1: '' || '',
                         custfield2: '' || '',
-                        comments: data.tpurchasesbackorderreport[i].Comments || '',
+                        comments: data.tpurchaseorderlist[i].Comments || '',
                     };
                         dataTableList.push(dataList);
 
@@ -720,32 +720,32 @@ Template.purchaseorderlistBO.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                for(let i=0; i<data.tpurchasesbackorderreport.length; i++){
-                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmount)|| 0.00;
-                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalTax) || 0.00;
-                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].TotalAmountInc)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Payment)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].Balance)|| 0.00;
-                    let orderstatus = data.tpurchasesbackorderreport[i].OrderStatus || '';
-                    let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchasesbackorderreport[i].StandardCost)|| 0.00;
-                    if(data.tpurchasesbackorderreport[i].Deleted == true){
-                      orderstatus = "Deleted";
-                    }else if(data.tpurchasesbackorderreport[i].SupplierName == ''){
-                      orderstatus = "Deleted";
-                    };
+                for(let i=0; i<data.tpurchaseorderlist.length; i++){
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmount)|| 0.00;
+                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalTax) || 0.00;
+                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].TotalAmountInc)|| 0.00;
+                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Payment)|| 0.00;
+                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].Balance)|| 0.00;
+                  let productCost = utilityService.modifynegativeCurrencyFormat(data.tpurchaseorderlist[i].LineCost)|| 0.00;
+                  let orderstatus = data.tpurchaseorderlist[i].OrderStatus || '';
+                  if(data.tpurchaseorderlist[i].Deleted == true){
+                    orderstatus = "Deleted";
+                  }else if(data.tpurchaseorderlist[i].SupplierName == ''){
+                    orderstatus = "Deleted";
+                  };
                     var dataList = {
-                        id: data.tpurchasesbackorderreport[i].PurchaseOrderID || '',
-                        employee:data.tpurchasesbackorderreport[i].EmployeeName || '',
-                        sortdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].OrderDate,
-                        orderdate: data.tpurchasesbackorderreport[i].OrderDate !=''? moment(data.tpurchasesbackorderreport[i].OrderDate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].OrderDate,
-                        suppliername: data.tpurchasesbackorderreport[i].SupplierName || '',
-                        productname: data.tpurchasesbackorderreport[i].ProductName || '',
-                        purchasedesc: data.tpurchasesbackorderreport[i].Product_Description || '',
-                        etasortdate:data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("YYYY/MM/DD"): data.tpurchasesbackorderreport[i].ETADate,
-                        etadate: data.tpurchasesbackorderreport[i].ETADate !=''? moment(data.tpurchasesbackorderreport[i].ETADate).format("DD/MM/YYYY"): data.tpurchasesbackorderreport[i].ETADate,
-                        customerjob: data.tpurchasesbackorderreport[i].CustomerJob || '',
-                        qtybackorder: data.tpurchasesbackorderreport[i].BackOrder || 0,
-                        originalqty: data.tpurchasesbackorderreport[i].BackOrder || 0,
+                        id: data.tpurchaseorderlist[i].PurchaseOrderID || '',
+                        employee:data.tpurchaseorderlist[i].EmployeeName || '',
+                        sortdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].OrderDate,
+                        orderdate: data.tpurchaseorderlist[i].OrderDate !=''? moment(data.tpurchaseorderlist[i].OrderDate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].OrderDate,
+                        suppliername: data.tpurchaseorderlist[i].SupplierName || '',
+                        productname: data.tpurchaseorderlist[i].ProductName || '',
+                        purchasedesc: data.tpurchaseorderlist[i].Product_Description || '',
+                        etasortdate:data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("YYYY/MM/DD"): data.tpurchaseorderlist[i].ETADate,
+                        etadate: data.tpurchaseorderlist[i].ETADate !=''? moment(data.tpurchaseorderlist[i].ETADate).format("DD/MM/YYYY"): data.tpurchaseorderlist[i].ETADate,
+                        customerjob: data.tpurchaseorderlist[i].CustomerJob || '',
+                        qtybackorder: data.tpurchaseorderlist[i].BackOrder || 0,
+                        originalqty: data.tpurchaseorderlist[i].BackOrder || 0,
                         prodcost: productCost,
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: totalTax || 0.00,
@@ -755,7 +755,7 @@ Template.purchaseorderlistBO.onRendered(function() {
                         orderstatus: orderstatus || '',
                         custfield1: '' || '',
                         custfield2: '' || '',
-                        comments: data.tpurchasesbackorderreport[i].Comments || '',
+                        comments: data.tpurchaseorderlist[i].Comments || '',
                     };
                         dataTableList.push(dataList);
 
@@ -1105,64 +1105,7 @@ Template.purchaseorderlistBO.events({
     },
     'click .saveTable' : function(event){
         let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text()||'';
-            var colWidth = $tblrow.find(".custom-range").val()||0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
-            var colHidden = false;
-            if($tblrow.find(".custom-control-input").is(':checked')){
-                colHidden = false;
-            }else{
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({_id:Session.get('mycloudLogonID'),clouddatabaseID:Session.get('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblpurchaseorderlistBO'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                               PrefGroup:'salesform',PrefName:'tblpurchaseorderlistBO',published:true,
-                                                                               customFields:lineItems,
-                                                                               updatedAt: new Date() }}, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                }else{
-                    CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                            PrefGroup:'salesform',PrefName:'tblpurchaseorderlistBO',published:true,
-                                            customFields:lineItems,
-                                            createdAt: new Date() }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
-
+        $('#myModal2').modal('toggle');
     },
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();

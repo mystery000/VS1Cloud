@@ -4079,7 +4079,7 @@ Template.purchaseordercard.events({
                     document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
                     //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
                     //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                    //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
 
                 }
             });
@@ -4199,7 +4199,7 @@ Template.purchaseordercard.events({
                     document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
                     //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
                     //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                    //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
 
                 }
             });
@@ -5185,7 +5185,7 @@ Template.purchaseordercard.events({
                             document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
                             //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
                             //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                            //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
 
                         }
                     });
@@ -5338,7 +5338,7 @@ Template.purchaseordercard.events({
                         document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
                         //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
                         //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+                        //document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
 
                     }
                 });

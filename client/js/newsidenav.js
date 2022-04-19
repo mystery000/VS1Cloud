@@ -119,7 +119,7 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
     var countObjectTimes = 0;
-    let allDataToLoad = 69;
+    let allDataToLoad = 68;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -713,7 +713,7 @@ Template.newsidenav.onRendered(function() {
                 $('.headerprogressbar').removeClass('headerprogressbarHidden');
               }
 
-            }else if(Math.round(progressPercentage) == 100){
+            }else if(Math.round(progressPercentage) >= 100){
                 $('.checkmarkwrapper').removeClass("hide");
               setTimeout(function() {
                 if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -813,7 +813,7 @@ Template.newsidenav.onRendered(function() {
             $('.headerprogressbar').removeClass('headerprogressbarHidden');
           }
 
-        }else if(Math.round(progressPercentage) == 100){
+        }else if(Math.round(progressPercentage) >= 100){
             $('.checkmarkwrapper').removeClass("hide");
           setTimeout(function() {
             if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -947,7 +947,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -986,7 +986,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1022,7 +1022,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1058,7 +1058,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1096,7 +1096,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1133,7 +1133,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1171,7 +1171,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1208,7 +1208,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1245,7 +1245,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1282,7 +1282,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1318,7 +1318,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1354,7 +1354,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1390,7 +1390,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1427,7 +1427,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1464,7 +1464,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1501,7 +1501,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1538,7 +1538,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1575,7 +1575,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1612,7 +1612,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1649,7 +1649,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1684,7 +1684,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1722,7 +1722,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1767,7 +1767,7 @@ Template.newsidenav.onRendered(function() {
         //       $('.headerprogressbar').removeClass('headerprogressbarHidden');
         //     }
         //
-        //   }else if(Math.round(progressPercentage) == 100){
+        //   }else if(Math.round(progressPercentage) >= 100){
         //       $('.checkmarkwrapper').removeClass("hide");
         //     setTimeout(function() {
         //       if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1802,7 +1802,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1842,7 +1842,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1876,7 +1876,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1916,7 +1916,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1950,7 +1950,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -1990,7 +1990,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2044,7 +2044,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2079,7 +2079,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2120,7 +2120,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2154,7 +2154,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2195,7 +2195,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2233,7 +2233,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2271,7 +2271,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2308,7 +2308,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2343,7 +2343,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2400,7 +2400,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2436,7 +2436,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2473,7 +2473,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2511,7 +2511,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2551,7 +2551,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2590,7 +2590,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2625,7 +2625,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2683,7 +2683,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2717,7 +2717,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2757,7 +2757,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2791,7 +2791,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2843,7 +2843,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2885,7 +2885,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2920,7 +2920,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2960,7 +2960,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -2994,7 +2994,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3031,7 +3031,7 @@ Template.newsidenav.onRendered(function() {
             $('.headerprogressbar').removeClass('headerprogressbarHidden');
           }
 
-        }else if(Math.round(progressPercentage) == 100){
+        }else if(Math.round(progressPercentage) >= 100){
             $('.checkmarkwrapper').removeClass("hide");
           setTimeout(function() {
             if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3067,7 +3067,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3104,7 +3104,7 @@ Template.newsidenav.onRendered(function() {
                   $('.headerprogressbar').removeClass('headerprogressbarHidden');
                 }
 
-              }else if(Math.round(progressPercentage) == 100){
+              }else if(Math.round(progressPercentage) >= 100){
                   $('.checkmarkwrapper').removeClass("hide");
                 setTimeout(function() {
                   if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3143,7 +3143,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3180,7 +3180,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3217,7 +3217,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3254,7 +3254,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3290,7 +3290,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3324,7 +3324,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3365,7 +3365,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3399,7 +3399,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3439,7 +3439,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3475,7 +3475,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3513,7 +3513,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3554,7 +3554,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3590,7 +3590,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3625,7 +3625,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3661,7 +3661,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -3697,7 +3697,7 @@ Template.newsidenav.onRendered(function() {
               $('.headerprogressbar').removeClass('headerprogressbarHidden');
             }
 
-          }else if(Math.round(progressPercentage) == 100){
+          }else if(Math.round(progressPercentage) >= 100){
               $('.checkmarkwrapper').removeClass("hide");
             setTimeout(function() {
               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4106,7 +4106,7 @@ Template.newsidenav.onRendered(function() {
           }, 800);
           }
         }, 5000);
-        }, 60000);
+      }, 40000);
 
     }
 
@@ -4168,7 +4168,7 @@ Template.newsidenav.onRendered(function() {
                             $('.headerprogressbar').removeClass('headerprogressbarHidden');
                           }
 
-                        }else if(Math.round(progressPercentage) == 100){
+                        }else if(Math.round(progressPercentage) >= 100){
                             $('.checkmarkwrapper').removeClass("hide");
                           setTimeout(function() {
                             if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4208,7 +4208,7 @@ Template.newsidenav.onRendered(function() {
                                     $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                   }
 
-                                }else if(Math.round(progressPercentage) == 100){
+                                }else if(Math.round(progressPercentage) >= 100){
                                     $('.checkmarkwrapper').removeClass("hide");
                                   setTimeout(function() {
                                     if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4247,7 +4247,7 @@ Template.newsidenav.onRendered(function() {
                                                 $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                               }
 
-                                            }else if(Math.round(progressPercentage) == 100){
+                                            }else if(Math.round(progressPercentage) >= 100){
                                                 $('.checkmarkwrapper').removeClass("hide");
                                               setTimeout(function() {
                                                 if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4294,7 +4294,7 @@ Template.newsidenav.onRendered(function() {
                         $('.headerprogressbar').removeClass('headerprogressbarHidden');
                       }
 
-                    }else if(Math.round(progressPercentage) == 100){
+                    }else if(Math.round(progressPercentage) >= 100){
                         $('.checkmarkwrapper').removeClass("hide");
                       setTimeout(function() {
                         if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4372,7 +4372,7 @@ Template.newsidenav.onRendered(function() {
                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                             }
 
-                          }else if(Math.round(progressPercentage) == 100){
+                          }else if(Math.round(progressPercentage) >= 100){
                               $('.checkmarkwrapper').removeClass("hide");
                             setTimeout(function() {
                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4412,7 +4412,7 @@ Template.newsidenav.onRendered(function() {
                                   $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                 }
 
-                              }else if(Math.round(progressPercentage) == 100){
+                              }else if(Math.round(progressPercentage) >= 100){
                                   $('.checkmarkwrapper').removeClass("hide");
                                 setTimeout(function() {
                                   if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4453,7 +4453,7 @@ Template.newsidenav.onRendered(function() {
                                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                             }
 
-                                          }else if(Math.round(progressPercentage) == 100){
+                                          }else if(Math.round(progressPercentage) >= 100){
                                               $('.checkmarkwrapper').removeClass("hide");
                                             setTimeout(function() {
                                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4497,7 +4497,7 @@ Template.newsidenav.onRendered(function() {
                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                         }
 
-                      }else if(Math.round(progressPercentage) == 100){
+                      }else if(Math.round(progressPercentage) >= 100){
                           $('.checkmarkwrapper').removeClass("hide");
                         setTimeout(function() {
                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4741,7 +4741,7 @@ Template.newsidenav.onRendered(function() {
                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                             }
 
-                          }else if(Math.round(progressPercentage) == 100){
+                          }else if(Math.round(progressPercentage) >= 100){
                               $('.checkmarkwrapper').removeClass("hide");
                             setTimeout(function() {
                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4788,7 +4788,7 @@ Template.newsidenav.onRendered(function() {
                                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                         }
 
-                                      }else if(Math.round(progressPercentage) == 100){
+                                      }else if(Math.round(progressPercentage) >= 100){
                                           $('.checkmarkwrapper').removeClass("hide");
                                         setTimeout(function() {
                                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4838,7 +4838,7 @@ Template.newsidenav.onRendered(function() {
                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                         }
 
-                      }else if(Math.round(progressPercentage) == 100){
+                      }else if(Math.round(progressPercentage) >= 100){
                           $('.checkmarkwrapper').removeClass("hide");
                         setTimeout(function() {
                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -4971,7 +4971,7 @@ Template.newsidenav.onRendered(function() {
                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                             }
 
-                          }else if(Math.round(progressPercentage) == 100){
+                          }else if(Math.round(progressPercentage) >= 100){
                               $('.checkmarkwrapper').removeClass("hide");
                             setTimeout(function() {
                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5009,7 +5009,7 @@ Template.newsidenav.onRendered(function() {
                                   $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                 }
 
-                              }else if(Math.round(progressPercentage) == 100){
+                              }else if(Math.round(progressPercentage) >= 100){
                                   $('.checkmarkwrapper').removeClass("hide");
                                 setTimeout(function() {
                                   if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5053,7 +5053,7 @@ Template.newsidenav.onRendered(function() {
                                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                             }
 
-                                        }else if(Math.round(progressPercentage) == 100){
+                                        }else if(Math.round(progressPercentage) >= 100){
                                             $('.checkmarkwrapper').removeClass("hide");
                                             setTimeout(function() {
                                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5100,7 +5100,7 @@ Template.newsidenav.onRendered(function() {
                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                         }
 
-                      }else if(Math.round(progressPercentage) == 100){
+                      }else if(Math.round(progressPercentage) >= 100){
                           $('.checkmarkwrapper').removeClass("hide");
                         setTimeout(function() {
                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5287,7 +5287,7 @@ Template.newsidenav.onRendered(function() {
                               $('.headerprogressbar').removeClass('headerprogressbarHidden');
                             }
 
-                          }else if(Math.round(progressPercentage) == 100){
+                          }else if(Math.round(progressPercentage) >= 100){
                               $('.checkmarkwrapper').removeClass("hide");
                             setTimeout(function() {
                               if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5325,7 +5325,7 @@ Template.newsidenav.onRendered(function() {
                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                         }
 
-                      }else if(Math.round(progressPercentage) == 100){
+                      }else if(Math.round(progressPercentage) >= 100){
                           $('.checkmarkwrapper').removeClass("hide");
                         setTimeout(function() {
                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5532,7 +5532,7 @@ Template.newsidenav.onRendered(function() {
                             $('.headerprogressbar').removeClass('headerprogressbarHidden');
                           }
 
-                        }else if(Math.round(progressPercentage) == 100){
+                        }else if(Math.round(progressPercentage) >= 100){
                             $('.checkmarkwrapper').removeClass("hide");
                           setTimeout(function() {
                             if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5571,7 +5571,7 @@ Template.newsidenav.onRendered(function() {
                                         $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                       }
 
-                                    }else if(Math.round(progressPercentage) == 100){
+                                    }else if(Math.round(progressPercentage) >= 100){
                                         $('.checkmarkwrapper').removeClass("hide");
                                       setTimeout(function() {
                                         if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5612,7 +5612,7 @@ Template.newsidenav.onRendered(function() {
                         $('.headerprogressbar').removeClass('headerprogressbarHidden');
                       }
 
-                    }else if(Math.round(progressPercentage) == 100){
+                    }else if(Math.round(progressPercentage) >= 100){
                         $('.checkmarkwrapper').removeClass("hide");
                       setTimeout(function() {
                         if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5684,7 +5684,7 @@ Template.newsidenav.onRendered(function() {
                   $('.headerprogressbar').removeClass('headerprogressbarHidden');
                 }
 
-              }else if(Math.round(progressPercentage) == 100){
+              }else if(Math.round(progressPercentage) >= 100){
                   $('.checkmarkwrapper').removeClass("hide");
                 setTimeout(function() {
                   if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5764,7 +5764,7 @@ Template.newsidenav.onRendered(function() {
                           $('.headerprogressbar').removeClass('headerprogressbarHidden');
                         }
 
-                      }else if(Math.round(progressPercentage) == 100){
+                      }else if(Math.round(progressPercentage) >= 100){
                           $('.checkmarkwrapper').removeClass("hide");
                         setTimeout(function() {
                           if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5803,7 +5803,7 @@ Template.newsidenav.onRendered(function() {
                                       $('.headerprogressbar').removeClass('headerprogressbarHidden');
                                     }
 
-                                  }else if(Math.round(progressPercentage) == 100){
+                                  }else if(Math.round(progressPercentage) >= 100){
                                       $('.checkmarkwrapper').removeClass("hide");
                                     setTimeout(function() {
                                       if($('.headerprogressbar').hasClass("headerprogressbarShow")){
@@ -5844,7 +5844,7 @@ Template.newsidenav.onRendered(function() {
                       $('.headerprogressbar').removeClass('headerprogressbarHidden');
                     }
 
-                  }else if(Math.round(progressPercentage) == 100){
+                  }else if(Math.round(progressPercentage) >= 100){
                       $('.checkmarkwrapper').removeClass("hide");
                     setTimeout(function() {
                       if($('.headerprogressbar').hasClass("headerprogressbarShow")){

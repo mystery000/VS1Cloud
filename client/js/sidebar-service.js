@@ -831,7 +831,9 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     options = {
       IgnoreDates:true,
       OrderBy:"PurchaseOrderID desc",
-      IncludeBO:false,
+      IncludeBo:false,
+      IncludeShipped:true,
+      IncludeLines:false,
       LimitCount:'"'+limitcount+'"',
       LimitFrom:'"'+limitfrom+'"'
       };
@@ -839,7 +841,9 @@ getAllContactCombineVS1(limitcount, limitfrom) {
        options = {
          OrderBy:"PurchaseOrderID desc",
          IgnoreDates:false,
-         IncludeBO:false,
+         IncludeBo:false,
+         IncludeShipped:true,
+         IncludeLines:false,
          DateFrom:'"'+dateFrom+'"',
          DateTo:'"'+dateTo+'"',
          LimitCount:'"'+limitcount+'"',
@@ -1362,6 +1366,9 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     options = {
       IgnoreDates:true,
       OrderBy:"SaleID desc",
+      IncludeBo:false,
+      IncludeShipped:true,
+      IncludeLines:false,
       LimitCount:'"'+limitcount+'"',
       LimitFrom:'"'+limitfrom+'"'
       };
@@ -1369,6 +1376,9 @@ getAllContactCombineVS1(limitcount, limitfrom) {
        options = {
          OrderBy:"SaleID desc",
          IgnoreDates:false,
+         IncludeBo:false,
+         IncludeShipped:true,
+         IncludeLines:false,
          DateFrom:'"'+dateFrom+'"',
          DateTo:'"'+dateTo+'"',
          LimitCount:'"'+limitcount+'"',
@@ -1844,20 +1854,26 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
     options = {
       IgnoreDates:true,
       OrderBy:"SaleID desc",
+      IncludeBo:true,
+      IncludeShipped:false,
+      IncludeLines:true,
       LimitCount:'"'+limitcount+'"',
       LimitFrom:'"'+limitfrom+'"'
-   };
- }else{
-   options = {
-     IgnoreDates:false,
-     OrderBy:"SaleID desc",
-     DateFrom:'"'+dateFrom+'"',
-     DateTo:'"'+dateTo+'"',
-     LimitCount:'"'+limitcount+'"',
-     LimitFrom:'"'+limitfrom+'"'
- };
-}
-  return this.getList(this.ERPObjects.TSalesBackOrderReport, options);
+      };
+     }else{
+       options = {
+         OrderBy:"SaleID desc",
+         IgnoreDates:false,
+         IncludeBo:true,
+         IncludeShipped:false,
+         IncludeLines:true,
+         DateFrom:'"'+dateFrom+'"',
+         DateTo:'"'+dateTo+'"',
+         LimitCount:'"'+limitcount+'"',
+         LimitFrom:'"'+limitfrom+'"'
+     };
+    }
+  return this.getList(this.ERPObjects.TInvoiceList, options);
 }
 
   getAllPurchaseOrderListNonBo() {
@@ -1895,19 +1911,27 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
     if(ignoreDate == true){
       options = {
         IgnoreDates:true,
+        OrderBy:"PurchaseOrderID desc",
+        IncludeBo:true,
+        IncludeShipped:false,
+        IncludeLines:true,
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
-     };
-   }else{
-     options = {
-       IgnoreDates:false,
-       DateFrom:'"'+dateFrom+'"',
-       DateTo:'"'+dateTo+'"',
-       LimitCount:'"'+limitcount+'"',
-       LimitFrom:'"'+limitfrom+'"'
-   };
-  }
-    return this.getList(this.ERPObjects.TPurchasesBackOrderReport, options);
+        };
+       }else{
+         options = {
+           OrderBy:"PurchaseOrderID desc",
+           IgnoreDates:false,
+           IncludeBo:true,
+           IncludeShipped:false,
+           IncludeLines:true,
+           DateFrom:'"'+dateFrom+'"',
+           DateTo:'"'+dateTo+'"',
+           LimitCount:'"'+limitcount+'"',
+           LimitFrom:'"'+limitfrom+'"'
+       };
+      }
+    return this.getList(this.ERPObjects.TPurchaseOrderList, options);
   }
 
   getAllReconcilationList(limitcount, limitfrom) {

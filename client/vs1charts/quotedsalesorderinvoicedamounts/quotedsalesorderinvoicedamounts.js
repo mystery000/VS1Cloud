@@ -3,9 +3,11 @@ import 'jQuery.print/jQuery.print.js';
 import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../../js/core-service';
+import { SideBarService } from '../../js/sidebar-service';
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
+let sideBarService = new SideBarService();
 Template.quotedsalesorderinvoicedamounts.onCreated(()=>{
 const templateObject = Template.instance();
 templateObject.records = new ReactiveVar([]);
