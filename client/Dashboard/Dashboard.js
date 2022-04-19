@@ -74,6 +74,10 @@ Template.dashboard.events({
       .attr("aria-valuenow", valeur);
     $(".progressBarInner").text("Invoices " + valeur + "%");
   },
+  'click .btnBatchUpdate': function () {
+    $('.fullScreenSpin').css('display','inline-block');
+      batchUpdateCall();
+  },
   // "click #hideearnings": function () {
   //   let check = earningschart;
   //   if (check == "true" || check == true) {
