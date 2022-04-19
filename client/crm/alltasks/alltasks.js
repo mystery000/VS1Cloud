@@ -128,7 +128,12 @@ Template.alltasks.events({
 
   },
 
+  // open edit modal
   'click .ttodo-edit': function (e) {
+
+    $(".btnAddSubTask").css("display", "block");
+    $(".newTaskRow").css("display", "none");
+
     let id = e.target.dataset.id;
     let selected_id = Template.instance().selected_id.get();
     let selected_ttodo = Template.instance().selected_ttodo.get();
@@ -352,6 +357,7 @@ Template.alltasks.events({
 
   },
 
+  // cancel edit
   'click .btnCancelEdit': function (e) {
 
     let selected_id = Template.instance().selected_id.get();
@@ -365,6 +371,7 @@ Template.alltasks.events({
 
   },
 
+  // submit edit
   'click .btnSaveEdit': function (e) {
 
     // let id = e.target.dataset.id;
@@ -427,6 +434,7 @@ Template.alltasks.events({
 
   },
 
+  // submit save task
   'click .btnSaveAddTask': function (e) {
 
     let task_name = $('#add_task_name').val();
