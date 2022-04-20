@@ -948,6 +948,77 @@ Template.receiptsoverview.onRendered(function () {
         }
     });
 
+    templateObject.getEmployees = function () {
+        getVS1Data('TEmployee').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
+                    addVS1Data('TEmployee', JSON.stringify(data));
+                    let lineItems = [];
+                    for (let i = 0; i < data.temployee.length; i++) {
+                        let lineItem = {
+                            id: data.temployee[i].fields.ID || '',
+                            employeeno: data.temployee[i].fields.EmployeeNo || '',
+                            employeename: data.temployee[i].fields.EmployeeName || '',
+                        };
+                        lineItems.push(lineItem);
+                    }
+    
+                    templateObject.employees.set(lineItems);
+                }).catch(function (err) {
+    
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.temployee;
+    
+                let lineItems = [];
+                for (let i = 0; i < useData.length; i++) {
+                    let lineItem = {
+                        id: useData[i].fields.ID || '',
+                        employeeno: useData[i].fields.EmployeeNo || '',
+                        employeename: useData[i].fields.EmployeeName || '',
+                    };
+                    lineItems.push(lineItem);
+                }
+                templateObject.employees.set(lineItems);
+            }
+        }).catch(function (err) {
+            sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TEmployee', JSON.stringify(data));
+                let lineItems = [];
+                for (let i = 0; i < data.temployee.length; i++) {
+                    let lineItem = {
+                        id: data.temployee[i].fields.ID || '',
+                        employeeno: data.temployee[i].fields.EmployeeNo || '',
+                        employeename: data.temployee[i].fields.EmployeeName || '',
+                    };
+                    lineItems.push(lineItem);
+                }
+                templateObject.employees.set(lineItems);
+            }).catch(function (err) {
+    
+            });
+        });
+    }
+    
+    // templateObject.getEmployees();
+    
+    templateObject.getSuppliers = function () {
+        accountService.getSupplierVS1().then(function (data) {
+            let lineItems = [];
+            for (let i in data.tsuppliervs1) {
+                let lineItem = {
+                    supplierid: data.tsuppliervs1[i].Id || ' ',
+                    suppliername: data.tsuppliervs1[i].ClientName || ' ',
+                };
+                lineItems.push(lineItem);
+            }
+            templateObject.suppliers.set(lineItems);
+        }).catch(function (err) {
+    
+        });
+    };
+
     templateObject.getExpenseClaims = function () {
         $('#fullScreenSpin').css('display', 'inline-block');
         accountService.getExpenseClaim().then(function (data) {
@@ -1071,19 +1142,26 @@ Template.receiptsoverview.onRendered(function () {
                 transactionTypeName = "VISA";
             }
 
+            let loggedUserName = Session.get('mySessionEmployee');
+            let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+            let currency = Session.get('ERPCountryAbbr');
+
+            var parentElement;
             if (from == 'ViewReceipt') {
-                $('#viewReceiptModal .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#viewReceiptModal .edtTotal').val('$' + data.total);
-                $('#viewReceiptModal .transactionTypes').val(transactionTypeName);
+                parentElement = "#viewReceiptModal";
             } else if (from == 'NavExpense') {
-                $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#nav-expense .edtTotal').val('$' + data.total);
-                $('#nav-expense .transactionTypes').val(transactionTypeName);
+                parentElement = "#nav-expense";
             } else if (from == 'NavTime') {
-                $('#nav-time .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#nav-time .edtTotal').val('$' + data.total);
-                $('#nav-time .transactionTypes').val(transactionTypeName);
+                parentElement = "#nav-time";
             }
+
+            $(parentElement + ' .employees').attr('data-id', loggedUserId);
+            $(parentElement + ' .employees').val(loggedUserName);
+            $(parentElement + ' .currencies').val(currency);
+            $(parentElement + ' .dtReceiptDate').datepicker('setDate', new Date(data.date));
+            $(parentElement + ' .edtTotal').val('$' + data.total);
+            $(parentElement + ' .transactionTypes').val(transactionTypeName);
+
         }).catch(function (err) {
             console.log('ocrresult err', err);
             $('#fullScreenSpin').css('display', 'none');
@@ -1142,14 +1220,17 @@ Template.receiptsoverview.events({
 
         $('#employeeListModal').attr('data-from', 'NavExpense');
 
-        $('#nav-expense .employees').attr('data-id', '');
-        $('#nav-expense .employees').val('');
+        let loggedUserName = Session.get('mySessionEmployee');
+        let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+        let currency = Session.get('ERPCountryAbbr');
+        $('#nav-expense .employees').attr('data-id', loggedUserId);
+        $('#nav-expense .employees').val(loggedUserName);
         $('#nav-expense .transactionTypes').attr('data-id', '');
         $('#nav-expense .transactionTypes').val('');
         $('#nav-expense .merchants').attr('data-id', '');
         $('#nav-expense .merchants').val('');
         $('#nav-expense .currencies').attr('data-id', '');
-        $('#nav-expense .currencies').val('');
+        $('#nav-expense .currencies').val(currency);
         $('#nav-expense .chart-accounts').attr('data-id', '');
         $('#nav-expense .chart-accounts').val('');
         $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date());
@@ -1177,14 +1258,17 @@ Template.receiptsoverview.events({
 
         $('#employeeListModal').attr('data-from', 'NavTime');
 
-        $('#nav-time .employees').attr('data-id', '');
-        $('#nav-time .employees').val('');
+        let loggedUserName = Session.get('mySessionEmployee');
+        let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+        let currency = Session.get('ERPCountryAbbr');
+        $('#nav-time .employees').attr('data-id', loggedUserId);
+        $('#nav-time .employees').val(loggedUserName);
         $('#nav-time .transactionTypes').attr('data-id', '');
         $('#nav-time .transactionTypes').val('');
         $('#nav-time .merchants').attr('data-id', '');
         $('#nav-time .merchants').val('');
         $('#nav-time .currencies').attr('data-id', '');
-        $('#nav-time .currencies').val('');
+        $('#nav-time .currencies').val(currency);
         $('#nav-time .chart-accounts').attr('data-id', '');
         $('#nav-time .chart-accounts').val('');
         $('#nav-time .dtReceiptDate').datepicker('setDate', new Date());
