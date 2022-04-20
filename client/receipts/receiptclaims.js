@@ -1068,8 +1068,8 @@ Template.receiptsoverview.onRendered(function () {
                 $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
                 $('#nav-expense .edtTotal').val('$' + data.total);
             } else if (from == 'NavTime') {
-                $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
-                $('#nav-expense .edtTotal').val('$' + data.total);
+                $('#nav-time .dtReceiptDate').datepicker('setDate', new Date(data.date));
+                $('#nav-time .edtTotal').val('$' + data.total);
             }
         }).catch(function (err) {
             console.log('ocrresult err', err);
@@ -1202,7 +1202,7 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .receiptPhoto').attr('data-name', imageFile.name);
             $('#viewReceiptModal .img-placeholder').css('opacity', 0);
             console.log('selected image', imageData);
-            // template.getOCRResultFromImage(imageData, imageFile.name);
+            template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
 
@@ -1384,6 +1384,22 @@ Template.receiptsoverview.events({
         val = val.replace('$', '');
         e.target.value = '$' + val;
     },
+    'change #claimHours': function(e) {
+        var val = e.target.value;
+        numVal = parseFloat(val) || 0;
+        e.target.value = numVal;
+
+        rate = parseFloat($('#claimRate').val().replace('$', '')) || 0;
+        $('#nav-time .edtTotal').val('$' + (numVal * rate));
+    },
+    'change #claimRate': function(e) {
+        var val = e.target.value;
+        numVal = parseFloat(val.replace('$', '')) || 0;
+        e.target.value = '$' + numVal;
+
+        hours = parseFloat($('#claimHours').val()) || 0;
+        $('#nav-time .edtTotal').val('$' + (numVal * hours));
+    },
 
     // update receipt record
     'click #viewReceiptModal .btnSave': function (e) {
@@ -1437,7 +1453,7 @@ Template.receiptsoverview.events({
                 SupplierName: supplierName,
                 AccountId: chartAccountId ? parseInt(chartAccountId) : 0,
                 AccountName: chartAccountName,
-                AmountInc: totalAmount ? parseInt(totalAmount) : 0,
+                AmountInc: totalAmount ? parseFloat(totalAmount) : 0,
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
@@ -1519,14 +1535,7 @@ Template.receiptsoverview.events({
         let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
 
         var totalAmount = 0;
-        totalAmount = $(parentElement + ' .edtTotal').val();
-        if (from == 'NavExpense') {
-            
-        } else if (from == 'NavTime') {
-            let hours = $('#claimHours').val() || 0;
-            let rate = $('#claimRate').val() || 0;
-            // totalAmount = hours * rate;
-        }
+        totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
 
         let expenseClaimLine = {
             type: "TExpenseClaimLineEx",
@@ -1537,7 +1546,7 @@ Template.receiptsoverview.events({
                 SupplierName: supplierName,
                 AccountId: chartAccountId ? parseInt(chartAccountId) : 0,
                 AccountName: chartAccountName,
-                AmountInc: totalAmount ? parseInt(totalAmount) : 0,
+                AmountInc: totalAmount ? parseFloat(totalAmount) : 0,
                 Reimbursement: reimbursement,
                 DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                 Description: description,
@@ -1619,7 +1628,7 @@ Template.receiptsoverview.events({
                         SupplierName: supplierName,
                         AccountId: chartAccountId ? parseInt(chartAccountId) : 0,
                         AccountName: chartAccountName,
-                        AmountInc: totalAmount ? parseInt(totalAmount) : 0,
+                        AmountInc: totalAmount ? parseFloat(totalAmount) : 0,
                         Reimbursement: reimbursement,
                         DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                         Description: description,
