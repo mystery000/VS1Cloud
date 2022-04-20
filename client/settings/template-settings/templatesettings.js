@@ -41,6 +41,13 @@ Template.templatesettings.onRendered(function () {
     // Session.set("template",data)
   });
 
+  //save template fields in the localstorage   
+  function saveTemplateFields(key, value){
+    localStorage.setItem(key, value)
+  }
+
+
+  //update template with invoice type   
   function updateTemplate(object_invoce) {
     $("#templatePreviewModal").modal("toggle");
     if (object_invoce.length > 0) {
@@ -242,6 +249,8 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_payment").hide();
     $("#templatePreviewModal .field_amount").show();
     updateTemplate(object_invoce);
+
+    saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
   }
 
   //show credit data with dummy data
@@ -299,6 +308,8 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_amount").show();
 
     updateTemplate(object_invoce);
+
+    saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
   }
 
   //show customer payment info with DummyData
@@ -353,6 +364,8 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_amount").hide();
 
     updateTemplate(object_invoce);
+
+    saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
   }
 
     //show customer payment info with DummyData
@@ -428,6 +441,8 @@ Template.templatesettings.onRendered(function () {
 
 
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
   //show invoice payment info with DummyData
@@ -491,6 +506,8 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_amount").show();
 
     updateTemplate(object_invoce);
+
+    saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
   }
 
   //show invoice back  info with DummyData
@@ -552,6 +569,8 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_amount").show();
 
     updateTemplate(object_invoce);
+
+    saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
   }
 
 
@@ -604,6 +623,8 @@ Template.templatesettings.onRendered(function () {
         $("#templatePreviewModal .field_payment").hide();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
 
@@ -656,6 +677,8 @@ Template.templatesettings.onRendered(function () {
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
 
@@ -708,6 +731,8 @@ Template.templatesettings.onRendered(function () {
         $("#templatePreviewModal .field_payment").hide();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
       //show selas order  info with DummyData
@@ -759,6 +784,8 @@ Template.templatesettings.onRendered(function () {
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
 
@@ -814,6 +841,8 @@ Template.templatesettings.onRendered(function () {
 
 
         updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
 
