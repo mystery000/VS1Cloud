@@ -21,6 +21,7 @@
             <div class="spinner"></div>
         </div>
         <h3 class="text-dark mb-4">
+  
             <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 16px; float: right;">Help <i
                     class="fa fa-question-circle-o" style="font-size: 16px;"></i></a>
         </h3>
@@ -63,8 +64,8 @@
                                 <ul class="list-group list-group-flush">
                                     {{#each index in getTemplateNumber}}
                                     <li class="list-group-item templateItem justify-content-between">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch" name="billRadio" id="bill_1"
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="billRadio" id="bill_1"
                                                 value="bill_1" checked>
                                             <label class="form-check-label" for="bill_1">
                                                 Template {{index}}
