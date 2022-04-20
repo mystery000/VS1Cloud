@@ -1057,19 +1057,32 @@ Template.receiptsoverview.onRendered(function () {
     templateObject.getOCRResultFromImage = function(imageData, fileName) {
         $('#fullScreenSpin').css('display', 'inline-block');
         ocrService.POST(imageData, fileName).then(function(data) {
-            console.log('ocrresult', data);
+
             $('#fullScreenSpin').css('display', 'none');
             let from = $('#employeeListModal').attr('data-from');
+
+            paymenttype = data.payment_type;
+            transactionTypeName = "Cash";
+            if (paymenttype == "master_card") {
+                transactionTypeName = "Master Card";
+            } else if (paymenttype == "credit_card") {
+                transactionTypeName = "Credit Card";
+            } else if (paymenttype == "visa") {
+                transactionTypeName = "VISA";
+            }
 
             if (from == 'ViewReceipt') {
                 $('#viewReceiptModal .dtReceiptDate').datepicker('setDate', new Date(data.date));
                 $('#viewReceiptModal .edtTotal').val('$' + data.total);
+                $('#viewReceiptModal .transactionTypes').val(transactionTypeName);
             } else if (from == 'NavExpense') {
                 $('#nav-expense .dtReceiptDate').datepicker('setDate', new Date(data.date));
                 $('#nav-expense .edtTotal').val('$' + data.total);
+                $('#nav-expense .transactionTypes').val(transactionTypeName);
             } else if (from == 'NavTime') {
                 $('#nav-time .dtReceiptDate').datepicker('setDate', new Date(data.date));
                 $('#nav-time .edtTotal').val('$' + data.total);
+                $('#nav-time .transactionTypes').val(transactionTypeName);
             }
         }).catch(function (err) {
             console.log('ocrresult err', err);
