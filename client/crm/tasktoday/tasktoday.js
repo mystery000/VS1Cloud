@@ -1,10 +1,8 @@
 import { CRMService } from '../crm-service';
 import '../../lib/global/indexdbstorage.js';
-import { valHooks } from 'jquery';
-import { isNumber } from 'lodash';
 let crmService = new CRMService();
 
-Template.alltasks.onCreated(function () {
+Template.tasktoday.onCreated(function () {
 
   const templateObject = Template.instance();
   templateObject.allrecords = new ReactiveVar([]);
@@ -16,7 +14,7 @@ Template.alltasks.onCreated(function () {
 
 });
 
-Template.alltasks.onRendered(function () {
+Template.tasktoday.onRendered(function () {
 
   console.log('rendered...')
   $("#task_items_wrapper").sortable({
@@ -90,7 +88,7 @@ Template.alltasks.onRendered(function () {
   templateObject.getAllTaskList();
 });
 
-Template.alltasks.events({
+Template.tasktoday.events({
 
   'click .mainTaskCol': function (event) {
     if (!event.target.classList.contains('no-modal')) {
@@ -556,13 +554,12 @@ Template.alltasks.events({
 
 });
 
-Template.alltasks.helpers({
+Template.tasktoday.helpers({
   allrecords: () => {
     return Template.instance().allrecords.get();
   },
 
   overdueRecords: () => {
-    return Template.instance().overdueRecords.get().slice(0, 3);
     return Template.instance().overdueRecords.get();
   },
 

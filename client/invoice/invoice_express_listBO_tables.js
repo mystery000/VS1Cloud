@@ -128,43 +128,54 @@ Template.invoicelistBO.onRendered(function() {
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                     }
-                    for(let i=0; i<data.tsalesbackorderreport.length; i++){
-                        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePrice)|| 0.00;
-                        let totalTax = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalTax) || 0.00;
-                        // Currency+''+data.tsalesbackorderreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePriceInc)|| 0.00;
-                        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalPaid)|| 0.00;
-                        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalBalance)|| 0.00;
-                        let salestatus = data.tsalesbackorderreport[i].QuoteStatus || '';
-                        if(data.tsalesbackorderreport[i].Deleted == true){
-                          salestatus = "Deleted";
-                        }else if(data.tsalesbackorderreport[i].CustomerName == ''){
-                          salestatus = "Deleted";
-                        };
+                    for(let i=0; i<data.tinvoicelist.length; i++){
+                      let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+                      let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+                      // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                      let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+                      let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+                      let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+                      let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+                      let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+                      if(data.tinvoicelist[i].Deleted == true){
+                        salestatus = "Deleted";
+                      }else if(data.tinvoicelist[i].CustomerName == ''){
+                        salestatus = "Deleted";
+                      };
                         var dataList = {
-                            id: data.tsalesbackorderreport[i].SaleID || '',
-                            employee:data.tsalesbackorderreport[i].EnteredBy || '',
-                            sortdate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("YYYY/MM/DD"): data.tsalesbackorderreport[i].SaleDate,
-                            saledate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].SaleDate,
-                            duedate: data.tsalesbackorderreport[i].DueDate !=''? moment(data.tsalesbackorderreport[i].DueDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].DueDate,
-                            customername: data.tsalesbackorderreport[i].CustomerName || '',
+                            id: data.tinvoicelist[i].SaleID || '',
+                            employee:data.tinvoicelist[i].EmployeeName || '',
+                            sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+                            saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+                            duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+                            customername: data.tinvoicelist[i].CustomerName || '',
+
+                            productname: data.tinvoicelist[i].ProductName || '',
+                            saledesc: data.tinvoicelist[i].Product_Description || '',
+                            etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+                            etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+                            customerjob: data.tinvoicelist[i].CustomerJob || '',
+                            qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+                            originalqty: data.tinvoicelist[i].BackOrder || 0,
+                            prodcost: productCost,
+
                             totalamountex: totalAmountEx || 0.00,
                             totaltax: 0.00 || 0.00,
                             totalamount: totalAmount || 0.00,
                             totalpaid: totalPaid || 0.00,
                             totaloustanding: totalOutstanding || 0.00,
-                            department: data.tsalesbackorderreport[i].class || '',
-                            custfield1: data.tsalesbackorderreport[i].UOM || '',
-                            custfield2: data.tsalesbackorderreport[i].SaleTerms || '',
-                            comments: data.tsalesbackorderreport[i].PickMemo || '',
-                            qtybackorder: data.tsalesbackorderreport[i].BackOrder || '',
-                            product: data.tsalesbackorderreport[i].ProductName || '',
+                            department: data.tinvoicelist[i].class || '',
+                            custfield1: data.tinvoicelist[i].UOM || '',
+                            custfield2: data.tinvoicelist[i].SaleTerms || '',
+                            comments: data.tinvoicelist[i].PickMemo || '',
+                            qtybackorder: data.tinvoicelist[i].BackOrder || '',
+                            product: data.tinvoicelist[i].ProductName || '',
                             salestatus: salestatus || '',
-                            // shipdate:data.tsalesbackorderreport[i].ShipDate !=''? moment(data.tsalesbackorderreport[i].ShipDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].ShipDate,
+                            // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
 
                         };
 
-                        //if(data.tsalesbackorderreport[i].IsBackOrder == true){
+                        //if(data.tinvoicelist[i].IsBackOrder == true){
                         dataTableList.push(dataList);
                         //}
                         //}
@@ -428,10 +439,10 @@ Template.invoicelistBO.onRendered(function() {
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsalesbackorderreport;
+                let useData = data.tinvoicelist;
                 let lineItems = [];
                 let lineItemObj = {};
-
+                console.log(data);
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
@@ -440,43 +451,54 @@ Template.invoicelistBO.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                for(let i=0; i<data.tsalesbackorderreport.length; i++){
-                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePrice)|| 0.00;
-                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalTax) || 0.00;
-                    // Currency+''+data.tsalesbackorderreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePriceInc)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalPaid)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalBalance)|| 0.00;
-                    let salestatus = data.tsalesbackorderreport[i].QuoteStatus || '';
-                    if(data.tsalesbackorderreport[i].Deleted == true){
-                      salestatus = "Deleted";
-                    }else if(data.tsalesbackorderreport[i].CustomerName == ''){
-                      salestatus = "Deleted";
-                    };
+                for(let i=0; i<data.tinvoicelist.length; i++){
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+                  // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+                  let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+                  let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+                  if(data.tinvoicelist[i].Deleted == true){
+                    salestatus = "Deleted";
+                  }else if(data.tinvoicelist[i].CustomerName == ''){
+                    salestatus = "Deleted";
+                  };
                     var dataList = {
-                        id: data.tsalesbackorderreport[i].SaleID || '',
-                        employee:data.tsalesbackorderreport[i].EnteredBy || '',
-                        sortdate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("YYYY/MM/DD"): data.tsalesbackorderreport[i].SaleDate,
-                        saledate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].SaleDate,
-                        duedate: data.tsalesbackorderreport[i].DueDate !=''? moment(data.tsalesbackorderreport[i].DueDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].DueDate,
-                        customername: data.tsalesbackorderreport[i].CustomerName || '',
+                        id: data.tinvoicelist[i].SaleID || '',
+                        employee:data.tinvoicelist[i].EmployeeName || '',
+                        sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+                        saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+                        duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+                        customername: data.tinvoicelist[i].CustomerName || '',
+
+                        productname: data.tinvoicelist[i].ProductName || '',
+                        saledesc: data.tinvoicelist[i].Product_Description || '',
+                        etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+                        etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+                        customerjob: data.tinvoicelist[i].CustomerJob || '',
+                        qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+                        originalqty: data.tinvoicelist[i].BackOrder || 0,
+                        prodcost: productCost,
+
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: 0.00 || 0.00,
                         totalamount: totalAmount || 0.00,
                         totalpaid: totalPaid || 0.00,
                         totaloustanding: totalOutstanding || 0.00,
-                        department: data.tsalesbackorderreport[i].class || '',
-                        custfield1: data.tsalesbackorderreport[i].UOM || '',
-                        custfield2: data.tsalesbackorderreport[i].SaleTerms || '',
-                        comments: data.tsalesbackorderreport[i].PickMemo || '',
-                        qtybackorder: data.tsalesbackorderreport[i].BackOrder || '',
-                        product: data.tsalesbackorderreport[i].ProductName || '',
+                        department: data.tinvoicelist[i].class || '',
+                        custfield1: data.tinvoicelist[i].UOM || '',
+                        custfield2: data.tinvoicelist[i].SaleTerms || '',
+                        comments: data.tinvoicelist[i].PickMemo || '',
+                        qtybackorder: data.tinvoicelist[i].BackOrder || '',
+                        product: data.tinvoicelist[i].ProductName || '',
                         salestatus: salestatus || '',
-                        // shipdate:data.tsalesbackorderreport[i].ShipDate !=''? moment(data.tsalesbackorderreport[i].ShipDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].ShipDate,
+                        // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
 
                     };
 
-                    //if(data.tsalesbackorderreport[i].IsBackOrder == true){
+                    //if(data.tinvoicelist[i].IsBackOrder == true){
                     dataTableList.push(dataList);
                     //}
                     //}
@@ -748,43 +770,54 @@ Template.invoicelistBO.onRendered(function() {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
-                for(let i=0; i<data.tsalesbackorderreport.length; i++){
-                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePrice)|| 0.00;
-                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalTax) || 0.00;
-                    // Currency+''+data.tsalesbackorderreport[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalLinePriceInc)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalPaid)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsalesbackorderreport[i].TotalBalance)|| 0.00;
-                    let salestatus = data.tsalesbackorderreport[i].QuoteStatus || '';
-                    if(data.tsalesbackorderreport[i].Deleted == true){
-                      salestatus = "Deleted";
-                    }else if(data.tsalesbackorderreport[i].CustomerName == ''){
-                      salestatus = "Deleted";
-                    };
+                for(let i=0; i<data.tinvoicelist.length; i++){
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+                  // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+                  let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+                  let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+                  if(data.tinvoicelist[i].Deleted == true){
+                    salestatus = "Deleted";
+                  }else if(data.tinvoicelist[i].CustomerName == ''){
+                    salestatus = "Deleted";
+                  };
                     var dataList = {
-                        id: data.tsalesbackorderreport[i].SaleID || '',
-                        employee:data.tsalesbackorderreport[i].EnteredBy || '',
-                        sortdate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("YYYY/MM/DD"): data.tsalesbackorderreport[i].SaleDate,
-                        saledate: data.tsalesbackorderreport[i].SaleDate !=''? moment(data.tsalesbackorderreport[i].SaleDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].SaleDate,
-                        duedate: data.tsalesbackorderreport[i].DueDate !=''? moment(data.tsalesbackorderreport[i].DueDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].DueDate,
-                        customername: data.tsalesbackorderreport[i].CustomerName || '',
+                        id: data.tinvoicelist[i].SaleID || '',
+                        employee:data.tinvoicelist[i].EmployeeName || '',
+                        sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+                        saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+                        duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+                        customername: data.tinvoicelist[i].CustomerName || '',
+
+                        productname: data.tinvoicelist[i].ProductName || '',
+                        saledesc: data.tinvoicelist[i].Product_Description || '',
+                        etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+                        etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+                        customerjob: data.tinvoicelist[i].CustomerJob || '',
+                        qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+                        originalqty: data.tinvoicelist[i].BackOrder || 0,
+                        prodcost: productCost,
+
                         totalamountex: totalAmountEx || 0.00,
                         totaltax: 0.00 || 0.00,
                         totalamount: totalAmount || 0.00,
                         totalpaid: totalPaid || 0.00,
                         totaloustanding: totalOutstanding || 0.00,
-                        department: data.tsalesbackorderreport[i].class || '',
-                        custfield1: data.tsalesbackorderreport[i].UOM || '',
-                        custfield2: data.tsalesbackorderreport[i].SaleTerms || '',
-                        comments: data.tsalesbackorderreport[i].PickMemo || '',
-                        qtybackorder: data.tsalesbackorderreport[i].BackOrder || '',
-                        product: data.tsalesbackorderreport[i].ProductName || '',
+                        department: data.tinvoicelist[i].class || '',
+                        custfield1: data.tinvoicelist[i].UOM || '',
+                        custfield2: data.tinvoicelist[i].SaleTerms || '',
+                        comments: data.tinvoicelist[i].PickMemo || '',
+                        qtybackorder: data.tinvoicelist[i].BackOrder || '',
+                        product: data.tinvoicelist[i].ProductName || '',
                         salestatus: salestatus || '',
-                        // shipdate:data.tsalesbackorderreport[i].ShipDate !=''? moment(data.tsalesbackorderreport[i].ShipDate).format("DD/MM/YYYY"): data.tsalesbackorderreport[i].ShipDate,
+                        // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
 
                     };
 
-                    //if(data.tsalesbackorderreport[i].IsBackOrder == true){
+                    //if(data.tinvoicelist[i].IsBackOrder == true){
                     dataTableList.push(dataList);
                     //}
                     //}
@@ -1219,7 +1252,7 @@ Template.invoicelistBO.events({
 
 
                         }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tsalesbackorderreport.length + ' of ' + data.tsalesbackorderreport.length + ' entries');
+                        $('.dataTables_info').html('Showing 1 to ' + data.tinvoicelist.length + ' of ' + data.tinvoicelist.length + ' entries');
 
                     }
 

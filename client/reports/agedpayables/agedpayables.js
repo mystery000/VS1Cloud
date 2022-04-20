@@ -53,10 +53,230 @@ Template.agedpayables.onRendered(() => {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
     let currenctURL = FlowRouter.current().queryParams;
+    let contactName = FlowRouter.current().queryParams.contact ||'';
     templateObject.getAgedPayableReports = function (dateFrom, dateTo, ignoreDate) {
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        if(contactName != ''){
+          sideBarService.getTAPReportByName(contactName).then(function (data) {
+              let totalRecord = [];
+              let grandtotalRecord = [];
+              if(data.Params.IgnoreDates == true){
+                $('#dateFrom').attr('readonly', true);
+                $('#dateTo').attr('readonly', true);
+              }else{
 
+                $("#dateFrom").val(data.Params.DateFrom !=''? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+                $("#dateTo").val(data.Params.DateTo !=''? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
+              }
+              if (data.tapreport.length) {
+                  //localStorage.setItem('VS1AgedPayables_Report', JSON.stringify(data)||'');
+                  let records = [];
+                  let allRecords = [];
+                  let current = [];
+
+                  let totalNetAssets = 0;
+                  let GrandTotalLiability = 0;
+                  let GrandTotalAsset = 0;
+                  let incArr = [];
+                  let cogsArr = [];
+                  let expArr = [];
+                  let accountData = data.tapreport;
+                  let accountType = '';
+
+                  for (let i = 0; i < accountData.length; i++) {
+
+                      let recordObj = {};
+                      recordObj.Id = data.tapreport[i].PurchaseOrderID;
+                      recordObj.type = data.tapreport[i].Type;
+                      recordObj.SupplierName = data.tapreport[i].Name;
+                      recordObj.dataArr = [
+                          '',
+                          data.tapreport[i].Type,
+                          data.tapreport[i].PurchaseOrderID,
+                          // moment(data.tapreport[i].InvoiceDate).format("DD MMM YYYY") || '-',
+                          data.tapreport[i].DueDate != '' ? moment(data.tapreport[i].DueDate).format("DD/MM/YYYY") : data.tapreport[i].DueDate,
+                          // data.tapreport[i].InvoiceNumber || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i].AmountDue) || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i].Current) || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["30Days"]) || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["60Days"]) || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["90Days"]) || '-',
+                          utilityService.modifynegativeCurrencyFormat(data.tapreport[i]["120Days"]) || '-',
+
+                          //
+                      ];
+
+                      if ((data.tapreport[i].AmountDue != 0) || (data.tapreport[i].Current != 0)
+                           || (data.tapreport[i]["30Days"] != 0) || (data.tapreport[i]["60Days"] != 0)
+                           || (data.tapreport[i]["90Days"] != 0) || (data.tapreport[i]["120Days"] != 0)) {
+                          if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
+
+                              if (currenctURL.contact.replace(/\s/g, '') == data.tapreport[i].Name.replace(/\s/g, '')) {
+                                  records.push(recordObj);
+                              }
+                          } else {
+                              records.push(recordObj);
+                          }
+                      }
+
+                  }
+                  records = _.sortBy(records, 'SupplierName');
+                  records = _.groupBy(records, 'SupplierName');
+                  for (let key in records) {
+                      let obj = [{
+                              key: key
+                          }, {
+                              data: records[key]
+                          }
+                      ];
+                      allRecords.push(obj);
+                  }
+
+                  let iterator = 0;
+                  for (let i = 0; i < allRecords.length; i++) {
+                      let amountduetotal = 0;
+                      let Currenttotal = 0;
+                      let lessTnMonth = 0;
+                      let oneMonth = 0;
+                      let twoMonth = 0;
+                      let threeMonth = 0;
+                      let Older = 0;
+                      const currencyLength = Currency.length;
+                      for (let k = 0; k < allRecords[i][1].data.length; k++) {
+                          amountduetotal = amountduetotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[4]);
+                          Currenttotal = Currenttotal + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[5]);
+                          oneMonth = oneMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[6]);
+                          twoMonth = twoMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[7]);
+                          threeMonth = threeMonth + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[8]);
+                          Older = Older + utilityService.convertSubstringParseFloat(allRecords[i][1].data[k].dataArr[9]);
+                      }
+                      let val = ['Total ' + allRecords[i][0].key + '', '', '', '', utilityService.modifynegativeCurrencyFormat(amountduetotal), utilityService.modifynegativeCurrencyFormat(Currenttotal),
+                          utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+                      current.push(val);
+
+                  }
+
+                  //grandtotalRecord
+                  let grandamountduetotal = 0;
+                  let grandCurrenttotal = 0;
+                  let grandlessTnMonth = 0;
+                  let grandoneMonth = 0;
+                  let grandtwoMonth = 0;
+                  let grandthreeMonth = 0;
+                  let grandOlder = 0;
+
+                  for (let n = 0; n < current.length; n++) {
+
+                      const grandcurrencyLength = Currency.length;
+
+                      //for (let m = 0; m < current[n].data.length; m++) {
+                      grandamountduetotal = grandamountduetotal + utilityService.convertSubstringParseFloat(current[n][4]);
+                      grandCurrenttotal = grandCurrenttotal + utilityService.convertSubstringParseFloat(current[n][5]);
+                      // grandlessTnMonth = grandlessTnMonth + utilityService.convertSubstringParseFloat(current[n][5]);
+                      grandoneMonth = grandoneMonth + utilityService.convertSubstringParseFloat(current[n][6]);
+                      grandtwoMonth = grandtwoMonth + utilityService.convertSubstringParseFloat(current[n][7]);
+                      grandthreeMonth = grandthreeMonth + utilityService.convertSubstringParseFloat(current[n][8]);
+                      grandOlder = grandOlder + utilityService.convertSubstringParseFloat(current[n][9]);
+                      //}
+                      // let val = ['Total ' + allRecords[i][0].key+'', '', '', '', utilityService.modifynegativeCurrencyFormat(Currenttotal), utilityService.modifynegativeCurrencyFormat(lessTnMonth),
+                      //     utilityService.modifynegativeCurrencyFormat(oneMonth), utilityService.modifynegativeCurrencyFormat(twoMonth), utilityService.modifynegativeCurrencyFormat(threeMonth), utilityService.modifynegativeCurrencyFormat(Older)];
+                      // current.push(val);
+
+                  }
+
+                  let grandval = ['Grand Total ' + '', '', '', '',
+                      utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+                      // utilityService.modifynegativeCurrencyFormat(grandamountduetotal),
+                      utilityService.modifynegativeCurrencyFormat(grandCurrenttotal),
+                      utilityService.modifynegativeCurrencyFormat(grandoneMonth),
+                      utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+                      utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+                      utilityService.modifynegativeCurrencyFormat(grandOlder)];
+
+                  for (let key in records) {
+                      let dataArr = current[iterator]
+                          let obj = [{
+                                  key: key
+                              }, {
+                                  data: records[key]
+                              }, {
+                                  total: [{
+                                          dataArr: dataArr
+                                      }
+                                  ]
+                              }
+                          ];
+                      totalRecord.push(obj);
+                      iterator += 1;
+                  }
+
+                  templateObject.records.set(totalRecord);
+                  templateObject.grandrecords.set(grandval);
+
+                  if (templateObject.records.get()) {
+                      setTimeout(function () {
+                          $('td a').each(function () {
+                              if ($(this).text().indexOf('-' + Currency) >= 0)
+                                  $(this).addClass('text-danger')
+                          });
+                          $('td').each(function () {
+                              if ($(this).text().indexOf('-' + Currency) >= 0)
+                                  $(this).addClass('text-danger')
+                          });
+
+                          $('td').each(function () {
+
+                              let lineValue = $(this).first().text()[0];
+                              if (lineValue != undefined) {
+                                  if (lineValue.indexOf(Currency) >= 0)
+                                      $(this).addClass('text-right')
+                              }
+
+                          });
+
+                          $('td').each(function () {
+                              if ($(this).first().text().indexOf('-' + Currency) >= 0)
+                                  $(this).addClass('text-right')
+                          });
+
+                          $('td:nth-child(4)').each(function () {
+                              $(this).addClass('text-right');
+                          });
+                          $('.fullScreenSpin').css('display', 'none');
+                      }, 100);
+                  }
+
+              } else {
+                  let records = [];
+                  let recordObj = {};
+                  recordObj.Id = '';
+                  recordObj.type = '';
+                  recordObj.SupplierName = ' ';
+                  recordObj.dataArr = [
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-',
+                      '-'
+                  ];
+
+                  records.push(recordObj);
+                  templateObject.records.set(records);
+                  templateObject.grandrecords.set('');
+                  $('.fullScreenSpin').css('display', 'none');
+              }
+
+          }).catch(function (err) {
+              //Bert.alert('<strong>' + err + '</strong>!', 'danger');
+              $('.fullScreenSpin').css('display', 'none');
+          });
+        }else{
         sideBarService.getTAPReport(dateFrom, dateTo, ignoreDate).then(function (data) {
             let totalRecord = [];
             let grandtotalRecord = [];
@@ -275,7 +495,7 @@ Template.agedpayables.onRendered(() => {
             //Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $('.fullScreenSpin').css('display', 'none');
         });
-
+      }
     };
 
     var currentDate2 = new Date();
