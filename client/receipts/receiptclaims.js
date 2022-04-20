@@ -1144,7 +1144,7 @@ Template.receiptsoverview.events({
         $('#nav-expense .swtReiumbursable').attr('checked', false);
         $('#nav-expense #txaDescription').val('');
 
-        $('#nav-expense .receiptPhoto').css('background-image', "");
+        $('#nav-expense .receiptPhoto').css('background-image', 'none');
         $('#nav-expense .receiptPhoto').attr('data-name', "");
         $('#nav-expense .img-placeholder').css('opacity', 1);
     },
@@ -1179,7 +1179,7 @@ Template.receiptsoverview.events({
         $('#nav-time .swtReiumbursable').attr('checked', false);
         $('#nav-time #txaDescription').val('');
 
-        $('#nav-time .receiptPhoto').css('background-image', "");
+        $('#nav-time .receiptPhoto').css('background-image', "none");
         $('#nav-time .receiptPhoto').attr('data-name', "");
         $('#nav-time .img-placeholder').css('opacity', 1);
     },
@@ -1276,7 +1276,7 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .receiptPhoto').attr('data-name', selectedClaim.Attachments[0].fields.AttachmentName);
             $('#viewReceiptModal .img-placeholder').css('opacity', 0);
         } else {
-            $('#viewReceiptModal .receiptPhoto').css('background-image', "");
+            $('#viewReceiptModal .receiptPhoto').css('background-image', "none");
             $('#viewReceiptModal .receiptPhoto').attr('data-name', "");
             $('#viewReceiptModal .img-placeholder').css('opacity', 1);
         }
@@ -1408,7 +1408,7 @@ Template.receiptsoverview.events({
         imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
 
         var attachment;
-        if (imageData) {
+        if (imageData != 'none') {
             imageData = imageData.split(/"/)[1];
             imageBase64 = imageData.split(',')[1];
             imageDescryption = imageData.split(',')[0];
@@ -1492,6 +1492,39 @@ Template.receiptsoverview.events({
         });
     },
 
+    'click #viewReceiptModal .btn-download': function(e) {
+
+        imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
+        imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
+
+        if (imageData != 'none') {
+            imageData = imageData.split(/"/)[1];
+
+            var a = document.createElement("a"); //Create <a>
+            a.href = imageData; //Image Base64 Goes here
+            a.download = imageName; //File name Here
+            a.click();
+        } else {
+            swal("There is no attachment to download", '', 'warning');
+        }
+    },
+
+    'click .btn-detach': function (e) {
+        let from = $('#employeeListModal').attr('data-from');
+        var parentElement;
+        if (from == "ViewReceipt") {
+            parentElement = "#viewReceiptModal";
+        } else if (from == "NavExpense") {
+            parentElement = "#nav-expense";
+        } else if (from == "NavTime") {
+            parentElement = "#nav-time";
+        }
+        
+        $(parentElement + ' .receiptPhoto').css('background-image', 'none');
+        $(parentElement + ' .receiptPhoto').attr('data-name', '');
+        $(parentElement + ' .img-placeholder').css('opacity', 1);
+    },
+
     'click #newReceiptModal .btnSave': function (e) {
 
         let template = Template.instance();
@@ -1503,7 +1536,7 @@ Template.receiptsoverview.events({
         imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
 
         var attachment;
-        if (imageData) {
+        if (imageData != 'none') {
             imageData = imageData.split(/"/)[1];
             imageBase64 = imageData.split(',')[1];
             imageDescryption = imageData.split(',')[0];
