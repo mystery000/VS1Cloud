@@ -7,6 +7,7 @@ import { PaymentsService } from '../payments/payments-service';
 import { ProductService } from '../product/product-service';
 import { SideBarService } from '../js/sidebar-service';
 import { EmployeePayrollService } from '../js/employeepayroll-service';
+import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import { Random } from 'meteor/random';
 import { AppointmentService } from '../appointments/appointment-service';
 import '../lib/global/indexdbstorage.js';
@@ -2746,9 +2747,24 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getEmployeePaySettings = async () => {
         try { 
-            let dataObject = await getVS1Data('TEmployeepaysettings');
-            if (dataObject.length) {
-                let data = JSON.parse(dataObject[0].data);
+            // EmployeePayrollApi fetch data
+            const employeePayrollApi = new EmployeePayrollApi();
+
+            const allEmployeePaysettingEndpoint = employeePayrollApi.collection.findByName(
+                employeePayrollApi.collectionNames.TEmployeepaysettings
+            );
+            allEmployeePaysettingEndpoint.url.searchParams.append("ListType", "'Detail'");
+            // Search for specific employee
+            allEmployeePaysettingEndpoint.url.searchParams.append(
+                "select",
+                `[Employeeid]=${employeeID}`
+            );
+            
+            const allEmployeePaysetting = await allEmployeePaysettingEndpoint.fetch();
+
+            if (allEmployeePaysetting.ok == true) {
+                const data = await allEmployeePaysetting.json();
+                console.log('TEmployeepaysettings', data);
                 let useData = data.temployeepaysettings;
                 for (let i = 0; i < useData.length; i++) {
                     if (parseInt(useData[i].fields.Employeeid) === parseInt(employeeID)) {
@@ -2771,11 +2787,9 @@ Template.employeescard.onRendered(function () {
                             UpwardvariationRequested: useData[i].fields.Employee.fields.UpwardvariationRequested ? useData[i].fields.Employee.fields.UpwardvariationRequested : false,
                             SeniorandPensionersTaxOffsetClaimed: useData[i].fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? useData[i].fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
                             HasApprovedWithholdingVariation: useData[i].fields.Employee.fields.HasApprovedWithholdingVariation ? useData[i].fields.Employee.fields.HasApprovedWithholdingVariation : false,
-
-                            dataObject: dataObject
+                            dataObject: data
                         };
                         templateObject.employeePayInfos.set(payInfo);
-                        console.log('TEmployeepaysettings', payInfo)
                         break;                    
                     }
                 }
@@ -2783,6 +2797,7 @@ Template.employeescard.onRendered(function () {
         } catch(err) {  
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllEmployeePaySettings('All',0)
+            console.log('TEmployeepaysettings', data );
             for (let i = 0; i < data.temployeepaysettings.length; i++) {
                 if (parseInt(data.temployeepaysettings[i].fields.Employeeid) === parseInt(employeeID)) {
 
@@ -3727,11 +3742,11 @@ Template.employeescard.events({
             let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
             let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
 
-            let dataObject = payInfo.dataObject;
+            let data = payInfo.dataObject;
 
-            let employeeEmail = dataObject[0].EmployeeEmail;
-            let timestamp = dataObject[0].timestamp;
-            let data = JSON.parse(dataObject[0].data);
+            // let employeeEmail = dataObject[0].EmployeeEmail;
+            // let timestamp = dataObject[0].timestamp;
+            // let data = JSON.parse(dataObject[0].data);
 
             let newData = {...data};
             let currentInfo = data.temployeepaysettings[index];
@@ -3747,19 +3762,22 @@ Template.employeescard.events({
             currentInfo.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed = SeniorandPensionersTaxOffsetClaimed;
             currentInfo.fields.Employee.fields.HasApprovedWithholdingVariation = HasApprovedWithholdingVariation;
 
-            let newDataObj = [{
-                EmployeeEmail: employeeEmail,
-                timestamp: timestamp,
-                data: data
-            }];
+            // let newDataObj = [{
+            //     EmployeeEmail: employeeEmail,
+            //     timestamp: timestamp,
+            //     data: data
+            // }];
 
-            let objDetails = {};
-            if (!isNaN(currentId.id)) {
+            // let objDetails = {};
+            // if (!isNaN(currentId.id)) {
 
-            } else {
+            // } else {
 
-            }
-            addVS1Data('TEmployeepaysettings', JSON.stringify(data));
+            // }
+
+            // console.log( 'data', currentInfo )
+
+            addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
             employeePayrollService.saveTEmployeepaysettings(objDetails).then(function(objDetails) {

@@ -19,7 +19,7 @@
             display: block;
         }
     </style>
-    <div style="margin-top: -24px;">
+    <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
@@ -31,10 +31,12 @@
                 }
             }
         </style>
-        <header style="padding: 16px;" class="salesOverviewMobile">
-            <h2 style="margin: 14px;margin-bottom: 0px;" class="pageHeader">Sales Overview
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
-                        class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+      
+        <header class="p-2 d-flex align-items-center salesOverviewMobile">
+            <h2 class="m-1 pageHeader" >Sales Overview</h2>
+                <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">
+                    Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
+                </a>
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                     <div class="modal-dialog modal-sm" role="document">
@@ -60,9 +62,9 @@
                     </div>
                 </div>
                 <!-- End Help View Modal -->
-                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal3"
+                <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
                     style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
-            </h2>
+           
             <div class="modal fade" role="dialog" tabindex="-1" id="myModal3">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
