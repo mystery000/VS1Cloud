@@ -345,7 +345,7 @@ Template.allChartLists.onRendered(function () {
 
         //if (itemList.includes(itemName) == true) {
         // If the item name exist
-        if (tvs1chart.fields.ChartWidth) {
+        if (parseInt(tvs1chart.fields.ChartWidth) > 100) {
           $(`[key='${itemName}'] .ui-resizable`).css(
             "width",
             tvs1chart.fields.ChartWidth

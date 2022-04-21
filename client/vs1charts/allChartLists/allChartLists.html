@@ -46,8 +46,21 @@
         }
         .minHeight100 .canvasHeight100 {
             position: relative;
-            /* min-height: 200px; */
+            min-height: 110px;
+            max-height: 100%;
         }
+        .col-md-6 .minHeight100 .canvasParentDiv {
+            position: relative;
+            max-height: 100%;
+            min-height: calc(100vh / 2.5) !important;
+        }
+        /* .col-md-6 .minHeight100 .canvasHeight100 canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        } */
     </style>
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
         <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">

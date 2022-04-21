@@ -3776,7 +3776,7 @@ Template.employeescard.events({
             // }
 
             // console.log( 'data', currentInfo )
-
+            //TO DO: SAVE INTO DATABASE
             addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
