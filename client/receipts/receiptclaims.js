@@ -1103,62 +1103,64 @@ Template.receiptsoverview.onRendered(function () {
 
             console.log('vendor', data.vendor);
 
-            isExistSupplier = false;
-            templateObject.suppliers.get().forEach(supplier => {
-                if (data.vendor.name == supplier.suupliername) {
-                    isExistSupplier = true;
-                    $(parentElement + ' .merchants').val(data.vendor.name);
-                    $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
-                }
-            })
-
-            if (!isExistSupplier) {
-                // create supplier with vendor data
-                objDetails = {
-                    type: "TSupplier",
-                    fields:
-                    {
-                        ClientName: data.vendor.name,
-                        FirstName: data.vendor.name,
-                        LastName: '',
-                        Phone: data.vendor.phone_number,
-                        Mobile: '',
-                        Email: data.vendor.email,
-                        SkypeName: '',
-                        Street: '',
-                        Street2: '',
-                        Suburb: '',
-                        State: '',
-                        PostCode: '',
-                        Country: '',
-
-                        BillStreet: '',
-                        BillStreet2: '',
-                        BillState: '',
-                        BillPostCode: '',
-                        Billcountry: '',
-                        PublishOnVS1: true
+            if (!data.vendor.name) {
+                isExistSupplier = false;
+                templateObject.suppliers.get().forEach(supplier => {
+                    if (data.vendor.name == supplier.suupliername) {
+                        isExistSupplier = true;
+                        $(parentElement + ' .merchants').val(data.vendor.name);
+                        $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                     }
-                };
+                })
 
-                contactService.saveSupplier(objDetails).then(function (supplier) {
-                    console.log('supplier save', supplier);
-                    //$('.fullScreenSpin').css('display','none');
-                    //  Meteor._reload.reload();
-                    $(parentElement + ' .merchants').val(data.vendor.name);
-                    $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+                if (!isExistSupplier) {
+                    // create supplier with vendor data
+                    objDetails = {
+                        type: "TSupplier",
+                        fields:
+                        {
+                            ClientName: data.vendor.name,
+                            FirstName: data.vendor.name,
+                            LastName: '',
+                            Phone: data.vendor.phone_number,
+                            Mobile: '',
+                            Email: data.vendor.email,
+                            SkypeName: '',
+                            Street: '',
+                            Street2: '',
+                            Suburb: '',
+                            State: '',
+                            PostCode: '',
+                            Country: '',
 
-                    var suppliers = templateObject.suppliers.get();
-                    suppliers.push({
-                        supplierid: supplier.fields.ID,
-                        suppliername: data.vendor.name,
+                            BillStreet: '',
+                            BillStreet2: '',
+                            BillState: '',
+                            BillPostCode: '',
+                            Billcountry: '',
+                            PublishOnVS1: true
+                        }
+                    };
+
+                    contactService.saveSupplier(objDetails).then(function (supplier) {
+                        console.log('supplier save', supplier);
+                        //$('.fullScreenSpin').css('display','none');
+                        //  Meteor._reload.reload();
+                        $(parentElement + ' .merchants').val(data.vendor.name);
+                        $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+
+                        var suppliers = templateObject.suppliers.get();
+                        suppliers.push({
+                            supplierid: supplier.fields.ID,
+                            suppliername: data.vendor.name,
+                        });
+                        templateObject.suppliers.set(suppliers);
+
+                    }).catch(function (err) {
+                        //$('.fullScreenSpin').css('display','none');
+                        console.log('supplier svae error', err);
                     });
-                    templateObject.suppliers.set(suppliers);
-
-                }).catch(function (err) {
-                    //$('.fullScreenSpin').css('display','none');
-                    console.log('supplier svae error', err);
-                });
+                }
             }
 
             $(parentElement + ' .employees').attr('data-id', loggedUserId);
