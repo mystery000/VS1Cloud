@@ -8,6 +8,8 @@ import { UtilityService } from "../utility-service";
 import { PaymentsService } from "../payments/payments-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
+import ChartHandler from "../js/Charts/ChartHandler";
+import HeaderCard from "./HeaderCard";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1930,11 +1932,11 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.deactivateDraggable = () => {
-      draggableCharts.disable();
+    draggableCharts.disable();
   };
   templateObject.activateDraggable = () => {
-      draggableCharts.enable();
-  };    
+    draggableCharts.enable();
+  };
   templateObject.activateDraggable(); // this will enable charts resiable features
 
   let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -1980,6 +1982,42 @@ Template.purchasesoverview.onRendered(function () {
   // });
 
   //$(".portlet").resizable();
+
+  $(".connectedCardSortable")
+    .sortable({
+      disabled: false,
+      connectWith: ".connectedCardSortable",
+      placeholder: "portlet-placeholder ui-corner-all",
+      stop: async (event, ui) => {
+        // console.log($(ui.item[0]));
+        console.log("Dropped the sortable chart");
+
+        // Here we rebuild positions tree in html
+        ChartHandler.buildCardPositions(
+          $(".connectedCardSortable .card-visibility")
+        );
+
+
+        // Here we get that list and create and object
+        const cards = $(".connectedCardSortable .card-visibility");
+
+        let jsonObject = [];
+        // console.log(cards);
+        for (let i = 0; i < cards.length; i++) {
+          jsonObject.push(
+            new HeaderCard({
+              employeeId: Session.get("mySessionEmployeeLoggedID"),
+              key: $(cards[i]).attr("card-key"),
+              position: $(cards[i]).attr("position"),
+            })
+          );
+        }
+
+        // TO DO: We need to save this locally and on the remote server also
+        console.log(jsonObject);
+      },
+    })
+    .disableSelection();
 });
 
 Template.purchasesoverview.events({
