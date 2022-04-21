@@ -947,61 +947,6 @@ Template.receiptsoverview.onRendered(function () {
             return ((a < b) ? 1 : ((a > b) ? -1 : 0));
         }
     });
-
-    templateObject.getEmployees = function () {
-        getVS1Data('TEmployee').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TEmployee', JSON.stringify(data));
-                    let lineItems = [];
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let lineItem = {
-                            id: data.temployee[i].fields.ID || '',
-                            employeeno: data.temployee[i].fields.EmployeeNo || '',
-                            employeename: data.temployee[i].fields.EmployeeName || '',
-                        };
-                        lineItems.push(lineItem);
-                    }
-    
-                    templateObject.employees.set(lineItems);
-                }).catch(function (err) {
-    
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-    
-                let lineItems = [];
-                for (let i = 0; i < useData.length; i++) {
-                    let lineItem = {
-                        id: useData[i].fields.ID || '',
-                        employeeno: useData[i].fields.EmployeeNo || '',
-                        employeename: useData[i].fields.EmployeeName || '',
-                    };
-                    lineItems.push(lineItem);
-                }
-                templateObject.employees.set(lineItems);
-            }
-        }).catch(function (err) {
-            sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TEmployee', JSON.stringify(data));
-                let lineItems = [];
-                for (let i = 0; i < data.temployee.length; i++) {
-                    let lineItem = {
-                        id: data.temployee[i].fields.ID || '',
-                        employeeno: data.temployee[i].fields.EmployeeNo || '',
-                        employeename: data.temployee[i].fields.EmployeeName || '',
-                    };
-                    lineItems.push(lineItem);
-                }
-                templateObject.employees.set(lineItems);
-            }).catch(function (err) {
-    
-            });
-        });
-    }
-    
-    // templateObject.getEmployees();
     
     templateObject.getSuppliers = function () {
         accountService.getSupplierVS1().then(function (data) {
@@ -1018,6 +963,7 @@ Template.receiptsoverview.onRendered(function () {
     
         });
     };
+    templateObject.getSuppliers();
 
     templateObject.getExpenseClaims = function () {
         $('#fullScreenSpin').css('display', 'inline-block');
@@ -1154,6 +1100,25 @@ Template.receiptsoverview.onRendered(function () {
             } else if (from == 'NavTime') {
                 parentElement = "#nav-time";
             }
+
+            merchantName = data.vendor.name;
+            console.log('vendor', data.vendor);
+
+            isExistSupplier = false;
+            templateObject.suppliers.get().forEach(supplier => {
+                if (merchantName == supplier.suupliername) {
+                    isExistSupplier = true;
+                    $(parentElement + ' .merchants').val(merchantName);
+                    $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
+                }
+            })
+
+            if (!isExistSupplier) {
+                // create supplier with vendor data
+                $(parentElement + ' .merchants').val(merchantName);
+                $(parentElement + ' .merchants').attr('data-id', '');
+            }
+
 
             $(parentElement + ' .employees').attr('data-id', loggedUserId);
             $(parentElement + ' .employees').val(loggedUserName);
@@ -1298,7 +1263,6 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .receiptPhoto').css('background-image', "url('" + imageData + "')");
             $('#viewReceiptModal .receiptPhoto').attr('data-name', imageFile.name);
             $('#viewReceiptModal .img-placeholder').css('opacity', 0);
-            console.log('selected image', imageData);
             template.getOCRResultFromImage(imageData, imageFile.name);
         })
     },
