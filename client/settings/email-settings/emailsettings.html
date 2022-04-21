@@ -111,44 +111,44 @@
                                         {{#each item in employeescheduledrecord}}
                                             {{#if checkIfEssentials item.formID}}
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="arrow">{{item.formname}}</td>
-                                                    {{#if equals item.frequency "Monthly"}}
+                                                    <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}">{{item.formname}}</td>
+                                                    {{#if equals item.frequencyType "Monthly"}}
                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="day{{item.monthDays}}" data-ofmonths="{{item.globalRef}}"
-                                                            data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                            data-monthdate="day{{item.monthDays}}" data-ofmonths="{{item.extraOption}}"
+                                                            data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
                                                     {{else}}
-                                                        {{#if equals item.frequency "Weekly"}}
+                                                        {{#if equals item.frequencyType "Weekly"}}
                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                data-selectdays="{{item.globalRef}}" data-everyweeks="item.every"
-                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                data-selectdays="{{item.extraOption}}" data-everyweeks="{{item.every}}"
+                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
                                                         {{else}}
-                                                            {{#if equals item.frequency "Daily"}}
+                                                            {{#if equals item.frequencyType "Daily"}}
                                                                 <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                    data-dailyradiooption="{{item.globalRef}}" data-everydays="item.every"
-                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                    data-dailyradiooption="{{item.extraOption}}" data-everydays="{{item.every}}"
+                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
                                                             {{else}}
-                                                                {{#if equals item.frequency "One Time Only"}}
+                                                                {{#if equals item.frequencyType "One Time Only"}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
                                                                 {{else}}
-                                                                    {{#if equals item.frequency "On Event"}}
+                                                                    {{#if equals item.frequencyType "On Event"}}
                                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                            data-eventtype="{{item.globalRef}}">{{item.frequency}}</td>
+                                                                            data-eventtype="{{item.extraOption}}">{{item.frequencyType}}</td>
                                                                     {{else}}
-                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequency}}</td>
+                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequencyType}}</td>
                                                                     {{/if}}
                                                                 {{/if}}
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
-                                                    {{#if equals item.MsUpdateSiteCode "Time"}}
-                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.MsUpdateSiteCode}}</td>
-                                                    {{else}}
-                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.MsUpdateSiteCode}}</td>
-                                                    {{/if}}
+                                                    <!-- {{#if equals item.MsUpdateSiteCode "Time"}}
+                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td>
+                                                    {{else}} -->
+                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td>
+                                                    <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
-                                                            class="es-input highlightSelect edtRecipients" type="search">{{item.employeeName}}</td>
+                                                            class="es-input highlightSelect edtRecipients" type="search" value="{{item.recipients}}"></td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
@@ -219,11 +219,13 @@
                                                 </style>
                                                 <tbody>
                                                     {{#each reportType in reportTypeData}}
+                                                    {{#unless equals reportType.id 1}}
                                                     <tr class="dnd-moved" id="groupedReports-{{reportType.id}}" style="cursor: pointer;">
                                                         <td contenteditable="false" class=""><input class="star"
                                                                 type="checkbox"></td>
                                                         <td contenteditable="false" class="">{{reportType.name}}</td>
                                                     </tr>
+                                                    {{/unless}}
                                                     {{/each}}
                                                 </tbody>
                                             </table>
@@ -316,22 +318,22 @@
                                     </thead>
                                     <tbody>
                                         {{#each item in employeescheduledrecord}}
-                                            {{#unless item.formId 0}}
+                                            {{#if checkIfNotEssentials item.formID}}
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="arrow">{{item.formname}}</td>
                                                     {{#if equals item.frequency "Monthly"}}
                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="day{{item.monthDays}}" data-ofmonths="{{item.globalRef}}"
+                                                            data-monthdate="{{item.monthDays}}" data-ofmonths="{{item.extraOption}}"
                                                             data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
                                                     {{else}}
                                                         {{#if equals item.frequency "Weekly"}}
                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                data-selectdays="{{item.globalRef}}" data-everyweeks="item.every"
+                                                                data-selectdays="{{item.extraOption}}" data-everyweeks="{{item.every}}"
                                                                 data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
                                                         {{else}}
                                                             {{#if equals item.frequency "Daily"}}
                                                                 <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                    data-dailyradiooption="{{item.globalRef}}" data-everydays="item.every"
+                                                                    data-dailyradiooption="{{item.extraOption}}" data-everydays="{{item.every}}"
                                                                     data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
                                                             {{else}}
                                                                 {{#if equals item.frequency "One Time Only"}}
@@ -340,7 +342,7 @@
                                                                 {{else}}
                                                                     {{#if equals item.frequency "On Event"}}
                                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                            data-eventtype="{{item.globalRef}}">{{item.frequency}}</td>
+                                                                            data-eventtype="{{item.extraOption}}">{{item.frequency}}</td>
                                                                     {{else}}
                                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequency}}</td>
                                                                     {{/if}}
@@ -348,16 +350,16 @@
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
-                                                    {{#if equals item.MsUpdateSiteCode "Time"}}
-                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.MsUpdateSiteCode}}</td>
-                                                    {{else}}
-                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.MsUpdateSiteCode}}</td>
-                                                    {{/if}}
+                                                    <!-- {{#if equals item.MsUpdateSiteCode "Time"}} -->
+                                                        <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td> -->
+                                                    <!-- {{else}} -->
+                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td>
+                                                    <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
                                                             class="es-input highlightSelect edtRecipients" type="search">{{item.employeeName}}</td>
                                                 </tr>
-                                            {{/unless}}
+                                            {{/if}}
                                         {{/each}}
 
                                     </tbody>
@@ -718,7 +720,7 @@
                                                                         <input type="text" class="form-control"
                                                                             id="edtMonthlyStartDate"
                                                                             name="edtMonthlyStartDate">
-                                                                        <div class="input-group-addon" style="">
+                                                                        <div class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-th"
                                                                                 style="cursor: pointer;"></span>
                                                                         </div>
@@ -888,7 +890,7 @@
                                                                         <input type="text" class="form-control"
                                                                             id="edtWeeklyStartDate"
                                                                             name="edtWeeklyStartDate">
-                                                                        <div class="input-group-addon" style="">
+                                                                        <div class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-th"
                                                                                 style="cursor: pointer;"></span>
                                                                         </div>
@@ -984,7 +986,7 @@
                                                                         <input type="text" class="form-control"
                                                                             id="edtDailyStartDate"
                                                                             name="edtDailyStartDate">
-                                                                        <div class="input-group-addon" style="">
+                                                                        <div class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-th"
                                                                                 style="cursor: pointer;"></span>
                                                                         </div>
@@ -1034,7 +1036,7 @@
                                                                         <input type="text" class="form-control"
                                                                             id="edtOneTimeOnlyDate"
                                                                             name="edtOneTimeOnlyDate">
-                                                                        <div class="input-group-addon" style="">
+                                                                        <div class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-th"
                                                                                 style="cursor: pointer;"></span>
                                                                         </div>
@@ -1210,8 +1212,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-6 col-lg-5">
+                                                <!-- <div class="row"> -->
+                                                    <!-- <div class="col-6 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnDate">
@@ -1219,8 +1221,8 @@
                                                                 Time
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-6 col-lg-7">
+                                                    </div> -->
+                                                    <!-- <div class="col-6 col-lg-7">
                                                         <div class="form-group" style="margin-bottom: 0px !important;">
                                                             <input type="time" class="form-control" id="edtBasedOnDate"
                                                                 name="edtBasedOnDate"
@@ -1230,8 +1232,8 @@
                                                                 This field is rquired.
                                                             </p>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    </div> -->
+                                                <!-- </div> -->
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-success btnSaveBasedOn"><i
