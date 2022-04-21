@@ -219,7 +219,7 @@
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <div class="card-header rightsideheader">
-                        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                        <ul class="nav nav-tabs nav-fill" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active {{#if itemTransaction.matched }}matchedtab{{/if}}" id="home-tab" data-toggle="tab" href="#match_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="home" aria-selected="true">Match</a>
                             </li>
@@ -238,7 +238,7 @@
                         </ul>
                     </div>
                     <div class="card-body" style="padding: 0;">
-                        <div class="tab-content" id="myTabContent">
+                        <div class="tab-content">
                             <div class="tab-pane fade show active {{#if itemTransaction.matched }}matched{{/if}}" id="match_{{ itemTransaction.DepositLineID }}" role="tabpanel" aria-labelledby="match-tab">
                                 <div class="row" style="margin-left: 0; margin-right: 0;">
                                     <div class="col-12" style="padding: 16px; border: 1px solid #e3e6f0; border-bottom: 0 solid #e3e6f0; border-top: 0 solid #e3e6f0;">
@@ -281,7 +281,7 @@
                                                 style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
                                     </div>
                                     <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
-                                        <a href="" style="float: right;">Add Details</a>
+                                        <a href="" style="float: right;" id="btnAddDetail_{{ itemTransaction.DepositLineID }}">Add Details</a>
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +290,7 @@
                                     <div class="col-6" style="padding: 16px;">
                                         <div class="form-group mb-0">
                                             <label>Select a Bank Account</label>
-                                            <select type="search" class="form-control" id="ttaxRate_{{ itemTransaction.DepositLineID }}" value="Tax Rate"
+                                            <select type="search" class="form-control" id="transferAccount_{{ itemTransaction.DepositLineID }}" value=""
                                                 style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
                                         </div>
                                     </div>

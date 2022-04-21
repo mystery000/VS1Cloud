@@ -26,13 +26,13 @@ Template.newbankrecon.onCreated(function() {
     templateObject.bankTransactionData = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
 
-    setTimeout(function() {
-        $(document).ready(function() {
-
-
-        });
-
-    }, 500);
+    // setTimeout(function() {
+    //     $(document).ready(function() {
+    //
+    //
+    //     });
+    //
+    // }, 500);
 });
 
 Template.newbankrecon.onRendered(function() {
@@ -57,6 +57,8 @@ Template.newbankrecon.onRendered(function() {
     let bankaccountname = Session.get('bankaccountname') || '';
     let statementDate = localStorage.getItem('statementdate')|| '';
     let selectedAccountFlag = '';
+    let selectedDepositID = null;
+    let selectedTaxRateFlag = '';
 
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
@@ -311,20 +313,16 @@ Template.newbankrecon.onRendered(function() {
                     page_arr = page_arr.slice((page_number-1)*page_limit, page_number*page_limit);
                     let thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), page_arr);
                     templateObject.bankTransactionData.set(thirdaryData);
-                    defineTabpanelEvent();
+                    if (templateObject.bankTransactionData.get().length > 0) {
+                        setTimeout(function() {
+                            defineTabpanelEvent();
+                        }, 500);
+                    }
                 }
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
 
-            if (templateObject.bankTransactionData.get()) {
-                setTimeout(function() {
-                }, 0);
-            } else {
-                setTimeout(function() {
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
-            }
             $('.fullScreenSpin').css('display', 'none');
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
@@ -583,6 +581,7 @@ Template.newbankrecon.onRendered(function() {
                 var taxSelected = "sales";
                 var offset = $each.offset();
                 var taxRateDataName = e.target.value || "";
+                selectedDepositID = item.DepositLineID;
                 if (e.pageX > offset.left + $each.width() - 8) {
                     // X button 16px wide?
                     $("#taxRateListModal").modal("toggle");
@@ -623,11 +622,11 @@ Template.newbankrecon.onRendered(function() {
             $('#what_'+item.DepositLineID).editableSelect();
             $('#what_'+item.DepositLineID).editableSelect().on('click.editable-select', function (e, li) {
                 var $each = $(this);
-                console.log('what_'+item.DepositLineID);
                 var offset = $each.offset();
                 let accountService = new AccountService();
-                var accountDataName = e.target.value ||'';
-                selectedAccountFlag = 'ForTransaction';
+                let accountDataName = e.target.value ||'';
+                selectedAccountFlag = 'ForCreate';
+                selectedDepositID = item.DepositLineID;
 
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     $('#selectLineID').val('');
@@ -651,7 +650,7 @@ Template.newbankrecon.onRendered(function() {
                                 });
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
-                                var added=false;
+                                let added=false;
                                 for (let a = 0; a < data.taccountvs1.length; a++) {
                                     if((data.taccountvs1[a].fields.AccountName) === accountDataName){
                                         added = true;
@@ -688,6 +687,83 @@ Template.newbankrecon.onRendered(function() {
                     }
                 }
             });
+            $('#transferAccount_'+item.DepositLineID).editableSelect();
+            $('#transferAccount_'+item.DepositLineID).editableSelect().on('click.editable-select', function (e, li) {
+                var $each = $(this);
+                var offset = $each.offset();
+                let accountService = new AccountService();
+                let accountDataName = e.target.value ||'';
+                selectedAccountFlag = 'ForTransfer';
+                selectedDepositID = item.DepositLineID;
+
+                if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+                    $('#selectLineID').val('');
+                    $('#bankAccountListModal').modal();
+                    setTimeout(function () {
+                        $('#tblAccount_filter .form-control-sm').focus();
+                        $('#tblAccount_filter .form-control-sm').val('');
+                        $('#tblAccount_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblAccountlist').DataTable();
+                        datatable.draw();
+                        $('#tblAccountlist_filter .form-control-sm').trigger("input");
+                    }, 500);
+                }else{
+                    if(accountDataName.replace(/\s/g, '') !== ''){
+                        getVS1Data('TAccountVS1').then(function (dataObject) {
+                            if (dataObject.length === 0) {
+                                accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                    setBankAccountData(data);
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let added=false;
+                                for (let a = 0; a < data.taccountvs1.length; a++) {
+                                    if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                                        added = true;
+                                        setBankAccountData(data, a);
+                                    }
+                                }
+                                if(!added) {
+                                    accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                        setBankAccountData(data);
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display','none');
+                                    });
+                                }
+                            }
+                        }).catch(function (err) {
+                            accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                setBankAccountData(data);
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display','none');
+                            });
+                        });
+                        $('#addAccountModal').modal('toggle');
+                    }else{
+                        $('#selectLineID').val('');
+                        $('#bankAccountListModal').modal();
+                        setTimeout(function () {
+                            $('#tblAccount_filter .form-control-sm').focus();
+                            $('#tblAccount_filter .form-control-sm').val('');
+                            $('#tblAccount_filter .form-control-sm').trigger("input");
+                            var datatable = $('#tblSupplierlist').DataTable();
+                            datatable.draw();
+                            $('#tblAccount_filter .form-control-sm').trigger("input");
+                        }, 500);
+                    }
+                }
+            });
+            $('#btnAddDetail_'+item.DepositLineID).on('click', function(e, li) {
+                let taxRate = $('#ctaxRate'+item.DepositLineID).val();
+                let who = $('#who_'+item.DepositLineID).val();
+                let what = $('#what_'+item.DepositLineID).val();
+                let why = $('#why_'+item.DepositLineID).val();
+                // FlowRouter.go('/recontransactiondetail?ID='+selectedDepositID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate);
+                let queryParams = {ID: item.DepositLineID, who: who, what: what, why: why, taxRate: taxRate};
+                FlowRouter.go('/recontransactiondetail', queryParams);
+            });
         })
     }
 
@@ -695,10 +771,11 @@ Template.newbankrecon.onRendered(function() {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
         var table = $(this);
+        let accountname = table.find(".productName").text();
+        let accountId = table.find(".colAccountID").text();
+        $('#bankAccountListModal').modal('toggle');
+
         if (selectedAccountFlag === 'ForBank') {
-            let accountname = table.find(".productName").text();
-            let accountId = table.find(".colAccountID").text();
-            $('#bankAccountListModal').modal('toggle');
             $('#bankAccountName').val(accountname);
             $('#bankAccountID').val(accountId);
 
@@ -712,41 +789,21 @@ Template.newbankrecon.onRendered(function() {
                         window.open('/newbankrecon', '_self');
                     }, 1000);
                 }
-            } else {
-
             }
-        } else if (selectedAccountFlag === 'ForTransaction') {
-            let selectLineID = $('#selectLineID').val();
-            let $tblrows = $("#tblDepositEntryLine tbody tr");
-            if(selectLineID){
-                let lineProductName = table.find(".productName").text();
-                let lineProductDesc = table.find(".productDesc").text();
-                let lineAccoutNo = table.find(".accountnumber").text();
-
-                $('#'+selectLineID+" .lineAccountName").val(lineProductName);
-                $('#transactionAccountListModal').modal('toggle');
-
-                $(".colAccount").removeClass('boldtablealertsborder');
-            }else{
-                let accountname = table.find(".productName").text();
-                $('#transactionAccountListModal').modal('toggle');
-                $('#transactionAccountName').val(accountname);
-                if($tblrows.find(".lineAccountName").val() === ''){
-                    $tblrows.find(".colAccount").addClass('boldtablealertsborder');
-                }
+        } else if (selectedAccountFlag === 'ForCreate') {
+            if (accountId !== "") {
+                $('#what_'+selectedDepositID).val(accountname);
+            }
+        } else if (selectedAccountFlag === 'ForTransfer') {
+            if (accountId !== "") {
+                $('#transferAccount_'+selectedDepositID).val(accountname);
             }
         }
-
         $('#tblAccount_filter .form-control-sm').val('');
-        // setTimeout(function () {
-        //     $('.btnRefreshAccount').trigger('click');
-        //     $('.fullScreenSpin').css('display', 'none');
-        // }, 1000);
     });
 
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
-        let selectedTaxRateDropdownID = $('#selectLineID').val() || 'transactionTaxRate';
-        $('#'+selectedTaxRateDropdownID+'').val($(this).find(".taxName").text());
+        $('#ctaxRate_'+selectedDepositID).val($(this).find(".taxName").text());
         $('#taxRateListModal').modal('toggle');
     });
 });
