@@ -455,7 +455,7 @@ Template.newsidenav.onRendered(function() {
                 $('#sidenavdashbaord ').removeClass('active');
                 $('#sidenavappointment').removeClass('active');
                 $('#sidenavcontacts').removeClass('active');
-                $('#sidenavcrm ').removeClass('active');
+                $('#sidenavcrm').removeClass('active');
                 $('#sidenavinventory').removeClass('active');
                 $('#sidenavpayments').removeClass('active');
                 $('#sidenavpurchases').removeClass('active');

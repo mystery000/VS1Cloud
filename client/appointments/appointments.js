@@ -6330,9 +6330,12 @@ Template.appointments.onRendered(function () {
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
     templateObject.checkSMSSettings = function() {
         const smsSettings = templateObject.defaultSMSSettings.get();
-        if (smsSettings.twilioAccountId === "" ||
+        const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
+        const chkSMSUser = $('#chkSMSUser').prop('checked');
+        if ((!smsSettings || smsSettings.twilioAccountId === "" ||
             smsSettings.twilioAccountToken === "" ||
-            smsSettings.twilioTelephoneNumber === "") {
+            smsSettings.twilioTelephoneNumber === "") &&
+            (chkSMSCustomer || chkSMSUser)) {
             swal({
                 title: 'No SMS Settings',
                 text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
@@ -8602,42 +8605,46 @@ Template.appointments.events({
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
-            swal({
-                title: 'Invalid phone number',
-                text: "Invalid phone number. Any SMS message won't be sent.",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'cancel'
-            }).then((result) => {
-                if (result.value) {
-                    $('#btnStartAppointmentConfirm').trigger('click');
-                }
-            })
-        } else {
-            const templateObject = Template.instance();
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            if (!smsSettings || !smsSettings.twilioAccountId) {
+            if (smsCustomer || smsUser) {
                 swal({
-                    title: 'No SMS Settings',
-                    text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                    title: 'Invalid phone number',
+                    text: "Invalid phone number. Any SMS message won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'Go to SMS Settings'
+                    cancelButtonText: 'cancel'
                 }).then((result) => {
                     if (result.value) {
-                        $('#chkSMSCustomer').prop('checked', false);
-                        $('#chkSMSUser').prop('checked', false);
                         $('#btnStartAppointmentConfirm').trigger('click');
-                    } else if (result.dismiss === 'cancel') {
-                        window.open('/smssettings', '_self');
-                    } else {
-                        window.open('/smssettings', '_self');
                     }
-                });
+                })
             } else {
-                if (smsCustomer || smsUser) {
+                $('#btnStartAppointmentConfirm').trigger('click');
+            }
+        } else {
+            const templateObject = Template.instance();
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            if (smsCustomer || smsUser) {
+                if (!smsSettings || !smsSettings.twilioAccountId) {
+                    swal({
+                        title: 'No SMS Settings',
+                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Continue',
+                        cancelButtonText: 'Go to SMS Settings'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#chkSMSCustomer').prop('checked', false);
+                            $('#chkSMSUser').prop('checked', false);
+                            $('#btnStartAppointmentConfirm').trigger('click');
+                        } else if (result.dismiss === 'cancel') {
+                            window.open('/smssettings', '_self');
+                        } else {
+                            window.open('/smssettings', '_self');
+                        }
+                    });
+                } else {
                     const templateObject = Template.instance();
                     $('#startAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
@@ -8647,9 +8654,9 @@ Template.appointments.events({
                     const startAppointmentSMS = templateObject.defaultSMSSettings.get().startAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
                     $('#startAppointmentSMSMessage').val(startAppointmentSMS);
-                } else {
-                    $('#btnStartAppointmentConfirm').trigger('click');
                 }
+            } else {
+                $('#btnStartAppointmentConfirm').trigger('click');
             }
         }
     },
@@ -8658,42 +8665,44 @@ Template.appointments.events({
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
-            swal({
-                title: 'Invalid phone number',
-                text: "Invalid phone number. Any SMS message won't be sent.",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'cancel'
-            }).then((result) => {
-                if (result.value) {
-                    $('#btnEndActualTime').trigger('click');
-                }
-            })
-        } else {
-            const templateObject = Template.instance();
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            if (!smsSettings || !smsSettings.twilioAccountId) {
+            if (smsCustomer || smsUser) {
                 swal({
-                    title: 'No SMS Settings',
-                    text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                    title: 'Invalid phone number',
+                    text: "Invalid phone number. Any SMS message won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'Go to SMS Settings'
+                    cancelButtonText: 'cancel'
                 }).then((result) => {
                     if (result.value) {
-                        $('#chkSMSCustomer').prop('checked', false);
-                        $('#chkSMSUser').prop('checked', false);
-                        $('#btnStartAppointmentConfirm').trigger('click');
-                    } else if (result.dismiss === 'cancel') {
-                        window.open('/smssettings', '_self');
-                    } else {
-                        window.open('/smssettings', '_self');
+                        $('#btnEndActualTime').trigger('click');
                     }
-                });
-            } else {
-                if (smsCustomer || smsUser) {
+                })
+            } else $('#btnEndActualTime').trigger('click');
+        } else {
+            const templateObject = Template.instance();
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            if (smsCustomer || smsUser) {
+                if (!smsSettings || !smsSettings.twilioAccountId) {
+                    swal({
+                        title: 'No SMS Settings',
+                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Continue',
+                        cancelButtonText: 'Go to SMS Settings'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#chkSMSCustomer').prop('checked', false);
+                            $('#chkSMSUser').prop('checked', false);
+                            $('#btnStartAppointmentConfirm').trigger('click');
+                        } else if (result.dismiss === 'cancel') {
+                            window.open('/smssettings', '_self');
+                        } else {
+                            window.open('/smssettings', '_self');
+                        }
+                    });
+                } else {
                     const templateObject = Template.instance();
                     $('#stopAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
@@ -8703,9 +8712,9 @@ Template.appointments.events({
                     const stopAppointmentSMS = templateObject.defaultSMSSettings.get().stopAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService);
                     $('#stopAppointmentSMSMessage').val(stopAppointmentSMS);
-                } else {
-                    $('#btnEndActualTime').trigger('click');
                 }
+            } else {
+                $('#btnEndActualTime').trigger('click');
             }
         }
     },
@@ -8714,42 +8723,44 @@ Template.appointments.events({
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
-            swal({
-                title: 'Invalid phone number',
-                text: "Invalid phone number. Any SMS message won't be sent.",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'cancel'
-            }).then((result) => {
-                if (result.value) {
-                    $('#btnSaveAppointmentSubmit').trigger('click');
-                }
-            })
-        } else {
-            const templateObject = Template.instance();
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            if (!smsSettings || !smsSettings.twilioAccountId) {
+            if (smsCustomer || smsUser) {
                 swal({
-                    title: 'No SMS Settings',
-                    text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                    title: 'Invalid phone number',
+                    text: "Invalid phone number. Any SMS message won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'Go to SMS Settings'
+                    cancelButtonText: 'cancel'
                 }).then((result) => {
                     if (result.value) {
-                        $('#chkSMSCustomer').prop('checked', false);
-                        $('#chkSMSUser').prop('checked', false);
-                        $('#btnStartAppointmentConfirm').trigger('click');
-                    } else if (result.dismiss === 'cancel') {
-                        window.open('/smssettings', '_self');
-                    } else {
-                        window.open('/smssettings', '_self');
+                        $('#btnSaveAppointmentSubmit').trigger('click');
                     }
-                });
-            } else {
-                if (smsCustomer || smsUser) {
+                })
+            } else $('#btnSaveAppointmentSubmit').trigger('click');
+        } else {
+            const templateObject = Template.instance();
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            if (smsCustomer || smsUser) {
+                if (!smsSettings || !smsSettings.twilioAccountId) {
+                    swal({
+                        title: 'No SMS Settings',
+                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Continue',
+                        cancelButtonText: 'Go to SMS Settings'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#chkSMSCustomer').prop('checked', false);
+                            $('#chkSMSUser').prop('checked', false);
+                            $('#btnStartAppointmentConfirm').trigger('click');
+                        } else if (result.dismiss === 'cancel') {
+                            window.open('/smssettings', '_self');
+                        } else {
+                            window.open('/smssettings', '_self');
+                        }
+                    });
+                } else {
                     const templateObject = Template.instance();
                     $('#saveAppointmentModal').modal('show');
                     const accountName = $('#customer').val();
@@ -8762,9 +8773,9 @@ Template.appointments.events({
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)
                         .replace('[Full Address]', fullAddress).replace('[Booked Time]', bookedTime);
                     $('#saveAppointmentSMSMessage').val(saveAppointmentSMS);
-                } else {
-                    $('#btnSaveAppointmentSubmit').trigger('click');
                 }
+            } else {
+                $('#btnSaveAppointmentSubmit').trigger('click');
             }
         }
     },

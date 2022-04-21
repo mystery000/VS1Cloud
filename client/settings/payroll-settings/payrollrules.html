@@ -308,7 +308,7 @@
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
                                             <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
-
+                                          
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -323,6 +323,7 @@
                                                                 <div class="col-12">
                                                                     <div class="form-group">
                                                                         <label for="edtRateName">Pay Period</label>
+                                                                        <input type="hidden" id="paycalendarId" name="paycalendarId" value="0" />
                                                                         <input type="search" class="form-control" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?">
                                                                     </div>
                                                                 </div>
@@ -471,6 +472,7 @@
                                                                     <div class="form-group">
                                                                         <label for="">Name</label>
                                                                         <input type="text" class="form-control" id="holidayname">
+                                                                        <input type="hidden" id="holidayid" name="holidayid" value="0"/>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
@@ -609,6 +611,7 @@
                                                                     <th class="th colHolidayID hiddenColumn" >ID</th>
                                                                     <th class="th colHolidayName" >Name</th>
                                                                     <th class="th colHolidayDate" >Date</th>
+                                                                    <th class="th colHolidaygroup hiddenColumn">holdiday group</th>
                                                                     <th class="th colHolidayDelete" style="width: 3% !important;"></th>
                                                                 </tr>
                                                             </thead>
@@ -617,6 +620,7 @@
                                                                     <td contenteditable="false" class="colHolidayID hiddenColumn" ></td>
                                                                     <td contenteditable="false" class="colPayCalendarName"></td>
                                                                     <td contenteditable="false" class="colNextPaymentDate"></td>
+                                                                    <td contenteditable="false" class="colHolidaygroup hiddenColumn"></td>
                                                                     <td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i
                                                                                     class="fa fa-remove"></i></button></span>
                                                                     </td>
@@ -1825,6 +1829,7 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
+                                                                        <input type="hidden" id="newSuperannuationFundId"  value="0"/>
                                                                         <label for="edtFundType">Type</label>
                                                                         <select class="form-control edtFundType" id="edtFundType" >
                                                                             <option value="regulated">Regulated Superannuation Fund</option>
@@ -2211,6 +2216,14 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addRateModel">
         {{> addratetypepop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="fundTypeListModel">
+        {{> fundtypelistpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addFundModel">
+        {{> fundtypepop}}
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="deleteEarningsLineModal">

@@ -123,6 +123,14 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.TSuperannuation, options);
     }
 
+    checkfundTypeByName(description)
+    {
+        let options = {
+            select: "[description]='" + description + "'"
+        };
+        return this.getList(this.ERPObjects.TSuperType, options);
+    }
+
     checkReimbursementByName(reimbursementName) {
         let options = {
             select: "[PayItemsReiumbursementName]='" + reimbursementName + "'"
@@ -251,6 +259,12 @@ export class TaxRateService extends BaseService {
     saveUnPaidLeave(data){
         
         return this.POST(this.ERPObjects.TUnpaidLeave, data);
+    }
+
+    saveSuperType(data)
+    {
+        return this.POST(this.ERPObjects.TSuperType, data);
+
     }
 
     checkDepartmentByName(deptName) {

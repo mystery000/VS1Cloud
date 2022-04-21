@@ -440,7 +440,7 @@ Template.paymentcard.onRendered(() => {
 
 
                       var dataList = [
-                         '<div class="custom-control custom-checkbox chkBox pointer"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-'+data.tsaleslist[i].PurchaseOrderID+'" value="'+totalOutstanding+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tsaleslist[i].PurchaseOrderID+'"></label></div>',
+                         '<div class="custom-control custom-checkbox chkBox pointer"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-'+data.tsaleslist[i].SaleId+'" value="'+totalOutstanding+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tsaleslist[i].SaleId+'"></label></div>',
                           data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
                           data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
                           data.tsaleslist[i].BORef || '',
@@ -6840,7 +6840,7 @@ Template.paymentcard.events({
         $('#customerPaymentListModal').modal('hide');
 
     },
-    'keydown #edtPaymentAmount,keydown #lineOrginalamount,keydown #lineAmountdue,keydown #linePaymentamount, keydown #lineOutstandingAmount': function(event) {
+    'keydown #edtPaymentAmount,keydown #lineOrginalamount,keydown #lineAmountdue,keydown .linePaymentamount, keydown #lineOutstandingAmount': function(event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             // Allow: Ctrl+A, Command+A
             (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
@@ -6868,8 +6868,22 @@ Template.paymentcard.events({
         $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
     },
     'blur .linePaymentamount': function(event) {
-        let paymentAmt = $(event.target).val();
+        let paymentAmt = $(event.target).val()||0;
+
+        let oustandingAmt = $(event.target).closest('tr').find('.lineOutstandingAmount').text()||0;
+        let formatedoustandingAmt = Number(oustandingAmt.replace(/[^0-9.-]+/g, "")) || 0;
+
         let formatedpaymentAmt = Number(paymentAmt.replace(/[^0-9.-]+/g, "")) || 0;
+
+        if(formatedpaymentAmt > 0){
+        if(formatedpaymentAmt > formatedoustandingAmt){
+          $(event.target).closest('tr').find('.lineOutstandingAmount').text(Currency + 0);
+        }else{
+          let getUpdateOustanding = formatedoustandingAmt - formatedpaymentAmt;
+          $(event.target).closest('tr').find('.lineOutstandingAmount').text(utilityService.modifynegativeCurrencyFormat(getUpdateOustanding));
+        }
+       }
+
         $(event.target).val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
         let $tblrows = $("#tblPaymentcard tbody tr");
         let appliedGrandTotal = 0;

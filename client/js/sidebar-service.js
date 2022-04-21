@@ -1,4 +1,5 @@
 import {BaseService} from '../js/base-service.js';
+import {HTTP} from 'meteor/http';
 export class SideBarService extends BaseService {
   getNewProductListVS1(limitcount, limitfrom) {
     let options = '';
@@ -19,6 +20,11 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  // getAllCurrencies()
+  // {
+  //   return this.getList('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json');
+
+  // }
 
   getPayrollinformation(limitcount, limitfrom)
   {
@@ -27,17 +33,17 @@ export class SideBarService extends BaseService {
     if(limitcount == 'All'){
        options = {
          ListType: "Detail",
-
+     
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
-
+        
      };
     }
     return this.getList(this.ERPObjects.TPayrollOrganization, options);
-
+     
   }
 
   getOrdinarytimeEarning(limitcount, limitfrom)
@@ -47,17 +53,29 @@ export class SideBarService extends BaseService {
        options = {
          ListType: "Detail",
          select:'[OrdinaryTimeEarningsActive]=true'
-
+     
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select:'[OrdinaryTimeEarningsActive]=true'
-
+        
      };
     }
     return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+
+  }
+
+  getAllCurrencies()
+  {
+       HTTP.call( 'GET', 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json', { "options": "" }, function( error, response ) {
+     
+          return response;
+
+       });
+     
+ 
 
   }
 
@@ -67,13 +85,13 @@ export class SideBarService extends BaseService {
       let options = '';
       if(limitcount == 'All'){
         options = {
-
+        
           ListType: "Detail",
           select: "[EmployeeTerminationPaymentsActive]=true"
           };
       }else{
         options = {
-
+          
           ListType: "Detail",
           select: "[EmployeeTerminationPaymentsActive]=true",
           LimitCount:'"'+limitcount+'"',
@@ -88,13 +106,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+      
          ListType: "Detail",
          select: "[OverTimeEarningsActive]=true"
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select: "[OverTimeEarningsActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -108,13 +126,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+      
          ListType: "Detail",
          select: "[LumpSumEActive]=true"
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select: "[LumpSumEActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -130,13 +148,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+      
          ListType: "Detail",
          select: "[EarningBonusesCommisionsActive]=true"
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select: "[EarningBonusesCommisionsActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -152,13 +170,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+      
          ListType: "Detail",
          select: "[LumpSumWActive]=true"
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select: "[LumpSumWActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -175,13 +193,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+      
          ListType: "Detail",
          select: "[DirectorsFeesActive]=true"
         };
     }else{
       options = {
-
+        
          ListType: "Detail",
          select: "[DirectorsFeesActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -216,13 +234,13 @@ export class SideBarService extends BaseService {
     let options = '';
     if(limitcount == 'All'){
        options = {
-
+       
          ListType: "Detail",
          select: "[PayrollHolidaysActive]=true"
         };
     }else{
       options = {
-
+      
          ListType: "Detail",
          select: "[PayrollHolidaysActive]=true",
          LimitCount:'"'+limitcount+'"',
@@ -231,8 +249,8 @@ export class SideBarService extends BaseService {
     }
     return this.getList(this.ERPObjects.TPayrollHolidays, options);
   }
-
-
+  
+ 
   getAllCustomFields() {
        let options = {
            ListType: "Detail",
@@ -629,14 +647,14 @@ getAccountListVS1() {
   }
 
 getRateListVS1() {
-
+    
   let options = '';
-
+  
        options = {
         ListType: "Detail",
-
+      
        };
-
+   
 
     return this.getList(this.ERPObjects.TPayRateType, options);
   }
@@ -646,19 +664,19 @@ getRateListVS1() {
     let options = '';
      options = {
      ListType: "Detail",
-
+   
     };
      return this.getList(this.ERPObjects.Treimbursement, options);
 
   }
 
   getRateTypeByName(description) {{
-
+   
     let options = '';
-
+  
     options = {
       select: "[Description]='"+description+"'",
-
+   
     };
 
     return this.getList(this.ERPObjects.TPayRateType, options);
@@ -831,7 +849,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     options = {
       IgnoreDates:true,
       OrderBy:"PurchaseOrderID desc",
-      IncludeBo:false,
+      IncludeBO:false,
       IncludeShipped:true,
       IncludeLines:false,
       LimitCount:'"'+limitcount+'"',
@@ -841,7 +859,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
        options = {
          OrderBy:"PurchaseOrderID desc",
          IgnoreDates:false,
-         IncludeBo:false,
+         IncludeBO:false,
          IncludeShipped:true,
          IncludeLines:false,
          DateFrom:'"'+dateFrom+'"',
@@ -962,12 +980,12 @@ getAllContactCombineVS1(limitcount, limitfrom) {
         Paid:false,
         Unpaid:true,
         OrderBy:"PurchaseOrderID desc",
-        Search:'PrintName = "'+supplierName+'"'
+         Search:'PrintName = "'+supplierName+'"'
      };
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
-  getAllAwaitingCustomerPaymentByCustomerName(customerName) {
+ getAllAwaitingCustomerPaymentByCustomerName(customerName) {
     let options = '';
       options = {
         IgnoreDates:true,
@@ -982,7 +1000,6 @@ getAllContactCombineVS1(limitcount, limitfrom) {
      };
     return this.getList(this.ERPObjects.TSalesList, options);
   }
-
   getAllOverDueAwaitingSupplierPayment(currentDate, limitcount, limitfrom) {
     let options = '';
       options = {
@@ -1436,7 +1453,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getTAPReportByName(contactName){
+ getTAPReportByName(contactName){
     let options = '';
       options = {
         IgnoreDates: true,
@@ -1445,7 +1462,6 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
       return this.getList(this.ERPObjects.TAPReport, options);
   }
-
   getTTransactionListReport(msTimeStamp){
     let options = '';
     if(msTimeStamp){
@@ -1592,13 +1608,13 @@ getAllContactCombineVS1(limitcount, limitfrom) {
        options = {
           ListType: "Detail",
           select: "[ReimbursementActive]=true"
-
+         
         };
     }else{
       options = {
         ListType: "Detail",
         select: "[ReimbursementActive]=true"
-
+       
         // LimitCount:'"'+limitcount+'"',
         // LimitFrom:'"'+limitfrom+'"'
      };
@@ -1610,11 +1626,11 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){
        options = {
-            ListType: "Detail",
+            ListType: "Detail",       
         };
     }else{
        options = {
-                ListType: "Detail",
+                ListType: "Detail",  
        };
     };
     return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
@@ -1869,21 +1885,21 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
       IncludeLines:true,
       LimitCount:'"'+limitcount+'"',
       LimitFrom:'"'+limitfrom+'"'
-      };
-     }else{
-       options = {
-         OrderBy:"SaleID desc",
-         IgnoreDates:false,
-         IncludeBo:true,
-         IncludeShipped:false,
-         IncludeLines:true,
-         DateFrom:'"'+dateFrom+'"',
-         DateTo:'"'+dateTo+'"',
-         LimitCount:'"'+limitcount+'"',
-         LimitFrom:'"'+limitfrom+'"'
-     };
-    }
-  return this.getList(this.ERPObjects.TInvoiceList, options);
+   };
+ }else{
+   options = {
+     OrderBy:"SaleID desc",
+     IgnoreDates:false,
+     IncludeBo:true,
+     IncludeShipped:false,
+     IncludeLines:true,
+     DateFrom:'"'+dateFrom+'"',
+     DateTo:'"'+dateTo+'"',
+     LimitCount:'"'+limitcount+'"',
+     LimitFrom:'"'+limitfrom+'"'
+ };
+}
+  return this.getList(this.ERPObjects.TSalesBackOrderReport, options);
 }
 
   getAllPurchaseOrderListNonBo() {
@@ -1927,21 +1943,21 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
         IncludeLines:true,
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
-        };
-       }else{
-         options = {
-           OrderBy:"PurchaseOrderID desc",
-           IgnoreDates:false,
-           IncludeBo:true,
-           IncludeShipped:false,
-           IncludeLines:true,
-           DateFrom:'"'+dateFrom+'"',
-           DateTo:'"'+dateTo+'"',
-           LimitCount:'"'+limitcount+'"',
-           LimitFrom:'"'+limitfrom+'"'
-       };
-      }
-    return this.getList(this.ERPObjects.TPurchaseOrderList, options);
+     };
+   }else{
+     options = {
+       OrderBy:"PurchaseOrderID desc",
+       IgnoreDates:false,
+       IncludeBo:true,
+       IncludeShipped:false,
+       IncludeLines:true,
+       DateFrom:'"'+dateFrom+'"',
+       DateTo:'"'+dateTo+'"',
+       LimitCount:'"'+limitcount+'"',
+       LimitFrom:'"'+limitfrom+'"'
+   };
+  }
+    return this.getList(this.ERPObjects.TPurchasesBackOrderReport, options);
   }
 
   getAllReconcilationList(limitcount, limitfrom) {
@@ -2089,7 +2105,7 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
   getGlobalSettings(){
         let options = {
            PropertyList: "PrefName,Fieldvalue",
-           select: '[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime" or [PrefName]="VS1SMSID" or [PrefName]="VS1SMSToken" or [PrefName]="VS1SMSPhone" or [PrefName]="VS1SAVESMSMSG" or [PrefName]="VS1STARTSMSMSG" or [PrefName]="VS1STOPSMSMSG"'
+           select: '[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime"'
         }
        return this.getList(this.ERPObjects.TERPPreference,options);
    }
@@ -2268,7 +2284,7 @@ getCalender(limitcount, limitfrom) {
      options = {
       ListType: "Detail",
       select: "[PayrollCalendarActive]=true"
-
+    
      };
   }else{
     options = {
@@ -2294,10 +2310,33 @@ getSuperannuation(limitcount, limitfrom) {
      // orderby:'"ClientID desc"',
        ListType: "Detail",
        select: "[Allclasses]=false"
-
+    
     };
   }
-    return this.getList(this.ERPObjects.TSuperannuation, options);
+   return this.getList(this.ERPObjects.TSuperannuation, options);
+}
+
+
+getSuperType()
+{
+
+  let options = '';
+ 
+   options = {
+      ListType: "Detail",
+      // select: '[Active]=true'
+  };
+ 
+  return this.getList(this.ERPObjects.TSuperType, options);
+
+}
+
+getOneFundTypeByName(dataSearchName){
+  let options = {
+    ListType:"Detail",
+    select: '[Description]="'+dataSearchName+'"'
+  };
+  return this.getList(this.ERPObjects.TSuperType, options);
 }
 
 getPaidLeave(limitcount, limitfrom) {
@@ -2305,14 +2344,14 @@ getPaidLeave(limitcount, limitfrom) {
   if(limitcount == 'All'){
      options = {
       ListType: "Detail",
-      select: '[PayItemsLeavePaidActive]=true'
+      select: '[LeavePaidActive]=true'
      };
   }else{
     options = {
      // orderby:'"ClientID desc"',
        ListType: "Detail",
-     select: '[PayItemsLeavePaidActive]=true'
-
+       select: '[LeavePaidActive]=true'
+    
     };
   }
      return this.getList(this.ERPObjects.TPaidLeave, options);
@@ -2324,7 +2363,7 @@ getPaidLeave(limitcount, limitfrom) {
     options = {
      ListType: "Detail",
      select: '[LeaveUnPaidActive]=true'
-
+     
     };
     return this.getList(this.ERPObjects.TUnpaidLeave, options);
 }

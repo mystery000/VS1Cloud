@@ -238,6 +238,9 @@ ERPObjects = function () {
         TPayrollTaxes: "TPayrollTaxes",
         TReimbursement: "TReimbursement",
         TPayRateType: "TPayRateType",
+        TSuperType:"TSuperType",
+
+
 
     }
     return objects;
