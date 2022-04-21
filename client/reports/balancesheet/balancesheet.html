@@ -45,8 +45,8 @@
                         <p class="text-primary m-0 font-weight-bold">Balance Sheet</p>
                     </div>
                     <div class="card-body">
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                        <div class="row no-gutters justify-content-between">
+                            <div class="col-3">
                                 <div class="form-group" style="margin: 16px;margin-left: 8px;">
                                     <label>Search:</label>
                                     <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
@@ -71,14 +71,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end">
+                            <div class="col-2">
+                                <style>
+                                    #uploadedImage {
+                                        width: 160px !important;
+                                        margin: 0 auto !important;
+                                    }
+                                </style>
+                                <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
+                            </div>
+                            <div class="col-3" style="display: inline-flex;">
                                 <div class="dropdown" style="margin: 16px;">
                                     <style>
                                         .dropdown-toggle::after {
                                             display: none;
                                         }
                                     </style>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
                                     <div class="dropdown-menu" role="menu">
                                         <h6 class="dropdown-header" role="presentation">Date ranges</h6>
                                         <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
@@ -184,6 +193,13 @@
                                         </tr>
                                         {{/each}}
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3" style="text-align: center; background-color: #fff;">
+                                                Powered by VS1Cloud
+                                            </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>

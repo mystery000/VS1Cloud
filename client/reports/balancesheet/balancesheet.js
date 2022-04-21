@@ -41,6 +41,13 @@ Template.balancesheetreport.onRendered(() => {
         yearRange: "-90:+10",
     });
 
+    let imageData= (localStorage.getItem("Image"));
+    if(imageData)
+    {
+        $('#uploadedImage').attr('src', imageData);
+        $('#uploadedImage').attr('width','50%');
+    }
+
   var today = moment().format('DD/MM/YYYY');
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
