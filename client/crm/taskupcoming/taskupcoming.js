@@ -538,6 +538,10 @@ Template.taskupcoming.events({
       }
 
       $('.fullScreenSpin').css('display', 'none');
+
+      $('#add_task_name').val('');
+      $('#add_task_description').val('');
+
     }).catch(function (err) {
       swal({
         title: 'Oooops...',

@@ -1,8 +1,12 @@
 import { CRMService } from '../crm-service';
 import '../../lib/global/indexdbstorage.js';
+import { valHooks } from 'jquery';
+import { isNumber } from 'lodash';
 let crmService = new CRMService();
 
-Template.tasktoday.onCreated(function () {
+Template.projects.onCreated(function () {
+
+  console.log('onCreated...')
 
   const templateObject = Template.instance();
   templateObject.allrecords = new ReactiveVar([]);
@@ -14,26 +18,21 @@ Template.tasktoday.onCreated(function () {
 
 });
 
-Template.tasktoday.onRendered(function () {
+Template.projects.onRendered(function () {
 
   console.log('rendered...')
   $("#task_items_wrapper").sortable({
     handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
-  });
-  $("#today_container").sortable({
-    handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
-  });
-  $("#upcoming_container").sortable({
-    handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
+    update: function (event, ui) {
+      var sorted = $("#task_items_wrapper").sortable("serialize", { key: "sort" });
+      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
+
+      let current_id = ui.item[0].id;
+      // console.log('taskDrag update =>', sorted, sortedIDs, current_id, ui)
+      let prev_id = ui.item[0].previousElementSibling.id;
+      let next_id = ui.item[0].nextElementSibling.id;
+      console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
+    },
   });
 
   $("#date-input, #dtRescheduleDate").datepicker({
@@ -60,7 +59,10 @@ Template.tasktoday.onRendered(function () {
       if (data.ttodo && data.ttodo.length > 0) {
 
         let today = moment().format('YYYY-MM-DD');
-        let allrecords = data.ttodo;
+        let allrecords = data.ttodo.sort(function (a, b) {
+          return (a.Recno > b.Recno) ? 1 : -1;
+        });
+
         let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
         let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
         let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
@@ -88,7 +90,7 @@ Template.tasktoday.onRendered(function () {
   templateObject.getAllTaskList();
 });
 
-Template.tasktoday.events({
+Template.projects.events({
 
   'click .mainTaskCol': function (event) {
     if (!event.target.classList.contains('no-modal')) {
@@ -558,12 +560,19 @@ Template.tasktoday.events({
 
 });
 
-Template.tasktoday.helpers({
+Template.projects.helpers({
+  getProjectName: () => {
+
+    let url = new URL(window.location.href);
+    let searchID = parseInt(url.searchParams.get("id")) || 0;
+    return 'Project ' + searchID;
+  },
   allrecords: () => {
     return Template.instance().allrecords.get();
   },
 
   overdueRecords: () => {
+    return Template.instance().overdueRecords.get().slice(0, 3);
     return Template.instance().overdueRecords.get();
   },
 
