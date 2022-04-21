@@ -2,6 +2,7 @@ import {TaxRateService} from "../settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import {CountryService} from '../../js/country-service';
 import { SideBarService } from '../../js/sidebar-service';
+import {HTTP} from 'meteor/http';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 Template.currenciesSettings.onCreated(function(){
@@ -644,9 +645,9 @@ if(listData){
 
 Template.currenciesSettings.events({
 
-  'click .btnFxupdate' : function(event){
+    'click .btnFxupdate' : function(event){
     FlowRouter.go('/fxupdatesetting');
-   },
+    },
     'click #btnNewInvoice':function(event){
         // FlowRouter.go('/invoicecard');
     },
@@ -833,6 +834,20 @@ Template.currenciesSettings.events({
   'click .btnCloseAddNewDept': function () {
         $('#newTaxRate').css('display','none');
 
+  },
+
+
+  'click .synbutton':function(){
+    
+    HTTP.call( 'GET', 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json', { "options": "" }, function( error, response ) {
+     
+         let data = response.data;
+         let date = response.date;
+
+         console.log(data.aud);
+      
+
+     });
   },
   'click .btnDeleteCurrency': function () {
     let taxRateService = new TaxRateService();
