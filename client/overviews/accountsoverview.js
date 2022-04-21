@@ -830,6 +830,7 @@ Template.accountsoverview.onRendered(function () {
               var accountdesc = data.taccountvs1[0].fields.Description || "";
               var bankaccountname =
                 data.taccountvs1[0].fields.BankAccountName || "";
+              var bankaccountname = data.taccountvs1[0].fields.BankName || "";
               var bankbsb = data.taccountvs1[0].fields.BSB || "";
               var bankacountno =
                 data.taccountvs1[0].fields.BankAccountNumber || "";
@@ -931,6 +932,7 @@ Template.accountsoverview.onRendered(function () {
               var accountdesc = data.taccountvs1[a].fields.Description || "";
               var bankaccountname =
                 data.taccountvs1[a].fields.BankAccountName || "";
+              var bankname = data.taccountvs1[a].fields.BankName || "";
               var bankbsb = data.taccountvs1[a].fields.BSB || "";
               var bankacountno =
                 data.taccountvs1[a].fields.BankAccountNumber || "";
@@ -1020,6 +1022,7 @@ Template.accountsoverview.onRendered(function () {
                 var accountdesc = data.taccountvs1[0].fields.Description || "";
                 var bankaccountname =
                   data.taccountvs1[0].fields.BankAccountName || "";
+                var bankname = data.taccountvs1[a].fields.BankName || "";
                 var bankbsb = data.taccountvs1[0].fields.BSB || "";
                 var bankacountno =
                   data.taccountvs1[0].fields.BankAccountNumber || "";
@@ -1219,14 +1222,13 @@ Template.accountsoverview.onRendered(function () {
                   accountname: data.taccountvs1[i].AccountName || "",
                   description: data.taccountvs1[i].Description || "",
                   accountnumber: data.taccountvs1[i].AccountNumber || "",
-                  accounttypename:
-                    fullAccountTypeName || data.taccountvs1[i].AccountTypeName,
+                  accounttypename:fullAccountTypeName || data.taccountvs1[i].AccountTypeName,
                   accounttypeshort: data.taccountvs1[i].AccountTypeName || "",
                   taxcode: data.taccountvs1[i].TaxCode || "",
                   bankaccountname: data.taccountvs1[i].BankAccountName || "",
+                  bankname: data.taccountvs1[i].BankName || "",
                   bsb: data.taccountvs1[i].BSB || "",
-                  bankaccountnumber:
-                    data.taccountvs1[i].BankAccountNumber || "",
+                  bankaccountnumber:data.taccountvs1[i].BankAccountNumber || "",
                   swiftcode: data.taccountvs1[i].Extra || "",
                   routingNo: data.taccountvs1[i].BankCode || "",
                   apcanumber: data.taccountvs1[i].BankNumber || "",
@@ -1405,7 +1407,6 @@ Template.accountsoverview.onRendered(function () {
         } else {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.taccountvs1;
-
           let lineItems = [];
           let lineItemObj = {};
           let fullAccountTypeName = "";
@@ -1441,6 +1442,7 @@ Template.accountsoverview.onRendered(function () {
               accounttypeshort: useData[i].fields.AccountTypeName || "",
               taxcode: useData[i].fields.TaxCode || "",
               bankaccountname: useData[i].fields.BankAccountName || "",
+              bankname: useData[i].fields.BankName || "",
               bsb: useData[i].fields.BSB || "",
               bankaccountnumber: useData[i].fields.BankAccountNumber || "",
               swiftcode: useData[i].fields.Extra || "",
@@ -1657,6 +1659,7 @@ Template.accountsoverview.onRendered(function () {
                 accounttypeshort: data.taccountvs1[i].AccountTypeName || "",
                 taxcode: data.taccountvs1[i].TaxCode || "",
                 bankaccountname: data.taccountvs1[i].BankAccountName || "",
+                bankname: data.taccountvs1[i].BankName || "",
                 bsb: data.taccountvs1[i].BSB || "",
                 bankaccountnumber: data.taccountvs1[i].BankAccountNumber || "",
                 swiftcode: data.taccountvs1[i].Extra || "",
@@ -1884,6 +1887,7 @@ Template.accountsoverview.onRendered(function () {
           var bankaccountname =
             $(event.target).closest("tr").find(".colBankAccountName").text() ||
             "";
+          var bankname = localStorage.getItem("vs1companyBankName") ||$(event.target).closest("tr").find(".colBankName").text()|| "";
           var bankbsb =
             $(event.target).closest("tr").find(".colBSB").text() || "";
           var bankacountno =
@@ -1930,9 +1934,7 @@ Template.accountsoverview.onRendered(function () {
           $("#edtBankAccountNo").val(bankacountno);
           $("#swiftCode").val(swiftCode);
           $("#routingNo").val(routingNo);
-          $("#edtBankName").val(
-            localStorage.getItem("vs1companyBankName") || ""
-          );
+          $("#edtBankName").val(bankname);
 
           $("#edtCardNumber").val(cardnumber);
           $("#edtExpiryDate").val(
