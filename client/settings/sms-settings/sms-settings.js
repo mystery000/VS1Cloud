@@ -60,6 +60,7 @@ Template.smssettings.onRendered(function () {
     stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
   }
   smsService.getSMSSettings().then((result) => {
+    $('.fullScreenSpin').css('display','none');
     if (result.terppreference.length > 0) {
       templateObject.smsSettingDetails.set(result.terppreference);
       for (let i = 0; i < result.terppreference.length; i++) {
@@ -80,7 +81,6 @@ Template.smssettings.onRendered(function () {
       $('#startAppointmentSMS').val(smsSettings.startAppointmentSMSMessage);
       $('#stopAppointmentSMS').val(smsSettings.stopAppointmentSMSMessage);
 
-      $('.fullScreenSpin').css('display','none');
     }
   }).catch((error) => {
     console.log(error);
