@@ -5465,8 +5465,7 @@ Template.payrollrules.onRendered(function() {
 //         }
 
 
-    }
-    });
+  
 
   //  $('#tblDeductions tbody').on( 'click', 'td:not(.colDeleteDeductions)', function () {
  //   var listData = $(this).closest('tr').find('.colDeductionsID').text();
