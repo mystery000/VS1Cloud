@@ -3758,7 +3758,7 @@ Template.appointments.onRendered(function () {
                     var result = appointmentData.filter(apmt => {
                         return apmt.id == appID
                     });
-                    
+
                     console.log('3 =================================> ', result);
 
                     if (result.length > 0) {
@@ -6355,7 +6355,7 @@ Template.appointments.onRendered(function () {
             });
         }
     }
-    templateObject.checkSMSSettings();
+    // templateObject.checkSMSSettings();
 });
 
 Template.appointments.events({
@@ -9612,7 +9612,7 @@ Template.appointments.events({
         }
 
         let objectData = "";
-        
+
         const customerPhone = $('#mobile').val();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
