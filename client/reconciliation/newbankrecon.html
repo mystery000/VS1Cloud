@@ -80,6 +80,12 @@
                 right: 0;
                 background: rgba(23, 166, 115, 0.5);
             }
+            .sortBtn {
+                cursor: pointer;
+            }
+            .sortBtn .fa-sort {
+                color: #858796 !important;
+            }
 
             /* If there's a reconciliation match, add class "matched" to the Tab-Pane and "matchedtab" to the Match Nav-Item anchor tag */
         </style>
@@ -147,13 +153,11 @@
                     <div class="col-6">
 
                     </div>
-                    <div class="col-3" style="text-align: center;">
-                        <button type="button" class="btn btn-link">Spent <i class="fas fa-caret-down" style="margin-left: 5px;"></i></button>
-                        <button type="button" class="btn btn-link" style="display: none;">Spent <i class="fas fa-caret-up" style="margin-left: 5px;"></i></button>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortDepositSpent">Spent <i class="fas {{ fa_sortDepositSpent }}" style="margin-left: 5px;"></i></span>
                     </div>
-                    <div class="col-3" style="text-align: center;">
-                        <button type="button" class="btn btn-link">Received <i class="fas fa-caret-down" style="margin-left: 5px;"></i></button>
-                        <button type="button" class="btn btn-link" style="display: none;">Received <i class="fas fa-caret-up" style="margin-left: 5px;"></i></button>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortDepositReceived">Received <i class="fas {{ fa_sortDepositReceived }}" style="margin-left: 5px;"></i></span>
                     </div>
                 </div>
             </div>
@@ -165,13 +169,11 @@
                     <div class="col-6">
 
                     </div>
-                    <div class="col-3" style="text-align: center;">
-                        <button type="button" class="btn btn-link">Spent <i class="fas fa-caret-down" style="margin-left: 5px;"></i></button>
-                        <button type="button" class="btn btn-link" style="display: none;">Spent <i class="fas fa-caret-up" style="margin-left: 5px;"></i></button>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortWithdrawSpent">Spent <i class="fas {{ fa_sortWithdrawSpent }}" style="margin-left: 5px;"></i></span>
                     </div>
-                    <div class="col-3" style="text-align: center;">
-                        <button type="button" class="btn btn-link">Received <i class="fas fa-caret-down" style="margin-left: 5px;"></i></button>
-                        <button type="button" class="btn btn-link" style="display: none;">Received <i class="fas fa-caret-up" style="margin-left: 5px;"></i></button>
+                    <div class="col-3" style="text-align: center; color: #00a3d3 !important;">
+                        <span class="sortBtn sortWithdrawReceived">Received <i class="fas {{ fa_sortWithdrawReceived }}" style="margin-left: 5px;"></i></span>
                     </div>
                 </div>
             </div>
@@ -200,14 +202,10 @@
                                 <a href="">More Details</a>
                             </div>
                             <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                {{#if equals itemTransaction.deporwith 'spent' }}
-                                    <span style="float: right; font-weight: 700;">{{ itemTransaction.StatementAmount }}</span>
-                                {{/if }}
+                                <span style="float: right; font-weight: 700;">{{ itemTransaction.spentDepositAmount }}</span>
                             </div>
                             <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                {{#if equals itemTransaction.deporwith 'received' }}
-                                    <span style="float: right; font-weight: 700;">{{ itemTransaction.StatementAmount }}</span>
-                                {{/if }}
+                                <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedDepositAmount }}</span>
                             </div>
                         </div>
                     </div>
@@ -223,25 +221,25 @@
                     <div class="card-header rightsideheader">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active {{#if itemTransaction.matched }}matchedtab{{/if}}" id="home-tab" data-toggle="tab" href="#match_1" role="tab" aria-controls="home" aria-selected="true">Match</a>
+                                <a class="nav-link active {{#if itemTransaction.matched }}matchedtab{{/if}}" id="home-tab" data-toggle="tab" href="#match_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="home" aria-selected="true">Match</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#create_1" role="tab" aria-controls="profile" aria-selected="false">Create</a>
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#create_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="profile" aria-selected="false">Create</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#transfer_1" role="tab" aria-controls="contact" aria-selected="false">Transfer</a>
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#transfer_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="contact" aria-selected="false">Transfer</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#discuss_1" role="tab" aria-controls="contact" aria-selected="false">Discuss</a>
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#discuss_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="contact" aria-selected="false">Discuss</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_1" role="tab" aria-controls="contact" aria-selected="false">Find & Match</a>
+                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact_{{ itemTransaction.DepositLineID }}" role="tab" aria-controls="contact" aria-selected="false">Find & Match</a>
                             </li>
                         </ul>
                     </div>
                     <div class="card-body" style="padding: 0;">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active {{#if itemTransaction.matched }}matched{{/if}}" id="match_1" role="tabpanel" aria-labelledby="match-tab">
+                            <div class="tab-pane fade show active {{#if itemTransaction.matched }}matched{{/if}}" id="match_{{ itemTransaction.DepositLineID }}" role="tabpanel" aria-labelledby="match-tab">
                                 <div class="row" style="margin-left: 0; margin-right: 0;">
                                     <div class="col-12" style="padding: 16px; border: 1px solid #e3e6f0; border-bottom: 0 solid #e3e6f0; border-top: 0 solid #e3e6f0;">
                                         <p style="margin-bottom: 0;">{{ itemTransaction.ReconDate }}</p>
@@ -251,39 +249,35 @@
                                         <p style="margin-bottom: 0;">Ref: <span>{{ itemTransaction.ReferenceNo }}</span></p>
                                     </div>
                                     <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                        {{#if equals itemTransaction.deporwith 'spent' }}
-                                            <span style="float: right; font-weight: 700;">{{ itemTransaction.Amount }}</span>
-                                        {{/if }}
+                                        <span style="float: right; font-weight: 700;">{{ itemTransaction.spentWithdrawAmount }}</span>
                                     </div>
                                     <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0;">
-                                        {{#if equals itemTransaction.deporwith 'received' }}
-                                            <span style="float: right; font-weight: 700;">{{ itemTransaction.Amount }}</span>
-                                        {{/if }}
+                                        <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedWithdrawAmount }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="create_1" role="tabpanel" aria-labelledby="create-tab">
+                            <div class="tab-pane fade" id="create_{{ itemTransaction.DepositLineID }}" role="tabpanel" aria-labelledby="create-tab">
                                 <div class="row" style="margin-left: 0; margin-right: 0;">
                                     <div class="col-6" style="padding: 16px; padding-bottom: 0;">
                                         <div class="form-group mb-0">
                                             <label>Who</label>
-                                            <input type="text" class="form-control" id="" placeholder="Name of the contact...">
+                                            <input type="text" class="form-control" id="who_{{ itemTransaction.DepositLineID }}" placeholder="Name of the contact...">
                                         </div>
                                     </div>
                                     <div class="col-6" style="padding: 16px; padding-bottom: 0;">
                                         <div class="form-group mb-0">
                                             <label>What</label>
-                                            <select type="search" class="form-control" id="transactionAccountName" placeholder="Choose the account..." name="transactionAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                            <select type="search" class="form-control" id="what_{{ itemTransaction.DepositLineID }}" placeholder="Choose the account..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
                                         </div>
                                     </div>
                                     <div class="col-12" style="padding: 16px;">
                                         <div class="form-group mb-0">
                                             <label>Why</label>
-                                            <input type="text" class="form-control" id="" placeholder="Enter a description...">
+                                            <input type="text" class="form-control" id="why_{{ itemTransaction.DepositLineID }}" placeholder="Enter a description...">
                                         </div>
                                     </div>
                                     <div class="col-4" style="padding: 0 !important; border: 0;">
-                                        <select type="search" class="form-control" id="transactionTaxRate" name="transactionTaxRate" value="Tax Rate"
+                                        <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.DepositLineID }}" value="Tax Rate"
                                                 style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
                                     </div>
                                     <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
@@ -291,28 +285,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="transfer_1" role="tabpanel" aria-labelledby="transfer-tab">
+                            <div class="tab-pane fade" id="transfer_{{ itemTransaction.DepositLineID }}" role="tabpanel" aria-labelledby="transfer-tab">
                                 <div class="row" style="margin-left: 0; margin-right: 0;">
                                     <div class="col-6" style="padding: 16px;">
                                         <div class="form-group mb-0">
                                             <label>Select a Bank Account</label>
-                                            <select type="search" class="form-control" id="transactionTaxRate" name="transactionTaxRate" value="Tax Rate"
+                                            <select type="search" class="form-control" id="ttaxRate_{{ itemTransaction.DepositLineID }}" value="Tax Rate"
                                                 style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
                                         </div>
                                     </div>
                                     <div class="col-6" style="padding: 16px;">
                                         <div class="form-group mb-0">
                                             <label>Reference</label>
-                                            <input type="text" class="form-control" id="">
+                                            <input type="text" class="form-control" id="reference_{{ itemTransaction.DepositLineID }}">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="discuss_1" role="tabpanel" aria-labelledby="discuss-tab">
+                            <div class="tab-pane fade" id="discuss_{{ itemTransaction.DepositLineID }}" role="tabpanel" aria-labelledby="discuss-tab">
                                 <div class="row" style="margin-left: 0; margin-right: 0;">
                                     <div class="col-12" style="padding: 16px;">
                                         <div class="form-group mb-0">
-                                            <textarea class="form-control" id="" rows="6"></textarea>
+                                            <textarea class="form-control" id="discussText_{{ itemTransaction.DepositLineID }}" rows="6"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -331,17 +325,39 @@
             <div class="col-12 col-md-11">
                 <div class="card shadow" style="padding: 16px;">
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-3">
                             <div class="float-left">
-                                Page <strong>1</strong> of <strong>1</strong>
-                                <span style="font-weight: 200;">({{ bankTransactionData.length }} items to be reconciled)</span>
+                                Page <strong>{{ page_number }}</strong> of <strong>{{ page_count }}</strong>
+                                <span style="font-weight: 200;">({{ page_total }} items to be reconciled)</span>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <span class="float-right">
+                        <div class="col-12 col-md-3">
+                            <div class="dropdown">
+                                <span class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important;">
+                                    Jump to Page :
+                                </span>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+                                    {{#each i in page_list}}
+                                    <a class="dropdown-item" href="" onclick="window.open('/newbankrecon?page={{ i }}{{ sort_param }}', '_self');"> {{ i }} </a>
+                                    {{/each }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <span class="float-left">
                                 <div class="custom-control custom-switch">
                                     <input class="custom-control-input" type="checkbox" value="" id="swtSuggestPreviousEntries" name="swtSuggestPreviousEntries" style="cursor: pointer;" checked>
                                     <label class="custom-control-label" for="swtSuggestPreviousEntries" style="cursor: pointer;">Suggest Previous Entries</label>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <span class="float-right">
+                                <div class="custom-control custom-switch">
+                                    <button class="btn btn-primary btnPageStart" type="button" style="width: 80px; margin: 3px;"><span><i class="fa fa-angle-double-left" style="margin-right: 5px;"></i>Start</span></button>
+                                    <button class="btn btn-primary btnPagePrev" type="button" style="width: 80px; margin: 3px;" ><span><i class="fa fa-angle-left" style="margin-right: 5px;"></i>Prev</span></button>
+                                    <button class="btn btn-primary btnPageNext" type="button" style="width: 80px; margin: 3px;"><span><i class="fa fa-angle-right" style="padding-right: 8px;"></i>Next</span></button>
+                                    <button class="btn btn-primary btnPageEnd" type="button" style="width: 80px; margin: 3px;"><i class="fa fa-angle-double-right" style="margin-right: 5px;"></i>End</button>
                                 </div>
                             </span>
                         </div>

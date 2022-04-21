@@ -13,6 +13,16 @@ Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
 
     templateObject.accountnamerecords = new ReactiveVar();
+    templateObject.page_number = new ReactiveVar();
+    templateObject.page_total = new ReactiveVar();
+    templateObject.page_count = new ReactiveVar();
+    templateObject.page_list = new ReactiveVar([]);
+    templateObject.sort = new ReactiveVar();
+    templateObject.sort_param = new ReactiveVar();
+    templateObject.fa_sortDepositSpent = new ReactiveVar();
+    templateObject.fa_sortDepositReceived = new ReactiveVar();
+    templateObject.fa_sortWithdrawSpent = new ReactiveVar();
+    templateObject.fa_sortWithdrawReceived = new ReactiveVar();
     templateObject.bankTransactionData = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
 
@@ -30,6 +40,13 @@ Template.newbankrecon.onRendered(function() {
     const templateObject = Template.instance();
     let reconService = new ReconService();
     let productService = new ProductService();
+
+    let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
+    templateObject.page_number.set(page_number);
+    templateObject.sort.set((FlowRouter.current().queryParams.sort !== undefined && FlowRouter.current().queryParams.sort !== '')?FlowRouter.current().queryParams.sort:'');
+    templateObject.sort_param.set((Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'');
+    let page_limit = 10;
+    let page_total = 0;
 
     const taxCodesList = [];
     const accountTypeList = [];
@@ -161,52 +178,20 @@ Template.newbankrecon.onRendered(function() {
         }
     }
 
-    // https://localhost/erpapi/TToBeReconciledWithDrawal?IgnoreDate=true&AccountID=1
-
-    // {
-    //     "Params":{
-    //     "AccountId":1,
-    //         "DateFrom":"2022-03-09",
-    //         "DateTo":"2022-04-08 23:59:59",
-    //         "IgnoreDates":false,
-    //         "Objclassname":"TToBeReconciledWithDrawal",
-    //         "OrderBy":"",
-    //         "Search":"",
-    //         "Count": 1
-    // },
-    //     "ttobereconciledwithdrawal":[
-    //     {
-    //         "Seqno":7,
-    //         "Notes":"Cheque",
-    //         "DepositID":183,
-    //         "DepositLineID":0,
-    //         "DepositDate":"2014-07-02 00:00:00",
-    //         "TransactionType":"Cheque",
-    //         "Amount":200,
-    //         "PaymentID":887,
-    //         "CusID":120,
-    //         "ReferenceNo":"1",
-    //         "CompanyName":"Admin .",
-    //         "StatementLineID":0,
-    //         "StatementTransactionDate":"1899-12-30 00:00:00",
-    //         "StatementAmount":0,
-    //         "StatementDescription":""
-    //     }]}
-
-    templateObject.getBankTransactionData = function (accountTypeId, statementDate, ignoreDate) {
+    templateObject.getBankTransactionData = function (accountId, statementDate, ignoreDate) {
         let reconData = [];
         ignoreDate = true;
         $('.fullScreenSpin').css('display', 'inline-block');
-        reconService.getToBeReconciledDeposit(accountTypeId, statementDate, ignoreDate).then(function(data) {
+        reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
-                    let depositamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconcileddeposit[i].Amount) || 0.00;
+                    let depositamount = data.ttobereconcileddeposit[i].Amount;
                     let reconciledepositObj = {
                         SortDate: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("YYYY-MM-DD") : data.ttobereconcileddeposit[i].DepositDate,
                         ReconDate: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[i].DepositDate,
                         CompanyName: data.ttobereconcileddeposit[i].CompanyName || ' ',
                         PaymentType: data.ttobereconcileddeposit[i].Notes || ' ',
-                        Amount: depositamount || 0.00,
+                        Amount: depositamount,
                         DepositID: data.ttobereconcileddeposit[i].DepositID || ' ',
                         ReferenceNo: data.ttobereconcileddeposit[i].ReferenceNo || ' ',
                         Seqno: data.ttobereconcileddeposit[i].Seqno || 0,
@@ -214,27 +199,31 @@ Template.newbankrecon.onRendered(function() {
                         DepositLineID: data.ttobereconcileddeposit[i].DepositLineID || 0,
                         CusID: data.ttobereconcileddeposit[i].CusID || 0,
                         StatementLineID: data.ttobereconcileddeposit[i].StatementLineID || 0,
-                        StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate !== '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("YYYY-MM-DD") : data.ttobereconcileddeposit[i].StatementTransactionDate,
+                        StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate !== '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[i].StatementTransactionDate,
                         StatementAmount: data.ttobereconcileddeposit[i].StatementAmount || 0.00,
                         StatementDescription: data.ttobereconcileddeposit[i].StatementDescription || ' ',
                         deporwith: 'spent',
                         matched: data.ttobereconcileddeposit[i].Amount === data.ttobereconcileddeposit[i].StatementAmount,
+                        spentDepositAmount: utilityService.modifynegativeCurrencyFormat(data.ttobereconcileddeposit[i].StatementAmount),
+                        receivedDepositAmount: utilityService.modifynegativeCurrencyFormat(0),
+                        spentWithdrawAmount: utilityService.modifynegativeCurrencyFormat(depositamount),
+                        receivedWithdrawAmount: utilityService.modifynegativeCurrencyFormat(0),
                     };
                     if (data.ttobereconcileddeposit[i].Seqno !== 0) {
                         reconData.push(reconciledepositObj);
                     }
                 }
             }
-            reconService.getToBeReconciledWithdrawal(accountTypeId, statementDate, ignoreDate).then(function(data) {
+            reconService.getToBeReconciledWithdrawal(accountId, statementDate, ignoreDate).then(function(data) {
                 if (data.ttobereconciledwithdrawal.length > 0) {
                     for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
-                        let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount) || 0.00;
+                        let withdrawalamount = data.ttobereconciledwithdrawal[j].Amount;
                         let reconcilewithdrawalObj = {
                             SortDate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : data.ttobereconciledwithdrawal[i].DepositDate,
                             ReconDate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
                             CompanyName: data.ttobereconciledwithdrawal[j].CompanyName || ' ',
                             PaymentType: data.ttobereconciledwithdrawal[j].Notes || ' ',
-                            Amount: withdrawalamount || 0.00,
+                            Amount: withdrawalamount,
                             DepositID: data.ttobereconciledwithdrawal[j].DepositID || ' ',
                             ReferenceNo: data.ttobereconciledwithdrawal[j].ReferenceNo || ' ',
                             Seqno: data.ttobereconciledwithdrawal[j].Seqno || 0,
@@ -242,18 +231,87 @@ Template.newbankrecon.onRendered(function() {
                             DepositLineID: data.ttobereconciledwithdrawal[j].DepositLineID || 0,
                             CusID: data.ttobereconciledwithdrawal[j].CusID || 0,
                             StatementLineID: data.ttobereconciledwithdrawal[j].StatementLineID || 0,
-                            StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate !== '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("YYYY-MM-DD") : data.ttobereconciledwithdrawal[j].StatementTransactionDate,
+                            StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate !== '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].StatementTransactionDate,
                             StatementAmount: data.ttobereconciledwithdrawal[j].StatementAmount || 0.00,
                             StatementDescription: data.ttobereconciledwithdrawal[j].StatementDescription || ' ',
                             deporwith: 'received',
                             matched: data.ttobereconciledwithdrawal[j].Amount === data.ttobereconciledwithdrawal[j].StatementAmount,
+                            spentDepositAmount: utilityService.modifynegativeCurrencyFormat(0),
+                            receivedDepositAmount: utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].StatementAmount),
+                            spentWithdrawAmount: utilityService.modifynegativeCurrencyFormat(0),
+                            receivedWithdrawAmount: utilityService.modifynegativeCurrencyFormat(withdrawalamount),
                         };
                         if (data.ttobereconciledwithdrawal[j].Seqno !== 0) {
                             reconData.push(reconcilewithdrawalObj);
                         }
                     }
-                    var thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), reconData);
+                    page_total = reconData.length;
+                    templateObject.page_total.set(page_total);
+                    let page_cnt = Math.ceil(page_total/page_limit);
+                    templateObject.page_count.set(page_cnt);
+                    let page_list = Array.from({length: page_cnt}, (_, i) => i + 1);
+                    templateObject.page_list.set(page_list);
+                    let page_arr = [];
+                    let sort = templateObject.sort.get();
+                    if (sort === "ascDepositSpent") {
+                        page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', false);
+                        templateObject.fa_sortDepositSpent.set('fa-sort-asc');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "descDepositSpent") {
+                        page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', true);
+                        templateObject.fa_sortDepositSpent.set('fa-sort-desc');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "ascDepositReceived") {
+                        page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', false);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort-asc');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "descDepositReceived") {
+                        page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', true);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort-desc');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "ascWithdrawSpent") {
+                        page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', false);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort-asc');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "descWithdrawSpent") {
+                        page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', true);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort-desc');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    } else if (sort === "ascWithdrawReceived") {
+                        page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', false);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort-asc');
+                    } else if (sort === "descWithdrawReceived") {
+                        page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', true);
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort-desc');
+                    } else {
+                        page_arr = sortBankTransactionData(reconData, 'SortDate');
+                        templateObject.fa_sortDepositSpent.set('fa-sort');
+                        templateObject.fa_sortDepositReceived.set('fa-sort');
+                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
+                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
+                    }
+                    page_arr = page_arr.slice((page_number-1)*page_limit, page_number*page_limit);
+                    let thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), page_arr);
                     templateObject.bankTransactionData.set(thirdaryData);
+                    defineTabpanelEvent();
                 }
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -273,113 +331,25 @@ Template.newbankrecon.onRendered(function() {
         });
     };
 
-    templateObject.getReconcileDeposit = function(accountTypeId, statementDate, ignoreDate) {
-
-    };
-
-    templateObject.getReconcileWithdrawal = function(accountTypeId, statementDate, ignoreDate) {
-        let reconwith = [];
-        $('.fullScreenSpin').css('display', 'inline-block');
-        reconService.getToBeReconciledWithdrawal(accountTypeId, statementDate, ignoreDate).then(function(data) {
-            if (data.ttobereconciledwithdrawal.length > 0) {
-                for (let j in data.ttobereconciledwithdrawal) {
-                    let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount) || 0.00;
-                    let reconcilewithdrawalObj = {
-                        sortdate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : data.ttobereconciledwithdrawal[i].DepositDate,
-                        reconwithdate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
-                        reconwithname: data.ttobereconciledwithdrawal[j].CompanyName || ' ',
-                        reconwithpaymenttype: data.ttobereconciledwithdrawal[j].Notes || ' ',
-                        reconwithamount: withdrawalamount || 0.00,
-                        reconwithid: data.ttobereconciledwithdrawal[j].DepositID || ' ',
-                        reconwithref: data.ttobereconciledwithdrawal[j].ReferenceNo || ' ',
-                        seqwithnum: data.ttobereconciledwithdrawal[j].Seqno || 0,
-                        reconwithpaymentid: data.ttobereconciledwithdrawal[j].DepositID || 0,
-                        depositLineID: data.ttobereconciledwithdrawal[j].DepositLineID || 0,
-                    };
-                    if (data.ttobereconciledwithdrawal[j].Seqno !== 0) {
-                        reconwith.push(reconcilewithdrawalObj);
-                        // templateObject.reconVS1with.set(reconwith);
-                    }
-                }
-
-                var thirdaryData = $.merge($.merge([], templateObject.reconVS1with.get()), reconwith);
-                templateObject.reconVS1with.set(thirdaryData);
-
-                if (templateObject.reconVS1with.get()) {
-                    setTimeout(function() {
-                        $('#tblVS1With').DataTable({
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: false,
-                            "scrollY": "400px",
-                            "scrollCollapse": true,
-                            "columnDefs": [{
-                                "orderable": false,
-                                "targets": 0
-                            }],
-                            // colReorder: true,
-                            colReorder: {
-                                fixedColumnsLeft: 1
-                            },
-                            select: true,
-                            destroy: true,
-                            // colReorder: true,
-                            pageLength: 10,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [1, "desc"]
-                            ],
-                            action: function() {
-                                $('#tblVS1With').DataTable().ajax.reload();
-                            }
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 0);
-                }
-            } else {
-                setTimeout(function() {
-                    $('#tblVS1With').DataTable({
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: false,
-                        "scrollY": "400px",
-                        "scrollCollapse": true,
-                        "columnDefs": [{
-                            "orderable": false,
-                            "targets": 0
-                        }],
-                        // colReorder: true,
-                        colReorder: {
-                            fixedColumnsLeft: 1
-                        },
-                        select: true,
-                        destroy: true,
-                        // colReorder: true,
-                        pageLength: 10,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [1, "desc"]
-                        ],
-                        action: function() {
-                            $('#tblVS1With').DataTable().ajax.reload();
-                        }
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 0);
+    function sortBankTransactionData(array, key, desc=true) {
+        return array.sort(function(a, b) {
+            var x = a[key];
+            var y = b[key];
+            if (key === 'SortDate') {
+                x = new Date(x);
+                y = new Date(y);
             }
-            $('.fullScreenSpin').css('display', 'none');
-        }).catch(function(err) {
-            $('.fullScreenSpin').css('display', 'none');
+            if (key === 'spentDepositAmount' || key === 'receivedDepositAmount' || key === 'spentWithdrawAmount' || key === 'receivedWithdrawAmount') {
+                x = parseFloat(utilityService.substringMethod(x));
+                y = parseFloat(utilityService.substringMethod(y));
+            }
+            if (!desc)
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            else
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
         });
-    };
+    }
+
 
     templateObject.getOpenBalance = function(bankAccount) {
         reconService.getReconciliationBalance(bankAccount).then(function(data) {
@@ -403,7 +373,6 @@ Template.newbankrecon.onRendered(function() {
                             if (data.treconciliation[k].OnHold === true) {
                                 Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
                                 Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
-                                window.open('/newbankrecon?id=' + data.treconciliation[k].Id, '_self');
                             }
                         }
                         // openBal = data.treconciliation[data.treconciliation.length - 1].CloseBalance;
@@ -581,49 +550,6 @@ Template.newbankrecon.onRendered(function() {
         }, 500);
     }
 
-    $('#transactionTaxRate').editableSelect();
-    $('#transactionTaxRate').editableSelect().on("click.editable-select", function (e, li) {
-        var $each = $(this);
-        var taxSelected = "sales";
-        var offset = $each.offset();
-        var taxRateDataName = e.target.value || "";
-        if (e.pageX > offset.left + $each.width() - 8) {
-            // X button 16px wide?
-            $("#taxRateListModal").modal("toggle");
-        } else {
-            if (taxRateDataName.replace(/\s/g, "") !== "") {
-                $(".taxcodepopheader").text("Edit Tax Rate");
-                getVS1Data("TTaxcodeVS1").then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        purchaseService.getTaxCodesVS1().then(function (data) {
-                            setTaxRateData(data);
-                        })
-                        .catch(function (err) {
-                            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                            $(".fullScreenSpin").css("display", "none");
-                            // Meteor._reload.reload();
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        $(".taxcodepopheader").text("Edit Tax Rate");
-                        setTaxRateData(data);
-                    }
-                })
-                .catch(function (err) {
-                    purchaseService.getTaxCodesVS1().then(function (data) {
-                        setTaxRateData(data);
-                    })
-                    .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                    });
-                });
-            } else {
-                $("#taxRateListModal").modal("toggle");
-            }
-        }
-    });
     function setTaxRateData(data) {
         let lineItems = [];
         let lineItemObj = {};
@@ -648,73 +574,122 @@ Template.newbankrecon.onRendered(function() {
         }
     }
 
-    $('#transactionAccountName').editableSelect();
-    $('#transactionAccountName').editableSelect().on('click.editable-select', function (e, li) {
-        var $each = $(this);
-        var offset = $each.offset();
-        let accountService = new AccountService();
-        var accountDataName = e.target.value ||'';
-        selectedAccountFlag = 'ForTransaction';
-
-        if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-            $('#selectLineID').val('');
-            $('#bankAccountListModal').modal();
-            setTimeout(function () {
-                $('#tblAccount_filter .form-control-sm').focus();
-                $('#tblAccount_filter .form-control-sm').val('');
-                $('#tblAccount_filter .form-control-sm').trigger("input");
-                var datatable = $('#tblAccountlist').DataTable();
-                datatable.draw();
-                $('#tblAccountlist_filter .form-control-sm').trigger("input");
-            }, 500);
-        }else{
-            if(accountDataName.replace(/\s/g, '') !== ''){
-                getVS1Data('TAccountVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        accountService.getOneAccountByName(accountDataName).then(function (data) {
-                            setBankAccountData(data);
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display','none');
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        var added=false;
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-                            if((data.taccountvs1[a].fields.AccountName) === accountDataName){
-                                added = true;
-                                setBankAccountData(data, a);
+    function defineTabpanelEvent() {
+        templateObject.bankTransactionData.get().forEach(function(item, index) {
+            
+            $('#ctaxRate_'+item.DepositLineID).editableSelect();
+            $('#ctaxRate_'+item.DepositLineID).editableSelect().on("click.editable-select", function (e, li) {
+                var $each = $(this);
+                var taxSelected = "sales";
+                var offset = $each.offset();
+                var taxRateDataName = e.target.value || "";
+                if (e.pageX > offset.left + $each.width() - 8) {
+                    // X button 16px wide?
+                    $("#taxRateListModal").modal("toggle");
+                } else {
+                    if (taxRateDataName.replace(/\s/g, "") !== "") {
+                        $(".taxcodepopheader").text("Edit Tax Rate");
+                        getVS1Data("TTaxcodeVS1").then(function (dataObject) {
+                            if (dataObject.length === 0) {
+                                purchaseService.getTaxCodesVS1().then(function (data) {
+                                    setTaxRateData(data);
+                                })
+                                    .catch(function (err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $(".fullScreenSpin").css("display", "none");
+                                        // Meteor._reload.reload();
+                                    });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                $(".taxcodepopheader").text("Edit Tax Rate");
+                                setTaxRateData(data);
                             }
-                        }
-                        if(!added) {
+                        })
+                            .catch(function (err) {
+                                purchaseService.getTaxCodesVS1().then(function (data) {
+                                    setTaxRateData(data);
+                                })
+                                    .catch(function (err) {
+                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                                        $(".fullScreenSpin").css("display", "none");
+                                        // Meteor._reload.reload();
+                                    });
+                            });
+                    } else {
+                        $("#taxRateListModal").modal("toggle");
+                    }
+                }
+            });
+            $('#what_'+item.DepositLineID).editableSelect();
+            $('#what_'+item.DepositLineID).editableSelect().on('click.editable-select', function (e, li) {
+                var $each = $(this);
+                console.log('what_'+item.DepositLineID);
+                var offset = $each.offset();
+                let accountService = new AccountService();
+                var accountDataName = e.target.value ||'';
+                selectedAccountFlag = 'ForTransaction';
+
+                if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+                    $('#selectLineID').val('');
+                    $('#bankAccountListModal').modal();
+                    setTimeout(function () {
+                        $('#tblAccount_filter .form-control-sm').focus();
+                        $('#tblAccount_filter .form-control-sm').val('');
+                        $('#tblAccount_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblAccountlist').DataTable();
+                        datatable.draw();
+                        $('#tblAccountlist_filter .form-control-sm').trigger("input");
+                    }, 500);
+                }else{
+                    if(accountDataName.replace(/\s/g, '') !== ''){
+                        getVS1Data('TAccountVS1').then(function (dataObject) {
+                            if (dataObject.length === 0) {
+                                accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                    setBankAccountData(data);
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                var added=false;
+                                for (let a = 0; a < data.taccountvs1.length; a++) {
+                                    if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                                        added = true;
+                                        setBankAccountData(data, a);
+                                    }
+                                }
+                                if(!added) {
+                                    accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                        setBankAccountData(data);
+                                    }).catch(function (err) {
+                                        $('.fullScreenSpin').css('display','none');
+                                    });
+                                }
+                            }
+                        }).catch(function (err) {
                             accountService.getOneAccountByName(accountDataName).then(function (data) {
                                 setBankAccountData(data);
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display','none');
                             });
-                        }
+                        });
+                        $('#addAccountModal').modal('toggle');
+                    }else{
+                        $('#selectLineID').val('');
+                        $('#bankAccountListModal').modal();
+                        setTimeout(function () {
+                            $('#tblAccount_filter .form-control-sm').focus();
+                            $('#tblAccount_filter .form-control-sm').val('');
+                            $('#tblAccount_filter .form-control-sm').trigger("input");
+                            var datatable = $('#tblSupplierlist').DataTable();
+                            datatable.draw();
+                            $('#tblAccount_filter .form-control-sm').trigger("input");
+                        }, 500);
                     }
-                }).catch(function (err) {
-                    accountService.getOneAccountByName(accountDataName).then(function (data) {
-                        setBankAccountData(data);
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display','none');
-                    });
-                });
-                $('#addAccountModal').modal('toggle');
-            }else{
-                $('#selectLineID').val('');
-                $('#bankAccountListModal').modal();
-                setTimeout(function () {
-                    $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('');
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblSupplierlist').DataTable();
-                    datatable.draw();
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                }, 500);
-            }
-        }
-    });
+                }
+            });
+        })
+    }
 
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
@@ -722,23 +697,21 @@ Template.newbankrecon.onRendered(function() {
         var table = $(this);
         if (selectedAccountFlag === 'ForBank') {
             let accountname = table.find(".productName").text();
-            var accountTypeId = table.find(".colAccountID").text();
+            let accountId = table.find(".colAccountID").text();
             $('#bankAccountListModal').modal('toggle');
             $('#bankAccountName').val(accountname);
-            $('#bankAccountID').val(accountTypeId);
+            $('#bankAccountID').val(accountId);
 
-            if (accountTypeId !== "") {
-                bankaccountid = accountname;
-                bankaccountname = accountTypeId;
-                Session.setPersistent('bankaccountid', accountTypeId);
-                Session.setPersistent('bankaccountname', accountname);
-
-                templateObject.getOpenBalance(bankaccountname);
-                templateObject.getBankTransactionData(bankaccountid, statementDate, false);
-
-                setTimeout(function() {
-                    window.open('/newbankrecon', '_self');
-                }, 1000);
+            if (accountId !== "") {
+                bankaccountid = accountId;
+                bankaccountname = accountname;
+                if (bankaccountid !== Session.get('bankaccountid')) {
+                    setTimeout(function () {
+                        Session.setPersistent('bankaccountid', accountId);
+                        Session.setPersistent('bankaccountname', accountname);
+                        window.open('/newbankrecon', '_self');
+                    }, 1000);
+                }
             } else {
 
             }
@@ -765,10 +738,10 @@ Template.newbankrecon.onRendered(function() {
         }
 
         $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
+        // setTimeout(function () {
+        //     $('.btnRefreshAccount').trigger('click');
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }, 1000);
     });
 
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
@@ -783,6 +756,60 @@ Template.newbankrecon.events({
     'click .btnReconTransactionDetail': function() {
         FlowRouter.go('/recontransactiondetail');
         // window.open('/recontransactiondetail', '_self');
+    },
+    'click .btnPageStart': function() {
+        let sort = Template.instance().sort_param.get();
+        window.open('/newbankrecon?page=1'+sort, '_self');
+    },
+    'click .btnPageEnd': function() {
+        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        window.open('/newbankrecon?page='+Template.instance().page_count.get()+sort, '_self');
+    },
+    'click .btnPagePrev': function() {
+        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        let prev_page = (Template.instance().page_number.get() <= 1)? 1: Template.instance().page_number.get() - 1;
+        window.open('/newbankrecon?page='+prev_page+sort, '_self');
+    },
+    'click .btnPageNext': function() {
+        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        let next_page = (Template.instance().page_number.get() >= Template.instance().page_count.get())? Template.instance().page_count.get(): Template.instance().page_number.get() + 1;
+        window.open('/newbankrecon?page='+next_page+sort, '_self');
+    },
+    'click .sortDepositSpent': function() {
+        let sort = '';
+        if (Template.instance().sort.get() === "descDepositSpent") {
+            sort = "ascDepositSpent";
+        } else {
+            sort = "descDepositSpent";
+        }
+        window.open('/newbankrecon?sort='+sort, '_self');
+    },
+    'click .sortDepositReceived': function() {
+        let sort = '';
+        if (Template.instance().sort.get() === "descDepositReceived") {
+            sort = "ascDepositReceived";
+        } else {
+            sort = "descDepositReceived";
+        }
+        window.open('/newbankrecon?sort='+sort, '_self');
+    },
+    'click .sortWithdrawSpent': function() {
+        let sort = '';
+        if (Template.instance().sort.get() === "descWithdrawSpent") {
+            sort = "ascWithdrawSpent";
+        } else {
+            sort = "descWithdrawSpent";
+        }
+        window.open('/newbankrecon?sort='+sort, '_self');
+    },
+    'click .sortWithdrawReceived': function() {
+        let sort = '';
+        if (Template.instance().sort.get() === "descWithdrawReceived") {
+            sort = "ascWithdrawReceived";
+        } else {
+            sort = "descWithdrawReceived";
+        }
+        window.open('/newbankrecon?sort='+sort, '_self');
     },
 
 });
@@ -814,5 +841,35 @@ Template.newbankrecon.helpers({
     },
     bankTransactionData: () => {
         return Template.instance().bankTransactionData.get();
+    },
+    page_number: () => {
+        return Template.instance().page_number.get();
+    },
+    page_total: () => {
+        return Template.instance().page_total.get();
+    },
+    page_count: () => {
+        return Template.instance().page_count.get();
+    },
+    page_list: () => {
+        return Template.instance().page_list.get();
+    },
+    sort: () => {
+        return Template.instance().sort.get();
+    },
+    sort_param: () => {
+        return Template.instance().sort_param.get();
+    },
+    fa_sortDepositSpent: () => {
+        return Template.instance().fa_sortDepositSpent.get();
+    },
+    fa_sortDepositReceived: () => {
+        return Template.instance().fa_sortDepositReceived.get();
+    },
+    fa_sortWithdrawSpent: () => {
+        return Template.instance().fa_sortWithdrawSpent.get();
+    },
+    fa_sortWithdrawReceived: () => {
+        return Template.instance().fa_sortWithdrawReceived.get();
     }
 });
