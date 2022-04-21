@@ -1148,6 +1148,13 @@ Template.receiptsoverview.onRendered(function () {
                     $(parentElement + ' .merchants').val(data.vendor.name);
                     $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
 
+                    var suppliers = templateObject.suppliers.get();
+                    suppliers.push({
+                        supplierid: supplier.fields.ID,
+                        suppliername: data.vendor.name,
+                    });
+                    templateObject.suppliers.set(suppliers);
+
                 }).catch(function (err) {
                     //$('.fullScreenSpin').css('display','none');
                     console.log('supplier svae error', err);
