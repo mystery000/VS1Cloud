@@ -21,21 +21,16 @@ Template.alltasks.onRendered(function () {
   console.log('rendered...')
   $("#task_items_wrapper").sortable({
     handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
-  });
-  $("#today_container").sortable({
-    handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
-  });
-  $("#upcoming_container").sortable({
-    handle: '.taskDrag',
-    change: function (event, ui) {
-      console.log(event, ui)
-    }
+    update: function (event, ui) {
+      var sorted = $("#task_items_wrapper").sortable("serialize", { key: "sort" });
+      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
+
+      let current_id = ui.item[0].id;
+      // console.log('taskDrag update =>', sorted, sortedIDs, current_id, ui)
+      let prev_id = ui.item[0].previousElementSibling.id;
+      let next_id = ui.item[0].nextElementSibling.id;
+      console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
+    },
   });
 
   $("#date-input, #dtRescheduleDate").datepicker({
@@ -63,6 +58,10 @@ Template.alltasks.onRendered(function () {
 
         let today = moment().format('YYYY-MM-DD');
         let allrecords = data.ttodo;
+        // let allrecords = data.ttodo.sort(function (a, b) {
+        //   return (a.Recno < b.Recno) ? 1 : -1;
+        // });
+
         let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
         let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
         let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
@@ -123,6 +122,8 @@ Template.alltasks.events({
     if (id) {
       crmService.saveNewTask(objDetails).then(function (objDetails) {
         $('#ttodo_' + id).remove();
+        // recalculate count here
+
       });
     }
 
@@ -525,11 +526,7 @@ Template.alltasks.events({
               <div class="row justify-content-between">
                 <div class="dueDateTags" style="display: inline-flex;">
                   
-                </div>
-                <div style="display: inline-flex;">
-                  <span class="taskLocation no-modal"><a class="taganchor no-modal" href="">All Tasks<i
-                        class="fas fa-inbox text-primary no-modal" style="margin-left: 5px;"></i></a></span>
-                </div>
+                </div> 
               </div>
             </div>
             `;
@@ -540,6 +537,14 @@ Template.alltasks.events({
       }
 
       $('.fullScreenSpin').css('display', 'none');
+
+      $('#add_task_name').val('');
+      $('#add_task_description').val('');
+
+      // check the date
+      let crm_upcoming_count = $('.crm_upcoming_count').html();
+      $('.crm_upcoming_count').html(Number(crm_upcoming_count) + 1);
+
     }).catch(function (err) {
       swal({
         title: 'Oooops...',
@@ -562,7 +567,7 @@ Template.alltasks.helpers({
   },
 
   overdueRecords: () => {
-    return Template.instance().overdueRecords.get().slice(0, 3);
+    // return Template.instance().overdueRecords.get().slice(0, 3);
     return Template.instance().overdueRecords.get();
   },
 
@@ -577,7 +582,21 @@ Template.alltasks.helpers({
   },
 
   getTodoDate: (date, format) => {
-    return moment(date).format(format);
+    if (moment().format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
+      return 'Today';
+    } else {
+      return moment(date).format(format);
+    }
+  },
+
+  getTaskStyleClass: (date) => {
+    if (moment().format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
+      return 'taskToday';
+    } else if (moment().format('YYYY-MM-DD') > moment(date).format('YYYY-MM-DD')) {
+      return 'taskOverdue';
+    } else {
+      return 'taskUpcoming';
+    }
   },
 
   getTodayDate: (format) => {
