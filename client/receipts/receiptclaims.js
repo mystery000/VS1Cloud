@@ -7,9 +7,7 @@ import {
 import {
     CoreService
 } from '../js/core-service';
-import {
-    EmployeeProfileService
-} from "../js/profile-service";
+import {ContactService} from "../contacts/contact-service";
 import {
     AccountService
 } from "../accounts/account-service";
@@ -28,6 +26,8 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
 let ocrService = new OCRService();
+let contactService = new ContactService();
+
 Template.receiptsoverview.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.employees = new ReactiveVar([]);
@@ -1101,24 +1101,58 @@ Template.receiptsoverview.onRendered(function () {
                 parentElement = "#nav-time";
             }
 
-            merchantName = data.vendor.name;
             console.log('vendor', data.vendor);
 
             isExistSupplier = false;
             templateObject.suppliers.get().forEach(supplier => {
-                if (merchantName == supplier.suupliername) {
+                if (data.vendor.name == supplier.suupliername) {
                     isExistSupplier = true;
-                    $(parentElement + ' .merchants').val(merchantName);
+                    $(parentElement + ' .merchants').val(data.vendor.name);
                     $(parentElement + ' .merchants').attr('data-id', supplier.supplierid);
                 }
             })
 
             if (!isExistSupplier) {
                 // create supplier with vendor data
-                $(parentElement + ' .merchants').val(merchantName);
-                $(parentElement + ' .merchants').attr('data-id', '');
-            }
+                objDetails = {
+                    type: "TSupplier",
+                    fields:
+                    {
+                        ClientName: data.vendor.name,
+                        FirstName: data.vendor.name,
+                        LastName: '',
+                        Phone: data.vendor.phone_number,
+                        Mobile: '',
+                        Email: data.vendor.email,
+                        SkypeName: '',
+                        Street: '',
+                        Street2: '',
+                        Suburb: '',
+                        State: '',
+                        PostCode: '',
+                        Country: '',
 
+                        BillStreet: '',
+                        BillStreet2: '',
+                        BillState: '',
+                        BillPostCode: '',
+                        Billcountry: '',
+                        PublishOnVS1: true
+                    }
+                };
+
+                contactService.saveSupplier(objDetails).then(function (supplier) {
+                    console.log('supplier save', supplier);
+                    //$('.fullScreenSpin').css('display','none');
+                    //  Meteor._reload.reload();
+                    $(parentElement + ' .merchants').val(data.vendor.name);
+                    $(parentElement + ' .merchants').attr('data-id', supplier.fields.ID);
+
+                }).catch(function (err) {
+                    //$('.fullScreenSpin').css('display','none');
+                    console.log('supplier svae error', err);
+                });
+            }
 
             $(parentElement + ' .employees').attr('data-id', loggedUserId);
             $(parentElement + ' .employees').val(loggedUserName);
