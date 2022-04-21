@@ -62,4 +62,8 @@ export class EmployeePayrollService extends BaseService {
     return this.POST(this.ERPObjects.TBankAccounts, data);
   }
 
+  saveTLeavRequest( data ){
+    return this.POST(this.ERPObjects.TLeavRequest, data);
+  }
+
 }

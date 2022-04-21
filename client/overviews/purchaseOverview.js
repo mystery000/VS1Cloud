@@ -2,6 +2,7 @@ import { PurchaseBoardService } from "../js/purchase-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { CoreService } from "../js/core-service";
 import { EmployeeProfileService } from "../js/profile-service";
+import draggableCharts from "../js/Charts/draggableCharts";
 import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { PaymentsService } from "../payments/payments-service";
@@ -1927,6 +1928,14 @@ Template.purchasesoverview.onRendered(function () {
         // Meteor._reload.reload();
       });
   };
+
+  templateObject.deactivateDraggable = () => {
+      draggableCharts.disable();
+  };
+  templateObject.activateDraggable = () => {
+      draggableCharts.enable();
+  };    
+  templateObject.activateDraggable(); // this will enable charts resiable features
 
   let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
   let urlParametersDateTo = FlowRouter.current().queryParams.toDate;

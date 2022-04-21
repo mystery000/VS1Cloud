@@ -15,6 +15,13 @@ export default class ChartHandler {
     }
   }
 
+  static buildCardPositions() {
+    const charts = $(".card-visibility");
+    for (let i = 0; i <= charts.length; i++) {
+      $(charts[i]).attr("position", i);
+    }
+  }
+
   static async saveCharts(charts = $(".chart-visibility")) {
        /**
      * Lets load all API colections
