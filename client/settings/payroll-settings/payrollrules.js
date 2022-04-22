@@ -13669,6 +13669,25 @@ Template.payrollrules.onRendered(function() {
 
           }
 
+          if(description == "Self-Managed Superannuation Fund")
+          {
+              $('#acountabmandelectronic').css('display','block');
+              $('#edtabn').css('display','block');
+              $('#accountbsb').css('display','block');
+        
+              $('#account_name').css('display','block');
+          }
+          else
+          {
+              $('#acountabmandelectronic').css('display','none');
+              $('#edtabn').css('display','none');
+              $('#accountbsb').css('display','none');
+            
+              $('#account_name').css('display','none');
+
+          }
+
+
         $('#tblfundtypelist_filter .form-control-sm').val('');
         setTimeout(function () {
             $('.btnRefreshFundType').trigger('click');
