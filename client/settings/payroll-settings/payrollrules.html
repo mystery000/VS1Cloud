@@ -307,7 +307,7 @@
                                             <h4>Pay Calendars</h4>
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
+                                            <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
                                           
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -394,6 +394,33 @@
                                                         padding: .75rem;
                                                         vertical-align: top;
                                                     }
+
+                                                    .colNextPayPeriod{
+                                                        width: 80px;
+                                                    }
+                                                    .colNextPaymentDate{
+                                                        width: 80px;
+                                                    }
+
+                                                    .colDeleteCalenders{
+                                                        width: 3% !important;
+                                                    }
+                                                    .colHolidayDelete{
+                                                        width: 3% !important;
+                                                    }     
+                                                    
+                                                    .colDeletesup{
+                                                        width: 3% !important;
+                                                    }
+
+                                                    .colDeletepaidrem{
+                                                        width: 3% !important;
+                                                    }
+
+                                                    .colDeleterei{
+                                                        width: 3% !important;
+                                                    }
+
                                                 </style>
 
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
@@ -425,8 +452,8 @@
                                                             <th class="th colCalenderID hiddenColumn" >ID</th>
                                                             <th class="th colPayCalendarName" style="">Name</th>
                                                             <th class="th colPayPeriod" style="">Pay Period</th>
-                                                            <th class="th colNextPayPeriod" style="">Next Pay Period</th>
-                                                            <th class="th colNextPaymentDate" style="">Next Payment Date</th>
+                                                            <th class="th colNextPayPeriod" >Next Pay Period</th>
+                                                            <th class="th colNextPaymentDate" >Next Payment Date</th>
                                                             <th class="th colDelete" style="width: 3% !important;"></th>
                                                         </tr>
                                                     </thead>
@@ -434,10 +461,10 @@
                                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                                             <td contenteditable="false" class="colCalenderID hiddenColumn" ></td>
                                                             <td contenteditable="false" class="colPayCalendarName"></td>
-                                                            <td contenteditable="false" class="colPayPeriod"></td>
-                                                            <td contenteditable="false" class="colNextPayPeriod"></td>
-                                                            <td contenteditable="false" class="colNextPaymentDate"></td>
-                                                            <td contenteditable="false" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
+                                                            <td contenteditable="false"  class="colPayPeriod"></td>
+                                                            <td contenteditable="false"  class="colNextPayPeriod"></td>
+                                                            <td contenteditable="false"  class="colNextPaymentDate"></td>
+                                                            <td contenteditable="false" style="width: 3% !important;" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -455,7 +482,7 @@
                                             <p>Holidays help us to be more accurate when calculating leave for your employees.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button>
+                                            <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button>
 
                                             <div class="modal fade" id="newHolidayModal" tabindex="-1" role="dialog" aria-labelledby="newHolidayLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -843,13 +870,13 @@
                                                                 Add
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#ordinaryTimeEarningsModal">Ordinary Time Earnings</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#overtimeEarningsModal">Overtime Earnings</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#employmentTermninationPaymentsModal">Employment Termnination Payments</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#lumpSumEModal">Lump Sum E</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#bonusesCommissionsModal">Bonuses & Commissions</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#lumpSumWModal">Lump Sum W</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#directorsFeesModal">Directors Fees</a>
+                                                                <a class="dropdown-item pointer btnAddordinaryTimeEarnings" data-toggle="modal" data-target="#ordinaryTimeEarningsModal">Ordinary Time Earnings</a>
+                                                                <a class="dropdown-item pointer btnAddoverTimeEarnings" data-toggle="modal" data-target="#overtimeEarningsModal">Overtime Earnings</a>
+                                                                <a class="dropdown-item pointer btnAddemploymentTermnination" data-toggle="modal" data-target="#employmentTermninationPaymentsModal">Employment Termnination Payments</a>
+                                                                <a class="dropdown-item pointer btnAddolumpSumE" data-toggle="modal" data-target="#lumpSumEModal">Lump Sum E</a>
+                                                                <a class="dropdown-item pointer btnAddbonusesCommissions" data-toggle="modal" data-target="#bonusesCommissionsModal">Bonuses & Commissions</a>
+                                                                <a class="dropdown-item pointer btnAddlumpSumW" data-toggle="modal" data-target="#lumpSumWModal">Lump Sum W</a>
+                                                                <a class="dropdown-item pointer btnAdddirectorsFees" data-toggle="modal" data-target="#directorsFeesModal">Directors Fees</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -870,6 +897,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsName">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsName">
+                                                                            <input type="hidden" id="ordinaryTimeEarningsid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -929,6 +957,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameOvertime">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameOvertime">
+                                                                            <input type="hidden" class="form-control" id="edtEarningsNameOvertimeid" value="0" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -989,6 +1018,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameTermnination">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameTermnination">
+                                                                            <input type="hidden" class="form-control" id="edtemploymentTermninationid"  value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1049,6 +1079,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameLumpSumE">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameLumpSumE">
+                                                                            <input type="hidden" id="edtLumpSumid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1112,6 +1143,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameBonusesCommissions">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameBonusesCommissions">
+                                                                            <input type="hidden" id="edtEarningsNameBonusesCommissionid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1175,6 +1207,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameLumpSumW">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameLumpSumW">
+                                                                            <input type="hidden" id="edtEarningsNameLumpSumWid" value="0" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1238,6 +1271,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtEarningsNameDirectorsFees">Earnings Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameDirectorsFees">
+                                                                            <input type="hidden" id="edtEarningsDirectorsFeesid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1312,8 +1346,10 @@
                                                                 <th class="th colEarningsNames" style="width: 200px;">Earnings Name</th>
                                                                 <th class="th colEarningsType" style="width: 80px;">Earnings Type</th>
                                                                 <th class="th colEarningsDisplayName" style="">Display name</th>
+                                                                <th class="th colEarningsratetype" >Rate Type</th>
                                                                 <th class="th colEarningsAmount" style="width: 80px;">Amount</th>
-                                                                <th class="th colEarningsAccounts" style="">Account</th>
+                                                                <th class="th colEarningsAccounts" >Account</th>
+                                                              
                                                                 <th class="th colEarningsAccountsID hiddenColumn" style="">Account ID</th>
                                                                 <th class="th colEarningsPAYG hiddenColumn" style="">PAYG withholding</th>
                                                                 <th class="th colEarningsSuperannuation hiddenColumn" style="">Superannuation Guarantee Contribution</th>
@@ -1548,7 +1584,7 @@
                                                         <h5 style="font-weight: 600;">Reimbursements</h5>
                                                     </div>
                                                     <div class="col-6">
-                                                        <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newReimbursementModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add</button>
+                                                        <button type="button" class="btn btn-primary btnAddNewReimbursements float-right" data-toggle="modal" data-target="#newReimbursementModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add</button>
                                                     </div>
                                                 </div>
 
@@ -1565,6 +1601,7 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-group">
+                                                                            <input type="hidden" id="res_id" name="res_id" value="0" class="form-control"/>
                                                                             <label for="edtReimbursementName">Reimbursement Name</label>
                                                                             <input type="text" class="form-control" id="edtReimbursementName">
                                                                         </div>
@@ -1639,8 +1676,8 @@
                                                                 Add
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#paidLeaveModal">Paid Leave</a>
-                                                                <a class="dropdown-item pointer" data-toggle="modal" data-target="#unpaidLeaveModal">Unpaid Leave</a>
+                                                                <a class="dropdown-item pointer addpaidleave" data-toggle="modal" data-target="#paidLeaveModal">Paid Leave</a>
+                                                                <a class="dropdown-item pointer addunpaidleave" data-toggle="modal" data-target="#unpaidLeaveModal">Unpaid Leave</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1653,6 +1690,7 @@
                                                                 <h5 class="modal-title" id="paidLeaveLabel">Paid Leave</h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
+
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
@@ -1661,6 +1699,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtLeaveName">Leave Name</label>
                                                                             <input type="text" class="form-control" id="edtLeaveName">
+                                                                            <input type="hidden" id="paidleaveid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 mb-1">
@@ -1715,6 +1754,7 @@
                                                                         <div class="form-group">
                                                                             <label for="edtUnpaidLeaveName">Leave Name</label>
                                                                             <input type="text" class="form-control" id="edtUnpaidLeaveName">
+                                                                             <input type="hidden" id="unpaidleaveid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12 mb-1">
@@ -1814,7 +1854,7 @@
                                             <h4>Superannuation</h4>
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newSuperannuationFundModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Superannuation Fund</button>
+                                            <button type="button" class="btn btn-primary btnAddNewSuperannuation float-right" data-toggle="modal" data-target="#newSuperannuationFundModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Superannuation Fund</button>
 
                                             <div class="modal fade" id="newSuperannuationFundModal" tabindex="-1" role="dialog" aria-labelledby="newSuperannuationFundLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1832,7 +1872,7 @@
                                                                         <input type="hidden" id="newSuperannuationFundId"  value="0"/>
                                                                         <label for="edtFundType">Type</label>
                                                                         <select class="form-control edtFundType" id="edtFundType" >
-                                                                    
+                                                                          
                                                                         </select>
                                                                     </div>
                                                                 </div>
