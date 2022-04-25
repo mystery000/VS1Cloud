@@ -1899,6 +1899,8 @@ Template.receiptsoverview.events({
             totalAmount += amount;
         }
 
+        totalAmount = Math.trunc(totalAmount*100)/100;
+
         if (totalAmount != receipt.AmountInc) {
             swal("Splited amount is not same as original receipt's", '', 'warning');
             return;
