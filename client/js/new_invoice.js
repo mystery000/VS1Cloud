@@ -2404,7 +2404,8 @@ Template.new_invoice.onRendered(() => {
                             saleCustField1: data.fields.SaleCustField1,
                             saleCustField2: data.fields.SaleCustField2,
                             totalPaid: totalPaidAmount,
-                            ispaid: false
+                            ispaid: false,
+                            isPartialPaid: false
                         };
 
                         $('#edtCustomerName').val(data.fields.CustomerName);
@@ -2681,6 +2682,10 @@ Template.new_invoice.onRendered(() => {
                               if(data.fields.IsBackOrder){
                                  lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                               }
+                              let isPartialPaid = false;
+                              if(data.fields.TotalPaid > 0){
+                                isPartialPaid = true;
+                              }
                                 let invoicerecord = {
                                     id: data.fields.ID,
                                     lid: lidData,
@@ -2715,7 +2720,8 @@ Template.new_invoice.onRendered(() => {
                                     saleCustField1: data.fields.SaleCustField1 || '',
                                     saleCustField2: data.fields.SaleCustField2 || '',
                                     totalPaid: totalPaidAmount || 0,
-                                    ispaid: data.fields.IsPaid
+                                    ispaid: data.fields.IsPaid,
+                                    isPartialPaid: isPartialPaid
                                 };
 
                                 $('#edtCustomerName').val(data.fields.CustomerName);
@@ -3039,6 +3045,11 @@ Template.new_invoice.onRendered(() => {
                                        lidData = 'Edit Invoice' + ' (BO) ' + useData[d].fields.ID||'';
                                     }
 
+                                    let isPartialPaid = false;
+                                    if(useData[d].fields.TotalPaid > 0){
+                                      isPartialPaid = true;
+                                    }
+
                                     let invoicerecord = {
                                         id: useData[d].fields.ID,
                                         lid: lidData,
@@ -3073,7 +3084,8 @@ Template.new_invoice.onRendered(() => {
                                         saleCustField1: useData[d].fields.SaleCustField1,
                                         saleCustField2: useData[d].fields.SaleCustField2,
                                         totalPaid: totalPaidAmount,
-                                        ispaid: useData[d].fields.IsPaid
+                                        ispaid: useData[d].fields.IsPaid,
+                                        isPartialPaid: isPartialPaid
                                     };
 
                                     $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -3334,6 +3346,12 @@ Template.new_invoice.onRendered(() => {
                                   if(data.fields.IsBackOrder){
                                      lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                                   }
+
+                                  let isPartialPaid = false;
+                                  if(data.fields.TotalPaid > 0){
+                                    isPartialPaid = true;
+                                  }
+
                                     let invoicerecord = {
                                         id: data.fields.ID,
                                         lid: lidData,
@@ -3368,7 +3386,8 @@ Template.new_invoice.onRendered(() => {
                                         saleCustField1: data.fields.SaleCustField1,
                                         saleCustField2: data.fields.SaleCustField2,
                                         totalPaid: totalPaidAmount,
-                                        ispaid: data.fields.IsPaid
+                                        ispaid: data.fields.IsPaid,
+                                        isPartialPaid: isPartialPaid
                                     };
 
                                     $('#edtCustomerName').val(data.fields.CustomerName);
@@ -3693,6 +3712,11 @@ Template.new_invoice.onRendered(() => {
                           if(data.fields.IsBackOrder){
                              lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                           }
+                          let isPartialPaid = false;
+                          if(data.fields.TotalPaid > 0){
+                            isPartialPaid = true;
+                          }
+
                             let invoicerecord = {
                                 id: data.fields.ID,
                                 lid: lidData,
@@ -3727,7 +3751,8 @@ Template.new_invoice.onRendered(() => {
                                 saleCustField1: data.fields.SaleCustField1,
                                 saleCustField2: data.fields.SaleCustField2,
                                 totalPaid: totalPaidAmount,
-                                ispaid: data.fields.IsPaid
+                                ispaid: data.fields.IsPaid,
+                                isPartialPaid: isPartialPaid
                             };
 
                             $('#edtCustomerName').val(data.fields.CustomerName);
@@ -4112,6 +4137,12 @@ Template.new_invoice.onRendered(() => {
                               if(data.fields.IsBackOrder){
                                  lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                               }
+
+                              let isPartialPaid = false;
+                              if(data.fields.TotalPaid > 0){
+                                isPartialPaid = true;
+                              }
+
                                 let invoicerecord = {
                                     id: data.fields.ID,
                                     lid: lidData,
@@ -4146,7 +4177,8 @@ Template.new_invoice.onRendered(() => {
                                     saleCustField1: data.fields.SaleCustField1,
                                     saleCustField2: data.fields.SaleCustField2,
                                     totalPaid: totalPaidAmount,
-                                    ispaid: data.fields.IsPaid
+                                    ispaid: data.fields.IsPaid,
+                                    isPartialPaid: isPartialPaid
                                 };
 
                                 $('#edtCustomerName').val(data.fields.CustomerName);
@@ -4445,6 +4477,10 @@ Template.new_invoice.onRendered(() => {
                                     if(useData[d].fields.IsBackOrder){
                                        lidData = 'Edit Invoice' + ' (BO) ' + useData[d].fields.ID||'';
                                     }
+                                    let isPartialPaid = false;
+                                    if(useData[d].fields.TotalPaid > 0){
+                                      isPartialPaid = true;
+                                    }
                                     let invoicerecord = {
                                         id: useData[d].fields.ID,
                                         lid: lidData,
@@ -4479,7 +4515,8 @@ Template.new_invoice.onRendered(() => {
                                         saleCustField1: useData[d].fields.SaleCustField1,
                                         saleCustField2: useData[d].fields.SaleCustField2,
                                         totalPaid: totalPaidAmount,
-                                        ispaid: useData[d].fields.IsPaid
+                                        ispaid: useData[d].fields.IsPaid,
+                                        isPartialPaid: isPartialPaid
                                     };
 
                                     $('#edtCustomerName').val(useData[d].fields.CustomerName);
@@ -4753,6 +4790,10 @@ Template.new_invoice.onRendered(() => {
                                        lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                                     }
 
+                                    let isPartialPaid = false;
+                                    if(data.fields.TotalPaid > 0){
+                                      isPartialPaid = true;
+                                    }
                                     let invoicerecord = {
                                         id: data.fields.ID,
                                         lid: lidData,
@@ -4788,6 +4829,7 @@ Template.new_invoice.onRendered(() => {
                                         saleCustField2: data.fields.SaleCustField2,
                                         totalPaid: totalPaidAmount,
                                         ispaid: data.fields.IsPaid,
+                                        isPartialPaid: isPartialPaid,
                                         deleted: data.fields.Deleted
                                     };
 
@@ -5053,6 +5095,11 @@ Template.new_invoice.onRendered(() => {
                           if(data.fields.IsBackOrder){
                              lidData = 'Edit Invoice' + ' (BO) ' + data.fields.ID||'';
                           }
+                          let isPartialPaid = false;
+                          if(data.fields.TotalPaid > 0){
+                            isPartialPaid = true;
+                          }
+
                             let invoicerecord = {
                                 id: data.fields.ID,
                                 lid: lidData,
@@ -5086,7 +5133,8 @@ Template.new_invoice.onRendered(() => {
                                 saleCustField1: data.fields.SaleCustField1,
                                 saleCustField2: data.fields.SaleCustField2,
                                 totalPaid: totalPaidAmount,
-                                ispaid: data.fields.IsPaid
+                                ispaid: data.fields.IsPaid,
+                                isPartialPaid: isPartialPaid
                             };
 
                             $('#edtCustomerName').val(data.fields.CustomerName);
@@ -5414,7 +5462,8 @@ Template.new_invoice.onRendered(() => {
                             saleCustField1: data.fields.SaleCustField1,
                             saleCustField2: data.fields.SaleCustField2,
                             totalPaid: totalPaidAmount,
-                            ispaid: false
+                            ispaid: false,
+                            isPartialPaid: false
                         };
 
                         $('#edtCustomerName').val(data.fields.CustomerName);
@@ -5704,7 +5753,8 @@ Template.new_invoice.onRendered(() => {
                             saleCustField1: data.fields.SaleCustField1,
                             saleCustField2: data.fields.SaleCustField2,
                             totalPaid: totalPaidAmount,
-                            ispaid: false
+                            ispaid: false,
+                            isPartialPaid: false
                         };
 
                         $('#edtCustomerName').val(data.fields.CustomerName);
@@ -5925,7 +5975,8 @@ Template.new_invoice.onRendered(() => {
                 saleCustField1: '',
                 saleCustField2: '',
                 totalPaid: Currency + '' + 0.00,
-                ispaid: false
+                ispaid: false,
+                isPartialPaid: false
             };
 
             $('#edtCustomerName').val('');
