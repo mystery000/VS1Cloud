@@ -105,9 +105,6 @@ async function saveCharts() {
     );
   });
 
-  // Save Into local indexDB
-  await ChartHandler.saveChartsInLocalDB( _chartGroup, chartList )
-
   for (const _chart of chartList) {
     // chartList.forEach(async (chart) => {
     //console.log("Saving chart");
@@ -158,20 +155,28 @@ Template.allChartLists.onRendered(function () {
   };
   templateObject.checkChartToDisplay = async () => {
     let defaultChartList = [];
-    const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-    let displayedCharts = 0;
+    let chartList = [];
 
-    const allChartsEndpoint = dashboardApis.collection.findByName(
-      dashboardApis.collectionNames.vs1charts
-    );
-    allChartsEndpoint.url.searchParams.append("ListType", "'Detail'");
-    const allChartResponse = await allChartsEndpoint.fetch();
+    const dashboardApis = new DashboardApi(); // Load all dashboard APIS 
 
-    if (allChartResponse.ok == true) {
-      const allChartsJsonResponse = await allChartResponse.json();
-      //console.log(allChartsJsonResponse);
+    let displayedCharts = 0;    
+    chartList = await ChartHandler.getTvs1charts()
+    if( chartList.length == 0 ){
+      // Fetching data from API
+      const allChartsEndpoint = dashboardApis.collection.findByName(
+        dashboardApis.collectionNames.vs1charts
+      );
+      allChartsEndpoint.url.searchParams.append("ListType", "'Detail'");
+      const allChartResponse = await allChartsEndpoint.fetch();
 
-      let chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
+      if (allChartResponse.ok == true) {
+        const allChartsJsonResponse = await allChartResponse.json();
+        //console.log(allChartsJsonResponse);
+        chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
+      }
+    }
+
+    if( chartList.length > 0 ){
       // console.log(allChartResponse);
       // console.log('chartlist', chartList);
       // the goal here is to get the right names so it can be used for preferences
@@ -241,43 +246,9 @@ Template.allChartLists.onRendered(function () {
     }
 
     // Now get user preferences
-    let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _chartGroup );
-    if( tvs1ChartDashboardPreference.length == 0 ){
-      const dashboardPreferencesEndpoint = dashboardApis.collection.findByName(
-        dashboardApis.collectionNames.Tvs1dashboardpreferences
-      );
-
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "ListType",
-        "'Detail'"
-      );
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "select",
-        `[employeeID]=${employeeId}`
-      );
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "select",
-        `[TabGroup]=${_tabGroup}`
-      );
-
-      const dashboardPreferencesEndpointResponse =
-        await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
-
-      if (dashboardPreferencesEndpointResponse.ok == true) {
-        dashboardPreferencesEndpointJsonResponse =
-          await dashboardPreferencesEndpointResponse.json();
-      }
-      tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
-        dashboardPreferencesEndpointJsonResponse.tvs1dashboardpreferences
-      ).filter((chart) => {
-        if (chart.fields.TabGroup == _tabGroup) {
-          return chart;
-        }
-      });
-    }
-
-    // console.log("tvs1ChartDashboardPreference", tvs1ChartDashboardPreference);
-
+    let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
+    // console.log('tvs1ChartDashboardPreference', tvs1ChartDashboardPreference)
+    
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
@@ -520,6 +491,8 @@ Template.allChartLists.events({
     await saveCharts();
     await chartsEditor.disable();
     await templateObject.hideChartElements();
+      // Save Into local indexDB
+    await ChartHandler.saveChartsInLocalDB();
     await templateObject.checkChartToDisplay();
     $(".fullScreenSpin").css("display", "none");
   },
