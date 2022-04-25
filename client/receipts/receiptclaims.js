@@ -34,11 +34,29 @@ Template.receiptsoverview.onCreated(function () {
     templateObject.suppliers = new ReactiveVar([]);
     templateObject.chartAccounts = new ReactiveVar([]);
     templateObject.expenseClaimList = new ReactiveVar([]);
+    templateObject.multiReceiptRecords = new ReactiveVar([]);
     templateObject.editExpenseClaim = new ReactiveVar();
 });
 
 Template.receiptsoverview.onRendered(function () {
     let templateObject = Template.instance();
+
+    sessionCurrency = Session.get('ERPCountryAbbr');
+    multipleRecords = [];
+    for (i = 0; i < 10; i++) {
+        item = {
+            date: moment().format("DD/MM/YYYY"),
+            amount: 0,
+            merchantName: "",
+            merchantId: 0,
+            accountName: "",
+            accountId: 0,
+            currency: sessionCurrency,
+            description: ""
+        }
+        multipleRecords.push(item);
+    }
+    templateObject.multiReceiptRecords.set(multipleRecords);
 
     $('.employees').editableSelect();
     $('.merchants').editableSelect();
@@ -2088,18 +2106,11 @@ Template.receiptsoverview.events({
 Template.receiptsoverview.helpers({
     expenseClaimList: () => {
         return Template.instance().expenseClaimList.get();
-        // .sort(function (a, b) {
-        //     if (a.claimDate == 'NA') {
-        //         return 1;
-        //     } else if (b.claimDate == 'NA') {
-        //         return -1;
-        //     }
-        //     let aDateString = moment(a.DateTime, "DD/MM/YYYY").format("YYYY-MM-DD");
-        //     let bDateString = moment(b.DateTime, "DD/MM/YYYY").format("YYYY-MM-DD");
-        //     return (aDateString > bDateString) ? 1 : -1;
-        // });
     },
     editExpenseClaim: () => {   
         return Template.instance().editExpenseClaim.get();
+    },
+    multiReceiptRecords: () => {
+        return Template.instance().multiReceiptRecords.get();
     }
 });
