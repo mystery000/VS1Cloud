@@ -1,8 +1,5 @@
 <template name="allChartLists">
     <style>
-        #connectedSortable{
-            margin: 0 auto;
-        }
         .portlet-placeholder {
             border: 1px dotted black;
             margin: 0 1em 1em 0;
@@ -76,71 +73,69 @@
             height: 100%;
         } */
     </style>
-        <div class="p-3">
-            <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
-                <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">
-                    {{> monthlyprofitandloss}}
-                </div>
-                <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="resalecomparisioncol" key="dashboard__employee_sales_comparison">
-                    {{> resalescomparision}}
-                </div>
-                <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="monthlyearningscol" key="dashboard__monthly_earnings">
-                    {{> monthlyearnings}}
-                </div>                
-                <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="quotedinvoicedamountscol" key="dashboard__quoted_amounts_/_invoiced_amounts">
-                    {{> quotedinvoicedamounts}}
-                </div>
-                <div class="col-auto col-md-6 sortable-chart-widget-js hideelement"  key="dashboard__expenses">
-                    {{> expenseschart}}
-                </div>
+        <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="monthylprofiteandlosscol" key="dashboard__monthyl_profit_and_loss">
+                {{> monthlyprofitandloss}}
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="resalecomparisioncol" key="dashboard__employee_sales_comparison">
+                {{> resalescomparision}}
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="monthlyearningscol" key="dashboard__monthly_earnings">
+                {{> monthlyearnings}}
+            </div>                
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement" id="quotedinvoicedamountscol" key="dashboard__quoted_amounts_/_invoiced_amounts">
+                {{> quotedinvoicedamounts}}
+            </div>
+            <div class="col-auto col-md-6 sortable-chart-widget-js hideelement"  key="dashboard__expenses">
+                {{> expenseschart}}
+            </div>
 
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__top_10_customers">
-                    {{> top10Customers}}
-                </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__top_10_customers">
+                {{> top10Customers}}
+            </div>
 
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__top_10_supplies">
-                    {{> top10Suppliers}}
-                </div>
-            
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__active_employees">
-                    {{> activeEmployees}}
-                </div>    
-            
-                <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="accounts__revenue_streams">
-                    {{> accountrevenuestreams}}
-                </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__top_10_supplies">
+                {{> top10Suppliers}}
+            </div>
+        
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="contacts__active_employees">
+                {{> activeEmployees}}
+            </div>    
+        
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="accounts__revenue_streams">
+                {{> accountrevenuestreams}}
+            </div>
 
-                <div class="sortable-chart-widget-js hideelement col-auto col-md-8" key="sales__sales_overview">
-                    {{> quotedsalesorderinvoicedamounts}}
-                </div>
+            <div class="sortable-chart-widget-js hideelement col-auto col-md-8" key="sales__sales_overview">
+                {{> quotedsalesorderinvoicedamounts}}
+            </div>
 
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" id="profiteandlosschartcol" key="dashboard__profit_and_loss">
-                    {{> profitandlosschart}}
-                </div>
-            
-                <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="inventory__stock_on_hand_and_demand">
-                    {{> invstockonhandanddemand}}
-                </div>
-            
-                <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="payroll__employee_jobs_completed">
-                    {{> employeecompletedjobs}}
-                </div>
-            
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="payroll__clocked_on_employees">
-                    {{> clockedOnEmployees}}
-                </div>
-            
-                <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="purchases__monthly_expenses">
-                    {{> monthllyexpenses}}
-                </div>
-            
-                <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="purchases__expenses_breakdown">
-                    {{> expensebreakdown}}
-                </div>
-            
-                <div class="sortable-chart-widget-js hideelement col-auto col-md-8" key="employees__absentee_rate_over_last_12_months">
-                    {{> absenteeRate }}
-                </div>
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" id="profiteandlosschartcol" key="dashboard__profit_and_loss">
+                {{> profitandlosschart}}
+            </div>
+        
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="inventory__stock_on_hand_and_demand">
+                {{> invstockonhandanddemand}}
+            </div>
+        
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="payroll__employee_jobs_completed">
+                {{> employeecompletedjobs}}
+            </div>
+        
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="payroll__clocked_on_employees">
+                {{> clockedOnEmployees}}
+            </div>
+        
+            <div class="col-auto col-md-8 sortable-chart-widget-js hideelement" key="purchases__monthly_expenses">
+                {{> monthllyexpenses}}
+            </div>
+        
+            <div class="col-auto col-md-4 sortable-chart-widget-js hideelement" key="purchases__expenses_breakdown">
+                {{> expensebreakdown}}
+            </div>
+        
+            <div class="sortable-chart-widget-js hideelement col-auto col-md-8" key="employees__absentee_rate_over_last_12_months">
+                {{> absenteeRate }}
             </div>
         </div>
         <div class="row no-gutters justify-content-center">

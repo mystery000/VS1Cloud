@@ -23,7 +23,7 @@
             }
         </style>
 
-        <header class="p-4 d-flex align-items-center">
+        <header class="pt-2 pb-3 d-flex align-items-center">
             <h2 class="mr-1">Dashboard</h2>
             <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
                     class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
@@ -74,11 +74,11 @@
             }
         </style>
 
-        <div class="px-4">
-            <div class="row">
-                {{> purchasesaleschart}}
-            </div>      
+        
+        <div class="row">
+            {{> purchasesaleschart}}
         </div>      
+            
 
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="1" chartGroup="Dashboard" }}

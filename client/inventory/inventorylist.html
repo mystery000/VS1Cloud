@@ -11,7 +11,7 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="p-4 d-flex align-items-center">
+        <header class="py-2 d-flex align-items-center">
             <h2 class="mr-1">Inventory Overview</h2>
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                 <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
@@ -59,9 +59,9 @@
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="5" chartGroup="Inventory" }}
 
-        <div class="row d-xl-flex flex-row justify-content-xl-center" style="margin: 0px;">
+        <div class="row d-xl-flex flex-row justify-content-xl-center">
             <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0rem !important;">
-                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px;"><i
+                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px; margin-left: 0"><i
                         class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 <div>
                     <a class="btn btn-primary float-left btnNewProduct" href="/productview" style="margin: 16px;"><i
@@ -408,295 +408,293 @@
             </div>
         </div>
 
-        <div style="padding: 0px 12px;">
-            <div class="card-body p-3 rounded">
-                <!-- Start {{> optionNavSalesOverview}} -->
-                <div class="d-xl-flex justify-content-xl-end">
-                    <div>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                            <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>Display Settings</h4><button type="button" class="close"
-                                            data-dismiss="modal" aria-label="Close"><span
-                                                aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div>
-                                            {{#if tableheaderrecords}}
-                                            <form class="d-xl-flex align-items-xl-center">
-                                                <div class="flex-grow-1">
-                                                    <style>
-                                                        .groove {
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            width: 200px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
+        <div class="card-body px-0 py-3 rounded">
+            <!-- Start {{> optionNavSalesOverview}} -->
+            <div class="d-xl-flex justify-content-xl-end">
+                <div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Display Settings</h4><button type="button" class="close"
+                                        data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        {{#if tableheaderrecords}}
+                                        <form class="d-xl-flex align-items-xl-center">
+                                            <div class="flex-grow-1">
+                                                <style>
+                                                    .groove {
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        width: 200px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                    }
+
+                                                    .custom-control-label {
+                                                        position: absolute;
+                                                    }
+
+                                                    .rngRange {
+                                                        position: relative;
+                                                        display: flex;
+                                                        flex-direction: column;
+                                                        width: 100%;
+                                                        pointer-events: auto;
+                                                        background-color: rgb(255, 255, 255);
+                                                        background-clip: padding-box;
+                                                        border: 1px solid rgb(133, 135, 150);
+                                                        border-radius: .3rem;
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                        color: rgb(128, 128, 128);
+                                                        height: inherit !important;
+                                                    }
+
+                                                    @media only screen and (max-width: 480px) {
+                                                        .modal.show .modal-dialog {
+                                                            float: inherit !important;
+                                                            left: inherit !important;
+                                                            top: auto !important;
+
                                                         }
+                                                    }
+                                                </style>
+                                                {{#each item in tableheaderrecords}}
+                                                {{#if equals item.sTitle "id"}}
+                                                {{else}}
 
-                                                        .custom-control-label {
-                                                            position: absolute;
-                                                        }
-
-                                                        .rngRange {
-                                                            position: relative;
-                                                            display: flex;
-                                                            flex-direction: column;
-                                                            width: 100%;
-                                                            pointer-events: auto;
-                                                            background-color: rgb(255, 255, 255);
-                                                            background-clip: padding-box;
-                                                            border: 1px solid rgb(133, 135, 150);
-                                                            border-radius: .3rem;
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
-                                                            color: rgb(128, 128, 128);
-                                                            height: inherit !important;
-                                                        }
-
-                                                        @media only screen and (max-width: 480px) {
-                                                            .modal.show .modal-dialog {
-                                                                float: inherit !important;
-                                                                left: inherit !important;
-                                                                top: auto !important;
-
-                                                            }
-                                                        }
-                                                    </style>
-                                                    {{#each item in tableheaderrecords}}
-                                                    {{#if equals item.sTitle "id"}}
-                                                    {{else}}
-
-                                                    <div id="{{item.sIndex}}" class="columnSettings">
-                                                        <div class="custom-control custom-switch"
-                                                            style="margin: 8px; float:left;">
-                                                            <input class="custom-control-input chkDatatable"
-                                                                type="checkbox" id="chkSalesNo-{{item.sIndex}}"
-                                                                name="chkSalesNo-{{item.sIndex}}"
-                                                                checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
-                                                                value="{{item.sTitle}}">
-                                                            <label class="custom-control-label"
-                                                                for="chkSalesNo-{{item.sIndex}}"></label>
-                                                            <div contenteditable="true" class="groove divcolumn"
-                                                                type="text" value="{{item.sTitle}}"
-                                                                valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                        </div>
-                                                        <div class="d-xl-flex align-items-xl-center divColWidth"
-                                                            style="margin: 8px;">
-                                                            <label class="text-nowrap"
-                                                                style="padding-left: 0px;margin-top: 8px;">Width:
-                                                                <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                            </label>
-                                                            <input class="custom-range rngRange" type="number"
-                                                                style="margin: 8px;" value="{{item.sWidth}}" min="0"
-                                                                max="1000">
-                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                                        </div>
+                                                <div id="{{item.sIndex}}" class="columnSettings">
+                                                    <div class="custom-control custom-switch"
+                                                        style="margin: 8px; float:left;">
+                                                        <input class="custom-control-input chkDatatable"
+                                                            type="checkbox" id="chkSalesNo-{{item.sIndex}}"
+                                                            name="chkSalesNo-{{item.sIndex}}"
+                                                            checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
+                                                            value="{{item.sTitle}}">
+                                                        <label class="custom-control-label"
+                                                            for="chkSalesNo-{{item.sIndex}}"></label>
+                                                        <div contenteditable="true" class="groove divcolumn"
+                                                            type="text" value="{{item.sTitle}}"
+                                                            valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
                                                     </div>
-
-                                                    {{#if equals item.sVisible true}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
-                                                    </script>
-                                                    {{else}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
-                                                    </script>
-                                                    {{/if}}
-
-                                                    {{/if}}
-                                                    {{/each}}
+                                                    <div class="d-xl-flex align-items-xl-center divColWidth"
+                                                        style="margin: 8px;">
+                                                        <label class="text-nowrap"
+                                                            style="padding-left: 0px;margin-top: 8px;">Width:
+                                                            <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                        </label>
+                                                        <input class="custom-range rngRange" type="number"
+                                                            style="margin: 8px;" value="{{item.sWidth}}" min="0"
+                                                            max="1000">
+                                                        <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                    </div>
                                                 </div>
-                                            </form>
-                                            {{/if}}
-                                        </div>
+
+                                                {{#if equals item.sVisible true}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
+                                                </script>
+                                                {{else}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
+                                                </script>
+                                                {{/if}}
+
+                                                {{/if}}
+                                                {{/each}}
+                                            </div>
+                                        </form>
+                                        {{/if}}
                                     </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save"
-                                                style="margin-right: 5px;"></i>Save</button>
-                                        <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
-                                                class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
-                                                class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save"
+                                            style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
+                                            class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                            class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- End -->
-                <div class="table-responsive">
-                    <style>
-                        th {
-                            background-color: #ededed;
-                        }
+            </div>
+            <!-- End -->
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
 
-                        .table-striped tbody tr:nth-of-type(odd) {
-                            background-color: white !important;
-                        }
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
 
-                        .table-striped tbody tr:nth-of-type(even) {
-                            background-color: #0000000d !important;
-                        }
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
 
-                        .JColResizer>tbody>tr>td,
-                        .JColResizer>tbody>tr>th {
-                            padding: .75rem !important;
-                        }
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
 
-                        .hiddenColumn {
-                            display: none;
-                        }
+                    .hiddenColumn {
+                        display: none;
+                    }
 
-                        .showColumn {
-                            display: table-cell;
-                            padding: .75rem;
-                            vertical-align: top;
-                        }
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
 
-                        input[type=number]::-webkit-inner-spin-button,
-                        input[type=number]::-webkit-outer-spin-button {
-                            opacity: 1;
-                        }
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
 
-                        /* .searchInput {
-                        display: block;
-                        width: 100%;
-                        height: calc(1.5em + .75rem + 2px);
-                        padding: .375rem .75rem;
-                        font-size: 1rem;
-                        font-weight: 400;
-                        line-height: 1.5;
-                        color: rgb(110 112 126);
-                        background-color: rgb(255 255 255);
-                        background-clip: padding-box;
-                        border: 1px solid rgb(209 211 226);
-                        border-radius: .35rem;
-                        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-                        } */
-                        #tblInventory_filter .form-control,
-                        #tblInventory_filter label {
-                            /* display:none!important; */
-                        }
-                    </style>
-                    <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
+                    /* .searchInput {
+                    display: block;
+                    width: 100%;
+                    height: calc(1.5em + .75rem + 2px);
+                    padding: .375rem .75rem;
+                    font-size: 1rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: rgb(110 112 126);
+                    background-color: rgb(255 255 255);
+                    background-clip: padding-box;
+                    border: 1px solid rgb(209 211 226);
+                    border-radius: .35rem;
+                    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+                    } */
+                    #tblInventory_filter .form-control,
+                    #tblInventory_filter label {
+                        /* display:none!important; */
+                    }
+                </style>
+                <!-- <div class="form-group" style="margin: 16px;margin-left: 8px;">
 <label>Search:</label>
 <input type="search" class="searchInput" autocomplete="off" id="myInputSearch" name="myInputSearch">
 </div> -->
-                    <!-- <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="dataTables_filter">
-                                <label style="display: flex;">Search:<input type="search" class="searchInput" placeholder="" aria-controls="tblInventory" autocomplete="off" id="myInputSearch" name="myInputSearch" style="margin-left: 0.5em;"></label>
-                            </div>
+                <!-- <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="dataTables_filter">
+                            <label style="display: flex;">Search:<input type="search" class="searchInput" placeholder="" aria-controls="tblInventory" autocomplete="off" id="myInputSearch" name="myInputSearch" style="margin-left: 0.5em;"></label>
                         </div>
-                    </div> -->
+                    </div>
+                </div> -->
 
-                    <style>
-                        .lblPriceEx,
-                        .lblCostEx {
-                            color: #00a3d3;
-                        }
+                <style>
+                    .lblPriceEx,
+                    .lblCostEx {
+                        color: #00a3d3;
+                    }
 
-                        .lblPriceInc,
-                        .lblCostInc {
-                            color: #17a673;
-                        }
+                    .lblPriceInc,
+                    .lblCostInc {
+                        color: #17a673;
+                    }
 
-                        .fa-trans {
-                            -ms-transform: rotate(180deg);
-                            transform: rotate(180deg);
-                        }
+                    .fa-trans {
+                        -ms-transform: rotate(180deg);
+                        transform: rotate(180deg);
+                    }
 
-                        .lblPriceEx,
-                        .lblPriceInc,
-                        .lblCostEx,
-                        .lblCostInc {
-                            cursor: pointer;
-                            -webkit-touch-callout: none;
-                            -webkit-user-select: none;
-                            -khtml-user-select: none;
-                            -moz-user-select: none;
-                            -ms-user-select: none;
-                            user-select: none;
-                        }
+                    .lblPriceEx,
+                    .lblPriceInc,
+                    .lblCostEx,
+                    .lblCostInc {
+                        cursor: pointer;
+                        -webkit-touch-callout: none;
+                        -webkit-user-select: none;
+                        -khtml-user-select: none;
+                        -moz-user-select: none;
+                        -ms-user-select: none;
+                        user-select: none;
+                    }
 
-                        .showColumn {
-                            display: inline-block !important;
-                            padding: 0px !important;
-                        }
+                    .showColumn {
+                        display: inline-block !important;
+                        padding: 0px !important;
+                    }
 
-                        input.showColumn {
-                            padding: 12px !important;
-                        }
+                    input.showColumn {
+                        padding: 12px !important;
+                    }
 
-                        .colCostPrice {
-                            width: 130px !important;
-                        }
+                    .colCostPrice {
+                        width: 130px !important;
+                    }
 
-                        .colCostPriceInc {
-                            width: 135px !important;
-                        }
+                    .colCostPriceInc {
+                        width: 135px !important;
+                    }
 
-                        .colSalePrice {
-                            width: 130px !important;
-                        }
+                    .colSalePrice {
+                        width: 130px !important;
+                    }
 
-                        .colSalePriceInc {
-                            width: 135px !important;
-                        }
-                    </style>
+                    .colSalePriceInc {
+                        width: 135px !important;
+                    }
+                </style>
 
 
-                    <table id="tblInventory" style="width:100%"
-                        class="dataTable table table-striped table-bordered tblInventory">
-                        <thead>
-                            <tr class="dnd-moved">
-                                <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
-                                <th class="th colProductName" style="width:200px;">Product Name</th>
-                                <th class="th colSalesDescription">Sales Description</th>
-                                <th class="th colBarcode">Barcode</th>
-                                <th class="th colDepartment" style="width:150px;">Department</th>
-                                <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
-                                    <i class="fas fa-random"></i>
-                                </th>
-                                <th class="th colCostPriceInc lblCostInc " style="width:135px;">Cost Price (Inc) <i
-                                        class="fas fa-random fa-trans"></i></th>
-                                <th class="th colSalePrice lblPriceEx hiddenColumn" style="width:130px;">Sale Price (Ex)
-                                    <i class="fas fa-random"></i>
-                                </th>
-                                <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i
-                                        class="fas fa-random fa-trans"></i></th>
-                                <th class="th colQuantity" style="width:70px;">In Stock</th>
+                <table id="tblInventory" style="width:100%"
+                    class="dataTable table table-striped table-bordered tblInventory">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
+                            <th class="th colProductName" style="width:200px;">Product Name</th>
+                            <th class="th colSalesDescription">Sales Description</th>
+                            <th class="th colBarcode">Barcode</th>
+                            <th class="th colDepartment" style="width:150px;">Department</th>
+                            <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
+                                <i class="fas fa-random"></i>
+                            </th>
+                            <th class="th colCostPriceInc lblCostInc " style="width:135px;">Cost Price (Inc) <i
+                                    class="fas fa-random fa-trans"></i></th>
+                            <th class="th colSalePrice lblPriceEx hiddenColumn" style="width:130px;">Sale Price (Ex)
+                                <i class="fas fa-random"></i>
+                            </th>
+                            <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i
+                                    class="fas fa-random fa-trans"></i></th>
+                            <th class="th colQuantity" style="width:70px;">In Stock</th>
 
-                                <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
-                                <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>
-                                <th class="th colProdCustField2 hiddenColumn">Custom Field 2</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colProductID">{{item.id}}</td>
-                                <td contenteditable="false" class="colProductName">{{item.productname}}</td>
-                                <td contenteditable="false" class="colSalesDescription">{{item.salesdescription}}</td>
-                                <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                <td contenteditable="false" class="colCostPrice" style="text-align: right!important;">{{item.costprice}}</td>
-                                <td contenteditable="false" class="colSalePrice" style="text-align: right!important;">{{item.saleprice}}</td>
-                                <td contenteditable="false" class="colQuantity" style="text-align: right!important;">{{item.quantity}}</td>
-                                <td contenteditable="false" class="colBarcode">{{item.prodbarcode}}</td>
-                                <td contenteditable="false" class="colPurchaseDescription hiddenColumn">{{item.purchasedescription}}</td>
-                                <td contenteditable="false" class="colProdCustField1 hiddenColumn">{{item.customfield1}}</td>
-                                <td contenteditable="false" class="colProdCustField2 hiddenColumn">{{item.customfield2}}</td>
-                            </tr>
-                            {{/each}}
-                            {{/if}} -->
-                        </tbody>
-                    </table>
-                </div>
+                            <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
+                            <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>
+                            <th class="th colProdCustField2 hiddenColumn">Custom Field 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- {{#if datatablerecords}}
+                        {{#each item in datatablerecords}}
+                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                            <td contenteditable="false" class="colProductID">{{item.id}}</td>
+                            <td contenteditable="false" class="colProductName">{{item.productname}}</td>
+                            <td contenteditable="false" class="colSalesDescription">{{item.salesdescription}}</td>
+                            <td contenteditable="false" class="colDepartment">{{item.department}}</td>
+                            <td contenteditable="false" class="colCostPrice" style="text-align: right!important;">{{item.costprice}}</td>
+                            <td contenteditable="false" class="colSalePrice" style="text-align: right!important;">{{item.saleprice}}</td>
+                            <td contenteditable="false" class="colQuantity" style="text-align: right!important;">{{item.quantity}}</td>
+                            <td contenteditable="false" class="colBarcode">{{item.prodbarcode}}</td>
+                            <td contenteditable="false" class="colPurchaseDescription hiddenColumn">{{item.purchasedescription}}</td>
+                            <td contenteditable="false" class="colProdCustField1 hiddenColumn">{{item.customfield1}}</td>
+                            <td contenteditable="false" class="colProdCustField2 hiddenColumn">{{item.customfield2}}</td>
+                        </tr>
+                        {{/each}}
+                        {{/if}} -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
