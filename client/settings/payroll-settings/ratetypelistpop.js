@@ -24,6 +24,7 @@ Template.ratetypelistpop.onCreated(() => {
 });
 
 Template.ratetypelistpop.onRendered(function() {
+    $('.fullScreenSpin').css('display','inline-block');
     let tempObj = Template.instance();
     let sideBarService = new SideBarService();
     let utilityService = new UtilityService();

@@ -32,8 +32,8 @@
             }
         </style>
       
-        <header class="p-2 d-flex align-items-center salesOverviewMobile">
-            <h2 class="m-1 pageHeader" >Sales Overview</h2>
+        <header class="px-0 pt-2 pb-3 d-flex align-items-center salesOverviewMobile">
+            <h2 class="mr-1 pageHeader" >Sales Overview</h2>
                 <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">
                     Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
                 </a>
@@ -185,12 +185,12 @@
             }
         </style>
 
-        <div class="row" style="padding: 0px 16px;">
+        <div class="row">
             <div class="col-6 col-md-7 col-lg-8">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav" type="button" style="margin: 16px;"><i
+                <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav" type="button" style="margin: 12px; margin-left:0;"><i
                         class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
 
-                <div class="btn-group btnNav" style="margin: 16px;">
+                <div class="btn-group btnNav" style="margin: 12px;">
                     <a class="btn btn-primary QuoteList" role="button" href="/quoteslist">Quotes</a>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
                         aria-expanded="false" type="button"></button>
@@ -201,7 +201,7 @@
                     </div>
                 </div>
 
-                <div class="btn-group btnNav" style="margin: 16px;">
+                <div class="btn-group btnNav" style="margin: 12px;">
                     <a class="btn btn-primary salesOrderList" role="button" href="/salesorderslist" id="salesOrderList"
                         name="salesOrderList">Sales
                         Orders</a>
@@ -215,7 +215,7 @@
                     </div>
                 </div>
 
-                <div class="btn-group btnNav" style="margin: 16px;">
+                <div class="btn-group btnNav" style="margin: 12px;">
                     <a class="btn btn-primary invoiceList" role="button" href="/invoicelist" id="invoiceList"
                         name="invoiceList">Invoices</a>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
@@ -229,7 +229,7 @@
                         <!-- <a class="dropdown-item" role="presentation" href="/refundcard" id="newRefund" name="newRefund">+ New Refund</a> -->
                     </div>
                 </div>
-                <div class="btn-group btnNav" style="margin: 16px;">
+                <div class="btn-group btnNav" style="margin: 12px;">
                     <a class="btn btn-primary refundList" role="button" href="/refundlist" id="refundlist"
                         name="refundlist">Refunds</a>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
@@ -243,14 +243,14 @@
             </div>
             <div class="col-6 col-md-5 col-lg-4">
                 <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"
-                    style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 16px;"><i
+                    style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 12px;"><i
                         class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                <button class="btn btn-primary export float-right btnNav" type="button" style="margin: 16px;"
+                <button class="btn btn-primary export float-right btnNav" type="button" style="margin: 12px;"
                     id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
                         style="padding-right: 5px;"></i>Export</button>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
-                    href="#myModal2" style="margin: 16px; display: none;"><i
+                    href="#myModal2" style="margin: 12px; display: none;"><i
                         class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
@@ -288,8 +288,7 @@
             </div>
         </div> -->
 
-        <div style="padding: 0px 12px;">
-            <div class="card-body p-3 rounded" style="padding-top: 0px !important;">
+            <div class="card-body px-0 py-3 rounded">
                 <!-- Start {{> optionNavSalesOverview}} -->
                 <div class="d-xl-flex justify-content-xl-end">
                     <div>
@@ -556,7 +555,6 @@
                     </table>
                 </div>
             </div>
-        </div>
     </div>
     <script>
         modalDraggable();

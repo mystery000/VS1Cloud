@@ -1240,7 +1240,7 @@
                                                             <h5 class="card-title">Employee Name</h5>
                                                             <p style="font-size: 25px; font-weight: 600; margin-bottom: 0px;">
                                                                 {{! record.company}}
-                                                                {{employeePayInfo.EmployeeName}}
+                                                                {{employeePayInfo.fields.Employee.fields.EmployeeName}}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -1251,7 +1251,7 @@
                                                             <h5 class="card-title">Annual Salary</h5>
                                                             <button onclick="showAnnualSalary()" type="button" class="btn btn-primary" id="btnViewAnnual"><i class="far fa-eye" style="margin-right: 5px;"></i> View</button>
                                                             <p style="font-size: 25px; font-weight: 600; margin-bottom: 0px; display: none;" id="annualSalary">
-                                                                <span id="annualSalaryValue">{{employeePayInfo.AnnSalary}}</span>
+                                                                <span id="annualSalaryValue">0</span>
                                                                 <button onclick="showAnnualSalary()" class="btn btn-primary float-right"><i class="far fa-eye-slash" style="margin-right: 5px;"></i> Hide</button>
                                                             </p>
                                                             <script>
@@ -1354,7 +1354,7 @@
                                                                                 <div class="col-12 col-md-3">
                                                                                     <div class="form-group" style="margin: 4px;">
                                                                                         <label>Tax File Number (TFN)</label>
-                                                                                        <input type="text" class="form-control" id="edtTaxFileNumber" name="edtTaxFileNumber" value="{{employeePayInfo.TFN}}">
+                                                                                        <input type="text" class="form-control" id="edtTaxFileNumber" name="edtTaxFileNumber" value="{{employeePayInfo.fields.Employee.fields.TFN}}">
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-12 col-md-1">
@@ -1372,7 +1372,7 @@
                                                                                             <option value="TFN Exempt - Pensioner">TFN Exempt - Pensioner</option>
                                                                                         </select>
                                                                                         <script>
-                                                                                            $("#edtTfnExemption option[value='{{employeePayInfo.TFNExemption}}']").attr('selected', 'selected');
+                                                                                            $("#edtTfnExemption option[value='{{employeePayInfo.fields.Employee.fields.TFNExemption}}']").attr('selected', 'selected');
                                                                                         </script>
                                                                                     </div>
                                                                                 </div>
@@ -1393,7 +1393,7 @@
                                                                                 <option value="Superannuation income stream">Superannuation income stream</option>
                                                                             </select>
                                                                             <script>
-                                                                                $("#edtEmploymentBasis option[value='{{employeePayInfo.EmploymentBasis}}']").attr('selected', 'selected');
+                                                                                $("#edtEmploymentBasis option[value='{{employeePayInfo.fields.Employee.fields.EmploymentBasis}}']").attr('selected', 'selected');
                                                                             </script>
                                                                         </div>
                                                                     </div>
@@ -1405,6 +1405,9 @@
                                                                                 <option value="Foreign Resident">Foreign Resident</option>
                                                                                 <option value="Working Holiday Maker">Working Holiday Maker</option>
                                                                             </select>
+                                                                            <script>
+                                                                                $("#edtResidencyStatus option[value='{{employeePayInfo.fields.Employee.fields.ResidencyStatus}}']").attr('selected', 'selected');
+                                                                            </script>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1427,7 +1430,7 @@
                                                                 <div class="row">
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.TaxFreeThreshold true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.TaxFreeThreshold true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesTaxFreeThresholdClaimed" id="taxesTaxFreeThresholdClaimed" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesTaxFreeThresholdClaimed" id="taxesTaxFreeThresholdClaimed">
@@ -1436,7 +1439,7 @@
                                                                         </div>
                                                                         <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.OtherTaxOffsetClaimed true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.OtherTaxOffsetClaimed true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesOtherTaxOffsetClaimed" id="taxesOtherTaxOffsetClaimed">
@@ -1446,7 +1449,7 @@
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.StudyTrainingSupportLoan true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.StudyTrainingSupportLoan true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesStudyTrainingSupportLoans" id="taxesStudyTrainingSupportLoans" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesStudyTrainingSupportLoans" id="taxesStudyTrainingSupportLoans">
@@ -1455,7 +1458,7 @@
                                                                         </div>
                                                                         <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.UpwardvariationRequested true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.UpwardvariationRequested true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesUpwardVariationRequested" id="taxesUpwardVariationRequested">
@@ -1465,7 +1468,7 @@
                                                                     </div>
                                                                     <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 16px;">
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.EligibleToReceiveLeaveLoading true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.EligibleToReceiveLeaveLoading true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesEligibleReceiveLeaveLoading" id="taxesEligibleReceiveLeaveLoading" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesEligibleReceiveLeaveLoading" id="taxesEligibleReceiveLeaveLoading">
@@ -1474,7 +1477,7 @@
                                                                         </div>
                                                                         <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.SeniorandPensionersTaxOffsetClaimed true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesSeniorPensionersTaxOffsetClaimed" id="taxesSeniorPensionersTaxOffsetClaimed" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesSeniorPensionersTaxOffsetClaimed" id="taxesSeniorPensionersTaxOffsetClaimed">
@@ -1484,7 +1487,7 @@
                                                                         </div>
                                                                         <br />
                                                                         <div class="custom-control custom-switch" style="margin: 8px; display: inline-flex !important;">
-                                                                            {{#if equals employeePayInfo.HasApprovedWithholdingVariation true}}
+                                                                            {{#if equals employeePayInfo.fields.Employee.fields.HasApprovedWithholdingVariation true}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesHasApprovedWithholdingVariation" id="taxesHasApprovedWithholdingVariation" checked>
                                                                             {{else}}
                                                                             <input class="custom-control-input" type="checkbox" name="taxesHasApprovedWithholdingVariation" id="taxesHasApprovedWithholdingVariation">
@@ -1765,15 +1768,11 @@
                                                                                                 <option value="Parental Leave (unpaid)"></option>
                                                                                             </datalist> -->
                                                                                             <select class="form-control" id="leaveTypeSelect" name="leaveTypeSelect" style="cursor: pointer;">
-                                                                                                <option>Annual Leave</option>
-                                                                                                <option value="">Carer's Leave (unpaid)</option>
-                                                                                                <option value="">Community Service Leave</option>
-                                                                                                <option value="">Compassionate Leave (paid)</option>
-                                                                                                <option value="">Compassionate Leave (unpaid)</option>
-                                                                                                <option value="">Long Service Leave</option>
-                                                                                                <option value="">Other Unpaid Leave</option>
-                                                                                                <option value="">Parental Leave (unpaid)</option>
-                                                                                                <option>Personal/Carer's Leave</option>
+                                                                                                {{#if leaveTypeInfo}}
+                                                                                                    {{#each item in leaveTypeInfo}}
+                                                                                                        <option value="{{item.fields.LeaveType}}">{{item.fields.LeaveType}}</option>
+                                                                                                    {{/each}}
+                                                                                                {{/if}}    
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
@@ -1781,42 +1780,66 @@
                                                                                         <div class="form-group">
                                                                                             <label>Leave Calculation Method</label>
                                                                                             <!-- <input type="text" class="form-control" id=""> -->
-                                                                                            <select class="form-control" id="leaveCalcMethodSelect" name="leaveTypeSelect" style="cursor: pointer;">
-                                                                                                <option value="">Fixed Amount Each Period</option>
-                                                                                                <option value="">Manually Recorded Rate</option>
-                                                                                                <option value="">No Calculation Required</option>
-                                                                                                <option value="">Based on Ordinary Earnings</option>
+                                                                                            <select class="form-control" id="leaveCalcMethodSelect" name="leaveCalcMethodSelect" style="cursor: pointer;">
+                                                                                                <option value="Fixed Amount Each Period">Fixed Amount Each Period</option>
+                                                                                                <option value="Manually Recorded Rate">Manually Recorded Rate</option>
+                                                                                                <option value="No Calculation Required">No Calculation Required</option>
+                                                                                                <option value="Based on Ordinary Earnings">Based on Ordinary Earnings</option>
                                                                                             </select>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-12">
+                                                                                    <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
                                                                                         <div class="form-group">
-                                                                                            <label>Hours of leave accrued annually by full-time employee</label>
-                                                                                            <input type="text" class="form-control" id="">
+                                                                                            <label>Hours accrued annually</label>
+                                                                                            <input type="text" class="form-control" id="hoursAccruedAnnually" name="hoursAccruedAnnually">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
+                                                                                        <div class="form-group">
+                                                                                            <label>Hours of leave accrued annually by a full-time employee</label>
+                                                                                            <input type="text" class="form-control" id="hoursAccruedAnnuallyFullTimeEmp" name="hoursAccruedAnnually">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
+                                                                                        <div class="form-group">
+                                                                                            <label>Hours a full-time employee works in a Fortnightly pay period</label>
+                                                                                            <input type="text" class="form-control" id="hoursFullTimeEmpFortnightlyPay" name="hoursFullTimeEmpFortnightlyPay">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                    <div class="col-6 handleLeaveTypeOption manuallyRecordedRate hideelement">
+                                                                                        <div class="form-group">
+                                                                                            <label>Hours</label>
+                                                                                            <input type="text" class="form-control" id="hoursLeave" name="hoursLeave">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-6">
                                                                                         <div class="form-group">
                                                                                             <label>Opening Balance</label>
-                                                                                            <input type="text" class="form-control" id="">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-6">
-                                                                                        <div class="form-group">
-                                                                                            <label>Hours</label>
-                                                                                            <input type="text" class="form-control" id="" readonly>
+                                                                                            <input type="text" class="form-control" id="openingBalance" name="openingBalance">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>On termination unused balance is:</label>
-                                                                                            <input type="text" class="form-control" id="">
+                                                                                            <select class="form-control" id="onTerminationUnusedBalance" name="onTerminationUnusedBalance" style="cursor: pointer;">
+                                                                                                <option value="Not Paid Out">Not Paid Out</option>
+                                                                                                <option value="Paid Out">Paid Out</option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-12">
+                                                                                        <div class="form-group hideelement eftLeaveTypeCont">
+                                                                                            <label><input type="checkbox" name="eftLeaveType" id="eftLeaveType"> EFT leave type</label>                                                                                            
+                                                                                        </div>
+                                                                                        <div class="form-group hideelement superannuationGuaranteeCont">
+                                                                                            <label><input type="checkbox" name="superannuationGuarantee" id="superannuationGuarantee"> Includes Superannuation Guarantee Contribution</label>                                                                                            
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                <button type="button" id="btnSaveAssignLeaveType" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                             </div>
                                                                         </div>

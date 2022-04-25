@@ -4414,7 +4414,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
 
                                         } else {}
                                     });
@@ -4428,7 +4428,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -4439,7 +4439,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4457,7 +4457,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
 
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
@@ -4469,7 +4469,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4487,7 +4487,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -4498,7 +4498,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4507,7 +4507,7 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
-                                    FlowRouter.go('/paymentoverview?success=true');
+                                    FlowRouter.go('/invoicelist?success=true');
                                 };
                             };
 
@@ -4679,7 +4679,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
 
                                         } else {}
                                     });
@@ -4693,7 +4693,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -4704,7 +4704,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4722,7 +4722,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
 
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
@@ -4734,7 +4734,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4752,7 +4752,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            FlowRouter.go('/paymentoverview?success=true');
+                                            FlowRouter.go('/invoicelist?success=true');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -4763,7 +4763,7 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    FlowRouter.go('/paymentoverview?success=true');
+                                                    FlowRouter.go('/invoicelist?success=true');
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
 
@@ -4772,7 +4772,7 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
-                                    FlowRouter.go('/paymentoverview?success=true');
+                                    FlowRouter.go('/invoicelist?success=true');
                                 };
                             };
 

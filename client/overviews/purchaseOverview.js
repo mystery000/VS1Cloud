@@ -8,10 +8,13 @@ import { UtilityService } from "../utility-service";
 import { PaymentsService } from "../payments/payments-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
+import ChartHandler from "../js/Charts/ChartHandler";
+import HeaderCard from "./HeaderCard";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let _ = require("lodash");
+const _cardGroup = 'TPurchaseHeaderCard';
 
 Template.purchasesoverview.onCreated(function () {
   const templateObject = Template.instance();
@@ -1930,11 +1933,47 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.deactivateDraggable = () => {
-      draggableCharts.disable();
+    draggableCharts.disable();
   };
   templateObject.activateDraggable = () => {
-      draggableCharts.enable();
-  };    
+    draggableCharts.enable();
+  };
+
+  templateObject.setCardPositions = () => {
+    let headerCardsList = JSON.parse(localStorage.getItem(_cardGroup));    
+    if( headerCardsList ){
+      headerCardsList.forEach((card) => {
+        $(`[card-key='${card.key}']`).attr("position", card.position);
+      })
+      let $chartWrappper = $(".connectedCardSortable");
+      $chartWrappper
+        .find(".card-visibility")
+        .sort(function (a, b) {
+          return +a.getAttribute("position") - +b.getAttribute("position");
+        })
+        .appendTo($chartWrappper);
+    }
+  };
+  templateObject.setCardPositions();  
+
+  templateObject.saveCards = () => {
+    // Here we get that list and create and object
+    const cards = $(".connectedCardSortable .card-visibility");
+    let cardList = [];
+    // console.log(cards);
+    for (let i = 0; i < cards.length; i++) {
+      cardList.push(
+        new HeaderCard({
+          employeeId: Session.get("mySessionEmployeeLoggedID"),
+          key: $(cards[i]).attr("card-key"),
+          position: $(cards[i]).attr("position"),
+        })
+      );
+    }
+    console.log('cardList', cardList)
+    localStorage.setItem(_cardGroup, JSON.stringify(cardList));
+  };
+
   templateObject.activateDraggable(); // this will enable charts resiable features
 
   let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -1980,6 +2019,26 @@ Template.purchasesoverview.onRendered(function () {
   // });
 
   //$(".portlet").resizable();
+
+  $(".connectedCardSortable")
+    .sortable({
+      disabled: false,
+      connectWith: ".connectedCardSortable",
+      placeholder: "portlet-placeholder ui-corner-all",
+      stop: async (event, ui) => {
+        // console.log($(ui.item[0]));
+        console.log("Dropped the sortable chart");
+
+        // Here we rebuild positions tree in html
+        ChartHandler.buildCardPositions(
+          $(".connectedCardSortable .card-visibility")
+        );
+
+        // Here we save card list
+        templateObject.saveCards()
+      },
+    })
+    .disableSelection();
 });
 
 Template.purchasesoverview.events({

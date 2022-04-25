@@ -15,8 +15,33 @@ export default class ChartHandler {
     }
   }
 
-  static buildCardPositions() {
-    const charts = $(".card-visibility");
+  static calculateWidth( chart ){
+      let elementWidth = $(chart).width();
+      let elementParentWidth = $('.connectedChartSortable').width();
+      let widthPercentage = Math.round(100 * elementWidth / elementParentWidth);
+      if( parseInt( widthPercentage ) < 20 ){
+        widthPercentage = 20
+      }
+      if( parseInt( widthPercentage ) > 100 ){
+        widthPercentage = 100
+      }
+      return widthPercentage;
+  }
+
+  static calculateHeight( chart ){
+      let elementHeight = $(chart).height();
+      let elementParentHeight = document.documentElement.clientHeight;
+      let heightPercentage = Math.round(100 * elementHeight / elementParentHeight);
+      if( parseInt( heightPercentage ) < 20 ){
+        heightPercentage = 20
+      }
+      if( parseInt( heightPercentage ) > 100 ){
+        heightPercentage = 100
+      }
+      return heightPercentage;
+  }
+  
+  static buildCardPositions(charts = $(".card-visibility")) {
     for (let i = 0; i <= charts.length; i++) {
       $(charts[i]).attr("position", i);
     }
@@ -58,8 +83,8 @@ export default class ChartHandler {
             Position: parseInt($(chart).attr("position")),
             ChartGroup: $(chart).parents(".charts").attr("data-chartgroup"),
             TabGroup: $(chart).parents(".charts").attr("data-tabgroup"),
-            ChartWidth: $(chart).find(".ui-resizable").width(),
-            ChartHeight: $(chart).find(".ui-resizable").height(),
+            ChartWidth: ChartHandler.calculateWidth(chart),
+            ChartHeight: ChartHandler.calculateHeight(chart),
           }),
         })
       );
@@ -115,11 +140,25 @@ export default class ChartHandler {
         Position: parseInt($(chart).attr("position")),
         ChartGroup: $(chart).parents(".charts").attr("data-chartgroup"),
         TabGroup: $(chart).parents(".charts").attr("data-tabgroup"),
-        ChartWidth: $(chart).find(".ui-resizable").width(),
-        ChartHeight: $(chart).find(".ui-resizable").height(),
+        ChartWidth: ChartHandler.calculateWidth(chart),
+        ChartHeight: ChartHandler.calculateHeight(chart),
       }),
     });
 
+    /**
+     * save into localstorage
+    */
+    const chartList = [];
+    let chartID = $(chart).attr("chart-id");
+    let _chartGroup = $(chart).parents(".charts").attr("data-chartgroup");
+    let localChartsList = await JSON.parse(localStorage.getItem(_chartGroup));
+    if (localChartsList) {
+      chartList = await localChartsList.filter(
+        (item) => item.fields.ChartID !== chartID
+      );
+    }
+    chartList.push(pref)
+    localStorage.setItem(_chartGroup, JSON.stringify(chartList));
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),

@@ -22,6 +22,7 @@ export class TaxRateService extends BaseService {
     getScheduleSettings() {
         let options = {
                 ListType: "Detail",
+                select: "[Active]=true",
     //        PropertyList:"BeginFromOption,ContinueIndefinitely,EmployeeId,Employeename,EndDate,Every,FormID,Frequency,GlobalRef,HolidayAction,ID,ISEmpty,KeyStringFieldName,KeyValue,LastEmaileddate,MonthDays,MsTimeStamp,MsUpdateSiteCode",
 
             };
@@ -149,7 +150,7 @@ export class TaxRateService extends BaseService {
     }
 
     savePayOrganization(data)
-    {    
+    {
         return this.POST(this.ERPObjects.TPayrollOrganization, data);
 
     }
@@ -170,7 +171,7 @@ export class TaxRateService extends BaseService {
     }
 
     checkRateTypeByName(description)
-    { 
+    {
         let options = {
         select: "[Description]='" + description + "'"
        };
@@ -252,12 +253,12 @@ export class TaxRateService extends BaseService {
     }
 
     savePaidLeave(data){
-        
+
         return this.POST(this.ERPObjects.TPaidLeave, data);
     }
 
     saveUnPaidLeave(data){
-        
+
         return this.POST(this.ERPObjects.TUnpaidLeave, data);
     }
 
@@ -487,7 +488,7 @@ export class TaxRateService extends BaseService {
 
     checkHolidaybyName(holidayname)
     {
-        
+
         let options = {
             select: "[PayrollHolidaysName]='" + holidayname + "'"
         };
@@ -507,7 +508,7 @@ export class TaxRateService extends BaseService {
         };
         return this.getList(this.ERPObjects.TPaymentMethod, options);
     }
-  
+
     getEmployees() {
         let options = {
             PropertyList: "PropertyList==ID,EmployeeName",
