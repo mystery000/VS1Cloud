@@ -22,8 +22,8 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <header class="p-2 d-flex align-items-center">
-            <h2 class="m-1">Purchases Overview</h2>
+        <header class="p-4 d-flex align-items-center">
+            <h2 class="mr-1">Purchases Overview</h2>
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                 <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
                         class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
@@ -56,8 +56,8 @@
            
         </header>
 
-        <div class="row connectedSortable connectedCardSortable" data-key="card" style="padding: 0px 30px;">
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility">
+        <div class="row connectedCardSortable" data-key="card" style="padding: 0px 30px;">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-purchase-orders">
                 <div class="card shadow border-left-info py-2 cardOutPO" style="cursor: pointer;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-bills">
                 <div class="card shadow border-left-info py-2 cardBills" style="cursor: pointer;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-credit">
                 <div class="card shadow border-left-info py-2 cardCredit" style="cursor: pointer;">
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
@@ -111,10 +111,10 @@
         <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 16px;">
             <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
                 <button id="btnRefresh" class="btn btn-primary btnRefresh" type="button"
-                    style="margin: 16px;min-width: 117.016px;"><i class="la la-lightbulb-o"
+                    style="margin: 12px;min-width: 117.016px;"><i class="la la-lightbulb-o"
                         style="margin-right: 5px;"></i>Refresh</button>
 
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary allList" role="button"
+                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary allList" role="button"
                         href="/purchasesoverview?id=all"
                         style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">All</a><button
                         class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
@@ -127,7 +127,7 @@
                         <a class="dropdown-item newCredit" role="presentation" href="/creditcard">+ New Credit</a>
                     </div>
                 </div>
-                <div class="btn-group float-left text-nowrap" style="margin: 16px;"><a
+                <div class="btn-group float-left text-nowrap" style="margin: 12px;"><a
                         class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist"
                         style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Purchase
                         Order</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split"
@@ -142,7 +142,7 @@
                             name="newPurchaseorder">+ New Purchase Order</a>
                     </div>
                 </div>
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary billList"
+                <div class="btn-group float-left" style="margin: 12x;"><a class="btn btn-primary billList"
                         role="button"
                         style="color: rgb(255,255,255);min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;"
                         href="/billlist" id="billList" name="billList">Bill</a><button
@@ -155,7 +155,7 @@
                             Bill</a>
                     </div>
                 </div>
-                <div class="btn-group float-left" style="margin: 16px;"><a class="btn btn-primary creditList"
+                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary creditList"
                         role="button" href="/creditlist" id="creditList" name="creditList"
                         style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Credit</a><button
                         class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
@@ -170,14 +170,14 @@
             </div>
             <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                 <button class="btn btn-primary export float-right" type="button"
-                    style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn"
+                    style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn"
                     name="exportbtn"><i class="fas fa-file-export"
                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                 <button class="btn btn-primary printConfirm float-right" type="button"
-                    style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
+                    style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
                 <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"
-                    style="margin:16px;"><i class="icon ion-android-more-horizontal"></i></a>
+                    style="margin:12px;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
 

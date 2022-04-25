@@ -17,19 +17,16 @@ export default class draggableCharts {
     setTimeout(() => {
       $(".connectedSortable")
         .sortable({
+          handle: '.card-header',
           disabled: false,
-          connectWith: ".connectedSortable",
+          scroll: false,
           placeholder: "portlet-placeholder ui-corner-all",
+          tolerance: 'pointer',
           stop: async (event, ui) => {
             // console.log($(ui.item[0]));
             console.log('Dropped the sortable chart');
-            let chartType = $(ui.item[0]).parents(".connectedSortable").data('key')
-            if( chartType != 'card' ){
-              ChartHandler.buildPositions();
-              await ChartHandler.saveCharts();
-            }else{
-              ChartHandler.buildCardPositions();
-            }
+            ChartHandler.buildPositions();
+            await ChartHandler.saveCharts();
           },
         })
         .disableSelection();

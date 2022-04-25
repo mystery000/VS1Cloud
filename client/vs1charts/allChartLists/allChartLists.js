@@ -69,9 +69,45 @@ const buildPositions = async () => {
 };
 
 /**
+ * 
+ *  {Chart Width calculate in percentage} 
+ */
+
+function calculateWidth( chart ){
+    let elementWidth = $(chart).width();
+    let elementParentWidth = $('.connectedChartSortable').width();
+    let widthPercentage = Math.round(100 * elementWidth / elementParentWidth);
+    if( parseInt( widthPercentage ) < 20 ){
+      widthPercentage = 20
+    }
+    if( parseInt( widthPercentage ) > 100 ){
+      widthPercentage = 100
+    }
+    return widthPercentage;
+}
+
+/**
+ * 
+ * @param {*} height chart 
+ * @returns
+*/
+function calculateHeight( chart ){
+  let elementHeight = $(chart).height();
+  let elementParentHeight = document.documentElement.clientHeight;
+  let heightPercentage = Math.round(100 * elementHeight / elementParentHeight);
+  if( parseInt( heightPercentage ) < 20 ){
+    heightPercentage = 20
+  }
+  if( parseInt( heightPercentage ) > 100 ){
+    heightPercentage = 100
+  }
+  return heightPercentage;
+}
+
+/**
  * This function will save the charts on the dashboard
  */
-const saveCharts = async () => {
+async function saveCharts() {
   /**
    * Lets load all API colections
    */
@@ -80,7 +116,6 @@ const saveCharts = async () => {
 
   const charts = $(".chart-visibility");
   // console.log(charts);
-
   /**
    * @property {Tvs1ChartDashboardPreference[]}
    */
@@ -97,20 +132,19 @@ const saveCharts = async () => {
       new Tvs1ChartDashboardPreference({
         type: "Tvs1dashboardpreferences",
         fields: new Tvs1ChartDashboardPreferenceField({
-          Active:
-            $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
+          Active: $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
             $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true"
-              ? false
-              : true,
+            ? false
+            : true,
           ChartID: $(chart).attr("chart-id"),
-          ID: $(chart).attr("pref-id"), // This is empty when it is the first time, but the next times it is filled
+          ID: $(chart).attr("pref-id"),
           EmployeeID: employeeId,
           Chartname: $(chart).attr("chart-name"),
           Position: parseInt($(chart).attr("position")),
           ChartGroup: _chartGroup,
           TabGroup: _tabGroup,
-          ChartWidth: $(chart).find(".ui-resizable").width(),
-          ChartHeight: $(chart).find(".ui-resizable").height(),
+          ChartWidth: calculateWidth(chart),
+          ChartHeight: calculateHeight(chart),
         }),
       })
     );
@@ -120,7 +154,6 @@ const saveCharts = async () => {
   for (const _chart of chartList) {
     // chartList.forEach(async (chart) => {
     //console.log("Saving chart");
-
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
@@ -138,7 +171,7 @@ const saveCharts = async () => {
     }
     //});
   }
-};
+}
 
 Template.allChartLists.onRendered(function () {
   const templateObject = Template.instance();
@@ -236,11 +269,6 @@ Template.allChartLists.onRendered(function () {
           chart.fields.ID
         );
 
-        if (_chartGroup == "Contacts") {
-          $(`[key='${chart.fields._chartSlug}']`).removeClass("col-md-6");
-          $(`[key='${chart.fields._chartSlug}']`).addClass("col-md-4");
-        }
-
         if (chart.fields.ChartGroup == _chartGroup) {
           // Default charts
           defaultChartList.push(chart.fields._chartSlug);
@@ -294,43 +322,49 @@ Template.allChartLists.onRendered(function () {
     }
 
     // Now get user preferences
-    const dashboardPreferencesEndpoint = dashboardApis.collection.findByName(
-      dashboardApis.collectionNames.Tvs1dashboardpreferences
-    );
+    let tvs1ChartDashboardPreference = [];
+    let localChartsList = localStorage.getItem(_chartGroup);    
+    if( localChartsList ){
+      tvs1ChartDashboardPreference = await JSON.parse( localChartsList )
+    }else{
 
-    dashboardPreferencesEndpoint.url.searchParams.append(
-      "ListType",
-      "'Detail'"
-    );
-    dashboardPreferencesEndpoint.url.searchParams.append(
-      "select",
-      `[employeeID]=${employeeId}`
-    );
-    dashboardPreferencesEndpoint.url.searchParams.append(
-      "select",
-      `[TabGroup]=${_tabGroup}`
-    );
+      const dashboardPreferencesEndpoint = dashboardApis.collection.findByName(
+        dashboardApis.collectionNames.Tvs1dashboardpreferences
+      );
 
-    const dashboardPreferencesEndpointResponse =
-      await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
+      dashboardPreferencesEndpoint.url.searchParams.append(
+        "ListType",
+        "'Detail'"
+      );
+      dashboardPreferencesEndpoint.url.searchParams.append(
+        "select",
+        `[employeeID]=${employeeId}`
+      );
+      dashboardPreferencesEndpoint.url.searchParams.append(
+        "select",
+        `[TabGroup]=${_tabGroup}`
+      );
 
-    if (dashboardPreferencesEndpointResponse.ok == true) {
-      dashboardPreferencesEndpointJsonResponse =
-        await dashboardPreferencesEndpointResponse.json();
-    }
-    let tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
-      dashboardPreferencesEndpointJsonResponse.tvs1dashboardpreferences
-    ).filter((chart) => {
-      if (chart.fields.TabGroup == _tabGroup) {
-        return chart;
+      const dashboardPreferencesEndpointResponse =
+        await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+      if (dashboardPreferencesEndpointResponse.ok == true) {
+        dashboardPreferencesEndpointJsonResponse =
+          await dashboardPreferencesEndpointResponse.json();
       }
-    });
+      tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
+        dashboardPreferencesEndpointJsonResponse.tvs1dashboardpreferences
+      ).filter((chart) => {
+        if (chart.fields.TabGroup == _tabGroup) {
+          return chart;
+        }
+      });
+    }
 
-    console.log("tvs1ChartDashboardPreference", tvs1ChartDashboardPreference);
+    // console.log("tvs1ChartDashboardPreference", tvs1ChartDashboardPreference);
 
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
-      $(".sortable-chart-widget-js").removeClass("col-md-6 col-md-4");
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
         // setTimeout(() => {
         // this is good to see how the charts are apearing or not
@@ -345,12 +379,15 @@ Template.allChartLists.onRendered(function () {
 
         //if (itemList.includes(itemName) == true) {
         // If the item name exist
-        if (parseInt(tvs1chart.fields.ChartWidth) > 100) {
-          $(`[key='${itemName}'] .ui-resizable`).css(
+        if( tvs1chart.fields.ChartWidth ){
+          $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
             "width",
-            tvs1chart.fields.ChartWidth
+            tvs1chart.fields.ChartWidth + '%'
           );
         }
+
+        $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
+        $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
 
         // This the default size if ever it zero
         // if ($(`[key='${itemName}'] .ui-resizable`).width() < 150) {
@@ -358,14 +395,11 @@ Template.allChartLists.onRendered(function () {
         // }
 
         // This is the ChartHeight saved in the preferences
-        if (parseInt( tvs1chart.fields.ChartHeight ) > 150) {
+        if( tvs1chart.fields.ChartHeight ){
           $(`[key='${itemName}'] .ui-resizable`).css(
             "height",
-            tvs1chart.fields.ChartHeight
+            tvs1chart.fields.ChartHeight + 'vh'
           );
-
-          //$(`[key='${itemName}'] canvas`).attr('height', tvs1chart.fields.ChartHeight);
-          //$(`[key='${itemName}'] canvas`).css('height', `${tvs1chart.fields.ChartHeight}px`);
         }
 
         // This the default size if ever it zero
