@@ -295,6 +295,85 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
 
+  getNewCalenderByNameOrPayPeriod(dataSearchName) {
+    let options = '';
+       options = {
+        ListType: "Detail",
+        select: '[PayrollCalendarName] f7like "'+dataSearchName+'" OR [PayrollCalendarPayPeriod] f7like "'+dataSearchName+'"'
+       };
+    return this.getList(this.ERPObjects.TPayrollCalendars, options);
+  }
+
+  getNewHolidayByName(dataSearchName) {
+    let options = '';
+       options = {
+        ListType: "Detail",
+        select: '[PayrollHolidaysName] f7like "'+dataSearchName+'"'
+       };
+     return this.getList(this.ERPObjects.TPayrollHolidays, options);
+  }
+
+  getPaidLeaveByName(dataSearchName)
+  {
+    let options = '';
+     options = {
+     ListType: "Detail",
+     select: '[LeavePaidName] f7like "'+dataSearchName+'"'
+     };
+     return this.getList(this.ERPObjects.TPaidLeave, options);
+
+  }
+
+  getEarningByName(dataSearchName)
+  {
+    let options = '';
+     options = {
+     ListType: "Detail",
+     select: '[OrdinaryTimeEarningsName] f7like "'+dataSearchName+'"'
+     };
+     return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+  }
+
+  getSuperannuationByName(dataSearchName) {
+    let options = '';
+    options = {
+     ListType: "Detail",
+     select: '[PayrollCalendarName] f7like "'+dataSearchName+'" OR [PayrollCalendarPayPeriod] f7like "'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TSuperannuation, options);
+
+  }
+  
+  getAllowanceByName(dataSearchName) {
+    let options = '';
+    options = {
+     ListType: "Detail",
+     select: '[Description] f7like "'+dataSearchName+'" OR [DisplayIn] f7like "'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TAllowance, options);
+  }
+
+  getDeductionByName(dataSearchName) {
+    
+    let options = '';
+    options = {
+     ListType: "Detail",
+     select: '[Description] f7like "'+dataSearchName+'" OR [Displayin] f7like "'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TDeduction, options);
+
+  }
+
+  getReimbursementByName(dataSearchName) {
+   
+    let options = '';
+    options = {
+     ListType: "Detail",
+     select: '[ReimbursementName] f7like "'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TReimbursement, options);
+
+  }
   getNewInvoiceBoByNameOrID(dataSearchName) {
     let options = '';
        options = {
@@ -2284,7 +2363,7 @@ getCalender(limitcount, limitfrom) {
      options = {
       ListType: "Detail",
       select: "[PayrollCalendarActive]=true"
-
+    
      };
   }else{
     options = {
@@ -2301,18 +2380,16 @@ getCalender(limitcount, limitfrom) {
 getSuperannuation(limitcount, limitfrom) {
   let options = '';
   if(limitcount == 'All'){
-     options = {
-      ListType: "Detail",
-      select: "[Allclasses]=true"
-     };
-  }else{
     options = {
-     // orderby:'"ClientID desc"',
-       ListType: "Detail",
-       select: "[Allclasses]=false"
-
-    };
+      ListType: "Detail",   
+     };
   }
+  else{
+    options = {
+      ListType: "Detail",   
+     };
+  }
+   
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }
 
@@ -2321,12 +2398,12 @@ getSuperType()
 {
 
   let options = '';
-
+ 
    options = {
       ListType: "Detail",
       // select: '[Active]=true'
   };
-
+ 
   return this.getList(this.ERPObjects.TSuperType, options);
 
 }
@@ -2351,7 +2428,7 @@ getPaidLeave(limitcount, limitfrom) {
      // orderby:'"ClientID desc"',
        ListType: "Detail",
        select: '[LeavePaidActive]=true'
-
+    
     };
   }
      return this.getList(this.ERPObjects.TPaidLeave, options);
@@ -2363,7 +2440,7 @@ getPaidLeave(limitcount, limitfrom) {
     options = {
      ListType: "Detail",
      select: '[LeaveUnPaidActive]=true'
-
+     
     };
     return this.getList(this.ERPObjects.TUnpaidLeave, options);
 }
