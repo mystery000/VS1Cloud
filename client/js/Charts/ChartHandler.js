@@ -81,7 +81,7 @@ export default class ChartHandler {
             EmployeeID: Session.get("mySessionEmployeeLoggedID"),
             Chartname: $(chart).attr("chart-name"),
             Position: parseInt($(chart).attr("position")),
-            ChartGroup: $(chart).parents(".charts").attr("data-chartgroup"),
+            ChartGroup: $(chart).attr("chart-group"),
             TabGroup: $(chart).parents(".charts").attr("data-tabgroup"),
             ChartWidth: ChartHandler.calculateWidth(chart),
             ChartHeight: ChartHandler.calculateHeight(chart),
@@ -90,7 +90,8 @@ export default class ChartHandler {
       );
     });
     // save into local storage
-    localStorage.setItem($(chart).parents(".charts").attr("data-chartgroup"), JSON.stringify(chartList));
+    let _chartGroup = $(chart).parents(".charts").attr("data-chartgroup")
+    ChartHandler.saveChartsInLocalDB( _chartGroup, chartList )
     for (const _chart of chartList) {
       // chartList.forEach(async (chart) => {
       //console.log("Saving chart");
@@ -138,7 +139,7 @@ export default class ChartHandler {
         EmployeeID: Session.get("mySessionEmployeeLoggedID"),
         Chartname: $(chart).attr("chart-name"),
         Position: parseInt($(chart).attr("position")),
-        ChartGroup: $(chart).parents(".charts").attr("data-chartgroup"),
+        ChartGroup: $(chart).attr("chart-group"),
         TabGroup: $(chart).parents(".charts").attr("data-tabgroup"),
         ChartWidth: ChartHandler.calculateWidth(chart),
         ChartHeight: ChartHandler.calculateHeight(chart),
@@ -151,18 +152,56 @@ export default class ChartHandler {
     const chartList = [];
     let chartID = $(chart).attr("chart-id");
     let _chartGroup = $(chart).parents(".charts").attr("data-chartgroup");
-    let localChartsList = await JSON.parse(localStorage.getItem(_chartGroup));
+    let localChartsList = await ChartHandler.getLocalChartPreferences( _chartGroup );
     if (localChartsList) {
       chartList = await localChartsList.filter(
         (item) => item.fields.ChartID !== chartID
       );
     }
     chartList.push(pref)
-    localStorage.setItem(_chartGroup, JSON.stringify(chartList));
+    ChartHandler.saveChartsInLocalDB( _chartGroup, chartList )
     const ApiResponse = await apiEndpoint.fetch(null, {
       method: "POST",
       headers: ApiService.getPostHeaders(),
       body: JSON.stringify(pref),
     });
   }
+
+  static async saveChartsInLocalDB( _chartGroup, chartList ) {
+    // save into indexDB
+    const localChartData = [];
+    let localTvs1dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences')
+    if( localTvs1dashboardpreferences.length ){
+      localChartData = JSON.parse(localTvs1dashboardpreferences[0].data)
+      localChartData = await localChartData.filter(
+        (item) => item.key !== _chartGroup
+      );
+    }
+    localChartData.push({
+        key: _chartGroup, 
+        chartList: chartList
+    })
+    await addVS1Data('Tvs1dashboardpreferences', JSON.stringify(localChartData))
+    return true
+  };
+
+  static async getLocalChartPreferences( _chartGroup ) {
+    let userPreference = [];
+    let localTvs1dashboardpreferences = await getVS1Data('Tvs1dashboardpreferences')
+    if( localTvs1dashboardpreferences.length ){
+      localChartData = JSON.parse(localTvs1dashboardpreferences[0].data)
+      if( localChartData ){
+        userPreference = await localChartData.filter((chart) => {
+          if ( chart.key == _chartGroup ) {
+            return chart;
+          }
+        });
+      }
+      if( userPreference.length ){
+        return userPreference[0].chartList;
+      }
+    }
+    return userPreference;
+  }
+
 }
