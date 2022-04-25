@@ -577,6 +577,12 @@ Template.purchaseordercard.onRendered(() => {
                           if(data.fields.IsBackOrder){
                              lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                           }
+
+                          let isPartialPaid = false;
+                          if(data.fields.TotalPaid > 0){
+                              isPartialPaid = true;
+                          }
+
                             let purchaseorderrecord = {
                                 id: data.fields.ID,
                                 lid: lidData,
@@ -611,6 +617,7 @@ Template.purchaseordercard.onRendered(() => {
                                 saleCustField2: data.fields.SalesComments,
                                 totalPaid: totalPaidAmount,
                                 ispaid: data.fields.IsPaid,
+                                isPartialPaid: isPartialPaid,
                                 department: data.fields.Lines[0].fields.LineClassName || defaultDept
                             };
 
@@ -805,6 +812,12 @@ Template.purchaseordercard.onRendered(() => {
                                 if(useData[d].fields.IsBackOrder){
                                    lidData = 'Edit Purchase Order' + ' (BO) ' + useData[d].fields.ID||'';
                                 }
+
+                                let isPartialPaid = false;
+                                if(data.fields.TotalPaid > 0){
+                                    isPartialPaid = true;
+                                }
+
                                 let purchaseorderrecord = {
                                     id: useData[d].fields.ID,
                                     lid: lidData,
@@ -839,6 +852,7 @@ Template.purchaseordercard.onRendered(() => {
                                     saleCustField2: useData[d].fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: useData[d].fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
                                 };
 
@@ -1015,6 +1029,12 @@ Template.purchaseordercard.onRendered(() => {
                               if(data.fields.IsBackOrder){
                                  lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                               }
+
+                              let isPartialPaid = false;
+                              if(data.fields.TotalPaid > 0){
+                                  isPartialPaid = true;
+                              }
+
                                 let purchaseorderrecord = {
                                     id: data.fields.ID,
                                     lid: lidData,
@@ -1049,6 +1069,7 @@ Template.purchaseordercard.onRendered(() => {
                                     saleCustField2: data.fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: data.fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: data.fields.Lines[0].fields.LineClassName || defaultDept
                                 };
 
@@ -1222,6 +1243,12 @@ Template.purchaseordercard.onRendered(() => {
                         if(data.fields.IsBackOrder){
                            lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                         }
+
+                        let isPartialPaid = false;
+                        if(data.fields.TotalPaid > 0){
+                            isPartialPaid = true;
+                        }
+
                         let purchaseorderrecord = {
                             id: data.fields.ID,
                             lid: lidData,
@@ -1256,6 +1283,7 @@ Template.purchaseordercard.onRendered(() => {
                             saleCustField2: data.fields.SalesComments,
                             totalPaid: totalPaidAmount,
                             ispaid: data.fields.IsPaid,
+                            isPartialPaid: isPartialPaid,
                             department: data.fields.Lines[0].fields.LineClassName || defaultDept
                         };
 
@@ -1488,6 +1516,7 @@ Template.purchaseordercard.onRendered(() => {
                     saleCustField2: data.fields.SalesComments,
                     totalPaid: totalPaidAmount,
                     ispaid: data.fields.IsPaid,
+                    isPartialPaid: isPartialPaid,
                     department: data.fields.Lines[0].fields.LineClassName || defaultDept
                 };
 
@@ -1653,7 +1682,8 @@ Template.purchaseordercard.onRendered(() => {
             saleCustField1: '',
             saleCustField2: '',
             totalPaid: Currency + '' + 0.00,
-            ispaid: false
+            ispaid: false,
+            isPartialPaid: false
 
         };
 

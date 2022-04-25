@@ -619,6 +619,7 @@ Template.billcard.onRendered(() => {
                                 saleCustField2: data.fields.SalesComments,
                                 totalPaid: totalPaidAmount,
                                 ispaid: data.fields.IsPaid,
+                                isPartialPaid: isPartialPaid,
                                 department: department || defaultDept
                             };
 
@@ -803,6 +804,11 @@ Template.billcard.onRendered(() => {
                                     lineItems.push(lineItemObj);
                                 }
 
+                                let isPartialPaid = false;
+                                if(data.fields.TotalPaid > 0){
+                                    isPartialPaid = true;
+                                }
+
                                 let billrecord = {
                                     id: useData[d].fields.ID,
                                     lid: 'Edit Bill' + ' ' + useData[d].fields.ID,
@@ -837,6 +843,7 @@ Template.billcard.onRendered(() => {
                                     saleCustField2: useData[d].fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: useData[d].fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
                                 };
 
@@ -1021,6 +1028,11 @@ Template.billcard.onRendered(() => {
                                     lineItems.push(lineItemObj);
                                 }
 
+                                let isPartialPaid = false;
+                                if(data.fields.TotalPaid > 0){
+                                    isPartialPaid = true;
+                                }
+
                                 let billrecord = {
                                     id: data.fields.ID,
                                     lid: 'Edit Bill' + ' ' + data.fields.ID,
@@ -1055,6 +1067,7 @@ Template.billcard.onRendered(() => {
                                     saleCustField2: data.fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: data.fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: department || defaultDept
                                 };
 
@@ -1236,6 +1249,11 @@ Template.billcard.onRendered(() => {
                             lineItems.push(lineItemObj);
                         }
 
+                        let isPartialPaid = false;
+                        if(data.fields.TotalPaid > 0){
+                            isPartialPaid = true;
+                        }
+
                         let billrecord = {
                             id: data.fields.ID,
                             lid: 'Edit Bill' + ' ' + data.fields.ID,
@@ -1270,6 +1288,7 @@ Template.billcard.onRendered(() => {
                             saleCustField2: data.fields.SalesComments,
                             totalPaid: totalPaidAmount,
                             ispaid: data.fields.IsPaid,
+                            isPartialPaid: isPartialPaid,
                             department: department || defaultDept
                         };
 
@@ -1462,7 +1481,9 @@ Template.billcard.onRendered(() => {
             saleCustField1: '',
             saleCustField2: '',
             totalPaid: Currency + '' + 0.00,
-            ispaid: false
+            ispaid: false,
+            isPartialPaid: false
+
         };
 
         $('#edtSupplierName').val('');
