@@ -119,7 +119,7 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
     var countObjectTimes = 0;
-    let allDataToLoad = 69;
+    let allDataToLoad = 70;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -694,6 +694,26 @@ Template.newsidenav.onRendered(function() {
     $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
     $('.headerprogressbar').addClass('headerprogressbarShow');
     $('.headerprogressbar').removeClass('headerprogressbarHidden');
+
+    getVS1Data('Tvs1charts').then(function(dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getTvs1charts().then(function(data) {
+            addVS1Data('Tvs1charts', JSON.stringify(data));
+        }).catch(function(err) {
+
+        });
+      }
+    });
+    getVS1Data('Tvs1dashboardpreferences').then(function(dataObject) {
+      if (dataObject.length == 0) {
+        sideBarService.getTvs1dashboardpreferences().then(function(data) {
+            addVS1Data('Tvs1dashboardpreferences', JSON.stringify(data));
+        }).catch(function(err) {
+
+        });
+      }
+    });
+
 
     getVS1Data('TAppUser').then(function(dataObject) {
         if (dataObject.length == 0) {

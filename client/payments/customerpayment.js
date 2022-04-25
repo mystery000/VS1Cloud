@@ -104,9 +104,239 @@ Template.customerpayment.onRendered(function() {
       }
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+        if(FlowRouter.current().queryParams.payment){
+          let paymentIDs = FlowRouter.current().queryParams.payment || '';
+          let customerName = FlowRouter.current().queryParams.name || '';
+           sideBarService.getAllTCustomerPaymentListDataByPaymentID(customerName).then(function (data) {
+              let lineItems = [];
+              let lineItemObj = {};
+
+                  if (data.Params.IgnoreDates == true) {
+                      $('#dateFrom').attr('readonly', true);
+                      $('#dateTo').attr('readonly', true);
+                      // FlowRouter.go('/customerpayment?ignoredate=true');
+                  } else {
+                      $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                      $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                  }
+                  for(let i=0; i<data.tcustomerpaymentlist.length; i++){
+
+                      let amount = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Amount)|| 0.00;
+                      let applied = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Applied) || 0.00;
+                      // Currency+''+data.tcustomerpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                      let balance = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Balance)|| 0.00;
+                      let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].TotalPaid)|| 0.00;
+                      let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].TotalBalance)|| 0.00;
+
+                      let paystatus = data.tcustomerpaymentlist[i].QuoteStatus || '';
+                      if(data.tcustomerpaymentlist[i].Deleted == true){
+                        paystatus = "Deleted";
+                      }
+
+                      var dataList = {
+                          id: data.tcustomerpaymentlist[i].PaymentID || '',
+                          sortdate: data.tcustomerpaymentlist[i].PaymentDate !=''? moment(data.tcustomerpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tcustomerpaymentlist[i].PaymentDate,
+                          paymentdate: data.tcustomerpaymentlist[i].PaymentDate !=''? moment(data.tcustomerpaymentlist[i].PaymentDate).format("DD/MM/YYYY"): data.tcustomerpaymentlist[i].PaymentDate,
+                          customername: data.tcustomerpaymentlist[i].CompanyName || '',
+                          paymentamount: amount || 0.00,
+                          applied: applied || 0.00,
+                          balance: balance || 0.00,
+                          bankaccount: data.tcustomerpaymentlist[i].BankAccountName || '',
+                          department: data.tcustomerpaymentlist[i].Department || '',
+                          paystatus: paystatus || '',
+                          refno: data.tcustomerpaymentlist[i].ReferenceNo || '',
+                          paymentmethod: data.tcustomerpaymentlist[i].PaymentMethodName || '',
+                          notes: data.tcustomerpaymentlist[i].Notes || ''
+                      };
+
+                      var arrSplit = paymentIDs.split(',');
+                      $.each( arrSplit, function( index, value ) {
+                            if(data.tcustomerpaymentlist[i].PaymentID == value){
+                              dataTableList.push(dataList);
+                            }
+                      });
+
+
+                  }
+              templateObject.datatablerecords.set(dataTableList);
+              if(templateObject.datatablerecords.get()){
+
+                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblCustomerPayment', function(error, result){
+                      if(error){
+
+                      }else{
+                          if(result){
+                              for (let i = 0; i < result.customFields.length; i++) {
+                                  let customcolumn = result.customFields;
+                                  let columData = customcolumn[i].label;
+                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                  let hiddenColumn = customcolumn[i].hidden;
+                                  let columnClass = columHeaderUpdate.split('.')[1];
+                                  let columnWidth = customcolumn[i].width;
+                                  let columnindex = customcolumn[i].index + 1;
+
+                                  if(hiddenColumn == true){
+
+                                      $("."+columnClass+"").addClass('hiddenColumn');
+                                      $("."+columnClass+"").removeClass('showColumn');
+                                  }else if(hiddenColumn == false){
+                                      $("."+columnClass+"").removeClass('hiddenColumn');
+                                      $("."+columnClass+"").addClass('showColumn');
+                                  }
+
+                              }
+                          }
+
+                      }
+                  });
+
+
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+              }
+
+              $('.fullScreenSpin').css('display','none');
+              setTimeout(function () {
+                  //$.fn.dataTable.moment('DD/MM/YY');
+                  $('#tblCustomerPayment').DataTable({
+                      // dom: 'lBfrtip',
+                      columnDefs: [
+                          {type: 'date', targets: 0}
+                          // ,
+                          // { targets: 0, className: "text-center" }
+
+                      ],
+                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      buttons: [
+                          {
+                              extend: 'excelHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "Customer Payments List - "+ moment().format(),
+                              orientation:'portrait',
+                              exportOptions: {
+                                  columns: ':visible',
+                                  format: {
+                                      body: function ( data, row, column ) {
+                                          if(data.includes("</span>")){
+                                              var res = data.split("</span>");
+                                              data = res[1];
+                                          }
+
+                                          return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                      }
+                                  }
+                              }
+                          },{
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'Customer Payment',
+                              filename: "Customer Payments List - "+ moment().format(),
+                              exportOptions: {
+                                  columns: ':visible',
+                                  stripHtml: false
+                              }
+                          }],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
+                      // bStateSave: true,
+                      // rowId: 0,
+                      pageLength: initialReportDatatableLoad,
+                      "bLengthChange": false,
+                      info: true,
+                      responsive: true,
+                      "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                      // "aaSorting": [[1,'desc']],
+                      action: function () {
+                          $('#tblCustomerPayment').DataTable().ajax.reload();
+                      },
+                      "fnInitComplete": function () {
+                        let urlParametersPage = FlowRouter.current().queryParams.page;
+                        if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                            this.fnPageChange('last');
+                        }
+                         $("<button class='btn btn-primary btnRefreshCustomerPayment' type='button' id='btnRefreshCustomerPayment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblCustomerPayment_filter");
+                         $('.myvarFilterForm').appendTo(".colDateFilter");
+                      },
+                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                        let countTableData = data.Params.Count || 0; //get count from API data
+
+                          return 'Showing '+ iStart + " to " + iEnd + " of " + iEnd;
+                      }
+
+
+                  }).on('page', function () {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                      let draftRecord = templateObject.datatablerecords.get();
+                      templateObject.datatablerecords.set(draftRecord);
+                  }).on('column-reorder', function () {
+
+                  }).on( 'length.dt', function ( e, settings, len ) {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                  });
+                  $('.fullScreenSpin').css('display','none');
+
+
+              }, 0);
+              var columns = $('#tblCustomerPayment th');
+              let sTible = "";
+              let sWidth = "";
+              let sIndex = "";
+              let sVisible = "";
+              let columVisible = false;
+              let sClass = "";
+              $.each(columns, function(i,v) {
+                  if(v.hidden == false){
+                      columVisible =  true;
+                  }
+                  if((v.className.includes("hiddenColumn"))){
+                      columVisible = false;
+                  }
+                  sWidth = v.style.width.replace('px', "");
+
+                  let datatablerecordObj = {
+                      sTitle: v.innerText || '',
+                      sWidth: sWidth || '',
+                      sIndex: v.cellIndex || '',
+                      sVisible: columVisible || false,
+                      sClass: v.className || ''
+                  };
+                  tableHeaderList.push(datatablerecordObj);
+              });
+              templateObject.tableheaderrecords.set(tableHeaderList);
+              $('div.dataTables_filter input').addClass('form-control form-control-sm');
+              $('#tblCustomerPayment tbody').on( 'click', 'tr', function () {
+                  var listData = $(this).closest('tr').attr('id');
+                  var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+                  if(listData){
+                    if(checkDeleted == "Deleted"){
+                      swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                    }else{
+                      FlowRouter.go('/paymentcard?id=' + listData);
+                    }
+                  }
+              });
+
+          }).catch(function (err) {
+              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+              $('.fullScreenSpin').css('display','none');
+              // Meteor._reload.reload();
+          });
+
+        }else{
         getVS1Data('TCustomerPaymentList').then(function (dataObject) {
             if(dataObject.length == 0){
-                sideBarService.getAllTCustomerPaymentListData(initialDataLoad,0).then(function (data) {
+                sideBarService.getAllTCustomerPaymentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -1006,7 +1236,7 @@ Template.customerpayment.onRendered(function() {
               // Meteor._reload.reload();
           });
         });
-
+      }
     }
 
     templateObject.getAllCustomerPaymentData();

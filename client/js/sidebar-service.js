@@ -569,6 +569,18 @@ export class SideBarService extends BaseService {
       return this.getList(this.ERPObjects.TCustomerPaymentList, options);
     }
 
+    getAllTCustomerPaymentListDataByPaymentID(customername) {
+    let options = '';
+
+      options = {
+        IgnoreDates:true,
+        OrderBy:"PaymentDate desc",
+        Search:'CompanyName = "'+customername+'"'
+         };
+
+        return this.getList(this.ERPObjects.TCustomerPaymentList, options);
+    }
+
   getTSupplierPaymentList(limitcount, limitfrom){
     let options = '';
     if(limitcount == 'All'){
@@ -586,6 +598,18 @@ export class SideBarService extends BaseService {
      };
     }
       return this.getList(this.ERPObjects.TSupplierPayment, options);
+  }
+
+  getAllTSupplierPaymentListDataByPaymentID(suppliername) {
+  let options = '';
+
+    options = {
+      IgnoreDates:true,
+      OrderBy:"PaymentDate desc",
+      Search:'CompanyName = "'+suppliername+'"'
+       };
+
+      return this.getList(this.ERPObjects.TSupplierPaymentList, options);
   }
 
   getAllTSupplierPaymentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
@@ -2449,6 +2473,22 @@ getPaidLeave(limitcount, limitfrom) {
     return this.getList(this.ERPObjects.TUnpaidLeave, options);
 }
 
+getTvs1dashboardpreferences() {
+ let options = '';
+   options = {
+    ListType: "Detail",
+    select: "[EmployeeID]='"+Session.get('mySessionEmployeeLoggedID')+"'",
+   };
+   return this.getList(this.ERPObjects.Tvs1dashboardpreferences, options);
+}
+
+getTvs1charts() {
+ let options = '';
+   options = {
+    ListType: "Detail"
+   };
+   return this.getList(this.ERPObjects.Tvs1charts, options);
+}
 
 
 }
