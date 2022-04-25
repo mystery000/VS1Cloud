@@ -343,7 +343,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSuperannuation, options);
 
   }
-  
+
   getAllowanceByName(dataSearchName) {
     let options = '';
     options = {
@@ -354,7 +354,7 @@ export class SideBarService extends BaseService {
   }
 
   getDeductionByName(dataSearchName) {
-    
+
     let options = '';
     options = {
      ListType: "Detail",
@@ -365,7 +365,7 @@ export class SideBarService extends BaseService {
   }
 
   getReimbursementByName(dataSearchName) {
-   
+
     let options = '';
     options = {
      ListType: "Detail",
@@ -496,6 +496,10 @@ export class SideBarService extends BaseService {
       };
     }
       return this.getList(this.ERPObjects.TJobVS1, options);
+  }
+
+  getAllExpenseCliamExDataVS1() {
+    return this.GET(this.erpGet.ERPTExpenseEx);
   }
 
   getTPaymentList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom){
@@ -2363,7 +2367,7 @@ getCalender(limitcount, limitfrom) {
      options = {
       ListType: "Detail",
       select: "[PayrollCalendarActive]=true"
-    
+
      };
   }else{
     options = {
@@ -2381,15 +2385,15 @@ getSuperannuation(limitcount, limitfrom) {
   let options = '';
   if(limitcount == 'All'){
     options = {
-      ListType: "Detail",   
+      ListType: "Detail",
      };
   }
   else{
     options = {
-      ListType: "Detail",   
+      ListType: "Detail",
      };
   }
-   
+
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }
 
@@ -2398,12 +2402,12 @@ getSuperType()
 {
 
   let options = '';
- 
+
    options = {
       ListType: "Detail",
       // select: '[Active]=true'
   };
- 
+
   return this.getList(this.ERPObjects.TSuperType, options);
 
 }
@@ -2428,7 +2432,7 @@ getPaidLeave(limitcount, limitfrom) {
      // orderby:'"ClientID desc"',
        ListType: "Detail",
        select: '[LeavePaidActive]=true'
-    
+
     };
   }
      return this.getList(this.ERPObjects.TPaidLeave, options);
@@ -2440,7 +2444,7 @@ getPaidLeave(limitcount, limitfrom) {
     options = {
      ListType: "Detail",
      select: '[LeaveUnPaidActive]=true'
-     
+
     };
     return this.getList(this.ERPObjects.TUnpaidLeave, options);
 }
