@@ -65,7 +65,7 @@ Template.receiptsoverview.onRendered(function () {
     function setEmployeeSelect(e) {
         var $earch = $(e.target);
         var offset = $earch.offset();
-        var employeeName = e.target.value || '';        
+        var employeeName = e.target.value || '';
 
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $earch.attr('data-id', '');
@@ -81,7 +81,7 @@ Template.receiptsoverview.onRendered(function () {
         } else {
             if (employeeName.replace(/\s/g, '') != '') {    // edit employee
                 let editId = $('#viewReceiptModal .employees').attr('data-id');
-                
+
                 getVS1Data('TEmployee').then(function (dataObject) {
 
                     if (dataObject.length == 0) {
@@ -90,10 +90,10 @@ Template.receiptsoverview.onRendered(function () {
                             for (let i = 0; i < data.temployee.length; i++) {
                                 if (data.temployee[i].fields.ID == editId) {
                                     showEditEmployeeView(data.temployee[i].fields);
-                                }    
+                                }
                             }
                         }).catch(function (err) {
-        
+
                         });
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -111,10 +111,10 @@ Template.receiptsoverview.onRendered(function () {
                         for (let i = 0; i < data.temployee.length; i++) {
                             if (data.temployee[i].fields.ID == editId) {
                                 showEditEmployeeView(data.temployee[i].fields);
-                            } 
+                            }
                         }
                     }).catch(function (err) {
-        
+
                     });
                 });
             } else {
@@ -149,7 +149,7 @@ Template.receiptsoverview.onRendered(function () {
         let popCustomernotes = data.Notes || '';
         let popCustomerpreferedpayment = data.PaymentMethodName || '';
         let popGender = data.Sex == "F" ? "Female" : data.Sex == "M" ? "Male" : "";
-        
+
         //$('#edtCustomerCompany').attr('readonly', true);
         $('#edtCustomerCompany').val(popCustomerName);
         $('#edtEmployeePOPID').val(popCustomerID);
@@ -400,7 +400,7 @@ Template.receiptsoverview.onRendered(function () {
         $('#edtCurrencyDesc').val(data.CurrencyDesc);
         $('#edtBuyRate').val(data.BuyRate);
         $('#edtSellRate').val(data.SellRate);
-    }    
+    }
 
     templateObject.setAccountSelect = function(e) {
         var $earch = $(e.target);
@@ -476,7 +476,7 @@ Template.receiptsoverview.onRendered(function () {
                       $('#edtAccountName').attr('readonly', true);
                       $('#sltAccountType').attr('readonly', true);
                       $('#sltAccountType').attr('disabled', 'disabled');
-                      
+
                       showEditAccountView(data.taccountvs1[0]);
 
                     }).catch(function(err) {
@@ -665,7 +665,7 @@ Template.receiptsoverview.onRendered(function () {
     });
 
     templateObject.setTimeFilter = function(option) {
-        
+
         var startDate;
         var endDate = moment().format("DD/MM/YYYY");
 
@@ -732,7 +732,7 @@ Template.receiptsoverview.onRendered(function () {
                 class: "colReceiptDate",
                 render: function(data, type, row, meta) {
                     let index = meta.row + meta.settings._iDisplayStart;
-                    let html = '<div class="input-group date" style="cursor: pointer;width: 140px;">' + 
+                    let html = '<div class="input-group date" style="cursor: pointer;width: 140px;">' +
                                     '<input type="text" class="form-control dtSplitReceipt" name="dtSplitReceipt" value="' + data + '">' +
                                     '<div class="input-group-addon">' +
                                         '<span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
@@ -947,7 +947,7 @@ Template.receiptsoverview.onRendered(function () {
             return ((a < b) ? 1 : ((a > b) ? -1 : 0));
         }
     });
-    
+
     templateObject.getSuppliers = function () {
         accountService.getSupplierVS1().then(function (data) {
             let lineItems = [];
@@ -960,113 +960,220 @@ Template.receiptsoverview.onRendered(function () {
             }
             templateObject.suppliers.set(lineItems);
         }).catch(function (err) {
-    
+
         });
     };
     templateObject.getSuppliers();
 
     templateObject.getExpenseClaims = function () {
         $('#fullScreenSpin').css('display', 'inline-block');
-        accountService.getExpenseClaim().then(function (data) {
-            let lineItems = [];
-            console.log('expense', data)
-            data.texpenseclaimex.forEach(expense => {
-                if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
-                    expense.fields.Lines.forEach(claim => {
-                        let lineItem = claim.fields;
-                        lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
+        //Load Indexdb data
+        getVS1Data('TExpenseClaim').then(function (dataObject) {
+            if (dataObject.length == 0) { // check if no idexdb
+              accountService.getExpenseClaim().then(function (data) {
+                 addVS1Data('TExpenseClaim', JSON.stringify(data));
+                  let lineItems = [];
+                  console.log('expense', data)
+                  data.texpenseclaimex.forEach(expense => {
+                      if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
+                          expense.fields.Lines.forEach(claim => {
+                              let lineItem = claim.fields;
+                              lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
+                              lineItems.push(lineItem);
+                          })
+                      }else if(Object.prototype.toString.call(expense.fields.Lines) === "[object Object]"){
+                          let lineItem = expense.fields.Lines.fields;
+                          lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
+                          lineItems.push(lineItem);
+                      }
+                  });
+
+                  templateObject.expenseClaimList.set(lineItems);
+
+                  setTimeout(function () {
+                      //$.fn.dataTable.moment('DD/MM/YY');
+                      $('#tblReceiptList').DataTable({
+                          columnDefs: [{
+                              "orderable": false,
+                              "targets": 0
+                          }, {
+                              type: 'extract-date',
+                              targets: 1
+                          }],
+                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                          buttons: [{
+                              extend: 'excelHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "Awaiting Customer Payments List - " + moment().format(),
+                              orientation: 'portrait',
+                              exportOptions: {
+                                  columns: ':visible:not(.chkBox)',
+                                  format: {
+                                      body: function (data, row, column) {
+                                          if (data.includes("</span>")) {
+                                              var res = data.split("</span>");
+                                              data = res[1];
+                                          }
+
+                                          return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                      }
+                                  }
+                              }
+                          }, {
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'Supplier Payment',
+                              filename: "Awaiting Customer Payments List - " + moment().format(),
+                              exportOptions: {
+                                  columns: ':visible:not(.chkBox)',
+                                  stripHtml: false
+                              }
+                          }],
+                          select: true,
+                          destroy: true,
+                          colReorder: true,
+                          colReorder: {
+                              fixedColumnsLeft: 0
+                          },
+                          pageLength: initialReportDatatableLoad,
+                          "bLengthChange": false,
+                          info: true,
+                          responsive: true,
+                          "order": [
+                              [1, "desc"]
+                          ],
+                          action: function () {
+                              // $('#tblReceiptList').DataTable().ajax.reload();
+                          },
+                          "fnInitComplete": function () {
+                              $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
+                              $('.myvarFilterForm').appendTo(".colDateFilter");
+                          }
+                      }).on('page', function () {
+                          setTimeout(function () {
+                              MakeNegative();
+                          }, 100);
+
+                      }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
+                          setTimeout(function () {
+                              MakeNegative();
+                          }, 100);
+                      });
+                      $('#fullScreenSpin').css('display', 'none');
+
+                      templateObject.setTimeFilter('lastMonth');
+                  }, 0);
+
+                  // $('.dataTables_info').html('Showing 1 to '+ lineItems.length + ' of ' + lineItems.length + ' entries');
+              });
+            } else { //else load data from indexdb
+                let data = JSON.parse(dataObject[0].data);
+                let lineItems = [];
+                console.log('expense', data)
+                data.texpenseclaimex.forEach(expense => {
+                    if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
+                        expense.fields.Lines.forEach(claim => {
+                            let lineItem = claim.fields;
+                            lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
+                            lineItems.push(lineItem);
+                        })
+                    }else if(Object.prototype.toString.call(expense.fields.Lines) === "[object Object]"){
+                        let lineItem = expense.fields.Lines.fields;
+                        lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
                         lineItems.push(lineItem);
-                    })
-                }else if(Object.prototype.toString.call(expense.fields.Lines) === "[object Object]"){    
-                    let lineItem = expense.fields.Lines.fields;
-                    lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
-                    lineItems.push(lineItem);
-                }
-            });
+                    }
+                });
 
-            templateObject.expenseClaimList.set(lineItems);
+                templateObject.expenseClaimList.set(lineItems);
 
-            setTimeout(function () {
-                //$.fn.dataTable.moment('DD/MM/YY');
-                $('#tblReceiptList').DataTable({
-                    columnDefs: [{
-                        "orderable": false,
-                        "targets": 0
-                    }, {
-                        type: 'extract-date',
-                        targets: 1
-                    }],
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [{
-                        extend: 'excelHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Awaiting Customer Payments List - " + moment().format(),
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible:not(.chkBox)',
-                            format: {
-                                body: function (data, row, column) {
-                                    if (data.includes("</span>")) {
-                                        var res = data.split("</span>");
-                                        data = res[1];
+                setTimeout(function () {
+                    //$.fn.dataTable.moment('DD/MM/YY');
+                    $('#tblReceiptList').DataTable({
+                        columnDefs: [{
+                            "orderable": false,
+                            "targets": 0
+                        }, {
+                            type: 'extract-date',
+                            targets: 1
+                        }],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                            extend: 'excelHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            orientation: 'portrait',
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                format: {
+                                    body: function (data, row, column) {
+                                        if (data.includes("</span>")) {
+                                            var res = data.split("</span>");
+                                            data = res[1];
+                                        }
+
+                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
                                     }
-        
-                                    return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-        
                                 }
                             }
+                        }, {
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Supplier Payment',
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                stripHtml: false
+                            }
+                        }],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        colReorder: {
+                            fixedColumnsLeft: 0
+                        },
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+                        info: true,
+                        responsive: true,
+                        "order": [
+                            [1, "desc"]
+                        ],
+                        action: function () {
+                            // $('#tblReceiptList').DataTable().ajax.reload();
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
+                            $('.myvarFilterForm').appendTo(".colDateFilter");
                         }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Supplier Payment',
-                        filename: "Awaiting Customer Payments List - " + moment().format(),
-                        exportOptions: {
-                            columns: ':visible:not(.chkBox)',
-                            stripHtml: false
-                        }
-                    }],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    colReorder: {
-                        fixedColumnsLeft: 0
-                    },
-                    pageLength: initialReportDatatableLoad,
-                    "bLengthChange": false,
-                    info: true,
-                    responsive: true,
-                    "order": [
-                        [1, "desc"]
-                    ],
-                    action: function () {
-                        // $('#tblReceiptList').DataTable().ajax.reload();
-                    },
-                    "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
-                        $('.myvarFilterForm').appendTo(".colDateFilter");
-                    }
-                }).on('page', function () {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                    
-                }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                });
-                $('#fullScreenSpin').css('display', 'none');
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
 
-                templateObject.setTimeFilter('lastMonth');
-            }, 0);
+                    }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+                    $('#fullScreenSpin').css('display', 'none');
 
-            // $('.dataTables_info').html('Showing 1 to '+ lineItems.length + ' of ' + lineItems.length + ' entries');
-        });
+                    templateObject.setTimeFilter('lastMonth');
+                }, 0);
+              }
+        }).catch(function (err) {
+          $('#fullScreenSpin').css('display', 'none');
+         });
+
     }
 
     templateObject.getExpenseClaims();
@@ -1384,7 +1491,7 @@ Template.receiptsoverview.events({
             $('#viewReceiptModal .receiptPhoto').attr('data-name', "");
             $('#viewReceiptModal .img-placeholder').css('opacity', 1);
         }
-        
+
     },
     'click #tblEmployeelist tbody tr': function (e) {
         let employeeName = $(e.target).closest('tr').find(".colEmployeeName").text() || '';
@@ -1407,7 +1514,7 @@ Template.receiptsoverview.events({
         let supplierName = $(e.target).closest('tr').find(".colCompany").text() || '';
         let supplierID = $(e.target).closest('tr').find(".colID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
-        
+
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .merchants').val(supplierName);
             $('#viewReceiptModal .merchants').attr('data-id', supplierID);
@@ -1424,7 +1531,7 @@ Template.receiptsoverview.events({
         let currencyName = $(e.target).closest('tr').find(".colCode").text() || '';
         let currencyID = $(e.target).closest('tr').attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
-        
+
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .currencies').val(currencyName);
             $('#viewReceiptModal .currencies').attr('data-id', currencyID);
@@ -1441,7 +1548,7 @@ Template.receiptsoverview.events({
         let accountName = $(e.target).closest('tr').find(".productName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
-        
+
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .chart-accounts').val(accountName);
             $('#viewReceiptModal .chart-accounts').attr('data-id', accountID);
@@ -1469,7 +1576,7 @@ Template.receiptsoverview.events({
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';
         let typeID = $(e.target).closest('tr').find("input.chkBox").attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
-        
+
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .transactionTypes').val(typeName);
             $('#viewReceiptModal .transactionTypes').attr('data-id', typeID);
@@ -1567,7 +1674,7 @@ Template.receiptsoverview.events({
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
                 // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                // CurrencyName: currencyName,                
+                // CurrencyName: currencyName,
             }
         };
 
@@ -1623,7 +1730,7 @@ Template.receiptsoverview.events({
         } else if (from == "NavTime") {
             parentElement = "#nav-time";
         }
-        
+
         $(parentElement + ' .receiptPhoto').css('background-image', 'none');
         $(parentElement + ' .receiptPhoto').attr('data-name', '');
         $(parentElement + ' .img-placeholder').css('opacity', 1);
@@ -1693,7 +1800,7 @@ Template.receiptsoverview.events({
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
                 // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                // CurrencyName: currencyName,                
+                // CurrencyName: currencyName,
             }
         };
 
@@ -1739,7 +1846,7 @@ Template.receiptsoverview.events({
             confirmButtonText: 'Yes'
           }).then((result) => {
             if (result.value) {
-        
+
                 let employeeId = $('#viewReceiptModal .employees').attr('data-id');
                 let employeeName = $('#viewReceiptModal .employees').val()  || ' ';
                 let transactionTypeId = $('#viewReceiptModal .transactionTypes').attr('data-id');
@@ -1754,7 +1861,7 @@ Template.receiptsoverview.events({
                 let totalAmount = $('#viewReceiptModal .edtTotal').val().replace('$', '');
                 let reimbursement = $('#viewReceiptModal .swtReiumbursable').prop('checked');
                 let description = $('#viewReceiptModal #txaDescription').val() || 'Receipt Claim';
-        
+
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
                     fields: {
@@ -1775,10 +1882,10 @@ Template.receiptsoverview.events({
                         // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                         // TransactionTypeName: transactionTypeName,
                         // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                        // CurrencyName: currencyName,                
+                        // CurrencyName: currencyName,
                     }
                 };
-        
+
                 let expenseClaim = {
                     type: "TExpenseClaimEx",
                     fields: {
@@ -1793,13 +1900,13 @@ Template.receiptsoverview.events({
                         Active: false
                     }
                 }
-        
+
                 console.log('ExpenseClaim', expenseClaim)
-        
+
                 $('#fullScreenSpin').css('display', 'inline-block');
                 accountService.saveReceipt(expenseClaim).then(function (data) {
                     // $('#fullScreenSpin').css('display', 'none');
-                    window.open('/receiptsoverview', '_self');                    
+                    window.open('/receiptsoverview', '_self');
                 });
             } else if (result.dismiss === 'cancel') {
 
@@ -1870,11 +1977,11 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
 
-        splitDataTable = $('#tblSplitExpense').DataTable();        
+        splitDataTable = $('#tblSplitExpense').DataTable();
         var lineItems = splitDataTable.rows().data();
 
         let amount = Math.round(receipt.AmountInc*100 / (lineItems.length))/100;
-        
+
         for (i = 0; i < lineItems.length; i++) {
             if (i == lineItems.length - 1) {
                 lineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
@@ -1928,7 +2035,7 @@ Template.receiptsoverview.events({
                         // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                         // TransactionTypeName: transactionTypeName,
                         // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                        // CurrencyName: currencyName,                
+                        // CurrencyName: currencyName,
                     }
                 };
                 expenseClaim = {
@@ -1964,11 +2071,11 @@ Template.receiptsoverview.events({
                         // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                         // TransactionTypeName: transactionTypeName,
                         // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                        // CurrencyName: currencyName,                
+                        // CurrencyName: currencyName,
                     }
                 };
                 expenseClaim = {
-                    type: "TExpenseClaimEx",                    
+                    type: "TExpenseClaimEx",
                     fields: {
                         ID: receipt.ExpenseClaimID,
                         DateTime: lineItem.DateTime,
@@ -1980,7 +2087,7 @@ Template.receiptsoverview.events({
             console.log('splited item', expenseClaim);
             accountService.saveReceipt(expenseClaim).then(function (data) {
                 // $('#fullScreenSpin').css('display', 'none');
-                setTimeout(() => {                    
+                setTimeout(() => {
                     window.open('/receiptsoverview', '_self');
                 }, 500);
             }).catch ( err => {
@@ -2019,7 +2126,7 @@ Template.receiptsoverview.events({
         }
 
         let amount = Math.round(receipt.AmountInc*100 / (newLineItems.length))/100;
-        
+
         for (i = 0; i < newLineItems.length; i++) {
             if (i == newLineItems.length - 1) {
                 newLineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
@@ -2055,7 +2162,7 @@ Template.receiptsoverview.events({
                 // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                 // TransactionTypeName: transactionTypeName,
                 // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                // CurrencyName: currencyName,                
+                // CurrencyName: currencyName,
             }
         };
         expenseClaim = {
@@ -2079,8 +2186,23 @@ Template.receiptsoverview.events({
                 window.open('/receiptsoverview', '_self');
             // }, 200);
         });
+    },
+    'click .btnRefresh': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+
+        sideBarService.getAllExpenseCliamExDataVS1().then(function (expenseData) {
+            addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function (datareturn) {
+              window.open('/receiptsoverview', '_self');
+            }).catch(function (err) {
+              window.open('/receiptsoverview', '_self');
+            });
+        }).catch(function (err) {
+            window.open('/receiptsoverview', '_self');
+        });
+
+
     }
-    
+
 });
 
 Template.receiptsoverview.helpers({
@@ -2097,7 +2219,7 @@ Template.receiptsoverview.helpers({
         //     return (aDateString > bDateString) ? 1 : -1;
         // });
     },
-    editExpenseClaim: () => {   
+    editExpenseClaim: () => {
         return Template.instance().editExpenseClaim.get();
     }
 });

@@ -1079,7 +1079,6 @@ Template.newsidenav.onRendered(function() {
         });
     }
 
-
     templateObject.getAllSuppliersData = function() {
         sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function(data) {
           countObjectTimes++;
@@ -3717,6 +3716,43 @@ Template.newsidenav.onRendered(function() {
         });
     }
 
+    templateObject.getAllTExpenseClaimExData = function() {
+        sideBarService.getAllExpenseCliamExDataVS1().then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          //$(".progressBarInner").text("Job "+Math.round(progressPercentage)+"%");
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Receipt Claim ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            //localStorage.setItem('VS1TJobVS1List', JSON.stringify(data) || '');
+            addVS1Data('TExpenseClaim', JSON.stringify(data));
+            $("<span class='process'>Receipt Claim Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+    }
+
     var job = new CronJob('00 00 00 * * *', function() {
 
     });
@@ -3900,7 +3936,25 @@ Template.newsidenav.onRendered(function() {
                     templateObject.getAllTReconcilationData();
                 });
             }
-
+            if (isExpenseClaims) {
+              getVS1Data('TExpenseClaim').then(function(dataObject) {
+                  if (dataObject.length == 0) {
+                      templateObject.getAllTExpenseClaimExData();
+                  } else {
+                      let data = JSON.parse(dataObject[0].data);
+                      let useData = data.texpenseclaimex;
+                      if (useData.length > 0) {
+                          if (useData[0].Id) {
+                              templateObject.getAllTExpenseClaimExData();
+                          }
+                      }else{
+                        templateObject.getAllTExpenseClaimExData();
+                      }
+                  }
+              }).catch(function(err) {
+                  templateObject.getAllTExpenseClaimExData();
+              });
+            }
             if (isInventory) {
                 getVS1Data('TStockAdjustEntry').then(function(dataObject) {
                     if (dataObject.length == 0) {

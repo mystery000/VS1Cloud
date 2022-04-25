@@ -646,6 +646,7 @@ Template.newtaxratepop.onRendered(function() {
 Template.newtaxratepop.events({
     'click .btnSaveTaxRate': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
+        var url = FlowRouter.current().path;
         let taxRateService = new TaxRateService();
         let taxSelected = $('#taxSelected').val();
         let taxtID = $('#edtTaxID').val();
@@ -856,7 +857,7 @@ Template.newtaxratepop.events({
                                 $('#sltTaxCode').val(taxName);
                             }
                             }
-                            
+
                             if(url.includes("/accountsoverview")) {
                                 $('#sltTaxCode').val(taxName);
                             }
