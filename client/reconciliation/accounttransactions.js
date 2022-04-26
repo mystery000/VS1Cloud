@@ -473,7 +473,13 @@ Template.accounttransactions.onRendered(function() {
                         custfield2: '' || '',
                         comments: data.tcheque[i].Comments || '',
                     };
+                    if (Id != null) {
+
+                        if (Id == data.tcheque[i].GLAccountName) {
                     dataTableList.push(dataList);
+
+                  }
+                }
 
                 }
                 templateObject.datatablerecords.set(dataTableList);
