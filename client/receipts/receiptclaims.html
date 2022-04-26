@@ -576,7 +576,7 @@
     </div>
 
     <div class="modal fade" id="mergeModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Merge an Expense</h5>
@@ -665,22 +665,37 @@
                             <table id="tblMerge" style="width:100%" class="dataTable table table-striped table-bordered tblMerge">
                                 <thead>
                                     <tr class="dnd-moved">
-                                        <th class="th col" style="width: 6%;">Date</th>
-                                        <th class="th col">Merchant</th>
-                                        <th class="th col" style="width: 20%;">Total</th>
-                                        <th class="th col">Account</th>
-                                        <th class="th col">Comment</th>
+                                        <th class="th col" style="width: 2%;">
+                                            <div class="custom-control custom-checkbox chkBox" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All">
+                                                <label class="custom-control-label chkBoxAll" for="formCheck-All"></label>
+                                            </div>
+                                        </th>
+                                        <th class="th colReceiptDate">Date</th>
+                                        <th class="th colReceiptMerchant">Merchant</th>
+                                        <th class="th colReceiptAmount" style="width: 80px;">Amount</th>
+                                        <th class="th colReceiptAccount">Account</th>
+                                        <th class="th colReceiptDesc" style="width: 30%;">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="dnd-moved" id="receiptentry1" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col"></td>
-                                        <td contenteditable="false" class="col" style="width: 20%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col"></td>
-                                        <td contenteditable="false" class="col"></td>
-
+                                    {{#if expenseClaimList}}
+                                    {{#each item in expenseClaimList}}
+                                    <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
+                                        <td contenteditable="false" class="col" style="width: 2%;">
+                                            <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}" >
+                                                <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
+                                            </div>
+                                        </td>
+                                        <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
+                                        <td contenteditable="false" class="colReceiptMerchant" >{{item.SupplierName}}</td>
+                                        <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
+                                        <td contenteditable="false" class="colReceiptAccount" >{{item.AccountName}}</td>
+                                        <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
                                     </tr>
+                                    {{/each}}
+                                    {{/if}}
                                 </tbody>
                             </table>
                         </div>

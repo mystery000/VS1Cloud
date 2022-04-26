@@ -723,7 +723,7 @@ Template.receiptsoverview.onRendered(function () {
 
     $.fn.dataTableExt.afnFiltering.push(
         function( settings, data, dataIndex ) {
-            if (settings.nTable.id === 'tblReceiptList') {
+            if (settings.nTable.id === 'tblReceiptList' || settings.nTable.id === 'tblMerge') {
                 var min = $('#dateFrom').val();
                 var max = $('#dateTo').val();
                 let startDate = moment(min, 'DD/MM/YYYY');
@@ -866,81 +866,6 @@ Template.receiptsoverview.onRendered(function () {
             }, 100);
         });
     }, 0);
-
-    setTimeout(function () {
-        //$.fn.dataTable.moment('DD/MM/YY');
-        $('#tblMerge').DataTable({
-            columnDefs: [{
-                type: 'date',
-                targets: 0
-            }],
-            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilterMerge'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [{
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "Awaiting Customer Payments List - " + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                    columns: ':visible:not(.chkBox)',
-                    format: {
-                        body: function (data, row, column) {
-                            if (data.includes("</span>")) {
-                                var res = data.split("</span>");
-                                data = res[1];
-                            }
-
-                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-                        }
-                    }
-                }
-            }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Supplier Payment',
-                filename: "Awaiting Customer Payments List - " + moment().format(),
-                exportOptions: {
-                    columns: ':visible:not(.chkBox)',
-                    stripHtml: false
-                }
-            }],
-            select: true,
-            destroy: true,
-            colReorder: true,
-            // colReorder: {
-            //     fixedColumnsLeft: 0
-            // },
-            pageLength: initialReportDatatableLoad,
-            "bLengthChange": false,
-            info: true,
-            responsive: true,
-            "order": [
-                [1, "desc"]
-            ],
-            action: function () {
-                $('#tblMerge').DataTable().ajax.reload();
-            },
-            "fnInitComplete": function () {
-                $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus'></i></button>").insertAfter("#tblMerge_filter");
-                $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
-            }
-        }).on('page', function () {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
-            // let draftRecord = templateObject.datatablerecords.get();
-            // templateObject.datatablerecords.set(draftRecord);
-        }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-            setTimeout(function () {
-                MakeNegative();
-            }, 100);
-        });
-    }, 0);
-
 
     $('.imageParent')
         // tile mouse actions
@@ -1099,6 +1024,81 @@ Template.receiptsoverview.onRendered(function () {
                               MakeNegative();
                           }, 100);
                       });
+
+                      $('#tblMerge').DataTable({
+                        columnDefs: [{
+                            type: 'date',
+                            targets: 0
+                        }, {
+                            type: 'extract-date',
+                            targets: 1
+                        }],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilterMerge'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                            extend: 'excelHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            orientation: 'portrait',
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                format: {
+                                    body: function (data, row, column) {
+                                        if (data.includes("</span>")) {
+                                            var res = data.split("</span>");
+                                            data = res[1];
+                                        }
+
+                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                    }
+                                }
+                            }
+                        }, {
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Supplier Payment',
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                stripHtml: false
+                            }
+                        }],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // colReorder: {
+                        //     fixedColumnsLeft: 0
+                        // },
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+                        info: true,
+                        responsive: true,
+                        "order": [
+                            [1, "desc"]
+                        ],
+                        action: function () {
+                            $('#tblMerge').DataTable().ajax.reload();
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus'></i></button>").insertAfter("#tblMerge_filter");
+                            $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
+                        }
+                      }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                        // let draftRecord = templateObject.datatablerecords.get();
+                        // templateObject.datatablerecords.set(draftRecord);
+                      }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                      });
+
                       $('#fullScreenSpin').css('display', 'none');
 
                       templateObject.setTimeFilter('lastMonth');
@@ -1200,9 +1200,86 @@ Template.receiptsoverview.onRendered(function () {
                             MakeNegative();
                         }, 100);
                     });
+
+                    $('#tblMerge').DataTable({
+                        columnDefs: [{
+                            type: 'date',
+                            targets: 0
+                        }, {
+                            type: 'extract-date',
+                            targets: 1
+                        }],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilterMerge'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                            extend: 'excelHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            orientation: 'portrait',
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                format: {
+                                    body: function (data, row, column) {
+                                        if (data.includes("</span>")) {
+                                            var res = data.split("</span>");
+                                            data = res[1];
+                                        }
+
+                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                    }
+                                }
+                            }
+                        }, {
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Supplier Payment',
+                            filename: "Awaiting Customer Payments List - " + moment().format(),
+                            exportOptions: {
+                                columns: ':visible:not(.chkBox)',
+                                stripHtml: false
+                            }
+                        }],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // colReorder: {
+                        //     fixedColumnsLeft: 0
+                        // },
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+                        info: true,
+                        responsive: true,
+                        "order": [
+                            [1, "desc"]
+                        ],
+                        action: function () {
+                            $('#tblMerge').DataTable().ajax.reload();
+                        },
+                        "fnInitComplete": function () {
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus'></i></button>").insertAfter("#tblMerge_filter");
+                            $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
+                        }
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                        // let draftRecord = templateObject.datatablerecords.get();
+                        // templateObject.datatablerecords.set(draftRecord);
+                    }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+                
+
                     $('#fullScreenSpin').css('display', 'none');
 
                     templateObject.setTimeFilter('lastMonth');
+
                 }, 0);
               }
         }).catch(function (err) {
