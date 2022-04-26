@@ -58,6 +58,23 @@ Template.receiptsoverview.onRendered(function () {
     }
     templateObject.multiReceiptRecords.set(multipleRecords);
 
+    setTimeout(() => {
+        $('.multipleMerchant').editableSelect();
+        $('.multipleAccount').editableSelect();
+        $(".dtMultiple").datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            dateFormat: 'dd/mm/yy',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+        });
+    }, 200);
+
     $('.employees').editableSelect();
     $('.merchants').editableSelect();
     $('.chart-accounts').editableSelect();
@@ -68,7 +85,7 @@ Template.receiptsoverview.onRendered(function () {
         setEmployeeSelect(e);
     });
     $('.merchants').on('click', function(e, li) {
-        setSupplierSelect(e);
+        templateObject.setSupplierSelect(e);
     });
     $('.currencies').on('click', function(e, li) {
         setCurrencySelect(e);
@@ -199,7 +216,7 @@ Template.receiptsoverview.onRendered(function () {
         }, 200);
     }
 
-    function setSupplierSelect(e) {
+    templateObject.setSupplierSelect = function (e) {
         var $earch = $(e.target);
         var offset = $earch.offset();
         $('#edtSupplierPOPID').val('');
@@ -772,7 +789,7 @@ Template.receiptsoverview.onRendered(function () {
                 width: '20%',
                 render: function(data, type, row, meta) {
                     let index = meta.row + meta.settings._iDisplayStart;
-                    return '<input id="splitAmount-' + index + '" style="text-align: right" value="$' + data + '" />';
+                    return '<input id="splitAmount-' + index + '" class="form-control" style="text-align: right" value="$' + data + '" />';
                 }
             }, {
                 orderable: false,
@@ -1375,12 +1392,21 @@ Template.receiptsoverview.events({
         $('#nav-expense .receiptPhoto').attr('data-name', "");
         $('#nav-expense .img-placeholder').css('opacity', 1);
     },
-    'click a#showMultiple': function () {
+    'click a#showMultiple, click #newReceiptModal #nav-multiple-tab': function () {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-multiple-tab').addClass('active');
 
         $('#newReceiptModal .tab-pane.show.active').removeClass('show active');
         $('#newReceiptModal .tab-pane#nav-multiple').addClass('show active');
+        
+        $('.dtMultiple').val(moment().format('DD/MM/YYYY'));
+        $('.multipleAmount').val('$0');
+        $('.multipleMerchant').val('');
+        $('.multipleMerchant').attr('data-id', 0);
+        $('.multipleAccount').val('');
+        $('.multipleAccount').attr('data-id', 0);
+        $('.multipleDescription').val('');
+        $('.multipleAttach').attr('data-image', '');
     },
     'click a#showTime, click #newReceiptModal #nav-time-tab': function () {
         $('a.nav-link.active').removeClass('active');
@@ -1542,6 +1568,9 @@ Template.receiptsoverview.events({
         } else if (from == 'NavTime') {
             $('#nav-time .merchants').val(supplierName);
             $('#nav-time .merchants').attr('data-id', supplierID);
+        } else if (from.includes('multipleMerchant-')) {
+            $('#' + from).val(supplierName);
+            $('#' + from).attr('data-id', supplierID);
         }
         $('#supplierListModal').modal('toggle');
     },
@@ -1587,6 +1616,9 @@ Template.receiptsoverview.events({
 
             rowData.AccountId = parseInt(accountID);
             rowData.AccountName = accountName;
+        } else if (from.includes('multipleAccount-')) {
+            $('#' + from).val(accountName);
+            $('#' + from).attr('data-id', accountID);
         }
         $('#accountListModal').modal('toggle');
     },
@@ -1608,6 +1640,11 @@ Template.receiptsoverview.events({
         $('#paymentMethodModal').modal('toggle');
     },
 
+    'change .multipleAmount': function(e) {
+        var val = e.target.value;
+        val = val.replace('$', '');
+        e.target.value = '$' + val;
+    },
     'change .edtTotal': function(e) {
         var val = e.target.value;
         val = val.replace('$', '');
@@ -1758,93 +1795,161 @@ Template.receiptsoverview.events({
 
         let template = Template.instance();
 
-        let from = $('#employeeListModal').attr('data-from');
-        let parentElement = from == 'NavExpense' ? '#nav-expense' : '#nav-time'
+        if ($('#newReceiptModal .tab-pane#nav-multiple').hasClass('active')) {
 
-        imageData = $(parentElement + ' .receiptPhoto').css('background-image');
-        imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
+            var receipts = [];
+            let loggedUserName = Session.get('mySessionEmployee');
+            let loggedUserId = Session.get('mySessionEmployeeLoggedID');
+            for (i = 0; i < 10; i++) {
+                var amount = $('#multipleAmount-' + i).val().replace('$', '');
+                numAmount = parseFloat(amount) || 0;
+                if (numAmount > 0) {
+                    accountName = $('#multipleAccount-' + i).val();
+                    accountId = $('#multipleAccount-' + i).attr('data-id');
+                    merchantName = $('#multipleMerchant-' + i).val();
+                    merchantId = $('#multipleMerchant-' + i).attr('data-id');
+                    description = $('#multipleDescription-' + i).val();
+                    date = $('#multipleDate-' + i).val();
 
-        var attachment;
-        if (imageData != 'none') {
-            imageData = imageData.split(/"/)[1];
-            imageBase64 = imageData.split(',')[1];
-            imageDescryption = imageData.split(',')[0];
-            attachment = [
-                {
-                    type: "TAttachment",
-                    fields: {
-                        Attachment: imageBase64,
-                        AttachmentName: imageName,
-                        Description: imageDescryption,
-                        TableName: "tblexpenseclaimline"
+                    if (!accountName || !merchantName) {
+                        swal("Select merchant and account for saving receipt", '', 'warning');
+                        return;
                     }
+
+                    let expenseClaimLine = {
+                        type: "TExpenseClaimLineEx",
+                        fields: {
+                            EmployeeID: loggedUserId,
+                            EmployeeName: loggedUserName,
+                            SupplierID: merchantId ? parseInt(merchantId) : 0,
+                            SupplierName: merchantName,
+                            AccountId: accountId ? parseInt(accountId) : 0,
+                            AccountName: accountName,
+                            AmountInc: numAmount,
+                            Reimbursement: false,
+                            DateTime: moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                            Description: description || "Receipt Claim",
+                            Paymethod: ''
+                        }
+                    };
+            
+                    let expenseClaim = {
+                        type: "TExpenseClaimEx",
+                        fields: {
+                            EmployeeID: loggedUserId,
+                            EmployeeName: loggedUserName,
+                            DateTime: moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                            Description: description || "Receipt Claim",
+                            Lines: [expenseClaimLine],
+                            RequestToEmployeeID: loggedUserId,
+                            RequestToEmployeeName: loggedUserName,
+                        }
+                    }
+
+                    receipts.push(expenseClaim);
                 }
-            ]
-        }
-
-        let employeeId = $(parentElement + ' .employees').attr('data-id');
-        let employeeName = $(parentElement + ' .employees').val()  || ' ';
-        let transactionTypeId = $(parentElement + ' .transactionTypes').attr('data-id');
-        let transactionTypeName = $(parentElement + ' .transactionTypes').val() || ' ';
-        let supplierId = $(parentElement + ' .merchants').attr('data-id');
-        let supplierName = $(parentElement + ' .merchants').val() || ' ';
-        let currencyId = $(parentElement + ' .currencies').attr('data-id');
-        let currencyName = $(parentElement + ' .currencies').val() || ' ';
-        let chartAccountId = $(parentElement + ' .chart-accounts').attr('data-id');
-        let chartAccountName = $(parentElement + ' .chart-accounts').val() || ' ';
-        let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
-        let reimbursement = $(parentElement + ' .swtReiumbursable').prop('checked');
-        let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
-
-        var totalAmount = 0;
-        totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
-
-        let expenseClaimLine = {
-            type: "TExpenseClaimLineEx",
-            fields: {
-                EmployeeID: employeeId ? parseInt(employeeId) : 0,
-                EmployeeName: employeeName,
-                SupplierID: supplierId ? parseInt(supplierId) : 0,
-                SupplierName: supplierName,
-                AccountId: chartAccountId ? parseInt(chartAccountId) : 0,
-                AccountName: chartAccountName,
-                AmountInc: totalAmount ? parseFloat(totalAmount) : 0,
-                Reimbursement: reimbursement,
-                DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-                Description: description,
-                Paymethod: transactionTypeName,
-                Attachments: attachment
-                // GroupReport: groupReport,
-                // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
-                // TransactionTypeName: transactionTypeName,
-                // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                // CurrencyName: currencyName,
             }
-        };
-
-        let expenseClaim = {
-            type: "TExpenseClaimEx",
-            fields: {
-                EmployeeID: employeeId ? parseInt(employeeId) : 0,
-                EmployeeName: employeeName,
-                DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
-                Description: description,
-                Lines: [expenseClaimLine],
-                RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
-                RequestToEmployeeName: employeeName,
+            
+            $('#fullScreenSpin').css('display', 'inline-block');
+            for (i = 0; i < receipts.length; i++) {
+                accountService.saveReceipt(receipts[i]).then(function (data) {
+                    // $('#fullScreenSpin').css('display', 'none');
+                    setTimeout(() => {
+                        window.open('/receiptsoverview', '_self');
+                    }, 500);
+                }).catch ( err => {
+                    $('#fullScreenSpin').css('display', 'none');
+                });
             }
+        } else {
+            let from = $('#employeeListModal').attr('data-from');
+            let parentElement = from == 'NavExpense' ? '#nav-expense' : '#nav-time'
+
+            imageData = $(parentElement + ' .receiptPhoto').css('background-image');
+            imageName = $(parentElement + ' .receiptPhoto').attr('data-name');
+
+            var attachment;
+            if (imageData != 'none') {
+                imageData = imageData.split(/"/)[1];
+                imageBase64 = imageData.split(',')[1];
+                imageDescryption = imageData.split(',')[0];
+                attachment = [
+                    {
+                        type: "TAttachment",
+                        fields: {
+                            Attachment: imageBase64,
+                            AttachmentName: imageName,
+                            Description: imageDescryption,
+                            TableName: "tblexpenseclaimline"
+                        }
+                    }
+                ]
+            }
+
+            let employeeId = $(parentElement + ' .employees').attr('data-id');
+            let employeeName = $(parentElement + ' .employees').val()  || ' ';
+            let transactionTypeId = $(parentElement + ' .transactionTypes').attr('data-id');
+            let transactionTypeName = $(parentElement + ' .transactionTypes').val() || ' ';
+            let supplierId = $(parentElement + ' .merchants').attr('data-id');
+            let supplierName = $(parentElement + ' .merchants').val() || ' ';
+            let currencyId = $(parentElement + ' .currencies').attr('data-id');
+            let currencyName = $(parentElement + ' .currencies').val() || ' ';
+            let chartAccountId = $(parentElement + ' .chart-accounts').attr('data-id');
+            let chartAccountName = $(parentElement + ' .chart-accounts').val() || ' ';
+            let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
+            let reimbursement = $(parentElement + ' .swtReiumbursable').prop('checked');
+            let description = $(parentElement + ' #txaDescription').val() || 'Receipt Claim';
+
+            var totalAmount = 0;
+            totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
+
+            let expenseClaimLine = {
+                type: "TExpenseClaimLineEx",
+                fields: {
+                    EmployeeID: employeeId ? parseInt(employeeId) : 0,
+                    EmployeeName: employeeName,
+                    SupplierID: supplierId ? parseInt(supplierId) : 0,
+                    SupplierName: supplierName,
+                    AccountId: chartAccountId ? parseInt(chartAccountId) : 0,
+                    AccountName: chartAccountName,
+                    AmountInc: totalAmount ? parseFloat(totalAmount) : 0,
+                    Reimbursement: reimbursement,
+                    DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    Description: description,
+                    Paymethod: transactionTypeName,
+                    Attachments: attachment
+                    // GroupReport: groupReport,
+                    // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
+                    // TransactionTypeName: transactionTypeName,
+                    // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                    // CurrencyName: currencyName,
+                }
+            };
+
+            let expenseClaim = {
+                type: "TExpenseClaimEx",
+                fields: {
+                    EmployeeID: employeeId ? parseInt(employeeId) : 0,
+                    EmployeeName: employeeName,
+                    DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    Description: description,
+                    Lines: [expenseClaimLine],
+                    RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
+                    RequestToEmployeeName: employeeName,
+                }
+            }
+
+            console.log('ExpenseClaim', expenseClaim)
+
+            $('#fullScreenSpin').css('display', 'inline-block');
+            accountService.saveReceipt(expenseClaim).then(function (data) {
+                console.log('update receipt result', data);
+                // $('#fullScreenSpin').css('display', 'none');
+                // setTimeout(() => {
+                    window.open('/receiptsoverview', '_self');
+                // }, 200);
+            });
         }
-
-        console.log('ExpenseClaim', expenseClaim)
-
-        $('#fullScreenSpin').css('display', 'inline-block');
-        accountService.saveReceipt(expenseClaim).then(function (data) {
-            console.log('update receipt result', data);
-            // $('#fullScreenSpin').css('display', 'none');
-            // setTimeout(() => {
-                window.open('/receiptsoverview', '_self');
-            // }, 200);
-        });
     },
     'click #btnShowSplitModal': function(e) {
         let template = Template.instance();
@@ -2128,6 +2233,16 @@ Template.receiptsoverview.events({
         $('#employeeListModal').attr('data-from', e.target.id);
         let template = Template.instance();
         template.setAccountSelect(e);
+    },
+    'click input[id^="multipleAccount-"]': function(e) {
+        $('#employeeListModal').attr('data-from', e.target.id);
+        let template = Template.instance();
+        template.setAccountSelect(e);
+    },
+    'click input[id^="multipleMerchant-"]': function(e) {
+        $('#employeeListModal').attr('data-from', e.target.id);
+        let template = Template.instance();
+        template.setSupplierSelect(e);
     },
     'click button[id^="splitRemove-"]': function(e) {
         let index = e.target.id.split('-')[1];

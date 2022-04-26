@@ -889,7 +889,7 @@
                                         <div class="col-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
-                                                <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="" readonly>
+                                                <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
                                         <div class="col-4">
@@ -982,45 +982,45 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-multiple" role="tabpanel" aria-labelledby="nav-multiple-tab">
-                            <table id="tblMultipleReceipt" style="width:100%; margin-top: 0px !important; margin-bottom: 0px !important;" class="dataTable table table-striped table-bordered">
+                            <table id="tblMultipleReceipt" style="width:100%; margin-top: 0px !important; margin-bottom: 0px !important;table-layout:fixed;" class="table table-striped table-bordered">
                                 <thead>
                                     <tr class="dnd-moved">
-                                        <th class="th col" style="width: 140px;">Date</th>
-                                        <th class="th col" style="width: 20%;">Merchant</th>
-                                        <th class="th col" style="width: 10%;">Amount</th>
-                                        <th class="th col" style="width: 10%;">Currency</th>
-                                        <th class="th col" style="width: 3%;"></th>
-                                        <th class="th col" style="width: 20%;">Account</th>
-                                        <th class="th col" >Description</th>
+                                        <th class="th" style="width: 160px;">Date</th>
+                                        <th class="th" style="width: 20%;">Merchant</th>
+                                        <th class="th" style="width: 100px;">Amount</th>
+                                        <th class="th" style="width: 10%;">Currency</th>
+                                        <th class="th" style="width: 3%;"></th>
+                                        <th class="th" style="width: 20%;">Account</th>
+                                        <th class="th" >Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#if multiReceiptRecords}}
-                                        {{#each item in multiReceiptRecords}}
-                                        <tr class="dnd-moved" style="cursor: pointer;">
-                                            <td contenteditable="false" class="col" style="width: 140px;">
-                                                <div class="input-group date" style="cursor: pointer;">
-                                                    <input type="text" class="form-control dtMultiple" name="dtMultiple" value="{{item.date}}">
-                                                    <div class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                    </div>
+                                    {{#each item in multiReceiptRecords}}
+                                    <tr class="dnd-moved" style="cursor: pointer;">
+                                        <td contenteditable="false">
+                                            <div class="input-group date" style="cursor: pointer;">
+                                                <input type="text" class="form-control dtMultiple" id="multipleDate-{{@index}}" name="dtMultiple" value="{{item.date}}">
+                                                <div class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                                 </div>
-                                            </td>
-                                            <td contenteditable="false" class="col" style="width: 20%;">
-                                                <select type="search" id="multipleMerchant-{{@index}}" class="form-control" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
-                                            </td>
-                                            <td contenteditable="false" class="col" style="width: 10%; text-align: right;">
-                                                <input id="multipleAmount-{{@index}}" style="text-align: right" value="${{item.amount}}" />
-                                            </td>
-                                            <td contenteditable="false" class="col" style="width: 10%;">{{item.currency}}</td>
-                                            <td contenteditable="false" id="multipleAttach-{{@index}}" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                            <td contenteditable="false" class="col" style="width: 20%;">
-                                                <select type="search" id="multipleAccount-{{@index}}" class="form-control" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
-                                            </td>
-                                            <td contenteditable="false" class="col" >{{item.description}}</td>
-                                        </tr>
-                                        {{/each}}
-                                    {{/if}}
+                                            </div>
+                                        </td>
+                                        <td contenteditable="false">
+                                            <select type="search" id="multipleMerchant-{{@index}}" class="form-control multipleMerchant" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
+                                        </td>
+                                        <td>
+                                            <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
+                                        </td>
+                                        <td contenteditable="false">{{item.currency}}</td>
+                                        <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
+                                        <td contenteditable="false">
+                                            <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
+                                        </td>
+                                        <td>
+                                            <input id="multipleDescription-{{@index}}" class="form-control multipleDescription" style="width: 100%;" value="{{item.description}}" />
+                                        </td>
+                                    </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
