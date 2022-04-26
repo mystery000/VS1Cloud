@@ -230,6 +230,8 @@ ERPObjects = function () {
         TEmployeePayrollSettings: "TEmployeePayrollSettings",
         TPayrollNotes: "TPayrollNotes",
         TPayrollTaxes: "TPayrollTaxes",
+        Tprojectlist: "Tprojectlist",
+        Tprojecttasks: "Tprojecttasks",
     }
     return objects;
 }

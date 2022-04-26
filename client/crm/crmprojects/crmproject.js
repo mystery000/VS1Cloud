@@ -9,12 +9,10 @@ Template.projects.onCreated(function () {
   console.log('onCreated...')
 
   const templateObject = Template.instance();
-  templateObject.allrecords = new ReactiveVar([]);
-  templateObject.todayRecords = new ReactiveVar([]);
-  templateObject.upcomingRecords = new ReactiveVar([]);
-  templateObject.overdueRecords = new ReactiveVar([]);
+  templateObject.active_projects = new ReactiveVar([]);
+  templateObject.archived_projects = new ReactiveVar([]);
   templateObject.selected_id = new ReactiveVar(0);
-  templateObject.selected_ttodo = new ReactiveVar('');
+  templateObject.selected_project = new ReactiveVar('');
 
 });
 
@@ -35,7 +33,7 @@ Template.projects.onRendered(function () {
     },
   });
 
-  $("#date-input, #dtRescheduleDate").datepicker({
+  $(".hasDatepicker").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
     buttonImageOnly: true,
@@ -51,35 +49,27 @@ Template.projects.onRendered(function () {
 
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
-  templateObject.selected_ttodo.set(null);
+  templateObject.selected_project.set(null);
 
-  templateObject.getAllTaskList = function () {
-    crmService.getTTodoTaskList().then(function (data) {
+  templateObject.getTProjectList = function () {
+    crmService.getTProjectList().then(function (data) {
+      console.log(data)
+      if (data.tprojectlist && data.tprojectlist.length > 0) {
 
-      if (data.ttodo && data.ttodo.length > 0) {
+        let active_projects = data.tprojectlist.filter(project => project.fields.Active == true);
+        let archived_projects = data.tprojectlist.filter(project => project.fields.Active == false);
+        // let active_projects = data.tprojectlist.sort(function (a, b) {
+        //   return (a.Recno > b.Recno) ? 1 : -1;
+        // }); 
 
-        let today = moment().format('YYYY-MM-DD');
-        let allrecords = data.ttodo.sort(function (a, b) {
-          return (a.Recno > b.Recno) ? 1 : -1;
-        });
+        templateObject.active_projects.set(active_projects);
+        templateObject.archived_projects.set(archived_projects);
 
-        let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
-        let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
-        let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
-
-        $('.crm_all_count').text(allrecords.length);
-        $('.crm_today_count').text(today_records.length);
-        $('.crm_upcoming_count').text(upcoming_records.length);
-
-        templateObject.allrecords.set(allrecords);
-        templateObject.todayRecords.set(today_records);
-        templateObject.upcomingRecords.set(upcoming_records);
-        templateObject.overdueRecords.set(overdue_records);
+        console.log('active_projects', active_projects)
+        console.log('archived_projects', archived_projects)
 
       } else {
-        $('.crm_all_count').text(0);
-        $('.crm_today_count').text(0);
-        $('.crm_upcoming_count').text(0);
+
       }
 
     }).catch(function (err) {
@@ -87,7 +77,7 @@ Template.projects.onRendered(function () {
     });
   }
 
-  templateObject.getAllTaskList();
+  templateObject.getTProjectList();
 });
 
 Template.projects.events({
@@ -562,28 +552,17 @@ Template.projects.events({
 
 Template.projects.helpers({
   getProjectName: () => {
-
     let url = new URL(window.location.href);
     let searchID = parseInt(url.searchParams.get("id")) || 0;
     return 'Project ' + searchID;
   },
-  allrecords: () => {
-    return Template.instance().allrecords.get();
+
+  active_projects: () => {
+    return Template.instance().active_projects.get();
   },
 
-  overdueRecords: () => {
-    return Template.instance().overdueRecords.get().slice(0, 3);
-    return Template.instance().overdueRecords.get();
-  },
-
-  todayRecords: () => {
-    // return Template.instance().allrecords.get().slice(4, 6);
-    return Template.instance().todayRecords.get();
-  },
-
-  upcomingRecords: () => {
-    // return Template.instance().allrecords.get().slice(7, 9);
-    return Template.instance().upcomingRecords.get();
+  archived_projects: () => {
+    return Template.instance().archived_projects.get();
   },
 
   getTodoDate: (date, format) => {

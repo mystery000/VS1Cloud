@@ -14,6 +14,20 @@ Template.alltasks.onCreated(function () {
   templateObject.selected_id = new ReactiveVar(0);
   templateObject.selected_ttodo = new ReactiveVar('');
 
+  $(".hasDatepicker").datepicker({
+    showOn: 'button',
+    buttonText: 'Show Date',
+    buttonImageOnly: true,
+    buttonImage: '/img/imgCal2.png',
+    constrainInput: false,
+    dateFormat: 'd/mm/yy',
+    showOtherMonths: true,
+    selectOtherMonths: true,
+    changeMonth: true,
+    changeYear: true,
+    yearRange: "-90:+10",
+  });
+
 });
 
 Template.alltasks.onRendered(function () {
@@ -33,7 +47,7 @@ Template.alltasks.onRendered(function () {
     },
   });
 
-  $("#date-input, #dtRescheduleDate").datepicker({
+  $(".hasDatepicker").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
     buttonImageOnly: true,
