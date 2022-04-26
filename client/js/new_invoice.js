@@ -12209,7 +12209,7 @@ Template.new_invoice.onRendered(() => {
 
           setTimeout(function () {
             let selectPayID = selectedCustomerPaymentID;
-            if (selectPayID.length === 0) {
+            if (selectPayID.length === 1) {
               window.open('/paymentcard?id=' + selectPayID, '_self');
             } else {
               window.open('/customerpayment?payment=' + selectPayID +'&name=' + customername, '_self');
