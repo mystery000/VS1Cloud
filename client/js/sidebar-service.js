@@ -469,6 +469,16 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployee, options);
   }
 
+  getLeadByName(dataSearchName) {
+
+    let options = '';
+    options = {
+     ListType: "Detail",
+     select: '[EnteredByEmployee] f7like "'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TLeads, options);
+  }
+
 
    getNewSupplierByNameOrID(dataSearchName) {
     let options = '';
@@ -846,6 +856,20 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       };
     }
     return this.getList(this.ERPObjects.TEmployee, options);
+  }
+
+  getAllLeads(limitcount, limitfrom) {
+    let options = '';
+    if(limitcount == 'All'){
+       options = {
+        ListType: "Detail",
+       };
+    }else{
+      options = {
+          ListType: "Detail",
+      };
+    }
+    return this.getList(this.ERPObjects.TLeads, options);
   }
 
   getAllEmployeesDataVS1(limitcount, limitfrom) {
