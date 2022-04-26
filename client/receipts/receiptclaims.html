@@ -9,9 +9,9 @@
             }
         </style> -->
         <header style="padding: 16px;padding-bottom: 0px;">
-            <h2 style="margin: 14px;margin-bottom: 0px;">Receipt Claims
+            <h2 class="pageHeader" style="margin: 14px;margin-bottom: 0px;">Receipt Claims
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                <a role="button" class="helpBtn" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -34,10 +34,43 @@
             </h2>
         </header>
 
-        <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 16px;">
-            <div class="col-12">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh m-1 m-md-3" type="button"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>                
-                <div class="btn-group m-1 m-md-3">
+        <style>
+            .btnOpenSettingsMobile {
+                display: none;
+            }
+
+            @media screen and (max-width: 450px) {
+                .pageHeader {
+                    margin: 14px 4px !important;
+                }
+                .helpBtn {
+                    float: right;
+                    margin-top: 8px;
+                }
+
+                .navButtons {
+                    margin-top: 42px;
+                    margin-bottom: 16px;
+                }
+
+                .btnNav {
+                    width: 90%;
+                }
+
+                .btnOpenSettingsDesktop {
+                    display: none;
+                }
+
+                .btnOpenSettingsMobile {
+                    display: block;
+                }
+            }
+        </style>
+
+        <div class="row d-xl-flex flex-row justify-content-xl-center navButtons" style="padding: 0px 16px;">
+            <div class="col-6">
+                <button id="btnRefresh" class="btn btn-primary btnRefresh m-1 m-md-3 btnNav" type="button"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                <div class="btn-group m-1 m-md-3 btnNav">
                     <button type="button" class="btn btn-primary btnNewReceipt" data-toggle="modal" data-target="#newReceiptModal"><i class="icon ion-plus" style="margin-right: 5px;"></i>New Receipt</button>
                     <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-caret-down"></i>
@@ -50,12 +83,15 @@
                         <a class="dropdown-item" href="" data-toggle="modal" data-target="#newReceiptModal" id="showTime">Time</a>
                     </div>
                 </div>
-                <a class="btn btnOpenSettings float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary printConfirm float-right m-1 m-md-3" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                <button id="exportbtn" class="btn btn-primary float-right m-1 m-md-3" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+            </div>
+            <div class="col-6">
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btn-primary printConfirm float-right btnNav m-1 m-md-3" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                <button id="exportbtn" class="btn btn-primary float-right btnNav m-1 m-md-3" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
             <!-- <div class="col-12">
-                
+
             </div> -->
         </div>
         <div class="px-md-3">
@@ -140,11 +176,19 @@
 
                                                                 {{#if equals item.sVisible true}}
                                                                     <script>
-                                                                        $("#" + {{tem.sIndex}} + ".chkDatatable").attr("checked", "checked");
+                                                                        $("#" + {
+                                                                            {
+                                                                                tem.sIndex
+                                                                            }
+                                                                        } + ".chkDatatable").attr("checked", "checked");
                                                                     </script>
                                                                 {{else}}
                                                                     <script>
-                                                                        $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
+                                                                        $("#" + {
+                                                                            {
+                                                                                item.sIndex
+                                                                            }
+                                                                        } + ".chkDatatable").removeAttr("checked");
                                                                     </script>
                                                                 {{/if}}
 
@@ -199,6 +243,7 @@
                         input[type=number]::-webkit-outer-spin-button {
                             opacity: 1;
                         }
+
                         input[type=search]#tblReceiptList_filter {
                             width: 150px !important;
                         }
@@ -261,21 +306,21 @@
                         </thead>
                         <tbody>
                             {{#if expenseClaimList}}
-                            {{#each item in expenseClaimList}}
-                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="col" style="width: 2%;">
-                                    <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
-                                        <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}" >
-                                        <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
-                                    </div>
-                                </td>
-                                <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
-                                <td contenteditable="false" class="colReceiptMerchant" >{{item.SupplierName}}</td>
-                                <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
-                                <td contenteditable="false" class="colReceiptAccount" >{{item.AccountName}}</td>
-                                <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
-                            </tr>
-                            {{/each}}
+                                {{#each item in expenseClaimList}}
+                                    <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
+                                        <td contenteditable="false" class="col" style="width: 2%;">
+                                            <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}">
+                                                <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
+                                            </div>
+                                        </td>
+                                        <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
+                                        <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
+                                        <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
+                                        <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                        <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                    </tr>
+                                {{/each}}
                             {{/if}}
                         </tbody>
                     </table>
@@ -342,20 +387,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-6 col-md-8">
                                     <div class="form-group">
                                         <label>Total Amount</label>
                                         <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6 col-md-4">
                                     <div class="form-group">
                                         <label>Currency</label>
                                         <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                     </div>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <div class="custom-control custom-switch">
+                                <div class="col-6">
+                                    <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursable" style="cursor: pointer;" checked="{{#if editExpenseClaim.Reimbursement}}checked{{/if}}">
                                         <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reiumbursable</label>
                                     </div>
@@ -680,21 +725,21 @@
                                 </thead>
                                 <tbody>
                                     {{#if expenseClaimList}}
-                                    {{#each item in expenseClaimList}}
-                                    <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 2%;">
-                                            <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
-                                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}" >
-                                                <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
-                                            </div>
-                                        </td>
-                                        <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
-                                        <td contenteditable="false" class="colReceiptMerchant" >{{item.SupplierName}}</td>
-                                        <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
-                                        <td contenteditable="false" class="colReceiptAccount" >{{item.AccountName}}</td>
-                                        <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
-                                    </tr>
-                                    {{/each}}
+                                        {{#each item in expenseClaimList}}
+                                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
+                                                <td contenteditable="false" class="col" style="width: 2%;">
+                                                    <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
+                                                        <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}">
+                                                        <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
+                                                    </div>
+                                                </td>
+                                                <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
+                                                <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
+                                                <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
+                                                <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                                <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                            </tr>
+                                        {{/each}}
                                     {{/if}}
                                 </tbody>
                             </table>
@@ -767,20 +812,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-6 col-md-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="form-group">
                                                 <label>Currency</label>
                                                 <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
-                                        <div class="col-12 mb-3">
-                                            <div class="custom-control custom-switch">
+                                        <div class="col-6">
+                                            <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableExpense" style="cursor: pointer;">
                                                 <label class="custom-control-label" for="swtReiumbursableExpense" style="cursor: pointer;">Reiumbursable</label>
                                             </div>
@@ -901,20 +946,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-6 col-md-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="form-group">
                                                 <label>Currency</label>
                                                 <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
-                                        <div class="col-12 mb-3">
-                                            <div class="custom-control custom-switch">
+                                        <div class="col-6">
+                                            <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">
                                                 <label class="custom-control-label" for="swtReiumbursableTime" style="cursor: pointer;">Reiumbursable</label>
                                             </div>
@@ -1006,35 +1051,35 @@
                                         <th class="th" style="width: 10%;">Currency</th>
                                         <th class="th" style="width: 3%;"></th>
                                         <th class="th" style="width: 20%;">Account</th>
-                                        <th class="th" >Description</th>
+                                        <th class="th">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {{#each item in multiReceiptRecords}}
-                                    <tr class="dnd-moved" style="cursor: pointer;">
-                                        <td contenteditable="false">
-                                            <div class="input-group date" style="cursor: pointer;">
-                                                <input type="text" class="form-control dtMultiple" id="multipleDate-{{@index}}" name="dtMultiple" value="{{item.date}}">
-                                                <div class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        <tr class="dnd-moved" style="cursor: pointer;">
+                                            <td contenteditable="false">
+                                                <div class="input-group date" style="cursor: pointer;">
+                                                    <input type="text" class="form-control dtMultiple" id="multipleDate-{{@index}}" name="dtMultiple" value="{{item.date}}">
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td contenteditable="false">
-                                            <select type="search" id="multipleMerchant-{{@index}}" class="form-control multipleMerchant" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
-                                        </td>
-                                        <td>
-                                            <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
-                                        </td>
-                                        <td contenteditable="false">{{item.currency}}</td>
-                                        <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false">
-                                            <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;" ></select>
-                                        </td>
-                                        <td>
-                                            <input id="multipleDescription-{{@index}}" class="form-control multipleDescription" style="width: 100%;" value="{{item.description}}" />
-                                        </td>
-                                    </tr>
+                                            </td>
+                                            <td contenteditable="false">
+                                                <select type="search" id="multipleMerchant-{{@index}}" class="form-control multipleMerchant" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                            </td>
+                                            <td>
+                                                <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
+                                            </td>
+                                            <td contenteditable="false">{{item.currency}}</td>
+                                            <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
+                                            <td contenteditable="false">
+                                                <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                            </td>
+                                            <td>
+                                                <input id="multipleDescription-{{@index}}" class="form-control multipleDescription" style="width: 100%;" value="{{item.description}}" />
+                                            </td>
+                                        </tr>
                                     {{/each}}
                                 </tbody>
                             </table>
@@ -1101,7 +1146,7 @@
                     {{> employeelistpop}}
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
         </div>
