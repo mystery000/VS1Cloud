@@ -25,8 +25,11 @@ export default class draggableCharts {
           stop: async (event, ui) => {
             // console.log($(ui.item[0]));
             console.log('Dropped the sortable chart');
-            ChartHandler.buildPositions();
+            $(".fullScreenSpin").css("display", "block");
+            await ChartHandler.buildPositions();
             await ChartHandler.saveCharts();
+            await ChartHandler.saveChartsInLocalDB();
+            $(".fullScreenSpin").css("display", "none");
           },
         })
         .disableSelection();

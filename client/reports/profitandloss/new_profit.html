@@ -161,10 +161,8 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-md-6" style="padding-top: 32px;">
-                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button"
-                                    style="margin: 16px;"><i class="la la-lightbulb-o"
-                                        style="padding-right: 5px;"></i>Update</button>
+                            <div class="col-12 col-md-5" style="padding-top: 32px;">
+                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Update</button>
                                 <div class="dropdown btnNav periodSelector float-left" style="margin: 16px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -239,7 +237,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-2">
+                                <style>
+                                    #uploadedImage {
+                                        margin: 0 auto !important;
+                                    }
+                                </style>
+                                <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
+                            </div>
+                            <div class="col-12 col-md-5">
                                 <div class="form-group float-right" style="margin: 16px;">
                                     <label>To</label>
                                     <div class="input-group date" style="width: 160px;">
@@ -545,6 +551,13 @@
                                             </tr> -->
 
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="9" style="text-align: center; background-color: #fff; padding-top: 32px;">
+                                                    Powered by <a href="https:/www.vs1cloud.com" target="_blank">VS1Cloud</a>
+                                                </th>
+                                            </tr>
+                                        </tfoot>
                                         <!-- {{#if records}}
                                             <tbody class = "tblGroupAcc">
                                                 {{#each item in records}}
@@ -1667,7 +1680,7 @@
                                         <i account-type="{{ value.item.accounttype }}"></i>
                                         {{#each item in value}}
                                         {{#if notEquals item.accounttype ""}}
-                                        
+
                                         {{#if containsequals item.accounttype "Total"}}
                                         <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
                                             <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>

@@ -29,6 +29,13 @@ Template.newprofitandloss.onRendered(function () {
     fromDateMonth = "0" + (currentDate.getMonth() + 1);
   }
 
+  let imageData= (localStorage.getItem("Image"));
+  if(imageData)
+  {
+      $('#uploadedImage').attr('src', imageData);
+      $('#uploadedImage').attr('width','50%');
+  }
+
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }

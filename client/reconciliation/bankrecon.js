@@ -27,22 +27,22 @@ Template.bankrecon.onRendered(function() {
         let paymentType = $(this).closest('tr').find(".colPaymentType").text();
         let selectDepositID = $(this).closest('tr').find(".colDepositID").text();
 
-        if (paymentType === "Customer Payment") {
+        if (paymentType == "Customer Payment") {
             if (selectDepositID) {
                 FlowRouter.go('/paymentcard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Cheque Deposit" || paymentType === "Cheque") {
+        if (paymentType == "Cheque Deposit" || paymentType == "Cheque") {
             if (selectDepositID) {
                 FlowRouter.go('/chequecard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Deposit Entry") {
+        if (paymentType == "Deposit Entry") {
             if (selectDepositID) {
                 FlowRouter.go('/depositcard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Journal Entry") {
+        if (paymentType == "Journal Entry") {
             if (selectDepositID) {
                 FlowRouter.go('/journalentrycard?id=' + selectDepositID);
             }
@@ -53,22 +53,22 @@ Template.bankrecon.onRendered(function() {
         let paymentType = $(this).closest('tr').find(".colPaymentType").text();
         let selectWithdrawalID = $(this).closest('tr').find(".colWithdrawlID").text();
 
-        if (paymentType === "Supplier Payment") {
+        if (paymentType == "Supplier Payment") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/supplierpaymentcard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Cheque") {
+        if (paymentType == "Cheque") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/chequecard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Journal Entry") {
+        if (paymentType == "Journal Entry") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/journalentrycard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Split Deposit") {
+        if (paymentType == "Split Deposit") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/depositcard?id=' + selectWithdrawalID);
             }
@@ -87,7 +87,7 @@ Template.bankrecon.onRendered(function() {
                         accountid: data.taccountvs1[i].Id || ' ',
                         accountname: data.taccountvs1[i].AccountName || ' '
                     };
-                    if ((data.taccountvs1[i].AccountTypeName === 'BANK') || (data.taccountvs1[i].AccountTypeName === 'CCARD')) {
+                    if ((data.taccountvs1[i].AccountTypeName == 'BANK') || (data.taccountvs1[i].AccountTypeName == 'CCARD')) {
                         accountnamerecords.push(accountnamerecordObj);
                         templateObject.accountnamerecords.set(accountnamerecords);
                     }
@@ -98,11 +98,11 @@ Template.bankrecon.onRendered(function() {
                 let bankaccountid = Session.get('bankaccountid') || '';
                 let bankaccountname = Session.get('bankaccountname') || '';
                 let statementDate = localStorage.getItem('statementdate')|| '';
-                
-                if(statementDate !== ''){
+
+                if(statementDate != ''){
                     $('.statementDate').val(statementDate);
                 }
-                if (bankaccountid !== '') {
+                if (bankaccountid != '') {
                     $('#bankAccountID').val(bankaccountid);
                     $('#bankAccountName').val(bankaccountname);
                     var statementDateData = new Date($(".statementDate").datepicker("getDate"));
@@ -154,21 +154,22 @@ Template.bankrecon.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         recService.getToBeReconciledDeposit(accountTypeId, statementDate, ignoreDate).then(function(data) {
             if (data.ttobereconcileddeposit.length > 0) {
-                for (let i = 0; i < data.ttobereconcileddeposit; i++ ) {
-                    let depositamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconcileddeposit[i].Amount) || 0.00;
+                // for (let r = 0; r < data.ttobereconcileddeposit; r++ ) {
+                  for (let r in data.ttobereconcileddeposit) {
+                    let depositamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconcileddeposit[r].Amount) || 0.00;
                     let reconciledepositObj = {
-                        sortdate: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("YYYY-MM-DD") : data.ttobereconcileddeposit[i].DepositDate,
-                        recondepdate: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[i].DepositDate,
-                        recondepname: data.ttobereconcileddeposit[i].CompanyName || ' ',
-                        recondeppaymenttype: data.ttobereconcileddeposit[i].Notes || ' ',
+                        sortdate: data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("YYYY-MM-DD") : data.ttobereconcileddeposit[r].DepositDate,
+                        recondepdate: data.ttobereconcileddeposit[r].DepositDate != '' ? moment(data.ttobereconcileddeposit[r].DepositDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[r].DepositDate,
+                        recondepname: data.ttobereconcileddeposit[r].CompanyName || ' ',
+                        recondeppaymenttype: data.ttobereconcileddeposit[r].Notes || ' ',
                         recondepamount: depositamount || 0.00,
-                        recondepid: data.ttobereconcileddeposit[i].DepositID || ' ',
-                        recondepref: data.ttobereconcileddeposit[i].ReferenceNo || ' ',
-                        seqdepnum: data.ttobereconcileddeposit[i].Seqno || 0,
-                        recondeppaymentid: data.ttobereconcileddeposit[i].PaymentID || 0,
-                        depositLineID: data.ttobereconcileddeposit[i].DepositLineID || 0,
+                        recondepid: data.ttobereconcileddeposit[r].DepositID || ' ',
+                        recondepref: data.ttobereconcileddeposit[r].ReferenceNo || ' ',
+                        seqdepnum: data.ttobereconcileddeposit[r].Seqno || 0,
+                        recondeppaymentid: data.ttobereconcileddeposit[r].PaymentID || 0,
+                        depositLineID: data.ttobereconcileddeposit[r].DepositLineID || 0,
                     };
-                    if (data.ttobereconcileddeposit[i].Seqno !== 0) {
+                    if (data.ttobereconcileddeposit[r].Seqno != 0) {
                         recondep.push(reconciledepositObj);
                     }
                 }
@@ -260,8 +261,8 @@ Template.bankrecon.onRendered(function() {
                 for (let j in data.ttobereconciledwithdrawal) {
                     let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.ttobereconciledwithdrawal[j].Amount) || 0.00;
                     let reconcilewithdrawalObj = {
-                        sortdate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : data.ttobereconciledwithdrawal[i].DepositDate,
-                        reconwithdate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
+                        sortdate: data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : data.ttobereconciledwithdrawal[i].DepositDate,
+                        reconwithdate: data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].DepositDate,
                         reconwithname: data.ttobereconciledwithdrawal[j].CompanyName || ' ',
                         reconwithpaymenttype: data.ttobereconciledwithdrawal[j].Notes || ' ',
                         reconwithamount: withdrawalamount || 0.00,
@@ -271,7 +272,7 @@ Template.bankrecon.onRendered(function() {
                         reconwithpaymentid: data.ttobereconciledwithdrawal[j].DepositID || 0,
                         depositLineID: data.ttobereconciledwithdrawal[j].DepositLineID || 0,
                     };
-                    if (data.ttobereconciledwithdrawal[j].Seqno !== 0) {
+                    if (data.ttobereconciledwithdrawal[j].Seqno != 0) {
                         reconwith.push(reconcilewithdrawalObj);
                         // templateObject.reconVS1with.set(reconwith);
                     }
@@ -366,7 +367,7 @@ Template.bankrecon.onRendered(function() {
             if (data.treconciliation.length) {
                 for (let k in data.treconciliation) {
                     //if(data.treconciliation[k].CloseBalance > 0){
-                    if (data.treconciliation[k].AccountName === bankAccount) {
+                    if (data.treconciliation[k].AccountName == bankAccount) {
                         // counter++;
                         let objData = {
                             Id: data.treconciliation[k].Id,
@@ -378,7 +379,7 @@ Template.bankrecon.onRendered(function() {
 
                         dataArray.push(objData);
                         if (FlowRouter.current().queryParams.id) {} else {
-                            if (data.treconciliation[k].OnHold === true) {
+                            if (data.treconciliation[k].OnHold == true) {
                                 Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
                                 Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
                                 window.open('/bankrecon?id=' + data.treconciliation[k].Id, '_self');
@@ -389,12 +390,12 @@ Template.bankrecon.onRendered(function() {
                     }
                     //}
                 }
-                if (dataArray.length === 0) {
+                if (dataArray.length == 0) {
                     openBal = 0;
                 } else {
                     for (let j in dataArray) {
 
-                      if(dataArray[dataArray.length - 1].OnHold === true){
+                      if(dataArray[dataArray.length - 1].OnHold == true){
                         openBal = dataArray[dataArray.length - 1].OpenBalance;
                       }else{
                         openBal = dataArray[dataArray.length - 1].CloseBalance;
@@ -426,7 +427,7 @@ Template.bankrecon.onRendered(function() {
                 let lastElement = data.treconciliation[data.treconciliation.length - 1];
                 latestReconId = (lastElement.Id);
 
-                if (latestReconId === parseInt(currentRecon)) {
+                if (latestReconId == parseInt(currentRecon)) {
                     $('.btnDeleteRecon').prop("disabled", false);
                 } else {
                     $('.btnDeleteRecon').prop("disabled", true);
@@ -670,12 +671,12 @@ Template.bankrecon.onRendered(function() {
                                 for (let j in data.fields.WithdrawalLines) {
                                     let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
                                     let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
-                                    if (data.fields.WithdrawalLines[j].fields.Notes === 'Customer Payment') {
+                                    if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
                                         reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
                                     }
                                     let reconcilewithdrawalObj = {
-                                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
                                         reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
                                         reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
                                         reconwithamount: withdrawalamount || 0.00,
@@ -694,7 +695,7 @@ Template.bankrecon.onRendered(function() {
 
                                 $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
                                 if (templateObject.reconVS1with.get()) {
-                                  if (data.fields.OnHold === false) {
+                                  if (data.fields.OnHold == false) {
                                     setTimeout(function() {
                                         $('#tblVS1With').DataTable({
                                             "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -750,7 +751,7 @@ Template.bankrecon.onRendered(function() {
                                     }, 0);
                                   }
                                 }
-                                if (data.fields.OnHold === false) {
+                                if (data.fields.OnHold == false) {
                                     setTimeout(function() {
                                         $('.tblVS1With tr').each(function() {
                                             var $tblrow = $(this);
@@ -829,7 +830,7 @@ Template.bankrecon.onRendered(function() {
                         //$('#hideSelectionToggle').css('pointer-events', 'none');
 
 
-                        if (data.fields.OnHold === true) {
+                        if (data.fields.OnHold == true) {
                           Session.setPersistent('bankaccountid', data.fields.AccountID);
                           Session.setPersistent('bankaccountname', data.fields.AccountName);
                           templateObject.getAccountNames();
@@ -843,7 +844,7 @@ Template.bankrecon.onRendered(function() {
                     let useData = data.treconciliation;
                     var added = false;
                     for (let d = 0; d < useData.length; d++) {
-                        if (parseInt(useData[d].fields.ID) === currentRecon) {
+                        if (parseInt(useData[d].fields.ID) == currentRecon) {
                             added = true;
                             $('.fullScreenSpin').css('display', 'none');
                             let recondep = [];
@@ -872,7 +873,7 @@ Template.bankrecon.onRendered(function() {
                             $('.differenceCalc').text(Currency + "0.00" || 0);
                             // $('.depositAmount').val(utilityService.modifynegativeCurrencyFormat(depositAmount) || 0);
                             // $('.withdrawalAmount').val(utilityService.modifynegativeCurrencyFormat(withdrawalAmount) || 0);
-                            if (useData[d].fields.OnHold === false) {
+                            if (useData[d].fields.OnHold == false) {
                                 $('#bankAccountName').attr('disabled', 'disabled');
                                 $('#bankAccountName').attr('readonly', true);
                                 $('.openingbalance').attr('readonly', true);
@@ -895,12 +896,12 @@ Template.bankrecon.onRendered(function() {
                                         if (useData[d].fields.DepositLines.hasOwnProperty(i)) {
                                             let depositamount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.DepositLines[i].fields.Amount) || 0.00;
                                             let reconepID = useData[d].fields.DepositLines[i].fields.ID;
-                                            if (useData[d].fields.DepositLines[i].fields.Notes === 'Customer Payment') {
+                                            if (useData[d].fields.DepositLines[i].fields.Notes == 'Customer Payment') {
                                                 reconepID = useData[d].fields.DepositLines[i].fields.PaymentID;
                                             }
                                             let reconciledepositObj = {
-                                                sortdate: useData[d].fields.DepositLines[i].fields.DepositDate !== '' ? moment(useData[d].fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : useData[d].fields.DepositLines[i].fields.DepositDate,
-                                                recondepdate: useData[d].fields.DepositLines[i].fields.DepositDate !== '' ? moment(useData[d].fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : useData[d].fields.DepositLines[i].fields.DepositDate,
+                                                sortdate: useData[d].fields.DepositLines[i].fields.DepositDate != '' ? moment(useData[d].fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : useData[d].fields.DepositLines[i].fields.DepositDate,
+                                                recondepdate: useData[d].fields.DepositLines[i].fields.DepositDate != '' ? moment(useData[d].fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : useData[d].fields.DepositLines[i].fields.DepositDate,
                                                 recondepname: useData[d].fields.DepositLines[i].fields.Payee || ' ',
                                                 recondeppaymenttype: useData[d].fields.DepositLines[i].fields.Notes || ' ',
                                                 recondepamount: depositamount || 0.00,
@@ -920,7 +921,7 @@ Template.bankrecon.onRendered(function() {
 
                                     $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
                                     if (templateObject.reconVS1dep.get()) {
-                                      if (useData[d].fields.OnHold === false) {
+                                      if (useData[d].fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('#tblVS1Dep').DataTable({
                                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -977,7 +978,7 @@ Template.bankrecon.onRendered(function() {
                                       }
                                     }
 
-                                    if (useData[d].fields.OnHold === false) {
+                                    if (useData[d].fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('.tblVS1Dep tr').each(function() {
                                                 var $tblrow = $(this);
@@ -1060,12 +1061,12 @@ Template.bankrecon.onRendered(function() {
                                         if (useData[d].fields.WithdrawalLines.hasOwnProperty(j)) {
                                             let withdrawalamount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.WithdrawalLines[j].fields.Amount) || 0.00;
                                             let reconepWidID = useData[d].fields.WithdrawalLines[j].fields.ID;
-                                            if (useData[d].fields.WithdrawalLines[j].fields.Notes === 'Customer Payment') {
+                                            if (useData[d].fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
                                                 reconepWidID = useData[d].fields.WithdrawalLines[j].fields.PaymentID;
                                             }
                                             let reconcilewithdrawalObj = {
-                                                sortdate: useData[d].fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(useData[d].fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : useData[d].fields.WithdrawalLines[j].fields.DepositDate,
-                                                reconwithdate: useData[d].fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(useData[d].fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : useData[d].fields.WithdrawalLines[j].fields.DepositDate,
+                                                sortdate: useData[d].fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(useData[d].fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : useData[d].fields.WithdrawalLines[j].fields.DepositDate,
+                                                reconwithdate: useData[d].fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(useData[d].fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : useData[d].fields.WithdrawalLines[j].fields.DepositDate,
                                                 reconwithname: useData[d].fields.WithdrawalLines[j].fields.ClientName || ' ',
                                                 reconwithpaymenttype: useData[d].fields.WithdrawalLines[j].fields.Notes || ' ',
                                                 reconwithamount: withdrawalamount || 0.00,
@@ -1085,7 +1086,7 @@ Template.bankrecon.onRendered(function() {
 
                                     $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
                                     if (templateObject.reconVS1with.get()) {
-                                      if (useData[d].fields.OnHold === false) {
+                                      if (useData[d].fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('#tblVS1With').DataTable({
                                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1144,7 +1145,7 @@ Template.bankrecon.onRendered(function() {
                                       }
                                     }
 
-                                    if (useData[d].fields.OnHold === false) {
+                                    if (useData[d].fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('.tblVS1With tr').each(function() {
                                                 var $tblrow = $(this);
@@ -1222,7 +1223,7 @@ Template.bankrecon.onRendered(function() {
 
                             }
 
-                            if (useData[d].fields.OnHold === true) {
+                            if (useData[d].fields.OnHold == true) {
                               Session.setPersistent('bankaccountid', useData[d].fields.AccountID);
                               Session.setPersistent('bankaccountname', useData[d].fields.AccountName);
                               templateObject.getAccountNames();
@@ -1258,7 +1259,7 @@ Template.bankrecon.onRendered(function() {
                             $('.differenceCalc').text(Currency + "0.00" || 0);
                             // $('.depositAmount').val(utilityService.modifynegativeCurrencyFormat(depositAmount) || 0);
                             // $('.withdrawalAmount').val(utilityService.modifynegativeCurrencyFormat(withdrawalAmount) || 0);
-                            if (data.fields.OnHold === false) {
+                            if (data.fields.OnHold == false) {
                                 $('#bankAccountName').attr('disabled', 'disabled');
                                 $('#bankAccountName').attr('readonly', true);
                                 $('.openingbalance').attr('readonly', true);
@@ -1281,12 +1282,12 @@ Template.bankrecon.onRendered(function() {
                                         if (data.fields.DepositLines.hasOwnProperty(i)) {
                                             let depositamount = utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount) || 0.00;
                                             let reconepID = data.fields.DepositLines[i].fields.ID;
-                                            if (data.fields.DepositLines[i].fields.Notes === 'Customer Payment') {
+                                            if (data.fields.DepositLines[i].fields.Notes == 'Customer Payment') {
                                                 reconepID = data.fields.DepositLines[i].fields.PaymentID;
                                             }
                                             let reconciledepositObj = {
-                                                sortdate: data.fields.DepositLines[i].fields.DepositDate !== '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
-                                                recondepdate: data.fields.DepositLines[i].fields.DepositDate !== '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
+                                                sortdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
+                                                recondepdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
                                                 recondepname: data.fields.DepositLines[i].fields.Payee || ' ',
                                                 recondeppaymenttype: data.fields.DepositLines[i].fields.Notes || ' ',
                                                 recondepamount: depositamount || 0.00,
@@ -1306,7 +1307,7 @@ Template.bankrecon.onRendered(function() {
 
                                     $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
                                     if (templateObject.reconVS1dep.get()) {
-                                      if (data.fields.OnHold === false) {
+                                      if (data.fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('#tblVS1Dep').DataTable({
                                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1362,7 +1363,7 @@ Template.bankrecon.onRendered(function() {
                                         }, 0);
                                       }
                                     }
-                                    if (data.fields.OnHold === false) {
+                                    if (data.fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('.tblVS1Dep tr').each(function() {
                                                 var $tblrow = $(this);
@@ -1444,12 +1445,12 @@ Template.bankrecon.onRendered(function() {
                                         if (data.fields.WithdrawalLines.hasOwnProperty(j)) {
                                             let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
                                             let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
-                                            if (data.fields.WithdrawalLines[j].fields.Notes === 'Customer Payment') {
+                                            if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
                                                 reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
                                             }
                                             let reconcilewithdrawalObj = {
-                                                sortdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                                reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                                sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                                reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
                                                 reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
                                                 reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
                                                 reconwithamount: withdrawalamount || 0.00,
@@ -1469,7 +1470,7 @@ Template.bankrecon.onRendered(function() {
 
                                     $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
                                     if (templateObject.reconVS1with.get()) {
-                                      if (data.fields.OnHold === false) {
+                                      if (data.fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('#tblVS1With').DataTable({
                                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1525,7 +1526,7 @@ Template.bankrecon.onRendered(function() {
                                         }, 0);
                                       }
                                     }
-                                    if (data.fields.OnHold === false) {
+                                    if (data.fields.OnHold == false) {
                                         setTimeout(function() {
                                             $('.tblVS1With tr').each(function() {
                                                 var $tblrow = $(this);
@@ -1604,7 +1605,7 @@ Template.bankrecon.onRendered(function() {
                             //$('#hideSelectionToggle').css('pointer-events', 'none');
 
 
-                            if (data.fields.OnHold === true) {
+                            if (data.fields.OnHold == true) {
                               Session.setPersistent('bankaccountid', data.fields.AccountID);
                               Session.setPersistent('bankaccountname', data.fields.AccountName);
                               templateObject.getAccountNames();
@@ -1644,7 +1645,7 @@ Template.bankrecon.onRendered(function() {
                     $('.differenceCalc').text(Currency + "0.00" || 0);
                     // $('.depositAmount').val(utilityService.modifynegativeCurrencyFormat(depositAmount) || 0);
                     // $('.withdrawalAmount').val(utilityService.modifynegativeCurrencyFormat(withdrawalAmount) || 0);
-                    if (data.fields.OnHold === false) {
+                    if (data.fields.OnHold == false) {
                         $('#bankAccountName').attr('disabled', 'disabled');
                         $('#bankAccountName').attr('readonly', true);
                         $('.openingbalance').attr('readonly', true);
@@ -1667,11 +1668,11 @@ Template.bankrecon.onRendered(function() {
                                 if (data.fields.DepositLines.hasOwnProperty(i)) {
                                     let depositamount = utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount) || 0.00;
                                     let reconepID = data.fields.DepositLines[i].fields.ID;
-                                    if (data.fields.DepositLines[i].fields.Notes === 'Customer Payment') {
+                                    if (data.fields.DepositLines[i].fields.Notes == 'Customer Payment') {
                                         reconepID = data.fields.DepositLines[i].fields.PaymentID;
                                     }
                                     let reconciledepositObj = {
-                                        recondepdate: data.fields.DepositLines[i].fields.DepositDate !== '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
+                                        recondepdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
                                         recondepname: data.fields.DepositLines[i].fields.Payee || ' ',
                                         recondeppaymenttype: data.fields.DepositLines[i].fields.Notes || ' ',
                                         recondepamount: depositamount || 0.00,
@@ -1691,7 +1692,7 @@ Template.bankrecon.onRendered(function() {
 
                             $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
                             if (templateObject.reconVS1dep.get()) {
-                              if (data.fields.OnHold === false) {
+                              if (data.fields.OnHold == false) {
                                 setTimeout(function() {
                                     $('#tblVS1Dep').DataTable({
                                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1747,7 +1748,7 @@ Template.bankrecon.onRendered(function() {
                                 }, 0);
                               }
                             }
-                            if (data.fields.OnHold === false) {
+                            if (data.fields.OnHold == false) {
                                 setTimeout(function() {
                                     $('.tblVS1Dep tr').each(function() {
                                         var $tblrow = $(this);
@@ -1829,12 +1830,12 @@ Template.bankrecon.onRendered(function() {
                                 if (data.fields.WithdrawalLines.hasOwnProperty(j)) {
                                     let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
                                     let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
-                                    if (data.fields.WithdrawalLines[j].fields.Notes === 'Customer Payment') {
+                                    if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
                                         reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
                                     }
                                     let reconcilewithdrawalObj = {
-                                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                        sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                                        reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
                                         reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
                                         reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
                                         reconwithamount: withdrawalamount || 0.00,
@@ -1853,7 +1854,7 @@ Template.bankrecon.onRendered(function() {
 
                             $('.withdrawalAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountwidth) || Currency + "0.00");
                             if (templateObject.reconVS1with.get()) {
-                              if (data.fields.OnHold === false) {
+                              if (data.fields.OnHold == false) {
                                 setTimeout(function() {
                                     $('#tblVS1With').DataTable({
                                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1909,7 +1910,7 @@ Template.bankrecon.onRendered(function() {
                                 }, 0);
                               }
                             }
-                            if (data.fields.OnHold === false) {
+                            if (data.fields.OnHold == false) {
                                 setTimeout(function() {
                                     $('.tblVS1With tr').each(function() {
                                         var $tblrow = $(this);
@@ -1988,7 +1989,7 @@ Template.bankrecon.onRendered(function() {
                     //$('#hideSelectionToggle').css('pointer-events', 'none');
 
 
-                    if (data.fields.OnHold === true) {
+                    if (data.fields.OnHold == true) {
                       Session.setPersistent('bankaccountid', data.fields.AccountID);
                       Session.setPersistent('bankaccountname', data.fields.AccountName);
                       templateObject.getAccountNames();
@@ -2030,7 +2031,7 @@ Template.bankrecon.onRendered(function() {
         var input_val = input.val();
 
         // don't validate empty input
-        if (input_val === "") {
+        if (input_val == "") {
             return;
         }
 
@@ -2059,7 +2060,7 @@ Template.bankrecon.onRendered(function() {
             right_side = formatNumber(right_side);
 
             // On blur make sure 2 numbers after decimal
-            if (blur === "blur") {
+            if (blur == "blur") {
                 right_side += "00";
             }
 
@@ -2081,7 +2082,7 @@ Template.bankrecon.onRendered(function() {
             input_val = Currency + input_val;
 
             // final formatting
-            if (blur === "blur") {
+            if (blur == "blur") {
                 input_val += ".00";
             }
         }
@@ -2118,9 +2119,9 @@ Template.bankrecon.onRendered(function() {
                 $('#tblAccountlist_filter .form-control-sm').trigger("input");
             }, 500);
         }else{
-            if(accountDataName.replace(/\s/g, '') !== ''){
+            if(accountDataName.replace(/\s/g, '') != ''){
                 getVS1Data('TAccountVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
+                    if (dataObject.length == 0) {
                         accountService.getOneAccountByName(accountDataName).then(function (data) {
                         let lineItems = [];
                         let lineItemObj = {};
@@ -2132,7 +2133,7 @@ Template.bankrecon.onRendered(function() {
                         $('#sltAccountType').attr('disabled', 'disabled');
                         if (accountTypeList) {
                         for (var h = 0; h < accountTypeList.length; h++) {
-                           if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                           if (data.taccountvs1[0].fields.AccountTypeName == accountTypeList[h].accounttypename) {
                                fullAccountTypeName = accountTypeList[h].description || '';
                            }
                         }
@@ -2156,10 +2157,10 @@ Template.bankrecon.onRendered(function() {
                         var cardcvc = data.taccountvs1[0].fields.CVC || '';
                         var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
 
-                        if ((accounttype === "BANK")) {
+                        if ((accounttype == "BANK")) {
                         $('.isBankAccount').removeClass('isNotBankAccount');
                         $('.isCreditAccount').addClass('isNotCreditAccount');
-                        }else if ((accounttype === "CCARD")) {
+                        }else if ((accounttype == "CCARD")) {
                         $('.isCreditAccount').removeClass('isNotCreditAccount');
                         $('.isBankAccount').addClass('isNotBankAccount');
                         } else {
@@ -2185,7 +2186,7 @@ Template.bankrecon.onRendered(function() {
                         $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
                         $('#edtCvc').val(cardcvc);
 
-                        if(showTrans === 'true'){
+                        if(showTrans == 'true'){
                         $('.showOnTransactions').prop('checked', true);
                         }else{
                         $('.showOnTransactions').prop('checked', false);
@@ -2210,12 +2211,13 @@ Template.bankrecon.onRendered(function() {
                         $('#edtAccountName').attr('readonly', true);
                         $('#sltAccountType').attr('readonly', true);
                         $('#sltAccountType').attr('disabled', 'disabled');
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-                            if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                        for (let a in data.taccountvs1.length) {
+                        //for (let a = 0; a < data.taccountvs1.length; a++) {
+                            if((data.taccountvs1[a].fields.AccountName) == accountDataName){
                                 added = true;
                                 if (accountTypeList) {
                                 for (var h = 0; h < accountTypeList.length; h++) {
-                                    if (data.taccountvs1[a].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                                    if (data.taccountvs1[a].fields.AccountTypeName == accountTypeList[h].accounttypename) {
                                         fullAccountTypeName = accountTypeList[h].description || '';
                                     }
                                 }
@@ -2239,10 +2241,10 @@ Template.bankrecon.onRendered(function() {
                             var cardcvc = data.taccountvs1[a].fields.CVC || '';
                             var cardexpiry = data.taccountvs1[a].fields.ExpiryDate || '';
 
-                            if ((accounttype === "BANK")) {
+                            if ((accounttype == "BANK")) {
                                 $('.isBankAccount').removeClass('isNotBankAccount');
                                 $('.isCreditAccount').addClass('isNotCreditAccount');
-                            }else if ((accounttype === "CCARD")) {
+                            }else if ((accounttype == "CCARD")) {
                                 $('.isCreditAccount').removeClass('isNotCreditAccount');
                                 $('.isBankAccount').addClass('isNotBankAccount');
                             } else {
@@ -2268,7 +2270,7 @@ Template.bankrecon.onRendered(function() {
                             $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
                             $('#edtCvc').val(cardcvc);
 
-                            if(showTrans === 'true'){
+                            if(showTrans == 'true'){
                                 $('.showOnTransactions').prop('checked', true);
                             }else{
                               $('.showOnTransactions').prop('checked', false);
@@ -2292,7 +2294,7 @@ Template.bankrecon.onRendered(function() {
                             $('#sltAccountType').attr('disabled', 'disabled');
                             if (accountTypeList) {
                                for (var h = 0; h < accountTypeList.length; h++) {
-                                   if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                                   if (data.taccountvs1[0].fields.AccountTypeName == accountTypeList[h].accounttypename) {
                                        fullAccountTypeName = accountTypeList[h].description || '';
                                    }
                                }
@@ -2316,10 +2318,10 @@ Template.bankrecon.onRendered(function() {
                             var cardcvc = data.taccountvs1[0].fields.CVC || '';
                             var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
 
-                            if ((accounttype === "BANK")) {
+                            if ((accounttype == "BANK")) {
                                 $('.isBankAccount').removeClass('isNotBankAccount');
                                 $('.isCreditAccount').addClass('isNotCreditAccount');
-                            } else if ((accounttype === "CCARD")) {
+                            } else if ((accounttype == "CCARD")) {
                                 $('.isCreditAccount').removeClass('isNotCreditAccount');
                                 $('.isBankAccount').addClass('isNotBankAccount');
                             } else {
@@ -2345,7 +2347,7 @@ Template.bankrecon.onRendered(function() {
                             $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
                             $('#edtCvc').val(cardcvc);
 
-                            if(showTrans === 'true'){
+                            if(showTrans == 'true'){
                                 $('.showOnTransactions').prop('checked', true);
                             }else{
                               $('.showOnTransactions').prop('checked', false);
@@ -2373,7 +2375,7 @@ Template.bankrecon.onRendered(function() {
                         $('#sltAccountType').attr('disabled', 'disabled');
                         if (accountTypeList) {
                            for (var h = 0; h < accountTypeList.length; h++) {
-                               if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                               if (data.taccountvs1[0].fields.AccountTypeName == accountTypeList[h].accounttypename) {
                                    fullAccountTypeName = accountTypeList[h].description || '';
                                }
                            }
@@ -2397,10 +2399,10 @@ Template.bankrecon.onRendered(function() {
                         var cardcvc = data.taccountvs1[0].fields.CVC || '';
                         var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
 
-                        if ((accounttype === "BANK")) {
+                        if ((accounttype == "BANK")) {
                             $('.isBankAccount').removeClass('isNotBankAccount');
                             $('.isCreditAccount').addClass('isNotCreditAccount');
-                        }else if ((accounttype === "CCARD")) {
+                        }else if ((accounttype == "CCARD")) {
                             $('.isCreditAccount').removeClass('isNotCreditAccount');
                             $('.isBankAccount').addClass('isNotBankAccount');
                         } else {
@@ -2426,7 +2428,7 @@ Template.bankrecon.onRendered(function() {
                         $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
                         $('#edtCvc').val(cardcvc);
 
-                        if(showTrans === 'true'){
+                        if(showTrans == 'true'){
                             $('.showOnTransactions').prop('checked', true);
                         }else{
                           $('.showOnTransactions').prop('checked', false);
@@ -2478,7 +2480,7 @@ Template.bankrecon.onRendered(function() {
 
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
-        if (accountTypeId !== "") {
+        if (accountTypeId != "") {
             Session.setPersistent('bankaccountid', accountTypeId);
             Session.setPersistent('bankaccountname', accountname);
             templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
@@ -2510,7 +2512,7 @@ Template.bankrecon.events({
 
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
 
-        if (accountTypeId !== "") {
+        if (accountTypeId != "") {
             Session.setPersistent('bankaccountid', accountTypeId);
             templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
             templateObject.getReconcileWithdrawal(accountTypeId, statementDate, false);
@@ -2527,10 +2529,10 @@ Template.bankrecon.events({
         var accountTypename = $('#bankAccountName').val();
         var statementDateData = new Date($(".statementDate").datepicker("getDate"));
         let statementDate = statementDateData.getFullYear() + "-" + (statementDateData.getMonth() + 1) + "-" + statementDateData.getDate();
-        if ($(".statementDate").val() !== "") {
+        if ($(".statementDate").val() != "") {
             localStorage.setItem('statementdate', $(".statementDate").val());
 
-            if (accountTypeId !== "") {
+            if (accountTypeId != "") {
                 Session.setPersistent('bankaccountid', accountTypeId);
                 Session.setPersistent('bankaccountname', accountTypename);
                 templateObject.getReconcileDeposit(accountTypeId, statementDate, false);
@@ -2852,18 +2854,18 @@ Template.bankrecon.events({
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
-                if ($("#" + depID + "_desc").text() === "Customer Payment") {
+                if ($("#" + depID + "_desc").text() == "Customer Payment") {
                     deppaymentid = depID;
                 }
 
                 if(FlowRouter.current().queryParams.id){
 
                 }else{
-                  if ($("#" + depID + "_desc").text() === "Cheque Deposit") {
+                  if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
                       deppaymentid = depID;
                   }
 
-                  if ($("#" + depID + "_desc").text() === "Cheque") {
+                  if ($("#" + depID + "_desc").text() == "Cheque") {
                       deppaymentid = depID;
                   }
                 }
@@ -3011,7 +3013,7 @@ Template.bankrecon.events({
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {}
+                if (result.value) {} else if (result.dismiss == 'cancel') {}
             });
             $('.fullScreenSpin').css('display', 'none');
         });
@@ -3034,14 +3036,14 @@ Template.bankrecon.events({
                 let depref = $("#" + depID + "_ref").text() || '';
                 let deppaymentid = $("#" + depID + "_payid").text() || '';
                 let depaccountname = $('#bankAccountName').val() || '';
-                if ($("#" + depID + "_desc").text() === "Customer Payment") {
+                if ($("#" + depID + "_desc").text() == "Customer Payment") {
                     deppaymentid = depID;
                 }
 
                 if(FlowRouter.current().queryParams.id){
 
                 }else{
-                  if ($("#" + depID + "_desc").text() === "Cheque Deposit") {
+                  if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
                       deppaymentid = depID;
                   }
 
@@ -3195,7 +3197,7 @@ Template.bankrecon.events({
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {}
+                if (result.value) {} else if (result.dismiss == 'cancel') {}
             });
             $('.fullScreenSpin').css('display', 'none');
         });
@@ -3255,7 +3257,7 @@ Template.bankrecon.events({
                         }).then((result) => {
                             if (result.value) {
 
-                            } else if (result.dismiss === 'cancel') {
+                            } else if (result.dismiss == 'cancel') {
 
                             }
                         });
@@ -3279,9 +3281,9 @@ Template.bankrecon.events({
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;
         var rowCountWith = $('#tblSelectedWithdrawals tbody tr').length; // a response of 2 = 1 element in table
 
-        if (difference === zero && endingbal === clearedbal) {
+        if (difference == zero && endingbal == clearedbal) {
             if (rowCountDep >= 1 || rowCountWith >= 1) {
-                if ($('#statementno').val().replace(/\s/g, '') !== '') {
+                if ($('#statementno').val().replace(/\s/g, '') != '') {
                     $('.reconbtn').prop("disabled", false);
                     $('.btnHold').prop("disabled", false);
                 } else {
@@ -3298,7 +3300,7 @@ Template.bankrecon.events({
             $('.reconbtn').prop("disabled", true);
             $('.btnHold').prop("disabled", true);
             if (rowCountDep >= 1 || rowCountWith >= 1) {
-                if ($('#statementno').val().replace(/\s/g, '') !== '') {
+                if ($('#statementno').val().replace(/\s/g, '') != '') {
                     $('.reconbtn').prop("disabled", true); //enables button
                     $('.btnHold').prop("disabled", false);
 
@@ -3321,9 +3323,9 @@ Template.bankrecon.events({
         var rowCountDep = $('#tblSelectedDeposits tbody tr').length;
         var rowCountWith = $('#tblSelectedWithdrawals tbody tr').length; // a response of 2 = 1 element in table
 
-        if (difference === zero && endingbal === clearedbal) {
+        if (difference == zero && endingbal == clearedbal) {
             if (rowCountDep >= 1 || rowCountWith >= 1) {
-                if ($('#statementno').val().replace(/\s/g, '') !== '') {
+                if ($('#statementno').val().replace(/\s/g, '') != '') {
                     $('.reconbtn').prop("disabled", false); //enables button
                     $('.btnHold').prop("disabled", false);
 
@@ -3341,7 +3343,7 @@ Template.bankrecon.events({
             $('.reconbtn').prop("disabled", true);
             $('.btnHold').prop("disabled", true);
             if (rowCountDep >= 1 || rowCountWith >= 1) {
-                if ($('#statementno').val().replace(/\s/g, '') !== '') {
+                if ($('#statementno').val().replace(/\s/g, '') != '') {
                     $('.reconbtn').prop("disabled", true); //enables button
                     $('.btnHold').prop("disabled", false);
 
@@ -3358,24 +3360,24 @@ Template.bankrecon.events({
         $('.statementno').val(event.target.value);
     },
     'keydown .endingbalance, keydown .lineUnitPrice, keydown .lineAmount': function(event) {
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||
             // Allow: Ctrl+A, Command+A
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode == 65 && (event.ctrlKey == true || event.metaKey == true)) ||
             // Allow: home, end, left, right, down, up
             (event.keyCode >= 35 && event.keyCode <= 40)) {
             // let it happen, don't do anything
             return;
         }
 
-        if (event.shiftKey === true) {
+        if (event.shiftKey == true) {
             event.preventDefault();
         }
 
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode === 8 || event.keyCode === 9 ||
-            event.keyCode === 37 || event.keyCode === 39 ||
-            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {} else {
+            event.keyCode == 8 || event.keyCode == 9 ||
+            event.keyCode == 37 || event.keyCode == 39 ||
+            event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {} else {
             event.preventDefault();
         }
     },
@@ -3393,7 +3395,7 @@ Template.bankrecon.events({
             if (rowCountDep <= 1 && rowCountWith <= 1) {
                 swal("No transactions flagged to be reconciled.", "", "warning");
             } else {
-                if (endingbal === '') {
+                if (endingbal == '') {
                     swal("No Ending Balance Entered.", "", "warning");
                 }
             }
@@ -3409,7 +3411,7 @@ Template.bankrecon.events({
             if (rowCountDep <= 1 && rowCountWith <= 1) {
                 swal("No transactions flagged to be reconciled.", "", "warning");
             } else {
-                if (endingbal === '') {
+                if (endingbal == '') {
                     //swal("No Ending Balance Entered.","","warning");
                 }
             }
@@ -3418,7 +3420,7 @@ Template.bankrecon.events({
     'keyup #myInputSearchDep, change #myInputSearchDep, search #myInputSearchDep': function(event) {
         $('.tblVS1Dep tbody tr').show();
         let searchItem = $(event.target).val();
-        if (searchItem !== '') {
+        if (searchItem != '') {
             var value = searchItem.toLowerCase();
             $('.tblVS1Dep tbody tr').each(function() {
                 var found = 'false';
@@ -3433,7 +3435,7 @@ Template.bankrecon.events({
 
 
                 });
-                if (found === 'true') {
+                if (found == 'true') {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3446,7 +3448,7 @@ Template.bankrecon.events({
                 $(this).each(function() {
                     found = 'true';
                 });
-                if (found === 'true') {
+                if (found == 'true') {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3457,7 +3459,7 @@ Template.bankrecon.events({
     'keyup #myInputSearchWith, change #myInputSearchWith, search #myInputSearchWith': function(event) {
         $('.tblVS1With tbody tr').show();
         let searchItem = $(event.target).val();
-        if (searchItem !== '') {
+        if (searchItem != '') {
             var value = searchItem.toLowerCase();
             $('.tblVS1With tbody tr').each(function() {
                 var found = 'false';
@@ -3472,7 +3474,7 @@ Template.bankrecon.events({
 
 
                 });
-                if (found === 'true') {
+                if (found == 'true') {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3485,7 +3487,7 @@ Template.bankrecon.events({
                 $(this).each(function() {
                     found = 'true';
                 });
-                if (found === 'true') {
+                if (found == 'true') {
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -3498,9 +3500,9 @@ Template.bankrecon.events({
 Template.bankrecon.helpers({
     accountnamerecords: () => {
         return Template.instance().accountnamerecords.get().sort(function(a, b) {
-            if (a.accountname === 'NA') {
+            if (a.accountname == 'NA') {
                 return 1;
-            } else if (b.accountname === 'NA') {
+            } else if (b.accountname == 'NA') {
                 return -1;
             }
             return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;

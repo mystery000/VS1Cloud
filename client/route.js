@@ -492,6 +492,15 @@ authenticatedRoutes.route('/employeelist', {
     }
 });
 
+authenticatedRoutes.route('/leadlist', {
+    name: 'leadlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'leadlist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/supplierlist', {
     name: 'supplierlist',
     action() {

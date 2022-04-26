@@ -5,10 +5,12 @@ import DashboardApi from "../../js/Api/DashboardApi";
 import Tvs1chart from "../../js/Api/Model/Tvs1Chart";
 import resizableCharts from "../../js/Charts/resizableCharts";
 import ChartsEditor from "../../js/Charts/ChartsEditor";
+import ChartHandler from "../../js/Charts/ChartHandler";
 import draggableCharts from "../../js/Charts/draggableCharts";
 import Tvs1ChartDashboardPreference from "../../js/Api/Model/Tvs1ChartDashboardPreference";
 import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashboardPreferenceField";
 import ApiService from "../../js/Api/Module/ApiService";
+import '../../lib/global/indexdbstorage.js';
 let _ = require("lodash");
 
 /**
@@ -58,53 +60,6 @@ const chartsEditor = new ChartsEditor(
 );
 
 /**
- * Build the positions of the widgets
- */
-const buildPositions = async () => {
-  const charts = $(".chart-visibility");
-
-  for (let i = 0; i <= charts.length; i++) {
-    $(charts[i]).attr("position", i);
-  }
-};
-
-/**
- * 
- *  {Chart Width calculate in percentage} 
- */
-
-function calculateWidth( chart ){
-    let elementWidth = $(chart).width();
-    let elementParentWidth = $('.connectedChartSortable').width();
-    let widthPercentage = Math.round(100 * elementWidth / elementParentWidth);
-    if( parseInt( widthPercentage ) < 20 ){
-      widthPercentage = 20
-    }
-    if( parseInt( widthPercentage ) > 100 ){
-      widthPercentage = 100
-    }
-    return widthPercentage;
-}
-
-/**
- * 
- * @param {*} height chart 
- * @returns
-*/
-function calculateHeight( chart ){
-  let elementHeight = $(chart).height();
-  let elementParentHeight = document.documentElement.clientHeight;
-  let heightPercentage = Math.round(100 * elementHeight / elementParentHeight);
-  if( parseInt( heightPercentage ) < 20 ){
-    heightPercentage = 20
-  }
-  if( parseInt( heightPercentage ) > 100 ){
-    heightPercentage = 100
-  }
-  return heightPercentage;
-}
-
-/**
  * This function will save the charts on the dashboard
  */
 async function saveCharts() {
@@ -112,7 +67,7 @@ async function saveCharts() {
    * Lets load all API colections
    */
   const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-  buildPositions();
+  ChartHandler.buildPositions();
 
   const charts = $(".chart-visibility");
   // console.log(charts);
@@ -141,16 +96,15 @@ async function saveCharts() {
           EmployeeID: employeeId,
           Chartname: $(chart).attr("chart-name"),
           Position: parseInt($(chart).attr("position")),
-          ChartGroup: _chartGroup,
+          ChartGroup: $(chart).attr("chart-group"),
           TabGroup: _tabGroup,
-          ChartWidth: calculateWidth(chart),
-          ChartHeight: calculateHeight(chart),
+          ChartWidth: ChartHandler.calculateWidth(chart),
+          ChartHeight: ChartHandler.calculateHeight(chart),
         }),
       })
     );
   });
-  // save into local storage
-  localStorage.setItem(_chartGroup, JSON.stringify(chartList));
+
   for (const _chart of chartList) {
     // chartList.forEach(async (chart) => {
     //console.log("Saving chart");
@@ -189,44 +143,6 @@ Template.allChartLists.onRendered(function () {
       dimmedElements[0].classList.remove("dimmedChart");
     }
   };
-  templateObject.saveIntoLocalDB = async (e) => {
-    const chartList = [];
-    const chartcontainer = $(e.currentTarget).parents(
-      ".sortable-chart-widget-js"
-    );
-    let chartID = $(chartcontainer).attr("chart-id");
-    let dbchartslist = await JSON.parse(localStorage.getItem(_chartGroup));
-    if (dbchartslist) {
-      chartList = await dbchartslist.filter(
-        (item) => item.fields.ChartID !== chartID
-      );
-    }
-    chartList.push(
-      new Tvs1ChartDashboardPreference({
-        type: "Tvs1dashboardpreferences",
-        fields: new Tvs1ChartDashboardPreferenceField({
-          Active:
-            $(chartcontainer)
-              .find(".on-editor-change-mode")
-              .attr("is-hidden") == true ||
-            $(chartcontainer)
-              .find(".on-editor-change-mode")
-              .attr("is-hidden") == "true"
-              ? false
-              : true,
-          ChartID: $(chartcontainer).attr("chart-id"),
-          ID: $(chartcontainer).attr("pref-id"), // This is empty when it is the first time, but the next times it is filled
-          EmployeeID: employeeId,
-          Chartname: $(chartcontainer).attr("chart-name"),
-          Position: parseInt($(chartcontainer).attr("position")),
-          ChartGroup: _chartGroup,
-          ChartWidth: $(chartcontainer).find(".ui-resizable").width(),
-        }),
-      })
-    );
-    console.log(chartList);
-    localStorage.setItem(_chartGroup, JSON.stringify(chartList));
-  };
 
   templateObject.showChartElements = function () {
     // on edit mode true
@@ -239,20 +155,28 @@ Template.allChartLists.onRendered(function () {
   };
   templateObject.checkChartToDisplay = async () => {
     let defaultChartList = [];
-    const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-    let displayedCharts = 0;
+    let chartList = [];
 
-    const allChartsEndpoint = dashboardApis.collection.findByName(
-      dashboardApis.collectionNames.vs1charts
-    );
-    allChartsEndpoint.url.searchParams.append("ListType", "'Detail'");
-    const allChartResponse = await allChartsEndpoint.fetch();
+    const dashboardApis = new DashboardApi(); // Load all dashboard APIS 
 
-    if (allChartResponse.ok == true) {
-      const allChartsJsonResponse = await allChartResponse.json();
-      //console.log(allChartsJsonResponse);
+    let displayedCharts = 0;    
+    chartList = await ChartHandler.getTvs1charts()
+    if( chartList.length == 0 ){
+      // Fetching data from API
+      const allChartsEndpoint = dashboardApis.collection.findByName(
+        dashboardApis.collectionNames.vs1charts
+      );
+      allChartsEndpoint.url.searchParams.append("ListType", "'Detail'");
+      const allChartResponse = await allChartsEndpoint.fetch();
 
-      let chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
+      if (allChartResponse.ok == true) {
+        const allChartsJsonResponse = await allChartResponse.json();
+        //console.log(allChartsJsonResponse);
+        chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
+      }
+    }
+
+    if( chartList.length > 0 ){
       // console.log(allChartResponse);
       // console.log('chartlist', chartList);
       // the goal here is to get the right names so it can be used for preferences
@@ -322,47 +246,9 @@ Template.allChartLists.onRendered(function () {
     }
 
     // Now get user preferences
-    let tvs1ChartDashboardPreference = [];
-    let localChartsList = localStorage.getItem(_chartGroup);    
-    if( localChartsList ){
-      tvs1ChartDashboardPreference = await JSON.parse( localChartsList )
-    }else{
-
-      const dashboardPreferencesEndpoint = dashboardApis.collection.findByName(
-        dashboardApis.collectionNames.Tvs1dashboardpreferences
-      );
-
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "ListType",
-        "'Detail'"
-      );
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "select",
-        `[employeeID]=${employeeId}`
-      );
-      dashboardPreferencesEndpoint.url.searchParams.append(
-        "select",
-        `[TabGroup]=${_tabGroup}`
-      );
-
-      const dashboardPreferencesEndpointResponse =
-        await dashboardPreferencesEndpoint.fetch(); // here i should get from database all charts to be displayed
-
-      if (dashboardPreferencesEndpointResponse.ok == true) {
-        dashboardPreferencesEndpointJsonResponse =
-          await dashboardPreferencesEndpointResponse.json();
-      }
-      tvs1ChartDashboardPreference = Tvs1ChartDashboardPreference.fromList(
-        dashboardPreferencesEndpointJsonResponse.tvs1dashboardpreferences
-      ).filter((chart) => {
-        if (chart.fields.TabGroup == _tabGroup) {
-          return chart;
-        }
-      });
-    }
-
-    // console.log("tvs1ChartDashboardPreference", tvs1ChartDashboardPreference);
-
+    let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
+    // console.log('tvs1ChartDashboardPreference', tvs1ChartDashboardPreference)
+    
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
@@ -460,7 +346,7 @@ Template.allChartLists.onRendered(function () {
       displayedCharts = document.querySelectorAll(
         ".chart-visibility:not(.hideelement)"
       );
-      console.log("itemlist", defaultChartList);
+      // console.log("itemlist", defaultChartList);
       if (displayedCharts.length == 0) {
         // this will show all by default
         //console.log("No charts are being displayed, so show everything");
@@ -480,7 +366,7 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
           $(`[key='${item}']`).removeClass("hideelement");
           $(`[key='${item}']`).addClass("chart-visibility");
-          buildPositions();
+          ChartHandler.buildPositions();
         }
       }
     } else {
@@ -545,7 +431,6 @@ Template.allChartLists.events({
       $(e.currentTarget).text("Show");
     }
     // const templateObject = Template.instance();
-    // templateObject.saveIntoLocalDB(e)
   },
   "mouseover .card-header": (e) => {
     $(e.currentTarget).parent(".card").addClass("hovered");
@@ -606,6 +491,8 @@ Template.allChartLists.events({
     await saveCharts();
     await chartsEditor.disable();
     await templateObject.hideChartElements();
+      // Save Into local indexDB
+    await ChartHandler.saveChartsInLocalDB();
     await templateObject.checkChartToDisplay();
     $(".fullScreenSpin").css("display", "none");
   },
