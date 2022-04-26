@@ -1084,7 +1084,7 @@ Template.receiptsoverview.onRendered(function () {
                             $('#tblMerge').DataTable().ajax.reload();
                         },
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus'></i></button>").insertAfter("#tblMerge_filter");
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblMerge_filter");
                             $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
                         }
                       }).on('page', function () {
@@ -1260,7 +1260,7 @@ Template.receiptsoverview.onRendered(function () {
                             $('#tblMerge').DataTable().ajax.reload();
                         },
                         "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus'></i></button>").insertAfter("#tblMerge_filter");
+                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblMerge_filter");
                             $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
                         }
                     }).on('page', function () {
