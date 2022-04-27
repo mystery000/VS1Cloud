@@ -491,7 +491,7 @@
                         <!-- Detach receipt removes the currently attached receipt -->
                         <button type="button float-left" class="btn btn-secondary btn-detach">Detach Receipt</button>
                         <button type="button float-left" class="btn btn-secondary" id="btnShowSplitModal" data-dismiss="modal">Split Expense</button>
-                        <button type="button float-left" class="btn btn-secondary" data-toggle="modal" data-target="#mergeModal" data-dismiss="modal">Merge</button>
+                        <button type="button float-left" class="btn btn-secondary" id="btnShowMergeModal" data-dismiss="modal">Merge</button>
                         <button type="button float-left" class="btn btn-secondary" id="btnDuplicate">Duplicate</button>
                         <button type="button" class="btn btn-danger" id="btnDeleteReceipt"><i class="fas fa-trash-alt"></i></button>
                     </div>
@@ -634,16 +634,9 @@
                         <div class="col-12 col-md-3">
                             <div class="form-group">
                                 <label>Filter by Merchant</label>
-                                <select class="form-control" id="">
-                                    <option>All Merchants</option>
-                                    <option>Merchant 1</option>
-                                    <option>Merchant 2</option>
-                                    <option>Merchant 3</option>
-                                    <option>Merchant 4</option>
-                                    <option>Merchant 5</option>
-                                </select>
+                                <select class="form-control merchants" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label>Filter by Cards</label>
                                 <select class="form-control" id="">
                                     <option>All Cards</option>
@@ -653,17 +646,10 @@
                                     <option>Card 4</option>
                                     <option>Card 5</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label>Filter by Account</label>
-                                <select class="form-control" id="">
-                                    <option>All Categories</option>
-                                    <option>Office Supplies</option>
-                                    <option>Benefits</option>
-                                    <option>Car</option>
-                                    <option>Equipment</option>
-                                    <option>Insurance</option>
-                                </select>
+                                <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                             </div>
                         </div>
                         <div class="col-12 col-md-9">
@@ -681,16 +667,16 @@
                                         <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu" role="menu">
                                             <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                            <a class="dropdown-item timeFilterMerge" id="lastMonthMerge" role="presentation" href="#">Last Month</a>
+                                            <a class="dropdown-item timeFilterMerge" id="lastQuarterMerge" role="presentation" href="#">Last Quarter</a>
+                                            <a class="dropdown-item timeFilterMerge" id="last12MonthsMerge" role="presentation" href="#">Last 12 Months</a>
+                                            <a class="dropdown-item timeFilterMerge" id="ignoreDateMerge" role="presentation" href="#">Ignore Date</a>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
                                         <!-- <label style="margin-top: 8px; margin-right: 16px;">From</label> -->
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom" placeholder="From">
+                                            <input type="text" class="form-control" id="dateFromMerge" name="dateFrom" placeholder="From">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -699,7 +685,7 @@
                                     <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
                                         <!-- <label style="margin-top: 8px; margin-right: 16px;">To</label> -->
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo" placeholder="To">
+                                            <input type="text" class="form-control" id="dateToMerge" name="dateTo" placeholder="To">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -711,9 +697,9 @@
                                 <thead>
                                     <tr class="dnd-moved">
                                         <th class="th col" style="width: 2%;">
-                                            <div class="custom-control custom-checkbox chkBox" style="width:15px;margin-right: -6px;">
-                                                <input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All">
-                                                <label class="custom-control-label chkBoxAll" for="formCheck-All"></label>
+                                            <div class="custom-control custom-checkbox chkBoxMerge" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBoxAllMerge" type="checkbox" id="formCheckMerge-All">
+                                                <label class="custom-control-label chkBoxAllMerge" for="formCheckMerge-All"></label>
                                             </div>
                                         </th>
                                         <th class="th colReceiptDate">Date</th>
@@ -728,9 +714,9 @@
                                         {{#each item in expenseClaimList}}
                                             <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
                                                 <td contenteditable="false" class="col" style="width: 2%;">
-                                                    <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
-                                                        <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}">
-                                                        <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
+                                                    <div class="custom-control custom-checkbox chkBoxMerge pointer" style="width:15px;margin-right: -6px;">
+                                                        <input class="custom-control-input chkBoxMerge pointer" type="checkbox" id="formCheckMerge-{{item.ID}}">
+                                                        <label class="custom-control-label chkBoxMerge pointer" for="formCheckMerge-{{item.ID}}"></label>
                                                     </div>
                                                 </td>
                                                 <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
@@ -747,7 +733,166 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-primary" id="btnMergeDetail" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Merge</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mergeDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Merge Expenses</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="padding: 16px;">
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Expense to keep</label>
+                                        <select class="form-control" id="sltExpenseKeep">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index 0}}selected{{/if}}">{{item.DateTime}} - {{item.SupplierName}} ${{item.AmountInc}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Employee</label>
+                                        <input class="form-control" id="mergedEmployee" value="{{mergeReceiptRecords.[0].EmployeeName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Transaction Type</label>
+                                        <select class="form-control" id="mergedTransactionType">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Paymethod}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Merchant</label>
+                                        <input class="form-control" id="mergedMerchant" value="{{mergeReceiptRecords.[0].SupplierName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Date</label>
+                                        <select class="form-control" id="mergedDateTime">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.DateTime}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-8">
+                                    <div class="form-group">
+                                        <label>Total Amount</label>
+                                        <select class="form-control" id="mergedAmount">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">${{item.AmountInc}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-group">
+                                        <label>Currency</label>
+                                        <input class="form-control" value="{{sessionCurrency}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="custom-control custom-switch" style="margin-top: 40px;">
+                                        <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtMergedReiumbursable" style="cursor: pointer;">
+                                        <label class="custom-control-label" for="swtMergedReiumbursable" style="cursor: pointer;">Reiumbursable</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Chart of Accounts</label>
+                                        <input class="form-control" id="mergedAccount" value="{{mergeReceiptRecords.[0].AccountName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="3" id="mergedDescription" name="txaDescription" readonly>{{mergeReceiptRecords.[0].Description}}</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <style>
+                            .imageGrandMerge {
+                                position: absolute;
+                                top: 15%;
+                                left: 0;
+                                width: 100%;
+                                height: 85%;
+                                cursor: crosshair;
+                            }
+
+                            .imageParentMerge {
+                                width: 100%;
+                                border-radius: 15px;
+                                position: relative;
+                                float: left;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+
+                            .receiptPhotoMerge {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                background-size: contain;
+                                transition: transform .5s ease-out;
+                            }
+                        </style>
+
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Receipt</label>
+                                        <select class="form-control" id="mergedReceipt">
+                                            {{#each item in mergeReceiptRecords}}
+                                            {{#if item.Attachments}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Attachments.[0].fields.AttachmentName}}</option>
+                                            {{else}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">No Receipt</option>
+                                            {{/if}}
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 img-placeholder" style="text-align: center;">
+                                    <img src="/icons/nofiles_icon.png" style="display: block; margin-left: auto; margin-right: auto;">
+                                </div>
+                            </div>
+                            <div class="imageGrandMerge" style="padding-right: 0.75rem; padding-left: 0.75rem;">
+                                <div class="imageParentMerge" data-scale="2.4" data-image=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>
