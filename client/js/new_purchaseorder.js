@@ -70,6 +70,8 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
 
+    templateObject.selectedsupplierpayrecords = new ReactiveVar([]);
+
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
@@ -372,81 +374,11 @@ Template.purchaseordercard.onRendered(() => {
 
     };
 
-        templateObject.getAllSupplierPaymentData = function () {
-        getVS1Data('TSupplierPayment').then(function (dataObject) {
-            if(dataObject.length == 0){
-                sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    addVS1Data('TSupplierPayment',JSON.stringify(data));
-                    for(let i=0; i<data.tsupplierpayment.length; i++){
-                        let amount = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Amount)|| 0.00;
-                        let applied = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Applied) || 0.00;
-                        // Currency+''+data.tsupplierpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Balance)|| 0.00;
-                        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.TotalPaid)|| 0.00;
-                        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.TotalBalance)|| 0.00;
-                        var dataList = {
-                            id: data.tsupplierpayment[i].fields.ID || '',
-                            sortdate: data.tsupplierpayment[i].fields.PaymentDate !=''? moment(data.tsupplierpayment[i].fields.PaymentDate).format("YYYY/MM/DD"): data.tsupplierpayment[i].fields.PaymentDate,
-                            paymentdate: data.tsupplierpayment[i].fields.PaymentDate !=''? moment(data.tsupplierpayment[i].fields.PaymentDate).format("DD/MM/YYYY"): data.tsupplierpayment[i].fields.PaymentDate,
-                            customername: data.tsupplierpayment[i].fields.CompanyName || '',
-                            paymentamount: amount || 0.00,
-                            applied: applied || 0.00,
-                            balance: balance || 0.00,
-                             lines: data.tsupplierpayment[i].fields.Lines,
-                            bankaccount: data.tsupplierpayment[i].fields.AccountName || '',
-                            department: data.tsupplierpayment[i].fields.DeptClassName || '',
-                            refno: data.tsupplierpayment[i].fields.ReferenceNo || '',
-                            paymentmethod: data.tsupplierpayment[i].fields.PaymentMethodName || '',
-                            notes: data.tsupplierpayment[i].fields.Notes || ''
-                        };
-                        dataTableList.push(dataList);
-                    }
-                    templateObject.datatablerecords.set(dataTableList);
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display','none');
-                    // Meteor._reload.reload();
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsupplierpayment;
-                let lineItems = [];
-                let lineItemObj = {};
-                for(let i=0; i<data.tsupplierpayment.length; i++){
-                    let amount = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Amount)|| 0.00;
-                    let applied = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Applied) || 0.00;
-                    // Currency+''+useData[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    let balance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalPaid)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalBalance)|| 0.00;
-                    var dataList = {
-                        id: useData[i].fields.ID || '',
-                        sortdate: useData[i].fields.PaymentDate !=''? moment(useData[i].fields.PaymentDate).format("YYYY/MM/DD"): useData[i].fields.PaymentDate,
-                        paymentdate: useData[i].fields.PaymentDate !=''? moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY"): useData[i].fields.PaymentDate,
-                        customername: useData[i].fields.CompanyName || '',
-                        paymentamount: amount || 0.00,
-                        applied: applied || 0.00,
-                        balance: balance || 0.00,
-                        lines: useData[i].fields.Lines,
-                        bankaccount: useData[i].fields.AccountName || '',
-                        department: useData[i].fields.DeptClassName || '',
-                        refno: useData[i].fields.ReferenceNo || '',
-                        paymentmethod: useData[i].fields.PaymentMethodName || '',
-                        notes: useData[i].fields.Notes || ''
-                    };
-                    dataTableList.push(dataList);
-                }
-                templateObject.datatablerecords.set(dataTableList);
-
-
-            }
-        }).catch(function (err) {
-          sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function (data) {
+        templateObject.getAllSelectPaymentData = function () {
+          let supplierName = $('#edtSupplierName').val() || '';
+          purchaseService.getCheckPaymentDetailsByName(supplierName).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
-              addVS1Data('TSupplierPayment',JSON.stringify(data));
               for(let i=0; i<data.tsupplierpayment.length; i++){
                   let amount = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Amount)|| 0.00;
                   let applied = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Applied) || 0.00;
@@ -469,19 +401,18 @@ Template.purchaseordercard.onRendered(() => {
                       paymentmethod: data.tsupplierpayment[i].fields.PaymentMethodName || '',
                       notes: data.tsupplierpayment[i].fields.Notes || ''
                   };
+                //if (data.tsupplierpayment[i].fields.Lines != null) {
+                // if(data.tsupplierpayment[i].fields.Lines.length) {
                   dataTableList.push(dataList);
+                 //}
+               //}
               }
-              templateObject.datatablerecords.set(dataTableList);
+              templateObject.selectedsupplierpayrecords.set(dataTableList);
           }).catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $('.fullScreenSpin').css('display','none');
-              // Meteor._reload.reload();
+
           });
-        });
 
     }
-
-    templateObject.getAllSupplierPaymentData();
 
 
     templateObject.getAllClients();
@@ -673,6 +604,10 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                             }, 100);
 
+                            setTimeout(function () {
+                             templateObject.getAllSelectPaymentData();
+                           }, 1500);
+
                             templateObject.purchaseorderrecord.set(purchaseorderrecord);
                             templateObject.selectedCurrency.set(purchaseorderrecord.currency);
                             templateObject.inputSelectedCurrency.set(purchaseorderrecord.currency);
@@ -814,7 +749,7 @@ Template.purchaseordercard.onRendered(() => {
                                 }
 
                                 let isPartialPaid = false;
-                                if(data.fields.TotalPaid > 0){
+                                if(useData[d].fields.TotalPaid > 0){
                                     isPartialPaid = true;
                                 }
 
@@ -906,6 +841,10 @@ Template.purchaseordercard.onRendered(() => {
                                             });
                                         }
                                 }, 100);
+
+                                setTimeout(function () {
+                                 templateObject.getAllSelectPaymentData();
+                               }, 1500);
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1101,6 +1040,10 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                                     }
                                 }, 100);
+
+                                setTimeout(function () {
+                                 templateObject.getAllSelectPaymentData();
+                               }, 1500);
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1337,6 +1280,10 @@ Template.purchaseordercard.onRendered(() => {
                                             });
                                         }
                         }, 100);
+
+                        setTimeout(function () {
+                         templateObject.getAllSelectPaymentData();
+                       }, 1500);
 
                         templateObject.purchaseorderrecord.set(purchaseorderrecord);
                         templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -8654,7 +8601,7 @@ Template.purchaseordercard.events({
     },
     'click #btnViewPayment': function() {
        let templateObject = Template.instance();
-        let paymentData = templateObject.datatablerecords.get();
+        let paymentData = templateObject.selectedsupplierpayrecords.get();
         let paymentID = "";
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
@@ -8677,6 +8624,53 @@ Template.purchaseordercard.events({
                 }
            }
        }
+    },
+    'click .btnTransactionPaid': async function () {
+      let templateObject = Template.instance();
+      let paymentData = await templateObject.selectedsupplierpayrecords.get();
+      let  selectedSupplierPaymentID = [];
+      let paymentID = "";
+      var url = FlowRouter.current().path;
+      var getso_id = url.split('?id=');
+      var currentInvoice = getso_id[getso_id.length - 1];
+      let suppliername = $('#edtSupplierName').val() || '';
+      for(let x = 0; x < paymentData.length; x++) {
+          if(paymentData[x].lines != null && paymentData[x].lines != "") {
+              if (paymentData[x].lines.length > 1) {
+                  for(let y = 0; y < paymentData[x].lines.length; y++) {
+                      if (paymentData[x].lines[y].fields.POID == currentInvoice) {
+                        if(paymentData[x].lines[y].fields.PaidInFull == "Yes"){
+                          paymentID = paymentData[x].id;
+                          window.open('/supplierpaymentcard?id=' + paymentID, '_self');
+                        }else{
+                          paymentID = paymentData[x].id;
+                          selectedSupplierPaymentID.push(paymentID);
+                        }
+                      }
+                  }
+              } else {
+                  if(paymentData[x].lines[0].fields.POID == currentInvoice) {
+                    if(paymentData[x].lines[0].fields.PaidInFull == "Yes"){
+                      paymentID = paymentData[x].id;
+                      window.open('/supplierpaymentcard?id=' + paymentID, '_self');
+                    }else{
+                      paymentID = paymentData[x].id;
+                      selectedSupplierPaymentID.push(paymentID);
+
+                    }
+                  }
+              }
+          }
+      }
+
+      setTimeout(function () {
+        let selectPayID = selectedSupplierPaymentID;
+        if (selectPayID.length == 1) {
+          window.open('/supplierpaymentcard?id=' + selectPayID, '_self');
+        } else {
+          window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
+        };
+      }, 500);
     },
     'click .chkEmailCopy': function(event) {
         $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));
