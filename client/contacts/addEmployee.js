@@ -2881,7 +2881,6 @@ Template.employeescard.onRendered(function () {
 
     templateObject.getTBankAccounts = function() {
         let employeePayrollService = new EmployeePayrollService();
-        let EmployeeID = FlowRouter.current().queryParams;
         getVS1Data('TBankAccounts').then(function(dataObj) {
             let newData = {
                 primary: null,
@@ -2889,13 +2888,12 @@ Template.employeescard.onRendered(function () {
                 second: null,
                 third: null
             };
-            console.log('dataObj', dataObj)
             if(dataObj.length > 0) {
                 let data = JSON.parse(dataObj[0].data);
                 console.log( 'TBankAccounts', data )
                 let index = 1;
                 for(let i = 0; i < data.length; i ++) {
-                    if(data[i].fields.EmployeeID == EmployeeID) {
+                    if( parseInt( data[i].fields.EmployeeID ) == parseInt( employeeID ) ) {
                         if(data[i].fields.IsPrimary == false) {
                             // let newItem = {...data[i].fields};
                             // newItem.order = index;
@@ -2910,7 +2908,7 @@ Template.employeescard.onRendered(function () {
                     }
                 }
             }
-            
+            console.log('newData', newData)
             templateObject.bankAccList.set(newData);
 
         }).catch(function (err) {
