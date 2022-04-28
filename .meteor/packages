@@ -55,3 +55,4 @@ force-ssl
 kadira:flow-router
 kadira:blaze-layout
 littledata:synced-cron
+meteorhacks:ssr

@@ -18,6 +18,7 @@ Template.emailsettings.onCreated(function () {
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
+    templateObject.originScheduleData = new ReactiveVar([]);
     templateObject.employeescheduledrecord = new ReactiveVar([]);
     templateObject.essentialemployeescheduledrecord = new ReactiveVar([]);
     templateObject.formsData = new ReactiveVar([]);
@@ -180,7 +181,6 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyMonthly").prop('checked', false);
             $("#frequencyDaily").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
             document.getElementById("monthlySettings").style.display = "none";
             document.getElementById("weeklySettings").style.display = "block";
             document.getElementById("dailySettings").style.display = "none";
@@ -192,7 +192,6 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyWeekly").prop('checked', false);
             $("#frequencyMonthly").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
             document.getElementById("monthlySettings").style.display = "none";
             document.getElementById("weeklySettings").style.display = "none";
             document.getElementById("dailySettings").style.display = "block";
@@ -204,7 +203,6 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyDaily").prop('checked', false);
             $("#frequencyWeekly").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
             document.getElementById("monthlySettings").style.display = "block";
             document.getElementById("weeklySettings").style.display = "none";
             document.getElementById("dailySettings").style.display = "none";
@@ -244,7 +242,7 @@ Template.emailsettings.onRendered(function () {
         }
 
         if (day == "sunday") {
-            return 7;
+            return 0;
         }
 
     }
@@ -399,7 +397,6 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyMonthly").prop('checked', false);
             $("#frequencyDaily").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
             $('#frequencyWeekly').trigger('click');
         }
 
@@ -408,14 +405,12 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyWeekly").prop('checked', false);
             $("#frequencyMonthly").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
         }
 
         if (setting == "M") {
             $("#frequencyDaily").prop('checked', false);
             $("#frequencyWeekly").prop('checked', false);
             $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").prop('checked', false);
             $('#frequencyMonthly').prop('checked', false);
         }
 
@@ -423,15 +418,6 @@ Template.emailsettings.onRendered(function () {
             $("#frequencyDaily").prop('checked', false);
             $("#frequencyWeekly").prop('checked', false);
             $("#frequencyOnetimeonly").trigger('click');
-            $("#frequencyOnevent").prop('checked', false);
-            $('#frequencyMonthly').prop('checked', false);
-        }
-
-        if (setting == "E") {
-            $("#frequencyDaily").prop('checked', false);
-            $("#frequencyWeekly").prop('checked', false);
-            $("#frequencyOnetimeonly").prop('checked', false);
-            $("#frequencyOnevent").trigger('click');
             $('#frequencyMonthly').prop('checked', false);
         }
 
@@ -440,59 +426,79 @@ Template.emailsettings.onRendered(function () {
         taxRateService.getScheduleSettings().then(function(data) {
             console.log(data);
             let empData = data.treportschedules;
-            var employeeID = Session.get('mySessionEmployeeLoggedID');
+            templateObject.originScheduleData.set(data.treportschedules);
             var empDataCurr = '';
             $.grep(templateObject.formsData.get(), function (n) {
+                let recipients = [];
+                let recipientIds = [];
+                let formIds = [];
                 for (let i = 0; i < empData.length; i++) {
-
-                    //TODO: Remove this part
-                    console.log(empData[i].fields.EmployeeId + '_' + n.id);
-                    const getLocalStorageValue = localStorage.getItem('TReportSchedules_' + empData[i].fields.EmployeeId + '_' + n.id); 
-                    if (getLocalStorageValue) {
-                        empData[i] = JSON.parse(getLocalStorageValue);
-                        if (n.id == empData[i].fields.FormID) {
+                    if (empData[i].fields.Active) {
+                        if ((n.id == '1' && empData[i].fields.BeginFromOption === "S") || (n.id == empData[i].fields.FormID && empData[i].fields.BeginFromOption !== "S")) {
+                            if (!recipients.includes(empData[i].fields.EmployeeEmailID)) {
+                                recipients.push(empData[i].fields.EmployeeEmailID);
+                                recipientIds.push(empData[i].fields.EmployeeId);
+                            }
+                            if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                             empDataCurr = {
-                                employeeid: empData[i].fields.EmployeeId || '',
+                                employeeid: recipientIds.join('; ') || '',
                                 every: empData[i].fields.Every || '',
-                                formID: empData[i].fields.FormID || '',
+                                formID: n.id || '',
+                                employeeEmailID: recipients.join('; ') || '',
                                 formname: n.name || '',
                                 frequency: empData[i].fields.Frequency || '',
-                                basedOnType: empData[i].fields.BasedOnType || '',
                                 id: empData[i].fields.ID || '',
                                 monthDays: empData[i].fields.MonthDays || '',
                                 nextDueDate: empData[i].fields.NextDueDate || '',
                                 startDate: empData[i].fields.StartDate.split(' ')[0] || '',
                                 startTime: empData[i].fields.StartDate.split(' ')[1] || '',
                                 weekDay: empData[i].fields.WeekDay || '',
-                                recipients: empData[i].fields.Recipients || ''
+                                satAction: empData[i].fields.SatAction || '',
+                                sunAction: empData[i].fields.SunAction || '',
+                                beginFromOption: empData[i].fields.BeginFromOption || '',
+                                formIDs: formIds.join('; ')
                             };
-                            employeeScheduledRecord.push(empDataCurr);
+                            if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
+                            else {
+                                employeeScheduledRecord = [...employeeScheduledRecord.filter(schedule => schedule.formID != n.id), empDataCurr];
+                            }
                         }
                     }
                 }
                 empDataCurr = {
                     employeeid: '',
+                    employeeEmailID: '',
                     every: '',
                     formID: n.id || '',
                     formname: n.name || '',
-                    frequencyType: '',
-                    basedOnType: '',
+                    frequency: '',
                     monthDays: '',
                     nextDueDate: '',
                     startDate: '',
                     startTime: '',
                     weekDay: '',
-                    extraOption: '',
-                    recipients: ''
+                    satAction: '',
+                    sunAction: '',
+                    beginFromOption: '',
+                    formIDs: ''
                 }
 
                 let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
                 if (!found) {
                     employeeScheduledRecord.push(empDataCurr);
                 }
-
             });
             console.log(employeeScheduledRecord);
+
+            // Initialize Grouped Reports Modal
+            const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
+            if (groupedReportData.length === 1) {
+                const formIds = groupedReportData[0].formIDs.split('; ');
+                for (let i = 0; i < formIds.length; i++) {
+                    $("#groupedReports-" + formIds[i] + ' .star').prop('checked', true);
+                }
+            }
+
             $('.fullScreenSpin').css('display', 'none');
             templateObject.employeescheduledrecord.set(employeeScheduledRecord);
 
@@ -669,15 +675,19 @@ Template.emailsettings.onRendered(function () {
     templateObject.saveSchedules = async function(settings) {
         return new Promise((resolve, reject) => {
             let i = 0;
+            let savedSchedules = [];
+            const oldSettings = templateObject.originScheduleData.get();
             settings.each(async function() {
                 i++;
                 const formID = $(this).attr('data-id');
+                const formName = $(this).find('.sorting_1').text();
                 const frequencyEl = $(this).find('#edtFrequency');
                 const sendEl = $(this).find('#edtBasedOn');
                 let recipientIds = $(this).find('input.edtRecipients').attr('data-ids');
                 let recipients = $(this).find('input.edtRecipients').val();
+                console.log(recipientIds, recipients);
                 // Check if this setting has got recipients
-                if (!!recipientIds) {
+                if (!!recipients) {
                     recipientIds = recipientIds.split('; ');
                     recipients = recipients.split('; ');
                     for (let i = 0; i < recipientIds.length; i++) {
@@ -687,9 +697,7 @@ Template.emailsettings.onRendered(function () {
                         const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
     
                         const frequencyName = frequencyEl.text();
-                        const oldSettings = templateObject.employeescheduledrecord.get();
-                        const oldSetting = oldSettings.filter((setting) => setting.formID === parseInt(formID) && setting.employeeId === parseInt(recipientIds[i]));
-                        console.log(oldSetting);
+                        console.log(formID, recipientIds[i]);
                         let objDetail = {
                             type: "TReportSchedules",
                             fields: {
@@ -702,16 +710,17 @@ Template.emailsettings.onRendered(function () {
                                 LastEmaileddate: "",
                                 MonthDays: 0,
                                 StartDate: sDate,
-                                WeekDay: 1,
+                                WeekDay: 1
                             }
                         };
-    
-                        if (oldSetting.length && oldSetting[0].id) objDetail.fields.ID = oldSetting[0].id; // Confirm if this setting is inserted or updated
-                        
+
+                        // if report type is Grouped Reports....
+                        const groupedReports = $('#groupedReportsModal .star:checked');
+                        console.log(groupedReports);
                         if (frequencyName === "Monthly") {
                             const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
                             const ofMonths = frequencyEl.attr('data-ofMonths');
-                            objDetail.fields.ExtraOption = ofMonths;
+                            // objDetail.fields.ExtraOption = ofMonths;
                             objDetail.fields.MonthDays = monthDate;
                             objDetail.fields.Frequency = "M";
                         } else if (frequencyName === "Weekly") {
@@ -727,55 +736,133 @@ Template.emailsettings.onRendered(function () {
                             // objDetail.fields.ExtraOption = dailyradiooption;
                             objDetail.fields.SatAction = "P";
                             objDetail.fields.SunAction = "P";
+                            objDetail.fields.Every = -1;
                             if (dailyradiooption === 'dailyWeekdays') {
                                 objDetail.fields.SatAction = "D";
                                 objDetail.fields.SunAction = "D";
                             }
-                            if (everydays) objDetail.fields.Every = parseInt(everydays);
+                            if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
                         } else if (frequencyName === "One Time Only") {
                             objDetail.fields.EndDate = sDate;
                             objDetail.fields.Frequency = "";
-                        } else if (frequencyName === "On Event") {
-                            const eventType = frequencyEl.attr("data-eventtype");
-                            objDetail.fields.ISEmpty = eventType === "settingsOnLogon";
-                            objDetail.fields.Frequency = "";
-                            objDetail.fields.Active = false;
                         } else {
                             objDetail.fields.Active = false;
                         }
-    
-                        const sendName = sendEl.text();
-                        // const sendTime = sendEl.attr("data-time");
-                        objDetail.fields.BasedOnType = sendName;
-                        // if (sendTime) objDetail.fields.MsTimeStamp = sendTime;
+                        
+                        // Delete EmployeeEmail field
+                        delete objDetail.fields.EmployeeEmail;
 
-                        //TODO: Add employee email field
-                        objDetail.fields.EmployeeEmail = recipients[i];
-    
-                        // Get next due date for email scheduling
-                        Meteor.call('calculateNextDate', objDetail.fields, function(error, result) {
-                            console.log(result);
-                            objDetail.fields.NextDueDate = result;
+                        if (formID == '1') {
+                            let formIDs = [];
+                            for (let j = 0; j < groupedReports.length; j++) {
+                                console.log($(groupedReports[j]).closest('tr'));
+                                objDetail.fields.FormID = parseInt($(groupedReports[j]).closest('tr').attr('id').replace('groupedReports-', ''));
+                                objDetail.fields.ISEmpty = true;
+                                formIDs.push(objDetail.fields.FormID);
+                                
+                                console.log(objDetail);
+                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == objDetail.fields.FormID && setting.fields.EmployeeId == parseInt(recipientIds[i]));
+                                console.log('Old Setting =====> ', oldSetting);
+                                if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+
+                                const sendName = sendEl.text();
+                                // const sendTime = sendEl.attr("data-time");
+                                // objDetail.fields.BasedOnType = sendName;
+                                // if (sendTime) objDetail.fields.MsTimeStamp = sendTime;
+
+                                //TODO: Add employee email field
+                                // objDetail.fields.EmployeeEmail = recipients[i];
+
+                                // Get next due date for email scheduling
+                                const nextDueDate = await new Promise((resolve, reject) => {
+                                    Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                        if (error) return reject(error);
+                                        resolve(result);
+                                    });
+                                });
+                                objDetail.fields.NextDueDate = nextDueDate;
+                                objDetail.fields.BeginFromOption = "S";
+                                console.log(objDetail);
+                                try {
+                                    // Save email settings
+                                    const saveResult = await taxRateService.saveScheduleSettings(objDetail);
+                                    console.log(saveResult);
+                                    savedSchedules.push(objDetail);
+                                    $('.fullScreenSpin').css('display', 'none');
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                            // Add synced cron job here
+                            objDetail.fields.FormIDs = formIDs.join(',');
+                            objDetail.fields.FormID = '1';
+                            objDetail.fields.FormName = formName;
+                            objDetail.fields.EmployeeEmail = recipients[i];
+                            console.log(objDetail.fields);
+                            Meteor.call('addTask', objDetail.fields);
+                        } else {
+                            const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == objDetail.fields.FormID && setting.fields.EmployeeId == parseInt(recipientIds[i]));
+                            console.log('Old Setting =====> ', oldSetting);
+                            if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+
+                            const nextDueDate = await new Promise((resolve, reject) => {
+                                Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                    if (error) return reject(error);
+                                    resolve(result);
+                                });
+                            });
+                            objDetail.fields.NextDueDate = nextDueDate;
                             console.log(objDetail);
                             try {
                                 // Save email settings
-                                // const saveResult = await taxRateService.saveScheduleSettings(objDetail);
-                                // console.log(saveResult);
+                                const saveResult = await taxRateService.saveScheduleSettings(objDetail);
+                                console.log(saveResult);
+                                savedSchedules.push(objDetail);
         
-                                //TODO: Convert this part to use API
-                                localStorage.setItem('TReportSchedules_' + objDetail.fields.EmployeeId + '_' + objDetail.fields.FormID, JSON.stringify(objDetail));
-        
+                                // Add synced cron job here
+                                objDetail.fields.FormName = formName;
+                                objDetail.fields.EmployeeEmail = recipients[i];
+                                console.log(objDetail.fields)
                                 Meteor.call('addTask', objDetail.fields);
                                 $('.fullScreenSpin').css('display', 'none');
                             } catch (e) {
-                                console.log(e);
-                                resolve(false);
+                                console.log(e);x
                             }
-                        });
+                        }
                     }
+                } else {
+                    // Remove all
+                    let objDetail = {
+                        type: "TReportSchedules",
+                        fields: {
+                            Active: false,
+                            ContinueIndefinitely: true,
+                            EmployeeId: 0,
+                            Every: 1,
+                            EndDate: "",
+                            FormID: parseInt(formID),
+                            LastEmaileddate: "",
+                            MonthDays: 0,
+                            StartDate: "",
+                            WeekDay: 1,
+                        }
+                    };
+                    Meteor.call('addTask', objDetail.fields);
                 }
             });
-            if (i === settings.length) resolve(true);
+            oldSettings.map(async setting => {
+                let filteredSchedule = savedSchedules.filter(savedSchedule => savedSchedule.fields.FormID == setting.fields.FormID && savedSchedule.EmployeeId == setting.fields.EmployeeId);
+                if (filteredSchedule.length === 0) {
+                    const saveResult = await taxRateService.saveScheduleSettings({
+                        type: "TReportSchedules",
+                        fields: {
+                            Active: false,
+                            ID: setting.fields.ID
+                        }
+                    });
+                    console.log(saveResult);
+                }
+            })
         });
     }
 });
@@ -822,7 +909,7 @@ Template.emailsettings.events({
     },
     'click .btnSaveFrequency': function () {
         // let taxRateService = new TaxRateService();
-        // let templateObject = Template.instance();
+        let templateObject = Template.instance();
         // let startTime = "";
         // let startDate = "";
         // let date = "";
@@ -859,13 +946,7 @@ Template.emailsettings.events({
             const everyWeeks = $("#weeklyEveryXWeeks").val();
             const selectDays = $(".selectDays input[type=checkbox]:checked").val();
             console.log(selectDays);
-            if (selectDays === "monday") selectDays = 1;
-            else if (selectDays === "tuesday") selectDays = 2;
-            else if (selectDays === "wednesday") selectDays = 3;
-            else if (selectDays === "thursday") selectDays = 4;
-            else if (selectDays === "friday") selectDays = 5;
-            else if (selectDays === "saturday") selectDays = 6;
-            else if (selectDays === "sunday") selectDays = 0;
+            selectDays = templateObject.getDayNumber(selectDays);
             const startTime = $('#edtWeeklyStartTime').val();
             const startDate = $('#edtWeeklyStartDate').val();
             setTimeout(function () {
@@ -905,121 +986,9 @@ Template.emailsettings.events({
                 $('#edtOneTimeOnlyTimeError').css('display', 'block');
                 $('#edtOneTimeOnlyDateError').css('display', 'block');
             }
-        } else if (radioFrequency == "frequencyOnevent") {
-            const eventType = $("#onEventSettings input[type=radio]:checked").attr("id");
-            setTimeout(function () {
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("On Event");
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-eventtype', eventType);
-                $("#frequencyModal").modal('toggle');
-            }, 100);
         } else {
             $("#frequencyModal").modal('toggle');
         }
-
-        // var startdateTimeMonthly = new Date($("#edtMonthlyStartDate").datepicker("getDate"));
-        // var startdateTimeWeekly = new Date($("#edtWeeklyStartDate").datepicker("getDate"));
-        // var startdateTimeDaily = new Date($("#edtDailyStartDate").datepicker("getDate"));
-        // var startdateTimeOneTime = new Date($("#edtOneTimeOnlyDate").datepicker("getDate"));
-
-        // if ($('#frequencyMonthly').is(":checked")) {
-        //     startTime = $('#edtMonthlyStartTime').val();
-        //     startDate = startdateTimeMonthly.getFullYear() + "-" + (startdateTimeMonthly.getMonth() + 1) + "-" + startdateTimeMonthly.getDate() || '';
-        //     every = $('#sltDayOccurence').val();
-        //     frequency = "M";
-        //     monthDays = $('#sltDayOfWeek').val();
-        //     date = startDate + ' ' + startTime;
-        // }
-
-
-        // if ($('#frequencyWeekly').is(":checked")) {
-        //     startTime = $('#edtWeeklyStartTime').val();
-        //     startDate = startdateTimeWeekly.getFullYear() + "-" + (startdateTimeWeekly.getMonth() + 1) + "-" + startdateTimeWeekly.getDate() || '';
-        //     every = $('#weeklyEveryXWeeks').val();
-        //     frequency = "W";
-        //     date = startDate + ' ' + startTime;
-
-        //     var checkboxes = document.querySelectorAll('.chkBoxDays');
-        //     checkboxes.forEach((item) => {
-        //         if (item.checked) {
-        //             weekDay = templateObject.getDayNumber(item.value);
-        //         }
-        //     });
-        // }
-
-        // if ($('#frequencyDaily').is(":checked")) {
-        //     startTime = $('#edtDailyStartTime').val();
-        //     startDate = startdateTimeDaily.getFullYear() + "-" + (startdateTimeDaily.getMonth() + 1) + "-" + startdateTimeDaily.getDate() || '';
-        //     every = $('#dailyEveryXDays').val() || 1;
-        //     frequency = "D";
-        //     date = startDate + ' ' + startTime;
-        // }
-
-        // if ($('#frequencyOnetimeonly').is(":checked")) {
-        //     startTime = $('#edtOneTimeOnlyTime').val();
-        //     startDate = startdateTimeOneTime.getFullYear() + "-" + (startdateTimeOneTime.getMonth() + 1) + "-" + startdateTimeOneTime.getDate() || '';
-        //     every = 1;
-        //     frequency = "D";
-        //     date = startDate + ' ' + startTime;
-        // }
-
-        // if (id == "") {
-        //     objDetails = {
-        //         type: "TReportSchedules",
-        //         fields: {
-        //             EmployeeId: employeeID,
-        //             StartDate: date,
-        //             Every: parseInt(every) || 0,
-        //             Frequency: frequency,
-        //             FormID: formId,
-        //             MonthDays: monthDays,
-        //             //NextDueDate: "2022-02-15 00:00:00",
-        //             // SatAction: "D",
-        //             //StartDate: date,
-        //             // SunAction: "A",
-        //             WeekDay: weekDay,
-        //         }
-        //     };
-        // } else {
-        //     objDetails = {
-        //         type: "TReportSchedules",
-        //         fields: {
-        //             ID: parseInt(id) || 0,
-        //             EmployeeId: employeeID,
-        //             StartDate: date,
-        //             Every: parseInt(every) || 0,
-        //             Frequency: frequency,
-        //             FormID: formId,
-        //             MonthDays: monthDays,
-        //             //NextDueDate: "2022-02-15 00:00:00",
-        //             // SatAction: "D",
-        //             //StartDate: date,
-        //             // SunAction: "A",
-        //             WeekDay: weekDay,
-        //         }
-        //     };
-
-        // }
-
-        // localStorage.setItem('emailsetting-frequency', JSON.stringify(objDetails));
-
-        // taxRateService.saveScheduleSettings(objDetails).then(function (data) {
-        //     // Meteor._reload.reload();    // No reload required here after save frequency.
-        //     $('#frequencyModal').modal('toggle');
-        //     $('.fullScreenSpin').css('display', 'none');
-        // }).catch(function (err) {
-        //     swal({
-        //         title: 'Oooops...',
-        //         text: err,
-        //         type: 'error',
-        //         showCancelButton: false,
-        //         confirmButtonText: 'Try Again'
-        //     }).then((result) => {
-        //         if (result.value) {
-        //             // Meteor._reload.reload();    // No reload required here after save frequency.
-        //         } else if (result.dismiss === 'cancel') { }
-        //     });
-        //     $('.fullScreenSpin').css('display', 'none');
-        // });
     },
     'click .dnd-moved': (e) => {
         localStorage.setItem('transactiontype', e.currentTarget.getAttribute('id'));
@@ -1165,14 +1134,14 @@ Template.emailsettings.events({
         const startTime = $(event.target).attr('data-starttime') ? $(event.target).attr('data-starttime') : '';
         if (frequencyType === 'Monthly') {
             $radioFrequencyType.filter('[id=frequencyMonthly]').trigger('click');
-            const monthDay = $(event.target).attr('data-monthdate') ? $(event.target).attr('data-monthdate') : 'day1';
-            const months = $(event.target).attr('data-ofmonths') ? $(event.target).attr('data-ofmonths').split(',') : [];
+            const monthDay = $(event.target).attr('data-monthdate') ? 'day' + $(event.target).attr('data-monthdate') : 'day1';
+            // const months = $(event.target).attr('data-ofmonths') ? $(event.target).attr('data-ofmonths').split(',') : [];
             $('#sltDay').val(monthDay);
-            const monthCheckboxes = $('.ofMonthList input[type="checkbox"]');
-            for(let i = 0; i < monthCheckboxes.length; i++) {
-                if (months.includes($(monthCheckboxes[i]).attr('value'))) $(monthCheckboxes[i]).prop('checked', true);
-                else $(monthCheckboxes[i]).prop('checked', false);
-            };
+            // const monthCheckboxes = $('.ofMonthList input[type="checkbox"]');
+            // for(let i = 0; i < monthCheckboxes.length; i++) {
+            //     if (months.includes($(monthCheckboxes[i]).attr('value'))) $(monthCheckboxes[i]).prop('checked', true);
+            //     else $(monthCheckboxes[i]).prop('checked', false);
+            // };
             $('#edtMonthlyStartDate').val(startDate);
             $('#edtMonthlyStartTime').val(startTime);
             $('#monthlySettings').css('display', 'block');
@@ -1198,10 +1167,18 @@ Template.emailsettings.events({
             $('#weeklySettings').css('display', 'block');
         } else if (frequencyType === 'Daily') {
             $radioFrequencyType.filter('[id=frequencyDaily]').trigger('click');
-            const dayilyRadioOption = $(event.target).attr('data-dailyradiooption');
-            const everyDays = $(event.target).attr('data-everydays') ? $(event.target).attr('data-everydays') : '1';
-            $('#' + dayilyRadioOption).trigger('click');
-            $('#weeklyEveryXWeeks').val(everyDays);
+            const everyDays = $(event.target).attr('data-everydays') ? $(event.target).attr('data-everydays') : '';
+            const satAction = $(event.target).attr('data-sataction') ? $(event.target).attr('data-sataction') : '';
+            const sunAction = $(event.target).attr('data-sunaction') ? $(event.target).attr('data-sunaction') : '';
+            if (everyDays === '-1' && satAction === 'P' && sunAction === 'P') {
+                $('#dailyEveryDay').trigger('click');
+            } else if (everyDays === '-1' && satAction === 'D' && sunAction === 'D') {
+                $('#dailyWeekdays').trigger('click');
+            } else if (everyDays !== '-1') {
+                $('#dailyEvery').trigger('click');
+                $('#dailyEveryXDays').val(everyDays);
+                $('#dailyEveryXDays').prop('disabled', false);
+            }
             $('#edtDailyStartDate').val(startDate);
             $('#edtDailyStartTime').val(startTime);
             $('#dailySettings').css('display', 'block');
@@ -1210,11 +1187,6 @@ Template.emailsettings.events({
             $('#edtOneTimeOnlyTime').val(startTime);
             $radioFrequencyType.filter('[id=frequencyOnetimeonly]').trigger('click');
             $('#oneTimeOnlySettings').css('display', 'block');
-        } else if (frequencyType === 'On Event') {
-            const eventType = $(event.target).attr('data-eventtype');
-            $('#'+eventType).prop('checked', true);
-            $radioFrequencyType.filter('[id=frequencyOnevent]').trigger('click');
-            $('#onEventSettings').css('display', 'block');
         } else {
             $('#monthlySettings').css('display', 'block');
         }
@@ -1243,6 +1215,13 @@ Template.emailsettings.events({
         $("#customerListModal").modal('toggle');
     },
     'click #groupedReports': function () {
+        let formIds = $(event.target).attr('data-ids') || '';
+        formIds = formIds ? formIds.split('; ') : [];
+        if (formIds.length > 0) {
+            for (let i = 0; i < formIds.length; i++) {
+                $("#groupedReports-" + formIds[i] + ' input.star').prop('checked', true);
+            }
+        }
         $("#groupedReportsModal").modal('toggle');
     },
     'click input[name="frequencyRadio"]': function () {
@@ -1251,32 +1230,22 @@ Template.emailsettings.events({
             document.getElementById("weeklySettings").style.display = "none";
             document.getElementById("dailySettings").style.display = "none";
             document.getElementById("oneTimeOnlySettings").style.display = "none";
-            document.getElementById("onEventSettings").style.display = "none";
         } else if (event.target.id == "frequencyWeekly") {
             document.getElementById("weeklySettings").style.display = "block";
             document.getElementById("monthlySettings").style.display = "none";
             document.getElementById("dailySettings").style.display = "none";
             document.getElementById("oneTimeOnlySettings").style.display = "none";
-            document.getElementById("onEventSettings").style.display = "none";
         } else if (event.target.id == "frequencyDaily") {
             document.getElementById("dailySettings").style.display = "block";
             document.getElementById("monthlySettings").style.display = "none";
             document.getElementById("weeklySettings").style.display = "none";
             document.getElementById("oneTimeOnlySettings").style.display = "none";
-            document.getElementById("onEventSettings").style.display = "none";
         } else if (event.target.id == "frequencyOnetimeonly") {
             document.getElementById("oneTimeOnlySettings").style.display = "block";
             document.getElementById("monthlySettings").style.display = "none";
             document.getElementById("weeklySettings").style.display = "none";
             document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("onEventSettings").style.display = "none";
-        } else if (event.target.id == "frequencyOnevent") {
-            document.getElementById("onEventSettings").style.display = "block";
-            document.getElementById("monthlySettings").style.display = "none";
-            document.getElementById("weeklySettings").style.display = "none";
-            document.getElementById("dailySettings").style.display = "none";
-            document.getElementById("oneTimeOnlySettings").style.display = "none";
-        } else {
+        }else {
             $("#frequencyModal").modal('toggle');
         }
     },
@@ -1304,43 +1273,12 @@ Template.emailsettings.events({
             $("#frequencyModal").modal('toggle');
         }
     },
-    // 'click .btnSaveFrequency': function() {
-    //     let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
-    //
-    //     if (radioFrequency == "frequencyMonthly") {
-    //         setTimeout(function() {
-    //             $('#edtFrequency').html("Monthly");
-    //             $("#frequencyModal").modal('toggle');
-    //         }, 100);
-    //     } else if (radioFrequency == "frequencyWeekly") {
-    //         setTimeout(function() {
-    //             $('#edtFrequency').html("Weekly");
-    //             $("#frequencyModal").modal('toggle');
-    //         }, 100);
-    //     } else if (radioFrequency == "frequencyDaily") {
-    //         setTimeout(function() {
-    //             $('#edtFrequency').html("Daily");
-    //             $("#frequencyModal").modal('toggle');
-    //         }, 100);
-    //     } else if (radioFrequency == "frequencyOnetimeonly") {
-    //         setTimeout(function() {
-    //             $('#edtFrequency').html("One Time Only");
-    //             $("#frequencyModal").modal('toggle');
-    //         }, 100);
-    //     } else if (radioFrequency == "frequencyOnevent") {
-    //         setTimeout(function() {
-    //             $('#edtFrequency').html("On Event");
-    //             $("#frequencyModal").modal('toggle');
-    //         }, 100);
-    //     } else {
-    //         $("#frequencyModal").modal('toggle');
-    //     }
-    // },
     'click #edtBasedOn': function (event) {
         localStorage.setItem('selected_editBasedOn_id', $(event.target).closest('tr').attr('data-id'));
         const basedOnType = $(event.target).text();
         $('#edtBasedOnDate').val('');
         $('#basedOnPrint').prop('checked', true);
+        $('#onEventSettings').css('display', 'none');
         console.log(basedOnType);
         if (basedOnType === "On Time") {
             const dateTime = $(event.target).attr('data-time');
@@ -1352,27 +1290,29 @@ Template.emailsettings.events({
         else if (basedOnType === "On Transaction Date") $('#basedOnTransactionDate').prop('checked', true);
         else if (basedOnType === "On Save") $('#basedOnSave').prop('checked', true);
         else if (basedOnType === "On Print") $('#basedOnPrint').prop('checked', true);
+        else if (basedOnType === "On Event") {
+            $('#onEventSettings').css('display', 'block');
+            $('#basedOnEvent').prop('checked', true);
+        }
         $("#basedOnModal").modal('toggle');
     },
     'click input[name="basedOnRadio"]': function () {
         if (event.target.id == "basedOnPrint") {
-            $('#edtBasedOnDate').attr('disabled', true);
-            $('#edtBasedOnDate').attr('required', false);
+            $('#onEventSettings').css('display', 'none');
         } else if (event.target.id == "basedOnSave") {
-            $('#edtBasedOnDate').attr('disabled', true);
-            $('#edtBasedOnDate').attr('required', false);
+            // $('#edtBasedOnDate').attr('disabled', true);
+            // $('#edtBasedOnDate').attr('required', false);
+            $('#onEventSettings').css('display', 'none');
         } else if (event.target.id == "basedOnTransactionDate") {
-            $('#edtBasedOnDate').attr('disabled', true);
-            $('#edtBasedOnDate').attr('required', false);
+            $('#onEventSettings').css('display', 'none');
         } else if (event.target.id == "basedOnDueDate") {
-            $('#edtBasedOnDate').attr('disabled', true);
-            $('#edtBasedOnDate').attr('required', false);
+            $('#onEventSettings').css('display', 'none');
         } else if (event.target.id == "basedOnDate") {
-            $('#edtBasedOnDate').attr('disabled', false);
-            $('#edtBasedOnDate').attr('required', true);
+            $('#onEventSettings').css('display', 'none');
         } else if (event.target.id == "basedOnOutstanding") {
-            $('#edtBasedOnDate').attr('disabled', true);
-            $('#edtBasedOnDate').attr('required', false);
+            $('#onEventSettings').css('display', 'none');
+        } else if (event.target.id == "basedOnEvent") {
+            $('#onEventSettings').css('display', 'block');
         } else {
             $("#basedOnModal").modal('toggle');
         }

@@ -111,33 +111,27 @@
                                         {{#each item in employeescheduledrecord}}
                                             {{#if checkIfEssentials item.formID}}
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}">{{item.formname}}</td>
-                                                    {{#if equals item.frequencyType "Monthly"}}
+                                                    <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}" data-ids="{{item.formIDs}}">{{item.formname}}</td>
+                                                    {{#if equals item.frequency "M"}}
                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="day{{item.monthDays}}" data-ofmonths="{{item.extraOption}}"
-                                                            data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
+                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly</td>
                                                     {{else}}
-                                                        {{#if equals item.frequencyType "Weekly"}}
+                                                        {{#if equals item.frequency "W"}}
                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                data-selectdays="{{item.extraOption}}" data-everyweeks="{{item.every}}"
-                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
+                                                                data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
+                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly</td>
                                                         {{else}}
-                                                            {{#if equals item.frequencyType "Daily"}}
+                                                            {{#if equals item.frequency "D"}}
                                                                 <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                    data-dailyradiooption="{{item.extraOption}}" data-everydays="{{item.every}}"
-                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
+                                                                    data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
+                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily</td>
                                                             {{else}}
-                                                                {{#if equals item.frequencyType "One Time Only"}}
+                                                                {{#unless equals item.startDate ""}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">{{item.frequencyType}}</td>
+                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only</td>
                                                                 {{else}}
-                                                                    {{#if equals item.frequencyType "On Event"}}
-                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                            data-eventtype="{{item.extraOption}}">{{item.frequencyType}}</td>
-                                                                    {{else}}
-                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequencyType}}</td>
-                                                                    {{/if}}
-                                                                {{/if}}
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
+                                                                {{/unless}}
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
@@ -148,7 +142,7 @@
                                                     <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
-                                                            class="es-input highlightSelect edtRecipients" type="search" value="{{item.recipients}}"></td>
+                                                            class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
@@ -321,47 +315,40 @@
                                             {{#if checkIfNotEssentials item.formID}}
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="arrow">{{item.formname}}</td>
-                                                    {{#if equals item.frequency "Monthly"}}
+                                                    {{#if equals item.frequency "M"}}
                                                         <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="{{item.monthDays}}" data-ofmonths="{{item.extraOption}}"
-                                                            data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly</td>
                                                     {{else}}
-                                                        {{#if equals item.frequency "Weekly"}}
+                                                        {{#if equals item.frequency "W"}}
                                                             <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                data-selectdays="{{item.extraOption}}" data-everyweeks="{{item.every}}"
-                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
+                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly</td>
                                                         {{else}}
-                                                            {{#if equals item.frequency "Daily"}}
+                                                            {{#if equals item.frequency "D"}}
                                                                 <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                    data-dailyradiooption="{{item.extraOption}}" data-everydays="{{item.every}}"
-                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                    data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
+                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily</td>
                                                             {{else}}
-                                                                {{#if equals item.frequency "One Time Only"}}
+                                                                {{#unless equals item.startDate ""}}
                                                                     <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startdate}}">{{item.frequency}}</td>
+                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only</td>
                                                                 {{else}}
-                                                                    {{#if equals item.frequency "On Event"}}
-                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                            data-eventtype="{{item.extraOption}}">{{item.frequency}}</td>
-                                                                    {{else}}
-                                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequency}}</td>
-                                                                    {{/if}}
-                                                                {{/if}}
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
+                                                                {{/unless}}
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
-                                                    <!-- {{#if equals item.MsUpdateSiteCode "Time"}} -->
-                                                        <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td> -->
-                                                    <!-- {{else}} -->
+                                                    <!-- {{#if equals item.MsUpdateSiteCode "Time"}}
+                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td>
+                                                    {{else}} -->
                                                     <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td>
                                                     <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
-                                                            class="es-input highlightSelect edtRecipients" type="search">{{item.employeeName}}</td>
+                                                            class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
-
                                     </tbody>
                                 </table>
                                 <div class="modal fade" id="frequencyModal" tabindex="-1" role="dialog"
@@ -420,13 +407,6 @@
                                                                 name="frequencyRadio" id="frequencyOnetimeonly">
                                                             <label class="form-check-label" for="frequencyOnetimeonly">
                                                                 One Time Only
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="frequencyRadio" id="frequencyOnevent">
-                                                            <label class="form-check-label" for="frequencyOnevent">
-                                                                On Event
                                                             </label>
                                                         </div>
                                                     </div>
@@ -1046,39 +1026,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-9 onEventSettings colSettings"
-                                                        id="onEventSettings" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <h5 style="margin-bottom: 8px;">Settings</h5>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row" style="margin-bottom: 8px;">
-                                                            <div class="col-12 col-lg-3">
-                                                                <div class="form-check" style="margin-top: 2px;">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="settingsOnEvents" id="settingsOnLogon"
-                                                                        checked>
-                                                                    <label class="form-check-label"
-                                                                        for="settingsOnLogon">
-                                                                        On Logon
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row" style="margin-bottom: 8px;">
-                                                            <div class="col-12 col-lg-3">
-                                                                <div class="form-check" style="margin-top: 2px;">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="settingsOnEvents" id="settingsOnLogout">
-                                                                    <label class="form-check-label"
-                                                                        for="settingsOnLogout">
-                                                                        On Logout
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -1165,10 +1112,6 @@
                                                                 On Print
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnSave">
@@ -1176,10 +1119,6 @@
                                                                 On Save
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnTransactionDate">
@@ -1188,10 +1127,6 @@
                                                                 On Transaction Date
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnDueDate">
@@ -1199,16 +1134,51 @@
                                                                 On Due Date
                                                             </label>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnOutstanding">
                                                             <label class="form-check-label" for="basedOnOutstanding">
                                                                 If Outstanding
                                                             </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="basedOnRadio" id="basedOnEvent">
+                                                            <label class="form-check-label" for="basedOnEvent">
+                                                                On Event
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-7" id="onEventSettings" style="display: none;">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 style="margin-bottom: 8px;">Settings</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 8px;">
+                                                            <div class="col-12">
+                                                                <div class="form-check" style="margin-top: 2px;">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="settingsOnEvents" id="settingsOnLogon"
+                                                                        checked>
+                                                                    <label class="form-check-label"
+                                                                        for="settingsOnLogon">
+                                                                        On Logon
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 8px;">
+                                                            <div class="col-12">
+                                                                <div class="form-check" style="margin-top: 2px;">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="settingsOnEvents" id="settingsOnLogout">
+                                                                    <label class="form-check-label"
+                                                                        for="settingsOnLogout">
+                                                                        On Logout
+                                                                    </label>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
