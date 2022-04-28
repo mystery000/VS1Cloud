@@ -239,7 +239,7 @@ Template.contactlistpop.onRendered(function () {
                                     className: "colSalesOrderBalance text-right",
                                     "targets": [9]
                                 }, {
-                                    className: "colEmail hiddenColumn",
+                                    className: "colEmail text-right",
                                     "targets": [10]
                                 }, {
                                     className: "colCustFld1 hiddenColumn",
@@ -625,7 +625,7 @@ Template.contactlistpop.onRendered(function () {
                                 className: "colSalesOrderBalance text-right",
                                 "targets": [9]
                             }, {
-                                className: "colEmail hiddenColumn",
+                                className: "colEmail text-right",
                                 "targets": [10]
                             }, {
                                 className: "colCustFld1 hiddenColumn",
@@ -1008,7 +1008,7 @@ Template.contactlistpop.onRendered(function () {
                                 className: "colSalesOrderBalance text-right",
                                 "targets": [9]
                             }, {
-                                className: "colEmail hiddenColumn",
+                                className: "colEmail text-right",
                                 "targets": [10]
                             }, {
                                 className: "colCustFld1 hiddenColumn",
