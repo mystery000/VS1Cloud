@@ -1,90 +1,31 @@
-import EmployeeModel from "./Employee";
+import EmployeePaySettingFields from "./EmployeePaySettingFields";
 
 /**
- * @type {{type: string, fields: EmployeePaySettingsFields}}
+ * @param {EmployeePaySettingFields} fields
+ * @type {{type: string, fields: EmployeePaySettingFields}}
  */
+
 export default class EmployeePaySettings {
-  constructor({ type, fields }) {
-    this.type = type;
-    this.fields = fields;
-  }
-}
-
-/**
- * @type {{Employee: EmployeeModel}}
- */
-export class EmployeePaySettingsFields {
-  constructor({
-    Abn,
-    DateLastActuallyPaid,
-    Employee,
-    Employeeid,
-    Employeepaynotes,
-    FirstPayDate,
-    GlobalRef,
-    ID,
-    IsContractedOut,
-    IsDirector,
-    ISEmpty,
-    IsMarriedWoman,
-    Isontheroster,
-    KeyStringFieldName,
-    KeyValue,
-    LastPaid,
-    MsTimeStamp,
-    MsUpdateSiteCode,
-    NICTableLetter,
-    NonWageIncome,
-    Payperiod,
-    PayPeriodInDays,
-    Recno,
-    STPJobkeeperFinishDateDesc,
-    STPJobkeeperFinishFN,
-    STPJobkeeperFinishFNDesc,
-    STPJobkeeperStartDateDesc,
-    STPJobkeeperStartFN,
-    STPJobkeeperStartFNDesc,
-    STPTier,
-    STPTierDesc,
-    Uknino,
-    Uktaxcode,
-  }) {
-    this.Abn = Abn;
-    this.DateLastActuallyPaid = DateLastActuallyPaid;
-    if (Employee instanceof EmployeeModel) {
-      this.Employee = Employee;
-    } else {
-      this.Employee = new EmployeeModel(Employee);
+    constructor(options) {
+      this.type = options.type;
+      if (options.fields instanceof EmployeePaySettingFields) {
+        this.fields = fields;
+      } else {
+        this.fields = new EmployeePaySettingFields(options.fields);
+      }
     }
-    this.Employeeid = Employeeid;
-    this.Employeepaynotes = Employeepaynotes;
-    this.FirstPayDate = FirstPayDate;
-    this.GlobalRef = GlobalRef;
-    this.ID = ID;
-    this.IsContractedOut = IsContractedOut;
-    this.IsDirector = IsDirector;
-    this.ISEmpty = ISEmpty;
-    this.IsMarriedWoman = IsMarriedWoman;
-    this.Isontheroster = Isontheroster;
-    this.KeyStringFieldName = KeyStringFieldName;
-    this.KeyValue = KeyValue;
-    this.LastPaid = LastPaid;
-    this.MsTimeStamp = MsTimeStamp;
-    this.MsUpdateSiteCode = MsUpdateSiteCode;
-    this.NICTableLetter = NICTableLetter;
-    this.NonWageIncome = NonWageIncome;
-    this.Payperiod = Payperiod;
-    this.PayPeriodInDays = PayPeriodInDays;
-    this.Recno = Recno;
-    this.STPJobkeeperFinishDateDesc = STPJobkeeperFinishDateDesc;
-    this.STPJobkeeperFinishFN = STPJobkeeperFinishFN;
-    this.STPJobkeeperFinishFNDesc = STPJobkeeperFinishFNDesc;
-    this.STPJobkeeperStartDateDesc = STPJobkeeperStartDateDesc;
-    this.STPJobkeeperStartFN = STPJobkeeperStartFN;
-    this.STPJobkeeperStartFNDesc = STPJobkeeperStartFNDesc;
-    this.STPTier = STPTier;
-    this.STPTierDesc = STPTierDesc;
-    this.Uknino = Uknino;
-    this.Uktaxcode = Uktaxcode;
-  }
+  
+    /**
+     *
+     * @param {Array} array
+     * @return {EmployeePaySettings[]}
+     */
+    static fromList(array) {
+      let myList = [];
+      array.forEach((element) => {
+        myList.push(new EmployeePaySettings(element));
+      });
+  
+      return myList;
+    }
 }

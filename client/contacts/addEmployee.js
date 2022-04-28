@@ -12,8 +12,12 @@ import { Random } from 'meteor/random';
 import { AppointmentService } from '../appointments/appointment-service';
 import '../lib/global/indexdbstorage.js';
 import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
+import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
+import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
 import ApiService from "../js/Api/Module/ApiService";
+import LeaveRequest from "../js/Api/Model/LeaveRequest";
+import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let edtProductSelect = "";
@@ -21,8 +25,10 @@ Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.employeePayInfos = new ReactiveVar();
+    templateObject.employeePaySettings = new ReactiveVar();
     templateObject.leaveTypesDrpDown = new ReactiveVar();
-    templateObject.assignLeaveTypeInfo = new ReactiveVar();
+    templateObject.assignLeaveTypeInfos = new ReactiveVar();
+    templateObject.leaveRequestInfos = new ReactiveVar();
     templateObject.bankAccList = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
     templateObject.productsdatatable = new ReactiveVar();
@@ -2750,77 +2756,92 @@ Template.employeescard.onRendered(function () {
         }, 1000);
     }
 
+    templateObject.getLeaveRequests = async () => {
+        // TO DO
+        let TLeaveRequests = await getVS1Data('TLeaveRequest');
+        if( TLeaveRequests.length ){
+            let TLeaveRequestsData = JSON.parse(TLeaveRequests[0].data);
+            // console.log(TAssignLeaveTypesData.tassignteavetype)
+            let useData = LeaveRequest.fromList(
+                TLeaveRequestsData.tleaverequest
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            templateObject.leaveRequestInfos.set(useData);
+        }
+        
+    };
+    templateObject.getLeaveRequests();
+
+    templateObject.getAssignLeaveTypes = async () => {
+        let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
+        if( TAssignLeaveTypes.length ){
+            let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
+            // console.log(TAssignLeaveTypesData.tassignteavetype)
+            let useData = AssignLeaveType.fromList(
+                TAssignLeaveTypesData.tassignteavetype
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            templateObject.assignLeaveTypeInfos.set(useData);
+        }
+        
+    };
+    templateObject.getAssignLeaveTypes();
+
     templateObject.getEmployeePaySettings = async () => {
         try { 
-            // EmployeePayrollApi fetch data from localstorage
-            let localTEmployeepaysettings = localStorage.getItem('TEmployeePayTaxesSettings_' + employeeID);
-            if( localTEmployeepaysettings ){
-                let localUData = await JSON.parse( localTEmployeepaysettings )
-                let employeePaySettings = new EmployeePaySettings(localUData);
-                $('#annualSalaryValue').text( employeePaySettings.fields.Employee.fields.Wages * 12 )
-                templateObject.employeePayInfos.set(employeePaySettings);       
-            }else{
-                //EmployeePayrollApi Fetching from database
-                const employeePayrollApi = new EmployeePayrollApi();
-                const allEmployeePaysettingEndpoint = employeePayrollApi.collection.findByName(
-                    employeePayrollApi.collectionNames.TEmployeepaysettings
-                );
-                allEmployeePaysettingEndpoint.url.searchParams.append("ListType", "'Detail'");
-                // Search for specific employee
-                allEmployeePaysettingEndpoint.url.searchParams.append(
-                    "select",
-                    `[Employeeid]=${employeeID}`
-                );
+            // EmployeePayrollApi fetch data from indexDB
+            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            if( TEmployeepaysettings.length ){
+                let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
+                // console.log('TEmployeepaysettingData', TEmployeepaysettingData.temployeepaysettings)
+                let useData = EmployeePaySettings.fromList(
+                    TEmployeepaysettingData.temployeepaysettings
+                ).filter((item) => {
+                    if (item.fields.Employeeid == employeeID) {
+                        return item;
+                    }
+                });
+
+                let employeePaySettings = useData[0]
                 
-                const allEmployeePaysetting = await allEmployeePaysettingEndpoint.fetch();
 
-                if (allEmployeePaysetting.ok == true) {
-                    const data = await allEmployeePaysetting.json();               
-                    let useData = data.temployeepaysettings;
-                    
-                    //Set EmployeePaySettings fields
-                    let employeePaySettings = new EmployeePaySettings(useData[0]);
-                    $('#annualSalaryValue').text( employeePaySettings.fields.Employee.fields.Wages * 12 )
-                    templateObject.employeePayInfos.set(employeePaySettings);
-                    // console.log('employeePayInfos', templateObject.employeePayInfos.get());
-                    
-                    //Looping method to set employeePayInfos 
-                    // for (let i = 0; i < useData.length; i++) {
-                    //     if (parseInt(useData[i].fields.Employeeid) === parseInt(employeeID)) {
-                    //         let payInfo = {
-                    //             index: i,
-    
-    
-    
-                    //             ID: useData[i].fields.ID,
-                    //             EmployeeID: useData[i].fields.Employeeid,
-                    //             EmployeeName: useData[i].fields.Employee.fields.EmployeeName,
-                    //             AnnSalary: useData[i].fields.Employee.fields.Wages * 12,
-                    //             TFN: useData[i].fields.Employee.fields.TFN,
-                    //             Country: useData[i].fields.Employee.fields.Country,
-                    //             TaxFreeThreshold: useData[i].fields.Employee.fields.TaxFreeThreshold ? useData[i].fields.Employee.fields.TaxFreeThreshold : false,
+                let objEmployeePaySettings = {
+                    EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                    AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
+                    TFN: employeePaySettings.fields.Employee.fields.TFN,
+                    Country: employeePaySettings.fields.Employee.fields.Country,
+                    TaxFreeThreshold: employeePaySettings.fields.Employee.fields.TaxFreeThreshold ? employeePaySettings.fields.Employee.fields.TaxFreeThreshold : false,
 
-                    //             TFNExemption: useData[i].fields.Employee.fields.TFNExemption ? useData[i].fields.Employee.fields.TFNExemption : "TFN Exempt - Pensioner",
-                    //             EmploymentBasis: useData[i].fields.Employee.fields.EmploymentBasis ? useData[i].fields.Employee.fields.EmploymentBasis : "",
-                    //             ResidencyStatus: useData[i].fields.Employee.fields.ResidencyStatus ? useData[i].fields.Employee.fields.ResidencyStatus : "",
-                    //             StudyTrainingSupportLoan: useData[i].fields.Employee.fields.StudyTrainingSupportLoan ? useData[i].fields.Employee.fields.StudyTrainingSupportLoan : false,
-                    //             EligibleToReceiveLeaveLoading: useData[i].fields.Employee.fields.EligibleToReceiveLeaveLoading ? useData[i].fields.Employee.fields.EligibleToReceiveLeaveLoading : false,
-                    //             OtherTaxOffsetClaimed: useData[i].fields.Employee.fields.OtherTaxOffsetClaimed ? useData[i].fields.Employee.fields.OtherTaxOffsetClaimed : false,
-                    //             UpwardvariationRequested: useData[i].fields.Employee.fields.UpwardvariationRequested ? useData[i].fields.Employee.fields.UpwardvariationRequested : false,
-                    //             SeniorandPensionersTaxOffsetClaimed: useData[i].fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? useData[i].fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
-                    //             HasApprovedWithholdingVariation: useData[i].fields.Employee.fields.HasApprovedWithholdingVariation ? useData[i].fields.Employee.fields.HasApprovedWithholdingVariation : false,
-                    //             dataObject: data
-                    //         };
-                    //         templateObject.employeePayInfos.set(payInfo);
-                    //         break;                    
-                    //     }
-                    // }
+                    TFNExemption: employeePaySettings.fields.Employee.fields.TFNExemption ? employeePaySettings.fields.Employee.fields.TFNExemption : "",
+                    EmploymentBasis: employeePaySettings.fields.Employee.fields.EmploymentBasis ? employeePaySettings.fields.Employee.fields.EmploymentBasis : "",
+                    ResidencyStatus: employeePaySettings.fields.Employee.fields.ResidencyStatus ? employeePaySettings.fields.Employee.fields.ResidencyStatus : "",
+                    StudyTrainingSupportLoan: employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan ? employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan : false,
+                    EligibleToReceiveLeaveLoading: employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading ? employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading : false,
+                    OtherTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed : false,
+                    UpwardvariationRequested: employeePaySettings.fields.Employee.fields.UpwardvariationRequested ? employeePaySettings.fields.Employee.fields.UpwardvariationRequested : false,
+                    SeniorandPensionersTaxOffsetClaimed: employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed ? employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed : false,
+                    HasApprovedWithholdingVariation: employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation ? employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation : false,
                 }
+
+                templateObject.employeePaySettings.set(objEmployeePaySettings);
+
+                // console.log('employeePaySettings', templateObject.employeePaySettings.get())
+
+                templateObject.employeePayInfos.set(employeePaySettings);
+
+                $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
+                $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
+                $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
             }
         } catch(err) {  
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllEmployeePaySettings('All',0)
-            console.log('TEmployeepaysettings', data );
             for (let i = 0; i < data.temployeepaysettings.length; i++) {
                 if (parseInt(data.temployeepaysettings[i].fields.Employeeid) === parseInt(employeeID)) {
 
@@ -2846,7 +2867,7 @@ Template.employeescard.onRendered(function () {
     templateObject.getTLeaveTypes = async () => {
         try{
             let dataObj = await getVS1Data('TLeavetypes');
-            // console.log('TLeavetypes', dataObj )
+            console.log('TLeavetypes', dataObj )
         } catch(err) {  
             console.log( 'roor', err.message )
             let employeePayrollService = new EmployeePayrollService();
@@ -3734,9 +3755,55 @@ Template.employeescard.events({
         });
 
     },
+    // Save LeaveRequest Popup    
+    'click #btnSaveLeaveRequest': async function(event) {
+        // TO DO
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let TypeofRequest = $('#edtLeaveTypeofRequest').val();
+        let Description = $('#edtLeaveDescription').val();
+        let StartDate = $('#edtLeaveStartDate').val();
+        let EndDate = $('#edtLeaveEndDate').val();
+        let PayPeriod = $('#edtLeavePayPeriod').val();
+        let Hours = $('#edtLeaveHours').val();
+        const leaveRequests = [];
+        let TLeaveRequest = await getVS1Data('TLeaveRequest');
+        if( TLeaveRequest.length ){
+            let TLeaveRequestData = JSON.parse(TLeaveRequest[0].data);
+            leaveRequests = AssignLeaveType.fromList(
+                TLeaveRequestData.tleaverequest
+            );
+        }
+        
+        leaveRequests.push(
+            new LeaveRequest({
+                type: "TLeaveRequest",
+                fields: new LeaveRequestFields({
+                    EmployeeID: employeeID,
+                    TypeofRequest: TypeofRequest,
+                    Description: Description,
+                    StartDate: StartDate,
+                    EndDate: EndDate,
+                    PayPeriod: PayPeriod,
+                    Hours: Hours
+                }),
+            })
+        );
+        let updatedLeaveRequest = {
+            tleaverequest: leaveRequests,
+        }
+        await addVS1Data('TLeaveRequest', JSON.stringify(updatedLeaveRequest));            
+        templateObject.getLeaveRequests(); 
+        $('#newLeaveRequestModal').modal('hide');   
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
     // Save AssignLeaveType Popup
     'click #btnSaveAssignLeaveType': async function(event) {
-
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let LeaveType = $('#leaveTypeSelect').val();
@@ -3765,21 +3832,18 @@ Template.employeescard.events({
         let OnTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
         let EFTLeaveType = $("#eftLeaveType").is(':checked') ? true : false;
         let SuperannuationGuarantee = ( EFTLeaveType )? $("#superannuationGuarantee").is(':checked') ? true : false : false;
-        let TEmployeePayLeaveSettings = localStorage.getItem('TEmployeePayLeaveSettings_' + employeeID);
         const assignLeaveTypes = [];
-        if( TEmployeePayLeaveSettings ){
-            assignLeaveTypes = await JSON.parse( TEmployeePayLeaveSettings )
-            Array.prototype.forEach.call(assignLeaveTypes, (assignLeaveType) => {
-                console.log( assignLeaveType )
-                AssignLeaveType(assignLeaveType)             
-            })
-        }
-        console.log( assignLeaveTypes )
-        return false                
+        let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
+        if( TAssignLeaveTypes.length ){
+            let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
+            assignLeaveTypes = AssignLeaveType.fromList(
+                TAssignLeaveTypesData.tassignteavetype
+            );
+        }          
         assignLeaveTypes.push(
             new AssignLeaveType({
                 type: "TAssignLeaveType",
-                fields: {
+                fields: new AssignLeaveTypeFields({
                     LeaveType: LeaveType,
                     EmployeeID: employeeID,
                     LeaveCalcMethod: LeaveCalcMethod,
@@ -3791,11 +3855,17 @@ Template.employeescard.events({
                     OnTerminationUnusedBalance: OnTerminationUnusedBalance,
                     EFTLeaveType: EFTLeaveType,
                     SuperannuationGuarantee: SuperannuationGuarantee
-                }
+                }),
             })
         );
-        localStorage.setItem('TEmployeePayLeaveSettings_' + employeeID, JSON.stringify(assignLeaveTypes));
-        templateObj.assignLeaveTypeInfo.set(assignLeaveTypes);    
+        // console.log('assignLeaveTypes', assignLeaveTypes)
+        let updatedAssignLeaveTypes = {
+            tassignteavetype: assignLeaveTypes,
+        }
+        await addVS1Data('TAssignLeaveType', JSON.stringify(updatedAssignLeaveTypes));            
+        templateObject.getAssignLeaveTypes(); 
+        $('#assignLeaveTypeModal').modal('hide');   
+        $('.fullScreenSpin').css('display', 'none');
     },
 
     // Save active tab data
@@ -3817,17 +3887,30 @@ Template.employeescard.events({
             /**
              * Load EmployeePayrollApi API
              */
-            const employeePayrollApi = new EmployeePayrollApi();
+            // const employeePayrollApi = new EmployeePayrollApi();
 
-            const apiEndpoint = employeePayrollApi.collection.findByName(
-                employeePayrollApi.collectionNames.TEmployeepaysettings
-            );
+            // const apiEndpoint = employeePayrollApi.collection.findByName(
+            //     employeePayrollApi.collectionNames.TEmployeepaysettings
+            // );
 
             // let employeePayrollService = new EmployeePayrollService();
-            let payInfo = templateObject.employeePayInfos.get();
-            let employeePaySettings = new EmployeePaySettings(payInfo);
-            $('.fullScreenSpin').css('display', 'inline-block');
 
+            let useData = [];
+            const listEmployeePaySettings = {}
+            let employeePaySettings = templateObject.employeePayInfos.get();
+            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            if( TEmployeepaysettings.length ){
+                listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
+                useData = EmployeePaySettings.fromList(
+                    listEmployeePaySettings.temployeepaysettings
+                ).filter((item) => {
+                    if ( item.fields.Employeeid !== parseInt(employeeID) ) {
+                        return item;
+                    }
+                });
+            }
+
+            
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
@@ -3852,9 +3935,20 @@ Template.employeescard.events({
             employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed = SeniorandPensionersTaxOffsetClaimed;
             employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation = HasApprovedWithholdingVariation;
             
+            useData.push(employeePaySettings);
+
             /**
-             * Saving employeePaySettings Object
+             * Saving employeePaySettings Object in localDB
             */
+            
+            listEmployeePaySettings.temployeepaysettings = useData;
+            // console.log('useData', listEmployeePaySettings)
+            await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));            
+            $('.fullScreenSpin').css('display', 'none');
+          
+            return false;
+
+            
 
             /**
              * API is not ready we have to save into local db
@@ -3865,10 +3959,7 @@ Template.employeescard.events({
             //     body: JSON.stringify(employeePaySettings),
             // });
             
-            // Saving into localdb
-            localStorage.setItem('TEmployeePayTaxesSettings_' + employeeID, JSON.stringify(employeePaySettings));
-            $('.fullScreenSpin').css('display', 'none');
-            return false;
+            
 
             // let newDataObj = [{
             //     EmployeeEmail: employeeEmail,
@@ -3884,7 +3975,6 @@ Template.employeescard.events({
             // }
 
             // console.log( 'data', currentInfo )
-            //TO DO: SAVE INTO DATABASE
             addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
@@ -5633,12 +5723,18 @@ Template.employeescard.helpers({
     employeePayInfo: () => {
         return Template.instance().employeePayInfos.get();
     },
+    employeePaySetting: () => {        
+        return Template.instance().employeePaySettings.get();
+    },
     leaveTypeInfo: () => {
         return Template.instance().leaveTypesDrpDown.get();
     },
     assignLeaveTypeInfo: () => {
-        return Template.instance().leaveTypesDrpDown.get();
+        return Template.instance().assignLeaveTypeInfos.get();
     },
+    leaveRequestInfo: () => {
+        return Template.instance().leaveRequestInfos.get();
+    },    
     bankAccountList: () => {
         return Template.instance().bankAccList.get();
     },

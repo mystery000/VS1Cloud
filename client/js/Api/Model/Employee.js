@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import { isEmpty, times } from "lodash";
 import UserModel from "./User";
 
 export default class Employee {
@@ -138,6 +138,7 @@ export class EmployeeFields {
     TaxFreeThreshold,
     TaxScaleID,
     TFN,
+    TFNExemption,
     TfnApplicationMade,
     Title,
     TrackSales,
@@ -152,6 +153,14 @@ export class EmployeeFields {
     WorkersCompRate,
     WorkPhone,
     ZoneDependentSpecial,
+    EmploymentBasis,
+    ResidencyStatus,
+    StudyTrainingSupportLoan,
+    EligibleToReceiveLeaveLoading,
+    OtherTaxOffsetClaimed,
+    UpwardvariationRequested,
+    SeniorandPensionersTaxOffsetClaimed,
+    HasApprovedWithholdingVariation
   }) {
     this.ABN = ABN;
     this.Active = Active;
@@ -278,6 +287,7 @@ export class EmployeeFields {
     this.TaxFreeThreshold = TaxFreeThreshold;
     this.TaxScaleID = TaxScaleID;
     this.TFN = TFN;
+    this.TFNExemption = TFNExemption;
     this.TfnApplicationMade = TfnApplicationMade;
     this.Title = Title;
     this.TrackSales = TrackSales;
@@ -298,5 +308,13 @@ export class EmployeeFields {
     this.WorkersCompRate = WorkersCompRate;
     this.WorkPhone = WorkPhone;
     this.ZoneDependentSpecial = ZoneDependentSpecial;
+    this.EmploymentBasis = EmploymentBasis;
+    this.ResidencyStatus = ResidencyStatus;
+    this.StudyTrainingSupportLoan = StudyTrainingSupportLoan;
+    this.EligibleToReceiveLeaveLoading = EligibleToReceiveLeaveLoading;
+    this.OtherTaxOffsetClaimed = OtherTaxOffsetClaimed;
+    this.UpwardvariationRequested = UpwardvariationRequested;
+    this.SeniorandPensionersTaxOffsetClaimed = SeniorandPensionersTaxOffsetClaimed;
+    this.HasApprovedWithholdingVariation = HasApprovedWithholdingVariation;
   }
 }
