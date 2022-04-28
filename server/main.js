@@ -99,8 +99,8 @@ yodlee.getAccessToken({
     let postHeaders = {
       "Content-Type": "application/json",
       "Accept": "application/json",
-      "CLIENT-ID": "vrfT3ah0JbLfw2ZsJ2WPID5VFHdete2GeurWkm4",
-      "AUTHORIZATION": "apikey goldsnake2100:a89194f57da098a992d673b1661f270d",
+      "CLIENT-ID": "vrf9JUep9GWNHCpIKRREbTA9jbrF4LxdoEtiyLO",
+      "AUTHORIZATION": "apikey dev.vs1cloud:d56dcb27df3930fccceb8dd4c7e2628d",
       // "Access-Control-Allow-Origin": "*"
     };
     let postData = {
@@ -116,7 +116,6 @@ yodlee.getAccessToken({
       if (error) {
         cb(error, null);
       } else {
-        console.log('result', result);
         cb(null, result);
       }
     });
@@ -124,7 +123,7 @@ yodlee.getAccessToken({
 
   Meteor.methods({
     'getOcrResultFromVerifi': function(imageData, fileName) {
-      
+
       this.unblock();
       var result = Meteor.wrapAsync(callVerifiApi)(imageData, fileName);
       return result;

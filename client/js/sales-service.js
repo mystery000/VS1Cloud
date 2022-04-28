@@ -561,4 +561,12 @@ export class SalesBoardService extends BaseService {
       return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
 
+  getCheckPaymentLineByTransID(transID) {
+      let options = {
+          ListType: "Detail",
+          select: '[TransNo]="'+transID+'"',
+      };
+      return this.getList(this.ERPObjects.TCustomerPaymentLine, options);
+  }
+
 }

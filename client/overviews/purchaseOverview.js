@@ -1940,7 +1940,7 @@ Template.purchasesoverview.onRendered(function () {
   };
 
   templateObject.setCardPositions = () => {
-    let headerCardsList = JSON.parse(localStorage.getItem(_cardGroup));    
+    let headerCardsList = JSON.parse(localStorage.getItem(_cardGroup));
     if( headerCardsList ){
       headerCardsList.forEach((card) => {
         $(`[card-key='${card.key}']`).attr("position", card.position);
@@ -1954,7 +1954,7 @@ Template.purchasesoverview.onRendered(function () {
         .appendTo($chartWrappper);
     }
   };
-  templateObject.setCardPositions();  
+  templateObject.setCardPositions();
 
   templateObject.saveCards = () => {
     // Here we get that list and create and object
@@ -2423,7 +2423,7 @@ Template.purchasesoverview.events({
     FlowRouter.go("/creditlist");
   },
   "click .cardOutPO": function (event) {
-    FlowRouter.go("/agedpayables");
+    FlowRouter.go("/purchaseorderlist");
   },
   "click .newBill": function (event) {
     //FlowRouter.go('/creditcard');
