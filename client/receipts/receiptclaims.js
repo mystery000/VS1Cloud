@@ -44,6 +44,10 @@ Template.receiptsoverview.onCreated(function () {
 Template.receiptsoverview.onRendered(function () {
     let templateObject = Template.instance();
 
+    if (FlowRouter.current().queryParams.success) {
+        $('.btnRefresh').addClass('btnSearchAlert');
+    }
+
     sessionCurrency = Session.get('ERPCountryAbbr');
     multipleRecords = [];
     for (i = 0; i < 10; i++) {
@@ -1952,7 +1956,7 @@ Template.receiptsoverview.events({
         accountService.saveReceipt(expenseClaim).then(function (data) {
             // $('.fullScreenSpin').css('display', 'none');
             // setTimeout(() => {
-                window.open('/receiptsoverview', '_self');
+                window.open('/receiptsoverview?success=true', '_self');
             // }, 200);
         });
     },
@@ -2054,7 +2058,7 @@ Template.receiptsoverview.events({
                 accountService.saveReceipt(receipts[i]).then(function (data) {
                     // $('.fullScreenSpin').css('display', 'none');
                     setTimeout(() => {
-                        window.open('/receiptsoverview', '_self');
+                        window.open('/receiptsoverview?success=true', '_self');
                     }, 500);
                 }).catch ( err => {
                     $('.fullScreenSpin').css('display', 'none');
@@ -2145,7 +2149,7 @@ Template.receiptsoverview.events({
                 console.log('update receipt result', data);
                 // $('.fullScreenSpin').css('display', 'none');
                 // setTimeout(() => {
-                    window.open('/receiptsoverview', '_self');
+                    window.open('/receiptsoverview?success=true', '_self');
                 // }, 200);
             });
         }
@@ -2228,7 +2232,7 @@ Template.receiptsoverview.events({
                 $('.fullScreenSpin').css('display', 'inline-block');
                 accountService.saveReceipt(expenseClaim).then(function (data) {
                     // $('.fullScreenSpin').css('display', 'none');
-                    window.open('/receiptsoverview', '_self');
+                    window.open('/receiptsoverview?success=true', '_self');
                 });
             } else if (result.dismiss === 'cancel') {
 
@@ -2412,7 +2416,7 @@ Template.receiptsoverview.events({
             accountService.saveReceipt(expenseClaim).then(function (data) {
                 // $('.fullScreenSpin').css('display', 'none');
                 setTimeout(() => {
-                    window.open('/receiptsoverview', '_self');
+                    window.open('/receiptsoverview?success=true', '_self');
                 }, 500);
             }).catch ( err => {
                 $('.fullScreenSpin').css('display', 'none');
@@ -2517,12 +2521,12 @@ Template.receiptsoverview.events({
         accountService.saveReceipt(expenseClaim).then(function (data) {
             // $('.fullScreenSpin').css('display', 'none');
             // setTimeout(() => {
-                window.open('/receiptsoverview', '_self');
+                window.open('/receiptsoverview?success=true', '_self');
             // }, 200);
         });
     },
     'click .btnRefresh': async function () {
-        $('.fullScreenSpin').css('display', 'none');
+        $('.fullScreenSpin').css('display', 'inline-block');
 
         await sideBarService.getAllExpenseCliamExDataVS1().then(function (expenseData) {
             addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function (datareturn) {
@@ -2654,7 +2658,7 @@ Template.receiptsoverview.events({
         accountService.saveReceipt(expenseClaim).then(function (data) {
             // $('.fullScreenSpin').css('display', 'none');
             // setTimeout(() => {
-                window.open('/receiptsoverview', '_self');
+                window.open('/receiptsoverview?success=true', '_self');
             // }, 200);
         });
 
