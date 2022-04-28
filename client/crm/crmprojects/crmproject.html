@@ -9,7 +9,9 @@
 
       <div class="card shadow mb-4">
         <div class="card-header" style="display: inline-flex; padding-bottom: 0px;">
-          <h3>{{getProjectName}}</h3>
+          {{#if selected_project}}
+          <h3>{{selected_project.ProjectName}}</h3>
+          {{/if}}
         </div>
         <div class="card-body">
 

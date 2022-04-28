@@ -19,6 +19,10 @@ export class CRMService extends BaseService {
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
 
+  getTProjectDetail(id) {
+    return this.getOneById(this.ERPObjects.Tprojectlist, id);
+  }
+
   updateProject(data) {
     return this.POST(this.ERPObjects.Tprojectlist, data);
   }

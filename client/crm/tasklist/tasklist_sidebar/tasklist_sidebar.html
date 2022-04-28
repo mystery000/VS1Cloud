@@ -35,10 +35,11 @@
           <ul class="list-group list-group-flush" id="crmFavoriteUl">
             {{#if favorite_projects}}
             {{#each project in favorite_projects}}
-            <li class="list-group-item projectmenuoption projectName{{project.fields.ID}}">
-              <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: purple;"></i>
-              <span class="projectName"><a
-                  href="/projects?id={{project.fields.ID}}">{{project.fields.ProjectName}}</a></span>
+            <li
+              class="list-group-item projectmenuoption projectName{{project.fields.ID}} favoriteProjectName{{project.fields.ID}}">
+              <i class="fas fa-circle"
+                style="margin-right: 8px; width: 25px; color: {{getProjectColor project.fields.ProjectColour}}"></i>
+              <span class="projectName" data-id="{{project.fields.ID}}">{{project.fields.ProjectName}}</span>
               <span class="projectMenu">
                 <div class="dropdown">
                   <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button"
@@ -48,11 +49,13 @@
                   </button>
                   <div class="dropdown-menu project-dropdown-menu"
                     aria-labelledby="dropdownMenuButton_{{project.fields.ID}}">
-                    <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                      <i class="far fa-edit" style="margin-right: 8px;"></i>Edit
-                      Project</a>
+                    <a class="dropdown-item edit-project" href="#" data-id="{{project.fields.ID}}"
+                      data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                      data-toggle="modal" data-target="#editCrmProject">
+                      <i class="far fa-edit" style="margin-right: 8px;"></i>Edit Project</a>
                     <a class="dropdown-item remove-favorite" href="#" data-id="{{project.fields.ID}}"
-                      data-name="{{project.fields.ProjectName}}" data-projecttasks="{{project.fields.projecttasks}}">
+                      data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                      data-projecttasks="{{project.fields.projecttasks}}">
                       <i class="far fa-heart" style="margin-right: 8px;"></i>Remove from favorites</a>
                   </div>
                 </div>
@@ -81,9 +84,11 @@
 
           {{#each project in active_projects}}
           <li class="list-group-item projectmenuoption projectName{{project.fields.ID}}">
-            <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: purple;"></i>
-            <span class="projectName"><a
-                href="/projects?id={{project.fields.ID}}">{{project.fields.ProjectName}}</a></span>
+            <i class="fas fa-circle"
+              style="margin-right: 8px; width: 25px; color: {{getProjectColor project.fields.ProjectColour}}"></i>
+            <span class="projectName" data-id="{{project.fields.ID}}">
+              {{project.fields.ProjectName}}
+            </span>
             <span class="projectMenu">
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button"
@@ -93,41 +98,39 @@
                 </button>
                 <div class="dropdown-menu project-dropdown-menu"
                   aria-labelledby="dropdownMenuButton_{{project.fields.ID}}">
-                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add
-                    Project Above</a>
-                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add
-                    Project Below</a>
+                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}" data-toggle="modal"
+                    data-target="#newCrmProject">
+                    <i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add Project Above</a>
+                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}" data-toggle="modal"
+                    data-target="#newCrmProject">
+                    <i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add Project Below</a>
                   <div class="dropdown-divider"></div>
+                  <a class="dropdown-item edit-project" href="#" data-id="{{project.fields.ID}}"
+                    data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                    data-toggle="modal" data-target="#editCrmProject">
+                    <i class="far fa-edit" style="margin-right: 8px;"></i>Edit Project</a>
                   <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="far fa-edit" style="margin-right: 8px;"></i>Edit
-                    Project</a>
-                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-user-plus" style="margin-right: 8px;"></i>Share
-                    Project</a>
+                    <i class="fas fa-user-plus" style="margin-right: 8px;"></i>Share Project</a>
                   <a class="dropdown-item add-favorite" href="#" data-id="{{project.fields.ID}}"
-                    data-name="{{project.fields.ProjectName}}" data-projecttasks="{{project.fields.projecttasks}}">
-                    <i class="far fa-heart" style="margin-right: 8px;"></i>Add to
-                    Favorites</a>
+                    data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                    data-projecttasks="{{project.fields.projecttasks}}">
+                    <i class="far fa-heart" style="margin-right: 8px;"></i>Add to Favorites</a>
                   <div class="dropdown-divider"></div>
+                  <a class="dropdown-item duplicate-project" href="#" data-id="{{project.fields.ID}}"
+                    data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                    data-projecttasks="{{project.fields.projecttasks}}">
+                    <i class="fas fa-copy" style="margin-right: 8px;"></i>Duplicate Project</a>
                   <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-copy" style="margin-right: 8px;"></i>Duplicate
-                    Project</a>
+                    <i class="fas fa-envelope" style="margin-right: 8px;"></i>Emals Tasks to this Project</a>
                   <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-envelope" style="margin-right: 8px;"></i>Emals
-                    Tasks to this Project</a>
-                  <a class="dropdown-item" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-list" style="margin-right: 8px;"></i>Project
-                    Calendar Feed</a>
+                    <i class="fas fa-list" style="margin-right: 8px;"></i>Project Calendar Feed</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item archive-project" href="#" data-id="{{project.fields.ID}}"
-                    data-name="{{project.fields.ProjectName}}" data-projecttasks="{{project.fields.projecttasks}}">
-                    <i class="fas fa-archive" style="margin-right: 8px;"></i>Archive
-                    Project</a>
+                    data-name="{{project.fields.ProjectName}}" data-color="{{project.fields.ProjectColour}}"
+                    data-projecttasks="{{project.fields.projecttasks}}">
+                    <i class="fas fa-archive" style="margin-right: 8px;"></i>Archive Project</a>
                   <a class="dropdown-item delete-project" href="#" data-id="{{project.fields.ID}}">
-                    <i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
-                    Project</a>
+                    <i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete Project</a>
                 </div>
               </div>
             </span>
@@ -147,11 +150,9 @@
               {{#if archived_projects}}
               {{#each project in archived_projects}}
               <li class="list-group-item projectmenuoption projectName{{project.fields.ID}}">
-                <i class="fas fa-circle" style="margin-right: 8px; width: 25px; color: purple;"></i>
-                <span class="projectName">
-                  <a href="/projects?id={{project.fields.ID}}"
-                    style="background: transparent;">{{project.fields.ProjectName}}</a>
-                </span>
+                <i class="fas fa-circle"
+                  style="margin-right: 8px; width: 25px; color: {{getProjectColor project.fields.ProjectColour}}"></i>
+                <span class="projectName" data-id="{{project.fields.ID}}">{{project.fields.ProjectName}}</span>
                 <span class="projectMenu">
                   <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button"
@@ -184,6 +185,7 @@
   </div>
 
   {{> newProjectModal}}
+  {{> editProjectModal}}
   <style>
     .projectName a {
       font-size: 1rem !important;

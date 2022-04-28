@@ -6,19 +6,17 @@ let crmService = new CRMService();
 
 Template.projects.onCreated(function () {
 
-  console.log('onCreated...')
-
   const templateObject = Template.instance();
   templateObject.active_projects = new ReactiveVar([]);
   templateObject.archived_projects = new ReactiveVar([]);
+  templateObject.project_id = new ReactiveVar(0);
   templateObject.selected_id = new ReactiveVar(0);
-  templateObject.selected_project = new ReactiveVar('');
+  templateObject.selected_project = new ReactiveVar(null);
 
 });
 
 Template.projects.onRendered(function () {
 
-  console.log('rendered...')
   $("#task_items_wrapper").sortable({
     handle: '.taskDrag',
     update: function (event, ui) {
@@ -26,10 +24,8 @@ Template.projects.onRendered(function () {
       var sortedIDs = $("#task_items_wrapper").sortable("toArray");
 
       let current_id = ui.item[0].id;
-      // console.log('taskDrag update =>', sorted, sortedIDs, current_id, ui)
       let prev_id = ui.item[0].previousElementSibling.id;
       let next_id = ui.item[0].nextElementSibling.id;
-      console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
     },
   });
 
@@ -47,37 +43,34 @@ Template.projects.onRendered(function () {
     yearRange: "-90:+10",
   });
 
+
+  let currentId = FlowRouter.current().queryParams.id;
+  // let url = new URL(window.location.href);
+  // let searchID = parseInt(url.searchParams.get("id")) || 0;
+
   let templateObject = Template.instance();
-  templateObject.selected_id.set(0);
-  templateObject.selected_project.set(null);
+  templateObject.project_id.set(currentId);
 
-  templateObject.getTProjectList = function () {
-    crmService.getTProjectList().then(function (data) {
-      console.log(data)
-      if (data.tprojectlist && data.tprojectlist.length > 0) {
+  crmService.getTProjectDetail(currentId).then(function (data) {
+    if (data.fields) {
 
-        let active_projects = data.tprojectlist.filter(project => project.fields.Active == true);
-        let archived_projects = data.tprojectlist.filter(project => project.fields.Active == false);
-        // let active_projects = data.tprojectlist.sort(function (a, b) {
-        //   return (a.Recno > b.Recno) ? 1 : -1;
-        // }); 
+      templateObject.selected_project.set(data.fields);
+      let active_projects = data.fields.projecttasks.filter(project => project.fields.Active == true);
+      let archived_projects = data.fields.projecttasks.filter(project => project.fields.Active == false);
 
-        templateObject.active_projects.set(active_projects);
-        templateObject.archived_projects.set(archived_projects);
+      templateObject.active_projects.set(active_projects);
+      templateObject.archived_projects.set(archived_projects);
 
-        console.log('active_projects', active_projects)
-        console.log('archived_projects', archived_projects)
+    } else {
+      templateObject.active_projects.set(null);
+      templateObject.archived_projects.set(null);
+    }
 
-      } else {
+  }).catch(function (err) {
+    templateObject.active_projects.set(null);
+    templateObject.archived_projects.set(null);
+  });
 
-      }
-
-    }).catch(function (err) {
-
-    });
-  }
-
-  templateObject.getTProjectList();
 });
 
 Template.projects.events({
@@ -429,7 +422,12 @@ Template.projects.events({
 
     let task_name = $('#add_task_name').val();
     let task_description = $('#add_task_description').val();
+    let project_id = Template.instance().project_id.get();
 
+    if (project_id === '' || project_id == 0) {
+      swal('Project is not selected correctly!', '', 'warning');
+      return;
+    }
     if (task_name === '') {
       swal('Task name is not entered!', '', 'warning');
       return;
@@ -439,6 +437,7 @@ Template.projects.events({
     var objDetails = {
       type: "TToDo",
       fields: {
+        // ProjectID: project_id,
         Completed: false,
         Name: task_name,
         Description: task_description
@@ -551,10 +550,9 @@ Template.projects.events({
 });
 
 Template.projects.helpers({
-  getProjectName: () => {
-    let url = new URL(window.location.href);
-    let searchID = parseInt(url.searchParams.get("id")) || 0;
-    return 'Project ' + searchID;
+
+  selected_project: () => {
+    return Template.instance().selected_project.get();
   },
 
   active_projects: () => {
