@@ -11,6 +11,22 @@ export class CRMService extends BaseService {
     return this.getList(this.ERPObjects.TToDo, options);
   }
 
+  getTProjectList() {
+    let options = {
+      ListType: "Detail"
+      // select: "[Active]=true" 
+    }
+    return this.getList(this.ERPObjects.Tprojectlist, options);
+  }
+
+  getTProjectDetail(id) {
+    return this.getOneById(this.ERPObjects.Tprojectlist, id);
+  }
+
+  updateProject(data) {
+    return this.POST(this.ERPObjects.Tprojectlist, data);
+  }
+
   getOneTTodoTask(id) {
     return this.getOneById(this.ERPObjects.TToDo, id);
   }

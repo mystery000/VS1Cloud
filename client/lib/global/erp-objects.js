@@ -240,7 +240,9 @@ ERPObjects = function () {
         TPayRateType: "TPayRateType",
         TSuperType:"TSuperType",
         TCustomerPaymentLine:"TCustomerPaymentLine",
-        TSupplierPaymentLine:"TSupplierPaymentLine"
+        TSupplierPaymentLine:"TSupplierPaymentLine",
+        Tprojectlist: "Tprojectlist",
+        Tprojecttasks: "Tprojecttasks",
     }
     return objects;
 }

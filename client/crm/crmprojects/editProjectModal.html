@@ -1,10 +1,10 @@
-<template name="newProjectModal">
-  <div class="modal fade" id="newCrmProject" tabindex="-1" role="dialog" aria-labelledby="newCrmProjectLabel"
+<template name="editProjectModal">
+  <div class="modal fade" id="editCrmProject" tabindex="-1" role="dialog" aria-labelledby="editCrmProjectLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="newCrmProjectLabel">New Project</h5>
+          <h5 class="modal-title" id="editCrmProjectLabel">Edit Project</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -14,20 +14,22 @@
             <div class="col-12">
               <div class="form-group">
                 <label>Project Name</label>
-                <input type="text" class="form-control" id="crmProjectName" name="crmProjectName" autocomplete="off">
+                <input type="text" class="form-control" id="editCrmProjectName" name="editCrmProjectName"
+                  autocomplete="off">
               </div>
             </div>
             <div class="col-12">
               <div class="form-group">
                 <label>Project Color</label>
-                <input type="color" class="form-control" id="crmProjectColor" name="crmProjectColor" autocomplete="off">
+                <input type="color" class="form-control" id="editCrmProjectColor" name="editCrmProjectColor"
+                  autocomplete="off">
               </div>
             </div>
             <div class="col-12 mb-4">
               <div class="custom-control custom-switch">
-                <input class="custom-control-input" type="checkbox" value="swtNewCrmProjectFavorite"
-                  id="swtNewCrmProjectFavorite" name="swtNewCrmProjectFavorite" style="cursor: pointer;">
-                <label class="custom-control-label" for="swtNewCrmProjectFavorite" style="cursor: pointer;">Add to
+                <input class="custom-control-input" type="checkbox" value="swteditCrmProjectFavorite"
+                  id="swteditCrmProjectFavorite" name="swteditCrmProjectFavorite" style="cursor: pointer;">
+                <label class="custom-control-label" for="swteditCrmProjectFavorite" style="cursor: pointer;">Add to
                   Favorites</label>
               </div>
             </div>
@@ -40,9 +42,9 @@
                   </div>
                   <!-- <img src="images/listoption.svg" style="width: 100%; "> -->
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="crmViewOption" id="crmViewOptionList"
+                    <input class="form-check-input" type="radio" name="crmViewOption" id="editCrmViewOptionList"
                       value="listoption" checked>
-                    <label class="form-check-label" for="crmViewOptionList">
+                    <label class="form-check-label" for="editCrmViewOptionList">
                       List
                     </label>
                   </div>
@@ -53,9 +55,9 @@
                   </div>
                   <!-- <img src="images/gridoption.svg" style="width: 100%;"> -->
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="crmViewOption" id="crmViewOptionGrid"
+                    <input class="form-check-input" type="radio" name="crmViewOption" id="editCrmViewOptionGrid"
                       value="gridoption">
-                    <label class="form-check-label" for="crmViewOptionGrid">
+                    <label class="form-check-label" for="editCrmViewOptionGrid">
                       Board
                     </label>
                   </div>
@@ -68,8 +70,9 @@
           </div>
         </div>
         <div class="modal-footer">
+          <input type="hidden" id="editProjectID">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary btnNewCrmProject" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-primary btnEditCrmProject" data-dismiss="modal">Save</button>
         </div>
       </div>
     </div>
