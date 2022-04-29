@@ -6338,7 +6338,7 @@ Template.appointments.onRendered(function () {
             (chkSMSCustomer || chkSMSUser)) {
             swal({
                 title: 'No SMS Settings',
-                text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                text: "SMS messages won't be sent to Customer or User",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Continue',
@@ -8628,7 +8628,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
@@ -8686,7 +8686,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',

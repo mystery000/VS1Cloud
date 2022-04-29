@@ -33,7 +33,7 @@
         <header class="py-2 d-flex align-items-center">
             <h2 class="mr-1">Contact Overview</h2>
 
-            <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help 
+            <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help
                 <i class="fa fa-question-circle-o" style="font-size: 20px;"></i>
             </a>
             <!-- Start Help View Modal -->
@@ -361,7 +361,6 @@
                         {{#if datatablerecords}}
                         {{#each item in datatablerecords}}
                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                            <!-- <td contenteditable="false" class="colClientNo" >{{item.id}}</td> -->
                             <td contenteditable="false" class="colClientName">{{item.clientname}}</td>
                             <td contenteditable="false" class="colType">{{item.type}}</td>
                             <td contenteditable="false" class="colPhone">{{item.phone}}</td>
@@ -377,7 +376,6 @@
                             <td contenteditable="false" class="colSalesOrderBalance"
                                 style="text-align: right!important;">{{item.salesorderbalance}}</td>
                             <td contenteditable="false" class="colEmail hiddenColumn">{{item.email}}</td>
-                            <!-- <td contenteditable="false" class="colCountry hiddenColumn">{{item.country}}</td> -->
                             <td contenteditable="false" class="colCustFld1 hiddenColumn">{{item.custFld1}}</td>
                             <td contenteditable="false" class="colCustFld2 hiddenColumn">{{item.custFld2}}</td>
                             <td contenteditable="false" class="colAddress">{{item.address}}</td>
