@@ -6,14 +6,15 @@
         <header style="padding: 16px;">
             <h2 style="margin: 16px;">Sales Report
 
-                <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                     <div class="modal-dialog modal-sm" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="padding-bottom: 8px;">
-                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
                             <div class="modal-body">
                                 <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                 <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
@@ -39,8 +40,13 @@
 
             /* Remove Hyperlinks */
             @media print {
-                a:link {text-decoration: none !important;}
-                a[href]:after {content: none !important;}
+                a:link {
+                    text-decoration: none !important;
+                }
+
+                a[href]:after {
+                    content: none !important;
+                }
             }
         </style>
 
@@ -48,7 +54,10 @@
             <div class="col-12 col-md-8">
                 <div class="card shadow flex-grow-1 mb-3" style="margin-top: 16px;margin-right: 16px;margin-left: 16px;">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Sales</p>
+                        <div class="row no-gutters justify-content-between">
+                            <p class="text-primary m-0 font-weight-bold">Sales</p>
+                            <button type="button" class="btn btn-primary" id="btnSummary"><i class="fas fa-repeat" style="margin-right: 5px;"></i> Summary</button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -62,16 +71,18 @@
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                    <h4>Deparment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                </div>
                                                 <div class="modal-body">
                                                     {{#each item in deptrecords}}
-                                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                                        <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                                                        <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                                                    </div>
+                                                        <div class="custom-control custom-switch" style="margin: 8px;">
+                                                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
+                                                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                                                        </div>
                                                     {{/each}}
                                                 </div>
-                                                <div class="modal-footer"><button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button><button class="btn btn-light" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
+                                                <div class="modal-footer"><button class="btn btn-primary" type="button" data-dismiss="modal"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button><button class="btn btn-light"
+                                                        data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button></div>
                                             </div>
                                         </div>
                                     </div>
@@ -95,16 +106,16 @@
                                     <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
                                     <div class="dropdown-menu" role="menu">
                                         <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                        <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
-                                        <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                        <a class="dropdown-item last12Months"  id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                        <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                        <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
+                                        <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
+                                        <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
+                                        <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 16px;">
                                     <label>From</label>
                                     <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                        <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -112,7 +123,7 @@
                                 </div>
                                 <div class="form-group" style="margin: 16px;"><label>To</label>
                                     <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                        <input type="text" class="form-control" id="dateTo" name="dateTo">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -144,6 +155,7 @@
                                     .totalhr {
                                         border-top: 2px #858999 solid;
                                     }
+
                                     .grandtotal {
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
@@ -166,49 +178,51 @@
                                         </thead>
                                         <tbody>
                                             {{#if records}}
-                                            {{#each record in records}}
-                                            {{#each recordItem in record}}
-                                            {{#if recordItem.key}}
-                                            <tr class="totalhr">
-                                                <td style="font-weight: 800;">
-                                                    <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                            {{/if}}
-                                            {{#each item in recordItem.data}}
-                                            <tr class="{{item.type}}" id="{{item.Id}}">
-                                                {{#each subItem in item.dataArr}}
-                                                <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+                                                {{#each record in records}}
+                                                    {{#each recordItem in record}}
+                                                        {{#if recordItem.key}}
+                                                            <tr class="totalhr">
+                                                                <td style="font-weight: 800;">
+                                                                    <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        {{/if}}
+                                                        {{#each item in recordItem.data}}
+                                                            <tr class="{{item.type}}" id="{{item.Id}}">
+                                                                {{#each subItem in item.dataArr}}
+                                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+                                                                {{/each}}
+                                                            </tr>
+                                                        {{/each}}
+                                                        {{#each total in recordItem.total}}
+                                                            <tr class="TotalField">
+                                                                {{#each items in total.dataArr}}
+                                                                    <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
+                                                                {{/each}}
+                                                            </tr>
+                                                        {{/each}}
+                                                    {{/each}}
                                                 {{/each}}
-                                            </tr>
-                                            {{/each}}
-                                            {{#each total in recordItem.total}}
-                                            <tr class="TotalField">
-                                                {{#each items in total.dataArr}}
-                                                <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
-                                                {{/each}}
-                                            </tr>
-                                            {{/each}}
-                                            {{/each}}
-                                            {{/each}}
-                                            {{#if grandrecords}}
-                                            <!-- {{#each item in grandrecords}} -->
-                                            <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-                                                {{#each item in grandrecords}}
-                                                <td>{{item}}</td>
-                                                {{/each}}
-                                            </tr>
-                                            {{/if}}
+                                                {{#if grandrecords}}
+                                                    <!-- {{#each item in grandrecords}} -->
+                                                    <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
+                                                        {{#each item in grandrecords}}
+                                                            <td>{{item}}</td>
+                                                        {{/each}}
+                                                    </tr>
+                                                {{/if}}
                                             {{else}}
-                                            <tr class="odd" style="text-align: center;"><td valign="top" colspan="10" class="dataTables_empty">No data available in table</td></tr>
+                                                <tr class="odd" style="text-align: center;">
+                                                    <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+                                                </tr>
                                             {{/if}}
 
                                         </tbody>
@@ -237,9 +251,9 @@
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
-            <div class="modal-content" >
-                <div class="modal-header" >
-                    <h4 class="title-header" >Sales Report</h4>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="title-header">Sales Report</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
