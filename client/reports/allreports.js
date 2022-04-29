@@ -25,6 +25,10 @@ Template.allreports.onCreated(function(){
    templateObject.is1099Transaction.set(false);
    templateObject.isAccountsLists = new ReactiveVar();
    templateObject.isAccountsLists.set(false);
+   templateObject.isTransactionJournal = new ReactiveVar();
+   templateObject.isTransactionJournal.set(false);
+   templateObject.isUnpaidBills = new ReactiveVar();
+   templateObject.isUnpaidBills.set(false);
    templateObject.isUnpaidPO = new ReactiveVar();
    templateObject.isUnpaidPO.set(false);
    templateObject.isBackOrderedPO = new ReactiveVar();
@@ -78,6 +82,8 @@ Template.allreports.onRendered(() => {
   let isTrialBalance = Session.get('cloudTrialBalance');
   let is1099Transaction = Session.get('cloud1099Transaction');
   let isAccountsLists = Session.get('cloudAccountList');
+  let isTransactionJournal = Session.get('cloudTransactionJournal');
+  let isUnpaidBills = Session.get('cloudBillsUnpaid');
   let isUnpaidPO = Session.get('cloudPurchaseOrderUnpaid');
   let isBackOrderedPO = Session.get('cloudPurchaseOrderBO');
   let isSalesOrderConverted = Session.get('cloudSalesOrderConverted');
@@ -133,6 +139,12 @@ Template.allreports.onRendered(() => {
     }
     if(isAccountsLists == true){
     templateObject.isAccountsLists.set(true);
+    }
+    if(isTransactionJournal == true){
+    templateObject.isTransactionJournal.set(true);
+    }
+    if(isUnpaidBills == true){
+    templateObject.isUnpaidBills.set(true);
     }
     if(isUnpaidPO == true){
     templateObject.isUnpaidPO.set(true);
@@ -323,6 +335,26 @@ Template.allreports.events({
         } else {
             Session.setPersistent('cloudAccountList', false);
             templateObject.isAccountsLists.set(false);
+        }
+    },
+    'click .chkTransactionJournal': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudTransactionJournal', true);
+            templateObject.isTransactionJournal.set(true);
+        } else {
+            Session.setPersistent('cloudTransactionJournal', false);
+            templateObject.isTransactionJournal.set(false);
+        }
+    },
+    'click .chkUnpaidBills': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudBillsUnpaid', true);
+            templateObject.isUnpaidBills.set(true);
+        } else {
+            Session.setPersistent('cloudBillsUnpaid', false);
+            templateObject.isUnpaidBills.set(false);
         }
     },
     'click .chkUnpaidPO': function (event) {
@@ -573,6 +605,12 @@ Template.allreports.helpers({
   isAccountsLists: function() {
         return Template.instance().isAccountsLists.get();
   },
+  isTransactionJournal: function() {
+        return Template.instance().isTransactionJournal.get();
+  },
+  isUnpaidBills: function() {
+        return Template.instance().isUnpaidBills.get();
+  },
   isUnpaidPO: function() {
         return Template.instance().isUnpaidPO.get();
   },
@@ -673,6 +711,8 @@ Template.allreports.helpers({
       let isTrialBalance =  Template.instance().isTrialBalance.get();
       let is1099Transaction =  Template.instance().is1099Transaction.get();
       let isAccountsLists =  Template.instance().isAccountsLists.get();
+      let isTransactionJournal =  Template.instance().isTransactionJournal.get();
+      let isUnpaidBills =  Template.instance().isUnpaidBills.get();
       let isUnpaidPO =  Template.instance().isUnpaidPO.get();
       let isBackOrderedPO =  Template.instance().isBackOrderedPO.get();
       let isSalesOrderConverted =  Template.instance().isSalesOrderConverted.get();
@@ -694,7 +734,7 @@ Template.allreports.helpers({
       let isPrintStatement =  Template.instance().isPrintStatement.get();
       let isShowFavorite = false;
 
-      if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO){
+      if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal){
         isShowFavorite = true;
       }
       return isShowFavorite;
