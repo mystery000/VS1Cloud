@@ -9,7 +9,8 @@ import { PaymentsService } from "../payments/payments-service";
 import { SideBarService } from "../js/sidebar-service";
 import "../lib/global/indexdbstorage.js";
 import ChartHandler from "../js/Charts/ChartHandler";
-import HeaderCard from "./HeaderCard";
+import Tvs1CardPreference from "../js/Api/Model/Tvs1CardPreference";
+import Tvs1CardPreferenceFields from "../js/Api/Model/Tvs1CardPreferenceFields";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -1939,11 +1940,30 @@ Template.purchasesoverview.onRendered(function () {
     draggableCharts.enable();
   };
 
-  templateObject.setCardPositions = () => {
-    let headerCardsList = JSON.parse(localStorage.getItem(_cardGroup));
-    if( headerCardsList ){
-      headerCardsList.forEach((card) => {
-        $(`[card-key='${card.key}']`).attr("position", card.position);
+  templateObject.setCardPositions = async () => {
+    let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
+    const cardList = [];
+    if( Tvs1CardPref.length ){
+        let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        cardList = new Tvs1CardPreference.fromList(
+          Tvs1CardPreferenceData.tvs1cardpreference
+        ).filter((card) => {
+          if (card.fields.EmployeeID == employeeID) {
+            return card;
+          }
+        });
+    }
+    console.log('cardList', cardList)
+    if( cardList.length ){
+      cardList.forEach((card) => {
+        $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
+        $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
+        if( card.fields.Active == false ){
+          $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
+          $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
+          $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
+        }
       })
       let $chartWrappper = $(".connectedCardSortable");
       $chartWrappper
@@ -1956,22 +1976,29 @@ Template.purchasesoverview.onRendered(function () {
   };
   templateObject.setCardPositions();
 
-  templateObject.saveCards = () => {
+  templateObject.saveCards = async () => {
     // Here we get that list and create and object
     const cards = $(".connectedCardSortable .card-visibility");
-    let cardList = [];
+    const cardList = [];
     // console.log(cards);
     for (let i = 0; i < cards.length; i++) {
       cardList.push(
-        new HeaderCard({
-          employeeId: Session.get("mySessionEmployeeLoggedID"),
-          key: $(cards[i]).attr("card-key"),
-          position: $(cards[i]).attr("position"),
+        new Tvs1CardPreference({
+          type: "Tvs1CardPreference",
+          fields: new Tvs1CardPreferenceFields({
+            EmployeeID: Session.get("mySessionEmployeeLoggedID"),
+            CardKey: $(cards[i]).attr("card-key"),
+            Position: $(cards[i]).attr("position"),
+            TabGroup: $(cards[i]).attr("card-tabgroup"),
+            Active: ( $(cards[i]).attr("card-active") == 'true' )? true : false
+          })
         })
       );
     }
-    console.log('cardList', cardList)
-    localStorage.setItem(_cardGroup, JSON.stringify(cardList));
+    let updatedTvs1CardPreference = {
+      tvs1cardpreference: cardList,
+    }
+    await addVS1Data('Tvs1CardPreference', JSON.stringify(updatedTvs1CardPreference));
   };
 
   templateObject.activateDraggable(); // this will enable charts resiable features
@@ -2384,6 +2411,37 @@ Template.purchasesoverview.events({
       "-" +
       currentDate2.getDate();
     templateObject.getAllFilterPurchasesData(getDateFrom, getLoadDate, false);
+  },
+  "click .editCardBtn": function (e) {
+    e.preventDefault();
+    $(".card-visibility").removeClass('hideelement');
+    if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
+      $('.cardShowBtn').removeClass('hideelement');
+      $('.editCardBtn').find('i').removeClass('fa-cog')
+      $('.editCardBtn').find('i').addClass('fa-times')      
+    }else{
+      $('.cardShowBtn').addClass('hideelement');
+      $('.editCardBtn').find('i').removeClass('fa-times')
+      $('.editCardBtn').find('i').addClass('fa-cog')
+      let templateObject = Template.instance();
+      templateObject.setCardPositions();
+    }
+    return false
+  },
+  "click .cardShowBtn": function(e){
+    e.preventDefault();
+    if( $(e.target).find('.far').hasClass('fa-eye') ){
+      $(e.target).find('.far').removeClass('fa-eye')
+      $(e.target).find('.far').addClass('fa-eye-slash')
+      $(e.target).parents('.card-visibility').attr('card-active', 'false') 
+    }else{
+      $(e.target).find('.far').removeClass('fa-eye-slash')
+      $(e.target).find('.far').addClass('fa-eye')
+      $(e.target).parents('.card-visibility').attr('card-active', 'true')
+    }
+    let templateObject = Template.instance();
+    templateObject.saveCards()
+    return false
   },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();

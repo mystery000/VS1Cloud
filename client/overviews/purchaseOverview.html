@@ -16,6 +16,55 @@
         .showelement {
             display: block;
         }
+        .customCardMainDiv {
+            position: relative;
+            padding-top: 15px !important;
+        }
+        .hideShowDiv {
+            display: inline-block;
+            width: 100%;
+            text-align: right;
+            padding: 0 8px;
+            margin: 0;
+            position: absolute;
+            top: 5px;
+            left: 0;
+        }
+        a.cardSettingBtn {
+            display: inline-flex;
+            width: 22px;
+            height: 22px;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            border-radius: 4px;
+            background: #dddfeb;
+            color: #202020;
+            text-decoration: none;
+            margin-left: 3px;
+        }
+        a.cardHideBtn, a.cardShowBtn {
+            display: inline-flex;
+            width: 22px;
+            height: 22px;
+            font-size: 10px;
+            justify-content: center;
+            align-items: center;
+            background: #dddfeb;
+            border-radius: 4px;
+            margin-left: 2px;
+            text-decoration: none;
+            color: #202020;
+        }
+        a.cardHideBtn:hover, a.cardShowBtn:hover,
+        a.cardHideBtn.active, a.cardShowBtn.active {
+            background: #00a3d3;
+            color: #fff;
+        }
+        a.cardHideBtn i, a.cardShowBtn i {
+            pointer-events: none;
+        }
+
     </style>
 
     <div class="container-fluid">
@@ -57,8 +106,12 @@
         </header>
 
         <div class="row connectedCardSortable" data-key="card">
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-purchase-orders">
-                <div class="card shadow border-left-info py-2 cardOutPO" style="cursor: pointer;">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-tabgroup="7" card-active="true" card-key="outstanding-purchase-orders">
+                <div class="card shadow border-left-info py-2 cardOutPO customCardMainDiv" style="cursor: pointer;">
+                    <div class="hideShowDiv">
+                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                    </div>
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
@@ -72,8 +125,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-bills">
-                <div class="card shadow border-left-info py-2 cardBills" style="cursor: pointer;">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="1" card-tabgroup="7" card-active="true" card-key="outstanding-bills">
+                <div class="card shadow border-left-info py-2 cardBills customCardMainDiv" style="cursor: pointer;">
+                    <div class="hideShowDiv">
+                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                    </div>
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
@@ -87,8 +144,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" card-key="outstanding-credit">
-                <div class="card shadow border-left-info py-2 cardCredit" style="cursor: pointer;">
+            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="2" card-tabgroup="7" card-active="true" card-key="outstanding-credit">
+                <div class="card shadow border-left-info py-2 cardCredit customCardMainDiv" key="" style="cursor: pointer;">
+                    <div class="hideShowDiv">
+                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                    </div>
                     <div class="card-body">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">

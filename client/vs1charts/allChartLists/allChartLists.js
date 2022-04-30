@@ -205,8 +205,14 @@ Template.allChartLists.onRendered(function () {
             "false"
           );
           $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
+          if( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
+            $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
+          }
+          if( chart.fields._chartSlug == 'sales__sales_overview'){
+            $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
+            $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
+          }
         } else {
-          $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
           $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
             "Show"
           );
