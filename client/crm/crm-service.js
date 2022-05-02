@@ -1,14 +1,21 @@
 import { BaseService } from '../js/base-service.js';
 export class CRMService extends BaseService {
-  getTTodoTaskList() {
-    let employeeID = 3;  // tempcode
+
+  getAllTaskList() {
     let options = {
-      orderby: '"ToDoByDate asc"',
+      // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
-      select: "[Active]=true and [Completed]=false and [Done]=false"
-      // select: "[Active]=true and [Completed]=false and [EmployeeID]=" + employeeID
+      select: "[Active]=true and [ProjectID]=0"
     }
-    return this.getList(this.ERPObjects.TToDo, options);
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getTaskDetail(id) {
+    return this.getOneById(this.ERPObjects.Tprojecttasks, id);
+  }
+
+  saveNewTask(data) {
+    return this.POST(this.ERPObjects.Tprojecttasks, data);
   }
 
   getTProjectList() {
@@ -27,11 +34,17 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojectlist, data);
   }
 
-  getOneTTodoTask(id) {
-    return this.getOneById(this.ERPObjects.TToDo, id);
+  getTTodoTaskList() {
+    let options = {
+      orderby: '"ToDoByDate asc"',
+      ListType: "Detail",
+      select: "[Active]=true and [Completed]=false and [Done]=false"
+      // select: "[Active]=true and [Completed]=false and [EmployeeID]=" + employeeID
+    }
+    return this.getList(this.ERPObjects.TToDo, options);
   }
 
-  saveNewTask(data) {
-    return this.POST(this.ERPObjects.TToDo, data);
+  getOneTTodoTask(id) {
+    return this.getOneById(this.ERPObjects.TToDo, id);
   }
 }

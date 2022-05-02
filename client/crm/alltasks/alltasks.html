@@ -26,7 +26,7 @@
                     <label class="custom-control-label chkBox pointer no-modal chk_complete"
                       data-id="{{item.fields.ID}}" for="taskitem_{{item.fields.ID}}"></label>
                   </div>
-                  <span class="taskName no-modal">Task {{item.fields.ID}}</span>
+                  <span class="taskName no-modal">{{item.fields.TaskName}}</span>
                 </div>
                 <div style="display: inline-flex;">
                   <i class="far fa-edit taskActionButton ttodo-edit no-modal" data-toggle="tooltip"
@@ -75,13 +75,13 @@
                 </div>
               </div>
               <div class="row justify-content-between">
-                <span class="taskDescription text-secondary">{{getDescription item.fields.Description}}</span>
+                <span class="taskDescription text-secondary">{{getDescription item.fields.TaskDescription}}</span>
               </div>
               <div class="row justify-content-between">
                 <div class="dueDateTags no-modal" style="display: inline-flex;">
-                  <span class="taskDueDate no-modal {{getTaskStyleClass item.fields.ToDoByDate}}"
+                  <span class="taskDueDate no-modal {{getTaskStyleClass item.fields.MsTimeStamp}}"
                     data-toggle="dropdown"><i class="far fa-calendar-plus no-modal" style="margin-right: 5px;"></i>
-                    {{getTodoDate item.fields.ToDoByDate 'D MMM'}}
+                    {{getTodoDate item.fields.MsTimeStamp 'D MMM'}}
                   </span>
                   <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
                     aria-labelledby="dropdownMenuButton" style="width: 275px;">
@@ -118,9 +118,9 @@
                       </div>
                     </div>
                   </div>
-                  {{#if item.fields.label}}
+                  {{#if item.fields.TaskLabel}}
                   <span class="taskTag no-modal"><a class="taganchor no-modal" href=""><i class="fas fa-tag no-modal"
-                        style="margin-right: 5px;"></i>{{item.fields.label}}</a>
+                        style="margin-right: 5px;"></i>{{item.fields.TaskLabel}}</a>
                   </span>
                   {{/if}}
                 </div>

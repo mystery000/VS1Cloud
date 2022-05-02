@@ -66,19 +66,24 @@ Template.alltasks.onRendered(function () {
   templateObject.selected_ttodo.set(null);
 
   templateObject.getAllTaskList = function () {
-    crmService.getTTodoTaskList().then(function (data) {
-
-      if (data.ttodo && data.ttodo.length > 0) {
+    crmService.getAllTaskList().then(function (data) {
+      console.log('alltasks==>', data)
+      if (data.tprojecttasks && data.tprojecttasks.length > 0) {
 
         let today = moment().format('YYYY-MM-DD');
-        let allrecords = data.ttodo;
-        // let allrecords = data.ttodo.sort(function (a, b) {
+        let allrecords = data.tprojecttasks;
+
+        // tempcode until fields are added in backend
+        let today_records = data.tprojecttasks;
+        let upcoming_records = data.tprojecttasks;
+        let overdue_records = data.tprojecttasks;
+        // let allrecords = data.tprojecttasks.sort(function (a, b) {
         //   return (a.Recno < b.Recno) ? 1 : -1;
         // });
 
-        let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
-        let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
-        let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
+        // let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
+        // let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
+        // let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
 
         $('.crm_all_count').text(allrecords.length);
         $('.crm_today_count').text(today_records.length);
@@ -126,18 +131,56 @@ Template.alltasks.events({
     let id = e.target.dataset.id;
     // handle complete process via api
     var objDetails = {
-      type: "TToDo",
+      type: "Tprojecttasks",
       fields: {
         ID: id,
-        Completed: true
+        Active: false
       }
     };
 
     if (id) {
+      let templateObject = Template.instance();
       crmService.saveNewTask(objDetails).then(function (objDetails) {
         $('#ttodo_' + id).remove();
         // recalculate count here
+        templateObject.getAllTaskList();
+        // crmService.getAllTaskList().then(function (data) {
+        //   console.log('alltasks==>', data)
+        //   if (data.tprojecttasks && data.tprojecttasks.length > 0) {
 
+        //     let today = moment().format('YYYY-MM-DD');
+        //     let allrecords = data.tprojecttasks;
+
+        //     // tempcode until fields are added in backend
+        //     let today_records = data.tprojecttasks;
+        //     let upcoming_records = data.tprojecttasks;
+        //     let overdue_records = data.tprojecttasks;
+        //     // let allrecords = data.tprojecttasks.sort(function (a, b) {
+        //     //   return (a.Recno < b.Recno) ? 1 : -1;
+        //     // });
+
+        //     // let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
+        //     // let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
+        //     // let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
+
+        //     $('.crm_all_count').text(allrecords.length);
+        //     $('.crm_today_count').text(today_records.length);
+        //     $('.crm_upcoming_count').text(upcoming_records.length);
+
+        //     templateObject.allrecords.set(allrecords);
+        //     templateObject.todayRecords.set(today_records);
+        //     templateObject.upcomingRecords.set(upcoming_records);
+        //     templateObject.overdueRecords.set(overdue_records);
+
+        //   } else {
+        //     $('.crm_all_count').text(0);
+        //     $('.crm_today_count').text(0);
+        //     $('.crm_upcoming_count').text(0);
+        //   }
+
+        // }).catch(function (err) {
+
+        // });
       });
     }
 
@@ -154,9 +197,12 @@ Template.alltasks.events({
     let selected_ttodo = Template.instance().selected_ttodo.get();
 
     let selected_record = Template.instance().allrecords.get().filter(tdo => tdo.fields.ID == id)[0];
+    console.log('open edit', id, Template.instance().allrecords.get())
 
-    let title = selected_record.fields.ID;
-    let description = selected_record.fields.Description;
+    let title = selected_record.fields.TaskName;
+    let description = selected_record.fields.TaskDescription;
+    let label = selected_record.fields.TaskLabel;
+    let due_date = selected_record.fields.MsTimeStamp;
 
     var edit_modal = `<div class="row editTaskRow no-modal">
         <div class="col-12">
@@ -393,6 +439,8 @@ Template.alltasks.events({
     let selected_id = Template.instance().selected_id.get();
     let selected_ttodo = Template.instance().selected_ttodo.get();
 
+    console.log('save edit', selected_id)
+
     // handle save process here
     let edit_task_name = $('#edit_task_name').val();
     let edit_task_description = $('#edit_task_description').val();
@@ -404,11 +452,11 @@ Template.alltasks.events({
     $('.fullScreenSpin').css('display', 'inline-block');
 
     var objDetails = {
-      type: "TToDo",
+      type: "Tprojecttasks",
       fields: {
         ID: selected_id,
-        Name: edit_task_name,
-        Description: edit_task_description
+        TaskName: edit_task_name,
+        TaskDescription: edit_task_description
       }
     };
 
@@ -424,10 +472,51 @@ Template.alltasks.events({
         $('#ttodo_' + id + ' .taskName').html(edit_task_name);
         $('#ttodo_' + id + ' .taskDescription').html(edit_task_description);
 
+        //////////////////////////////
+        let templateObject = Template.instance();
+        crmService.getAllTaskList().then(function (data) {
+          console.log('call save edit==>', data)
+          if (data.tprojecttasks && data.tprojecttasks.length > 0) {
 
+            let today = moment().format('YYYY-MM-DD');
+            let allrecords = data.tprojecttasks;
+
+            // tempcode until fields are added in backend
+            let today_records = data.tprojecttasks;
+            let upcoming_records = data.tprojecttasks;
+            let overdue_records = data.tprojecttasks;
+            // let allrecords = data.tprojecttasks.sort(function (a, b) {
+            //   return (a.Recno < b.Recno) ? 1 : -1;
+            // });
+
+            // let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
+            // let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
+            // let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
+
+            $('.crm_all_count').text(allrecords.length);
+            $('.crm_today_count').text(today_records.length);
+            $('.crm_upcoming_count').text(upcoming_records.length);
+
+            templateObject.allrecords.set(allrecords);
+            templateObject.todayRecords.set(today_records);
+            templateObject.upcomingRecords.set(upcoming_records);
+            templateObject.overdueRecords.set(overdue_records);
+
+          } else {
+            $('.crm_all_count').text(0);
+            $('.crm_today_count').text(0);
+            $('.crm_upcoming_count').text(0);
+          }
+          console.log('after save edit', Template.instance().allrecords.get())
+
+        }).catch(function (err) {
+
+        });
+        //////////////////////////////
       }
 
       $('.fullScreenSpin').css('display', 'none');
+
     }).catch(function (err) {
       swal({
         title: 'Oooops...',
@@ -462,11 +551,10 @@ Template.alltasks.events({
     $('.fullScreenSpin').css('display', 'inline-block');
 
     var objDetails = {
-      type: "TToDo",
+      type: "Tprojecttasks",
       fields: {
-        Completed: false,
-        Name: task_name,
-        Description: task_description
+        TaskName: task_name,
+        TaskDescription: task_description
       }
     };
 
@@ -548,6 +636,48 @@ Template.alltasks.events({
 
         $(".btnAddSubTask").css("display", "block");
         $(".newTaskRow").css("display", "none");
+
+        //////////////////////////////
+        let templateObject = Template.instance();
+        crmService.getAllTaskList().then(function (data) {
+          console.log('alltasks==>', data)
+          if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+
+            let today = moment().format('YYYY-MM-DD');
+            let allrecords = data.tprojecttasks;
+
+            // tempcode until fields are added in backend
+            let today_records = data.tprojecttasks;
+            let upcoming_records = data.tprojecttasks;
+            let overdue_records = data.tprojecttasks;
+            // let allrecords = data.tprojecttasks.sort(function (a, b) {
+            //   return (a.Recno < b.Recno) ? 1 : -1;
+            // });
+
+            // let today_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) == today);
+            // let upcoming_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) > today);
+            // let overdue_records = allrecords.filter(item => item.fields.ToDoByDate.substring(0, 10) < today);
+
+            $('.crm_all_count').text(allrecords.length);
+            $('.crm_today_count').text(today_records.length);
+            $('.crm_upcoming_count').text(upcoming_records.length);
+
+            templateObject.allrecords.set(allrecords);
+            templateObject.todayRecords.set(today_records);
+            templateObject.upcomingRecords.set(upcoming_records);
+            templateObject.overdueRecords.set(overdue_records);
+
+          } else {
+            $('.crm_all_count').text(0);
+            $('.crm_today_count').text(0);
+            $('.crm_upcoming_count').text(0);
+          }
+          console.log('after save', Template.instance().allrecords.get())
+
+        }).catch(function (err) {
+
+        });
+        //////////////////////////////
       }
 
       $('.fullScreenSpin').css('display', 'none');
