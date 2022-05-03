@@ -251,6 +251,8 @@ Template.allChartLists.onRendered(function () {
       });
     }
 
+    return false
+
     // Now get user preferences
     let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
     // console.log('tvs1ChartDashboardPreference', tvs1ChartDashboardPreference)
