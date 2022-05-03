@@ -188,9 +188,15 @@
                         <hr style="margin-top: 4px;">
 
                         <div class="row d-xl-flex justify-content-xl-end">
+
                             <button class="btn btn-success btnSave" type="button" id="btnSave" name="" style="margin: 8px;">
                                 <i class="fa fa-save" style="margin-right: 8px;"></i>Save
                             </button>
+                            {{#if isCloudTrueERP}}
+                            <button class="btn btn-warning btnUploadERPUSer" type="button" id="btnUploadERPUSer" name="" style="margin: 8px;">
+                                <i class="fas fa-cloud-upload-alt"></i> Import ERP Users
+                            </button>
+                            {{/if}}
                             <button class="btn btn-secondary btnBack" type="button" style="margin: 8px;">
                                 <i class="fa fa-close" style="margin-right: 8px;"></i>Cancel
                             </button>

@@ -549,4 +549,12 @@ export class TaxRateService extends BaseService {
         return this.getList('VS1_Cloud_Task/Method?Name="VS1_BackupList"');
     }
 
+    getUserDetails() {
+        let options = {
+            ListType: "Detail",
+            select: "[Active]=true",
+        };
+            return this.getList(this.ERPObjects.TEmployee,options);
+        }
+
 }

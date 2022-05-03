@@ -964,6 +964,14 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
+                                                                                {{#if isCloudTrueERP}}
+                                                                                <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                                                  <div class="custom-control custom-switch chkSameCustomer" style="margin: 4px; margin-top: 39px; float: left;">
+                                                                                      <input class="custom-control-input" type="checkbox" id="chkLoadFromTrueERP" style="cursor: pointer;" checked>
+                                                                                      <label class="custom-control-label" for="chkLoadFromTrueERP" style="cursor: pointer;">Load From TrueERP</label>
+                                                                                  </div>
+                                                                                </div>
+                                                                                {{/if}}
                                                                             </div>
                                                                         {{/each}}
                                                                     {{/if}}

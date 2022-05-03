@@ -5522,7 +5522,7 @@ Template.appointments.onRendered(function () {
         let getEmployeeID = templateObject.empID.get() || '';
         document.getElementById("customer").value = $(this).find(".colCompany").text();
         document.getElementById("phone").value = $(this).find(".colPhone").text();
-        document.getElementById("mobile").value = $(this).find(".colPhone").text();
+        document.getElementById("mobile").value = $(this).find(".colMobile").text();
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
@@ -8608,7 +8608,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8668,7 +8668,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8726,7 +8726,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8744,7 +8744,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User.",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
