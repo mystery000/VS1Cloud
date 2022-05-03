@@ -6,19 +6,15 @@
             height: 50px;
             width: 50px;
         }
-
-
         .ui-sortable .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
             cursor: move;
             transition-duration: 300ms;
 
         }
-
         .ui-widget.ui-widget-content {
             border: 1px solid #e3e6f0;
         }
-
         .responsive-chart {
             position: relative;
             height: 100%;
@@ -38,7 +34,7 @@
             object-fit: contain;
         }
         .minHeight100 {
-            height: 100%;
+            height: 100% !important;
             position: relative;
         }
         .minHeight100 .canvasHeight100 {
@@ -60,12 +56,35 @@
             position: relative;
             max-height: 100%;
         }
-        .resizeAfterChart {
+        /* .resizeAfterChart {
             margin: .75rem !important;
             padding: 0px !important;
         }
         .resizeAfterChart .card {
             margin: 0px !important;
+        } */
+        .minHeight100 {
+            display: inline-block;
+            width: 100%;
+        }
+        .sortable-chart-widget-js {
+            margin-bottom: 30px !important;
+        }
+        .minHeight100 .card.mb-4 {
+            margin: 0px !important;
+        }
+        .resizeAfterChart .card {
+            max-width: 100%;
+        }
+        .sortable-chart-widget-js .minHeight100 .card canvas,
+        .sortable-chart-widget-js .minHeight100 .card .chartjs-size-monitor,
+        .sortable-chart-widget-js .minHeight100 .card .canvasParentDiv,
+        .sortable-chart-widget-js .minHeight100 .card .card-body,
+        .sortable-chart-widget-js .minHeight100 .card .card-header,
+        .sortable-chart-widget-js .minHeight100 .card,
+        .sortable-chart-widget-js .minHeight100 {
+            float: left;
+            width: 100%;
         }
         /* .col-md-6 .minHeight100 .canvasHeight100 canvas {
             position: absolute;
