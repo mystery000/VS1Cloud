@@ -60,41 +60,94 @@
                     max-height: 100% !important;
                     position: relative;
                 }
-              
+
             </style>
- 
+
             <div class="card-body showprofitchat" id="profitlosschat" style="display: flex;flex-direction: column;justify-content: space-evenly;">
                 <div class="canvasParentDiv canvasHeight100">
+
+                    <!-- <div class="row" style="height: 100%;">
+                        <div class="col-4">
+                            <div class="row" style="display: block; height: 33%; padding-left: 8px;">
+                                <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3">
+                                    <span class="spnTotalSales">0.00</span>
+                                </div>
+                                <span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Sales</span>
+                            </div>
+                            <div class="row" style="display: block; height: 33%; padding-left: 8px;">
+                                <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                                    <span class="spnTotalExpense">0.00</span>
+                                </div>
+                                <span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Expenses</span>
+                            </div>
+                            <div class="row" style="display: block; height: 33%; padding-left: 8px;">
+                                <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3">
+                                    <span class="spnTotalnetincome">0.00</span>
+                                </div>
+                                <span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Net Income</span>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row" style="height: 33%;">
+                                <div class="col-12 colSales" id="colSales">
+                                    <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 65%;" title="Total Sales">
+                                        <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{salesperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{salesperc}}%;"><span class="sr-only">{{salesperc}}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row" style="height: 33%;">
+                                <div class="col-12 colExpenses" id="colExpenses">
+                                    <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 65%;" title="Total Expenses">
+                                        <div class="cssExpense progress-bar bg-danger progress-bar-striped progress-bar-animated" aria-valuenow="{{expenseperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{expenseperc}}%;"><span
+                                                class="sr-only">{{expenseperc}}%</span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row" style="height: 33%;">
+                                <div class="col-12 colIncome" id="colIncome">
+                                    <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 65%;" title="Net Income">
+                                        <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{netincomeperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netincomeperc}}%;"><span
+                                                class="sr-only">{{netincomeperc}}%</span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> -->
+
                     <div class="row no-gutters align-items-center newHeightForLine">
-                        <div class="col-auto mr-auto colSalesLabel" id="colSalesLabel">
+                        <div class="col-4 colSalesLabel" id="colSalesLabel">
                             <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3"><span class="spnTotalSales">0.00</span></div><span
                                 style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Sales</span>
                         </div>
-                        <div class="col-6 colSales" id="colSales">
-                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="Total Sales">
+                        <div class="col-8 colSales" id="colSales">
+                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Total Sales">
                                 <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" aria-valuenow="{{salesperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{salesperc}}%;"><span class="sr-only">{{salesperc}}%</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row no-gutters align-items-center newHeightForLine" >
-                        <div class="col-6 colExpensesLabel" id="colExpensesLabel">
+                        <div class="col-4 colExpensesLabel" id="colExpensesLabel">
                             <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span class="spnTotalExpense">0.00</span></div><span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Expenses</span>
                         </div>
-                        <div class="col-6 colExpenses" id="colExpenses">
-                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="Total Expenses">
+                        <div class="col-8 colExpenses" id="colExpenses">
+                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Total Expenses">
                                 <div class="cssExpense progress-bar bg-danger progress-bar-striped progress-bar-animated" aria-valuenow="{{expenseperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{expenseperc}}%;"><span
                                         class="sr-only">{{expenseperc}}%</span></div>
                             </div>
                         </div>
                     </div>
                     <div class="row no-gutters align-items-center newHeightForLine" >
-                        <div class="col-6 colIncomeLabel" id="colIncomeLabel">
+                        <div class="col-4 colIncomeLabel" id="colIncomeLabel">
                             <div class="text-dark d-xl-flex flex-column justify-content-xl-center font-weight-bold h5 mb-0 mr-3"><span class="spnTotalnetincome">0.00</span></div><span style="color: rgb(133,135,150);font-weight: 400;font-size: 16px;">Net
                                 Income</span>
                         </div>
-                        <div class="col-6 colIncome" id="colIncome">
-                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 40px;" title="Net Income">
+                        <div class="col-8 colIncome" id="colIncome">
+                            <div class="progress progress-sm" data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" style="height: 85px;" title="Net Income">
                                 <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" aria-valuenow="{{netincomeperc}}" aria-valuemin="0" aria-valuemax="100" style="width: {{netincomeperc}}%;"><span
                                         class="sr-only">{{netincomeperc}}%</span></div>
                             </div>
