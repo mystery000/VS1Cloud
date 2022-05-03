@@ -547,8 +547,24 @@ export class SalesBoardService extends BaseService {
 
   getCheckPaymentIDByURLID(urlID) {
       let options = {
-          PropertyList: "ID",
+          ListType: "Detail",
           select: '[InvoiceNo]="'+urlID+'"',
+      };
+      return this.getList(this.ERPObjects.TCustomerPaymentLine, options);
+  }
+
+  getCheckPaymentDetailsByName(customerName) {
+      let options = {
+          ListType: "Detail",
+          select: '[ClientPrintName]="'+customerName+'" and [deleted]=false',
+      };
+      return this.getList(this.ERPObjects.TCustomerPayment, options);
+  }
+
+  getCheckPaymentLineByTransID(transID) {
+      let options = {
+          ListType: "Detail",
+          select: '[TransNo]="'+transID+'"',
       };
       return this.getList(this.ERPObjects.TCustomerPaymentLine, options);
   }

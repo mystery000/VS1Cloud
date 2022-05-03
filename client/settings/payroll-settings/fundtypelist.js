@@ -24,6 +24,7 @@ Template.fundtypelistpop.onCreated(() => {
 });
 
 Template.fundtypelistpop.onRendered(function() {
+    $('.fullScreenSpin').css('display','inline-block');
     let tempObj = Template.instance();
     let sideBarService = new SideBarService();
     let utilityService = new UtilityService();

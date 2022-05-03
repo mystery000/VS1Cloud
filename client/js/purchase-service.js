@@ -56,13 +56,6 @@ export class PurchaseBoardService extends BaseService {
     }
 
 
-
-
-
-
-
-
-
     getProducts() {
         let options = {
             PropertyList: "ProductName,SalesDescription,SellQty1Price,TaxCodeSales",
@@ -598,6 +591,22 @@ export class PurchaseBoardService extends BaseService {
           select: "[SupplierName]='"+supplierName+"'",
       };
       return this.getList(this.ERPObjects.TCredit, options);
+  }
+
+  getCheckPaymentDetailsByName(supplierName) {
+      let options = {
+          ListType: "Detail",
+          select: '[ClientPrintName]="'+supplierName+'" and [deleted]=false',
+      };
+      return this.getList(this.ERPObjects.TSupplierPayment, options);
+  }
+
+  getCheckPaymentLineByTransID(transID) {
+      let options = {
+          ListType: "Detail",
+          select: '[TransNo]="'+transID+'"',
+      };
+      return this.getList(this.ERPObjects.TSupplierPaymentLine, options);
   }
 
 }

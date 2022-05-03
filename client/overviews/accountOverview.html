@@ -32,8 +32,8 @@
             }
         </style> -->
 
-        <header class="p-2 d-flex align-items-center">
-            <h2 class="m-1">Accounts Overview</h2>
+        <header class="p-0 d-flex align-items-center">
+            <h2 class="mr-1">Accounts Overview</h2>
 
             <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i
                     class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
@@ -86,13 +86,13 @@
             </div>
         </div> -->
 
-        <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0 16px;">
+        <div class="row d-xl-flex flex-row justify-content-xl-center">
             <div class="col-7 d-xl-flex flex-grow-1 align-items-xl-start">
-                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px;"><i
+                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px; margin-left:0px;"><i
                         class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 <div>
                     <a class="btn btn-primary float-left btnAddNewAccounts" role="button" data-toggle="modal"
-                        href="#addNewAccount" style="margin: 16px;"><i class="fa fa-plus"
+                        href="#addNewAccount" style="margin: 12px;"><i class="fa fa-plus"
                             style="margin-right: 8px;"></i>New Account</a>
                     <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
                         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"
@@ -343,8 +343,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button"
-                    style="margin: 16px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
+                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 12px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
             </div>
             <div class="col-5 d-xl-flex justify-content-xl-end align-items-end">
                 <style>
@@ -472,220 +471,218 @@
             </div>
         </div>
 
-        <div style="padding: 0px 12px;">
-            <div class="card-body p-3 rounded">
-                <!-- Start {{> optionNavSalesOverview}} -->
-                <div class="d-xl-flex justify-content-xl-end">
-                    <div>
-                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                            <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>Display Settings</h4><button type="button" class="close"
-                                            data-dismiss="modal" aria-label="Close"><span
-                                                aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div>
-                                            {{#if tableheaderrecords}}
-                                            <form class="d-xl-flex align-items-xl-center">
-                                                <div class="flex-grow-1">
-                                                    <style>
-                                                        .groove {
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            width: 200px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
+        <div class="card-body p-0 rounded">
+            <!-- Start {{> optionNavSalesOverview}} -->
+            <div class="d-xl-flex justify-content-xl-end">
+                <div>
+                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                        <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4>Display Settings</h4><button type="button" class="close"
+                                        data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">×</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        {{#if tableheaderrecords}}
+                                        <form class="d-xl-flex align-items-xl-center">
+                                            <div class="flex-grow-1">
+                                                <style>
+                                                    .groove {
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        width: 200px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                    }
+
+                                                    .custom-control-label {
+                                                        position: absolute;
+                                                    }
+
+                                                    .rngRange {
+                                                        position: relative;
+                                                        display: flex;
+                                                        flex-direction: column;
+                                                        width: 100%;
+                                                        pointer-events: auto;
+                                                        background-color: rgb(255, 255, 255);
+                                                        background-clip: padding-box;
+                                                        border: 1px solid rgb(133, 135, 150);
+                                                        border-radius: .3rem;
+                                                        border-style: solid;
+                                                        border-width: 1px;
+                                                        padding: 2px;
+                                                        border-radius: .35rem;
+                                                        color: rgb(128, 128, 128);
+                                                        height: inherit !important;
+                                                    }
+
+                                                    @media only screen and (max-width: 480px) {
+                                                        .modal.show .modal-dialog {
+                                                            float: inherit !important;
+                                                            left: inherit !important;
+                                                            top: auto !important;
+
                                                         }
+                                                    }
+                                                </style>
+                                                {{#each item in tableheaderrecords}}
+                                                {{#if equals item.sTitle "id"}}
+                                                {{else}}
 
-                                                        .custom-control-label {
-                                                            position: absolute;
-                                                        }
-
-                                                        .rngRange {
-                                                            position: relative;
-                                                            display: flex;
-                                                            flex-direction: column;
-                                                            width: 100%;
-                                                            pointer-events: auto;
-                                                            background-color: rgb(255, 255, 255);
-                                                            background-clip: padding-box;
-                                                            border: 1px solid rgb(133, 135, 150);
-                                                            border-radius: .3rem;
-                                                            border-style: solid;
-                                                            border-width: 1px;
-                                                            padding: 2px;
-                                                            border-radius: .35rem;
-                                                            color: rgb(128, 128, 128);
-                                                            height: inherit !important;
-                                                        }
-
-                                                        @media only screen and (max-width: 480px) {
-                                                            .modal.show .modal-dialog {
-                                                                float: inherit !important;
-                                                                left: inherit !important;
-                                                                top: auto !important;
-
-                                                            }
-                                                        }
-                                                    </style>
-                                                    {{#each item in tableheaderrecords}}
-                                                    {{#if equals item.sTitle "id"}}
-                                                    {{else}}
-
-                                                    <div id="{{item.sIndex}}" class="columnSettings">
-                                                        <div class="custom-control custom-switch"
-                                                            style="margin: 8px; float:left;">
-                                                            <input class="custom-control-input chkDatatable"
-                                                                type="checkbox" id="chkSalesNo-{{item.sIndex}}"
-                                                                name="chkSalesNo-{{item.sIndex}}"
-                                                                checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
-                                                                value="{{item.sTitle}}">
-                                                            <label class="custom-control-label"
-                                                                for="chkSalesNo-{{item.sIndex}}"></label>
-                                                            <div contenteditable="true" class="groove divcolumn"
-                                                                type="text" value="{{item.sTitle}}"
-                                                                valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                        </div>
-                                                        <div class="d-xl-flex align-items-xl-center divColWidth"
-                                                            style="margin: 8px;">
-                                                            <label class="text-nowrap"
-                                                                style="padding-left: 0;margin-top: 8px;">Width:
-                                                                <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                            </label>
-                                                            <input class="custom-range rngRange" type="number"
-                                                                style="margin: 8px;" value="{{item.sWidth}}" min="0"
-                                                                max="1000">
-                                                            <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
-                                                        </div>
+                                                <div id="{{item.sIndex}}" class="columnSettings">
+                                                    <div class="custom-control custom-switch"
+                                                        style="margin: 8px; float:left;">
+                                                        <input class="custom-control-input chkDatatable"
+                                                            type="checkbox" id="chkSalesNo-{{item.sIndex}}"
+                                                            name="chkSalesNo-{{item.sIndex}}"
+                                                            checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
+                                                            value="{{item.sTitle}}">
+                                                        <label class="custom-control-label"
+                                                            for="chkSalesNo-{{item.sIndex}}"></label>
+                                                        <div contenteditable="true" class="groove divcolumn"
+                                                            type="text" value="{{item.sTitle}}"
+                                                            valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
                                                     </div>
-
-                                                    {{#if equals item.sVisible true}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }}+".chkDatatable").attr("checked", "checked");
-                                                    </script>
-                                                    {{else}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }}+".chkDatatable").removeAttr("checked");
-                                                    </script>
-                                                    {{/if}}
-
-                                                    {{/if}}
-                                                    {{/each}}
+                                                    <div class="d-xl-flex align-items-xl-center divColWidth"
+                                                        style="margin: 8px;">
+                                                        <label class="text-nowrap"
+                                                            style="padding-left: 0;margin-top: 8px;">Width:
+                                                            <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                        </label>
+                                                        <input class="custom-range rngRange" type="number"
+                                                            style="margin: 8px;" value="{{item.sWidth}}" min="0"
+                                                            max="1000">
+                                                        <!-- <div contenteditable="true" class="groove rngRange" type="text" value="{{item.sWidth}}" min="0" max="1000">{{item.sWidth}}px</div> -->
+                                                    </div>
                                                 </div>
-                                            </form>
-                                            {{/if}}
-                                        </div>
+
+                                                {{#if equals item.sVisible true}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }}+".chkDatatable").attr("checked", "checked");
+                                                </script>
+                                                {{else}}
+                                                <script>
+                                                    $("#" + {{ item.sIndex }}+".chkDatatable").removeAttr("checked");
+                                                </script>
+                                                {{/if}}
+
+                                                {{/if}}
+                                                {{/each}}
+                                            </div>
+                                        </form>
+                                        {{/if}}
                                     </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
-                                                style="margin-right: 5px;"></i>Save</button>
-                                        <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
-                                                class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
-                                                class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-success saveTable" type="button"><i class="fa fa-save"
+                                            style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
+                                            class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                            class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- End -->
-                <div class="table-responsive">
-                    <style>
-                        th {
-                            background-color: #ededed;
-                        }
+            </div>
+            <!-- End -->
+            <div class="table-responsive">
+                <style>
+                    th {
+                        background-color: #ededed;
+                    }
 
-                        .table-striped tbody tr:nth-of-type(odd) {
-                            background-color: white !important;
-                        }
+                    .table-striped tbody tr:nth-of-type(odd) {
+                        background-color: white !important;
+                    }
 
-                        .table-striped tbody tr:nth-of-type(even) {
-                            background-color: #0000000d !important;
-                        }
+                    .table-striped tbody tr:nth-of-type(even) {
+                        background-color: #0000000d !important;
+                    }
 
-                        .JColResizer>tbody>tr>td,
-                        .JColResizer>tbody>tr>th {
-                            padding: .75rem !important;
-                        }
+                    .JColResizer>tbody>tr>td,
+                    .JColResizer>tbody>tr>th {
+                        padding: .75rem !important;
+                    }
 
-                        .hiddenColumn {
-                            display: none;
-                        }
+                    .hiddenColumn {
+                        display: none;
+                    }
 
-                        .showColumn {
-                            display: table-cell;
-                            padding: .75rem;
-                            vertical-align: top;
-                        }
+                    .showColumn {
+                        display: table-cell;
+                        padding: .75rem;
+                        vertical-align: top;
+                    }
 
-                        input[type=number]::-webkit-inner-spin-button,
-                        input[type=number]::-webkit-outer-spin-button {
-                            opacity: 1;
-                        }
+                    input[type=number]::-webkit-inner-spin-button,
+                    input[type=number]::-webkit-outer-spin-button {
+                        opacity: 1;
+                    }
 
-                        .isNotBankAccount {
-                            display: none !important;
-                        }
+                    .isNotBankAccount {
+                        display: none !important;
+                    }
 
-                        .isNotCreditAccount {
-                            display: none !important;
-                        }
-                    </style>
-                    <table id="tblAccountOverview" style="width:100%"
-                        class="dataTable table table-striped table-bordered tblAccountOverview">
-                        <thead>
-                            <tr class="dnd-moved">
-                                <th class="th colAccountId hiddenColumn" style=" ">Account ID</th>
-                                <th class="th colAccountName" style=" ">Account Name</th>
-                                <th class="th colDescription" style=" ">Description</th>
-                                <th class="th colAccountNo" style="width:90px;">Account No</th>
-                                <th class="th colType">Type</th>
-                                <th class="th colBalance" style="width:80px;">Balance</th>
-                                <th class="th colTaxCode" style="width:80px;">Tax Code</th>
-                                <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
-                                <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
-                                <th class="th colBSB" style="width:60px;">{{bsbRegionName}}</th>
-                                <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
-                                <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
-                                <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
-                                <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
-                                <th class="th colExtra hiddenColumn">Swift Code</th>
-                                <th class="th colAPCANumber hiddenColumn">Routing Number</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{#if datatablerecords}}
-                            {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colAccountId hiddenColumn">{{item.id}}</td>
-                                <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
-                                <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
-                                <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
-                                    {{item.accounttypename}}</td>
-                                <td contenteditable="false" class="colBalance" style="text-align: right!important;">
-                                    {{item.balance}}</td>
-                                <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
-                                <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
-                                <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
-                                <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
-                                <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
-                                <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
-                                <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
-                                <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
-                                <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
-                                <td contenteditable="false" class="colAPCANumber hiddenColumn"
-                                    checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
+                    .isNotCreditAccount {
+                        display: none !important;
+                    }
+                </style>
+                <table id="tblAccountOverview" style="width:100%"
+                    class="dataTable table table-striped table-bordered tblAccountOverview">
+                    <thead>
+                        <tr class="dnd-moved">
+                            <th class="th colAccountId hiddenColumn" style=" ">Account ID</th>
+                            <th class="th colAccountName" style=" ">Account Name</th>
+                            <th class="th colDescription" style=" ">Description</th>
+                            <th class="th colAccountNo" style="width:90px;">Account No</th>
+                            <th class="th colType">Type</th>
+                            <th class="th colBalance" style="width:80px;">Balance</th>
+                            <th class="th colTaxCode" style="width:80px;">Tax Code</th>
+                            <th class="th colBankName hiddenColumn" style="width:120px;">Bank Name</th>
+                            <th class="th colBankAccountName" style="width:120px;">Bank Acc Name</th>
+                            <th class="th colBSB" style="width:60px;">{{bsbRegionName}}</th>
+                            <th class="th colBankAccountNo" style="width:120px;">Bank Acc No</th>
+                            <th class="th colCardNumber hiddenColumn" style="width:120px;">Card Number</th>
+                            <th class="th colExpiryDate hiddenColumn" style="width:60px;">Expiry Date</th>
+                            <th class="th colCVC hiddenColumn" style="width:60px;">CVC</th>
+                            <th class="th colExtra hiddenColumn">Swift Code</th>
+                            <th class="th colAPCANumber hiddenColumn">Routing Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#if datatablerecords}}
+                        {{#each item in datatablerecords}}
+                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                            <td contenteditable="false" class="colAccountId hiddenColumn">{{item.id}}</td>
+                            <td contenteditable="false" class="colAccountName">{{item.accountname}}</td>
+                            <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                            <td contenteditable="false" class="colAccountNo">{{item.accountnumber}}</td>
+                            <td contenteditable="false" class="colType" accounttype="{{item.accounttypeshort}}">
+                                {{item.accounttypename}}</td>
+                            <td contenteditable="false" class="colBalance" style="text-align: right!important;">
+                                {{item.balance}}</td>
+                            <td contenteditable="false" class="colTaxCode">{{item.taxcode}}</td>
+                            <td contenteditable="false" class="colBankName hiddenColumn">{{item.bankname}}</td>
+                            <td contenteditable="false" class="colBankAccountName">{{item.bankaccountname}}</td>
+                            <td contenteditable="false" class="colBSB">{{item.bsb}}</td>
+                            <td contenteditable="false" class="colBankAccountNo">{{item.bankaccountnumber}}</td>
+                            <td contenteditable="false" class="colCardNumber hiddenColumn">{{item.cardnumber}}</td>
+                            <td contenteditable="false" class="colExpiryDate hiddenColumn">{{item.expirydate}}</td>
+                            <td contenteditable="false" class="colCVC hiddenColumn">{{item.cvc}}</td>
+                            <td contenteditable="false" class="colExtra hiddenColumn">{{item.swiftcode}}</td>
+                            <td contenteditable="false" class="colAPCANumber hiddenColumn"
+                                checkheader="{{item.isheader}}">{{item.apcanumber}}</td>
 
-                            </tr>
-                            {{/each}}
-                            {{/if}}
-                        </tbody>
-                    </table>
-                </div>
+                        </tr>
+                        {{/each}}
+                        {{/if}}
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">

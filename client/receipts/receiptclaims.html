@@ -1,7 +1,7 @@
 <template name="receiptsoverview">
     <div style="margin-top: -24px;">
-        <div id="fullScreenSpin" style="display:none;">
-            <div class="spinner" style="z-index: 1500 !important;"></div>
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
         </div>
         <!-- <style>
             .dataTables_filter {
@@ -9,9 +9,9 @@
             }
         </style> -->
         <header style="padding: 16px;padding-bottom: 0px;">
-            <h2 style="margin: 14px;margin-bottom: 0px;">Receipt Claims
+            <h2 class="pageHeader" style="margin: 14px;margin-bottom: 0px;">Receipt Claims
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
-                <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                <a role="button" class="helpBtn" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
                 <!-- Start Help View Modal -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -34,10 +34,43 @@
             </h2>
         </header>
 
-        <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 16px;">
-            <div class="col-12">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh m-1 m-md-3" type="button"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>                
-                <div class="btn-group m-1 m-md-3">
+        <style>
+            .btnOpenSettingsMobile {
+                display: none;
+            }
+
+            @media screen and (max-width: 450px) {
+                .pageHeader {
+                    margin: 14px 4px !important;
+                }
+                .helpBtn {
+                    float: right;
+                    margin-top: 8px;
+                }
+
+                .navButtons {
+                    margin-top: 42px;
+                    margin-bottom: 16px;
+                }
+
+                .btnNav {
+                    width: 90%;
+                }
+
+                .btnOpenSettingsDesktop {
+                    display: none;
+                }
+
+                .btnOpenSettingsMobile {
+                    display: block;
+                }
+            }
+        </style>
+
+        <div class="row d-xl-flex flex-row justify-content-xl-center navButtons" style="padding: 0px 16px;">
+            <div class="col-6">
+                <button id="btnRefresh" class="btn btn-primary btnRefresh m-1 m-md-3 btnNav" type="button"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                <div class="btn-group m-1 m-md-3 btnNav">
                     <button type="button" class="btn btn-primary btnNewReceipt" data-toggle="modal" data-target="#newReceiptModal"><i class="icon ion-plus" style="margin-right: 5px;"></i>New Receipt</button>
                     <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-caret-down"></i>
@@ -50,12 +83,15 @@
                         <a class="dropdown-item" href="" data-toggle="modal" data-target="#newReceiptModal" id="showTime">Time</a>
                     </div>
                 </div>
-                <a class="btn btnOpenSettings float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary printConfirm float-right m-1 m-md-3" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                <button id="exportbtn" class="btn btn-primary float-right m-1 m-md-3" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+            </div>
+            <div class="col-6">
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btn-primary printConfirm float-right btnNav m-1 m-md-3" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                <button id="exportbtn" class="btn btn-primary float-right btnNav m-1 m-md-3" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right m-1 m-md-3" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
             <!-- <div class="col-12">
-                
+
             </div> -->
         </div>
         <div class="px-md-3">
@@ -140,11 +176,19 @@
 
                                                                 {{#if equals item.sVisible true}}
                                                                     <script>
-                                                                        $("#" + {{tem.sIndex}} + ".chkDatatable").attr("checked", "checked");
+                                                                        $("#" + {
+                                                                            {
+                                                                                tem.sIndex
+                                                                            }
+                                                                        } + ".chkDatatable").attr("checked", "checked");
                                                                     </script>
                                                                 {{else}}
                                                                     <script>
-                                                                        $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
+                                                                        $("#" + {
+                                                                            {
+                                                                                item.sIndex
+                                                                            }
+                                                                        } + ".chkDatatable").removeAttr("checked");
                                                                     </script>
                                                                 {{/if}}
 
@@ -199,6 +243,7 @@
                         input[type=number]::-webkit-outer-spin-button {
                             opacity: 1;
                         }
+
                         input[type=search]#tblReceiptList_filter {
                             width: 150px !important;
                         }
@@ -261,21 +306,21 @@
                         </thead>
                         <tbody>
                             {{#if expenseClaimList}}
-                            {{#each item in expenseClaimList}}
-                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="col" style="width: 2%;">
-                                    <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
-                                        <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}" >
-                                        <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
-                                    </div>
-                                </td>
-                                <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
-                                <td contenteditable="false" class="colReceiptMerchant" >{{item.SupplierName}}</td>
-                                <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
-                                <td contenteditable="false" class="colReceiptAccount" >{{item.AccountName}}</td>
-                                <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
-                            </tr>
-                            {{/each}}
+                                {{#each item in expenseClaimList}}
+                                    <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
+                                        <td contenteditable="false" class="col" style="width: 2%;">
+                                            <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-{{item.ID}}">
+                                                <label class="custom-control-label chkBox pointer" for="formCheck-{{item.ID}}"></label>
+                                            </div>
+                                        </td>
+                                        <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
+                                        <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
+                                        <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
+                                        <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                        <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                    </tr>
+                                {{/each}}
                             {{/if}}
                         </tbody>
                     </table>
@@ -342,20 +387,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-8">
+                                <div class="col-6 col-md-8">
                                     <div class="form-group">
                                         <label>Total Amount</label>
                                         <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6 col-md-4">
                                     <div class="form-group">
                                         <label>Currency</label>
                                         <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                     </div>
                                 </div>
-                                <div class="col-12 mb-3">
-                                    <div class="custom-control custom-switch">
+                                <div class="col-6">
+                                    <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursable" style="cursor: pointer;" checked="{{#if editExpenseClaim.Reimbursement}}checked{{/if}}">
                                         <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reiumbursable</label>
                                     </div>
@@ -446,7 +491,7 @@
                         <!-- Detach receipt removes the currently attached receipt -->
                         <button type="button float-left" class="btn btn-secondary btn-detach">Detach Receipt</button>
                         <button type="button float-left" class="btn btn-secondary" id="btnShowSplitModal" data-dismiss="modal">Split Expense</button>
-                        <button type="button float-left" class="btn btn-secondary" data-toggle="modal" data-target="#mergeModal" data-dismiss="modal">Merge</button>
+                        <button type="button float-left" class="btn btn-secondary" id="btnShowMergeModal" data-dismiss="modal">Merge</button>
                         <button type="button float-left" class="btn btn-secondary" id="btnDuplicate">Duplicate</button>
                         <button type="button" class="btn btn-danger" id="btnDeleteReceipt"><i class="fas fa-trash-alt"></i></button>
                     </div>
@@ -576,7 +621,7 @@
     </div>
 
     <div class="modal fade" id="mergeModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Merge an Expense</h5>
@@ -589,16 +634,9 @@
                         <div class="col-12 col-md-3">
                             <div class="form-group">
                                 <label>Filter by Merchant</label>
-                                <select class="form-control" id="">
-                                    <option>All Merchants</option>
-                                    <option>Merchant 1</option>
-                                    <option>Merchant 2</option>
-                                    <option>Merchant 3</option>
-                                    <option>Merchant 4</option>
-                                    <option>Merchant 5</option>
-                                </select>
+                                <select class="form-control merchants" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label>Filter by Cards</label>
                                 <select class="form-control" id="">
                                     <option>All Cards</option>
@@ -608,17 +646,10 @@
                                     <option>Card 4</option>
                                     <option>Card 5</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label>Filter by Account</label>
-                                <select class="form-control" id="">
-                                    <option>All Categories</option>
-                                    <option>Office Supplies</option>
-                                    <option>Benefits</option>
-                                    <option>Car</option>
-                                    <option>Equipment</option>
-                                    <option>Insurance</option>
-                                </select>
+                                <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                             </div>
                         </div>
                         <div class="col-12 col-md-9">
@@ -636,25 +667,25 @@
                                         <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu" role="menu">
                                             <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                            <a class="dropdown-item timeFilterMerge" id="lastMonthMerge" role="presentation" href="#">Last Month</a>
+                                            <a class="dropdown-item timeFilterMerge" id="lastQuarterMerge" role="presentation" href="#">Last Quarter</a>
+                                            <a class="dropdown-item timeFilterMerge" id="last12MonthsMerge" role="presentation" href="#">Last 12 Months</a>
+                                            <a class="dropdown-item timeFilterMerge" id="ignoreDateMerge" role="presentation" href="#">Ignore Date</a>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                        <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                                        <!-- <label style="margin-top: 8px; margin-right: 16px;">From</label> -->
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                            <input type="text" class="form-control" id="dateFromMerge" name="dateFrom" placeholder="From">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                        <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                                        <!-- <label style="margin-top: 8px; margin-right: 16px;">To</label> -->
                                         <div class="input-group date" style="width: 160px;">
-                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                            <input type="text" class="form-control" id="dateToMerge" name="dateTo" placeholder="To">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -665,29 +696,203 @@
                             <table id="tblMerge" style="width:100%" class="dataTable table table-striped table-bordered tblMerge">
                                 <thead>
                                     <tr class="dnd-moved">
-                                        <th class="th col" style="width: 6%;">Date</th>
-                                        <th class="th col">Merchant</th>
-                                        <th class="th col" style="width: 20%;">Total</th>
-                                        <th class="th col">Account</th>
-                                        <th class="th col">Comment</th>
+                                        <th class="th col" style="width: 2%;">
+                                            <div class="custom-control custom-checkbox chkBoxMerge" style="width:15px;margin-right: -6px;">
+                                                <input class="custom-control-input chkBoxAllMerge" type="checkbox" id="formCheckMerge-All">
+                                                <label class="custom-control-label chkBoxAllMerge" for="formCheckMerge-All"></label>
+                                            </div>
+                                        </th>
+                                        <th class="th colReceiptDate">Date</th>
+                                        <th class="th colReceiptMerchant">Merchant</th>
+                                        <th class="th colReceiptAmount" style="width: 80px;">Amount</th>
+                                        <th class="th colReceiptAccount">Account</th>
+                                        <th class="th colReceiptDesc" style="width: 30%;">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="dnd-moved" id="receiptentry1" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col"></td>
-                                        <td contenteditable="false" class="col" style="width: 20%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col"></td>
-                                        <td contenteditable="false" class="col"></td>
-
-                                    </tr>
+                                    {{#if expenseClaimList}}
+                                        {{#each item in expenseClaimList}}
+                                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
+                                                <td contenteditable="false" class="col" style="width: 2%;">
+                                                    <div class="custom-control custom-checkbox chkBoxMerge pointer" style="width:15px;margin-right: -6px;">
+                                                        <input class="custom-control-input chkBoxMerge pointer" type="checkbox" id="formCheckMerge-{{item.ID}}">
+                                                        <label class="custom-control-label chkBoxMerge pointer" for="formCheckMerge-{{item.ID}}"></label>
+                                                    </div>
+                                                </td>
+                                                <td contenteditable="false" class="colReceiptDate">{{item.DateTime}}</td>
+                                                <td contenteditable="false" class="colReceiptMerchant">{{item.SupplierName}}</td>
+                                                <td contenteditable="false" class="colReceiptAmount" style="text-align: right;width: 80px;">${{item.AmountInc}}</td>
+                                                <td contenteditable="false" class="colReceiptAccount">{{item.AccountName}}</td>
+                                                <td contenteditable="false" class="colReceiptDesc" style="width: 30%;">{{item.Description}}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{/if}}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-primary" id="btnMergeDetail" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Merge</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mergeDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Merge Expenses</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="padding: 16px;">
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Expense to keep</label>
+                                        <select class="form-control" id="sltExpenseKeep">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index 0}}selected{{/if}}">{{item.DateTime}} - {{item.SupplierName}} ${{item.AmountInc}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Employee</label>
+                                        <input class="form-control" id="mergedEmployee" value="{{mergeReceiptRecords.[0].EmployeeName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Transaction Type</label>
+                                        <select class="form-control" id="mergedTransactionType">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Paymethod}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Merchant</label>
+                                        <input class="form-control" id="mergedMerchant" value="{{mergeReceiptRecords.[0].SupplierName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Date</label>
+                                        <select class="form-control" id="mergedDateTime">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.DateTime}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-8">
+                                    <div class="form-group">
+                                        <label>Total Amount</label>
+                                        <select class="form-control" id="mergedAmount">
+                                            {{#each item in mergeReceiptRecords}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">${{item.AmountInc}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="form-group">
+                                        <label>Currency</label>
+                                        <input class="form-control" value="{{sessionCurrency}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="custom-control custom-switch" style="margin-top: 40px;">
+                                        <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtMergedReiumbursable" style="cursor: pointer;">
+                                        <label class="custom-control-label" for="swtMergedReiumbursable" style="cursor: pointer;">Reiumbursable</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Chart of Accounts</label>
+                                        <input class="form-control" id="mergedAccount" value="{{mergeReceiptRecords.[0].AccountName}}" readonly/>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="3" id="mergedDescription" name="txaDescription" readonly>{{mergeReceiptRecords.[0].Description}}</textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <style>
+                            .imageGrandMerge {
+                                position: absolute;
+                                top: 15%;
+                                left: 0;
+                                width: 100%;
+                                height: 85%;
+                                cursor: crosshair;
+                            }
+
+                            .imageParentMerge {
+                                width: 100%;
+                                border-radius: 15px;
+                                position: relative;
+                                float: left;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+
+                            .receiptPhotoMerge {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                background-size: contain;
+                                transition: transform .5s ease-out;
+                            }
+                        </style>
+
+                        <div class="col-12 col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label>Receipt</label>
+                                        <select class="form-control" id="mergedReceipt">
+                                            {{#each item in mergeReceiptRecords}}
+                                            {{#if item.Attachments}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Attachments.[0].fields.AttachmentName}}</option>
+                                            {{else}}
+                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">No Receipt</option>
+                                            {{/if}}
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12 img-placeholder" style="text-align: center;">
+                                    <img src="/icons/nofiles_icon.png" style="display: block; margin-left: auto; margin-right: auto;">
+                                </div>
+                            </div>
+                            <div class="imageGrandMerge" style="padding-right: 0.75rem; padding-left: 0.75rem;">
+                                <div class="imageParentMerge" data-scale="2.4" data-image=""></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>
@@ -752,20 +957,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-6 col-md-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="form-group">
                                                 <label>Currency</label>
                                                 <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
-                                        <div class="col-12 mb-3">
-                                            <div class="custom-control custom-switch">
+                                        <div class="col-6">
+                                            <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableExpense" style="cursor: pointer;">
                                                 <label class="custom-control-label" for="swtReiumbursableExpense" style="cursor: pointer;">Reiumbursable</label>
                                             </div>
@@ -886,20 +1091,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-6 col-md-8">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
-                                                <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="" readonly>
+                                                <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-6 col-md-4">
                                             <div class="form-group">
                                                 <label>Currency</label>
                                                 <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
-                                        <div class="col-12 mb-3">
-                                            <div class="custom-control custom-switch">
+                                        <div class="col-6">
+                                            <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">
                                                 <label class="custom-control-label" for="swtReiumbursableTime" style="cursor: pointer;">Reiumbursable</label>
                                             </div>
@@ -982,109 +1187,45 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-multiple" role="tabpanel" aria-labelledby="nav-multiple-tab">
-                            <table id="tblReceiptList" style="width:100%; margin-top: 0px !important; margin-bottom: 0px !important;" class="dataTable table table-striped table-bordered tblReceiptList">
+                            <table id="tblMultipleReceipt" style="width:100%; margin-top: 0px !important; margin-bottom: 0px !important;table-layout:fixed;" class="table table-striped table-bordered">
                                 <thead>
                                     <tr class="dnd-moved">
-                                        <th class="th col" style="width: 6%;">Date</th>
-                                        <th class="th col" style="width: 20%;">Merchant</th>
-                                        <th class="th col" style="width: 10%;">Amount</th>
-                                        <th class="th col" style="width: 10%;">Currency</th>
-                                        <th class="th col" style="width: 3%;"></th>
-                                        <th class="th col" style="width: 10%;">Account</th>
-                                        <th class="th col" >Description</th>
+                                        <th class="th" style="width: 160px;">Date</th>
+                                        <th class="th" style="width: 20%;">Merchant</th>
+                                        <th class="th" style="width: 100px;">Amount</th>
+                                        <th class="th" style="width: 10%;">Currency</th>
+                                        <th class="th" style="width: 3%;"></th>
+                                        <th class="th" style="width: 20%;">Account</th>
+                                        <th class="th">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
-                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
-                                        <td contenteditable="false" class="col" style="width: 6%;">08/03/2022</td>
-                                        <td contenteditable="false" class="col" style="width: 20%;">Rynfield BP</td>
-                                        <td contenteditable="false" class="col" style="width: 10%; text-align: right;">$500.00</td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">AUD</td>
-                                        <td contenteditable="false" class="col" style="width: 3%;"><i class="fa fa-cloud-upload"></i></td>
-                                        <td contenteditable="false" class="col" style="width: 10%;">Travel</td>
-                                        <td contenteditable="false" class="col" >20L Petrol</td>
-                                    </tr>
+                                    {{#each item in multiReceiptRecords}}
+                                        <tr class="dnd-moved" style="cursor: pointer;">
+                                            <td contenteditable="false">
+                                                <div class="input-group date" style="cursor: pointer;">
+                                                    <input type="text" class="form-control dtMultiple" id="multipleDate-{{@index}}" name="dtMultiple" value="{{item.date}}">
+                                                    <div class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td contenteditable="false">
+                                                <select type="search" id="multipleMerchant-{{@index}}" class="form-control multipleMerchant" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                            </td>
+                                            <td>
+                                                <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
+                                            </td>
+                                            <td contenteditable="false">{{item.currency}}</td>
+                                            <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
+                                            <td contenteditable="false">
+                                                <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                            </td>
+                                            <td>
+                                                <input id="multipleDescription-{{@index}}" class="form-control multipleDescription" style="width: 100%;" value="{{item.description}}" />
+                                            </td>
+                                        </tr>
+                                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -1150,7 +1291,7 @@
                     {{> employeelistpop}}
                 </div>
                 <div class="modal-footer">
-                  <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
         </div>

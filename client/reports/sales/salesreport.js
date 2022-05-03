@@ -1,6 +1,10 @@
-import {ReportService} from "../report-service";
+import {
+    ReportService
+} from "../report-service";
 import 'jQuery.print/jQuery.print.js';
-import {UtilityService} from "../../utility-service";
+import {
+    UtilityService
+} from "../../utility-service";
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 Template.salesreport.onCreated(() => {
@@ -22,8 +26,14 @@ Template.salesreport.onRendered(() => {
     var begunDate = moment(currentDate).format("DD/MM/YYYY");
     let fromDateMonth = (currentDate.getMonth() + 1);
     let fromDateDay = currentDate.getDate();
-    if ((currentDate.getMonth()+1) < 10) {
-        fromDateMonth = "0" + (currentDate.getMonth()+1);
+    if ((currentDate.getMonth() + 1) < 10) {
+        fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+
+    let imageData = (localStorage.getItem("Image"));
+    if (imageData) {
+        $('#uploadedImage').attr('src', imageData);
+        $('#uploadedImage').attr('width', '50%');
     }
 
     if (currentDate.getDate() < 10) {
@@ -50,11 +60,11 @@ Template.salesreport.onRendered(() => {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
     let currenctURL = FlowRouter.current().queryParams;
-    templateObject.getSalesReports = function (dateFrom, dateTo, ignoreDate) {
+    templateObject.getSalesReports = function(dateFrom, dateTo, ignoreDate) {
         templateObject.records.set('');
         templateObject.grandrecords.set('');
         if (!localStorage.getItem('VS1Sales_Report')) {
-            reportService.getSalesDetailsData(dateFrom, dateTo, ignoreDate).then(function (data) {
+            reportService.getSalesDetailsData(dateFrom, dateTo, ignoreDate).then(function(data) {
                 let totalRecord = [];
                 let grandtotalRecord = [];
 
@@ -96,8 +106,8 @@ Template.salesreport.onRendered(() => {
                             //
                         ];
 
-                        if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0)
-                             || (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
+                        if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
+                            (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
                             //records.push(recordObj);
                             if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
                                 if (currenctURL.contact.replace(/\s/g, '') == data.tsaleslist[i].CustomerName.replace(/\s/g, '')) {
@@ -119,11 +129,10 @@ Template.salesreport.onRendered(() => {
                     records = _.groupBy(records, 'Company');
                     for (let key in records) {
                         let obj = [{
-                                key: key
-                            }, {
-                                data: records[key]
-                            }
-                        ];
+                            key: key
+                        }, {
+                            data: records[key]
+                        }];
                         allRecords.push(obj);
                     }
 
@@ -145,7 +154,8 @@ Template.salesreport.onRendered(() => {
 
                         }
                         let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                            utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)];
+                            utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
+                        ];
                         current.push(val);
 
                     }
@@ -172,21 +182,20 @@ Template.salesreport.onRendered(() => {
                         utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
                         utilityService.modifynegativeCurrencyFormat(grandtotalTax),
                         utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                        utilityService.modifynegativeCurrencyFormat(grandbalance)];
+                        utilityService.modifynegativeCurrencyFormat(grandbalance)
+                    ];
 
                     for (let key in records) {
                         let dataArr = current[iterator]
-                            let obj = [{
-                                    key: key
-                                }, {
-                                    data: records[key]
-                                }, {
-                                    total: [{
-                                            dataArr: dataArr
-                                        }
-                                    ]
-                                }
-                            ];
+                        let obj = [{
+                            key: key
+                        }, {
+                            data: records[key]
+                        }, {
+                            total: [{
+                                dataArr: dataArr
+                            }]
+                        }];
                         totalRecord.push(obj);
                         iterator += 1;
                     }
@@ -195,17 +204,17 @@ Template.salesreport.onRendered(() => {
                     templateObject.grandrecords.set(grandval);
 
                     if (templateObject.records.get()) {
-                        setTimeout(function () {
-                            $('td a').each(function () {
+                        setTimeout(function() {
+                            $('td a').each(function() {
                                 if ($(this).text().indexOf('-' + Currency) >= 0)
                                     $(this).addClass('text-danger')
                             });
-                            $('td').each(function () {
+                            $('td').each(function() {
                                 if ($(this).text().indexOf('-' + Currency) >= 0)
                                     $(this).addClass('text-danger')
                             });
 
-                            $('td').each(function () {
+                            $('td').each(function() {
 
                                 let lineValue = $(this).first().text()[0];
                                 if (lineValue != undefined) {
@@ -215,7 +224,7 @@ Template.salesreport.onRendered(() => {
 
                             });
 
-                            $('td').each(function () {
+                            $('td').each(function() {
                                 if ($(this).first().text().indexOf('-' + Currency) >= 0)
                                     $(this).addClass('text-right')
                             });
@@ -249,7 +258,7 @@ Template.salesreport.onRendered(() => {
                     $('.fullScreenSpin').css('display', 'none');
                 }
 
-            }).catch(function (err) {
+            }).catch(function(err) {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
                 $('.fullScreenSpin').css('display', 'none');
             });
@@ -295,8 +304,8 @@ Template.salesreport.onRendered(() => {
                         //
                     ];
 
-                    if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0)
-                         || (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
+                    if ((data.tsaleslist[i].TotalAmount != 0) || (data.tsaleslist[i].TotalTax != 0) ||
+                        (data.tsaleslist[i].TotalAmountinc != 0) || (data.tsaleslist[i].Balance != 0)) {
                         //records.push(recordObj);
                         if ((currenctURL.contact !== undefined) && (currenctURL.contact !== "undefined")) {
                             if (currenctURL.contact.replace(/\s/g, '') == data.tsaleslist[i].CustomerName.replace(/\s/g, '')) {
@@ -318,11 +327,10 @@ Template.salesreport.onRendered(() => {
                 records = _.groupBy(records, 'Company');
                 for (let key in records) {
                     let obj = [{
-                            key: key
-                        }, {
-                            data: records[key]
-                        }
-                    ];
+                        key: key
+                    }, {
+                        data: records[key]
+                    }];
                     allRecords.push(obj);
                 }
 
@@ -344,7 +352,8 @@ Template.salesreport.onRendered(() => {
 
                     }
                     let val = ['Total ' + allRecords[i][0].key + '', '', '', '', '',
-                        utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)];
+                        utilityService.modifynegativeCurrencyFormat(totalAmountEx), utilityService.modifynegativeCurrencyFormat(totalTax), utilityService.modifynegativeCurrencyFormat(amountInc), utilityService.modifynegativeCurrencyFormat(balance)
+                    ];
                     current.push(val);
 
                 }
@@ -371,21 +380,20 @@ Template.salesreport.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(grandtotalAmountEx),
                     utilityService.modifynegativeCurrencyFormat(grandtotalTax),
                     utilityService.modifynegativeCurrencyFormat(grandamountInc),
-                    utilityService.modifynegativeCurrencyFormat(grandbalance)];
+                    utilityService.modifynegativeCurrencyFormat(grandbalance)
+                ];
 
                 for (let key in records) {
                     let dataArr = current[iterator]
-                        let obj = [{
-                                key: key
-                            }, {
-                                data: records[key]
-                            }, {
-                                total: [{
-                                        dataArr: dataArr
-                                    }
-                                ]
-                            }
-                        ];
+                    let obj = [{
+                        key: key
+                    }, {
+                        data: records[key]
+                    }, {
+                        total: [{
+                            dataArr: dataArr
+                        }]
+                    }];
                     totalRecord.push(obj);
                     iterator += 1;
                 }
@@ -394,17 +402,17 @@ Template.salesreport.onRendered(() => {
                 templateObject.grandrecords.set(grandval);
 
                 if (templateObject.records.get()) {
-                    setTimeout(function () {
-                        $('td a').each(function () {
+                    setTimeout(function() {
+                        $('td a').each(function() {
                             if ($(this).text().indexOf('-' + Currency) >= 0)
                                 $(this).addClass('text-danger')
                         });
-                        $('td').each(function () {
+                        $('td').each(function() {
                             if ($(this).text().indexOf('-' + Currency) >= 0)
                                 $(this).addClass('text-danger')
                         });
 
-                        $('td').each(function () {
+                        $('td').each(function() {
 
                             let lineValue = $(this).first().text()[0];
                             if (lineValue != undefined) {
@@ -414,7 +422,7 @@ Template.salesreport.onRendered(() => {
 
                         });
 
-                        $('td').each(function () {
+                        $('td').each(function() {
                             if ($(this).first().text().indexOf('-' + Currency) >= 0)
                                 $(this).addClass('text-right')
                         });
@@ -467,8 +475,8 @@ Template.salesreport.onRendered(() => {
 
     }
 
-    templateObject.getDepartments = function () {
-        reportService.getDepartment().then(function (data) {
+    templateObject.getDepartments = function() {
+        reportService.getDepartment().then(function(data) {
             for (let i in data.tdeptclass) {
 
                 let deptrecordObj = {
@@ -488,7 +496,10 @@ Template.salesreport.onRendered(() => {
 });
 
 Template.salesreport.events({
-    'change #dateTo': function () {
+    'click #btnSummary': function() {
+        FlowRouter.go('/salessummaryreport');
+    },
+    'change #dateTo': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -514,7 +525,7 @@ Template.salesreport.events({
         }
 
     },
-    'change #dateFrom': function () {
+    'change #dateFrom': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
@@ -540,15 +551,15 @@ Template.salesreport.events({
         }
 
     },
-    'click .btnRefresh': function () {
+    'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1Sales_Report', '');
         Meteor._reload.reload();
     },
-    'click td a': function (event) {
+    'click td a': function(event) {
         let redirectid = $(event.target).closest('tr').attr('id');
 
-        let transactiontype = $(event.target).closest('tr').attr('class'); ;
+        let transactiontype = $(event.target).closest('tr').attr('class');;
 
         if (redirectid && transactiontype) {
             if (transactiontype === 'Quote') {
@@ -563,13 +574,13 @@ Template.salesreport.events({
         }
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
-    'click .btnPrintReport': function (event) {
+    'click .btnPrintReport': function(event) {
         $(".printReport").print({
             title: document.title + " | Sales Report | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
         })
     },
-    'click .btnExportReport': function () {
+    'click .btnExportReport': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let utilityService = new UtilityService();
         let templateObject = Template.instance();
@@ -606,7 +617,7 @@ Template.salesreport.events({
         //
         // });
     },
-    'click #lastMonth': function () {
+    'click #lastMonth': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1Sales_Report', '');
@@ -618,15 +629,15 @@ Template.salesreport.events({
         var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
 
         var formatDateComponent = function(dateComponent) {
-          return (dateComponent < 10 ? '0' : '') + dateComponent;
+            return (dateComponent < 10 ? '0' : '') + dateComponent;
         };
 
         var formatDate = function(date) {
-          return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+            return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
         };
 
         var formatDateERP = function(date) {
-          return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+            return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
         };
 
 
@@ -641,7 +652,7 @@ Template.salesreport.events({
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
 
     },
-    'click #lastQuarter': function () {
+    'click #lastQuarter': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1Sales_Report', '');
@@ -651,6 +662,7 @@ Template.salesreport.events({
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
         function getQuarter(d) {
             d = d || new Date();
             var m = Math.floor(d.getMonth() / 3) + 2;
@@ -681,7 +693,7 @@ Template.salesreport.events({
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
 
     },
-    'click #last12Months': function () {
+    'click #last12Months': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1Sales_Report', '');
@@ -692,8 +704,8 @@ Template.salesreport.events({
 
         let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
         let fromDateDay = currentDate.getDate();
-        if ((currentDate.getMonth()+1) < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth()+1);
+        if ((currentDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentDate.getMonth() + 1);
         }
         if (currentDate.getDate() < 10) {
             fromDateDay = "0" + currentDate.getDate();
@@ -710,7 +722,7 @@ Template.salesreport.events({
         templateObject.getSalesReports(getDateFrom, getLoadDate, false);
 
     },
-    'click #ignoreDate': function () {
+    'click #ignoreDate': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1Sales_Report', '');
@@ -720,14 +732,14 @@ Template.salesreport.events({
         templateObject.getSalesReports('', '', true);
 
     },
-    'keyup #myInputSearch': function (event) {
+    'keyup #myInputSearch': function(event) {
         $('.table tbody tr').show();
         let searchItem = $(event.target).val();
         if (searchItem != '') {
             var value = searchItem.toLowerCase();
-            $('.table tbody tr').each(function () {
+            $('.table tbody tr').each(function() {
                 var found = 'false';
-                $(this).each(function () {
+                $(this).each(function() {
                     if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                         found = 'true';
                     }
@@ -742,14 +754,14 @@ Template.salesreport.events({
             $('.table tbody tr').show();
         }
     },
-    'blur #myInputSearch': function (event) {
+    'blur #myInputSearch': function(event) {
         $('.table tbody tr').show();
         let searchItem = $(event.target).val();
         if (searchItem != '') {
             var value = searchItem.toLowerCase();
-            $('.table tbody tr').each(function () {
+            $('.table tbody tr').each(function() {
                 var found = 'false';
-                $(this).each(function () {
+                $(this).each(function() {
                     if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                         found = 'true';
                     }
@@ -791,7 +803,7 @@ Template.salesreport.helpers({
         return loggedCompany;
     },
     deptrecords: () => {
-        return Template.instance().deptrecords.get().sort(function (a, b) {
+        return Template.instance().deptrecords.get().sort(function(a, b) {
             if (a.department == 'NA') {
                 return 1;
             } else if (b.department == 'NA') {
@@ -801,14 +813,14 @@ Template.salesreport.helpers({
         });
     }
 });
-Template.registerHelper('equals', function (a, b) {
+Template.registerHelper('equals', function(a, b) {
     return a === b;
 });
 
-Template.registerHelper('notEquals', function (a, b) {
+Template.registerHelper('notEquals', function(a, b) {
     return a != b;
 });
 
-Template.registerHelper('containsequals', function (a, b) {
+Template.registerHelper('containsequals', function(a, b) {
     return (a.indexOf(b) >= 0);
 });

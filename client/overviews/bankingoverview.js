@@ -96,7 +96,7 @@ Template.bankingoverview.onRendered(function() {
                 let arrayDataUse = [];
                 let totalAmountCalculation = '';
                 for (let i = 0; i < data.taccountvs1.length; i++) {
-                    if ((data.taccountvs1[i].AccountTypeName == 'CCARD') || (data.taccountvs1[i].AccountTypeName == 'BANK')) {
+                    if ((data.taccountvs1[i].AccountTypeName == 'CCARD') && (data.taccountvs1[i].fields.Balance != 0) || (data.taccountvs1[i].AccountTypeName == 'BANK') && (data.taccountvs1[i].fields.Balance != 0)) {
                         arrayDataUse.push(data.taccountvs1[i]);
                         let filterDueDateData = _.filter(arrayDataUse, function(data) {
                             return data.AccountName
@@ -150,7 +150,7 @@ Template.bankingoverview.onRendered(function() {
             let arrayDataUse = [];
             let totalAmountCalculation = '';
             for (let i = 0; i < useData.length; i++) {
-                if ((useData[i].fields.AccountTypeName == 'CCARD') || (useData[i].fields.AccountTypeName == 'BANK')) {
+                if ((useData[i].fields.AccountTypeName == 'CCARD') && (useData[i].fields.Balance != 0) || (useData[i].fields.AccountTypeName == 'BANK') && (useData[i].fields.Balance != 0)) {
                     arrayDataUse.push(useData[i].fields);
                     let filterDueDateData = _.filter(arrayDataUse, function(data) {
                         return data.AccountName
@@ -187,7 +187,7 @@ Template.bankingoverview.onRendered(function() {
             sortedArray = totalAmountCalculation.sort(function(a, b) {
                 return b.totalbalance - a.totalbalance;
             });
-            let getTop4Data = _.take(sortedArray, 4);
+            let getTop4Data = sortedArray;
             let newObjData = '';
             let newObjDataArr = [];
             templateObject.bankaccountdatarecord.set(getTop4Data);
@@ -1901,7 +1901,7 @@ Template.bankingoverview.events({
     'click .openaccountpayable': function() {
         FlowRouter.go('/chequelist');
     },
-    'click .openaccountreceivable': function(event) {
+    'click .opentrans': function(event) {
         let id = $(event.target).closest('.openaccountreceivable').attr('id');
         FlowRouter.go('/accounttransactions?id=' + id);
     },

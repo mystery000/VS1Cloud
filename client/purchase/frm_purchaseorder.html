@@ -1157,6 +1157,22 @@
                             display: flex !important;
                         }
                     }
+                    
+                    .paidIcon {
+                        animation: blink 2s ease-in infinite;
+                        -webkit-animation: blink 2s ease-in infinite;
+                    }
+
+                    @keyframes blink {
+
+                        from, to {
+                            opacity: 1
+                        }
+
+                        50% {
+                            opacity: 0
+                        }
+                    }
                 </style>
 
                 <div class="row align-items-end" style="margin: 16px; margin-top: 0px;">
@@ -1242,7 +1258,11 @@
                         </div>
                         <div class="row">
                             <div class="col-4" style="padding: 0px;">
-                                <p class="lead">Paid</p>
+                                {{#if equals purchaseorderrecord.isPartialPaid true}}
+                                    <p class="lead text-success pointer btnTransactionPaid" id=""><i class="fas fa-comments-dollar paidIcon"></i> Paid</p>
+                                {{else}}
+                                    <p class="lead">Paid</p>
+                                {{/if}}
                             </div>
                             <div class="col-8" style="padding: 0px;">
                                 <p class="lead" id="totalPaidAmt" name="totalPaidAmt">{{purchaseorderrecord.totalPaid}}</p>

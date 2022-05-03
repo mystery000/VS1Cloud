@@ -29,7 +29,7 @@ Template.templatesettings.onCreated(() => {
 
 Template.templatesettings.onRendered(function () {
   let templateObject = Template.instance();
-  document.querySelectorAll(".btnPreviewTemplate").forEach((el) => {
+  document.querySelectorAll(".templateItem").forEach((el) => {
     el.addEventListener("click", function () {
       title = el.getAttribute("data-id");
       templateObject.generateInvoiceData(title);

@@ -2494,18 +2494,13 @@ Template.accountsoverview.events({
                     localStorage.setItem("vs1companyBankBSB", bsb);
                     localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
                     localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
+                    sideBarService.getAccountListVS1().then(function (dataReload) {
+                        addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function (datareturn) {
                             window.open("/accountsoverview", "_self");
-                          })
-                          .catch(function (err) {
+                          }).catch(function (err) {
                             window.open("/accountsoverview", "_self");
                           });
-                      })
-                      .catch(function (err) {
+                      }).catch(function (err) {
                         window.open("/accountsoverview", "_self");
                       });
                   })

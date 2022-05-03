@@ -70,6 +70,8 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
 
+    templateObject.selectedsupplierpayrecords = new ReactiveVar([]);
+
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
@@ -372,81 +374,11 @@ Template.purchaseordercard.onRendered(() => {
 
     };
 
-        templateObject.getAllSupplierPaymentData = function () {
-        getVS1Data('TSupplierPayment').then(function (dataObject) {
-            if(dataObject.length == 0){
-                sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    addVS1Data('TSupplierPayment',JSON.stringify(data));
-                    for(let i=0; i<data.tsupplierpayment.length; i++){
-                        let amount = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Amount)|| 0.00;
-                        let applied = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Applied) || 0.00;
-                        // Currency+''+data.tsupplierpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Balance)|| 0.00;
-                        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.TotalPaid)|| 0.00;
-                        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.TotalBalance)|| 0.00;
-                        var dataList = {
-                            id: data.tsupplierpayment[i].fields.ID || '',
-                            sortdate: data.tsupplierpayment[i].fields.PaymentDate !=''? moment(data.tsupplierpayment[i].fields.PaymentDate).format("YYYY/MM/DD"): data.tsupplierpayment[i].fields.PaymentDate,
-                            paymentdate: data.tsupplierpayment[i].fields.PaymentDate !=''? moment(data.tsupplierpayment[i].fields.PaymentDate).format("DD/MM/YYYY"): data.tsupplierpayment[i].fields.PaymentDate,
-                            customername: data.tsupplierpayment[i].fields.CompanyName || '',
-                            paymentamount: amount || 0.00,
-                            applied: applied || 0.00,
-                            balance: balance || 0.00,
-                             lines: data.tsupplierpayment[i].fields.Lines,
-                            bankaccount: data.tsupplierpayment[i].fields.AccountName || '',
-                            department: data.tsupplierpayment[i].fields.DeptClassName || '',
-                            refno: data.tsupplierpayment[i].fields.ReferenceNo || '',
-                            paymentmethod: data.tsupplierpayment[i].fields.PaymentMethodName || '',
-                            notes: data.tsupplierpayment[i].fields.Notes || ''
-                        };
-                        dataTableList.push(dataList);
-                    }
-                    templateObject.datatablerecords.set(dataTableList);
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display','none');
-                    // Meteor._reload.reload();
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsupplierpayment;
-                let lineItems = [];
-                let lineItemObj = {};
-                for(let i=0; i<data.tsupplierpayment.length; i++){
-                    let amount = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Amount)|| 0.00;
-                    let applied = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Applied) || 0.00;
-                    // Currency+''+useData[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    let balance = utilityService.modifynegativeCurrencyFormat(useData[i].fields.Balance)|| 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalPaid)|| 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(useData[i].fields.TotalBalance)|| 0.00;
-                    var dataList = {
-                        id: useData[i].fields.ID || '',
-                        sortdate: useData[i].fields.PaymentDate !=''? moment(useData[i].fields.PaymentDate).format("YYYY/MM/DD"): useData[i].fields.PaymentDate,
-                        paymentdate: useData[i].fields.PaymentDate !=''? moment(useData[i].fields.PaymentDate).format("DD/MM/YYYY"): useData[i].fields.PaymentDate,
-                        customername: useData[i].fields.CompanyName || '',
-                        paymentamount: amount || 0.00,
-                        applied: applied || 0.00,
-                        balance: balance || 0.00,
-                        lines: useData[i].fields.Lines,
-                        bankaccount: useData[i].fields.AccountName || '',
-                        department: useData[i].fields.DeptClassName || '',
-                        refno: useData[i].fields.ReferenceNo || '',
-                        paymentmethod: useData[i].fields.PaymentMethodName || '',
-                        notes: useData[i].fields.Notes || ''
-                    };
-                    dataTableList.push(dataList);
-                }
-                templateObject.datatablerecords.set(dataTableList);
-
-
-            }
-        }).catch(function (err) {
-          sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function (data) {
+        templateObject.getAllSelectPaymentData = function () {
+          let supplierName = $('#edtSupplierName').val() || '';
+          purchaseService.getCheckPaymentDetailsByName(supplierName).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
-              addVS1Data('TSupplierPayment',JSON.stringify(data));
               for(let i=0; i<data.tsupplierpayment.length; i++){
                   let amount = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Amount)|| 0.00;
                   let applied = utilityService.modifynegativeCurrencyFormat(data.tsupplierpayment[i].fields.Applied) || 0.00;
@@ -469,19 +401,18 @@ Template.purchaseordercard.onRendered(() => {
                       paymentmethod: data.tsupplierpayment[i].fields.PaymentMethodName || '',
                       notes: data.tsupplierpayment[i].fields.Notes || ''
                   };
+                //if (data.tsupplierpayment[i].fields.Lines != null) {
+                // if(data.tsupplierpayment[i].fields.Lines.length) {
                   dataTableList.push(dataList);
+                 //}
+               //}
               }
-              templateObject.datatablerecords.set(dataTableList);
+              templateObject.selectedsupplierpayrecords.set(dataTableList);
           }).catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $('.fullScreenSpin').css('display','none');
-              // Meteor._reload.reload();
+
           });
-        });
 
     }
-
-    templateObject.getAllSupplierPaymentData();
 
 
     templateObject.getAllClients();
@@ -577,6 +508,12 @@ Template.purchaseordercard.onRendered(() => {
                           if(data.fields.IsBackOrder){
                              lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                           }
+
+                          let isPartialPaid = false;
+                          if(data.fields.TotalPaid > 0){
+                              isPartialPaid = true;
+                          }
+
                             let purchaseorderrecord = {
                                 id: data.fields.ID,
                                 lid: lidData,
@@ -611,6 +548,7 @@ Template.purchaseordercard.onRendered(() => {
                                 saleCustField2: data.fields.SalesComments,
                                 totalPaid: totalPaidAmount,
                                 ispaid: data.fields.IsPaid,
+                                isPartialPaid: isPartialPaid,
                                 department: data.fields.Lines[0].fields.LineClassName || defaultDept
                             };
 
@@ -665,6 +603,8 @@ Template.purchaseordercard.onRendered(() => {
                                             });
                                         }
                             }, 100);
+
+
 
                             templateObject.purchaseorderrecord.set(purchaseorderrecord);
                             templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -805,6 +745,12 @@ Template.purchaseordercard.onRendered(() => {
                                 if(useData[d].fields.IsBackOrder){
                                    lidData = 'Edit Purchase Order' + ' (BO) ' + useData[d].fields.ID||'';
                                 }
+
+                                let isPartialPaid = false;
+                                if(useData[d].fields.TotalPaid > 0){
+                                    isPartialPaid = true;
+                                }
+
                                 let purchaseorderrecord = {
                                     id: useData[d].fields.ID,
                                     lid: lidData,
@@ -839,6 +785,7 @@ Template.purchaseordercard.onRendered(() => {
                                     saleCustField2: useData[d].fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: useData[d].fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: useData[d].fields.Lines[0].fields.LineClassName || defaultDept
                                 };
 
@@ -892,6 +839,8 @@ Template.purchaseordercard.onRendered(() => {
                                             });
                                         }
                                 }, 100);
+
+
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1015,6 +964,12 @@ Template.purchaseordercard.onRendered(() => {
                               if(data.fields.IsBackOrder){
                                  lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                               }
+
+                              let isPartialPaid = false;
+                              if(data.fields.TotalPaid > 0){
+                                  isPartialPaid = true;
+                              }
+
                                 let purchaseorderrecord = {
                                     id: data.fields.ID,
                                     lid: lidData,
@@ -1049,6 +1004,7 @@ Template.purchaseordercard.onRendered(() => {
                                     saleCustField2: data.fields.SalesComments,
                                     totalPaid: totalPaidAmount,
                                     ispaid: data.fields.IsPaid,
+                                    isPartialPaid: isPartialPaid,
                                     department: data.fields.Lines[0].fields.LineClassName || defaultDept
                                 };
 
@@ -1080,6 +1036,8 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                                     }
                                 }, 100);
+
+
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1222,6 +1180,12 @@ Template.purchaseordercard.onRendered(() => {
                         if(data.fields.IsBackOrder){
                            lidData = 'Edit Purchase Order' + ' (BO) ' + data.fields.ID||'';
                         }
+
+                        let isPartialPaid = false;
+                        if(data.fields.TotalPaid > 0){
+                            isPartialPaid = true;
+                        }
+
                         let purchaseorderrecord = {
                             id: data.fields.ID,
                             lid: lidData,
@@ -1256,6 +1220,7 @@ Template.purchaseordercard.onRendered(() => {
                             saleCustField2: data.fields.SalesComments,
                             totalPaid: totalPaidAmount,
                             ispaid: data.fields.IsPaid,
+                            isPartialPaid: isPartialPaid,
                             department: data.fields.Lines[0].fields.LineClassName || defaultDept
                         };
 
@@ -1309,6 +1274,8 @@ Template.purchaseordercard.onRendered(() => {
                                             });
                                         }
                         }, 100);
+
+
 
                         templateObject.purchaseorderrecord.set(purchaseorderrecord);
                         templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1488,6 +1455,7 @@ Template.purchaseordercard.onRendered(() => {
                     saleCustField2: data.fields.SalesComments,
                     totalPaid: totalPaidAmount,
                     ispaid: data.fields.IsPaid,
+                    isPartialPaid: isPartialPaid,
                     department: data.fields.Lines[0].fields.LineClassName || defaultDept
                 };
 
@@ -1653,7 +1621,8 @@ Template.purchaseordercard.onRendered(() => {
             saleCustField1: '',
             saleCustField2: '',
             totalPaid: Currency + '' + 0.00,
-            ispaid: false
+            ispaid: false,
+            isPartialPaid: false
 
         };
 
@@ -8622,31 +8591,61 @@ Template.purchaseordercard.events({
         });
 
     },
-    'click #btnViewPayment': function() {
-       let templateObject = Template.instance();
-        let paymentData = templateObject.datatablerecords.get();
+    'click #btnViewPayment': async function() {
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+          $('.fullScreenSpin').css('display', 'inline-block');
         let paymentID = "";
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        for(let x=0; x < paymentData.length; x++){
+        var currentBill = getso_id[getso_id.length - 1];
+        let paymentData = await purchaseService.getCheckPaymentLineByTransID(currentBill) || '';
 
-            if(paymentData[x].lines != null && paymentData[x].lines != "") {
-                if(paymentData[x].lines.length > 1){
-                    for(let y = 0; y < paymentData[x].lines.length; y++) {
-                        if(paymentData[x].lines[y].fields.POID == currentInvoice) {
-                            paymentID = paymentData[x].id;
-                            window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                        }
-                    }
-                } else {
-                    if(paymentData[x].lines.fields.POID == currentInvoice) {
-                        paymentID = paymentData[x].id;
-                        window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                    }
-                }
+        if(paymentData){
+          for(let x = 0; x < paymentData.tsupplierpaymentline.length; x++) {
+            if (paymentData.tsupplierpaymentline.length > 1) {
+                paymentID = paymentData.tsupplierpaymentline[x].fields.Payment_ID;
+                window.open('/supplierpaymentcard?id=' + paymentID, '_self');
+            } else {
+                paymentID = paymentData.tsupplierpaymentline[0].fields.Payment_ID;
+                window.open('/supplierpaymentcard?id=' + paymentID, '_self');
            }
-       }
+          }
+
+        }else{
+        $('.fullScreenSpin').css('display', 'none');
+        }
+
+    },
+    'click .btnTransactionPaid': async function () {
+      let templateObject = Template.instance();
+      let purchaseService = new PurchaseBoardService();
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let  selectedSupplierPaymentID = [];
+      let paymentID = "";
+      var url = FlowRouter.current().path;
+      var getso_id = url.split('?id=');
+      var currentBill = getso_id[getso_id.length - 1];
+      let suppliername = $('#edtSupplierName').val() || '';
+      let paymentData = await purchaseService.getCheckPaymentLineByTransID(currentBill) || '';
+      if(paymentData){
+      for(let x = 0; x < paymentData.tsupplierpaymentline.length; x++) {
+              if (paymentData.tsupplierpaymentline.length > 1) {
+                      paymentID = paymentData.tsupplierpaymentline[x].fields.Payment_ID;
+                      selectedSupplierPaymentID.push(paymentID);
+              } else {
+                      paymentID = paymentData.tsupplierpaymentline[0].fields.Payment_ID;
+                      window.open('/supplierpaymentcard?id=' + paymentID, '_self');
+              }
+      }
+
+      setTimeout(function () {
+        let selectPayID = selectedSupplierPaymentID;
+        window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
+      }, 500);
+    }else{
+      $('.fullScreenSpin').css('display', 'none');
+    }
     },
     'click .chkEmailCopy': function(event) {
         $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));

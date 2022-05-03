@@ -38,7 +38,7 @@ ERPObjects = function () {
         TPayrollHolidays: "TPayrollHolidays",
         TPayrollCalendars: "TPayrollCalendars",
         TLeadStatusType: "TLeadStatusType",
-        TLeaveAccruals: "TLeaveAccruals",     
+        TLeaveAccruals: "TLeaveAccruals",
         TManufacture: "TManufacture",
         TMarketingContact: "TMarketingContact",
         TModel: "TModel",
@@ -239,9 +239,10 @@ ERPObjects = function () {
         TReimbursement: "TReimbursement",
         TPayRateType: "TPayRateType",
         TSuperType:"TSuperType",
-
-
-
+        TCustomerPaymentLine:"TCustomerPaymentLine",
+        TSupplierPaymentLine:"TSupplierPaymentLine",
+        Tprojectlist: "Tprojectlist",
+        Tprojecttasks: "Tprojecttasks",
     }
     return objects;
 }
