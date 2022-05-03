@@ -1647,6 +1647,8 @@ Template.vs1login.onRendered(function () {
                                                         ERPIPAdderess = "steelmains.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
                                                         ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                                    }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                        ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                         ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -1741,7 +1743,9 @@ Template.vs1login.onRendered(function () {
                                                     });
 
                                                     /* Remove licence */
-
+                                                    if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                      isTrueERPConnection = true;
+                                                    }
                                                     Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                                     Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                                     Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -2287,6 +2291,8 @@ Template.vs1login.onRendered(function () {
                                     ERPIPAdderess = "steelmains.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
                                     ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                    ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -2381,7 +2387,9 @@ Template.vs1login.onRendered(function () {
                                 });
 
                                 /* Remove licence */
-
+                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                  isTrueERPConnection = true;
+                                }
                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                 Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                 Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -2790,6 +2798,8 @@ Template.vs1login.onRendered(function () {
                                                     ERPIPAdderess = "steelmains.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
                                                     ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                                }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                    ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -2884,7 +2894,9 @@ Template.vs1login.onRendered(function () {
                                                 });
 
                                                 /* Remove licence */
-
+                                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                  isTrueERPConnection = true;
+                                                }
                                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                                 Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                                 Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -3456,6 +3468,8 @@ Template.vs1login.onRendered(function () {
                                                 ERPIPAdderess = "steelmains.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
                                                 ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                            }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                 ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -3552,6 +3566,9 @@ Template.vs1login.onRendered(function () {
                                             });
 
                                             /* Remove licence */
+                                            if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                              isTrueERPConnection = true;
+                                            }
 
                                             Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                             Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
@@ -4161,6 +4178,8 @@ Template.vs1login.onRendered(function () {
                                             ERPIPAdderess = "steelmains.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
                                             ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                        }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                            ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                             ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -4255,7 +4274,9 @@ Template.vs1login.onRendered(function () {
                                         });
 
                                         /* Remove licence */
-
+                                        if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                          isTrueERPConnection = true;
+                                        }
                                         Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                         Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                         Session.setPersistent('CloudContactsLicence', isContactsLicence);
