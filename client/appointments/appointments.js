@@ -8608,7 +8608,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8668,7 +8668,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8726,7 +8726,7 @@ Template.appointments.events({
             if (smsCustomer || smsUser) {
                 swal({
                     title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
@@ -8744,7 +8744,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User.",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
