@@ -1954,17 +1954,22 @@ Template.purchasesoverview.onRendered(function () {
           }
         });
     }
-    console.log('cardList', cardList)
+
     if( cardList.length ){
+      let cardcount = 0;
       cardList.forEach((card) => {
         $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
         $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
         if( card.fields.Active == false ){
+          cardcount++;
           $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
           $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
           $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
         }
       })
+      if( cardcount == cardList.length ){
+        $('.card-visibility').removeClass('hideelement')
+      }
       let $chartWrappper = $(".connectedCardSortable");
       $chartWrappper
         .find(".card-visibility")
@@ -2418,13 +2423,18 @@ Template.purchasesoverview.events({
     if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
       $('.cardShowBtn').removeClass('hideelement');
       $('.editCardBtn').find('i').removeClass('fa-cog')
-      $('.editCardBtn').find('i').addClass('fa-times')      
+      $('.editCardBtn').find('i').addClass('fa-save')      
     }else{
       $('.cardShowBtn').addClass('hideelement');
-      $('.editCardBtn').find('i').removeClass('fa-times')
+      $('.editCardBtn').find('i').removeClass('fa-save')
       $('.editCardBtn').find('i').addClass('fa-cog')
       let templateObject = Template.instance();
       templateObject.setCardPositions();
+    }
+    if( $('.card-visibility').hasClass('dimmedChart') ){
+      $('.card-visibility').removeClass('dimmedChart');
+    }else{
+      $('.card-visibility').addClass('dimmedChart');
     }
     return false
   },
@@ -2438,7 +2448,7 @@ Template.purchasesoverview.events({
       $(e.target).find('.far').removeClass('fa-eye-slash')
       $(e.target).find('.far').addClass('fa-eye')
       $(e.target).parents('.card-visibility').attr('card-active', 'true')
-    }
+    } 
     let templateObject = Template.instance();
     templateObject.saveCards()
     return false
