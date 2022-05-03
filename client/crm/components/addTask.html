@@ -21,29 +21,31 @@
               <i class="far fa-calendar-minus" style="margin-right: 8px;"></i>Schedule
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
-              <a class="dropdown-item" href="#"><i class="fas fa-calendar-day text-success"
-                  style="margin-right: 8px;"></i>Today
-                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Wed
+              <a class="dropdown-item no-modal setScheduleTodayAdd">
+                <i class="fas fa-calendar-day text-success no-modal" style="margin-right: 8px;"></i>Today
+                <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                  {{getTodayDate 'ddd'}}</div>
+              </a>
+              <a class="dropdown-item no-modal setScheduleTomorrowAdd">
+                <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+                <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                  {{getTomorrowDay}}</div>
+              </a>
+              <a class="dropdown-item no-modal setScheduleWeekendAdd">
+                <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+                <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
+              </a>
+              <a class="dropdown-item no-modal setScheduleNexweekAdd">
+                <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+                <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                  {{getNextMonday}}
                 </div>
               </a>
-              <a class="dropdown-item" href="#"><i class="fas fa-sun text-warning"
-                  style="margin-right: 8px;"></i>Tomorrow
-                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Thu
-                </div>
-              </a>
-              <a class="dropdown-item" href="#"><i class="fas fa-couch text-primary" style="margin-right: 8px;"></i>This
-                Weekend
-                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Sat
-                </div>
-              </a>
-              <a class="dropdown-item" href="#"><i class="fas fa-calendar-alt text-danger"
-                  style="margin-right: 8px;"></i>Next Week
-                <div class="float-right" style="width: 40%; text-align: end; color: #858796;">Mon
-                  Apr 11</div>
-              </a>
-              <a class="dropdown-item" href="#"><i class="fas fa-ban text-secondary" style="margin-right: 8px;"></i>No
-                Date</a>
-              <div class="dropdown-divider"></div>
+              <a class="dropdown-item no-modal setScheduleNodateAdd">
+                <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+                No Date</a>
+              <div class="dropdown-divider no-modal"></div>
+
               <div class="form-group" data-toggle="tooltip" data-placement="bottom" title="Date format: DD/MM/YYYY"
                 style="margin: 6px 20px; margin-top: 14px;">
                 <div class="input-group date" style="cursor: pointer;">
@@ -195,4 +197,5 @@
           style="margin-right: 8px;"></i> Add Task</button>
     </div>
   </div>
+
 </template>
