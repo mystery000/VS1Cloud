@@ -1,6 +1,10 @@
 <template name="purchasesaleschart">
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-primary py-2 overdueInvoiceAmt" style="cursor: pointer;">
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-active="true" card-key="dashboard-outstanding-invoice-amount">
+        <div class="card shadow customCardMainDiv border-left-primary py-2 overdueInvoiceAmt" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
@@ -12,8 +16,12 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-primary py-2 overdueInvoiceQty" style="cursor: pointer;">
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-active="true" card-key="dashboard-outstanding-invoice-quantity">
+        <div class="card shadow customCardMainDiv border-left-primary py-2 overdueInvoiceQty" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
@@ -25,8 +33,12 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-danger py-2 outstaningPayablesAmt" style="cursor: pointer;">
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-active="true" card-key="dashboard-outstanding-payables-amount">
+        <div class="card shadow customCardMainDiv border-left-danger py-2 outstaningPayablesAmt" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">
@@ -42,8 +54,12 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-xl-3 mb-4">
-        <div class="card shadow border-left-danger py-2 outstaningPayablesQty" style="cursor: pointer;">
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-active="true" card-key="dashboard-outstanding-payables-quantity">
+        <div class="card shadow customCardMainDiv border-left-danger py-2 outstaningPayablesQty" style="cursor: pointer;">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
             <div class="card-body">
                 <div class="row align-items-center no-gutters">
                     <div class="col mr-2">

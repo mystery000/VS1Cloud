@@ -16,6 +16,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let _ = require("lodash");
 const _cardGroup = 'TPurchaseHeaderCard';
+const _tabGroup = 7;
 
 Template.purchasesoverview.onCreated(function () {
   const templateObject = Template.instance();
@@ -1949,7 +1950,7 @@ Template.purchasesoverview.onRendered(function () {
         cardList = new Tvs1CardPreference.fromList(
           Tvs1CardPreferenceData.tvs1cardpreference
         ).filter((card) => {
-          if (card.fields.EmployeeID == employeeID) {
+          if ( parseInt( card.fields.EmployeeID ) == employeeID && parseInt( card.fields.TabGroup ) == _tabGroup ) {
             return card;
           }
         });
@@ -1968,7 +1969,7 @@ Template.purchasesoverview.onRendered(function () {
         }
       })
       if( cardcount == cardList.length ){
-        $('.card-visibility').removeClass('hideelement')
+        $('.card-visibility').eq(0).removeClass('hideelement')
       }
       let $chartWrappper = $(".connectedCardSortable");
       $chartWrappper
@@ -1985,6 +1986,18 @@ Template.purchasesoverview.onRendered(function () {
     // Here we get that list and create and object
     const cards = $(".connectedCardSortable .card-visibility");
     const cardList = [];
+    let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
+    if( Tvs1CardPref.length ){
+        let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
+        let employeeID = Session.get("mySessionEmployeeLoggedID");
+        cardList = new Tvs1CardPreference.fromList(
+          Tvs1CardPreferenceData.tvs1cardpreference
+        ).filter((card) => {
+          if ( parseInt( card.fields.EmployeeID ) != employeeID && parseInt( card.fields.TabGroup ) != _tabGroup ) {
+            return card;
+          }
+        });
+    }
     // console.log(cards);
     for (let i = 0; i < cards.length; i++) {
       cardList.push(
@@ -1994,7 +2007,7 @@ Template.purchasesoverview.onRendered(function () {
             EmployeeID: Session.get("mySessionEmployeeLoggedID"),
             CardKey: $(cards[i]).attr("card-key"),
             Position: $(cards[i]).attr("position"),
-            TabGroup: $(cards[i]).attr("card-tabgroup"),
+            TabGroup: _tabGroup,
             Active: ( $(cards[i]).attr("card-active") == 'true' )? true : false
           })
         })
