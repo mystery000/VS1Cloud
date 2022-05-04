@@ -2025,12 +2025,12 @@ Template.bankingoverview.events({
         FlowRouter.go('/chequelist');
     },
     'click .btnReconcile': function() {
-        FlowRouter.go('/newbankrecon');
+        FlowRouter.go('/bankrecon');
         // FlowRouter.go('/bankrecon');
         // window.open('/newbankrecon', '_self');
     },
     'click .btnBankRecon': function() {
-        FlowRouter.go('/bankrecon');
+        FlowRouter.go('/newbankrecon');
     },
     'click .btnReconList': function() {
         FlowRouter.go('/reconciliationlist');
