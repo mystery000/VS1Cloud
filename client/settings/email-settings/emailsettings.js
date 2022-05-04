@@ -693,6 +693,21 @@ Template.emailsettings.onRendered(function () {
                     let recipients = $(setting).find('input.edtRecipients').val();
                     console.log(recipientIds, recipients);
                     // Check if this setting has got recipients
+                    const basedOnTypeText = sendEl.text();
+                    let basedOnType = '';
+                    let isEmpty = false;
+                    if (basedOnTypeText == "On Print") basedOnType = "P";
+                    else if (basedOnTypeText == "On Save") basedOnType = "S";
+                    else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
+                    else if (basedOnTypeText == "On Due Date") basedOnType = "D";
+                    else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
+                    else if (basedOnTypeText == "On Event") {
+                        basedOnType = "E";
+                        const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
+                        console.log(eventRadios);
+                        if (eventRadios == "settingsOnLogon") isEmpty = false;
+                        else isEmpty = true;
+                    }
                     if (!!recipients) {
                         recipientIds = recipientIds.split('; ');
                         recipients = recipients.split('; ');
@@ -775,6 +790,29 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
 
                                 console.log(objDetail.fields);
+
+                                //TODO: Set basedon type here
+                                const basedOnTypeText = sendEl.text();
+                                let basedOnType = '';
+                                let isEmpty = false;
+                                if (basedOnTypeText == "On Print") basedOnType = "P";
+                                else if (basedOnTypeText == "On Save") basedOnType = "S";
+                                else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
+                                else if (basedOnTypeText == "On Due Date") basedOnType = "D";
+                                else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
+                                else if (basedOnTypeText == "On Event") {
+                                    basedOnType = "E";
+                                    const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
+                                    console.log(eventRadios);
+                                    if (eventRadios == "settingsOnLogon") isEmpty = false;
+                                    else isEmpty = true;
+                                }
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                    ISEmpty: isEmpty
+                                }));
+                                
                                 Meteor.call('addTask', objDetail.fields);
                             } else {
                                 const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
@@ -795,6 +833,13 @@ Template.emailsettings.onRendered(function () {
                                 } catch(e) {
                                     console.log(e);
                                 }
+
+                                //TODO: Set basedon type here
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                    ISEmpty: isEmpty
+                                }));
         
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
@@ -804,24 +849,6 @@ Template.emailsettings.onRendered(function () {
                             }
                         });
                         await Promise.all(saveSettingPromises);
-                    } else {
-                        // Remove all
-                        let objDetail = {
-                            type: "TReportSchedules",
-                            fields: {
-                                Active: false,
-                                ContinueIndefinitely: true,
-                                EmployeeId: 0,
-                                Every: 1,
-                                EndDate: "",
-                                FormID: parseInt(formID),
-                                LastEmaileddate: "",
-                                MonthDays: 0,
-                                StartDate: "",
-                                WeekDay: 1,
-                            }
-                        };
-                        Meteor.call('addTask', objDetail.fields);
                     }
                 });
                 savedSchedules = await Promise.all(promise);
@@ -833,6 +860,9 @@ Template.emailsettings.onRendered(function () {
                         || setting.fields.FormID == 177 && setting.fields.FormID == 129)) || (!isEssential
                         && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
                         && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
+                        // Remove all
+                        setting.fields.Active = false;
+                        Meteor.call('addTask', setting.fields);
                         const saveResult = await taxRateService.saveScheduleSettings({
                             type: "TReportSchedules",
                             fields: {
@@ -1446,6 +1476,17 @@ Template.emailsettings.events({
         } else if (radioBasedOn == "basedOnOutstanding") {
             setTimeout(function () {
                 $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').html("If Outstanding");
+                $("#basedOnModal").modal('toggle');
+            }, 100);
+        } else if (radioBasedOn == "basedOnEvent") {
+            setTimeout(function () {
+                $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').html("On Event");
+                const logInOrOut = $('#onEventSettings input[type=radio]:checked').attr('id');
+                if (logInOrOut == 'settingsOnLogon') {
+                    $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').attr('data-inout', 'in');
+                } else {
+                    $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').attr('data-inout', 'out');
+                }
                 $("#basedOnModal").modal('toggle');
             }, 100);
         } else {

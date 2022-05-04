@@ -8767,7 +8767,7 @@ Template.appointments.events({
                     const employeeName = $('#employee_name').val();
                     const companyName = Session.get('vs1companyName');
                     const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
-                    const bookedTime = $('#startTime').val() + $('#endTime').val() ? $('#startTime').val() + ' - ' + $('#endTime').val() : '';
+                    const bookedTime = $('#startTime').val() ? $('#startTime').val() : '';
                     const productService = $('#product-list').val();
                     const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)
