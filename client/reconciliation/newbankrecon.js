@@ -7,6 +7,10 @@ import XLSX from 'xlsx';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
+import { PurchaseBoardService } from "../js/purchase-service";
+import { SideBarService } from '../js/sidebar-service';
+
+let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
 Template.newbankrecon.onCreated(function() {
@@ -25,14 +29,6 @@ Template.newbankrecon.onCreated(function() {
     templateObject.fa_sortWithdrawReceived = new ReactiveVar();
     templateObject.bankTransactionData = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
-
-    // setTimeout(function() {
-    //     $(document).ready(function() {
-    //
-    //
-    //     });
-    //
-    // }, 500);
 });
 
 Template.newbankrecon.onRendered(function() {
@@ -40,6 +36,7 @@ Template.newbankrecon.onRendered(function() {
     const templateObject = Template.instance();
     let reconService = new ReconService();
     let productService = new ProductService();
+    let purchaseService = new PurchaseBoardService();
 
     let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
     templateObject.page_number.set(page_number);
@@ -49,8 +46,7 @@ Template.newbankrecon.onRendered(function() {
     let page_total = 0;
 
     const taxCodesList = [];
-    const accountTypeList = [];
-    var splashArrayTaxRateList = [];
+    const splashArrayTaxRateList = [];
     let accountnamerecords = [];
 
     let bankaccountid = Session.get('bankaccountid') || '';
@@ -58,7 +54,6 @@ Template.newbankrecon.onRendered(function() {
     let statementDate = localStorage.getItem('statementdate')|| '';
     let selectedAccountFlag = '';
     let selectedDepositID = null;
-    let selectedTaxRateFlag = '';
 
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
@@ -185,6 +180,27 @@ Template.newbankrecon.onRendered(function() {
         ignoreDate = true;
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
+            data = {
+                "ttobereconcileddeposit":[
+                    {
+                        "Amount" : 2500,
+                        "DepositDate": '2022-04-28',
+                        "CompanyName": 'Yuga',
+                        "Notes": '',
+                        "DepositID": 115,
+                        "ReferenceNo": 'ac-78',
+                        "Seqno": 333,
+                        "PaymentID": 115,
+                        "DepositLineID": 115,
+                        "CusID": 3,
+                        "StatementLineID": 15,
+                        "StatementTransactionDate": '2022-04-17',
+                        "StatementAmount": 1500,
+                        "StatementDescription": 'Manual'
+                    }
+                ]
+            };
+
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                     let depositamount = data.ttobereconcileddeposit[i].Amount;
@@ -202,7 +218,7 @@ Template.newbankrecon.onRendered(function() {
                         CusID: data.ttobereconcileddeposit[i].CusID || 0,
                         StatementLineID: data.ttobereconcileddeposit[i].StatementLineID || 0,
                         StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate !== '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("DD/MM/YYYY") : data.ttobereconcileddeposit[i].StatementTransactionDate,
-                        StatementAmount: data.ttobereconcileddeposit[i].StatementAmount || 0.00,
+                        StatementAmount: data.ttobereconcileddeposit[i].StatementAmount,
                         StatementDescription: data.ttobereconcileddeposit[i].StatementDescription || ' ',
                         deporwith: 'spent',
                         matched: data.ttobereconcileddeposit[i].Amount === data.ttobereconcileddeposit[i].StatementAmount,
@@ -234,7 +250,7 @@ Template.newbankrecon.onRendered(function() {
                             CusID: data.ttobereconciledwithdrawal[j].CusID || 0,
                             StatementLineID: data.ttobereconciledwithdrawal[j].StatementLineID || 0,
                             StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate !== '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("DD/MM/YYYY") : data.ttobereconciledwithdrawal[j].StatementTransactionDate,
-                            StatementAmount: data.ttobereconciledwithdrawal[j].StatementAmount || 0.00,
+                            StatementAmount: data.ttobereconciledwithdrawal[j].StatementAmount,
                             StatementDescription: data.ttobereconciledwithdrawal[j].StatementDescription || ' ',
                             deporwith: 'received',
                             matched: data.ttobereconciledwithdrawal[j].Amount === data.ttobereconciledwithdrawal[j].StatementAmount,
@@ -247,79 +263,10 @@ Template.newbankrecon.onRendered(function() {
                             reconData.push(reconcilewithdrawalObj);
                         }
                     }
-                    page_total = reconData.length;
-                    templateObject.page_total.set(page_total);
-                    let page_cnt = Math.ceil(page_total/page_limit);
-                    templateObject.page_count.set(page_cnt);
-                    let page_list = Array.from({length: page_cnt}, (_, i) => i + 1);
-                    templateObject.page_list.set(page_list);
-                    let page_arr = [];
-                    let sort = templateObject.sort.get();
-                    if (sort === "ascDepositSpent") {
-                        page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', false);
-                        templateObject.fa_sortDepositSpent.set('fa-sort-asc');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "descDepositSpent") {
-                        page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', true);
-                        templateObject.fa_sortDepositSpent.set('fa-sort-desc');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "ascDepositReceived") {
-                        page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', false);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort-asc');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "descDepositReceived") {
-                        page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', true);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort-desc');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "ascWithdrawSpent") {
-                        page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', false);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort-asc');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "descWithdrawSpent") {
-                        page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', true);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort-desc');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    } else if (sort === "ascWithdrawReceived") {
-                        page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', false);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort-asc');
-                    } else if (sort === "descWithdrawReceived") {
-                        page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', true);
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort-desc');
-                    } else {
-                        page_arr = sortBankTransactionData(reconData, 'SortDate');
-                        templateObject.fa_sortDepositSpent.set('fa-sort');
-                        templateObject.fa_sortDepositReceived.set('fa-sort');
-                        templateObject.fa_sortWithdrawSpent.set('fa-sort');
-                        templateObject.fa_sortWithdrawReceived.set('fa-sort');
-                    }
-                    page_arr = page_arr.slice((page_number-1)*page_limit, page_number*page_limit);
-                    let thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), page_arr);
-                    templateObject.bankTransactionData.set(thirdaryData);
-                    if (templateObject.bankTransactionData.get().length > 0) {
-                        setTimeout(function() {
-                            defineTabpanelEvent();
-                        }, 500);
-                    }
                 }
+                setBankTransactionData(reconData);
             }).catch(function(err) {
+                setBankTransactionData(reconData);
                 $('.fullScreenSpin').css('display', 'none');
             });
 
@@ -328,6 +275,80 @@ Template.newbankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
+
+    function setBankTransactionData(reconData) {
+        page_total = reconData.length;
+        templateObject.page_total.set(page_total);
+        let page_cnt = Math.ceil(page_total/page_limit);
+        templateObject.page_count.set(page_cnt);
+        let page_list = Array.from({length: page_cnt}, (_, i) => i + 1);
+        templateObject.page_list.set(page_list);
+        let page_arr = [];
+        let sort = templateObject.sort.get();
+        if (sort === "ascDepositSpent") {
+            page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', false);
+            templateObject.fa_sortDepositSpent.set('fa-sort-asc');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "descDepositSpent") {
+            page_arr = sortBankTransactionData(reconData, 'spentDepositAmount', true);
+            templateObject.fa_sortDepositSpent.set('fa-sort-desc');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "ascDepositReceived") {
+            page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', false);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort-asc');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "descDepositReceived") {
+            page_arr = sortBankTransactionData(reconData, 'receivedDepositAmount', true);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort-desc');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "ascWithdrawSpent") {
+            page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', false);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort-asc');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "descWithdrawSpent") {
+            page_arr = sortBankTransactionData(reconData, 'spentWithdrawAmount', true);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort-desc');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        } else if (sort === "ascWithdrawReceived") {
+            page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', false);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort-asc');
+        } else if (sort === "descWithdrawReceived") {
+            page_arr = sortBankTransactionData(reconData, 'receivedWithdrawAmount', true);
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort-desc');
+        } else {
+            page_arr = sortBankTransactionData(reconData, 'SortDate');
+            templateObject.fa_sortDepositSpent.set('fa-sort');
+            templateObject.fa_sortDepositReceived.set('fa-sort');
+            templateObject.fa_sortWithdrawSpent.set('fa-sort');
+            templateObject.fa_sortWithdrawReceived.set('fa-sort');
+        }
+        page_arr = page_arr.slice((page_number-1)*page_limit, page_number*page_limit);
+        let thirdaryData = $.merge($.merge([], templateObject.bankTransactionData.get()), page_arr);
+        templateObject.bankTransactionData.set(thirdaryData);
+        if (templateObject.bankTransactionData.get().length > 0) {
+            setTimeout(function() {
+                defineTabpanelEvent();
+            }, 500);
+        }
+    }
 
     function sortBankTransactionData(array, key, desc=true) {
         return array.sort(function(a, b) {
@@ -373,9 +394,7 @@ Template.newbankrecon.onRendered(function() {
                                 Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
                             }
                         }
-                        // openBal = data.treconciliation[data.treconciliation.length - 1].CloseBalance;
                     }
-                    //}
                 }
                 if (dataArray.length === 0) {
                     openBal = 0;
@@ -390,16 +409,15 @@ Template.newbankrecon.onRendered(function() {
 
                     }
                 }
-                $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
-                $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal) || 0);
+                $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
+                $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
             } else {
-                $('.openingbalance').val(Currency + '0');
-                $('.vs1cloudBalance').text(Currency + '0');
+                $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
+                $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
 
             }
-            // $('#openingbalance2').val(utilityService.modifynegativeCurrencyFormat(openBal));
         }).catch(function(err) {
-            $('.openingbalance').val(Currency + '0');
+            $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
             $('.fullScreenSpin').css('display', 'none');
         });
     };
@@ -411,35 +429,21 @@ Template.newbankrecon.onRendered(function() {
 
     $('#bankAccountName').editableSelect();
     $('#bankAccountName').editableSelect().on('click.editable-select', function (e, li) {
-        var $each = $(this);
-        var offset = $each.offset();
-        let accountService = new AccountService();
-        var accountDataName = e.target.value ||'';
+        const $each = $(this);
+        const offset = $each.offset();
+        const accountDataName = e.target.value || '';
         selectedAccountFlag = 'ForBank';
 
         if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-            $('#selectLineID').val('');
-            $('#bankAccountListModal').modal();
-            setTimeout(function () {
-                $('#tblAccount_filter .form-control-sm').focus();
-                $('#tblAccount_filter .form-control-sm').val('');
-                $('#tblAccount_filter .form-control-sm').trigger("input");
-                var datatable = $('#tblAccountlist').DataTable();
-                datatable.draw();
-                $('#tblAccountlist_filter .form-control-sm').trigger("input");
-            }, 500);
+            openBankAccountListModal();
         } else {
             if(accountDataName.replace(/\s/g, '') !== ''){
                 getVS1Data('TAccountVS1').then(function (dataObject) {
                     if (dataObject.length === 0) {
-                        accountService.getOneAccountByName(accountDataName).then(function (data) {
-                            setBankAccountData(data);
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display','none');
-                        });
+                        setOneAccountByName(accountDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
-                        var added=false;
+                        let added = false;
                         for (let a = 0; a < data.taccountvs1.length; a++) {
                             if((data.taccountvs1[a].fields.AccountName) === accountDataName){
                                 added = true;
@@ -447,48 +451,44 @@ Template.newbankrecon.onRendered(function() {
                             }
                         }
                         if(!added) {
-                            accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                setBankAccountData(data);
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display','none');
-                            });
+                            setOneAccountByName(accountDataName);
                         }
                     }
                 }).catch(function (err) {
-                    accountService.getOneAccountByName(accountDataName).then(function (data) {
-                        setBankAccountData(data);
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display','none');
-                    });
+                    setOneAccountByName(accountDataName);
                 });
                 $('#bankAccountListModal').modal('toggle');
             }else{
-                $('#selectLineID').val('');
-                $('#bankAccountListModal').modal();
-                setTimeout(function () {
-                    $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('');
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblSupplierlist').DataTable();
-                    datatable.draw();
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                }, 500);
+                openBankAccountListModal();
             }
         }
     });
+
+    function openBankAccountListModal(){
+        $('#selectLineID').val('');
+        $('#bankAccountListModal').modal();
+        setTimeout(function () {
+            $('#tblAccount_filter .form-control-sm').focus();
+            $('#tblAccount_filter .form-control-sm').val('');
+            $('#tblAccount_filter .form-control-sm').trigger("input");
+            var datatable = $('#tblAccountlist').DataTable();
+            datatable.draw();
+            $('#tblAccountlist_filter .form-control-sm').trigger("input");
+        }, 500);
+    }
+    function setOneAccountByName(accountDataName) {
+        accountService.getOneAccountByName(accountDataName).then(function (data) {
+            setBankAccountData(data);
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display','none');
+        });
+    }
     function setBankAccountData(data, i = 0) {
         let fullAccountTypeName = '';
         $('#add-account-title').text('Edit Account Details');
         $('#edtAccountName').attr('readonly', true);
         $('#sltAccountType').attr('readonly', true);
         $('#sltAccountType').attr('disabled', 'disabled');
-        if (accountTypeList) {
-            for (var h = 0; h < accountTypeList.length; h++) {
-                if (data.taccountvs1[i].fields.AccountTypeName === accountTypeList[h].accounttypename) {
-                    fullAccountTypeName = accountTypeList[h].description || '';
-                }
-            }
-        }
         var accountid = data.taccountvs1[i].fields.ID || '';
         var accounttype = fullAccountTypeName || data.taccountvs1[i].fields.AccountTypeName;
         var accountname = data.taccountvs1[i].fields.AccountName || '';
@@ -548,6 +548,15 @@ Template.newbankrecon.onRendered(function() {
         }, 500);
     }
 
+    function setTaxCodeVS1() {
+        purchaseService.getTaxCodesVS1().then(function (data) {
+            setTaxRateData(data);
+        }).catch(function (err) {
+            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            $(".fullScreenSpin").css("display", "none");
+            // Meteor._reload.reload();
+        });
+    }
     function setTaxRateData(data) {
         let lineItems = [];
         let lineItemObj = {};
@@ -577,10 +586,9 @@ Template.newbankrecon.onRendered(function() {
             
             $('#ctaxRate_'+item.DepositLineID).editableSelect();
             $('#ctaxRate_'+item.DepositLineID).editableSelect().on("click.editable-select", function (e, li) {
-                var $each = $(this);
-                var taxSelected = "sales";
-                var offset = $each.offset();
-                var taxRateDataName = e.target.value || "";
+                const $each = $(this);
+                const offset = $each.offset();
+                const taxRateDataName = e.target.value || "";
                 selectedDepositID = item.DepositLineID;
                 if (e.pageX > offset.left + $each.width() - 8) {
                     // X button 16px wide?
@@ -590,30 +598,15 @@ Template.newbankrecon.onRendered(function() {
                         $(".taxcodepopheader").text("Edit Tax Rate");
                         getVS1Data("TTaxcodeVS1").then(function (dataObject) {
                             if (dataObject.length === 0) {
-                                purchaseService.getTaxCodesVS1().then(function (data) {
-                                    setTaxRateData(data);
-                                })
-                                    .catch(function (err) {
-                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                                        $(".fullScreenSpin").css("display", "none");
-                                        // Meteor._reload.reload();
-                                    });
+                                setTaxCodeVS1();
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
                                 $(".taxcodepopheader").text("Edit Tax Rate");
                                 setTaxRateData(data);
                             }
-                        })
-                            .catch(function (err) {
-                                purchaseService.getTaxCodesVS1().then(function (data) {
-                                    setTaxRateData(data);
-                                })
-                                    .catch(function (err) {
-                                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                                        $(".fullScreenSpin").css("display", "none");
-                                        // Meteor._reload.reload();
-                                    });
-                            });
+                        }).catch(function (err) {
+                            setTaxCodeVS1();
+                        });
                     } else {
                         $("#taxRateListModal").modal("toggle");
                     }
@@ -621,104 +614,61 @@ Template.newbankrecon.onRendered(function() {
             });
             $('#what_'+item.DepositLineID).editableSelect();
             $('#what_'+item.DepositLineID).editableSelect().on('click.editable-select', function (e, li) {
-                var $each = $(this);
-                var offset = $each.offset();
-                let accountService = new AccountService();
-                let accountDataName = e.target.value ||'';
-                selectedAccountFlag = 'ForCreate';
                 selectedDepositID = item.DepositLineID;
-
+                const $each = $(this);
+                const offset = $each.offset();
+                $('#edtCustomerPOPID').val('');
+                    //$('#edtCustomerCompany').attr('readonly', false);
+                const customerDataName = e.target.value || '';
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-                    $('#selectLineID').val('');
-                    $('#bankAccountListModal').modal();
-                    setTimeout(function () {
-                        $('#tblAccount_filter .form-control-sm').focus();
-                        $('#tblAccount_filter .form-control-sm').val('');
-                        $('#tblAccount_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblAccountlist').DataTable();
-                        datatable.draw();
-                        $('#tblAccountlist_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }else{
-                    if(accountDataName.replace(/\s/g, '') !== ''){
-                        getVS1Data('TAccountVS1').then(function (dataObject) {
+                    openCustomerModal();
+                } else {
+                    if (customerDataName.replace(/\s/g, '') !== '') {
+                        //FlowRouter.go('/customerscard?name=' + e.target.value);
+                        $('#edtCustomerPOPID').val('');
+                        getVS1Data('TCustomerVS1').then(function (dataObject) {
                             if (dataObject.length === 0) {
-                                accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                    setBankAccountData(data);
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display','none');
-                                });
+                                setOneCustomerDataExByName(customerDataName);
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
-                                let added=false;
-                                for (let a = 0; a < data.taccountvs1.length; a++) {
-                                    if((data.taccountvs1[a].fields.AccountName) === accountDataName){
-                                        added = true;
-                                        setBankAccountData(data, a);
+                                let useData = data.tcustomervs1;
+                                let added = false;
+                                for (let i = 0; i < useData.length; i++) {
+                                    if (useData[i].fields.ClientName === customerDataName) {
+                                        setCustomerModal(useData[i]);
                                     }
                                 }
-                                if(!added) {
-                                    accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                        setBankAccountData(data);
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display','none');
-                                    });
+                                if (!added) {
+                                    setOneCustomerDataExByName(customerDataName);
                                 }
                             }
                         }).catch(function (err) {
-                            accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                setBankAccountData(data);
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display','none');
-                            });
+                            setOneCustomerDataExByName(customerDataName);
                         });
-                        $('#addAccountModal').modal('toggle');
-                    }else{
-                        $('#selectLineID').val('');
-                        $('#bankAccountListModal').modal();
-                        setTimeout(function () {
-                            $('#tblAccount_filter .form-control-sm').focus();
-                            $('#tblAccount_filter .form-control-sm').val('');
-                            $('#tblAccount_filter .form-control-sm').trigger("input");
-                            var datatable = $('#tblSupplierlist').DataTable();
-                            datatable.draw();
-                            $('#tblAccount_filter .form-control-sm').trigger("input");
-                        }, 500);
+                    } else {
+                        openCustomerModal();
                     }
                 }
+
             });
             $('#transferAccount_'+item.DepositLineID).editableSelect();
             $('#transferAccount_'+item.DepositLineID).editableSelect().on('click.editable-select', function (e, li) {
-                var $each = $(this);
-                var offset = $each.offset();
-                let accountService = new AccountService();
+                const $each = $(this);
+                const offset = $each.offset();
                 let accountDataName = e.target.value ||'';
                 selectedAccountFlag = 'ForTransfer';
                 selectedDepositID = item.DepositLineID;
 
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-                    $('#selectLineID').val('');
-                    $('#bankAccountListModal').modal();
-                    setTimeout(function () {
-                        $('#tblAccount_filter .form-control-sm').focus();
-                        $('#tblAccount_filter .form-control-sm').val('');
-                        $('#tblAccount_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblAccountlist').DataTable();
-                        datatable.draw();
-                        $('#tblAccountlist_filter .form-control-sm').trigger("input");
-                    }, 500);
+                    openBankAccountListModal();
                 }else{
                     if(accountDataName.replace(/\s/g, '') !== ''){
                         getVS1Data('TAccountVS1').then(function (dataObject) {
                             if (dataObject.length === 0) {
-                                accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                    setBankAccountData(data);
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display','none');
-                                });
+                                setOneAccountByName(accountDataName);
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
-                                let added=false;
+                                let added = false;
                                 for (let a = 0; a < data.taccountvs1.length; a++) {
                                     if((data.taccountvs1[a].fields.AccountName) === accountDataName){
                                         added = true;
@@ -726,45 +676,151 @@ Template.newbankrecon.onRendered(function() {
                                     }
                                 }
                                 if(!added) {
-                                    accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                        setBankAccountData(data);
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display','none');
-                                    });
+                                    setOneAccountByName(accountDataName);
                                 }
                             }
                         }).catch(function (err) {
-                            accountService.getOneAccountByName(accountDataName).then(function (data) {
-                                setBankAccountData(data);
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display','none');
-                            });
+                            setOneAccountByName(accountDataName);
                         });
                         $('#addAccountModal').modal('toggle');
                     }else{
-                        $('#selectLineID').val('');
-                        $('#bankAccountListModal').modal();
-                        setTimeout(function () {
-                            $('#tblAccount_filter .form-control-sm').focus();
-                            $('#tblAccount_filter .form-control-sm').val('');
-                            $('#tblAccount_filter .form-control-sm').trigger("input");
-                            var datatable = $('#tblSupplierlist').DataTable();
-                            datatable.draw();
-                            $('#tblAccount_filter .form-control-sm').trigger("input");
-                        }, 500);
+                        openBankAccountListModal();
                     }
                 }
             });
             $('#btnAddDetail_'+item.DepositLineID).on('click', function(e, li) {
-                let taxRate = $('#ctaxRate'+item.DepositLineID).val();
+                let taxRate = $('#ctaxRateID_'+item.DepositLineID).val();
                 let who = $('#who_'+item.DepositLineID).val();
-                let what = $('#what_'+item.DepositLineID).val();
+                let what = $('#whatID_'+item.DepositLineID).val();
                 let why = $('#why_'+item.DepositLineID).val();
-                // FlowRouter.go('/recontransactiondetail?ID='+selectedDepositID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate);
-                let queryParams = {ID: item.DepositLineID, who: who, what: what, why: why, taxRate: taxRate};
-                FlowRouter.go('/recontransactiondetail', queryParams);
+                let amount = item.StatementAmount;
+                let dateIn = item.SortDate;
+                Session.setPersistent('reconDepositID', item.DepositLineID);
+                Session.setPersistent('reconTaxRate', taxRate);
+                Session.setPersistent('reconWho', who);
+                Session.setPersistent('reconWhat', what);
+                Session.setPersistent('reconWhy', why);
+                Session.setPersistent('reconAmount', amount);
+                Session.setPersistent('reconDateIn', dateIn);
+                Session.setPersistent('reconSOR', item.deporwith);
+                // FlowRouter.go('/recontransactiondetail?ID='+item.DepositLineID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate+'&amount='+amount+'&dateIn='+dateIn);
+                FlowRouter.go('/recontransactiondetail');
+                // let queryParams = {ID: item.DepositLineID, who: who, what: what, why: why, taxRate: taxRate};
+                // FlowRouter.go('/recontransactiondetail', queryParams);
             });
         })
+    }
+    function openCustomerModal() {
+        $('#customerListModal').modal();
+        setTimeout(function () {
+            $('#tblCustomerlist_filter .form-control-sm').focus();
+            $('#tblCustomerlist_filter .form-control-sm').val('');
+            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+            var datatable = $('#tblCustomerlist').DataTable();
+            //datatable.clear();
+            //datatable.rows.add(splashArrayCustomerList);
+            datatable.draw();
+            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+            //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+        }, 500);
+    }
+    function setOneCustomerDataExByName(customerDataName) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
+            $('.fullScreenSpin').css('display', 'none');
+            setCustomerModal(data.tcustomer[0]);
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    }
+    function setCustomerModal(data) {
+        $('.fullScreenSpin').css('display', 'none');
+        let lineItems = [];
+        $('#add-customer-title').text('Edit Customer');
+        let popCustomerID = data.fields.ID || '';
+        let popCustomerName = data.fields.ClientName || '';
+        let popCustomerEmail = data.fields.Email || '';
+        let popCustomerTitle = data.fields.Title || '';
+        let popCustomerFirstName = data.fields.FirstName || '';
+        let popCustomerMiddleName = data.fields.CUSTFLD10 || '';
+        let popCustomerLastName = data.fields.LastName || '';
+        let popCustomertfn = '' || '';
+        let popCustomerPhone = data.fields.Phone || '';
+        let popCustomerMobile = data.fields.Mobile || '';
+        let popCustomerFaxnumber = data.fields.Faxnumber || '';
+        let popCustomerSkypeName = data.fields.SkypeName || '';
+        let popCustomerURL = data.fields.URL || '';
+        let popCustomerStreet = data.fields.Street || '';
+        let popCustomerStreet2 = data.fields.Street2 || '';
+        let popCustomerState = data.fields.State || '';
+        let popCustomerPostcode = data.fields.Postcode || '';
+        let popCustomerCountry = data.fields.Country || LoggedCountry;
+        let popCustomerbillingaddress = data.fields.BillStreet || '';
+        let popCustomerbcity = data.fields.BillStreet2 || '';
+        let popCustomerbstate = data.fields.BillState || '';
+        let popCustomerbpostalcode = data.fields.BillPostcode || '';
+        let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
+        let popCustomercustfield1 = data.fields.CUSTFLD1 || '';
+        let popCustomercustfield2 = data.fields.CUSTFLD2 || '';
+        let popCustomercustfield3 = data.fields.CUSTFLD3 || '';
+        let popCustomercustfield4 = data.fields.CUSTFLD4 || '';
+        let popCustomernotes = data.fields.Notes || '';
+        let popCustomerpreferedpayment = data.fields.PaymentMethodName || '';
+        let popCustomerterms = data.fields.TermsName || '';
+        let popCustomerdeliverymethod = data.fields.ShippingMethodName || '';
+        let popCustomeraccountnumber = data.fields.ClientNo || '';
+        let popCustomerisContractor = data.fields.Contractor || false;
+        let popCustomerissupplier = data.fields.IsSupplier || false;
+        let popCustomeriscustomer = data.fields.IsCustomer || false;
+        let popCustomerTaxCode = data.fields.TaxCodeName || '';
+        let popCustomerDiscount = data.fields.Discount || 0;
+        let popCustomerType = data.fields.ClientTypeName || '';
+        //$('#edtCustomerCompany').attr('readonly', true);
+        $('#edtCustomerCompany').val(popCustomerName);
+        $('#edtCustomerPOPID').val(popCustomerID);
+        $('#edtCustomerPOPEmail').val(popCustomerEmail);
+        $('#edtTitle').val(popCustomerTitle);
+        $('#edtFirstName').val(popCustomerFirstName);
+        $('#edtMiddleName').val(popCustomerMiddleName);
+        $('#edtLastName').val(popCustomerLastName);
+        $('#edtCustomerPhone').val(popCustomerPhone);
+        $('#edtCustomerMobile').val(popCustomerMobile);
+        $('#edtCustomerFax').val(popCustomerFaxnumber);
+        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+        $('#edtCustomerWebsite').val(popCustomerURL);
+        $('#edtCustomerShippingAddress').val(popCustomerStreet);
+        $('#edtCustomerShippingCity').val(popCustomerStreet2);
+        $('#edtCustomerShippingState').val(popCustomerState);
+        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+        $('#sedtCountry').val(popCustomerCountry);
+        $('#txaNotes').val(popCustomernotes);
+        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+        $('#sltTermsPOP').val(popCustomerterms);
+        $('#sltCustomerType').val(popCustomerType);
+        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+        $('#edtCustomeField1').val(popCustomercustfield1);
+        $('#edtCustomeField2').val(popCustomercustfield2);
+        $('#edtCustomeField3').val(popCustomercustfield3);
+        $('#edtCustomeField4').val(popCustomercustfield4);
+
+        $('#sltTaxCode').val(popCustomerTaxCode);
+
+        if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
+            (data.fields.State === data.fields.BillState) && (data.fields.Postcode === data.fields.BillPostcode) &&
+            (data.fields.Country === data.fields.Billcountry)) {
+            $('#chkSameAsShipping2').attr("checked", "checked");
+        }
+
+        if (data.fields.IsSupplier === true) {
+            // $('#isformcontractor')
+            $('#chkSameAsSupplier').attr("checked", "checked");
+        } else {
+            $('#chkSameAsSupplier').removeAttr("checked");
+        }
+
+        setTimeout(function () {
+            $('#addCustomerModal').modal('show');
+        }, 200);
     }
 
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
@@ -790,10 +846,6 @@ Template.newbankrecon.onRendered(function() {
                     }, 1000);
                 }
             }
-        } else if (selectedAccountFlag === 'ForCreate') {
-            if (accountId !== "") {
-                $('#what_'+selectedDepositID).val(accountname);
-            }
         } else if (selectedAccountFlag === 'ForTransfer') {
             if (accountId !== "") {
                 $('#transferAccount_'+selectedDepositID).val(accountname);
@@ -802,7 +854,16 @@ Template.newbankrecon.onRendered(function() {
         $('#tblAccount_filter .form-control-sm').val('');
     });
 
+    $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
+        // $('#whatID_'+selectedDepositID).val(parseInt($(this).find(".colID").text()));
+        $('#whatID_'+selectedDepositID).val($(this).find(".colCompany").text());
+        $('#what_'+selectedDepositID).val($(this).find(".colCompany").text());
+        $('#customerListModal').modal('toggle');
+    });
+
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
+        // $('#ctaxRateID_'+selectedDepositID).val(parseInt($(this).find(".sorting_1").text()));
+        $('#ctaxRateID_'+selectedDepositID).val($(this).find(".taxName").text());
         $('#ctaxRate_'+selectedDepositID).val($(this).find(".taxName").text());
         $('#taxRateListModal').modal('toggle');
     });
