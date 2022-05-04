@@ -8607,12 +8607,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
+                    title: 'Invalid Phone Number',
                     text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnStartAppointmentConfirm').trigger('click');
@@ -8667,12 +8667,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
+                    title: 'Invalid Phone Number',
                     text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnEndActualTime').trigger('click');
@@ -8725,12 +8725,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
+                    title: 'Invalid Phone Number',
                     text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnSaveAppointmentSubmit').trigger('click');
