@@ -180,26 +180,26 @@ Template.newbankrecon.onRendered(function() {
         ignoreDate = true;
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
-            // data = {
-            //     "ttobereconcileddeposit":[
-            //         {
-            //             "Amount" : 2500,
-            //             "DepositDate": '2022-04-28',
-            //             "CompanyName": 'Yuga',
-            //             "Notes": '',
-            //             "DepositID": 115,
-            //             "ReferenceNo": 'ac-78',
-            //             "Seqno": 333,
-            //             "PaymentID": 115,
-            //             "DepositLineID": 115,
-            //             "CusID": 3,
-            //             "StatementLineID": 15,
-            //             "StatementTransactionDate": '2022-04-17',
-            //             "StatementAmount": 1500,
-            //             "StatementDescription": 'Manual'
-            //         }
-            //     ]
-            // };
+            data = {
+                "ttobereconcileddeposit":[
+                    {
+                        "Amount" : 2500,
+                        "DepositDate": '2022-04-28',
+                        "CompanyName": 'Yuga',
+                        "Notes": '',
+                        "DepositID": 115,
+                        "ReferenceNo": 'ac-78',
+                        "Seqno": 333,
+                        "PaymentID": 115,
+                        "DepositLineID": 115,
+                        "CusID": 3,
+                        "StatementLineID": 15,
+                        "StatementTransactionDate": '2022-04-17',
+                        "StatementAmount": 1500,
+                        "StatementDescription": 'Manual'
+                    }
+                ]
+            };
 
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
