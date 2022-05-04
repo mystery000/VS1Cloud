@@ -713,34 +713,7 @@
                         <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                         <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
 
-                        <div class="modal fade" role="dialog" id="frmOptions">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4>Appointment Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                    </div>
-                                    <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <a role="presentation" class="dropdown-item" id="deleteAll" href="#">Delete this Appointment and following Appointments</a>
-                                            </div>
-                                            <div class="col-12">
-                                                <a role="presentation" id="copyappointment" class="dropdown-item" href="#">Copy this Appointment to Another Day</a>
-                                            </div>
-                                            <div class="col-12">
-                                                <a role="presentation" style="color: #3a3b45" class="dropdown-item btnRepeatApp" id="btnRepeatApp">Repeat This Appointment</a>
-                                            </div>
-                                            <div class="col-12">
-                                                <a role="presentation" class="dropdown-item" href="#" id="createInvoice" data-toggle="modal">Create Invoice</a>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button class="btn btn-secondary btnAppOptionsModal" id="btnAppOptionsModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
 
                         <!-- Start Appointment Modal to choose Start Appointment SMS Message -->
                         <div class="modal fade" role="dialog" id="startAppointmentModal">
@@ -931,6 +904,36 @@
             </div>
         </form>
     </div>
+
+    <div class="modal fade" role="dialog" id="frmOptions">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Appointment Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="deleteAll"><i class="far fa-trash-alt text-danger" style="width: 16px;"></i> Delete this Appointment and following Appointments</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="copyappointment"><i class="far fa-copy text-warning" style="width: 16px;"></i> Copy this Appointment to Another Day</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer btnRepeatApp" id="btnRepeatApp"><i class="fas fa-redo-alt text-info" style="width: 16px;"></i> Repeat This Appointment</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="createInvoice" data-toggle="modal"><i class="fas fa-file-invoice-dollar text-success" style="width: 16px;"></i> Create Invoice</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btnAppOptionsModal" id="btnAppOptionsModal" type="button" data-dismiss="modal"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div role="dialog" tabindex="-1" class="modal fade repeatAppointments" id="myModal2">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
