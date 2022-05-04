@@ -929,7 +929,7 @@
                                                                     {{#if empuserrecord}}
                                                                         {{#each itemrecord in empuserrecord}}
 
-                                                                            <div class="col-12 col-md-2">
+                                                                            <div class="col-12 col-md-3">
                                                                                 <div class="form-group" style="margin: 4px; display:none!important;"><label>Employee Name</label>
                                                                                     <input type="text" class="form-control" id="cloudEmpName" name="cloudEmpName" value="{{itemrecord.EmployeeName}}" readonly>
                                                                                     <input type="text" class="form-control" id="erpEmpID" name="erpEmpID" value="{{itemrecord.empID}}" style="display:none!important;" readonly>
@@ -945,24 +945,24 @@
                                                                                     <input type="text" class="form-control" name="cloudEmpEmailAddress" id="cloudEmpEmailAddress" value="{{itemrecord.LogonName}}">
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-12 col-md-2">
+                                                                            <div class="col-12 col-md-3">
                                                                                 <div class="form-group">
                                                                                     <label>Password</label>
                                                                                     <div style="width: 100%">
-                                                                                        <div style="width: 85%; float: left;">
+                                                                                        <div style="width: 100%; float: left;">
                                                                                             <input type="text" class="form-control" name="cloudCheckEmpUserPassword" id="cloudCheckEmpUserPassword" value="{{itemrecord.PasswordHash}}"
                                                                                                 style="display:none!important;">
                                                                                             <input type="password" class="form-control" id="cloudEmpUserPassword" name="cloudEmpUserPassword" value="{{itemrecord.PasswordHash}}"
                                                                                                 autocomplete="new-password">
                                                                                         </div>
-                                                                                        <div style="width: 15%; float: left;">
+                                                                                        <div style="width: 0%; float: left;">
                                                                                             <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password" style="color: #00a3d3; margin-top: 10px; margin-left: 4px;"></span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             {{#if isCloudTrueERP}}
-                                                                                <div class="col-12 col-md-2">
+                                                                                <div class="col-12 col-md-3">
                                                                                     <div class="form-group">
                                                                                         <div class="custom-control custom-switch chkSameCustomer" style="margin: 4px; margin-top: 39px; float: left;">
                                                                                             <input class="custom-control-input" type="checkbox" id="chkLoadFromTrueERP" style="cursor: pointer;" checked>
