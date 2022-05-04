@@ -180,26 +180,26 @@ Template.newbankrecon.onRendered(function() {
         ignoreDate = true;
         $('.fullScreenSpin').css('display', 'inline-block');
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
-            data = {
-                "ttobereconcileddeposit":[
-                    {
-                        "Amount" : 2500,
-                        "DepositDate": '2022-04-28',
-                        "CompanyName": 'Yuga',
-                        "Notes": '',
-                        "DepositID": 115,
-                        "ReferenceNo": 'ac-78',
-                        "Seqno": 333,
-                        "PaymentID": 115,
-                        "DepositLineID": 115,
-                        "CusID": 3,
-                        "StatementLineID": 15,
-                        "StatementTransactionDate": '2022-04-17',
-                        "StatementAmount": 1500,
-                        "StatementDescription": 'Manual'
-                    }
-                ]
-            };
+            // data = {
+            //     "ttobereconcileddeposit":[
+            //         {
+            //             "Amount" : 2500,
+            //             "DepositDate": '2022-04-28',
+            //             "CompanyName": 'Yuga',
+            //             "Notes": '',
+            //             "DepositID": 115,
+            //             "ReferenceNo": 'ac-78',
+            //             "Seqno": 333,
+            //             "PaymentID": 115,
+            //             "DepositLineID": 115,
+            //             "CusID": 3,
+            //             "StatementLineID": 15,
+            //             "StatementTransactionDate": '2022-04-17',
+            //             "StatementAmount": 1500,
+            //             "StatementDescription": 'Manual'
+            //         }
+            //     ]
+            // };
 
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
@@ -400,13 +400,11 @@ Template.newbankrecon.onRendered(function() {
                     openBal = 0;
                 } else {
                     for (let j in dataArray) {
-
                         if(dataArray[dataArray.length - 1].OnHold === true){
                             openBal = dataArray[dataArray.length - 1].OpenBalance;
                         }else{
                             openBal = dataArray[dataArray.length - 1].CloseBalance;
                         }
-
                     }
                 }
                 $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
@@ -695,7 +693,10 @@ Template.newbankrecon.onRendered(function() {
                 let why = $('#why_'+item.DepositLineID).val();
                 let amount = item.StatementAmount;
                 let dateIn = item.SortDate;
+                Session.setPersistent('bankaccountid', bankaccountid);
+                Session.setPersistent('bankaccountname', bankaccountname);
                 Session.setPersistent('reconDepositID', item.DepositLineID);
+                Session.setPersistent('reconPaymentID', item.PaymentID);
                 Session.setPersistent('reconTaxRate', taxRate);
                 Session.setPersistent('reconWho', who);
                 Session.setPersistent('reconWhat', what);

@@ -1,16 +1,27 @@
-import {PurchaseBoardService} from '../js/purchase-service';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { CoreService } from '../js/core-service';
-import {EmployeeProfileService} from "../js/profile-service";
 import {AccountService} from "../accounts/account-service";
 import {UtilityService} from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import { Random } from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
 import {ProductService} from "../product/product-service";
+import {SalesBoardService} from "../js/sales-service";
+import {jsPDF} from "jspdf";
+import {ReconService} from "./recon-service";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let reconService = new ReconService();
+
 let selectLineID = null;
+let DepositID = null;
+let PaymentID = null;
+let DateIn = null;
+let DepOrWith = null;
+let Who = null;
+let BankAccountName = null;
+let BankAccountID = null;
 
 Template.recontransactiondetail.onCreated(function(){
     const templateObject = Template.instance();
@@ -29,13 +40,17 @@ Template.recontransactiondetail.onRendered(function() {
     const splashArrayTaxRateList = [];
     let clientList = [];
 
-    let DepositID = (Session.get("reconDepositID") !== undefined && parseInt(Session.get("reconDepositID")) > 0)?Session.get("reconDepositID"):null;
-    let who = (Session.get("reconWho") !== undefined && Session.get("reconWho") !== '')?Session.get("reconWho"):null;
+    DepositID = (Session.get("reconDepositID") !== undefined && parseInt(Session.get("reconDepositID")) > 0)?Session.get("reconDepositID"):null;
+    PaymentID = (Session.get("reconPaymentID") !== undefined && parseInt(Session.get("reconPaymentID")) > 0)?Session.get("reconPaymentID"):null;
+    BankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
+    BankAccountID = (Session.get("bankaccountid") !== undefined && parseInt(Session.get("bankaccountid")) > 0)?Session.get("bankaccountid"):null;
+    Who = (Session.get("reconWho") !== undefined && Session.get("reconWho") !== '')?Session.get("reconWho"):null;
     let what = (Session.get("reconWhat") !== undefined && Session.get("reconWhat") !== '')?Session.get("reconWhat"):null;
     let why = (Session.get("reconWhy") !== undefined && Session.get("reconWhy") !== '')?Session.get("reconWhy"):null;
     let taxRate = (Session.get("reconTaxRate") !== undefined && Session.get("reconTaxRate") !== '')?Session.get("reconTaxRate"):null;
     let amount = (Session.get("reconAmount") !== undefined && Session.get("reconAmount") !== '')?Session.get("reconAmount"):0;
-    let dateIn = (Session.get("reconDateIn") !== undefined && Session.get("reconDateIn") !== '')?Session.get("reconDateIn"):'';
+    DateIn = (Session.get("reconDateIn") !== undefined && Session.get("reconDateIn") !== '')?Session.get("reconDateIn"):'';
+    DepOrWith = (Session.get("reconSOR") !== undefined && Session.get("reconSOR") !== '')?Session.get("reconSOR"):null;
 
     // let DepositID = (FlowRouter.current().queryParams.ID !== undefined && parseInt(FlowRouter.current().queryParams.ID) > 0)?FlowRouter.current().queryParams.ID:null;
     // let who = (FlowRouter.current().queryParams.who !== undefined && FlowRouter.current().queryParams.who !== '')?FlowRouter.current().queryParams.who:null;
@@ -81,12 +96,13 @@ Template.recontransactiondetail.onRendered(function() {
             basedataArr.push(basedataObj);
             let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
             templateObject.baselinedata.set(thirdaryData);
-            $('#FromWho').val(who);
-            let dateIn_val = (dateIn !=='')? moment(dateIn).format("DD/MM/YYYY"): dateIn;
+            $('#FromWho').val(Who);
+            let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
             $('#DateIn').val(dateIn_val);
             $('#TotalAmount').val(amount);
             setTimeout(function () {
-                setCalculated()
+                setCalculated();
+                $('#' + selectLineID + " .btnRemove").hide();
             }, 500);
         }
     }
@@ -239,7 +255,7 @@ Template.recontransactiondetail.onRendered(function() {
         const rowData = $('#tblrecontransactiondetail tbody>tr:last').clone(true);
         let tokenid = Random.id();
         $(".lineProductName", rowData).val("");
-        $(".lineProductDesc", rowData).text("");
+        $(".lineProductDesc", rowData).val("");
         $(".lineQty", rowData).val("");
         $(".lineAccountName", rowData).val("");
         $(".lineUnitPrice", rowData).val("");
@@ -247,6 +263,7 @@ Template.recontransactiondetail.onRendered(function() {
         $(".lineTaxRate", rowData).val("");
         $(".lineTaxAmount", rowData).text("");
         $(".lineDiscount", rowData).text("");
+        $(".btnRemove", rowData).show();
         rowData.attr('id', tokenid);
         $("#tblrecontransactiondetail tbody").append(rowData);
 
@@ -261,11 +278,11 @@ Template.recontransactiondetail.onRendered(function() {
 
         if (selectLineID) {
             let lineProductName = trow.find(".productName").text();
-            let lineProductDesc = trow.find(".productDesc").text();
-            let lineUnitPrice = trow.find(".salePrice").text();
+            let lineProductDesc = trow.find(".productDesc").val();
+            let lineUnitPrice = trow.find(".salePrice").val();
 
             $('#' + selectLineID + " .lineProductName").val(lineProductName);
-            $('#' + selectLineID + " .lineProductDesc").text(lineProductDesc);
+            $('#' + selectLineID + " .lineProductDesc").val(lineProductDesc);
             $('#' + selectLineID + " .lineQty").val(1);
             $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
             $('#productListModal').modal('toggle');
@@ -309,67 +326,9 @@ Template.recontransactiondetail.onRendered(function() {
 
 
     function setCalculated() {
-        let $tblrows = $("#tblrecontransactiondetail tbody tr");
         let taxcodeList = templateObject.taxraterecords.get();
         let customerList = templateObject.clientrecords.get();
-        let lineAmount = 0;
-        let subTotal = 0;
-        let discountTotal = 0;
-        let taxTotal = 0;
-        let grandTotal = 0;
-        if (selectLineID) {
-            let lineQty = parseInt($('#' + selectLineID + " .lineQty").val());
-            let lineUnitPrice = $('#' + selectLineID + " .lineUnitPrice").val();
-            lineUnitPrice = Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
-            $('#' + selectLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
-            let lineTaxRate = $('#' + selectLineID + " .lineTaxRate").val();
-            let lineTaxRateVal = 0;
-            if (lineTaxRate !== "") {
-                for (let i = 0; i < taxcodeList.length; i++) {
-                    if (taxcodeList[i].codename === lineTaxRate) {
-                        lineTaxRateVal = taxcodeList[i].coderate;
-                    }
-                }
-            }
-            // let lineUnitPriceInc = lineUnitPrice + lineUnitPrice * lineTaxRateVal /100;
-            // $('#' + selectLineID + " .lineUnitPriceInc").text(utilityService.modifynegativeCurrencyFormat(lineUnitPriceInc));
-            let lineTaxAmount = lineQty * lineUnitPrice * lineTaxRateVal /100;
-            $('#' + selectLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
-            let lineAccountName = $('#' + selectLineID + " .lineAccountName").val();
-            let lineDiscountRate = 0;
-            if (lineAccountName !== "") {
-                let customerDetail = customerList.filter(customer => {
-                    return customer.customername === lineAccountName
-                });
-                customerDetail = customerDetail[0];
-                lineDiscountRate = customerDetail.discount;
-            }
-            let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * lineDiscountRate/100;
-            $('#' + selectLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
-            lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
-            $('#' + selectLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
-        }
-
-        $tblrows.each(function (index) {
-            const $tblrow = $(this);
-            let lineSubTotal = $tblrow.find(".lineSubTotal").text();
-            lineSubTotal = Number(lineSubTotal.replace(/[^0-9.-]+/g, "")) || 0;
-            let lineTaxAmount = $tblrow.find(".lineTaxAmount").text();
-            lineTaxAmount = Number(lineTaxAmount.replace(/[^0-9.-]+/g, "")) || 0;
-            let lineDiscount = $tblrow.find(".lineDiscount").text();
-            lineDiscount = Number(lineDiscount.replace(/[^0-9.-]+/g, "")) || 0;
-            let lineAmount = $tblrow.find(".lineAmount").text();
-            lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
-
-            subTotal += lineSubTotal;
-            taxTotal += lineTaxAmount;
-            discountTotal += lineDiscount;
-            grandTotal += lineAmount;
-        });
-        $(".sub_total").text(utilityService.modifynegativeCurrencyFormat(subTotal));
-        $(".tax_total").text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-        $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
-        $(".grand_total").text(utilityService.modifynegativeCurrencyFormat(grandTotal));
+        setCalculated2(taxcodeList, customerList)
     }
 
 });
@@ -547,18 +506,179 @@ Template.recontransactiondetail.events({
             event.keyCode === 8 || event.keyCode === 9 ||
             event.keyCode === 37 || event.keyCode === 39 ||
             event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {
-            const templateObject = Template.instance();
-            const qty = event.target.value || 0;
-            if (selectLineID) {
-                $('#' + selectLineID + " .lineQty").val(qty);
-            }
-            let taxcodeList = templateObject.taxraterecords.get();
-            let customerList = templateObject.clientrecords.get();
-            setCalculated2(taxcodeList, customerList);
+
         }
         else {
             event.preventDefault();
         }
+    },
+    'change .lineQty': function (event) {
+        selectLineID = $(event.target).closest('tr').attr('id');
+        const templateObject = Template.instance();
+        let qty = parseInt($(event.target).val()) || 0;
+        $(event.target).val(qty);
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'change .lineUnitPrice': function (event) {
+        selectLineID = $(event.target).closest('tr').attr('id');
+        const templateObject = Template.instance();
+        let inputUnitPrice = 0;
+        if (!isNaN($(event.target).val())) {
+            inputUnitPrice = parseFloat($(event.target).val()) || 0;
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+        } else {
+            inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+        }
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'click .btnRemove': function (event) {
+        selectLineID = null;
+        let templateObject = Template.instance();
+        $(event.target).closest('tr').remove();
+        event.preventDefault();
+
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'click #btnCancel': function() {
+        Session.setPersistent('bankaccountid', Session.get('bankaccountid'));
+        Session.setPersistent('bankaccountname', Session.get('bankaccountname'));
+        FlowRouter.go('/newbankrecon');
+    },
+    'click #btnSave': function (event) {
+        let match_total = parseFloat($("#TotalAmount").val());
+        let grand_total =  Number($(".grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
+        if (match_total !== grand_total) {
+            swal('The totals do not match.', '', 'error');
+            $("#TotalAmount").focus();
+            return false;
+        }
+        let reconType = "";
+        if (DepOrWith === "spent") {
+            reconType = "TReconciliationDepositLines";
+        } else if (DepOrWith === "received") {
+            reconType = "TReconciliationWithdrawalLines";
+        } else {
+            return false;
+        }
+
+        $('.fullScreenSpin').css('display', 'inline-block');
+
+        let lineItems = [];
+        let lineItemsObj = {};
+        $('#tblrecontransactiondetail > tbody > tr').each(function () {
+            let lineID = this.id;
+            let lineProductDesc = $('#' + lineID + " .lineProductDesc").val();
+            let lineAccountName = $('#' + lineID + " .lineAccountName").val();
+            let lineAmount = $('#' + lineID + " .lineAmount").text();
+            lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
+            let refText = $('#reference').val();
+
+            let dateIn = $("#DateIn").val() || '';
+            let splitwithdepositdate = dateIn.split("/");
+            let withYear = splitwithdepositdate[2];
+            let withMonth = splitwithdepositdate[1];
+            let withDay = splitwithdepositdate[0];
+            let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
+
+            lineItemsObj = {
+                type: reconType,
+                fields: {
+                    AccountName: BankAccountName || '',
+                    Amount: lineAmount,
+                    BankStatementLineID: 0, //Hardcoded for now
+                    ClientName: lineAccountName || '',
+                    DepositDate: formatWithDate + " 00:00:00" || '',
+                    Deposited: true,
+                    DepositLineID: parseInt(DepositID) || 0,
+                    Notes: lineProductDesc || '',
+                    Payee: lineAccountName || '',
+                    PaymentID: parseInt(PaymentID) || 0,
+                    // Reconciled: true,
+                    Reconciled: false,
+                    Reference: refText || ''
+                }
+            };
+            lineItems.push(lineItemsObj);
+        });
+
+        // Pulling initial variables BEGIN
+        let deptname = "Default"; //Set to Default as it isn't used for recons
+        let employeename = Session.get('mySessionEmployee');
+        var notes = ''; //pending addition of notes field
+        var openbalance = 0;
+        let closebalance = 0;
+        var statementno = '';
+        let recondate = DateIn;
+        // Pulling initial variables END
+
+        let objDetails = {};
+        if (DepOrWith === "spent") {
+            objDetails = {
+                type: "TReconciliation",
+                fields: {
+                    // ID: parseInt(DepositID) || 0,
+                    AccountName: BankAccountName || '',
+                    CloseBalance: closebalance,
+                    Deleted: false,
+                    DepositLines: lineItems || '',
+                    DeptName: deptname || '',
+                    EmployeeName: employeename || '',
+                    Finished: false,
+                    Notes: notes || '',
+                    OnHold: true,
+                    OpenBalance: openbalance,
+                    ReconciliationDate: recondate,
+                    StatementNo: statementno || '0',
+                    WithdrawalLines: ''
+
+                }
+            };
+
+        } else {
+            objDetails = {
+                type: "TReconciliation",
+                fields: {
+                    // ID: parseInt(DepositID) || 0,
+                    AccountName: BankAccountName || '',
+                    CloseBalance: closebalance,
+                    Deleted: false,
+                    DepositLines: '',
+                    DeptName: deptname || '',
+                    EmployeeName: employeename || '',
+                    Finished: false,
+                    Notes: notes || '',
+                    OnHold: true,
+                    OpenBalance: openbalance,
+                    ReconciliationDate: recondate,
+                    StatementNo: statementno || '0',
+                    WithdrawalLines: lineItems || ''
+
+                }
+            };
+        }
+
+        reconService.saveReconciliation(objDetails).then(function(data) {
+            FlowRouter.go('/reconciliationlist?success=true');
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {} else if (result.dismiss == 'cancel') {}
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
+
     },
 
 });

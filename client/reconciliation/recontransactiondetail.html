@@ -69,7 +69,7 @@
                         </div>
                         <div class="form-group" style="margin-left: 20px;">
                             <label for="">Reference</label>
-                            <input type="text" class="form-control" id="" value="">
+                            <input type="text" class="form-control" id="reference" value="">
                         </div>
                     </div>
 
@@ -185,7 +185,9 @@
                                     <td contenteditable="false" class="colProductName">
                                         <input class="es-input highlightSelect lineProductName" type="search" value="{{item.product}}">
                                     </td>
-                                    <td contenteditable="false" class="colDescription lineProductDesc">{{item.description}}</td>
+                                    <td contenteditable="false" class="colDescription">
+                                        <input class="lineProductDesc colQty highlightInput" type="text" style="text-align: left !important;" value="{{item.description}}">
+                                    </td>
                                     <td class="colQty">
                                         <input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}">
                                     </td>
@@ -267,8 +269,8 @@
                 </div>
                 <div class="row no-gutters">
                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;">
-                        <button class="btn btn-primary" type="button" style="margin: 16px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save Transaction</button>
-                        <button class="btn btn-secondary" type="button" style="margin: 16px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                        <button class="btn btn-primary" type="button" style="margin: 16px;" id="btnSave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save Transaction</button>
+                        <button class="btn btn-secondary" type="button" style="margin: 16px;" id="btnCancel"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                     </div>
                 </div>
             </div>
