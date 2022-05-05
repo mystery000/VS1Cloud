@@ -2381,29 +2381,136 @@
                                                                             margin-left: 16px;
                                                                         }
                                                                     }
+                                                                    .earningRateNewDiv .form-group {
+                                                                        white-space: normal;
+                                                                    }
+                                                                    .earningRateNewDiv label {
+                                                                        display: inline-block;
+                                                                        width: 100%;
+                                                                        padding-bottom: 3px;
+                                                                    }
+                                                                    .ordanryHoursDiv {
+                                                                        display: inline-block;
+                                                                        min-height: 38px;
+                                                                        width: 100%;
+                                                                    }
+                                                                    .borderBottom1 {
+                                                                        border-bottom: 1px solid #f1f1f1;
+                                                                    }
+                                                                    .ordanryHoursDiv a {
+                                                                        color: #00a3d3 !important;
+                                                                    }
                                                                 </style>
                                                                 <div class="row mb-3">
                                                                     <div class="col-12">
                                                                         <div class="card shadow" style="padding: 8px 16px;">
-                                                                            <div class="earningLinesContainer">
-                                                                                <div class="row align-items-end ">
-                                                                                    <div class="col-6 col-md-7">
-                                                                                        <div class="form-group">
-                                                                                            <label>Earnings Rate</label>
-                                                                                            <input type="text" class="form-control" id="">
+                                                                            {{#if payTemplateEarningLines}}
+                                                                                {{#each item in payTemplateEarningLines}}
+                                                                                    <div class="earningLinesContainer earningRateNewDiv">
+                                                                                        <div class="row align-items-end ">
+                                                                                            <div class="col-6 col-md-7">
+                                                                                                <div class="form-group">
+                                                                                                    <label class="borderBottom1">Earnings Rate</label>
+                                                                                                    <div class="ordanryHoursDiv">
+                                                                                                        <a href="javascript:void(0)">{{ item.fields.EarningRate }}</a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            {{#if checkForAllowance item.fields.EarningRate true}}
+                                                                                                {{#if equals item.fields.CalculationType "enterrate"}}
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Fixed Amount</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Rate</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Total</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                {{/if}}
+                                                                                                {{#if equals item.fields.CalculationType "annualsalary"}} 
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Fixed Amount</label>
+                                                                                                            <input type="text" class="form-control" id="">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="col-5 col-md-2">
+                                                                                                        <div class="form-group">
+                                                                                                            <label>Annual Salary</label>
+                                                                                                            <input type="text" class="form-control" id="">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                {{/if}}
+                                                                                            {{/if}}
+                                                                                            {{#if equals item.fields.EarningRate "JobKeeper Payment top up"}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Fixed Amount</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>  
+                                                                                            {{/if}}
+                                                                                            {{#if equals item.fields.EarningRate "Ordinary Hours"}}
+                                                                                                {{#if equals item.fields.CalculationType "enterrate"}}
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Hour</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Rate</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Total</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                {{/if}}
+                                                                                                {{#if equals item.fields.CalculationType "annualsalary"}}
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Hour Per Week</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-5 col-md-2">
+                                                                                                    <div class="form-group">
+                                                                                                        <label>Annual Salary</label>
+                                                                                                        <input type="text" class="form-control" id="">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                {{/if}}
+                                                                                            {{/if}}
+                                                                                            {{#if equals item.fields.EarningRate "Overtime Hours (exempt from super)"}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Hours</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            {{/if}}                                                                                            
+                                                                                            <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="col-5 col-md-2">
-                                                                                        <div class="form-group">
-                                                                                            <label>Hours</label>
-                                                                                            <input type="text" class="form-control" id="">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                        <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                                {{/each}}
+                                                                            {{/if}} 
                                                                             <div class="row mb-2">
                                                                                 <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEarningsLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
@@ -2424,11 +2531,11 @@
                                                                                                                 <label>Earnings Rate</label>
                                                                                                                 <!-- <input type="text" class="form-control" id=""> -->
                                                                                                                 <select class="form-control" id="earningRateSelect" style="cursor: pointer;">
-                                                                                                                    <option>Allowances exempt from tax withholding and super</option>
-                                                                                                                    <option>Allowances subject to tax withholding and super</option>
-                                                                                                                    <option>JobKeeper Payment top up</option>
-                                                                                                                    <option>Ordinary Hours</option>
-                                                                                                                    <option>Overtime Hours (exempt from super)</option>
+                                                                                                                    <option value="Allowances exempt from tax withholding and super">Allowances exempt from tax withholding and super</option>
+                                                                                                                    <option value="Allowances subject to tax withholding and super">Allowances subject to tax withholding and super</option>
+                                                                                                                    <option value="JobKeeper Payment top up">JobKeeper Payment top up</option>
+                                                                                                                    <option value="Ordinary Hours">Ordinary Hours</option>
+                                                                                                                    <option value="Overtime Hours (exempt from super)">Overtime Hours (exempt from super)</option>
                                                                                                                 </select>
                                                                                                             </div>
                                                                                                         </div>
@@ -2436,15 +2543,15 @@
                                                                                                             <div class="form-group">
                                                                                                                 <label>Calculation Type</label><br />
                                                                                                                 <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationType" id="CalculationType1" value="useearningsrate">
+                                                                                                                    <input class="form-check-input calculationType" disabled type="radio" name="calculationType" id="CalculationType1" value="useearningsrate">
                                                                                                                     <label class="form-check-label" for="CalculationType1">Use Earnings Rate</label>
                                                                                                                 </div>
                                                                                                                 <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationType" id="CalculationType2" value="enterrate">
+                                                                                                                    <input class="form-check-input calculationType" type="radio" name="calculationType" id="CalculationType2" value="enterrate">
                                                                                                                     <label class="form-check-label" for="CalculationType2">Enter Rate</label>
                                                                                                                 </div>
                                                                                                                 <div class="form-check form-check-inline">
-                                                                                                                    <input class="form-check-input" type="radio" name="calculationType" id="CalculationType3" value="annualsalary">
+                                                                                                                    <input class="form-check-input calculationType" type="radio" name="calculationType" id="CalculationType3" value="annualsalary">
                                                                                                                     <label class="form-check-label" for="CalculationType3">Annual Salary</label>
                                                                                                                 </div>
                                                                                                             </div>
@@ -2452,13 +2559,13 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Expense Account</label>
-                                                                                                                <input type="text" class="form-control" id="expenseAccount">
+                                                                                                                <input type="text" class="form-control" id="expenseAccount" name="expenseAccount">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="modal-footer">
-                                                                                                    <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                                    <button type="button" id="addEarningsLine" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                                                 </div>
                                                                                             </div>
@@ -2469,189 +2576,327 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row">
+                                                                <div class="row mb-3">
                                                                     <div class="col-12">
-                                                                        <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addDeductionLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
-                                                                            Deduction Line</button>
-                                                                        <div class="modal fade" id="addDeductionLineModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
-                                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="newPayCalendarLabel">Add a Deduction Line</h5>
-                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <div class="row">
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Deduction Type</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Calculation Type</label><br />
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction1" value="fixedamount">
-                                                                                                        <label class="form-check-label" for="calculationTypeDeduction1">Fixed Amount</label>
-                                                                                                    </div>
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction2" value="pretax">
-                                                                                                        <label class="form-check-label" for="calculationTypeDeduction2">Pre-Tax %</label>
-                                                                                                    </div>
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction3" value="posttax">
-                                                                                                        <label class="form-check-label" for="calculationTypeDeduction3">Post-Tax %</label>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Control Account</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                        <div class="card shadow" style="padding: 8px 16px;">
+                                                                            {{#if payTemplateDeductionLines}}
+                                                                                {{#each item in payTemplateDeductionLines}}
+                                                                                <div class="earningLinesContainer earningRateNewDiv">
+                                                                                    <div class="row align-items-end ">
+                                                                                        <div class="col-6 col-md-7">
+                                                                                            <div class="form-group">
+                                                                                                <label class="borderBottom1">Deduction Type</label>
+                                                                                                <div class="ordanryHoursDiv">
+                                                                                                    <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
+                                                                                        {{#if equals item.fields.CalculationType "fixedamount"}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Amount</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        {{else}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Percentage</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        {{/if}}
+                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                                                                    </div>
+                                                                                </div>
+                                                                                {{/each}}
+                                                                            {{/if}}                                                                          
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-12">
+                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addDeductionLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
+                                                                                        Deduction Line</button>
+                                                                                        <div class="modal fade" id="addDeductionLineModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
+                                                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                                <div class="modal-content">
+                                                                                                    <div class="modal-header">
+                                                                                                        <h5 class="modal-title" id="newPayCalendarLabel">Add a Deduction Line</h5>
+                                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                    <div class="modal-body">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-12">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label>Deduction Type</label>
+                                                                                                                    <select class="form-control" id="deductionTypeSelect" style="cursor: pointer;">
+                                                                                                                        <option value="FBT">FBT</option>
+                                                                                                                        <option value="Lease Payments">Lease Payments</option>
+                                                                                                                        <option value="Other Post-Tax Deductions">Other Post-Tax Deductions</option>
+                                                                                                                        <option value="Other Pre-Tax Deductions">Other Pre-Tax Deductions</option>
+                                                                                                                        <option value="Union Fees/Subscriptions">Union Fees/Subscriptions</option>
+                                                                                                                    </select>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-12">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label>Calculation Type</label><br />
+                                                                                                                    <div class="form-check form-check-inline">
+                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction1" value="fixedamount">
+                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction1">Fixed Amount</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-check form-check-inline">
+                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction2" value="pretax">
+                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction2">Pre-Tax %</label>
+                                                                                                                    </div>
+                                                                                                                    <div class="form-check form-check-inline">
+                                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeDeduction" id="calculationTypeDeduction3" value="posttax">
+                                                                                                                        <label class="form-check-label" for="calculationTypeDeduction3">Post-Tax %</label>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-12">
+                                                                                                                <div class="form-group">
+                                                                                                                    <label>Control Account</label>
+                                                                                                                    <input type="text" class="form-control" id="controlAccountDeduction">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="modal-footer">
+                                                                                                        <button type="button" id="addDeductionLine" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>    
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                                <div class="row mb-3">
                                                                     <div class="col-12">
-                                                                        <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addSuperannuationLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
-                                                                            Superannuation Line</button>
-                                                                        <div class="modal fade" id="addSuperannuationLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="">Add a Superannuation Line</h5>
-                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </button>
+                                                                        <div class="card shadow" style="padding: 8px 16px;">
+                                                                            {{#if payTemplateSuperannuationLines}}
+                                                                                {{#each item in payTemplateSuperannuationLines}}
+                                                                                <div class="earningLinesContainer earningRateNewDiv">
+                                                                                    <div class="row align-items-end ">
+                                                                                        <div class="col-6 col-md-7">
+                                                                                            <div class="form-group">
+                                                                                                <label class="borderBottom1">Superannuation Fund</label>
+                                                                                                <div class="ordanryHoursDiv">
+                                                                                                    <a href="javascript:void(0)">{{ item.fields.Fund }}</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        {{#if equals item.fields.CalculationType "fixedamount"}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Amount</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        {{else}}
+                                                                                            <div class="col-5 col-md-2">
+                                                                                                <div class="form-group">
+                                                                                                    <label>Percentage</label>
+                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        {{/if}}
+                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="modal-body">
-                                                                                        <div class="row">
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Superannuation Fund</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                </div>
+                                                                                {{/each}}
+                                                                            {{/if}}
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-12">        
+                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addSuperannuationLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Superannuation Line</button>
+                                                                                    <div class="modal fade" id="addSuperannuationLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                            <div class="modal-content">
+                                                                                                <div class="modal-header">
+                                                                                                    <h5 class="modal-title" id="">Add a Superannuation Line</h5>
+                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                                    </button>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Contribution Type</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Calculation Type</label><br />
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation1" value="fixedamount">
-                                                                                                        <label class="form-check-label" for="calculationTypeSuperannuation1">Fixed Amount</label>
-                                                                                                    </div>
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation2" value="pretax">
-                                                                                                        <label class="form-check-label" for="calculationTypeDeduction2">Percentage of Earnings</label>
-                                                                                                    </div>
-                                                                                                    <div class="form-check form-check-inline">
-                                                                                                        <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation3" value="posttax">
-                                                                                                        <label class="form-check-label" for="calculationTypeSuperannuation3">Statutory Rate</label>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Minimum Monthly Earnings</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Expense Account</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Liability Account</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12 col-md-6">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Payment Frequency</label>
-                                                                                                    <input type="text" class="form-control" id="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="col-12 col-md-6">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Period Payment Date</label>
-                                                                                                    <div class="input-group date" style="cursor: pointer;">
-                                                                                                        <input type="text" class="form-control formClassDate edtPeriodPaymentDate" id="edtPeriodPaymentDate" name="edtPeriodPaymentDate" value="">
-                                                                                                        <div class="input-group-addon" style="">
-                                                                                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                                <div class="modal-body" id="superannuationForm">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Superannuation Fund</label>
+                                                                                                                <input type="text" class="form-control" id="superannuationFund">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Contribution Type</label>
+                                                                                                                <select class="form-control" id="superannuationTypeSelect" style="cursor: pointer;">
+                                                                                                                    <option value="Superannuation Guarantee Contribution (SGC)">Superannuation Guarantee Contribution (SGC)</option>
+                                                                                                                    <option value="Additional Employer Contribution (RESC)">Additional Employer Contribution (RESC)</option>
+                                                                                                                    <option value="Pre-Tax Voluntary Contribution (RESC)">Pre-Tax Voluntary Contribution (RESC)</option>
+                                                                                                                    <option value="Post-Tax Voluntary Contribution (Employee)">Post-Tax Voluntary Contribution (Employee)</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12 hideelement" id="reducesSGCContainer">
+                                                                                                            <div class="form-group">
+                                                                                                                <div class="form-check form-check-inline">
+                                                                                                                    <input class="form-check-input" type="checkbox" name="reducesSGC" id="reducesSGC">
+                                                                                                                    <label class="form-check-label" for="reducesSGC">Reduces SGC</label>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>    
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Calculation Type</label><br />
+                                                                                                                <div class="form-check form-check-inline">
+                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation1" value="fixedamount">
+                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation1">Fixed Amount</label>
+                                                                                                                </div>
+                                                                                                                <div class="form-check form-check-inline">
+                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation2" value="pretax">
+                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation2">Percentage of Earnings</label>
+                                                                                                                </div>
+                                                                                                                <div class="form-check form-check-inline" id="statutoryRateContainer">
+                                                                                                                    <input class="form-check-input" type="radio" name="calculationTypeSuperannuation" id="calculationTypeSuperannuation3" value="posttax">
+                                                                                                                    <label class="form-check-label" for="calculationTypeSuperannuation3">Statutory Rate</label>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Minimum Monthly Earnings</label>
+                                                                                                                <input type="text" class="form-control" id="minimumMonthlyEarnings">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Expense Account</label>
+                                                                                                                <input type="text" class="form-control" id="expenseSuperannuationAccount">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Liability Account</label>
+                                                                                                                <input type="text" class="form-control" id="liabilityAccount">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12 col-md-6">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Payment Frequency</label>
+                                                                                                                <select class="form-control" id="paymentFrequency" style="cursor: pointer;">
+                                                                                                                    <option value="Monthly">Monthly</option>
+                                                                                                                    <option value="Quarterly">Quarterly</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12 col-md-6">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Period Payment Date</label>
+                                                                                                                <div class="input-group date" style="cursor: pointer;">
+                                                                                                                    <input type="text" class="form-control formClassDate edtPeriodPaymentDate" id="edtPeriodPaymentDate" name="edtPeriodPaymentDate" value="">
+                                                                                                                    <div class="input-group-addon" style="">
+                                                                                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </div>
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button" id="addSuperannuationLine" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                </div>
+                                                                <div class="row mb-2">    
                                                                     <div class="col-12">
-                                                                        <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addReimbursementLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
-                                                                            Reiumbursement Line</button>
-                                                                        <div class="modal fade" id="addReimbursementLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-                                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h5 class="modal-title" id="">Add a Reiumbursement Line</h5>
-                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                            <span aria-hidden="true">&times;</span>
-                                                                                        </button>
+                                                                        <div class="card shadow" style="padding: 8px 16px;">
+                                                                            {{#if payTemplateReiumbursementLines}}
+                                                                                {{#each item in payTemplateReiumbursementLines}}
+                                                                                <div class="earningLinesContainer earningRateNewDiv">
+                                                                                    <div class="row align-items-end ">
+                                                                                        <div class="col-6 col-md-7">
+                                                                                            <div class="form-group">
+                                                                                                <label class="borderBottom1">Reimbursement Type</label>
+                                                                                                <div class="ordanryHoursDiv">
+                                                                                                    <a href="javascript:void(0)">{{ item.fields.ReiumbursementType }}</a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-5 col-md-2">
+                                                                                            <div class="form-group">
+                                                                                                <label>Amount</label>
+                                                                                                <input type="text" class="form-control" id="">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-1 col-md-1" style="padding-left: 0px;">
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="modal-body">
-                                                                                        <div class="row">
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Reiumbursement Type</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                </div>
+                                                                                {{/each}}
+                                                                            {{/if}}
+                                                                            <div class="row mb-2">
+                                                                                <div class="col-12"> 
+                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addReimbursementLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Reiumbursement Line</button>
+                                                                                    <div class="modal fade" id="addReimbursementLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+                                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                            <div class="modal-content">
+                                                                                                <div class="modal-header">
+                                                                                                    <h5 class="modal-title" id="">Add a Reiumbursement Line</h5>
+                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                                    </button>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Description</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                <div class="modal-body">
+                                                                                                    <div class="row">
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Reiumbursement Type</label>
+                                                                                                                <select class="form-control" id="reimbursementTypeSelect" style="cursor: pointer;">
+                                                                                                                    <option value="Other Reimbursable Costs">Other Reimbursable Costs</option>
+                                                                                                                    <option value="Travel National Costs">Travel National Costs</option>
+                                                                                                                </select>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Description</label>
+                                                                                                                <input type="text" class="form-control" id="reiumbursementDescription">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="col-12">
+                                                                                                            <div class="form-group">
+                                                                                                                <label>Control of Expense Account</label>
+                                                                                                                <input type="text" class="form-control" id="controlExpenseAccount">
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="col-12">
-                                                                                                <div class="form-group">
-                                                                                                    <label>Control of Expense Account</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button" id="addReiumbursementLine" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
+                                                                        </div>    
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">

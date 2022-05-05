@@ -15,6 +15,14 @@ import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
 import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
 import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
+import PayTemplateEarningLine from "../js/Api/Model/PayTemplateEarningLine";
+import PayTemplateEarningLineFields from "../js/Api/Model/PayTemplateEarningLineFields";
+import PayTemplateDeductionLine from "../js/Api/Model/PayTemplateDeductionLine";
+import PayTemplateDeductionLineFields from "../js/Api/Model/PayTemplateDeductionLineFields";
+import PayTemplateSuperannuationLine from "../js/Api/Model/PayTemplateSuperannuationLine";
+import PayTemplateSuperannuationLineFields from "../js/Api/Model/PayTemplateSuperannuationLineFields";
+import PayTemplateReiumbursementLine from "../js/Api/Model/PayTemplateReiumbursementLine";
+import PayTemplateReiumbursementLineFields from "../js/Api/Model/PayTemplateReiumbursementLineFields";
 import ApiService from "../js/Api/Module/ApiService";
 import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
@@ -24,6 +32,10 @@ let edtProductSelect = "";
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
+    templateObject.payTemplateEarningLineInfo = new ReactiveVar();
+    templateObject.payTemplateDeductionLineInfo = new ReactiveVar();
+    templateObject.payTemplateSuperannuationLineInfo = new ReactiveVar();
+    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();    
     templateObject.employeePayInfos = new ReactiveVar();
     templateObject.employeePaySettings = new ReactiveVar();
     templateObject.leaveTypesDrpDown = new ReactiveVar();
@@ -2757,7 +2769,6 @@ Template.employeescard.onRendered(function () {
     }
 
     templateObject.getLeaveRequests = async () => {
-        // TO DO
         let TLeaveRequests = await getVS1Data('TLeaveRequest');
         if( TLeaveRequests.length ){
             let TLeaveRequestsData = JSON.parse(TLeaveRequests[0].data);
@@ -2867,12 +2878,12 @@ Template.employeescard.onRendered(function () {
     templateObject.getTLeaveTypes = async () => {
         try{
             let dataObj = await getVS1Data('TLeavetypes');
-            console.log('TLeavetypes', dataObj )
-        } catch(err) {
-            console.log( 'roor', err.message )
+            // console.log('TLeavetypes', dataObj )
+        } catch(err) {  
+            // console.log( 'roor', err.message )
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-            console.log('TLeavetypes', data )
+            // console.log('TLeavetypes', data )
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -2890,7 +2901,7 @@ Template.employeescard.onRendered(function () {
             };
             if(dataObj.length > 0) {
                 let data = JSON.parse(dataObj[0].data);
-                console.log( 'TBankAccounts', data )
+                // console.log( 'TBankAccounts', data )
                 let index = 1;
                 for(let i = 0; i < data.length; i ++) {
                     if( parseInt( data[i].fields.EmployeeID ) == parseInt( employeeID ) ) {
@@ -2908,7 +2919,7 @@ Template.employeescard.onRendered(function () {
                     }
                 }
             }
-            console.log('newData', newData)
+            // console.log('newData', newData)
             templateObject.bankAccList.set(newData);
 
         }).catch(function (err) {
@@ -3755,7 +3766,6 @@ Template.employeescard.events({
     },
     // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
-        // TO DO
         $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
@@ -3865,6 +3875,192 @@ Template.employeescard.events({
         $('#assignLeaveTypeModal').modal('hide');
         $('.fullScreenSpin').css('display', 'none');
     },
+
+    // Pay Template Tab
+    'click #addEarningsLine': function(){
+        // TO DO
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let EarningRate = $('#earningRateSelect').val();
+        let CalculationType = $('input[name=calculationType]:checked').val();
+        let ExpenseAccount = $('#expenseAccount').val();
+        let payEarningLinesTemp = [];
+        let payEarningLinesTempExist = templateObject.payTemplateEarningLineInfo.get();
+        if( Array.isArray( payEarningLinesTempExist ) ){
+            payEarningLinesTemp = payEarningLinesTempExist
+        }
+        // console.log('payEarningLinesTemp', payEarningLinesTemp)
+        payEarningLinesTemp.push(        
+            new PayTemplateEarningLine({
+                type: 'TPayTemplateEarningLine',
+                fields: new PayTemplateEarningLineFields({
+                    EmployeeID: employeeID,
+                    EarningRate: EarningRate,
+                    CalculationType: CalculationType,
+                    ExpenseAccount: ExpenseAccount
+                })
+            })
+        )
+        // console.log('useData', payEarningLinesTemp)
+        templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
+        $('#earningRateSelect').val('Allowances exempt from tax withholding and super');
+        $('input[name=calculationType]:checked').attr('checked', false);
+        $('#expenseAccount').val('');
+        $('#addEarningsLineModal').modal('hide');
+    },
+
+    'click #addDeductionLine': function(){
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let DeductionType = $('#deductionTypeSelect').val();
+        let CalculationType = $('input[name=calculationTypeDeduction]:checked').val();
+        let ControlAccount = $('#controlAccountDeduction').val();
+        let payDeductionLinesTemp = [];
+        let payDeductionLinesTempExist = templateObject.payTemplateDeductionLineInfo.get();
+        if( Array.isArray( payDeductionLinesTempExist ) ){
+            payDeductionLinesTemp = payDeductionLinesTempExist
+        }
+        // console.log('payDeductionLinesTemp', payDeductionLinesTemp)
+        payDeductionLinesTemp.push(        
+            new PayTemplateDeductionLine({
+                type: 'TPayTemplateDeductionLine',
+                fields: new PayTemplateDeductionLineFields({
+                    EmployeeID: employeeID,
+                    DeductionType: DeductionType,
+                    CalculationType: CalculationType,
+                    ControlAccount: ControlAccount,
+                })
+            })
+        )
+        // console.log('useData', payDeductionLinesTemp)
+        templateObject.payTemplateDeductionLineInfo.set(payDeductionLinesTemp);
+        $('#deductionTypeSelect').val('FBT');
+        $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
+        $('#controlAccountDeduction').val('');
+        $('#addDeductionLineModal').modal('hide');
+    },
+
+    'click #addSuperannuationLine': function(){
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let Fund = $('#superannuationFund').val();
+        let ContributionType = $('#superannuationTypeSelect').val();
+        let ReducesSGC = ( $('#reducesSGC').is(':checked') )? true: false;
+        let CalculationType = $('input[name=calculationTypeSuperannuation]:checked').val();
+        let MinimumMonthlyEarnings = $('#minimumMonthlyEarnings').val();
+        let ExpenseAccount = $('#expenseSuperannuationAccount').val();
+        let LiabilityAccount = $('#liabilityAccount').val();
+        let PaymentFrequency = $('#paymentFrequency').val();
+        let PeriodPaymentDate = $('#edtPeriodPaymentDate').val();
+        let payLinesTemp = [];
+        let payLinesTempExist = templateObject.payTemplateSuperannuationLineInfo.get();
+        if( Array.isArray( payLinesTempExist ) ){
+            payLinesTemp = payLinesTempExist
+        }
+        payLinesTemp.push(
+            new PayTemplateSuperannuationLine({
+                type: 'TPayTemplateSuperannuationLine',
+                fields: new PayTemplateSuperannuationLineFields({
+                    EmployeeID: employeeID,
+                    Fund: Fund,
+                    ContributionType: ContributionType,
+                    ReducesSGC: ReducesSGC,
+                    CalculationType: CalculationType,
+                    MinimumMonthlyEarnings: MinimumMonthlyEarnings,
+                    ExpenseAccount: ExpenseAccount,
+                    LiabilityAccount: LiabilityAccount,
+                    PaymentFrequency: PaymentFrequency,
+                    PeriodPaymentDate: PeriodPaymentDate,
+                })
+            })
+        )
+        // console.log('useData', payLinesTemp)
+        templateObject.payTemplateSuperannuationLineInfo.set(payLinesTemp);
+        $('#superannuationFund').val('');
+        $('#superannuationTypeSelect').val('Superannuation Guarantee Contribution (SGC)');
+        $('#reducesSGC').attr('checked', false);
+        $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+        $('#minimumMonthlyEarnings').val('');
+        $('#expenseSuperannuationAccount').val('');
+        $('#liabilityAccount').val('');
+        $('#paymentFrequency').val('Monthly');
+        $('#edtPeriodPaymentDate').val('');
+        $('#addSuperannuationLineModal').modal('hide');
+    },
+
+    'change #superannuationTypeSelect': function(){
+        let CalculationType = $('#superannuationTypeSelect').val();
+        $('#reducesSGCContainer').addClass('hideelement')
+        $('#statutoryRateContainer').addClass('hideelement')
+        $('input[name=calculationTypeSuperannuation]:checked').attr('checked', false);
+        switch(CalculationType){
+            case 'Superannuation Guarantee Contribution (SGC)':
+                $('#statutoryRateContainer').removeClass('hideelement')
+            break;
+            case 'Pre-Tax Voluntary Contribution (RESC)':
+                $('#reducesSGCContainer').removeClass('hideelement')
+            break;
+            default:
+            break;    
+        }
+    },
+
+    'click #addReiumbursementLine': function(){
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let ReiumbursementType = $('#reimbursementTypeSelect').val();
+        let Description = $('#reiumbursementDescription').val();
+        let ControlExpenseAccount = $('#controlExpenseAccount').val();
+        let payLinesTemp = [];
+        let payLinesTempExist = templateObject.payTemplateReiumbursementLineInfo.get();
+        if( Array.isArray( payLinesTempExist ) ){
+            payLinesTemp = payLinesTempExist
+        }
+        payLinesTemp.push(
+            new PayTemplateReiumbursementLine({
+                type: 'TPayTemplateReiumbursementLine',
+                fields: new PayTemplateReiumbursementLineFields({
+                    EmployeeID: employeeID,
+                    ReiumbursementType: ReiumbursementType,
+                    Description: Description,
+                    ControlExpenseAccount: ControlExpenseAccount,
+                })
+            })
+        )
+        // console.log('useData', payLinesTemp)
+        templateObject.payTemplateReiumbursementLineInfo.set(payLinesTemp);
+        $('#reimbursementTypeSelect').val('');
+        $('#reiumbursementDescription').val('');
+        $('#controlExpenseAccount').val('');
+        $('#addReimbursementLineModal').modal('hide');
+    },
+
+    // Pay Template Earning Line Drop Down
+    'click #earningRateSelect': function(){
+        let earningRate = $('#earningRateSelect').val();
+        $('.calculationType').removeAttr("checked");
+        switch( earningRate ){
+            case 'JobKeeper Payment top up':
+                $('#CalculationType1').attr('disabled', true)
+                $('#CalculationType2').attr('disabled', false)
+                $('#CalculationType3').attr('disabled', true)
+            break;
+            case 'Overtime Hours (exempt from super)':
+                $('#CalculationType1').attr('disabled', false)
+                $('#CalculationType2').attr('disabled', true)
+                $('#CalculationType3').attr('disabled', true)
+            break;
+            default:
+                $('#CalculationType1').attr('disabled', true)
+                $('#CalculationType2').attr('disabled', false)
+                $('#CalculationType3').attr('disabled', false)
+            break;
+        }
+    }, 
 
     // Save active tab data
     'click #btnSaveEmployeePayroll': async function(event) {
@@ -4147,7 +4343,7 @@ Template.employeescard.events({
                 });
             }
 
-            console.log( 'saving bankaccount', data )
+            // console.log( 'saving bankaccount', data )
 
             $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -5708,13 +5904,18 @@ Template.employeescard.events({
             $('.superannuationGuaranteeCont').addClass('hideelement')
         }
     }
-
 });
 
 Template.employeescard.helpers({
     isCloudTrueERP: function() {
         let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
         return checkCloudTrueERP;
+    },
+    checkForAllowance: function ( EarningRate ) {
+        if( EarningRate == "Allowances exempt from tax withholding and super" || EarningRate == "Allowances subject to tax withholding and super" ){
+            return true
+        }
+        return false
     },
     isCloudUserPass: () => {
         return Template.instance().isCloudUserPass.get();
@@ -5740,6 +5941,18 @@ Template.employeescard.helpers({
     bankAccountList: () => {
         return Template.instance().bankAccList.get();
     },
+    payTemplateEarningLines: () => {
+        return Template.instance().payTemplateEarningLineInfo.get();
+    },     
+    payTemplateDeductionLines: () => {
+        return Template.instance().payTemplateDeductionLineInfo.get();
+    },  
+    payTemplateSuperannuationLines: () => {
+        return Template.instance().payTemplateSuperannuationLineInfo.get();
+    },  
+    payTemplateReiumbursementLines: () => {
+        return Template.instance().payTemplateReiumbursementLineInfo.get();
+    },    
     extraUserPrice: () => {
         return addExtraUserPrice || '$35';
     },
