@@ -243,6 +243,10 @@ ERPObjects = function () {
         TSupplierPaymentLine:"TSupplierPaymentLine",
         Tprojectlist: "Tprojectlist",
         Tprojecttasks: "Tprojecttasks",
+        Tprojecttask_subtasks: "Tprojecttask_subtasks",
+        Tprojecttask_activity: "Tprojecttask_activity",
+        Tprojecttask_comments: "Tprojecttask_comments",
+        Tprojecttask_TaskLabel: "Tprojecttask_TaskLabel",
     }
     return objects;
 }

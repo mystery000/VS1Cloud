@@ -1,20 +1,28 @@
 import { BaseService } from '../js/base-service.js';
 export class CRMService extends BaseService {
-  getTTodoTaskList() {
-    let employeeID = 3;  // tempcode
+
+  getAllTaskList(project_id = 11) {
     let options = {
-      orderby: '"ToDoByDate asc"',
+      // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
-      select: "[Active]=true and [Completed]=false and [Done]=false"
-      // select: "[Active]=true and [Completed]=false and [EmployeeID]=" + employeeID
+      // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
+      select: "[Active]=true and [Completed]=false"
     }
-    return this.getList(this.ERPObjects.TToDo, options);
+    return this.getList(this.ERPObjects.Tprojecttasks, options);
+  }
+
+  getTaskDetail(id) {
+    return this.getOneById(this.ERPObjects.Tprojecttasks, id);
+  }
+
+  saveNewTask(data) {
+    return this.POST(this.ERPObjects.Tprojecttasks, data);
   }
 
   getTProjectList() {
     let options = {
-      ListType: "Detail"
-      // select: "[Active]=true" 
+      ListType: "Detail",
+      select: "[Active]=true"
     }
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
@@ -27,11 +35,29 @@ export class CRMService extends BaseService {
     return this.POST(this.ERPObjects.Tprojectlist, data);
   }
 
-  getOneTTodoTask(id) {
-    return this.getOneById(this.ERPObjects.TToDo, id);
+  getAllLabels() {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    }
+    return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
   }
 
-  saveNewTask(data) {
-    return this.POST(this.ERPObjects.TToDo, data);
+  getOneLabel(id) {
+    return this.getOneById(this.ERPObjects.Tprojecttask_TaskLabel, id);
+  }
+
+  getTTodoTaskList() {
+    let options = {
+      orderby: '"ToDoByDate asc"',
+      ListType: "Detail",
+      select: "[Active]=true and [Completed]=false and [Done]=false"
+      // select: "[Active]=true and [Completed]=false and [EmployeeID]=" + employeeID
+    }
+    return this.getList(this.ERPObjects.TToDo, options);
+  }
+
+  getOneTTodoTask(id) {
+    return this.getOneById(this.ERPObjects.TToDo, id);
   }
 }

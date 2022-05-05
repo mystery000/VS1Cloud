@@ -261,24 +261,25 @@
                                     <div class="col-6" style="padding: 16px; padding-bottom: 0;">
                                         <div class="form-group mb-0">
                                             <label>Who</label>
-                                            <input type="text" class="form-control" id="who_{{ itemTransaction.DepositLineID }}" placeholder="Name of the contact...">
+                                            <input type="text" class="form-control" id="who_{{ itemTransaction.DepositLineID }}" placeholder="Name of the contact..." value="">
                                         </div>
                                     </div>
                                     <div class="col-6" style="padding: 16px; padding-bottom: 0;">
                                         <div class="form-group mb-0">
                                             <label>What</label>
-                                            <select type="search" class="form-control" id="what_{{ itemTransaction.DepositLineID }}" placeholder="Choose the account..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                            <select type="search" class="form-control" id="what_{{ itemTransaction.DepositLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                            <input type="hidden" id="whatID_{{ itemTransaction.DepositLineID }}" value="">
                                         </div>
                                     </div>
                                     <div class="col-12" style="padding: 16px;">
                                         <div class="form-group mb-0">
                                             <label>Why</label>
-                                            <input type="text" class="form-control" id="why_{{ itemTransaction.DepositLineID }}" placeholder="Enter a description...">
+                                            <input type="text" class="form-control" id="why_{{ itemTransaction.DepositLineID }}" placeholder="Enter a description..." value="">
                                         </div>
                                     </div>
                                     <div class="col-4" style="padding: 0 !important; border: 0;">
-                                        <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.DepositLineID }}" value="Tax Rate"
-                                                style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                        <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.DepositLineID }}" placehoder="Choose the tax code..." style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                        <input type="hidden" id="ctaxRateID_{{ itemTransaction.DepositLineID }}" value="">
                                     </div>
                                     <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
                                         <a href="" style="float: right;" id="btnAddDetail_{{ itemTransaction.DepositLineID }}">Add Details</a>
@@ -347,7 +348,7 @@
                             <span class="float-left">
                                 <div class="custom-control custom-switch">
                                     <input class="custom-control-input" type="checkbox" value="" id="swtSuggestPreviousEntries" name="swtSuggestPreviousEntries" style="cursor: pointer;" checked>
-                                    <label class="custom-control-label" for="swtSuggestPreviousEntries" style="cursor: pointer;">Suggest Previous Entries</label>
+                                    <label class="custom-control-label" for="swtSuggestPreviousEntries" style="width: 200px; cursor: pointer;">Suggest Previous Entries</label>
                                 </div>
                             </span>
                         </div>
@@ -356,8 +357,8 @@
                                 <div class="custom-control custom-switch">
                                     <button class="btn btn-primary btnPageStart" type="button" style="width: 80px; margin: 3px;"><span><i class="fa fa-angle-double-left" style="margin-right: 5px;"></i>Start</span></button>
                                     <button class="btn btn-primary btnPagePrev" type="button" style="width: 80px; margin: 3px;" ><span><i class="fa fa-angle-left" style="margin-right: 5px;"></i>Prev</span></button>
-                                    <button class="btn btn-primary btnPageNext" type="button" style="width: 80px; margin: 3px;"><span><i class="fa fa-angle-right" style="padding-right: 8px;"></i>Next</span></button>
-                                    <button class="btn btn-primary btnPageEnd" type="button" style="width: 80px; margin: 3px;"><i class="fa fa-angle-double-right" style="margin-right: 5px;"></i>End</button>
+                                    <button class="btn btn-primary btnPageNext" type="button" style="width: 80px; margin: 3px;"><span>Next <i class="fa fa-angle-right" style="padding-right: 8px;"></i></span></button>
+                                    <button class="btn btn-primary btnPageEnd" type="button" style="width: 80px; margin: 3px;">End <i class="fa fa-angle-double-right" style="margin-right: 5px;"></i></button>
                                 </div>
                             </span>
                         </div>
@@ -449,6 +450,23 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
+    </div>
+
+    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

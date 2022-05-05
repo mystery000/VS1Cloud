@@ -133,7 +133,8 @@ Template.customerlistpop.onRendered(function () {
                             data.tcustomervs1[i].fields.TermsName || '',
                             data.tcustomervs1[i].fields.FirstName || '',
                             data.tcustomervs1[i].fields.LastName || '',
-                            data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                            data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                            data.tcustomervs1[i].fields.Mobile || ''
                         ];
 
                         splashArrayCustomerList.push(dataListCustomer);
@@ -266,6 +267,9 @@ Template.customerlistpop.onRendered(function () {
                                 }, {
                                     className: "colCustomerTaxCode hiddenColumn",
                                     "targets": [24]
+                                }, {
+                                    className: "colMobile hiddenColumn",
+                                    "targets": [25]
                                 }
                             ],
                             select: true,
@@ -628,7 +632,8 @@ Template.customerlistpop.onRendered(function () {
                         data.tcustomervs1[i].fields.TermsName || '',
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
-                        data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                        data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                        data.tcustomervs1[i].fields.Mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);
@@ -761,6 +766,9 @@ Template.customerlistpop.onRendered(function () {
                             }, {
                                 className: "colCustomerTaxCode hiddenColumn",
                                 "targets": [24]
+                            }, {
+                                className: "colMobile hiddenColumn",
+                                "targets": [25]
                             }
                         ],
                         select: true,
@@ -858,7 +866,8 @@ Template.customerlistpop.onRendered(function () {
                                                         dataObjectnew.tcustomervs1[j].fields.TermsName || '',
                                                         dataObjectnew.tcustomervs1[j].fields.FirstName || '',
                                                         dataObjectnew.tcustomervs1[j].fields.LastName || '',
-                                                        dataObjectnew.tcustomervs1[j].fields.TaxCodeName || 'E'
+                                                        dataObjectnew.tcustomervs1[j].fields.TaxCodeName || 'E',
+                                                        dataObjectnew.tcustomervs1[j].fields.Mobile || ''
                                                     ];
 
                                                     splashArrayCustomerList.push(dataListCustomerDupp);
@@ -978,7 +987,8 @@ Template.customerlistpop.onRendered(function () {
                                               data.tcustomervs1[i].fields.TermsName || '',
                                               data.tcustomervs1[i].fields.FirstName || '',
                                               data.tcustomervs1[i].fields.LastName || '',
-                                              data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                                              data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                                              data.tcustomervs1[i].fields.Mobile || ''
                                           ];
 
                                           splashArrayCustomerList.push(dataListCustomer);
@@ -1229,7 +1239,8 @@ Template.customerlistpop.onRendered(function () {
                         data.tcustomervs1[i].fields.TermsName || '',
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
-                        data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                        data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                        data.tcustomervs1[i].fields.Mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);
@@ -1370,6 +1381,9 @@ Template.customerlistpop.onRendered(function () {
                             }, {
                                 className: "colCustomerTaxCode hiddenColumn",
                                 "targets": [24]
+                            }, {
+                                className: "colMobile hiddenColumn",
+                                "targets": [25]
                             }
                         ],
                         select: true,
@@ -1770,7 +1784,8 @@ Template.customerlistpop.events({
                             data.tcustomervs1[i].fields.TermsName || '',
                             data.tcustomervs1[i].fields.FirstName || '',
                             data.tcustomervs1[i].fields.LastName || '',
-                            data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                            data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                            data.tcustomervs1[i].fields.Mobile || ''
                         ];
 
                         splashArrayCustomerList.push(dataListCustomer);
@@ -1869,7 +1884,8 @@ Template.customerlistpop.events({
                         data.tcustomervs1[i].fields.TermsName || '',
                         data.tcustomervs1[i].fields.FirstName || '',
                         data.tcustomervs1[i].fields.LastName || '',
-                        data.tcustomervs1[i].fields.TaxCodeName || 'E'
+                        data.tcustomervs1[i].fields.TaxCodeName || 'E',
+                        data.tcustomervs1[i].fields.Mobile || ''
                     ];
 
                     splashArrayCustomerList.push(dataListCustomer);

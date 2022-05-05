@@ -366,7 +366,7 @@ Template.vs1login.onRendered(function () {
                             if (data.temployeeformaccessdetail[i].fields.Description === "Purchases") {
                                 isPurchases = true;
                             }
-                            if (data.temployeeformaccessdetail[i].fields.Description === "Expense Claims") {
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Receipt Claims") {
                                 isExpenseClaims = true;
                             }
                             if (data.temployeeformaccessdetail[i].fields.Description === "Fixed Assets") {
@@ -815,7 +815,7 @@ Template.vs1login.onRendered(function () {
                     if (optionaccess.fields.Description === "Purchases") {
                         isPurchases = true;
                     }
-                    if (optionaccess.fields.Description === "Expense Claims") {
+                    if (optionaccess.fields.Description === "Receipt Claims") {
                         isExpenseClaims = true;
                     }
                     if (optionaccess.fields.Description === "Fixed Assets") {
@@ -1645,6 +1645,10 @@ Template.vs1login.onRendered(function () {
                                                         ERPIPAdderess = "gardenscapes.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.170") {
                                                         ERPIPAdderess = "steelmains.vs1cloud.com";
+                                                    }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
+                                                        ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                                    }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                        ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                         ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                                     }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -1739,7 +1743,9 @@ Template.vs1login.onRendered(function () {
                                                     });
 
                                                     /* Remove licence */
-
+                                                    if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                      isTrueERPConnection = true;
+                                                    }
                                                     Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                                     Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                                     Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -2283,6 +2289,10 @@ Template.vs1login.onRendered(function () {
                                     ERPIPAdderess = "gardenscapes.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.170") {
                                     ERPIPAdderess = "steelmains.vs1cloud.com";
+                                }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
+                                    ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                    ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                 }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -2377,7 +2387,9 @@ Template.vs1login.onRendered(function () {
                                 });
 
                                 /* Remove licence */
-
+                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                  isTrueERPConnection = true;
+                                }
                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                 Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                 Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -2784,6 +2796,10 @@ Template.vs1login.onRendered(function () {
                                                     ERPIPAdderess = "gardenscapes.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.170") {
                                                     ERPIPAdderess = "steelmains.vs1cloud.com";
+                                                }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
+                                                    ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                                }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                    ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                     ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                                 }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -2878,7 +2894,9 @@ Template.vs1login.onRendered(function () {
                                                 });
 
                                                 /* Remove licence */
-
+                                                if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                                  isTrueERPConnection = true;
+                                                }
                                                 Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                                 Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                                 Session.setPersistent('CloudContactsLicence', isContactsLicence);
@@ -3448,6 +3466,10 @@ Template.vs1login.onRendered(function () {
                                                 ERPIPAdderess = "gardenscapes.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.170") {
                                                 ERPIPAdderess = "steelmains.vs1cloud.com";
+                                            }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
+                                                ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                            }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                                ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                                 ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                             }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -3544,6 +3566,9 @@ Template.vs1login.onRendered(function () {
                                             });
 
                                             /* Remove licence */
+                                            if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                              isTrueERPConnection = true;
+                                            }
 
                                             Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                             Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
@@ -4151,6 +4176,10 @@ Template.vs1login.onRendered(function () {
                                             ERPIPAdderess = "gardenscapes.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.170") {
                                             ERPIPAdderess = "steelmains.vs1cloud.com";
+                                        }else if (dataReturnRes.ProcessLog.ServerName == "144.130.174.162") {
+                                            ERPIPAdderess = "steelmains14403.vs1cloud.com";
+                                        }else if (dataReturnRes.ProcessLog.ServerName == "156.155.97.183") {
+                                            ERPIPAdderess = "vs1dev5.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "120.151.35.249") {
                                             ERPIPAdderess = "rappaustralia.vs1cloud.com";
                                         }else if (dataReturnRes.ProcessLog.ServerName == "165.228.147.127") {
@@ -4245,7 +4274,9 @@ Template.vs1login.onRendered(function () {
                                         });
 
                                         /* Remove licence */
-
+                                        if (dataReturnRes.ProcessLog.ServerName !== "110.142.175.245") {
+                                          isTrueERPConnection = true;
+                                        }
                                         Session.setPersistent('CloudTrueERPModule', isTrueERPConnection);
                                         Session.setPersistent('CloudAccountsLicence', isAccountsLicence);
                                         Session.setPersistent('CloudContactsLicence', isContactsLicence);

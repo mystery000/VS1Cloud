@@ -16,9 +16,7 @@ export default class resizableCharts {
         stop: async (event, ui) => {
 
           // add custom class to manage spacing
-          $(ui.element[0])
-            .parents(".sortable-chart-widget-js")
-            .addClass("resizeAfterChart");
+          
 
           /**
            * Build the positions of the widgets
@@ -34,9 +32,11 @@ export default class resizableCharts {
 
           $(ui.element[0])
             .parents(".sortable-chart-widget-js")
-            .removeClass("col-md-6 col-md-4"); // when you'll star resizing, it will remove its size
+            .removeClass("col-md-6 col-md-8 col-md-4"); // when you'll star resizing, it will remove its size
           // if ($(ui.element[0]).parents(".sortable-chart-widget-js").attr("key") != "purchases__expenses_breakdown") {
-            
+            $(ui.element[0])
+            .parents(".sortable-chart-widget-js")
+            .addClass("resizeAfterChart");
             // Restrict width more than 100
             if ( ChartHandler.calculateWidth(ui.element[0]) >= 100) {
                 $(this).resizable("option", "maxWidth", ui.size.width); 

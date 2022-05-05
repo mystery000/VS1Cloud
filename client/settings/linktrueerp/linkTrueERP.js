@@ -203,5 +203,142 @@ Template.linktrueerp.events({
         event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {} else {
         event.preventDefault();
     }
+},
+'click .btnUploadERPUSer': async function (event) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    let taxRateService = new TaxRateService();
+    var erpGet = erpDb();
+
+    taxRateService.getUserDetails().then(function (data) {
+      if(data.temployee.length > 0){
+        for (let i = 0; i < data.temployee.length; i++) {
+          let dataLength = data.temployee.length * 2500;
+            if (data.temployee[i].fields.User != null) {
+
+              var enteredEmail = data.temployee[i].fields.Email||'';
+              let cloudpassword = data.temployee[i].fields.User.fields.LogonPassword||'';
+              let employeeSaveID = data.temployee[i].fields.ID||'';
+              var empFirstName = data.temployee[i].fields.FirstName||'';
+              var empLastName = data.temployee[i].fields.LastName||'';
+              var empMiddleName = data.temployee[i].fields.MiddleName||'';
+              var empPhone = data.temployee[i].fields.Phone||'';
+
+              let empDOB = data.temployee[i].fields.DOB ||'';
+              let empStartDate = data.temployee[i].fields.DateStarted ||'';
+
+              var empGender = data.temployee[i].fields.Sex || 'M';
+              let addgender = '';
+              if (empGender === "Male") {
+                  addgender = "M";
+              } else if (empGender === "Female") {
+                  addgender = "F";
+              } else {
+                  addgender = empGender;
+              };
+              var enteredEmail = data.temployee[i].fields.Email||'';
+              var enteredPassword = data.temployee[i].fields.User.fields.LogonPassword||'';
+              var cloudHashPassword = CryptoJS.MD5(enteredPassword.toUpperCase()).toString();
+
+              if(data.temployee[i].fields.Email != ''){
+                //Save data Here
+                let objDetailsUser = {
+                    //JsonIn:{
+                    Name: "VS1_NewUser",
+                    Params: {
+                        Vs1UserName: enteredEmail,
+                        Vs1Password: enteredPassword,
+                        Modulename: "Add Extra User",
+                        // Paymentamount:35,
+                        Paymentamount: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        PayMethod: "Cash",
+                        Price: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        DiscountedPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        DiscountDesc: "",
+                        RenewPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        RenewDiscountedPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        RenewDiscountDesc: "Free User Included in the license - TrueERP Users",
+                        // PayMethod:"Cash",
+                        EmployeeDetails: {
+                            ID: parseInt(employeeSaveID) || 0,
+                            FirstName: empFirstName,
+                            LastName: empLastName,
+                            MiddleName: empMiddleName || '',
+                            Phone: empPhone,
+                            DateStarted: empStartDate,
+                            DOB: empDOB,
+                            Sex: addgender,
+                        },
+                        DatabaseName: erpGet.ERPDatabase,
+                        ServerName: erpGet.ERPIPAddress,
+                        ERPLoginDetails: {
+                            ERPUserName: localStorage.getItem('mySession'),
+                            ERPPassword: localStorage.getItem('EPassword')
+                        }
+                    }
+                    //}
+                };
+
+                var oPost = new XMLHttpRequest();
+                oPost.open("POST", URLRequest + loggedserverIP + ':' + loggedserverPort + '/' + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_NewUser"', true);
+                oPost.setRequestHeader("database", vs1loggedDatatbase);
+                oPost.setRequestHeader("username", 'VS1_Cloud_Admin');
+                oPost.setRequestHeader("password", 'DptfGw83mFl1j&9');
+                oPost.setRequestHeader("Accept", "application/json");
+                oPost.setRequestHeader("Accept", "application/html");
+                oPost.setRequestHeader("Content-type", "application/json");
+
+                var myString = '"JsonIn"' + ':' + JSON.stringify(objDetailsUser);
+                oPost.send(myString);
+                oPost.onreadystatechange = async function () {
+                    if (oPost.readyState == 4 && oPost.status == 200) {
+
+                        // $('.fullScreenSpin').css('display', 'none');
+                        // var myArrResponse = JSON.parse(oPost.responseText);
+
+                    }
+
+
+                }
+
+              }//End Save data
+
+
+          }
+
+          setTimeout(function () {
+
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+            title: 'ERP User Successfully Imported to VS1',
+            text: "Please log out to activate your changes.",
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'OK'
+            }).then((result) => {
+              let getLasTDatabase = erpGet.ERPDatabase;
+               if(getLasTDatabase){
+                 deleteStoreDatabase(getLasTDatabase).then(function(data) {
+                   window.open('/','_self');
+                   }).catch(function (err) {
+                     window.open('/','_self');
+                   });
+               }else{
+                 window.open('/','_self');
+               }
+            });
+          }, parseInt(dataLength));
+        }
+     }
+    }).catch(function (err) {
+
+    });
+
 }
+});
+
+Template.linktrueerp.helpers({
+  isCloudTrueERP: function() {
+      let checkCloudTrueERP = Session.get('CloudTrueERPModule') || false;
+      return checkCloudTrueERP;
+  }
 });

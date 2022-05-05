@@ -604,9 +604,7 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                             }, 100);
 
-                            setTimeout(function () {
-                             templateObject.getAllSelectPaymentData();
-                           }, 1500);
+
 
                             templateObject.purchaseorderrecord.set(purchaseorderrecord);
                             templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -842,9 +840,7 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                                 }, 100);
 
-                                setTimeout(function () {
-                                 templateObject.getAllSelectPaymentData();
-                               }, 1500);
+
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1041,9 +1037,7 @@ Template.purchaseordercard.onRendered(() => {
                                     }
                                 }, 100);
 
-                                setTimeout(function () {
-                                 templateObject.getAllSelectPaymentData();
-                               }, 1500);
+
 
                                 templateObject.purchaseorderrecord.set(purchaseorderrecord);
                                 templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -1281,9 +1275,7 @@ Template.purchaseordercard.onRendered(() => {
                                         }
                         }, 100);
 
-                        setTimeout(function () {
-                         templateObject.getAllSelectPaymentData();
-                       }, 1500);
+
 
                         templateObject.purchaseorderrecord.set(purchaseorderrecord);
                         templateObject.selectedCurrency.set(purchaseorderrecord.currency);
@@ -8599,78 +8591,61 @@ Template.purchaseordercard.events({
         });
 
     },
-    'click #btnViewPayment': function() {
-       let templateObject = Template.instance();
-        let paymentData = templateObject.selectedsupplierpayrecords.get();
+    'click #btnViewPayment': async function() {
+        let templateObject = Template.instance();
+        let purchaseService = new PurchaseBoardService();
+          $('.fullScreenSpin').css('display', 'inline-block');
         let paymentID = "";
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
-        var currentInvoice = getso_id[getso_id.length - 1];
-        for(let x=0; x < paymentData.length; x++){
+        var currentBill = getso_id[getso_id.length - 1];
+        let paymentData = await purchaseService.getCheckPaymentLineByTransID(currentBill) || '';
 
-            if(paymentData[x].lines != null && paymentData[x].lines != "") {
-                if(paymentData[x].lines.length > 1){
-                    for(let y = 0; y < paymentData[x].lines.length; y++) {
-                        if(paymentData[x].lines[y].fields.POID == currentInvoice) {
-                            paymentID = paymentData[x].id;
-                            window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                        }
-                    }
-                } else {
-                    if(paymentData[x].lines.fields.POID == currentInvoice) {
-                        paymentID = paymentData[x].id;
-                        window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                    }
-                }
+        if(paymentData){
+          for(let x = 0; x < paymentData.tsupplierpaymentline.length; x++) {
+            if (paymentData.tsupplierpaymentline.length > 1) {
+                paymentID = paymentData.tsupplierpaymentline[x].fields.Payment_ID;
+                window.open('/supplierpaymentcard?id=' + paymentID, '_self');
+            } else {
+                paymentID = paymentData.tsupplierpaymentline[0].fields.Payment_ID;
+                window.open('/supplierpaymentcard?id=' + paymentID, '_self');
            }
-       }
+          }
+
+        }else{
+        $('.fullScreenSpin').css('display', 'none');
+        }
+
     },
     'click .btnTransactionPaid': async function () {
       let templateObject = Template.instance();
-      let paymentData = await templateObject.selectedsupplierpayrecords.get();
+      let purchaseService = new PurchaseBoardService();
+      $('.fullScreenSpin').css('display', 'inline-block');
       let  selectedSupplierPaymentID = [];
       let paymentID = "";
       var url = FlowRouter.current().path;
       var getso_id = url.split('?id=');
-      var currentInvoice = getso_id[getso_id.length - 1];
+      var currentBill = getso_id[getso_id.length - 1];
       let suppliername = $('#edtSupplierName').val() || '';
-      for(let x = 0; x < paymentData.length; x++) {
-          if(paymentData[x].lines != null && paymentData[x].lines != "") {
-              if (paymentData[x].lines.length > 1) {
-                  for(let y = 0; y < paymentData[x].lines.length; y++) {
-                      if (paymentData[x].lines[y].fields.POID == currentInvoice) {
-                        if(paymentData[x].lines[y].fields.PaidInFull == "Yes"){
-                          paymentID = paymentData[x].id;
-                          window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                        }else{
-                          paymentID = paymentData[x].id;
-                          selectedSupplierPaymentID.push(paymentID);
-                        }
-                      }
-                  }
-              } else {
-                  if(paymentData[x].lines[0].fields.POID == currentInvoice) {
-                    if(paymentData[x].lines[0].fields.PaidInFull == "Yes"){
-                      paymentID = paymentData[x].id;
-                      window.open('/supplierpaymentcard?id=' + paymentID, '_self');
-                    }else{
-                      paymentID = paymentData[x].id;
+      let paymentData = await purchaseService.getCheckPaymentLineByTransID(currentBill) || '';
+      if(paymentData){
+      for(let x = 0; x < paymentData.tsupplierpaymentline.length; x++) {
+              if (paymentData.tsupplierpaymentline.length > 1) {
+                      paymentID = paymentData.tsupplierpaymentline[x].fields.Payment_ID;
                       selectedSupplierPaymentID.push(paymentID);
-
-                    }
-                  }
+              } else {
+                      paymentID = paymentData.tsupplierpaymentline[0].fields.Payment_ID;
+                      window.open('/supplierpaymentcard?id=' + paymentID, '_self');
               }
-          }
       }
 
       setTimeout(function () {
         let selectPayID = selectedSupplierPaymentID;
-        if (selectPayID.length == 1) {
-          window.open('/supplierpaymentcard?id=' + selectPayID, '_self');
-        } else {
-          window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
-        };
+        window.open('/supplierpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
       }, 500);
+    }else{
+      $('.fullScreenSpin').css('display', 'none');
+    }
     },
     'click .chkEmailCopy': function(event) {
         $('#edtSupplierEmail').val($('#edtSupplierEmail').val().replace(/\s/g, ''));

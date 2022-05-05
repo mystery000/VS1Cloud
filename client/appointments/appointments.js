@@ -2249,8 +2249,6 @@ Template.appointments.onRendered(function () {
                             return apmt.id == appID
                         });
 
-                        console.log('1 =================================> ', result);
-
                         if (result.length > 0) {
                             templateObject.getAllProductData();
                             if (result[0].isPaused == "Paused") {
@@ -3145,8 +3143,6 @@ Template.appointments.onRendered(function () {
                         return apmt.id == appID
                     });
 
-                    console.log('2 =================================> ', result);
-
                     if (result.length > 0) {
                         templateObject.getAllProductData();
                         if (result[0].isPaused == "Paused") {
@@ -3758,9 +3754,6 @@ Template.appointments.onRendered(function () {
                     var result = appointmentData.filter(apmt => {
                         return apmt.id == appID
                     });
-
-                    console.log('3 =================================> ', result);
-
                     if (result.length > 0) {
                         templateObject.getAllProductData();
                         if (result[0].isPaused == "Paused") {
@@ -5522,7 +5515,7 @@ Template.appointments.onRendered(function () {
         let getEmployeeID = templateObject.empID.get() || '';
         document.getElementById("customer").value = $(this).find(".colCompany").text();
         document.getElementById("phone").value = $(this).find(".colPhone").text();
-        document.getElementById("mobile").value = $(this).find(".colPhone").text();
+        document.getElementById("mobile").value = $(this).find(".colMobile").text();
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
@@ -6288,11 +6281,10 @@ Template.appointments.onRendered(function () {
                 case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
             }
         }
-        console.log(smsSettings);
         templateObject.defaultSMSSettings.set(smsSettings);
     }
     }).catch((error) => {
-        console.log(error);
+
     });
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise((resolve, reject) => {
@@ -6317,11 +6309,9 @@ Template.appointments.onRendered(function () {
                     );
                 },
                 success: function(data) {
-                    console.log("Got response: %o", data);
                     resolve({ success: true });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Request failed: " + textStatus + ", " + errorThrown);
                     resolve({ success: false });
                 }
             });
@@ -6338,7 +6328,7 @@ Template.appointments.onRendered(function () {
             (chkSMSCustomer || chkSMSUser)) {
             swal({
                 title: 'No SMS Settings',
-                text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                text: "SMS messages won't be sent to Customer or User",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Continue',
@@ -8607,12 +8597,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    title: 'Invalid Phone Number',
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnStartAppointmentConfirm').trigger('click');
@@ -8628,7 +8618,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
@@ -8667,12 +8657,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    title: 'Invalid Phone Number',
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnEndActualTime').trigger('click');
@@ -8686,7 +8676,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
@@ -8725,12 +8715,12 @@ Template.appointments.events({
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
-                    title: 'Invalid phone number',
-                    text: "Invalid phone number. Any SMS message won't be sent.",
+                    title: 'Invalid Phone Number',
+                    text: "SMS messages won't be sent.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
-                    cancelButtonText: 'cancel'
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
                         $('#btnSaveAppointmentSubmit').trigger('click');
@@ -8744,7 +8734,7 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS settings are non-existed. Any SMS messages won't be sent to customer or user.",
+                        text: "SMS messages won't be sent to Customer or User.",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
@@ -8767,7 +8757,7 @@ Template.appointments.events({
                     const employeeName = $('#employee_name').val();
                     const companyName = Session.get('vs1companyName');
                     const fullAddress = $('#address').val() + ', ' + $('#suburb').val() + ', ' + $('#state').val() + ', ' + $('#country').val();
-                    const bookedTime = $('#startTime').val() + $('#endTime').val() ? $('#startTime').val() + ' - ' + $('#endTime').val() : '';
+                    const bookedTime = $('#startTime').val() ? $('#startTime').val() : '';
                     const productService = $('#product-list').val();
                     const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace('[Customer Name]', accountName)
                         .replace('[Employee Name]', employeeName).replace('[Company Name]', companyName).replace('[Product/Service]', productService)

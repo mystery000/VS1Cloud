@@ -537,8 +537,8 @@ let grandOlder = 0;
     },
     'click .btnPrintReport':function (event) {
       $(".printReport").print({
-          title   :  document.title +" | Aged Receivables | "+loggedCompany,
-          noPrintSelector : ".addSummaryEditor",
+          title: "General Ledger | "+loggedCompany,
+          noPrintSelector: ".addSummaryEditor"
       })
     },
     'click .btnExportReport':function() {

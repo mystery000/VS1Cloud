@@ -1,5 +1,5 @@
 <template name="bankingoverview">
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding: 0px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
@@ -8,7 +8,7 @@
                 display: none;
             }
         </style> -->
-        <header class="p-4 d-flex align-items-center">
+        <header class="p-4 d-flex align-items-center" style="padding-top: 0px !important; padding-bottom: 0px !important;">
             <h2 class="mr-1">Banking Overview</h2>
                 <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                 <a class="m-1" role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help
@@ -34,7 +34,7 @@
                 <!-- End Help View Modal -->
 
         </header>
-        <div class="row" style="padding: 26px; padding-bottom: 0px;">
+        <div class="row connectedCardSortable" style="padding: 26px; padding-bottom: 0px;">
             <!-- CARDS -->
 
             <style>
@@ -43,14 +43,117 @@
                     text-decoration: underline;
                 }
             </style>
+            <style>
+                .dimmedChart>div {
+                    background-color: #dddfeb !important;
+                }
+
+                .card.hovered {
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
+                    cursor: move;
+                    transition-duration: 300ms;
+                }
+
+                .hideelement {
+                    display: none !important;
+                }
+
+                .showelement {
+                    display: block;
+                }
+
+                .customCardMainDiv {
+                    position: relative;
+                    padding-top: 15px !important;
+                }
+
+                .hideShowDiv {
+                    display: inline-block;
+                    width: 100%;
+                    text-align: right;
+                    padding: 0 8px;
+                    margin: 0;
+                    position: absolute;
+                    top: 5px;
+                    left: 0;
+                }
+
+                a.cardSettingBtn {
+                    display: inline-flex;
+                    width: 22px;
+                    height: 22px;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 10px;
+                    border-radius: 4px;
+                    /*background: #dddfeb;*/
+                    color: #dddfeb;
+                    text-decoration: none;
+                    margin-left: 3px;
+                }
+
+                a.editCardBtn :hover{
+                    background: #dddfeb;
+                    color: #6e6e6e;
+                    padding: 4px;
+                    border-radius: 3px;
+                }
+
+                a.cardHideBtn,
+                a.cardShowBtn {
+                    display: inline-flex;
+                    width: 22px;
+                    height: 22px;
+                    font-size: 10px;
+                    justify-content: center;
+                    align-items: center;
+                    /*background: #dddfeb;*/
+                    border-radius: 4px;
+                    margin-left: 2px;
+                    text-decoration: none;
+                    color: #dddfeb;
+                }
+
+                a.cardHideBtn:hover,
+                a.cardShowBtn:hover,
+                a.cardHideBtn.active,
+                a.cardShowBtn.active {
+                    background: #00a3d3;
+                    color: #fff;
+                }
+
+                a.cardHideBtn i,
+                a.cardShowBtn i {
+                    pointer-events: none;
+                }
+
+                .dimmedChart a.cardHideBtn,
+                .dimmedChart a.cardShowBtn,
+                .dimmedChart a.cardSettingBtn  {
+                    background: #f1f1f1 !important;
+                    color: #6e6e6e;
+                }
+
+                .dimmedChart a.editCardBtn :hover {
+                    background: rgba(0,0,0,0) !important;
+                }
+
+                .dimmedChart .cardSettingBtn {
+                    background: #fff;
+                }
+            </style>
             {{#if bankaccountdatarecord}}
             {{#each itembank in bankaccountdatarecord}}
-            <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable" id={{itembank.name}}>
-                <div class="card shadow {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} py-2">
+            <div class="col-md-6 col-xl-3 mb-4 openaccountreceivable card-visibility" position="{{ @index }}" card-active="true" card-key={{itembank.cardAccountID}} id={{itembank.name}}>
+                <div class="card shadow customCardMainDiv {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} {{#if equals @index 4 }} border-left-info{{/if}} {{#if equals @index 5 }} border-left-secondary {{/if}} py-2">
+                    <div class="hideShowDiv">
+                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+                    </div>
                     <div class="card-body" style="cursor: pointer;">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="opentrans text-uppercase {{#if equals @index 0 }} text-success{{/if}} {{#if equals @index 1 }} text-primary{{/if}} {{#if equals @index 2 }} text-danger{{/if}}  {{#if equals @index 3 }} text-warning{{/if}} font-weight-bold text-xs mb-1"><span style="font-size: 14px;">{{itembank.name}}</span></div>
+                                <div class="opentrans text-uppercase {{#if equals @index 0 }} text-success{{/if}} {{#if equals @index 1 }} text-primary{{/if}} {{#if equals @index 2 }} text-danger{{/if}}  {{#if equals @index 3 }} text-warning{{/if}} {{#if equals @index 4 }} text-info{{/if}} {{#if equals @index 5 }} text-secondary {{/if}}font-weight-bold text-xs mb-1"><span style="font-size: 14px;">{{itembank.name}}</span></div>
                                 <div class="opentrans text-dark font-weight-bold h5 mb-0 mr-3 "><span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;"><span class="custAwaitingAmt" id="custAwaitingAmt" name="custAwaitingAmt">  {{itembank.totalbalance}}</span></span></div>
                                 <div class="opentrans text-dark font-weight-bold h5 mb-0"><span style="font-size: 16px;color: rgb(221,223,235);">Bank Balance</span></div>
                             </div>
