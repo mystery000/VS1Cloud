@@ -15,7 +15,7 @@
         <div class="row">
           <div class="col-12">
             <li class="list-group-item taskmenuoption filters-item" id="filtersLayer">
-              <i data-toggle="collapse" href="#filtersCollapse" role="button" aria-expanded="false"
+              <i data-toggle="collapse" href="#filtersCollapse" role="button" aria-expanded="true"
                 aria-controls="filtersCollapse" class="fas text-secondary fa-angle-right"
                 style="margin-right: 8px; width: 25px;"></i>
               Filters
@@ -138,7 +138,7 @@
         <div class="row">
           <div class="col-12">
             <li class="list-group-item taskmenuoption filters-item" id="labelslayer">
-              <i data-toggle="collapse" href="#labelsCollapse" role="button" aria-expanded="false"
+              <i data-toggle="collapse" href="#labelsCollapse" role="button" aria-expanded="true"
                 aria-controls="labelsCollapse" class="fas text-secondary fa-angle-right"
                 style="margin-right: 8px; width: 25px;"></i>
               Labels
@@ -150,9 +150,10 @@
 
         <div class="collapse multi-collapse" id="labelsCollapse">
           <ul class="list-group list-group-flush" id="labelsCollapseContainer">
-            <li class="list-group-item filtersmenuoption" id="projectName">
+            {{#each item in alllabels}}
+            <li class="list-group-item filtersmenuoption">
               <i class="fas fa-tag" style="margin-right: 8px; width: 25px; color: purple;"></i>
-              <span class="projectName">Label #1</span>
+              <span class="projectName">{{item.fields.TaskLabelName}}</span>
               <span class="projectMenu" id="projectonemenu">
                 <div class="dropdown">
                   <button class="btn btn-secondary projectDropdown" type="button" title="Add to favorites">
@@ -187,43 +188,7 @@
               </span>
               <span class="projectItems" id="projectone">7</span>
             </li>
-            <li class="list-group-item filtersmenuoption">
-              <i class="fas fa-tag" style="margin-right: 8px; width: 25px; color: pink;"></i>
-              <span class="projectName">Label #2</span>
-              <span class="projectMenu" id="projecttwomenu">
-                <div class="dropdown">
-                  <button class="btn btn-secondary projectDropdown" type="button" title="Add to favorites">
-                    <i class="far fa-heart"></i>
-                  </button>
-                  <button class="btn btn-secondary projectDropdown" type="button" data-toggle="tooltip"
-                    aria-haspopup="true" aria-expanded="false" title="Edit label">
-                    <i class="far fa-edit"></i>
-                  </button>
-                  <button class="btn btn-secondary dropdown-toggle projectDropdown" type="button"
-                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                    title="More label actions...">
-                    <i class="fas fa-ellipsis-h"></i>
-                  </button>
-                  <div class="dropdown-menu project-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#"><i class="fas fa-arrow-up" style="margin-right: 8px;"></i>Add
-                      Label Above</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Add
-                      Label Below</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Edit
-                      Label</a>
-                    <a class="dropdown-item" href="#"><i class="far fa-heart" style="margin-right: 8px;"></i>Add to
-                      Favorites</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-arrow-down" style="margin-right: 8px;"></i>Move
-                      to shared labels</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#"><i class="fas fa-trash-alt" style="margin-right: 8px;"></i>Delete
-                      Label</a>
-                  </div>
-                </div>
-              </span>
-              <span class="projectItems" id="projecttwo">10</span>
-            </li>
+            {{/each}}
           </ul>
         </div>
       </div>

@@ -1,11 +1,12 @@
 import { BaseService } from '../js/base-service.js';
 export class CRMService extends BaseService {
 
-  getAllTaskList() {
+  getAllTaskList(project_id = 11) {
     let options = {
       // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
-      select: "[Active]=true and [ProjectID]=0"
+      // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
+      select: "[Active]=true and [Completed]=false"
     }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -20,8 +21,8 @@ export class CRMService extends BaseService {
 
   getTProjectList() {
     let options = {
-      ListType: "Detail"
-      // select: "[Active]=true" 
+      ListType: "Detail",
+      select: "[Active]=true"
     }
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }
@@ -32,6 +33,18 @@ export class CRMService extends BaseService {
 
   updateProject(data) {
     return this.POST(this.ERPObjects.Tprojectlist, data);
+  }
+
+  getAllLabels() {
+    let options = {
+      ListType: "Detail",
+      select: "[Active]=true"
+    }
+    return this.getList(this.ERPObjects.Tprojecttask_TaskLabel, options);
+  }
+
+  getOneLabel(id) {
+    return this.getOneById(this.ERPObjects.Tprojecttask_TaskLabel, id);
   }
 
   getTTodoTaskList() {
