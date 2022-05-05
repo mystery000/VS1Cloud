@@ -22,7 +22,6 @@ export class TaxRateService extends BaseService {
     getScheduleSettings() {
         let options = {
                 ListType: "Detail",
-                select: "[Active]=true",
     //        PropertyList:"BeginFromOption,ContinueIndefinitely,EmployeeId,Employeename,EndDate,Every,FormID,Frequency,GlobalRef,HolidayAction,ID,ISEmpty,KeyStringFieldName,KeyValue,LastEmaileddate,MonthDays,MsTimeStamp,MsUpdateSiteCode",
 
             };

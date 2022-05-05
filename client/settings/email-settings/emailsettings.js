@@ -11,6 +11,7 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import { startOfDay } from "@fullcalendar/core";
 let sideBarService = new SideBarService();
 
 Template.emailsettings.onCreated(function () {
@@ -440,23 +441,40 @@ Template.emailsettings.onRendered(function () {
                                 recipientIds.push(empData[i].fields.EmployeeId);
                             }
                             if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
+                            const startDate = empData[i].fields.StartDate.split(' ')[0];
+                            const startTime = empData[i].fields.StartDate.split(' ')[1];
+
+                            //TODO: Getting BasedOnType from localstorage
+                            let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                            let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
+                            let isInOut = basedOnTypeData ? JSON.parse(basedOnTypeData).ISEmpty : false;
+                            if (basedOnType == "P") basedOnType = "On Print";
+                            else if (basedOnType == "S") basedOnType = "On Save";
+                            else if (basedOnType == "T") basedOnType = "On Transaction Date";
+                            else if (basedOnType == "D") basedOnType = "On Due Date";
+                            else if (basedOnType == "O") basedOnType = "If Outstanding";
+                            else if (basedOnType == "E") basedOnType = "On Event";
+                            else basedOnType = '';
+
                             empDataCurr = {
                                 employeeid: recipientIds.join('; ') || '',
                                 every: empData[i].fields.Every || '',
                                 formID: n.id || '',
                                 employeeEmailID: recipients.join('; ') || '',
                                 formname: n.name || '',
+                                basedOnType: basedOnType,
+                                isEmpty: isInOut,
                                 frequency: empData[i].fields.Frequency || '',
                                 id: empData[i].fields.ID || '',
                                 monthDays: empData[i].fields.MonthDays || '',
                                 nextDueDate: empData[i].fields.NextDueDate || '',
-                                startDate: empData[i].fields.StartDate.split(' ')[0] || '',
-                                startTime: empData[i].fields.StartDate.split(' ')[1] || '',
+                                startDate: startDate.split('-')[2] + '/' + startDate.split('-')[1] + '/' + startDate.split('-')[0] || '',
+                                startTime: startTime.split(':')[0] + ':' + startTime.split(':')[1] || '',
                                 weekDay: empData[i].fields.WeekDay || '',
                                 satAction: empData[i].fields.SatAction || '',
                                 sunAction: empData[i].fields.SunAction || '',
                                 beginFromOption: empData[i].fields.BeginFromOption || '',
-                                formIDs: formIds.join('; ')
+                                formIDs: formIds.join('; '),
                             };
                             if (recipients.length === 1 && formIds.length === 1) employeeScheduledRecord.push(empDataCurr);
                             else {
@@ -480,7 +498,9 @@ Template.emailsettings.onRendered(function () {
                     satAction: '',
                     sunAction: '',
                     beginFromOption: '',
-                    formIDs: ''
+                    formIDs: '',
+                    basedOnType: '',
+                    isEmpty: false
                 }
 
                 let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
@@ -488,7 +508,6 @@ Template.emailsettings.onRendered(function () {
                     employeeScheduledRecord.push(empDataCurr);
                 }
             });
-            console.log(employeeScheduledRecord);
 
             // Initialize Grouped Reports Modal
             const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
@@ -672,108 +691,144 @@ Template.emailsettings.onRendered(function () {
         //$('#'+selectLineID+" .lineAccountName").val('');
     });
 
-    templateObject.saveSchedules = async function(settings) {
-        return new Promise((resolve, reject) => {
-            let i = 0;
-            let savedSchedules = [];
+    templateObject.saveSchedules = async function(settings, isEssential) {
+        return new Promise(async (resolve, reject) => {
             const oldSettings = templateObject.originScheduleData.get();
-            settings.each(async function() {
-                i++;
-                const formID = $(this).attr('data-id');
-                const formName = $(this).find('.sorting_1').text();
-                const frequencyEl = $(this).find('#edtFrequency');
-                const sendEl = $(this).find('#edtBasedOn');
-                let recipientIds = $(this).find('input.edtRecipients').attr('data-ids');
-                let recipients = $(this).find('input.edtRecipients').val();
-                console.log(recipientIds, recipients);
-                // Check if this setting has got recipients
-                if (!!recipients) {
-                    recipientIds = recipientIds.split('; ');
-                    recipients = recipients.split('; ');
-                    for (let i = 0; i < recipientIds.length; i++) {
-                        const starttime = frequencyEl.attr('data-starttime');
-                        const startdate = frequencyEl.attr('data-startdate');
-                        const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
-                        const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+            // Filter old settings according to the types of email setting(Essential one or Automated one)
+            if (!isEssential) {
+                oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.FormID != 54 && oldSetting.fields.FormID != 177 && oldSetting.fields.FormID != 129);
+            }
+            console.log(oldSettings);
+            try {
+                let promise = settings.map(async (setting) => {
+                    const formID = $(setting).attr('data-id');
+                    const formName = $(setting).find('.sorting_1').text();
+                    const frequencyEl = $(setting).find('#edtFrequency');
+                    const sendEl = $(setting).find('#edtBasedOn');
+                    let recipientIds = $(setting).find('input.edtRecipients').attr('data-ids');
+                    let recipients = $(setting).find('input.edtRecipients').val();
+                    console.log(recipientIds, recipients);
+                    // Check if this setting has got recipients
+                    const basedOnTypeText = sendEl.text();
+                    let basedOnType = '';
+                    let isEmpty = false;
+                    if (basedOnTypeText == "On Print") basedOnType = "P";
+                    else if (basedOnTypeText == "On Save") basedOnType = "S";
+                    else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
+                    else if (basedOnTypeText == "On Due Date") basedOnType = "D";
+                    else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
+                    else if (basedOnTypeText == "On Event") {
+                        basedOnType = "E";
+                        const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
+                        console.log(eventRadios);
+                        if (eventRadios == "settingsOnLogon") isEmpty = false;
+                        else isEmpty = true;
+                    }
+                    if (!!recipients) {
+                        recipientIds = recipientIds.split('; ');
+                        recipients = recipients.split('; ');
+                        let saveSettingPromises = recipientIds.map(async (recipientId, index) => {
+                            const starttime = frequencyEl.attr('data-starttime');
+                            const startdate = frequencyEl.attr('data-startdate');
+                            const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
+                            const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+        
+                            const frequencyName = frequencyEl.text();
+                            console.log(formID, recipientId);
+                            let objDetail = {
+                                type: "TReportSchedules",
+                                fields: {
+                                    Active: true,
+                                    BeginFromOption: "",
+                                    ContinueIndefinitely: true,
+                                    EmployeeId: parseInt(recipientId),
+                                    Every: 1,
+                                    EndDate: "",
+                                    FormID: parseInt(formID),
+                                    LastEmaileddate: "",
+                                    MonthDays: 0,
+                                    StartDate: sDate,
+                                    WeekDay: 1,
+                                    NextDueDate: '',
+                                }
+                            };
     
-                        const frequencyName = frequencyEl.text();
-                        console.log(formID, recipientIds[i]);
-                        let objDetail = {
-                            type: "TReportSchedules",
-                            fields: {
-                                Active: true,
-                                ContinueIndefinitely: true,
-                                EmployeeId: parseInt(recipientIds[i]),
-                                Every: 1,
-                                EndDate: "",
-                                FormID: parseInt(formID),
-                                LastEmaileddate: "",
-                                MonthDays: 0,
-                                StartDate: sDate,
-                                WeekDay: 1
+                            if (frequencyName === "Monthly") {
+                                const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
+                                const ofMonths = frequencyEl.attr('data-ofMonths');
+                                // objDetail.fields.ExtraOption = ofMonths;
+                                objDetail.fields.MonthDays = monthDate;
+                                objDetail.fields.Frequency = "M";
+                            } else if (frequencyName === "Weekly") {
+                                const selectdays = frequencyEl.attr("data-selectdays");
+                                const everyweeks = frequencyEl.attr("data-everyweeks");
+                                objDetail.fields.Frequency = "W";
+                                objDetail.fields.WeekDay = parseInt(selectdays);
+                                if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
+                            } else if (frequencyName === "Daily") {
+                                objDetail.fields.Frequency = "D";
+                                const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
+                                const everydays = frequencyEl.attr("data-everydays");
+                                // objDetail.fields.ExtraOption = dailyradiooption;
+                                objDetail.fields.SatAction = "P";
+                                objDetail.fields.SunAction = "P";
+                                objDetail.fields.Every = -1;
+                                if (dailyradiooption === 'dailyWeekdays') {
+                                    objDetail.fields.SatAction = "D";
+                                    objDetail.fields.SunAction = "D";
+                                }
+                                if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
+                            } else if (frequencyName === "One Time Only") {
+                                objDetail.fields.EndDate = sDate;
+                                objDetail.fields.Frequency = "";
+                            } else {
+                                objDetail.fields.Active = false;
                             }
-                        };
 
-                        // if report type is Grouped Reports....
-                        const groupedReports = $('#groupedReportsModal .star:checked');
-                        console.log(groupedReports);
-                        if (frequencyName === "Monthly") {
-                            const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
-                            const ofMonths = frequencyEl.attr('data-ofMonths');
-                            // objDetail.fields.ExtraOption = ofMonths;
-                            objDetail.fields.MonthDays = monthDate;
-                            objDetail.fields.Frequency = "M";
-                        } else if (frequencyName === "Weekly") {
-                            const selectdays = frequencyEl.attr("data-selectdays");
-                            const everyweeks = frequencyEl.attr("data-everyweeks");
-                            objDetail.fields.Frequency = "W";
-                            objDetail.fields.WeekDay = parseInt(selectdays);
-                            if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
-                        } else if (frequencyName === "Daily") {
-                            objDetail.fields.Frequency = "D";
-                            const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
-                            const everydays = frequencyEl.attr("data-everydays");
-                            // objDetail.fields.ExtraOption = dailyradiooption;
-                            objDetail.fields.SatAction = "P";
-                            objDetail.fields.SunAction = "P";
-                            objDetail.fields.Every = -1;
-                            if (dailyradiooption === 'dailyWeekdays') {
-                                objDetail.fields.SatAction = "D";
-                                objDetail.fields.SunAction = "D";
-                            }
-                            if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
-                        } else if (frequencyName === "One Time Only") {
-                            objDetail.fields.EndDate = sDate;
-                            objDetail.fields.Frequency = "";
-                        } else {
-                            objDetail.fields.Active = false;
-                        }
-                        
-                        // Delete EmployeeEmail field
-                        delete objDetail.fields.EmployeeEmail;
+                            if (formID == '1') {
+                                // if report type is Grouped Reports....
+                                const groupedReports = $('#groupedReportsModal .star:checked').map(function() {return $(this)}).get();
+                                let formIDs = [];
+                                groupedReports.map(async (groupedReport) => {
+                                    formIDs.push(parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', '')));
+                                    oldSettings = oldSettings.filter(oldSetting => {
+                                        return oldSetting.fields.FormID != parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''))
+                                        || oldSetting.fields.EmployeeId != parseInt(recipientId);
+                                    });
+                                });
+                                console.log(oldSettings);
 
-                        if (formID == '1') {
-                            let formIDs = [];
-                            for (let j = 0; j < groupedReports.length; j++) {
-                                console.log($(groupedReports[j]).closest('tr'));
-                                objDetail.fields.FormID = parseInt($(groupedReports[j]).closest('tr').attr('id').replace('groupedReports-', ''));
-                                objDetail.fields.ISEmpty = true;
-                                formIDs.push(objDetail.fields.FormID);
-                                
-                                console.log(objDetail);
-                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == objDetail.fields.FormID && setting.fields.EmployeeId == parseInt(recipientIds[i]));
-                                console.log('Old Setting =====> ', oldSetting);
-                                if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+                                // Add synced cron job here
+                                objDetail.fields.FormIDs = formIDs.join(',');
+                                objDetail.fields.FormID = 1;
+                                objDetail.fields.FormName = formName;
+                                objDetail.fields.EmployeeEmail = recipients[index];
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
 
-                                const sendName = sendEl.text();
-                                // const sendTime = sendEl.attr("data-time");
-                                // objDetail.fields.BasedOnType = sendName;
-                                // if (sendTime) objDetail.fields.MsTimeStamp = sendTime;
+                                console.log(objDetail.fields);
 
-                                //TODO: Add employee email field
-                                // objDetail.fields.EmployeeEmail = recipients[i];
+                                //TODO: Set basedon type here
+                                const basedOnTypeText = sendEl.text();
+                                let basedOnType = '';
+                                let isEmpty = false;
+                                if (basedOnTypeText == "On Print") basedOnType = "P";
+                                else if (basedOnTypeText == "On Save") basedOnType = "S";
+                                else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
+                                else if (basedOnTypeText == "On Due Date") basedOnType = "D";
+                                else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
+                                else if (basedOnTypeText == "On Event") {
+                                    basedOnType = "E";
+                                    const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
+                                    console.log(eventRadios);
+                                    if (eventRadios == "settingsOnLogon") isEmpty = false;
+                                    else isEmpty = true;
+                                }
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                    ISEmpty: isEmpty
+                                }));
 
-                                // Get next due date for email scheduling
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
                                         if (error) return reject(error);
@@ -781,89 +836,214 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-                                objDetail.fields.BeginFromOption = "S";
-                                console.log(objDetail);
+                                
+                                Meteor.call('addTask', objDetail.fields);
+                            } else {
+                                const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
+                                oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
+                                if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+    
+                                const nextDueDate = await new Promise((resolve, reject) => {
+                                    Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                        if (error) return reject(error);
+                                        resolve(result);
+                                    });
+                                });
+                                objDetail.fields.NextDueDate = nextDueDate;
+                                
                                 try {
                                     // Save email settings
-                                    const saveResult = await taxRateService.saveScheduleSettings(objDetail);
-                                    console.log(saveResult);
-                                    savedSchedules.push(objDetail);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                } catch (e) {
+                                    await taxRateService.saveScheduleSettings(objDetail);
+                                } catch(e) {
                                     console.log(e);
                                 }
-                            }
-                            // Add synced cron job here
-                            objDetail.fields.FormIDs = formIDs.join(',');
-                            objDetail.fields.FormID = '1';
-                            objDetail.fields.FormName = formName;
-                            objDetail.fields.EmployeeEmail = recipients[i];
-                            console.log(objDetail.fields);
-                            Meteor.call('addTask', objDetail.fields);
-                        } else {
-                            const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == objDetail.fields.FormID && setting.fields.EmployeeId == parseInt(recipientIds[i]));
-                            console.log('Old Setting =====> ', oldSetting);
-                            if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
 
-                            const nextDueDate = await new Promise((resolve, reject) => {
-                                Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
-                                    if (error) return reject(error);
-                                    resolve(result);
-                                });
-                            });
-                            objDetail.fields.NextDueDate = nextDueDate;
-                            console.log(objDetail);
-                            try {
-                                // Save email settings
-                                const saveResult = await taxRateService.saveScheduleSettings(objDetail);
-                                console.log(saveResult);
-                                savedSchedules.push(objDetail);
+                                //TODO: Set basedon type here
+                                localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
+                                    ...objDetail.fields,
+                                    BasedOnType: basedOnType,
+                                    ISEmpty: isEmpty
+                                }));
         
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
-                                objDetail.fields.EmployeeEmail = recipients[i];
-                                console.log(objDetail.fields)
+                                objDetail.fields.EmployeeEmail = recipients[index];
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', objDetail.fields);
-                                $('.fullScreenSpin').css('display', 'none');
-                            } catch (e) {
-                                console.log(e);x
                             }
-                        }
+                        });
+                        await Promise.all(saveSettingPromises);
                     }
-                } else {
-                    // Remove all
+                });
+                savedSchedules = await Promise.all(promise);
+                
+                console.log('Unsaved old settings => ', oldSettings);
+
+                let promise1 = oldSettings.map(async setting => {
+                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54 
+                        || setting.fields.FormID == 177 && setting.fields.FormID == 129)) || (!isEssential
+                        && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
+                        && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
+                        // Remove all
+                        setting.fields.Active = false;
+                        Meteor.call('addTask', setting.fields);
+                        const saveResult = await taxRateService.saveScheduleSettings({
+                            type: "TReportSchedules",
+                            fields: {
+                                Active: false,
+                                ID: setting.fields.ID
+                            }
+                        });
+                        console.log(saveResult);
+                        //TODO: Set basedon type here
+                        localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
+                    }
+                });
+                await Promise.all(promise1);
+                resolve({success: true, message: ''});
+            } catch(error) {
+                console.log(error);
+                if (typeof error !== 'string') error = error.message;
+                resolve({success: false, message: 'Something went wrong. Please try again later.'});
+            }
+        });
+    }
+
+    templateObject.saveGroupedReports = async function() {
+        try {
+            const oldSettings = templateObject.originScheduleData.get();
+            // Filter old settings according to the types of email setting(Essential one or Automated one)
+            // oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.BeginFromOption === "S");
+            const groupedReports = $('#groupedReportsModal .star:checked').map(function() {return $(this)}).get();
+            const formID = $('#automated1').attr('data-id');
+            const frequencyEl = $('#automated1').find('#edtFrequency');
+            const sendEl = $('#automated1').find('#edtBasedOn');
+            let recipientIds = $('#automated1').find('input.edtRecipients').attr('data-ids');
+            if (!!recipientIds) {
+                recipientIds = recipientIds.split('; ');
+                let savePromise = recipientIds.map(async (recipientId) => {
+                    const starttime = frequencyEl.attr('data-starttime');
+                    const startdate = frequencyEl.attr('data-startdate');
+                    const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
+                    const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
+    
+                    const frequencyName = frequencyEl.text();
                     let objDetail = {
                         type: "TReportSchedules",
                         fields: {
-                            Active: false,
+                            Active: true,
+                            BeginFromOption: "",
                             ContinueIndefinitely: true,
-                            EmployeeId: 0,
+                            EmployeeId: parseInt(recipientId),
                             Every: 1,
                             EndDate: "",
                             FormID: parseInt(formID),
                             LastEmaileddate: "",
                             MonthDays: 0,
-                            StartDate: "",
+                            StartDate: sDate,
                             WeekDay: 1,
+                            NextDueDate: '',
                         }
                     };
-                    Meteor.call('addTask', objDetail.fields);
-                }
-            });
-            oldSettings.map(async setting => {
-                let filteredSchedule = savedSchedules.filter(savedSchedule => savedSchedule.fields.FormID == setting.fields.FormID && savedSchedule.EmployeeId == setting.fields.EmployeeId);
-                if (filteredSchedule.length === 0) {
-                    const saveResult = await taxRateService.saveScheduleSettings({
-                        type: "TReportSchedules",
-                        fields: {
-                            Active: false,
-                            ID: setting.fields.ID
+                    console.log("AA", objDetail)
+            
+                    if (frequencyName === "Monthly") {
+                        const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
+                        const ofMonths = frequencyEl.attr('data-ofMonths');
+                        // objDetail.fields.ExtraOption = ofMonths;
+                        objDetail.fields.MonthDays = monthDate;
+                        objDetail.fields.Frequency = "M";
+                    } else if (frequencyName === "Weekly") {
+                        const selectdays = frequencyEl.attr("data-selectdays");
+                        const everyweeks = frequencyEl.attr("data-everyweeks");
+                        objDetail.fields.Frequency = "W";
+                        objDetail.fields.WeekDay = parseInt(selectdays);
+                        if (everyweeks) objDetail.fields.Every = parseInt(everyweeks);
+                    } else if (frequencyName === "Daily") {
+                        objDetail.fields.Frequency = "D";
+                        const dailyradiooption = frequencyEl.attr("data-dailyradiooption");
+                        const everydays = frequencyEl.attr("data-everydays");
+                        // objDetail.fields.ExtraOption = dailyradiooption;
+                        objDetail.fields.SatAction = "P";
+                        objDetail.fields.SunAction = "P";
+                        objDetail.fields.Every = -1;
+                        if (dailyradiooption === 'dailyWeekdays') {
+                            objDetail.fields.SatAction = "D";
+                            objDetail.fields.SunAction = "D";
+                        }
+                        if (dailyradiooption === 'dailyEvery' && everydays) objDetail.fields.Every = parseInt(everydays);
+                    } else if (frequencyName === "One Time Only") {
+                        objDetail.fields.EndDate = sDate;
+                        objDetail.fields.Frequency = "";
+                    } else {
+                        objDetail.fields.Active = false;
+                    }
+                    console.log(objDetail, oldSettings, recipientId)
+                    console.log(groupedReports.length);
+                    let promises = groupedReports.map(async (groupedReport) => {
+                        console.log($(groupedReport).closest('tr').attr('id'));
+                        objDetail.fields.FormID = parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''));
+                        objDetail.fields.ISEmpty = true;
+                        console.log(objDetail);
+                        console.log(oldSettings);
+    
+                        const oldSetting = oldSettings.filter((setting) => {
+                            console.log(setting, $(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''), recipientId)
+                            return setting.fields.FormID == $(groupedReport).closest('tr').attr('id').replace('groupedReports-', '') && setting.fields.EmployeeId == parseInt(recipientId)
+                        });
+                        console.log('---------------------------------------------------',oldSetting)
+                        oldSettings = oldSettings.filter((setting) => {
+                            console.log(setting.fields.FormID != $(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''));
+                            console.log(setting.fields.EmployeeId != parseInt(recipientId));
+                            return setting.fields.FormID != $(groupedReport).closest('tr').attr('id').replace('groupedReports-', '') || setting.fields.EmployeeId != parseInt(recipientId)
+                        });
+                        console.log($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''), parseInt(recipientId))
+                        if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+                        else delete objDetail.fields.ID;
+    
+                        // const sendName = sendEl.text();
+            
+                        //TODO: Add employee email field
+                        // objDetail.fields.EmployeeEmail = recipients[i];
+            
+                        // Get next due date for email scheduling
+                        // const nextDueDate = await new Promise((resolve, reject) => {
+                        //     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                        //         if (error) return reject(error);
+                        //         resolve(result);
+                        //     });
+                        // });
+            
+                        // objDetail.fields.NextDueDate = nextDueDate;
+                        objDetail.fields.BeginFromOption = "S";
+    
+                        // Save email settings
+                        await taxRateService.saveScheduleSettings(objDetail);
+                    });
+                    await Promise.all(promises);
+                    console.log(oldSettings);
+                    let removeSetting = oldSettings.map(async (setting) => {
+                        if (setting.fields.BeginFromOption === "S") {
+                            await taxRateService.saveScheduleSettings({
+                                type: "TReportSchedules",
+                                fields: {
+                                    Active: false,
+                                    ID: setting.fields.ID
+                                }
+                            })
                         }
                     });
-                    console.log(saveResult);
-                }
-            })
-        });
+                    await Promise.all(removeSetting);
+                });
+                await Promise.all(savePromise);
+                return {success: true};
+            } else {
+                return {success: true};
+            }
+        } catch(e) {
+            console.log(e);
+            return {success: false, message: 'Something went wrong. Please try again later.'};
+        }
     }
 });
 
@@ -923,7 +1103,7 @@ Template.emailsettings.events({
         let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
         
         if (radioFrequency == "frequencyMonthly") {
-            const monthDate = $("#sltDay").val();
+            const monthDate = $("#sltDay").val().replace('day', '');
             const ofMonths = '';
             let isFirst = true;
             $(".ofMonthList input[type=checkbox]:checked").each(function() {
@@ -995,107 +1175,73 @@ Template.emailsettings.events({
     },
     'click #emailsetting-essential': async function () {
         const templateObject = Template.instance();
-        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr');
+        const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr').map(function() {return $(this)}).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
-        const saveResult = await templateObject.saveSchedules(essentialSettings);
+        console.log(essentialSettings);
 
-        if (saveResult)
+        const saveResult = await templateObject.saveSchedules(essentialSettings, true);
+        const saveGroupResult = await templateObject.saveGroupedReports();
+
+        console.log(saveResult);
+        console.log(saveGroupResult);
+
+        if (saveResult.success && saveGroupResult.success)
             swal({
                 title: 'Success',
                 text: "Automated Email Settings (Essentials) were scheduled successfully",
                 type: 'success',
                 showCancelButton: false,
                 confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings','_self');
             });
         else 
             swal({
                 title: 'Oooops...',
-                text: 'Something went wrong. Please try again later.',
+                text: 'Something went wrong! Please try again later.',
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings','_self');
             });
         $('.fullScreenSpin').css('display', 'none');
+    },
+    'click #emailsetting-normal': async function() {
+        const templateObject = Template.instance();
+        const normalSettings = $('#tblAutomatedEmails tbody tr').map(function() {return $(this)}).get();
+        $('.fullScreenSpin').css('display', 'inline-block');
 
-        // if (id == "") {
-        //     objDetails = {
-        //         type: "TReportSchedules",
-        //         fields: {
-        //             EmployeeId: employeeID,
-        //             StartDate: date,
-        //             Every: parseInt(every) || 0,
-        //             Frequency: frequency,
-        //             FormID: formId,
-        //             MonthDays: monthDays,
-        //             //NextDueDate: "2022-02-15 00:00:00",
-        //             // SatAction: "D",
-        //             //StartDate: date,
-        //             // SunAction: "A",
-        //             WeekDay: weekDay,
-        //         }
-        //     };
-        // } else {
-        //     objDetails = {
-        //         type: "TReportSchedules",
-        //         fields: {
-        //             ID: parseInt(id) || 0,
-        //             EmployeeId: employeeID,
-        //             StartDate: date,
-        //             Every: parseInt(every) || 0,
-        //             Frequency: frequency,
-        //             FormID: formId,
-        //             MonthDays: monthDays,
-        //             //NextDueDate: "2022-02-15 00:00:00",
-        //             // SatAction: "D",
-        //             //StartDate: date,
-        //             // SunAction: "A",
-        //             WeekDay: weekDay,
-        //         }
-        //     };
+        console.log(normalSettings);
 
-        // }
+        const saveResult = await templateObject.saveSchedules(normalSettings, false);
 
-        // localStorage.setItem('emailsetting-frequency', JSON.stringify(objDetails));
+        console.log(saveResult);
 
-        // taxRateService.saveScheduleSettings(objDetails).then(function (data) {
-        //     // Meteor._reload.reload();    // No reload required here after save frequency.
-        //     $('#frequencyModal').modal('toggle');
-        //     $('.fullScreenSpin').css('display', 'none');
-        // }).catch(function (err) {
-        //     swal({
-        //         title: 'Oooops...',
-        //         text: err,
-        //         type: 'error',
-        //         showCancelButton: false,
-        //         confirmButtonText: 'Try Again'
-        //     }).then((result) => {
-        //         if (result.value) {
-        //             // Meteor._reload.reload();    // No reload required here after save frequency.
-        //         } else if (result.dismiss === 'cancel') { }
-        //     });
-        //     $('.fullScreenSpin').css('display', 'none');
-        // });
+        if (saveResult.success) {
+            swal({
+                title: 'Success',
+                text: 'Normal Email Settings were scheduled successfully',
+                type: 'success',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings','_self');
+            });
+        } else {
+            swal({
+                title: 'Oooops...',
+                text: 'Something went wrong! Please try again later.',
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.open('/emailsettings','_self');
+            });
+        }
 
-        // let tempContainer = [];
-        // Meteor.call('readAllEmailSettings', (error, result) => {
-        //     if (error) {
-        //         console.log(error);
-        //     } else {
-        //         result.forEach(elem => (tempContainer.push(elem)));
-        //         console.log(tempContainer);
-        //     }
-        // });
-        // let taxRateService = new TaxRateService();
-        // taxRateService.getScheduleSettings().then(function (data) {
-        //     let empData = data.treportschedules;
-        //     console.log(empData);
-        // })
-        // This is for test. Not required
-        // Meteor.call('deleteAllEmailSettings', (error, result) => {
-
-        // });
-
+        $('.fullScreenSpin').css('display', 'none');
     },
     'click .chkBoxDays': function (event) {
         var checkboxes = document.querySelectorAll('.chkBoxDays');
@@ -1293,6 +1439,8 @@ Template.emailsettings.events({
         else if (basedOnType === "On Event") {
             $('#onEventSettings').css('display', 'block');
             $('#basedOnEvent').prop('checked', true);
+            const isInOut = $(event.target).attr('data-inout');
+            if (isInOut == "true") $('#settingsOnLogout').prop('checked', true);
         }
         $("#basedOnModal").modal('toggle');
     },
@@ -1357,6 +1505,17 @@ Template.emailsettings.events({
         } else if (radioBasedOn == "basedOnOutstanding") {
             setTimeout(function () {
                 $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').html("If Outstanding");
+                $("#basedOnModal").modal('toggle');
+            }, 100);
+        } else if (radioBasedOn == "basedOnEvent") {
+            setTimeout(function () {
+                $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').html("On Event");
+                const logInOrOut = $('#onEventSettings input[type=radio]:checked').attr('id');
+                if (logInOrOut == 'settingsOnLogon') {
+                    $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').attr('data-inout', 'in');
+                } else {
+                    $('.dnd-moved[data-id="' + selectedBasedOnId + '"] #edtBasedOn').attr('data-inout', 'out');
+                }
                 $("#basedOnModal").modal('toggle');
             }, 100);
         } else {
