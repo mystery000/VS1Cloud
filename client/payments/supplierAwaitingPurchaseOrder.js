@@ -91,6 +91,8 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
     templateObject.resetData = function (dataVal) {
       if (FlowRouter.current().queryParams.overdue) {
         window.open('/supplierawaitingpurchaseorder?overdue=true&page=last','_self');
+      }else if (FlowRouter.current().queryParams.type) {
+        window.open('/supplierawaitingpurchaseorder?type=true&page=last','_self');
       }else{
         window.open('/supplierawaitingpurchaseorder?page=last', '_self');
       }
@@ -123,7 +125,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                            totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
                         }
                         let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
-                        if (data.tbillreport[i].Balance != 0) {
+                        //if (data.tbillreport[i].Balance != 0) {
                             if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                                 var dataList = {
                                     id: data.tbillreport[i].PurchaseOrderID || '',
@@ -149,7 +151,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     }
                                 }
                             }
-                        }
+                        //}
                     }
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
@@ -760,7 +762,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
                     let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
                     let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
-                    if (data.tbillreport[i].Balance != 0) {
+                    //if (data.tbillreport[i].Balance != 0) {
                         if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                             var dataList = {
                                 id: data.tbillreport[i].PurchaseOrderID || '',
@@ -786,7 +788,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 }
                             }
                         }
-                    }
+                    //}
                 }
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
@@ -1077,8 +1079,13 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        getVS1Data('TOverdueAwaitingSupplierPayment1').then(function (dataObject) {
+        getVS1Data('TOverdueAwaitingSupplierPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
+              if (FlowRouter.current().queryParams.overdue) {
+
+              }else if (FlowRouter.current().queryParams.type) {
+                toDate = "PO";
+              }
                 sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (data) {
                     let lineItems = [];
                     let lineItemObj = {};
@@ -1088,7 +1095,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
-                        FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
+                        if (FlowRouter.current().queryParams.overdue) {
+                          FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
+                        }else if (FlowRouter.current().queryParams.type) {
+                          FlowRouter.go('/supplierawaitingpurchaseorder?type=true');
+                        }
                     } else {
                         $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                         $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
@@ -1111,7 +1122,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                            totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
                         }
                         let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
-                        if (data.tbillreport[i].Balance != 0) {
+                        //if (data.tbillreport[i].Balance != 0) {
                             if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                                 var dataList = {
                                     id: data.tbillreport[i].PurchaseOrderID || '',
@@ -1137,7 +1148,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     //}
                                 //}
                             }
-                        }
+                        //}
                     }
                     templateObject.datatablerecords.set(dataTableList);
                     if (templateObject.datatablerecords.get()) {
@@ -1255,7 +1266,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 .on('click', function () {
                                     $('.fullScreenSpin').css('display', 'inline-block');
                                     let dataLenght = oSettings._iDisplayLength;
+                                    if (FlowRouter.current().queryParams.overdue) {
 
+                                    }else if (FlowRouter.current().queryParams.type) {
+                                      toDate = "PO";
+                                    }
                                       sideBarService.getAllOverDueAwaitingSupplierPayment(toDate, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                           getVS1Data('TOverdueAwaitingSupplierPayment').then(function (dataObjectold) {
                                               if (dataObjectold.length == 0) {}
@@ -1290,7 +1305,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                             },
                              "fnInitComplete": function () {
                                let urlParametersPage = FlowRouter.current().queryParams.page;
-                               if (urlParametersPage || FlowRouter.current().queryParams.overdue) {
+                               if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
                                    this.fnPageChange('last');
                                }
                                  $("<button class='btn btn-primary btnRefreshSupplierAwaiting' type='button' id='btnRefreshSupplierAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierAwaitingPO_filter");
@@ -1379,7 +1394,12 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
+                    if (FlowRouter.current().queryParams.overdue) {
+                      FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true&page=last');
+                    }else if (FlowRouter.current().queryParams.type) {
+                      FlowRouter.go('/supplierawaitingpurchaseorder?type=true&page=last');
+                    }
+
                 } else {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
@@ -1402,7 +1422,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                        totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
                     }
                     let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
-                    if (data.tbillreport[i].Balance != 0) {
+                    //if (data.tbillreport[i].Balance != 0) {
                         if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                             var dataList = {
                                 id: data.tbillreport[i].PurchaseOrderID || '',
@@ -1428,7 +1448,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 //}
                             //}
                         }
-                    }
+                    //}
                 }
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
@@ -1546,7 +1566,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                             .on('click', function () {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 let dataLenght = oSettings._iDisplayLength;
+                                if (FlowRouter.current().queryParams.overdue) {
 
+                                }else if (FlowRouter.current().queryParams.type) {
+                                  toDate = "PO";
+                                }
                                   sideBarService.getAllOverDueAwaitingSupplierPayment(toDate, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                       getVS1Data('TOverdueAwaitingSupplierPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
@@ -1581,7 +1605,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                         },
                          "fnInitComplete": function () {
                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                           if (urlParametersPage || FlowRouter.current().queryParams.overdue) {
+                           if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
                                this.fnPageChange('last');
                            }
                              $("<button class='btn btn-primary btnRefreshSupplierAwaiting' type='button' id='btnRefreshSupplierAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierAwaitingPO_filter");
@@ -1661,6 +1685,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 });
             }
         }).catch(function (err) {
+          if (FlowRouter.current().queryParams.overdue) {
+
+          }else if (FlowRouter.current().queryParams.type) {
+            toDate = "PO";
+          }
           sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
@@ -1670,7 +1699,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
               if (data.Params.IgnoreDates == true) {
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
+                  if (FlowRouter.current().queryParams.overdue) {
+                    FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
+                  }else if (FlowRouter.current().queryParams.type) {
+                    FlowRouter.go('/supplierawaitingpurchaseorder?type=true');
+                  }
               } else {
                   $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                   $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
@@ -1693,7 +1726,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                      totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
                   }
                   let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
-                  if (data.tbillreport[i].Balance != 0) {
+                  //if (data.tbillreport[i].Balance != 0) {
                       if ((data.tbillreport[i].Type == "Purchase Order") || (data.tbillreport[i].Type == "Bill") || (data.tbillreport[i].Type == "Credit")) {
                           var dataList = {
                               id: data.tbillreport[i].PurchaseOrderID || '',
@@ -1719,7 +1752,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                               //}
                           //}
                       }
-                  }
+                  //}
               }
               templateObject.datatablerecords.set(dataTableList);
               if (templateObject.datatablerecords.get()) {
@@ -1837,7 +1870,11 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                           .on('click', function () {
                               $('.fullScreenSpin').css('display', 'inline-block');
                               let dataLenght = oSettings._iDisplayLength;
+                              if (FlowRouter.current().queryParams.overdue) {
 
+                              }else if (FlowRouter.current().queryParams.type) {
+                                toDate = "PO";
+                              }
                                 sideBarService.getAllOverDueAwaitingSupplierPayment(toDate, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                     getVS1Data('TOverdueAwaitingSupplierPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
@@ -1872,7 +1909,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                       },
                        "fnInitComplete": function () {
                          let urlParametersPage = FlowRouter.current().queryParams.page;
-                         if (urlParametersPage || FlowRouter.current().queryParams.overdue) {
+                         if (urlParametersPage || FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
                              this.fnPageChange('last');
                          }
                            $("<button class='btn btn-primary btnRefreshSupplierAwaiting' type='button' id='btnRefreshSupplierAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSupplierAwaitingPO_filter");
@@ -1959,8 +1996,15 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
         });
     }
 
-    if (FlowRouter.current().queryParams.overdue) {
-      templateObject.getAllOverDueSupplierPaymentData();
+    if (FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
+      if(FlowRouter.current().queryParams.page){
+
+      }else{
+      addVS1Data('TOverdueAwaitingSupplierPayment', []);
+      }
+      setTimeout(function () {
+        templateObject.getAllOverDueSupplierPaymentData();
+      }, 500);
     }else{
       templateObject.getAllSupplierPaymentData();
     }
@@ -2438,6 +2482,11 @@ Template.supplierawaitingpurchaseorder.events({
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
         sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function (datareturn) {
+              if (FlowRouter.current().queryParams.overdue) {
+
+              }else if (FlowRouter.current().queryParams.type) {
+                toDate = "PO";
+              }
               sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                   addVS1Data('TOverdueAwaitingSupplierPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
                      Meteor._reload.reload();
@@ -2448,6 +2497,11 @@ Template.supplierawaitingpurchaseorder.events({
                  Meteor._reload.reload();
               });
             }).catch(function (err) {
+              if (FlowRouter.current().queryParams.overdue) {
+
+              }else if (FlowRouter.current().queryParams.type) {
+                toDate = "PO";
+              }
               sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                   addVS1Data('TOverdueAwaitingSupplierPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
                      Meteor._reload.reload();

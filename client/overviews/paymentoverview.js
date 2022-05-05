@@ -763,9 +763,6 @@ Template.paymentoverview.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tpaymentlist;
-
-                console.log(data);
-
                 if (data.Params.IgnoreDates == true) {
                     FlowRouter.go('/paymentoverview?ignoredate=true');
                     $('#dateFrom').attr('readonly', true);

@@ -92,7 +92,16 @@ Template.quoteslist.onRendered(function() {
     };
 
     templateObject.resetData = function (dataVal) {
-        window.open('/quoteslist?page=last','_self');
+      if(FlowRouter.current().queryParams.converted){
+        if(FlowRouter.current().queryParams.converted === true) {
+          window.open('/quoteslist?converted=true&page=last','_self');
+        }else{
+          window.open('/quoteslist?converted=false&page=last','_self');
+        }
+      }else {
+        window.open('/quoteslist?page=last', '_self');
+      }
+
     }
 
     templateObject.getAllQuoteData = function () {
@@ -433,7 +442,6 @@ Template.quoteslist.onRendered(function() {
             }else{
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tquotelist;
-
                 let lineItems = [];
                 let lineItemObj = {};
                 $('.fullScreenSpin').css('display','none');
@@ -1058,9 +1066,1000 @@ Template.quoteslist.onRendered(function() {
               // Meteor._reload.reload();
           });
         });
+    };
+
+    templateObject.getAllQuoteFilterData = function (converted) {
+
+      var currentBeginDate = new Date();
+      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+      let fromDateMonth = (currentBeginDate.getMonth() + 1);
+      let fromDateDay = currentBeginDate.getDate();
+      if ((currentBeginDate.getMonth() + 1) < 10) {
+          fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+      } else {
+          fromDateMonth = (currentBeginDate.getMonth() + 1);
+      }
+
+      if (currentBeginDate.getDate() < 10) {
+          fromDateDay = "0" + currentBeginDate.getDate();
+      }
+      var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+
+      getVS1Data('TQuoteFilterList').then(function (dataObject) {
+            if(dataObject.length == 0){
+                sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    addVS1Data('TQuoteFilterList',JSON.stringify(data));
+                    if (data.Params.IgnoreDates == true) {
+                        $('#dateFrom').attr('readonly', true);
+                        $('#dateTo').attr('readonly', true);
+                        if (FlowRouter.current().queryParams.converted == true) {
+                          FlowRouter.go('/quoteslist?converted=true');
+                        }else {
+                          FlowRouter.go('/quoteslist?converted=false');
+                        }
+
+                    } else {
+                        $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                        $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                    }
+                    for(let i=0; i<data.tquotelist.length; i++){
+                        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmount)|| 0.00;
+                        let totalTax = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalTax) || 0.00;
+                        // Currency+''+data.tinvoice[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmountInc)|| 0.00;
+                        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalPaid)|| 0.00;
+                        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalBalance)|| 0.00;
+                        let salestatus = data.tquotelist[i].QuoteStatus || '';
+                        if(data.tquotelist[i].Deleted == true){
+                          salestatus = "Deleted";
+                        }
+                        var dataList = {
+                            id: data.tquotelist[i].SaleID || '',
+                            employee:data.tquotelist[i].EmployeeName || '',
+                            sortdate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("YYYY/MM/DD"): data.tquotelist[i].SaleDate,
+                            saledate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("DD/MM/YYYY"): data.tquotelist[i].SaleDate,
+                            duedate: data.tquotelist[i].DueDate !=''? moment(data.tquotelist[i].DueDate).format("DD/MM/YYYY"): data.tquotelist[i].DueDate,
+                            customername: data.tquotelist[i].CustomerName || '',
+                            totalamountex: totalAmountEx || 0.00,
+                            totaltax: totalTax || 0.00,
+                            totalamount: totalAmount || 0.00,
+                            totalpaid: totalPaid || 0.00,
+                            totaloustanding: totalOutstanding || 0.00,
+                            salestatus: salestatus || '',
+                            custfield1: data.tquotelist[i].SaleCustField1 || '',
+                            custfield2: data.tquotelist[i].SaleCustField2 || '',
+                            comments: data.tquotelist[i].Comments || '',
+                            isConverted: data.tquotelist[i].Converted
+                        };
+                        //if(data.tquoteex[i].fields.CustomerName != ''){
+                            dataTableList.push(dataList);
+                        //}
+
+                        // splashArray.push(dataList);
+                        //}
+                    }
+                    templateObject.datatablerecords.set(dataTableList);
+                    if(templateObject.datatablerecords.get()){
+
+                        Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                            if(error){
+
+                            }else{
+                                if(result){
+                                    for (let i = 0; i < result.customFields.length; i++) {
+                                        let customcolumn = result.customFields;
+                                        let columData = customcolumn[i].label;
+                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                        let hiddenColumn = customcolumn[i].hidden;
+                                        let columnClass = columHeaderUpdate.split('.')[1];
+                                        let columnWidth = customcolumn[i].width;
+                                        let columnindex = customcolumn[i].index + 1;
+
+                                        if(hiddenColumn == true){
+
+                                            $("."+columnClass+"").addClass('hiddenColumn');
+                                            $("."+columnClass+"").removeClass('showColumn');
+                                        }else if(hiddenColumn == false){
+                                            $("."+columnClass+"").removeClass('hiddenColumn');
+                                            $("."+columnClass+"").addClass('showColumn');
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        });
+
+
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    }
+
+                    $('.fullScreenSpin').css('display','none');
+
+                    setTimeout(function () {
+                        $('#tblquotelist').DataTable({
+                            columnDefs: [
+                                {type: 'date', targets: 0}
+                            ],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            buttons: [
+                                {
+                                    extend: 'excelHtml5',
+                                    text: '',
+                                    download: 'open',
+                                    className: "btntabletocsv hiddenColumn",
+                                    filename: "Quote List - "+ moment().format(),
+                                    orientation:'portrait',
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        format: {
+                                            body: function ( data, row, column ) {
+                                                if(data.includes("</span>")){
+                                                    var res = data.split("</span>");
+                                                    data = res[1];
+                                                }
+
+                                                return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                            }
+                                        }
+                                    }
+                                },{
+                                    extend: 'print',
+                                    download: 'open',
+                                    className: "btntabletopdf hiddenColumn",
+                                    text: '',
+                                    title: 'Quote List',
+                                    filename: "Quote List - "+ moment().format(),
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        stripHtml: false
+                                    }
+                                }],
+                            // bStateSave: true,
+                            // rowId: 0,
+                            pageLength: initialDatatableLoad,
+                            "bLengthChange": false,
+                            info: true,
+                            responsive: true,
+                            "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                            action: function () {
+                                $('#tblquotelist').DataTable().ajax.reload();
+                            },
+                            "fnDrawCallback": function (oSettings) {
+                              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                              $('.paginate_button.page-item').removeClass('disabled');
+                              $('#tblquotelist_ellipsis').addClass('disabled');
+
+                              if(oSettings._iDisplayLength == -1){
+                                if(oSettings.fnRecordsDisplay() > 150){
+                                  $('.paginate_button.page-item.previous').addClass('disabled');
+                                  $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                              }else{
+
+                              }
+                              if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+                                  $('.paginate_button.page-item.next').addClass('disabled');
+                              }
+
+                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                               .on('click', function(){
+                                 $('.fullScreenSpin').css('display','inline-block');
+                                 let dataLenght = oSettings._iDisplayLength;
+                                 var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                 var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                 if(checkurlIgnoreDate == 'true'){
+                                   sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                     getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                                       if(dataObjectold.length == 0){
+
+                                       }else{
+                                         let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                         var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                         let objCombineData = {
+                                           Params: dataOld.Params,
+                                           tquotelist:thirdaryData
+                                         }
+
+
+                                           addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                             templateObject.resetData(objCombineData);
+                                           $('.fullScreenSpin').css('display','none');
+                                           }).catch(function (err) {
+                                           $('.fullScreenSpin').css('display','none');
+                                           });
+
+                                       }
+                                      }).catch(function (err) {
+
+                                      });
+
+                                   }).catch(function(err) {
+                                     $('.fullScreenSpin').css('display','none');
+                                   });
+                                 }else{
+                                 sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                   getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                                     if(dataObjectold.length == 0){
+
+                                     }else{
+                                       let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                       var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                       let objCombineData = {
+                                         Params: dataOld.Params,
+                                         tquotelist:thirdaryData
+                                       }
+
+
+                                         addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                           templateObject.resetData(objCombineData);
+                                         $('.fullScreenSpin').css('display','none');
+                                         }).catch(function (err) {
+                                         $('.fullScreenSpin').css('display','none');
+                                         });
+
+                                     }
+                                    }).catch(function (err) {
+
+                                    });
+
+                                 }).catch(function(err) {
+                                   $('.fullScreenSpin').css('display','none');
+                                 });
+                               }
+                               });
+
+                                setTimeout(function () {
+                                    MakeNegative();
+                                }, 100);
+                            },
+                             "fnInitComplete": function () {
+
+                               let urlParametersPage = FlowRouter.current().queryParams.page;
+                               if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                                   this.fnPageChange('last');
+                               }
+                             $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
+                             $('.myvarFilterForm').appendTo(".colDateFilter");
+                         },
+                         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                           let countTableData = data.Params.Count || 0; //get count from API data
+
+                             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                         }
+
+                        }).on('page', function () {
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                            let draftRecord = templateObject.datatablerecords.get();
+                            templateObject.datatablerecords.set(draftRecord);
+                        }).on('column-reorder', function () {
+
+                        }).on( 'length.dt', function ( e, settings, len ) {
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        });
+
+                        // $('#tblquotelist').DataTable().column( 0 ).visible( true );
+                        $('.fullScreenSpin').css('display','none');
+
+
+                    }, 0);
+
+                    var columns = $('#tblquotelist th');
+                    let sTible = "";
+                    let sWidth = "";
+                    let sIndex = "";
+                    let sVisible = "";
+                    let columVisible = false;
+                    let sClass = "";
+                    $.each(columns, function(i,v) {
+                        if(v.hidden == false){
+                            columVisible =  true;
+                        }
+                        if((v.className.includes("hiddenColumn"))){
+                            columVisible = false;
+                        }
+                        sWidth = v.style.width.replace('px', "");
+
+                        let datatablerecordObj = {
+                            sTitle: v.innerText || '',
+                            sWidth: sWidth || '',
+                            sIndex: v.cellIndex || '',
+                            sVisible: columVisible || false,
+                            sClass: v.className || ''
+                        };
+                        tableHeaderList.push(datatablerecordObj);
+                    });
+                    templateObject.tableheaderrecords.set(tableHeaderList);
+                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                    $('#tblquotelist tbody').on( 'click', 'tr', function () {
+                        var listData = $(this).closest('tr').attr('id');
+                        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+                        if(listData){
+                          if(checkDeleted == "Deleted"){
+                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                          }else{
+                            FlowRouter.go('/quotecard?id=' + listData);
+                          }
+                        }
+                    });
+
+                }).catch(function (err) {
+                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                    $('.fullScreenSpin').css('display','none');
+                    // Meteor._reload.reload();
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tquotelist;
+                let lineItems = [];
+                let lineItemObj = {};
+                $('.fullScreenSpin').css('display','none');
+                if (data.Params.IgnoreDates == true) {
+                    $('#dateFrom').attr('readonly', true);
+                    $('#dateTo').attr('readonly', true);
+                    if (FlowRouter.current().queryParams.converted == true) {
+                      FlowRouter.go('/quoteslist?converted=true&page=last');
+                    }else {
+                      FlowRouter.go('/quoteslist?converted=false&page=last');
+                    }
+                } else {
+                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                }
+                for(let i=0; i<data.tquotelist.length; i++){
+                    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmount)|| 0.00;
+                    let totalTax = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalTax) || 0.00;
+                    // Currency+''+data.tinvoice[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmountInc)|| 0.00;
+                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalPaid)|| 0.00;
+                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalBalance)|| 0.00;
+                    let salestatus = data.tquotelist[i].QuoteStatus || '';
+                    if(data.tquotelist[i].Deleted == true){
+                      salestatus = "Deleted";
+                    }
+                    var dataList = {
+                        id: data.tquotelist[i].SaleID || '',
+                        employee:data.tquotelist[i].EmployeeName || '',
+                        sortdate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("YYYY/MM/DD"): data.tquotelist[i].SaleDate,
+                        saledate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("DD/MM/YYYY"): data.tquotelist[i].SaleDate,
+                        duedate: data.tquotelist[i].DueDate !=''? moment(data.tquotelist[i].DueDate).format("DD/MM/YYYY"): data.tquotelist[i].DueDate,
+                        customername: data.tquotelist[i].CustomerName || '',
+                        totalamountex: totalAmountEx || 0.00,
+                        totaltax: totalTax || 0.00,
+                        totalamount: totalAmount || 0.00,
+                        totalpaid: totalPaid || 0.00,
+                        totaloustanding: totalOutstanding || 0.00,
+                        salestatus: salestatus || '',
+                        custfield1: data.tquotelist[i].SaleCustField1 || '',
+                        custfield2: data.tquotelist[i].SaleCustField2 || '',
+                        comments: data.tquotelist[i].Comments || '',
+                        isConverted: data.tquotelist[i].Converted
+                    };
+                    //if(data.tquoteex[i].fields.CustomerName != ''){
+                        dataTableList.push(dataList);
+                    //}
+
+                    // splashArray.push(dataList);
+                    //}
+                }
+                templateObject.datatablerecords.set(dataTableList);
+                if(templateObject.datatablerecords.get()){
+
+                    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                        if(error){
+
+                        }else{
+                            if(result){
+                                for (let i = 0; i < result.customFields.length; i++) {
+                                    let customcolumn = result.customFields;
+                                    let columData = customcolumn[i].label;
+                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                    let hiddenColumn = customcolumn[i].hidden;
+                                    let columnClass = columHeaderUpdate.split('.')[1];
+                                    let columnWidth = customcolumn[i].width;
+                                    let columnindex = customcolumn[i].index + 1;
+
+                                    if(hiddenColumn == true){
+
+                                        $("."+columnClass+"").addClass('hiddenColumn');
+                                        $("."+columnClass+"").removeClass('showColumn');
+                                    }else if(hiddenColumn == false){
+                                        $("."+columnClass+"").removeClass('hiddenColumn');
+                                        $("."+columnClass+"").addClass('showColumn');
+                                    }
+
+                                }
+                            }
+
+                        }
+                    });
+
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                }
+
+                $('.fullScreenSpin').css('display','none');
+
+                setTimeout(function () {
+                    $('#tblquotelist').DataTable({
+                        columnDefs: [
+                            {type: 'date', targets: 0}
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                text: '',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "Quote List - "+ moment().format(),
+                                orientation:'portrait',
+                                exportOptions: {
+                                    columns: ':visible',
+                                    format: {
+                                        body: function ( data, row, column ) {
+                                            if(data.includes("</span>")){
+                                                var res = data.split("</span>");
+                                                data = res[1];
+                                            }
+
+                                            return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                        }
+                                    }
+                                }
+                            },{
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'Quote List',
+                                filename: "Quote List - "+ moment().format(),
+                                exportOptions: {
+                                    columns: ':visible',
+                                    stripHtml: false
+                                }
+                            }],
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialDatatableLoad,
+                        "bLengthChange": false,
+                        info: true,
+                        responsive: true,
+                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                        action: function () {
+                            $('#tblquotelist').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                          $('.paginate_button.page-item').removeClass('disabled');
+                          $('#tblquotelist_ellipsis').addClass('disabled');
+
+                          if(oSettings._iDisplayLength == -1){
+                            if(oSettings.fnRecordsDisplay() > 150){
+                              $('.paginate_button.page-item.previous').addClass('disabled');
+                              $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                          }else{
+
+                          }
+                          if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+                              $('.paginate_button.page-item.next').addClass('disabled');
+                          }
+
+                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                           .on('click', function(){
+                             $('.fullScreenSpin').css('display','inline-block');
+                             let dataLenght = oSettings._iDisplayLength;
+                             var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                             var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                             let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                             let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                             if(checkurlIgnoreDate == 'true'){
+                               sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                 getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                                   if(dataObjectold.length == 0){
+
+                                   }else{
+                                     let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                     var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                     let objCombineData = {
+                                       Params: dataOld.Params,
+                                       tquotelist:thirdaryData
+                                     }
+
+
+                                       addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                         templateObject.resetData(objCombineData);
+                                       $('.fullScreenSpin').css('display','none');
+                                       }).catch(function (err) {
+                                       $('.fullScreenSpin').css('display','none');
+                                       });
+
+                                   }
+                                  }).catch(function (err) {
+
+                                  });
+
+                               }).catch(function(err) {
+                                 $('.fullScreenSpin').css('display','none');
+                               });
+                             }else{
+                             sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                               getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                                 if(dataObjectold.length == 0){
+
+                                 }else{
+                                   let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                   let objCombineData = {
+                                     Params: dataOld.Params,
+                                     tquotelist:thirdaryData
+                                   }
+
+
+                                     addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                       templateObject.resetData(objCombineData);
+                                     $('.fullScreenSpin').css('display','none');
+                                     }).catch(function (err) {
+                                     $('.fullScreenSpin').css('display','none');
+                                     });
+
+                                 }
+                                }).catch(function (err) {
+
+                                });
+
+                             }).catch(function(err) {
+                               $('.fullScreenSpin').css('display','none');
+                             });
+                           }
+                           });
+
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                         "fnInitComplete": function () {
+
+                           let urlParametersPage = FlowRouter.current().queryParams.page;
+                           if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                               this.fnPageChange('last');
+                           }
+                         $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
+                         $('.myvarFilterForm').appendTo(".colDateFilter");
+                     },
+                     "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                       let countTableData = data.Params.Count || 0; //get count from API data
+
+                         return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                     }
+
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                        let draftRecord = templateObject.datatablerecords.get();
+                        templateObject.datatablerecords.set(draftRecord);
+                    }).on('column-reorder', function () {
+
+                    }).on( 'length.dt', function ( e, settings, len ) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+
+                    // $('#tblquotelist').DataTable().column( 0 ).visible( true );
+                    $('.fullScreenSpin').css('display','none');
+
+
+                }, 0);
+
+                var columns = $('#tblquotelist th');
+                let sTible = "";
+                let sWidth = "";
+                let sIndex = "";
+                let sVisible = "";
+                let columVisible = false;
+                let sClass = "";
+                $.each(columns, function(i,v) {
+                    if(v.hidden == false){
+                        columVisible =  true;
+                    }
+                    if((v.className.includes("hiddenColumn"))){
+                        columVisible = false;
+                    }
+                    sWidth = v.style.width.replace('px', "");
+
+                    let datatablerecordObj = {
+                        sTitle: v.innerText || '',
+                        sWidth: sWidth || '',
+                        sIndex: v.cellIndex || '',
+                        sVisible: columVisible || false,
+                        sClass: v.className || ''
+                    };
+                    tableHeaderList.push(datatablerecordObj);
+                });
+                templateObject.tableheaderrecords.set(tableHeaderList);
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                $('#tblquotelist tbody').on( 'click', 'tr', function () {
+                    var listData = $(this).closest('tr').attr('id');
+                    var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+                    if(listData){
+                      if(checkDeleted == "Deleted"){
+                        swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                      }else{
+                        FlowRouter.go('/quotecard?id=' + listData);
+                      }
+                    }
+                });
+            }
+        }).catch(function (err) {
+          sideBarService.getAllTQuoteListFilterData(converted,prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              let lineItems = [];
+              let lineItemObj = {};
+              addVS1Data('TQuoteFilterList',JSON.stringify(data));
+              if (data.Params.IgnoreDates == true) {
+                  $('#dateFrom').attr('readonly', true);
+                  $('#dateTo').attr('readonly', true);
+                  if (FlowRouter.current().queryParams.converted == true) {
+                    FlowRouter.go('/quoteslist?converted=true');
+                  }else {
+                    FlowRouter.go('/quoteslist?converted=false');
+                  }
+              } else {
+                  $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                  $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+              }
+              for(let i=0; i<data.tquotelist.length; i++){
+                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmount)|| 0.00;
+                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalTax) || 0.00;
+                  // Currency+''+data.tinvoice[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalAmountInc)|| 0.00;
+                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalPaid)|| 0.00;
+                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tquotelist[i].TotalBalance)|| 0.00;
+                  let salestatus = data.tquotelist[i].QuoteStatus || '';
+                  if(data.tquotelist[i].Deleted == true){
+                    salestatus = "Deleted";
+                  }
+                  var dataList = {
+                      id: data.tquotelist[i].SaleID || '',
+                      employee:data.tquotelist[i].EmployeeName || '',
+                      sortdate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("YYYY/MM/DD"): data.tquotelist[i].SaleDate,
+                      saledate: data.tquotelist[i].SaleDate !=''? moment(data.tquotelist[i].SaleDate).format("DD/MM/YYYY"): data.tquotelist[i].SaleDate,
+                      duedate: data.tquotelist[i].DueDate !=''? moment(data.tquotelist[i].DueDate).format("DD/MM/YYYY"): data.tquotelist[i].DueDate,
+                      customername: data.tquotelist[i].CustomerName || '',
+                      totalamountex: totalAmountEx || 0.00,
+                      totaltax: totalTax || 0.00,
+                      totalamount: totalAmount || 0.00,
+                      totalpaid: totalPaid || 0.00,
+                      totaloustanding: totalOutstanding || 0.00,
+                      salestatus: salestatus || '',
+                      custfield1: data.tquotelist[i].SaleCustField1 || '',
+                      custfield2: data.tquotelist[i].SaleCustField2 || '',
+                      comments: data.tquotelist[i].Comments || '',
+                      isConverted: data.tquotelist[i].Converted
+                  };
+                  //if(data.tquoteex[i].fields.CustomerName != ''){
+                      dataTableList.push(dataList);
+                  //}
+
+                  // splashArray.push(dataList);
+                  //}
+              }
+              templateObject.datatablerecords.set(dataTableList);
+              if(templateObject.datatablerecords.get()){
+
+                  Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblquotelist', function(error, result){
+                      if(error){
+
+                      }else{
+                          if(result){
+                              for (let i = 0; i < result.customFields.length; i++) {
+                                  let customcolumn = result.customFields;
+                                  let columData = customcolumn[i].label;
+                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                                  let hiddenColumn = customcolumn[i].hidden;
+                                  let columnClass = columHeaderUpdate.split('.')[1];
+                                  let columnWidth = customcolumn[i].width;
+                                  let columnindex = customcolumn[i].index + 1;
+
+                                  if(hiddenColumn == true){
+
+                                      $("."+columnClass+"").addClass('hiddenColumn');
+                                      $("."+columnClass+"").removeClass('showColumn');
+                                  }else if(hiddenColumn == false){
+                                      $("."+columnClass+"").removeClass('hiddenColumn');
+                                      $("."+columnClass+"").addClass('showColumn');
+                                  }
+
+                              }
+                          }
+
+                      }
+                  });
+
+
+                  setTimeout(function () {
+                      MakeNegative();
+                  }, 100);
+              }
+
+              $('.fullScreenSpin').css('display','none');
+
+              setTimeout(function () {
+                  $('#tblquotelist').DataTable({
+                      columnDefs: [
+                          {type: 'date', targets: 0}
+                      ],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
+                      "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      buttons: [
+                          {
+                              extend: 'excelHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "Quote List - "+ moment().format(),
+                              orientation:'portrait',
+                              exportOptions: {
+                                  columns: ':visible',
+                                  format: {
+                                      body: function ( data, row, column ) {
+                                          if(data.includes("</span>")){
+                                              var res = data.split("</span>");
+                                              data = res[1];
+                                          }
+
+                                          return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                      }
+                                  }
+                              }
+                          },{
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'Quote List',
+                              filename: "Quote List - "+ moment().format(),
+                              exportOptions: {
+                                  columns: ':visible',
+                                  stripHtml: false
+                              }
+                          }],
+                      // bStateSave: true,
+                      // rowId: 0,
+                      pageLength: initialDatatableLoad,
+                      "bLengthChange": false,
+                      info: true,
+                      responsive: true,
+                      "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                      action: function () {
+                          $('#tblquotelist').DataTable().ajax.reload();
+                      },
+                      "fnDrawCallback": function (oSettings) {
+                        let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                        $('.paginate_button.page-item').removeClass('disabled');
+                        $('#tblquotelist_ellipsis').addClass('disabled');
+
+                        if(oSettings._iDisplayLength == -1){
+                          if(oSettings.fnRecordsDisplay() > 150){
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                          }
+                        }else{
+
+                        }
+                        if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+
+                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                         .on('click', function(){
+                           $('.fullScreenSpin').css('display','inline-block');
+                           let dataLenght = oSettings._iDisplayLength;
+                           var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                           var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                           let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                           let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                           if(checkurlIgnoreDate == 'true'){
+                             sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                               getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                                 if(dataObjectold.length == 0){
+
+                                 }else{
+                                   let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                   let objCombineData = {
+                                     Params: dataOld.Params,
+                                     tquotelist:thirdaryData
+                                   }
+
+
+                                     addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                       templateObject.resetData(objCombineData);
+                                     $('.fullScreenSpin').css('display','none');
+                                     }).catch(function (err) {
+                                     $('.fullScreenSpin').css('display','none');
+                                     });
+
+                                 }
+                                }).catch(function (err) {
+
+                                });
+
+                             }).catch(function(err) {
+                               $('.fullScreenSpin').css('display','none');
+                             });
+                           }else{
+                           sideBarService.getAllTQuoteListFilterData(converted,formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                             getVS1Data('TQuoteFilterList').then(function (dataObjectold) {
+                               if(dataObjectold.length == 0){
+
+                               }else{
+                                 let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                 var thirdaryData = $.merge($.merge([], dataObjectnew.tquotelist), dataOld.tquotelist);
+                                 let objCombineData = {
+                                   Params: dataOld.Params,
+                                   tquotelist:thirdaryData
+                                 }
+
+
+                                   addVS1Data('TQuoteFilterList',JSON.stringify(objCombineData)).then(function (datareturn) {
+                                     templateObject.resetData(objCombineData);
+                                   $('.fullScreenSpin').css('display','none');
+                                   }).catch(function (err) {
+                                   $('.fullScreenSpin').css('display','none');
+                                   });
+
+                               }
+                              }).catch(function (err) {
+
+                              });
+
+                           }).catch(function(err) {
+                             $('.fullScreenSpin').css('display','none');
+                           });
+                         }
+                         });
+
+                          setTimeout(function () {
+                              MakeNegative();
+                          }, 100);
+                      },
+                       "fnInitComplete": function () {
+
+                         let urlParametersPage = FlowRouter.current().queryParams.page;
+                         if (urlParametersPage || FlowRouter.current().queryParams.ignoredate||FlowRouter.current().queryParams.converted) {
+                             this.fnPageChange('last');
+                         }
+                       $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");
+                       $('.myvarFilterForm').appendTo(".colDateFilter");
+                   },
+                   "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                     let countTableData = data.Params.Count || 0; //get count from API data
+
+                       return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                   }
+
+                  }).on('page', function () {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                      let draftRecord = templateObject.datatablerecords.get();
+                      templateObject.datatablerecords.set(draftRecord);
+                  }).on('column-reorder', function () {
+
+                  }).on( 'length.dt', function ( e, settings, len ) {
+                      setTimeout(function () {
+                          MakeNegative();
+                      }, 100);
+                  });
+
+                  // $('#tblquotelist').DataTable().column( 0 ).visible( true );
+                  $('.fullScreenSpin').css('display','none');
+
+
+              }, 0);
+
+              var columns = $('#tblquotelist th');
+              let sTible = "";
+              let sWidth = "";
+              let sIndex = "";
+              let sVisible = "";
+              let columVisible = false;
+              let sClass = "";
+              $.each(columns, function(i,v) {
+                  if(v.hidden == false){
+                      columVisible =  true;
+                  }
+                  if((v.className.includes("hiddenColumn"))){
+                      columVisible = false;
+                  }
+                  sWidth = v.style.width.replace('px', "");
+
+                  let datatablerecordObj = {
+                      sTitle: v.innerText || '',
+                      sWidth: sWidth || '',
+                      sIndex: v.cellIndex || '',
+                      sVisible: columVisible || false,
+                      sClass: v.className || ''
+                  };
+                  tableHeaderList.push(datatablerecordObj);
+              });
+              templateObject.tableheaderrecords.set(tableHeaderList);
+              $('div.dataTables_filter input').addClass('form-control form-control-sm');
+              $('#tblquotelist tbody').on( 'click', 'tr', function () {
+                  var listData = $(this).closest('tr').attr('id');
+                  var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+                  if(listData){
+                    if(checkDeleted == "Deleted"){
+                      swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                    }else{
+                      FlowRouter.go('/quotecard?id=' + listData);
+                    }
+                  }
+              });
+
+          }).catch(function (err) {
+              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+              $('.fullScreenSpin').css('display','none');
+              // Meteor._reload.reload();
+          });
+        });
     }
 
-    templateObject.getAllQuoteData();
+    if (FlowRouter.current().queryParams.converted) {
+      if(FlowRouter.current().queryParams.page){
+
+      }else{
+      addVS1Data('TQuoteFilterList', []);
+      }
+      setTimeout(function () {
+        let checkConverted = FlowRouter.current().queryParams.converted || false;
+        templateObject.getAllQuoteFilterData(checkConverted);
+      }, 500);
+    }else{
+      templateObject.getAllQuoteData();
+    }
+
+
 
     templateObject.getAllFilterQuoteData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllTQuoteListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {

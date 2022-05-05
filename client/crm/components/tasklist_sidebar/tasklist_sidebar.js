@@ -409,7 +409,6 @@ Template.tasklist_sidebar.helpers({
   },
 
   getProjectCount: (tasks) => {
-    console.log('getprojectcount', tasks)
     if (tasks == null) {
       return '';
     } else if (tasks.fields != undefined) {

@@ -19,8 +19,6 @@ Template.projects.onCreated(function () {
 });
 
 Template.projects.onRendered(function () {
-
-  console.log('rendered...')
   $("#task_items_wrapper").sortable({
     handle: '.taskDrag',
     update: function (event, ui) {
@@ -30,7 +28,6 @@ Template.projects.onRendered(function () {
       let current_id = ui.item[0].id;
       let prev_id = ui.item[0].previousElementSibling.id;
       let next_id = ui.item[0].nextElementSibling.id;
-      console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
     },
   });
 
@@ -85,7 +82,7 @@ Template.projects.onRendered(function () {
         allrecords = allrecords.filter(item => item.fields.ProjectID == 11);
         all_projectrecords = data.tprojecttasks.filter(item => item.fields.ProjectID == currentId);
 
-        // tempcode until fields are added in backend 
+        // tempcode until fields are added in backend
         // let allrecords = data.tprojecttasks.sort(function (a, b) {
         //   return (a.Recno < b.Recno) ? 1 : -1;
         // });
@@ -454,7 +451,7 @@ Template.projects.events({
                   </div>
                 </div>
               </div>
-    
+
               <div class="dropdown taskDropdownFilter">
                 <button class="btn btn-primary dropdown-toggle btnSchedule"
                   style="background-color: rgba(0,0,0,0);" type="button" id="" data-toggle="dropdown"
@@ -593,14 +590,14 @@ Template.projects.events({
     });
   },
 
-  // set projectID in edit 
+  // set projectID in edit
   'click .setProjectIDEdit': function (e) {
     let projectID = e.target.dataset.projectid;
     $('#editProjectID').val(projectID);
 
   },
 
-  // set priority in edit 
+  // set priority in edit
   'click .chkPriority': function (e) {
     let id = e.target.dataset.id;
     let value = e.target.value
@@ -612,14 +609,14 @@ Template.projects.events({
 
   },
 
-  // set projectID in add 
+  // set projectID in add
   'click .setProjectIDAdd': function (e) {
     let projectID = e.target.dataset.projectid;
     $('#addProjectID').val(projectID);
 
   },
 
-  // set priority in add 
+  // set priority in add
   'click .chkPriorityAdd': function (e) {
     let value = e.target.value
     $('#chkPriority0').prop('checked', false);

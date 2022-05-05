@@ -28,7 +28,7 @@ export class SideBarService extends BaseService {
 
   getAllFundType() {
     let options = {
-      
+
     };
     return this.getList(this.ERPObjects.TSuperType, options);
 
@@ -905,7 +905,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   }
 
   getCheckLeadData(limitcount, limitfrom) {
-  
+
     let options = '';
     if(limitcount == 'All'){
        options = {
@@ -915,13 +915,13 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }else{
        options = {
             ListType: "Detail",
-            select: '[Active]=true',   
+            select: '[Active]=true',
       };
     }
     return this.getList(this.ERPObjects.TLeads, options);
   }
 
-  
+
   getAllEmployeesDataVS1(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){
@@ -1183,18 +1183,31 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   }
   getAllOverDueAwaitingSupplierPayment(currentDate, limitcount, limitfrom) {
     let options = '';
+    if(currentDate == "PO"){
+      options = {
+        IgnoreDates:true,
+        IncludePOs:true,
+        IncludeBills:false,
+        IncludeCredits:false,
+        Paid:false,
+        Unpaid:true,
+        OrderBy:"PurchaseOrderID desc",
+        LimitCount:'"'+limitcount+'"',
+        LimitFrom:'"'+limitfrom+'"'
+     };
+    }else{
       options = {
         IgnoreDates:true,
         IncludePOs:true,
         IncludeBills:true,
-        // Paid:false,
+        Paid:false,
         Unpaid:true,
         OrderBy:"PurchaseOrderID desc",
         Search:'DueDate < "'+currentDate+'"',
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
      };
-
+   }
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
@@ -1347,6 +1360,41 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }
       return this.getList(this.ERPObjects.TQuoteList, options);
     }
+
+    getAllTQuoteListFilterData(filterData, dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+    let options = '';
+
+    if(filterData == true){
+      options = {
+        IgnoreDates:true,
+        OrderBy:"SaleID desc",
+        Search:'Converted = '+filterData+'',
+        LimitCount:'"'+limitcount+'"',
+        LimitFrom:'"'+limitfrom+'"'
+        };
+      }else{
+        options = {
+          IgnoreDates:true,
+          OrderBy:"SaleID desc",
+          Search:'Converted != true',
+          LimitCount:'"'+limitcount+'"',
+          LimitFrom:'"'+limitfrom+'"'
+          };
+      }
+      //  }else{
+      //    options = {
+      //      OrderBy:"SaleID desc",
+      //      IgnoreDates:false,
+      //      Search:'Converted = '+filterData+'',
+      //      DateFrom:'"'+dateFrom+'"',
+      //      DateTo:'"'+dateTo+'"',
+      //      LimitCount:'"'+limitcount+'"',
+      //      LimitFrom:'"'+limitfrom+'"'
+      //  };
+      // }
+        return this.getList(this.ERPObjects.TQuoteList, options);
+    }
+
 
   getAllCreditList(limitcount, limitfrom) {
     let options = '';
@@ -1775,7 +1823,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       options = {
         ListType: "Detail",
         select: '[Active]=true',
-      
+
      };
     };
     return this.getList(this.ERPObjects.TAllowance, options);

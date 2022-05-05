@@ -2249,8 +2249,6 @@ Template.appointments.onRendered(function () {
                             return apmt.id == appID
                         });
 
-                        console.log('1 =================================> ', result);
-
                         if (result.length > 0) {
                             templateObject.getAllProductData();
                             if (result[0].isPaused == "Paused") {
@@ -3145,8 +3143,6 @@ Template.appointments.onRendered(function () {
                         return apmt.id == appID
                     });
 
-                    console.log('2 =================================> ', result);
-
                     if (result.length > 0) {
                         templateObject.getAllProductData();
                         if (result[0].isPaused == "Paused") {
@@ -3758,9 +3754,6 @@ Template.appointments.onRendered(function () {
                     var result = appointmentData.filter(apmt => {
                         return apmt.id == appID
                     });
-
-                    console.log('3 =================================> ', result);
-
                     if (result.length > 0) {
                         templateObject.getAllProductData();
                         if (result[0].isPaused == "Paused") {
@@ -6288,11 +6281,10 @@ Template.appointments.onRendered(function () {
                 case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
             }
         }
-        console.log(smsSettings);
         templateObject.defaultSMSSettings.set(smsSettings);
     }
     }).catch((error) => {
-        console.log(error);
+
     });
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise((resolve, reject) => {
@@ -6317,11 +6309,9 @@ Template.appointments.onRendered(function () {
                     );
                 },
                 success: function(data) {
-                    console.log("Got response: %o", data);
                     resolve({ success: true });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Request failed: " + textStatus + ", " + errorThrown);
                     resolve({ success: false });
                 }
             });

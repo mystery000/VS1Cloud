@@ -117,6 +117,8 @@ $('.dropdown-toggle').on("click",function(event){
 });
 // $('.dropdown-toggle').click(e => e.stopPropagation());
   });
+
+
     /*
       Bert.defaults = {
       hideDelay: 5000,

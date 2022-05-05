@@ -1519,7 +1519,6 @@ Template.bankingoverview.onRendered(function() {
                 }
             });
         }
-        // console.log(cards);
         for (let i = 0; i < cards.length; i++) {
             cardList.push(
             new Tvs1CardPreference({
@@ -1547,9 +1546,6 @@ Template.bankingoverview.onRendered(function() {
       connectWith: ".connectedCardSortable",
       placeholder: "portlet-placeholder ui-corner-all",
       stop: async (event, ui) => {
-        // console.log($(ui.item[0]));
-        console.log("Dropped the sortable chart");
-
         // Here we rebuild positions tree in html
         ChartHandler.buildCardPositions(
           $(".connectedCardSortable .card-visibility")
@@ -1559,7 +1555,7 @@ Template.bankingoverview.onRendered(function() {
         templateObject.saveCards()
       },
     })
-    .disableSelection(); 
+    .disableSelection();
 });
 
 Template.bankingoverview.events({
@@ -2042,7 +2038,7 @@ Template.bankingoverview.events({
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
             $('.cardShowBtn').removeClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-cog')
-            $('.editCardBtn').find('i').addClass('fa-save')      
+            $('.editCardBtn').find('i').addClass('fa-save')
         }else{
             $('.cardShowBtn').addClass('hideelement');
             $('.editCardBtn').find('i').removeClass('fa-save')
@@ -2062,12 +2058,12 @@ Template.bankingoverview.events({
         if( $(e.target).find('.far').hasClass('fa-eye') ){
             $(e.target).find('.far').removeClass('fa-eye')
             $(e.target).find('.far').addClass('fa-eye-slash')
-            $(e.target).parents('.card-visibility').attr('card-active', 'false') 
+            $(e.target).parents('.card-visibility').attr('card-active', 'false')
         }else{
             $(e.target).find('.far').removeClass('fa-eye-slash')
             $(e.target).find('.far').addClass('fa-eye')
             $(e.target).parents('.card-visibility').attr('card-active', 'true')
-        } 
+        }
         let templateObject = Template.instance();
         templateObject.saveCards()
         return false

@@ -1998,7 +1998,7 @@ Template.purchasesoverview.onRendered(function () {
           }
         });
     }
-    // console.log(cards);
+
     for (let i = 0; i < cards.length; i++) {
       cardList.push(
         new Tvs1CardPreference({
@@ -2071,9 +2071,6 @@ Template.purchasesoverview.onRendered(function () {
       connectWith: ".connectedCardSortable",
       placeholder: "portlet-placeholder ui-corner-all",
       stop: async (event, ui) => {
-        // console.log($(ui.item[0]));
-        console.log("Dropped the sortable chart");
-
         // Here we rebuild positions tree in html
         ChartHandler.buildCardPositions(
           $(".connectedCardSortable .card-visibility")

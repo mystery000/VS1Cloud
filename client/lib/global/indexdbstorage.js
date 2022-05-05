@@ -214,6 +214,8 @@ openDb = function (dbName) {
       db.createObjectStore("TOverdueAwaitingSupplierPayment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAssignLeaveType", { keyPath: "EmployeeEmail" });
       db.createObjectStore("Tvs1CardPreference", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TQuoteFilterList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TSalesOrderFilterList", { keyPath: "EmployeeEmail" });
     }
 
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));

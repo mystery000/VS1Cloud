@@ -35,7 +35,7 @@ Template.employeescard.onCreated(function () {
     templateObject.payTemplateEarningLineInfo = new ReactiveVar();
     templateObject.payTemplateDeductionLineInfo = new ReactiveVar();
     templateObject.payTemplateSuperannuationLineInfo = new ReactiveVar();
-    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();    
+    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();
     templateObject.employeePayInfos = new ReactiveVar();
     templateObject.employeePaySettings = new ReactiveVar();
     templateObject.leaveTypesDrpDown = new ReactiveVar();
@@ -2772,7 +2772,6 @@ Template.employeescard.onRendered(function () {
         let TLeaveRequests = await getVS1Data('TLeaveRequest');
         if( TLeaveRequests.length ){
             let TLeaveRequestsData = JSON.parse(TLeaveRequests[0].data);
-            // console.log(TAssignLeaveTypesData.tassignteavetype)
             let useData = LeaveRequest.fromList(
                 TLeaveRequestsData.tleaverequest
             ).filter((item) => {
@@ -2790,7 +2789,6 @@ Template.employeescard.onRendered(function () {
         let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
         if( TAssignLeaveTypes.length ){
             let TAssignLeaveTypesData = JSON.parse(TAssignLeaveTypes[0].data);
-            // console.log(TAssignLeaveTypesData.tassignteavetype)
             let useData = AssignLeaveType.fromList(
                 TAssignLeaveTypesData.tassignteavetype
             ).filter((item) => {
@@ -2810,7 +2808,6 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
-                // console.log('TEmployeepaysettingData', TEmployeepaysettingData.temployeepaysettings)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2841,8 +2838,6 @@ Template.employeescard.onRendered(function () {
                 }
 
                 templateObject.employeePaySettings.set(objEmployeePaySettings);
-
-                // console.log('employeePaySettings', templateObject.employeePaySettings.get())
 
                 templateObject.employeePayInfos.set(employeePaySettings);
 
@@ -2878,12 +2873,11 @@ Template.employeescard.onRendered(function () {
     templateObject.getTLeaveTypes = async () => {
         try{
             let dataObj = await getVS1Data('TLeavetypes');
-            // console.log('TLeavetypes', dataObj )
-        } catch(err) {  
-            // console.log( 'roor', err.message )
+        } catch(err) {
+
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-            // console.log('TLeavetypes', data )
+
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -2901,7 +2895,6 @@ Template.employeescard.onRendered(function () {
             };
             if(dataObj.length > 0) {
                 let data = JSON.parse(dataObj[0].data);
-                // console.log( 'TBankAccounts', data )
                 let index = 1;
                 for(let i = 0; i < data.length; i ++) {
                     if( parseInt( data[i].fields.EmployeeID ) == parseInt( employeeID ) ) {
@@ -2919,7 +2912,6 @@ Template.employeescard.onRendered(function () {
                     }
                 }
             }
-            // console.log('newData', newData)
             templateObject.bankAccList.set(newData);
 
         }).catch(function (err) {
@@ -3866,7 +3858,6 @@ Template.employeescard.events({
                 }),
             })
         );
-        // console.log('assignLeaveTypes', assignLeaveTypes)
         let updatedAssignLeaveTypes = {
             tassignteavetype: assignLeaveTypes,
         }
@@ -3890,8 +3881,7 @@ Template.employeescard.events({
         if( Array.isArray( payEarningLinesTempExist ) ){
             payEarningLinesTemp = payEarningLinesTempExist
         }
-        // console.log('payEarningLinesTemp', payEarningLinesTemp)
-        payEarningLinesTemp.push(        
+        payEarningLinesTemp.push(
             new PayTemplateEarningLine({
                 type: 'TPayTemplateEarningLine',
                 fields: new PayTemplateEarningLineFields({
@@ -3902,7 +3892,6 @@ Template.employeescard.events({
                 })
             })
         )
-        // console.log('useData', payEarningLinesTemp)
         templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
         $('#earningRateSelect').val('Allowances exempt from tax withholding and super');
         $('input[name=calculationType]:checked').attr('checked', false);
@@ -3922,8 +3911,8 @@ Template.employeescard.events({
         if( Array.isArray( payDeductionLinesTempExist ) ){
             payDeductionLinesTemp = payDeductionLinesTempExist
         }
-        // console.log('payDeductionLinesTemp', payDeductionLinesTemp)
-        payDeductionLinesTemp.push(        
+
+        payDeductionLinesTemp.push(
             new PayTemplateDeductionLine({
                 type: 'TPayTemplateDeductionLine',
                 fields: new PayTemplateDeductionLineFields({
@@ -3934,7 +3923,7 @@ Template.employeescard.events({
                 })
             })
         )
-        // console.log('useData', payDeductionLinesTemp)
+
         templateObject.payTemplateDeductionLineInfo.set(payDeductionLinesTemp);
         $('#deductionTypeSelect').val('FBT');
         $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
@@ -3977,7 +3966,7 @@ Template.employeescard.events({
                 })
             })
         )
-        // console.log('useData', payLinesTemp)
+
         templateObject.payTemplateSuperannuationLineInfo.set(payLinesTemp);
         $('#superannuationFund').val('');
         $('#superannuationTypeSelect').val('Superannuation Guarantee Contribution (SGC)');
@@ -4004,7 +3993,7 @@ Template.employeescard.events({
                 $('#reducesSGCContainer').removeClass('hideelement')
             break;
             default:
-            break;    
+            break;
         }
     },
 
@@ -4031,7 +4020,7 @@ Template.employeescard.events({
                 })
             })
         )
-        // console.log('useData', payLinesTemp)
+
         templateObject.payTemplateReiumbursementLineInfo.set(payLinesTemp);
         $('#reimbursementTypeSelect').val('');
         $('#reiumbursementDescription').val('');
@@ -4060,7 +4049,7 @@ Template.employeescard.events({
                 $('#CalculationType3').attr('disabled', false)
             break;
         }
-    }, 
+    },
 
     // Save active tab data
     'click #btnSaveEmployeePayroll': async function(event) {
@@ -4136,39 +4125,10 @@ Template.employeescard.events({
             */
 
             listEmployeePaySettings.temployeepaysettings = useData;
-            // console.log('useData', listEmployeePaySettings)
             await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
             $('.fullScreenSpin').css('display', 'none');
 
             return false;
-
-
-
-            /**
-             * API is not ready we have to save into local db
-             */
-            // const ApiResponse = await apiEndpoint.fetch(null, {
-            //     method: "POST",
-            //     headers: ApiService.getPostHeaders(),
-            //     body: JSON.stringify(employeePaySettings),
-            // });
-
-
-
-            // let newDataObj = [{
-            //     EmployeeEmail: employeeEmail,
-            //     timestamp: timestamp,
-            //     data: data
-            // }];
-
-            // let objDetails = {};
-            // if (!isNaN(currentId.id)) {
-
-            // } else {
-
-            // }
-
-            // console.log( 'data', currentInfo )
             addVS1Data('TEmployeepaysettings', JSON.stringify(currentInfo));
             $('.fullScreenSpin').css('display', 'none');
             return;
@@ -4343,7 +4303,6 @@ Template.employeescard.events({
                 });
             }
 
-            // console.log( 'saving bankaccount', data )
 
             $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -5943,16 +5902,16 @@ Template.employeescard.helpers({
     },
     payTemplateEarningLines: () => {
         return Template.instance().payTemplateEarningLineInfo.get();
-    },     
+    },
     payTemplateDeductionLines: () => {
         return Template.instance().payTemplateDeductionLineInfo.get();
-    },  
+    },
     payTemplateSuperannuationLines: () => {
         return Template.instance().payTemplateSuperannuationLineInfo.get();
-    },  
+    },
     payTemplateReiumbursementLines: () => {
         return Template.instance().payTemplateReiumbursementLineInfo.get();
-    },    
+    },
     extraUserPrice: () => {
         return addExtraUserPrice || '$35';
     },
