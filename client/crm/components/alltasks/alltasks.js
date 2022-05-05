@@ -1,12 +1,11 @@
-import { CRMService } from '../crm-service';
-import '../../lib/global/indexdbstorage.js';
-import { valHooks } from 'jquery';
-import { isNumber } from 'lodash';
+import { CRMService } from '../../crm-service';
 let crmService = new CRMService();
 
 Template.alltasks.onCreated(function () {
 
   let templateObject = Template.instance();
+  templateObject.alllabels = new ReactiveVar([]);
+  templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.allrecords = new ReactiveVar([]);
   templateObject.todayRecords = new ReactiveVar([]);
   templateObject.upcomingRecords = new ReactiveVar([]);
@@ -27,50 +26,56 @@ Template.alltasks.onRendered(function () {
       var sortedIDs = $("#task_items_wrapper").sortable("toArray");
 
       let current_id = ui.item[0].id;
-      // console.log('taskDrag update =>', sorted, sortedIDs, current_id, ui)
       let prev_id = ui.item[0].previousElementSibling.id;
       let next_id = ui.item[0].nextElementSibling.id;
       console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
     },
   });
 
-  $(".hasDatepicker").datepicker({
-    showOn: 'button',
-    buttonText: 'Show Date',
-    buttonImageOnly: true,
-    buttonImage: '/img/imgCal2.png',
-    constrainInput: false,
-    dateFormat: 'd/mm/yy',
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true,
-    yearRange: "-90:+10",
-  });
-  let currentDate = new Date();
-  let begunDate = moment(currentDate).format("d/mm/yy");
-  $('.hasDatepicker').val(begunDate);
-
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
   templateObject.selected_ttodo.set(null);
 
+  templateObject.updateTaskSchedule = function (id, date) {
+
+    let due_date = '';
+    if (date) {
+      due_date = moment(date).format('YYYY-MM-DD hh:mm:ss');
+    }
+
+    var objDetails = {
+      type: "Tprojecttasks",
+      fields: {
+        ID: id,
+        due_date: due_date
+      }
+    };
+
+    if (id) {
+      $('.fullScreenSpin').css('display', 'inline-block');
+      crmService.saveNewTask(objDetails).then(function (data) {
+        templateObject.getAllTaskList();
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    }
+  }
+
   templateObject.getAllTaskList = function () {
     crmService.getAllTaskList().then(function (data) {
-      console.log('getAllTaskList==>', data)
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
 
         let today = moment().format('YYYY-MM-DD');
         let allrecords = data.tprojecttasks;
+        allrecords = allrecords.filter(item => item.fields.ProjectID == 11);
 
         // tempcode until fields are added in backend 
         // let allrecords = data.tprojecttasks.sort(function (a, b) {
         //   return (a.Recno < b.Recno) ? 1 : -1;
         // });
 
-        let today_records = allrecords.filter(item => item.fields.MsTimeStamp.substring(0, 10) == today);
-        let upcoming_records = allrecords.filter(item => item.fields.MsTimeStamp.substring(0, 10) > today);
-        let overdue_records = allrecords.filter(item => item.fields.MsTimeStamp.substring(0, 10) < today);
+        let today_records = allrecords.filter(item => item.fields.due_date.substring(0, 10) == today);
+        let upcoming_records = allrecords.filter(item => item.fields.due_date.substring(0, 10) > today);
+        let overdue_records = allrecords.filter(item => (!item.fields.due_date || item.fields.due_date.substring(0, 10) < today));
 
         $('.crm_all_count').text(allrecords.length);
         $('.crm_today_count').text(today_records.length);
@@ -80,7 +85,40 @@ Template.alltasks.onRendered(function () {
         templateObject.todayRecords.set(today_records);
         templateObject.upcomingRecords.set(upcoming_records);
         templateObject.overdueRecords.set(overdue_records);
-        templateObject.due_date.set(null);
+
+        setTimeout(() => {
+          $(".crmDatepicker").datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            constrainInput: false,
+            dateFormat: 'yy/mm/dd',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+            onSelect: function (dateText, inst) {
+              // alert(dateText);
+              let task_id = inst.id
+              templateObject.updateTaskSchedule(task_id, dateText)
+            }
+          });
+          $(".crmEditDatepicker").datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            constrainInput: false,
+            dateFormat: 'yy/mm/dd',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-90:+10",
+          });
+        }, 500);
 
       } else {
         $('.crm_all_count').text(0);
@@ -93,7 +131,62 @@ Template.alltasks.onRendered(function () {
     });
   }
 
+  templateObject.getAllLabels = function () {
+    crmService.getAllLabels().then(function (data) {
+      if (data.tprojecttask_tasklabel && data.tprojecttask_tasklabel.length > 0) {
+
+        let alllabels = data.tprojecttask_tasklabel;
+        templateObject.alllabels.set(alllabels);
+
+        let label_dropdowns = '';
+        alllabels.forEach(lbl => {
+          label_dropdowns += `<a class="dropdown-item" href="#"><i class="fas fa-tag text-primary" style="margin-right: 8px;"></i>${lbl.fields.TaskLabelName}
+            <div style="width: 20%; float: right;">
+              <div class="custom-control custom-checkbox chkBox pointer"
+                style="width: 15px; float: right;">
+                <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
+                  id="label_${lbl.fields.ID}" value="">
+                <label class="custom-control-label chkBox pointer" for="label_${lbl.fields.ID}"></label>
+              </div>
+            </div>
+          </a>`;
+        });
+        $('#addTaskLabelWrapper').html(label_dropdowns);
+
+      } else {
+        templateObject.alllabels.set([]);
+      }
+
+    }).catch(function (err) {
+    });
+  }
+
+  templateObject.getTProjectList = function () {
+    crmService.getTProjectList().then(function (data) {
+      if (data.tprojectlist && data.tprojectlist.length > 0) {
+
+        let tprojectlist = data.tprojectlist;
+        tprojectlist = tprojectlist.filter(proj => proj.fields.ID != 11);
+        templateObject.tprojectlist.set(tprojectlist);
+
+        let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
+          style="margin-right: 8px;"></i>All Tasks</a>`;
+        tprojectlist.forEach(proj => {
+          add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
+        });
+        $('#goProjectWrapper').html(add_projectlist);
+
+      } else {
+        templateObject.tprojectlist.set([]);
+      }
+
+    }).catch(function (err) {
+    });
+  }
+
   templateObject.getAllTaskList();
+  templateObject.getAllLabels();
+  templateObject.getTProjectList();
 });
 
 Template.alltasks.events({
@@ -105,13 +198,20 @@ Template.alltasks.events({
   },
 
   'click .btnAddSubTask': function (event) {
+
+    let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
+    $('#addTaskModal').remove();
+    $('#newTaskRowWrapper').html(addTaskModal)
+
     $(".newTaskRow").css("display", "inline-flex");
+    $(".addTaskModal").css("display", "inline-flex");
     $(".btnAddSubTask").css("display", "none");
   },
 
   'click .btnCancelAddTask': function (event) {
     $(".btnAddSubTask").css("display", "block");
     $(".newTaskRow").css("display", "none");
+    $(".addTaskModal").css("display", "none");
   },
 
   // complete task
@@ -122,7 +222,7 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        Active: false
+        Completed: true
       }
     };
 
@@ -140,11 +240,81 @@ Template.alltasks.events({
 
   },
 
+  // delete task
+  'click .delete-task': function (e) {
+    let id = e.target.dataset.id;
+    // handle complete process via api
+    var objDetails = {
+      type: "Tprojecttasks",
+      fields: {
+        ID: id,
+        Active: false
+      }
+    };
+
+    if (id) {
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let templateObject = Template.instance();
+      crmService.saveNewTask(objDetails).then(function (objDetails) {
+        // recalculate count here
+        templateObject.getAllTaskList();
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    }
+
+  },
+
+  // duplicate task
+  'click .duplicate-task': function (e) {
+    let templateObject = Template.instance();
+    let id = e.target.dataset.id;
+    $('.fullScreenSpin').css('display', 'inline-block');
+    crmService.getTaskDetail(id).then(function (data) {
+      $('.fullScreenSpin').css('display', 'none');
+      if (data.fields.ID == id) {
+        let selected_record = data.fields;
+        // handle complete process via api
+        var objDetails = {
+          type: "Tprojecttasks",
+          fields: {
+            TaskName: 'Copy of ' + selected_record.TaskName,
+            TaskDescription: selected_record.TaskDescription,
+            due_date: selected_record.due_date,
+            priority: selected_record.priority,
+            // TaskLabel: selected_record.TaskLabel,
+            Completed: false
+          }
+        };
+
+        crmService.saveNewTask(objDetails).then(function (data) {
+          // recalculate count here
+          templateObject.getAllTaskList();
+          $('.fullScreenSpin').css('display', 'none');
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display', 'none');
+          swal(err, '', 'error');
+          return;
+        });;
+
+      } else {
+
+        swal('Cannot duplicate this task', '', 'warning');
+        return;
+      }
+
+    }).catch(function (err) {
+      $('.fullScreenSpin').css('display', 'none');
+      swal(err, '', 'error');
+      return;
+    });
+  },
+
   // open edit modal
   'click .ttodo-edit': function (e) {
 
     $(".btnAddSubTask").css("display", "block");
     $(".newTaskRow").css("display", "none");
+    $(".addTaskModal").css("display", "none");
 
     let id = e.target.dataset.id;
     let templateObject = Template.instance();
@@ -155,15 +325,55 @@ Template.alltasks.events({
     // get selected task detail via api
     crmService.getTaskDetail(id).then(function (data) {
       $('.fullScreenSpin').css('display', 'none');
-      console.log('getTaskDetail=>', id, data, data.fields)
       if (data.fields.ID == id) {
         let selected_record = data.fields;
-        console.log('open edit', id)
 
         let title = selected_record.TaskName;
         let description = selected_record.TaskDescription;
-        let label = selected_record.TaskLabel;
-        let due_date = selected_record.MsTimeStamp;
+        let labels = selected_record.TaskLabel;
+        let due_date = selected_record.due_date;
+
+        let edit_projectlist = `<a class="dropdown-item no-modal"  data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
+          style="margin-right: 8px;"></i>All Tasks</a>`;
+        templateObject.tprojectlist.get().forEach(proj => {
+          edit_projectlist += `<a class="dropdown-item setProjectIDEdit no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
+        });
+
+        if (labels == '' || labels == null) {
+          labels = '';
+        } else if (labels.type == undefined) {
+          let label_string = '';
+          labels.forEach(label => {
+            label_string += label.fields.TaskLabelName + ', '
+          });
+          labels = label_string.slice(0, -2);
+        } else {
+          labels = labels.fields.TaskLabelName;
+        }
+
+        let alllabels = templateObject.alllabels.get();
+        let label_dropdowns = '';
+        alllabels.forEach(lbl => {
+          label_dropdowns += `<a class="dropdown-item" href="#"><i class="fas fa-tag text-primary" style="margin-right: 8px;"></i>${lbl.fields.TaskLabelName}
+            <div style="width: 20%; float: right;">
+              <div class="custom-control custom-checkbox chkBox pointer"
+                style="width: 15px; float: right;">
+                <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
+                  id="label_${lbl.fields.ID}" value="">
+                <label class="custom-control-label chkBox pointer" for="label_${lbl.fields.ID}"></label>
+              </div>
+            </div>
+          </a>`;
+        });
+
+        // priority = 0 : Priority 4
+        // priority = 1 : Priority 3
+        // priority = 2 : Priority 2
+        // priority = 3 : Priority 1
+        let checked0 = selected_record.priority == 0 ? 'checked' : '';
+        let checked1 = selected_record.priority == 1 ? 'checked' : '';
+        let checked2 = selected_record.priority == 2 ? 'checked' : '';
+        let checked3 = selected_record.priority == 3 ? 'checked' : '';
 
         let getTodayDate = moment().format('ddd');
         let getTomorrowDay = moment().add(1, 'day').format('ddd');
@@ -213,10 +423,9 @@ Template.alltasks.events({
                     No Date</a>
                   <div class="dropdown-divider no-modal"></div>
                   <div class="form-group" data-toggle="tooltip" data-placement="bottom"
-                    title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+                    title="Date format: YYYY-MM-DD" style="margin: 6px 20px; margin-top: 14px;">
                     <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control hasDatepicker" autocomplete="off" value="${due_date}"><img class="ui-datepicker-trigger"
-                        src="/img/imgCal2.png" alt="Show Date" title="Show Date">
+                      <input type="text" class="form-control crmEditDatepicker" autocomplete="off" value="${due_date}">
                       <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                       </div>
@@ -233,34 +442,7 @@ Template.alltasks.events({
                       style="margin-right: 5px;"></i>All Tasks</span>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
-                  <a class="dropdown-item" href="#"><i class="fas fa-inbox text-primary"
-                      style="margin-right: 8px;"></i>All Tasks</a>
-                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
-                      style="margin-right: 8px; color: purple;"></i>Project #1</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    1</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    2</a>
-    
-                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
-                      style="margin-right: 8px; color: purple;"></i>Project #2</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    1</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    2</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    3</a>
-    
-                  <a class="dropdown-item" href="#"><i class="fas fa-circle"
-                      style="margin-right: 8px; color: purple;"></i>Project #3</a>
-                  <a class="dropdown-item dropdown-project-section" href="#"><i
-                      class="far fa-folder-open text-primary" style="margin-right: 8px;"></i>Section
-                    1</a>
+                  ${edit_projectlist}
                 </div>
               </div>
             </div>
@@ -269,90 +451,57 @@ Template.alltasks.events({
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                   title="Add label(s)..."></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
-                  style="width: 200px;">
-                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
-                      style="margin-right: 8px;"></i>[label 1]
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
-                        style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
-                          id="label_1" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
-                      style="margin-right: 8px;"></i>[label 2]
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
-                        style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
-                          id="label_2" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_2"></label>
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item" href="#"><i class="fas fa-tag text-primary"
-                      style="margin-right: 8px;"></i>[label 3]
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
-                        style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
-                          id="label_3" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_3"></label>
-                      </div>
-                    </div>
-                  </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="width: 200px;">
+                  ${label_dropdowns}
                 </div>
               </div>
-              <div class="dropdown">
-                <i class="far fa-flag taskModalAction taskModalActionDropdown dropdown-toggle"
+              <div class="dropdown no-modal">
+                <i class="fas fa-flag taskModalAction taskModalActionDropdown dropdown-toggle no-modal task_priority_${selected_record.priority}"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                   title="Set the priority..."></i>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                <div class="dropdown-menu dropdown-menu-right no-modal" aria-labelledby="dropdownMenuButton"
                   style="width: 200px;">
-                  <a class="dropdown-item text-danger" href="#"><i class="fas fa-tag"
+                  <a class="dropdown-item text-danger no-modal" for="chkPriority3${id}"><i class="fas fa-tag no-modal"
                       style="margin-right: 8px;"></i>Priority 1
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
+                    <div style="width: 20%; float: right;" class="no-modal">
+                      <div class="custom-control custom-checkbox chkBox pointer no-modal"
                         style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkPriority pointer" type="checkbox"
-                          id="label_1" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                        <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
+                          id="chkPriority3${id}" data-id="${id}" value="3" ${checked3}>
+                        <label class="custom-control-label chkBox pointer no-modal" for="chkPriority3${id}"></label>
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-warning" href="#"><i class="fas fa-tag"
+                  <a class="dropdown-item text-warning no-modal"><i class="fas fa-tag no-modal"
                       style="margin-right: 8px;"></i>Priority 2
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
+                    <div style="width: 20%; float: right;" class="no-modal">
+                      <div class="custom-control custom-checkbox chkBox pointer no-modal"
                         style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkPriority pointer" type="checkbox"
-                          id="label_1" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                        <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
+                          id="chkPriority2${id}" data-id="${id}" value="2" ${checked2}>
+                        <label class="custom-control-label chkBox pointer no-modal" for="chkPriority2${id}"></label>
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-primary" href="#"><i class="fas fa-tag"
+                  <a class="dropdown-item text-primary no-modal"><i class="fas fa-tag no-modal"
                       style="margin-right: 8px;"></i>Priority 3
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
+                    <div style="width: 20%; float: right;" class="no-modal">
+                      <div class="custom-control custom-checkbox chkBox pointer no-modal"
                         style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkPriority pointer" type="checkbox"
-                          id="label_1" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                        <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
+                          id="chkPriority1${id}" data-id="${id}" value="1" ${checked1}>
+                        <label class="custom-control-label chkBox pointer no-modal" for="chkPriority1${id}"></label>
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-secondary" href="#"><i class="fas fa-tag"
+                  <a class="dropdown-item text-secondary no-modal"><i class="fas fa-tag no-modal"
                       style="margin-right: 8px;"></i>Priority 4
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer"
+                    <div style="width: 20%; float: right;" class="no-modal">
+                      <div class="custom-control custom-checkbox chkBox pointer no-modal"
                         style="width: 15px; float: right;">
-                        <input class="custom-control-input chkBox chkPriority pointer" type="checkbox"
-                          id="label_1" value="">
-                        <label class="custom-control-label chkBox pointer" for="label_1"></label>
+                        <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
+                          id="chkPriority0${id}" data-id="${id}" value="0" ${checked0}>
+                        <label class="custom-control-label chkBox pointer no-modal" for="chkPriority0${id}"></label>
                       </div>
                     </div>
                   </a>
@@ -361,11 +510,12 @@ Template.alltasks.events({
               <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
                 title="Add reminder(s)..."></i>
             </div>
+            <input type="hidden" id="editProjectID" value="11" />
             <div class="col-12" style="margin-top: 12px;">
-              <button class="btn btn-success btnSaveEdit" type="button" style=""><i class="fa fa-save"
+              <button class="btn btn-success btnSaveEdit no-modal" type="button" style=""><i class="fa fa-save no-modal"
                   style="margin-right: 5px;"></i>Save</button>
-              <button class="btn btn-secondary btnCancelEdit" type="button" style="margin-left: 8px;"><i
-                  class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+              <button class="btn btn-secondary btnCancelEdit no-modal" type="button" style="margin-left: 8px;"><i
+                  class="fa fa-close no-modal" style="margin-right: 5px;"></i>Cancel</button>
             </div>
           </div>`
 
@@ -380,6 +530,26 @@ Template.alltasks.events({
           templateObject.selected_id.set(id);
           $('#ttodo_' + id).removeClass('mainTaskCol');
           $('#ttodo_' + id).html(edit_modal);
+
+          setTimeout(() => {
+            $(".crmEditDatepicker").datepicker({
+              showOn: 'button',
+              buttonText: 'Show Date',
+              buttonImageOnly: true,
+              buttonImage: '/img/imgCal2.png',
+              constrainInput: false,
+              dateFormat: 'yy/mm/dd',
+              showOtherMonths: true,
+              selectOtherMonths: true,
+              changeMonth: true,
+              changeYear: true,
+              yearRange: "-90:+10",
+            });
+            // let currentDate = new Date();
+            let begunDate = due_date ? moment(due_date).format("YYYY-MM-DD") : null;
+            $('.crmEditDatepicker').val(begunDate);
+
+          }, 500);
         }
 
       } else {
@@ -402,6 +572,43 @@ Template.alltasks.events({
     });
   },
 
+  // set projectID in edit 
+  'click .setProjectIDEdit': function (e) {
+    let projectID = e.target.dataset.projectid;
+    $('#editProjectID').val(projectID);
+
+  },
+
+  // set priority in edit 
+  'click .chkPriority': function (e) {
+    let id = e.target.dataset.id;
+    let value = e.target.value
+    $('#chkPriority0' + id).prop('checked', false);
+    $('#chkPriority1' + id).prop('checked', false);
+    $('#chkPriority2' + id).prop('checked', false);
+    $('#chkPriority3' + id).prop('checked', false);
+    $('#chkPriority' + value + id).prop('checked', true);
+
+  },
+
+  // set projectID in add 
+  'click .setProjectIDAdd': function (e) {
+    let projectID = e.target.dataset.projectid;
+    $('#addProjectID').val(projectID);
+
+  },
+
+  // set priority in add 
+  'click .chkPriorityAdd': function (e) {
+    let value = e.target.value
+    $('#chkPriority0').prop('checked', false);
+    $('#chkPriority1').prop('checked', false);
+    $('#chkPriority2').prop('checked', false);
+    $('#chkPriority3').prop('checked', false);
+    $('#chkPriority' + value).prop('checked', true);
+
+  },
+
   // cancel edit
   'click .btnCancelEdit': function (e) {
 
@@ -419,18 +626,22 @@ Template.alltasks.events({
   // submit edit
   'click .btnSaveEdit': function (e) {
 
-    // let id = e.target.dataset.id;
     let templateObject = Template.instance();
     let selected_id = templateObject.selected_id.get();
     let selected_ttodo = templateObject.selected_ttodo.get();
-    // tempcode. due_date should be nullable
-    let due_date = templateObject.due_date.get() ? templateObject.due_date.get() : new Date();
 
-    console.log('save edit', selected_id)
+    let due_date = $('.crmEditDatepicker').val();
+    due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : '';
+
+    let priority = 0;
+    priority = $('#chkPriority1' + selected_id).prop('checked') ? 1 : $('#chkPriority2' + selected_id).prop('checked') ? 2 : $('#chkPriority3' + selected_id).prop('checked') ? 3 : 0;
 
     // handle save process here
     let edit_task_name = $('#edit_task_name').val();
     let edit_task_description = $('#edit_task_description').val();
+
+    let projectID = $('#editProjectID').val() ? $('#editProjectID').val() : 11;
+
 
     if (edit_task_name === '') {
       swal('Task name is not entered!', '', 'warning');
@@ -442,9 +653,11 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: selected_id,
+        ProjectID: projectID,
         TaskName: edit_task_name,
         TaskDescription: edit_task_description,
-        MsTimeStamp: due_date
+        due_date: due_date,
+        priority: priority
       }
     };
 
@@ -461,6 +674,41 @@ Template.alltasks.events({
         edit_task_description = edit_task_description.length < 80 ? edit_task_description : edit_task_description.substring(0, 79) + '...'
         $('#ttodo_' + id + ' .taskName').html(edit_task_name);
         $('#ttodo_' + id + ' .taskDescription').html(edit_task_description);
+
+        let duedate = due_date == '' ? due_date : moment(due_date).format('YYYY-MM-DD');
+        let duedateClass = 'taskUpcoming';
+        if (duedate == '') {
+          duedate = '';
+          duedateClass = 'taskNodate';
+        }
+        else if (moment().format('YYYY-MM-DD') == duedate) {
+          duedate = 'Today';
+          duedateClass = 'taskToday';
+        } else if (moment().add(1, 'day').format('YYYY-MM-DD') == duedate) {
+          duedate = 'Tomorrow';
+          duedateClass = 'taskTomorrow';
+        } else if (moment().format('YYYY-MM-DD') > duedate) {
+          duedateClass = 'taskOverdue';
+        } else {
+          duedate = moment(due_date).format('D MMM');
+        }
+
+        let dueDateInner = '<i class="far fa-calendar-plus no-modal" style="margin-right: 5px;"></i>' + duedate;
+        $('#ttodo_' + id + ' .taskDueDate').html(dueDateInner);
+        $('#ttodo_' + id + ' .taskDueDate img').addClass('no-modal');
+        $('#ttodo_' + id + ' .taskDueDate').removeClass('taskOverdue');
+        $('#ttodo_' + id + ' .taskDueDate').removeClass('taskToday');
+        $('#ttodo_' + id + ' .taskDueDate').removeClass('taskTomorrow');
+        $('#ttodo_' + id + ' .taskDueDate').removeClass('taskUpcoming');
+        $('#ttodo_' + id + ' .taskDueDate').removeClass('taskNodate');
+        $('#ttodo_' + id + ' .taskDueDate').addClass(duedateClass);
+
+        $('#ttodo_' + id + ' .custom-checkbox').removeClass('task_priority_0');
+        $('#ttodo_' + id + ' .custom-checkbox').removeClass('task_priority_1');
+        $('#ttodo_' + id + ' .custom-checkbox').removeClass('task_priority_2');
+        $('#ttodo_' + id + ' .custom-checkbox').removeClass('task_priority_3');
+        $('#ttodo_' + id + ' .custom-checkbox').addClass('task_priority_' + priority);
+
 
         templateObject.getAllTaskList();
       }
@@ -492,20 +740,29 @@ Template.alltasks.events({
     let task_name = $('#add_task_name').val();
     let task_description = $('#add_task_description').val();
     let templateObject = Template.instance();
-    let due_date = templateObject.due_date.get() ? templateObject.due_date.get() : new Date();
+
+    let due_date = $('.crmEditDatepicker').val();
+    due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : '';
+
+    let priority = 0;
+    priority = $('#chkPriority1').prop('checked') ? 1 : ($('#chkPriority2').prop('checked') ? 2 : ($('#chkPriority3').prop('checked') ? 3 : 0));
 
     if (task_name === '') {
       swal('Task name is not entered!', '', 'warning');
       return;
     }
     $('.fullScreenSpin').css('display', 'inline-block');
+    let projectID = $('#addProjectID').val() ? $('#addProjectID').val() : 11;
 
     var objDetails = {
       type: "Tprojecttasks",
       fields: {
         TaskName: task_name,
         TaskDescription: task_description,
-        MsTimeStamp: due_date
+        Completed: false,
+        ProjectID: projectID,
+        due_date: due_date,
+        priority: priority
       }
     };
 
@@ -514,6 +771,7 @@ Template.alltasks.events({
 
         $(".btnAddSubTask").css("display", "block");
         $(".newTaskRow").css("display", "none");
+        $(".addTaskModal").css("display", "none");
 
         //////////////////////////////
         templateObject.getAllTaskList();
@@ -544,12 +802,13 @@ Template.alltasks.events({
     let id = e.target.dataset.id;
 
     let currentDate = new Date();
+    let due_date = moment(currentDate).format('YYYY-MM-DD hh:mm:ss');
 
     var objDetails = {
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        MsTimeStamp: currentDate
+        due_date: due_date
       }
     };
 
@@ -574,7 +833,7 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        MsTimeStamp: tomorrow
+        due_date: tomorrow
       }
     };
 
@@ -599,7 +858,7 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        MsTimeStamp: weekend
+        due_date: weekend
       }
     };
 
@@ -626,7 +885,7 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        MsTimeStamp: next_monday
+        due_date: next_monday
       }
     };
 
@@ -650,7 +909,7 @@ Template.alltasks.events({
       type: "Tprojecttasks",
       fields: {
         ID: id,
-        MsTimeStamp: null
+        due_date: ''
       }
     };
 
@@ -668,59 +927,88 @@ Template.alltasks.events({
   // set due_date
   'click .setScheduleTodayAdd': function (e) {
 
-    let templateObject = Template.instance();
-    console.log('setScheduleTodayAdd=>', templateObject.due_date.get())
-
     let due_date = moment().format('YYYY-MM-DD hh:mm:ss');
-    templateObject.due_date.set(due_date)
+    $('.crmEditDatepicker').val(due_date)
 
   },
 
   // set due_date
   'click .setScheduleTomorrowAdd': function (e) {
 
-    let templateObject = Template.instance();
-    console.log('setScheduleTomorrowAdd=>', templateObject.due_date.get())
-
     let due_date = moment().add(1, 'day').format('YYYY-MM-DD hh:mm:ss');
-    templateObject.due_date.set(due_date)
+    $('.crmEditDatepicker').val(due_date)
 
   },
 
   // set due_date
   'click .setScheduleWeekendAdd': function (e) {
 
-    let templateObject = Template.instance();
-    console.log('setScheduleWeekendAdd=>', templateObject.due_date.get())
     let due_date = moment().endOf('week').format('YYYY-MM-DD hh:mm:ss');
-    templateObject.due_date.set(due_date)
+    $('.crmEditDatepicker').val(due_date)
 
   },
 
   // set due_date
   'click .setScheduleNexweekAdd': function (e) {
 
-    let templateObject = Template.instance();
-    console.log('setScheduleNexweekAdd=>', templateObject.due_date.get())
-
     var startDate = moment();
     let due_date = moment(startDate).day(1 + 7).format('YYYY-MM-DD hh:mm:ss');
 
-    templateObject.due_date.set(due_date)
+    $('.crmEditDatepicker').val(due_date)
 
   },
 
   // set due_date
   'click .setScheduleNodateAdd': function (e) {
 
-    let templateObject = Template.instance();
-    templateObject.due_date.set(null)
+    $('.crmEditDatepicker').val(null)
 
+  },
+
+  // open add task above
+  'click .add-task-above': function (e) {
+    let id = e.target.dataset.id;
+    let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
+    $('#addTaskModal').remove();
+    $('#ttodo_' + id).prepend(addTaskModal)
+  },
+
+  // open add task below
+  'click .add-task-below': function (e) {
+    let id = e.target.dataset.id;
+    let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
+    $('#addTaskModal').remove();
+    $('#ttodo_' + id).append(addTaskModal)
+  },
+
+  'click .taskDropSecondFlag': function (e) {
+    let id = e.target.dataset.id;
+    let priority = e.target.dataset.priority;
+
+    if (id && priority) {
+      var objDetails = {
+        type: "Tprojecttasks",
+        fields: {
+          ID: id,
+          priority: priority
+        }
+      };
+
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let templateObject = Template.instance();
+      crmService.saveNewTask(objDetails).then(function (data) {
+        templateObject.getAllTaskList();
+        $('.fullScreenSpin').css('display', 'none');
+      });
+    }
   },
 
 });
 
 Template.alltasks.helpers({
+  alllabels: () => {
+    return Template.instance().alllabels.get();
+  },
   allrecords: () => {
     return Template.instance().allrecords.get();
   },
@@ -741,6 +1029,7 @@ Template.alltasks.helpers({
   },
 
   getTodoDate: (date, format) => {
+    if (date == "" || date == null) return '';
     if (moment().format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
       return 'Today';
     } else if (moment().add(1, 'day').format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
@@ -751,6 +1040,7 @@ Template.alltasks.helpers({
   },
 
   getTaskStyleClass: (date) => {
+    if (date == "" || date == null) return 'taskNodate';
     if (moment().format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
       return 'taskToday';
     } else if (moment().add(1, 'day').format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
@@ -777,5 +1067,20 @@ Template.alltasks.helpers({
 
   getDescription: (description) => {
     return description.length < 80 ? description : description.substring(0, 79) + '...'
-  }
+  },
+
+  getTaskLabel: (labels) => {
+    if (labels == '' || labels == null) {
+      return '';
+    } else if (labels.type == undefined) {
+      let label_string = '';
+      labels.forEach(label => {
+        label_string += label.fields.TaskLabelName + ', '
+      });
+      return label_string.slice(0, -2);
+    } else {
+      return labels.fields.TaskLabelName;
+    }
+  },
+
 });

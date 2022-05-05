@@ -210,6 +210,9 @@ Template.allChartLists.onRendered(function () {
           }
           if( chart.fields._chartSlug == 'sales__sales_overview'){
             $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
+            $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
+          }
+          if( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
             $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
           }
         } else {
