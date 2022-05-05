@@ -2555,7 +2555,9 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         let editingExpense = template.editExpenseClaim.get();
         template.mergeReceiptRecords.set([editingExpense]);
-        $('input[id^="formCheckMerge-' + editingExpense.ID + '"').attr('checked', true);
+        setTimeout(() => {
+            $("#formCheckMerge-" + editingExpense.ID).prop('checked', true);
+        }, 100);
     },
     'click #btnMergeDetail': function() {
         let template = Template.instance();
@@ -2623,47 +2625,100 @@ Template.receiptsoverview.events({
         let receiptRecords = template.mergeReceiptRecords.get();
 
         console.log('keeping expense', receiptRecords[template.mergeReceiptSelectedIndex.get()]);
-        let mergedExpense = Object.assign({}, receiptRecords[template.mergeReceiptSelectedIndex.get()]);
+        let index = template.mergeReceiptSelectedIndex.get();
+        for (i = 0; i < receiptRecords.length; i++) {
+            if (i == index) {
+                let mergedExpense = Object.assign({}, receiptRecords[index]);
 
-        let selectedReceiptIndex = $('#mergedReceipt').children("option:selected").val();
-        mergedExpense.Attachments = receiptRecords[selectedReceiptIndex].Attachments;
+                let selectedReceiptIndex = $('#mergedReceipt').children("option:selected").val();
+                mergedExpense.Attachments = receiptRecords[selectedReceiptIndex].Attachments;
+        
+                let selectedDateTime = $('#mergedDateTime option:selected').text();
+                mergedExpense.DateTime = selectedDateTime ? moment(selectedDateTime, 'DD/MM/YYYY').format('YYYY-MM-DD') : ''
+        
+                let selectedAmount = $('#mergedAmount option:selected').text();
+                mergedExpense.AmountInc = parseFloat(selectedAmount.replace('$', '')) || 0;
+        
+                let selectedPaymethod = $('#mergedTransactionType option:selected').text();
+                mergedExpense.Paymethod = selectedPaymethod;
+        
+                let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
+                mergedExpense.Reimbursement = selectedReiumbursable;
+        
+                console.log('merged expense', mergedExpense)
+        
+                let expenseClaimLine = {
+                    type: "TExpenseClaimLineEx",
+                    fields: mergedExpense
+                };
+                let expenseClaim = {
+                    type: "TExpenseClaimEx",
+                    fields: {
+                        ID: mergedExpense.ExpenseClaimID,
+                        EmployeeID: mergedExpense.EmployeeID,
+                        EmployeeName: mergedExpense.EmployeeName,
+                        DateTime: mergedExpense.DateTime,
+                        Description: mergedExpense.Description,
+                        Lines: [expenseClaimLine],
+                        RequestToEmployeeID: mergedExpense.EmployeeID,
+                        RequestToEmployeeName: mergedExpense.EmployeeName,
+                    }
+                }
+        
+                $('.fullScreenSpin').css('display', 'inline-block');
+                accountService.saveReceipt(expenseClaim).then(function (data) {
+                    // $('.fullScreenSpin').css('display', 'none');
+                    setTimeout(() => {
+                        window.open('/receiptsoverview?success=true', '_self');
+                    }, 500);
+                });
+            } else {
+                let receipt = receiptRecords[i];
+                let expenseClaimLine = {
+                    type: "TExpenseClaimLineEx",
+                    fields: {
+                        ID: receipt.ID,
+                        EmployeeID: receipt.EmployeeID,
+                        EmployeeName: receipt.EmployeeName,
+                        SupplierID: receipt.SupplierID,
+                        SupplierName: receipt.SupplierName,
+                        AccountId: receipt.AccountId,
+                        AccountName: receipt.AccountName,
+                        AmountInc: receipt.AmountInc,
+                        Reimbursement: receipt.Reimbursement,
+                        DateTime: moment(receipt.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        Description: receipt.Description,
+                        Paymethod: receipt.Paymethod,
+                        Active: false
+                        // GroupReport: groupReport,
+                        // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
+                        // TransactionTypeName: transactionTypeName,
+                        // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                        // CurrencyName: currencyName,
+                    }
+                };
 
-        let selectedDateTime = $('#mergedDateTime option:selected').text();
-        mergedExpense.DateTime = selectedDateTime ? moment(selectedDateTime, 'DD/MM/YYYY').format('YYYY-MM-DD') : ''
+                let expenseClaim = {
+                    type: "TExpenseClaimEx",
+                    fields: {
+                        ID: receipt.ExpenseClaimID,
+                        EmployeeID: receipt.EmployeeID,
+                        EmployeeName: receipt.EmployeeName,
+                        DateTime: moment(receipt.DateTime, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        Description: receipt.Description,
+                        Lines: [expenseClaimLine],
+                        RequestToEmployeeID: receipt.EmployeeID,
+                        RequestToEmployeeName: receipt.EmployeeName,
+                        Active: false
+                    }
+                }
 
-        let selectedAmount = $('#mergedAmount option:selected').text();
-        mergedExpense.AmountInc = parseFloat(selectedAmount.replace('$', '')) || 0;
-
-        let selectedPaymethod = $('#mergedTransactionType option:selected').text();
-        mergedExpense.Paymethod = selectedPaymethod;
-
-        let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
-        mergedExpense.Reiumbursable = selectedReiumbursable;
-
-        console.log('merged expense', mergedExpense)
-
-        let expenseClaim = {
-            type: "TExpenseClaimEx",
-            fields: {
-                ID: mergedExpense.ExpenseClaimID,
-                EmployeeID: mergedExpense.EmployeeID,
-                EmployeeName: mergedExpense.EmployeeName,
-                DateTime: mergedExpense.DateTime,
-                Description: mergedExpense.Description,
-                Lines: [mergedExpense],
-                RequestToEmployeeID: mergedExpense.EmployeeID,
-                RequestToEmployeeName: mergedExpense.EmployeeName,
+                $('.fullScreenSpin').css('display', 'inline-block');
+                accountService.saveReceipt(expenseClaim).then(function (data) {
+                    // $('.fullScreenSpin').css('display', 'none');
+                });
             }
         }
-
-        $('.fullScreenSpin').css('display', 'inline-block');
-        accountService.saveReceipt(expenseClaim).then(function (data) {
-            // $('.fullScreenSpin').css('display', 'none');
-            // setTimeout(() => {
-                window.open('/receiptsoverview?success=true', '_self');
-            // }, 200);
-        });
-
     }
 
 });
