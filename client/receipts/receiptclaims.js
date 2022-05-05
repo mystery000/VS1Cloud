@@ -2553,7 +2553,9 @@ Template.receiptsoverview.events({
         $('#formCheckMerge-All').attr('checked', false);
         $('input[id^="formCheckMerge-"').attr('checked', false);
         let template = Template.instance();
-        template.mergeReceiptRecords.set([]);
+        let editingExpense = template.editExpenseClaim.get();
+        template.mergeReceiptRecords.set([editingExpense]);
+        $('input[id^="formCheckMerge-' + editingExpense.ID + '"').attr('checked', true);
     },
     'click #btnMergeDetail': function() {
         let template = Template.instance();
