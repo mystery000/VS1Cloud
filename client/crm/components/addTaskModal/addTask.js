@@ -1,7 +1,3 @@
-import { CRMService } from '../crm-service';
-import '../../lib/global/indexdbstorage.js';
-let crmService = new CRMService();
-
 Template.addTask.onCreated(function () {
 });
 
