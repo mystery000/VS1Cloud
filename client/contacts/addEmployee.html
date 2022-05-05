@@ -929,7 +929,7 @@
                                                                     {{#if empuserrecord}}
                                                                         {{#each itemrecord in empuserrecord}}
 
-                                                                            <div class="col-12 col-md-3">
+                                                                            <div class="col-12 col-md-4">
                                                                                 <div class="form-group" style="margin: 4px; display:none!important;"><label>Employee Name</label>
                                                                                     <input type="text" class="form-control" id="cloudEmpName" name="cloudEmpName" value="{{itemrecord.EmployeeName}}" readonly>
                                                                                     <input type="text" class="form-control" id="erpEmpID" name="erpEmpID" value="{{itemrecord.empID}}" style="display:none!important;" readonly>
@@ -949,14 +949,14 @@
                                                                                 <div class="form-group">
                                                                                     <label>Password</label>
                                                                                     <div style="width: 100%">
-                                                                                        <div style="width: 100%; float: left;">
+                                                                                        <div style="width: 85%; float: left;">
                                                                                             <input type="text" class="form-control" name="cloudCheckEmpUserPassword" id="cloudCheckEmpUserPassword" value="{{itemrecord.PasswordHash}}"
                                                                                                 style="display:none!important;">
                                                                                             <input type="password" class="form-control" id="cloudEmpUserPassword" name="cloudEmpUserPassword" value="{{itemrecord.PasswordHash}}"
                                                                                                 autocomplete="new-password">
                                                                                         </div>
-                                                                                        <div style="width: 0%; float: left;">
-                                                                                            <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password" style="color: #00a3d3; margin-top: 10px; margin-left: 4px;"></span>
+                                                                                        <div style="width: 15%; float: left;">
+                                                                                            <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password" style="color: #00a3d3; margin-top: 10px; margin-left: 4px; margin-right: 0px"></span>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2437,7 +2437,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 {{/if}}
-                                                                                                {{#if equals item.fields.CalculationType "annualsalary"}} 
+                                                                                                {{#if equals item.fields.CalculationType "annualsalary"}}
                                                                                                     <div class="col-5 col-md-2">
                                                                                                         <div class="form-group">
                                                                                                             <label>Fixed Amount</label>
@@ -2458,7 +2458,7 @@
                                                                                                     <label>Fixed Amount</label>
                                                                                                     <input type="text" class="form-control" id="">
                                                                                                 </div>
-                                                                                            </div>  
+                                                                                            </div>
                                                                                             {{/if}}
                                                                                             {{#if equals item.fields.EarningRate "Ordinary Hours"}}
                                                                                                 {{#if equals item.fields.CalculationType "enterrate"}}
@@ -2503,14 +2503,14 @@
                                                                                                     <input type="text" class="form-control" id="">
                                                                                                 </div>
                                                                                             </div>
-                                                                                            {{/if}}                                                                                            
+                                                                                            {{/if}}
                                                                                             <div class="col-1 col-md-1" style="padding-left: 0px;">
                                                                                                 <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
-                                                                            {{/if}} 
+                                                                            {{/if}}
                                                                             <div class="row mb-2">
                                                                                 <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEarningsLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
@@ -2612,7 +2612,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                                 {{/each}}
-                                                                            {{/if}}                                                                          
+                                                                            {{/if}}
                                                                             <div class="row mb-2">
                                                                                 <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addDeductionLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
@@ -2671,7 +2671,7 @@
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>    
+                                                                                        </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -2715,7 +2715,7 @@
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row mb-2">
-                                                                                <div class="col-12">        
+                                                                                <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addSuperannuationLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Superannuation Line</button>
                                                                                     <div class="modal fade" id="addSuperannuationLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2752,7 +2752,7 @@
                                                                                                                     <label class="form-check-label" for="reducesSGC">Reduces SGC</label>
                                                                                                                 </div>
                                                                                                             </div>
-                                                                                                        </div>    
+                                                                                                        </div>
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Calculation Type</label><br />
@@ -2822,7 +2822,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row mb-2">    
+                                                                <div class="row mb-2">
                                                                     <div class="col-12">
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateReiumbursementLines}}
@@ -2851,7 +2851,7 @@
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                             <div class="row mb-2">
-                                                                                <div class="col-12"> 
+                                                                                <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addReimbursementLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Reiumbursement Line</button>
                                                                                     <div class="modal fade" id="addReimbursementLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2896,7 +2896,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>    
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
