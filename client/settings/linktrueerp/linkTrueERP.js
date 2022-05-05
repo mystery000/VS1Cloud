@@ -212,10 +212,9 @@ Template.linktrueerp.events({
     taxRateService.getUserDetails().then(function (data) {
       if(data.temployee.length > 0){
         for (let i = 0; i < data.temployee.length; i++) {
-          let dataLength = data.temployee.length * 2000;
+          let dataLength = data.temployee.length * 2500;
             if (data.temployee[i].fields.User != null) {
 
-              console.log(dataLength);
               var enteredEmail = data.temployee[i].fields.Email||'';
               let cloudpassword = data.temployee[i].fields.User.fields.LogonPassword||'';
               let employeeSaveID = data.temployee[i].fields.ID||'';
@@ -251,12 +250,13 @@ Template.linktrueerp.events({
                         Modulename: "Add Extra User",
                         // Paymentamount:35,
                         Paymentamount: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        PayMethod: "Cash",
                         Price: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
-                        DiscountedPrice: 0,
+                        DiscountedPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
                         DiscountDesc: "",
-                        RenewPrice: 0,
-                        RenewDiscountedPrice: 0,
-                        RenewDiscountDesc: "Free User Included in the license",
+                        RenewPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        RenewDiscountedPrice: Number(addExtraUserPrice.replace(/[^0-9.-]+/g, "")) || 35,
+                        RenewDiscountDesc: "Free User Included in the license - TrueERP Users",
                         // PayMethod:"Cash",
                         EmployeeDetails: {
                             ID: parseInt(employeeSaveID) || 0,
@@ -289,11 +289,11 @@ Template.linktrueerp.events({
 
                 var myString = '"JsonIn"' + ':' + JSON.stringify(objDetailsUser);
                 oPost.send(myString);
-                oPost.onreadystatechange = function () {
+                oPost.onreadystatechange = async function () {
                     if (oPost.readyState == 4 && oPost.status == 200) {
 
-                        $('.fullScreenSpin').css('display', 'none');
-                        var myArrResponse = JSON.parse(oPost.responseText);
+                        // $('.fullScreenSpin').css('display', 'none');
+                        // var myArrResponse = JSON.parse(oPost.responseText);
 
                     }
 

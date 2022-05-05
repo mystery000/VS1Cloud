@@ -366,7 +366,7 @@ Template.vs1login.onRendered(function () {
                             if (data.temployeeformaccessdetail[i].fields.Description === "Purchases") {
                                 isPurchases = true;
                             }
-                            if (data.temployeeformaccessdetail[i].fields.Description === "Expense Claims") {
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Receipt Claims") {
                                 isExpenseClaims = true;
                             }
                             if (data.temployeeformaccessdetail[i].fields.Description === "Fixed Assets") {
@@ -815,7 +815,7 @@ Template.vs1login.onRendered(function () {
                     if (optionaccess.fields.Description === "Purchases") {
                         isPurchases = true;
                     }
-                    if (optionaccess.fields.Description === "Expense Claims") {
+                    if (optionaccess.fields.Description === "Receipt Claims") {
                         isExpenseClaims = true;
                     }
                     if (optionaccess.fields.Description === "Fixed Assets") {
