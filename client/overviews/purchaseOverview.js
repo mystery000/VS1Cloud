@@ -2115,24 +2115,13 @@ Template.purchasesoverview.events({
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
 
-    sideBarService
-      .getAllPurchaseOrderListAll(
-        prevMonth11Date,
-        toDate,
-        false,
-        initialReportLoad,
-        0
-      )
-      .then(function (data) {
-        addVS1Data("TbillReport", JSON.stringify(data))
-          .then(function (datareturn) {
+    sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+        addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
             window.open("/purchasesoverview", "_self");
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             window.open("/purchasesoverview", "_self");
           });
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         window.open("/purchasesoverview", "_self");
       });
   },
@@ -2436,7 +2425,7 @@ Template.purchasesoverview.events({
     if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
       $('.cardShowBtn').removeClass('hideelement');
       $('.editCardBtn').find('i').removeClass('fa-cog')
-      $('.editCardBtn').find('i').addClass('fa-save')      
+      $('.editCardBtn').find('i').addClass('fa-save')
     }else{
       $('.cardShowBtn').addClass('hideelement');
       $('.editCardBtn').find('i').removeClass('fa-save')
@@ -2456,12 +2445,12 @@ Template.purchasesoverview.events({
     if( $(e.target).find('.far').hasClass('fa-eye') ){
       $(e.target).find('.far').removeClass('fa-eye')
       $(e.target).find('.far').addClass('fa-eye-slash')
-      $(e.target).parents('.card-visibility').attr('card-active', 'false') 
+      $(e.target).parents('.card-visibility').attr('card-active', 'false')
     }else{
       $(e.target).find('.far').removeClass('fa-eye-slash')
       $(e.target).find('.far').addClass('fa-eye')
       $(e.target).parents('.card-visibility').attr('card-active', 'true')
-    } 
+    }
     let templateObject = Template.instance();
     templateObject.saveCards()
     return false

@@ -6055,12 +6055,12 @@ Template.supplierpaymentcard.events({
 
                 sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                     addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                        window.open('/purchaseorderlist', '_self');
+                        window.open('/purchaseorderlist?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/purchaseorderlist', '_self');
+                        window.open('/purchaseorderlist?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/purchaseorderlist', '_self');
+                    window.open('/purchaseorderlist?success=true', '_self');
                 });
 
             }).catch(function(err) {
@@ -6378,12 +6378,12 @@ Template.supplierpaymentcard.events({
 
                 sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                     addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                      window.open('/billlist', '_self');
+                      window.open('/billlist?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/billlist', '_self');
+                        window.open('/billlist?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/billlist', '_self');
+                    window.open('/billlist?success=true', '_self');
                 });
 
                 //window.history.go(-2);

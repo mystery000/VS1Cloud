@@ -4138,7 +4138,7 @@ Template.paymentcard.events({
                                     attachments: attachment
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
-                                        window.open('/salesorderslist', '_self');
+                                        window.open('/salesorderslist?success=true', '_self');
                                     } else {
                                         $('#html-2-pdfwrapper').css('display', 'none');
                                         swal({
@@ -4968,7 +4968,7 @@ Template.paymentcard.events({
                                     attachments: attachment
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
-                                        window.open('/invoicelist', '_self');
+                                        window.open('/invoicelist?success=true', '_self');
 
                                     } else {}
                                 });
@@ -4982,7 +4982,7 @@ Template.paymentcard.events({
                                     attachments: attachment
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
-                                        window.open('/invoicelist', '_self');
+                                        window.open('/invoicelist?success=true', '_self');
                                     } else {
                                         $('#html-2-pdfwrapper').css('display', 'none');
                                         swal({
@@ -4993,7 +4993,7 @@ Template.paymentcard.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                window.open('/invoicelist', '_self');
+                                                window.open('/invoicelist?success=true', '_self');
                                             } else if (result.dismiss === 'cancel') {}
                                         });
 
@@ -5011,7 +5011,7 @@ Template.paymentcard.events({
                                     attachments: attachment
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
-                                        window.open('/invoicelist', '_self');
+                                        window.open('/invoicelist?success=true', '_self');
 
                                     } else {
                                         $('#html-2-pdfwrapper').css('display', 'none');
@@ -5023,7 +5023,7 @@ Template.paymentcard.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                window.open('/invoicelist', '_self');
+                                                window.open('/invoicelist?success=true', '_self');
                                             } else if (result.dismiss === 'cancel') {}
                                         });
 
@@ -5041,7 +5041,7 @@ Template.paymentcard.events({
                                     attachments: attachment
                                 }, function(error, result) {
                                     if (error && error.error === "error") {
-                                        window.open('/invoicelist', '_self');
+                                        window.open('/invoicelist?success=true', '_self');
                                     } else {
                                         $('#html-2-pdfwrapper').css('display', 'none');
                                         swal({
@@ -5052,7 +5052,7 @@ Template.paymentcard.events({
                                             confirmButtonText: 'OK'
                                         }).then((result) => {
                                             if (result.value) {
-                                                window.open('/invoicelist', '_self');
+                                                window.open('/invoicelist?success=true', '_self');
                                             } else if (result.dismiss === 'cancel') {}
                                         });
 
@@ -5061,7 +5061,7 @@ Template.paymentcard.events({
                                 });
 
                             } else {
-                                window.open('/invoicelist', '_self');
+                                window.open('/invoicelist?success=true', '_self');
                             };
                         };
 

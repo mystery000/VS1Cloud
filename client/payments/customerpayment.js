@@ -1620,26 +1620,26 @@ Template.customerpayment.events({
             addVS1Data('TCustomerPaymentList', JSON.stringify(dataCustData)).then(function (datareturn) {
               sideBarService.getTCustomerPaymentList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TCustomerPayment',JSON.stringify(data)).then(function (datareturn) {
-                      location.reload(true);
+                      window.open("/customerpayment", "_self");
                   }).catch(function (err) {
-                      location.reload(true);
+                      window.open("/customerpayment", "_self");
                   });
               }).catch(function(err) {
-                  location.reload(true);
+                  window.open("/customerpayment", "_self");
               });
             }).catch(function (err) {
               sideBarService.getTCustomerPaymentList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TCustomerPayment',JSON.stringify(data)).then(function (datareturn) {
-                      location.reload(true);
+                      window.open("/customerpayment", "_self");
                   }).catch(function (err) {
-                      location.reload(true);
+                      window.open("/customerpayment", "_self");
                   });
               }).catch(function(err) {
-                  location.reload(true);
+                  window.open("/customerpayment", "_self");
               });
             });
         }).catch(function (err) {
-           Meteor._reload.reload();
+           window.open("/customerpayment", "_self");
         });
 
 

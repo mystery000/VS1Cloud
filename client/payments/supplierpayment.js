@@ -1570,26 +1570,26 @@ Template.supplierpayment.events({
             addVS1Data('TSupplierPaymentList', JSON.stringify(dataSuppPayment)).then(function (datareturn) {
               sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TSupplierPayment',JSON.stringify(data)).then(function (datareturn) {
-                      location.reload(true);
+                      window.open("/supplierpayment", "_self");
                   }).catch(function (err) {
-                      location.reload(true);
+                      window.open("/supplierpayment", "_self");
                   });
               }).catch(function(err) {
-                  location.reload(true);
+                  window.open("/supplierpayment", "_self");
               });
             }).catch(function (err) {
               sideBarService.getTSupplierPaymentList(initialDataLoad,0).then(function(data) {
                   addVS1Data('TSupplierPayment',JSON.stringify(data)).then(function (datareturn) {
-                      location.reload(true);
+                      window.open("/supplierpayment", "_self");
                   }).catch(function (err) {
-                      location.reload(true);
+                      window.open("/supplierpayment", "_self");
                   });
               }).catch(function(err) {
-                  location.reload(true);
+                  window.open("/supplierpayment", "_self");
               });
             });
         }).catch(function (err) {
-           Meteor._reload.reload();
+           window.open("/supplierpayment", "_self");
         });
 
 
