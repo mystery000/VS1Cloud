@@ -102,6 +102,7 @@ export class TaxRateService extends BaseService {
 
     checkAllowanceByName(earningName) {
         let options = {
+            ListType: "Detail",
             select: "[Description]='" + earningName + "'"
         };
         return this.getList(this.ERPObjects.TAllowance, options);
@@ -133,7 +134,7 @@ export class TaxRateService extends BaseService {
 
     checkReimbursementByName(reimbursementName) {
         let options = {
-            select: "[PayItemsReiumbursementName]='" + reimbursementName + "'"
+            select: "[ReimbursementName]='" + reimbursementName + "'"
         };
         return this.getList(this.ERPObjects.TReimbursement, options);
 
@@ -489,7 +490,8 @@ export class TaxRateService extends BaseService {
     {
 
         let options = {
-            select: "[PayrollHolidaysName]='" + holidayname + "'"
+            select: "[PayrollHolidaysName]='" + holidayname + "'",
+            ListType: "Detail"
         };
         return this.getList(this.ERPObjects.TPayrollHolidays, options);
     }

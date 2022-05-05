@@ -436,6 +436,16 @@ authenticatedRoutes.route('/employeescard', {
     }
 });
 
+authenticatedRoutes.route('/leadscard', {
+    name: 'leadscard',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'leadscard'
+        });
+    }
+});
+
+
 authenticatedRoutes.route('/supplierscard', {
     name: 'supplierscard',
     action() {

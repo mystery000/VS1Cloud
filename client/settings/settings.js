@@ -26,7 +26,8 @@ Template.settings.onRendered(function() {
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('#uploadedImage').attr('src', imageData);
-        // $('#uploadedImage').attr('width','50%');
+        $('#uploadedImage').attr('width','160');
+        $('#uploadedImage').attr('height','50%');
     }
 
 });

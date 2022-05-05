@@ -32,19 +32,19 @@
                     <div class="card-header" style="padding: 0px !important;background-color: rgba(0,0,0,0); border-top: 0px; border-left: 0px; border-right: 0px;">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist" style="border-bottom: 0px;">
                             <li class="nav-item">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#organisation" role="tab" aria-controls="home" aria-selected="true">Organisation</a>
+                                <a class="nav-link" id="org-tab" data-toggle="tab" href="#organisation" role="tab" aria-controls="home" aria-selected="true">Organisation</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#calendars" role="tab" aria-controls="profile" aria-selected="false">Calendars</a>
+                                <a class="nav-link" id="cal-tab" data-toggle="tab" href="#calendars" role="tab" aria-controls="profile" aria-selected="false">Calendars</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#holidays" role="tab" aria-controls="contact" aria-selected="false">Holidays</a>
+                                <a class="nav-link" id="hol-tab" data-toggle="tab" href="#holidays" role="tab" aria-controls="contact" aria-selected="false">Holidays</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#payitems" role="tab" aria-controls="contact" aria-selected="false">Pay Items</a>
+                                <a class="nav-link" id="pay-tab" data-toggle="tab" href="#payitems" role="tab" aria-controls="contact" aria-selected="false">Pay Items</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#superannuation" role="tab" aria-controls="contact" aria-selected="false">Superannuation</a>
+                                <a class="nav-link" id="sup-tab" data-toggle="tab" href="#superannuation" role="tab" aria-controls="contact" aria-selected="false">Superannuation</a>
                             </li>
                         </ul>
                     </div>
@@ -128,7 +128,7 @@
                                                 </style>
                                                 <div class="col-12 mb-4">
                                                     <div class="imgTextArea">
-                                                        <img class="imageUpload img-fluid" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" width="160" height="160">
+                                                        <img class="imageUpload" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" width="100%" height="auto">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mb-2">
@@ -314,7 +314,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="newPayCalendarLabel">New Pay Calendar</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" id="closemodel" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -489,7 +489,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="newHolidayLabel">New Holiday</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" id="addholdayhide" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -751,7 +751,7 @@
                                                       <div class="modal-content">
                                                           <div class="modal-header">
                                                               <h5 class="modal-title" id="allowanceLabel">Allowance</h5>
-                                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                              <button type="button" class="close" id="addallowhide" data-dismiss="modal" aria-label="Close">
                                                                   <span aria-hidden="true">&times;</span>
                                                               </button>
                                                           </div>
@@ -887,7 +887,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="ordinaryTimeEarningsLabel">Ordinary Time Earnings</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="closeaddordintimemodel" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -947,7 +947,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="overtimeEarningsLabel">Overtime Earnings</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="addovertimeeringmodel" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1008,7 +1008,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="employmentTermninationPaymentsLabel">Employment Termnination Payments</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="addemployeterm" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1069,7 +1069,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="lumpSumELabel">Lump Sum E</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="addlumpsumlabelid" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1130,7 +1130,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="bonusesCommissionsLabel">Bonuses & Commissions</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="bonusescloseid" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1194,7 +1194,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="lumpSumWLabel">Lump Sum W</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="lumpSumWLabelclose" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1258,7 +1258,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="directorsFeesLabel">Directors Fees</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="closedirect" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1389,7 +1389,7 @@
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="noneLabel">None</h5>
                                                                 <input type="hidden" class="form-control" id="edtDeductionTitle" name="edtDeductionTitle">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="addductionmodelhide" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1593,7 +1593,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="newReimbursementLabel">New Reiumbursement</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" id="closeresim" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1688,7 +1688,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="paidLeaveLabel">Paid Leave</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="closepaidleave" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
 
                                                                 </button>
@@ -1744,7 +1744,7 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title" id="unpaidLeaveLabel">Unpaid Leave</h5>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <button type="button" class="close" id="closeunpaid" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
@@ -1861,7 +1861,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="newSuperannuationFundLabel">New Superannuation Fund</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <button type="button" class="close" id="closeuperannution" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
@@ -2271,7 +2271,7 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Earnings</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delearning" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2292,7 +2292,7 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Allowance</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delallow" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2323,7 +2323,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Deduction</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="deldeu" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2348,7 +2348,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Calender</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="hidedeleteca" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2373,7 +2373,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Reimbursement</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delres" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2399,7 +2399,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Leave Data</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delleave" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2425,7 +2425,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Superannuation</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delsup" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -2451,7 +2451,7 @@
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Holiday Data</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" id="delholidy" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
