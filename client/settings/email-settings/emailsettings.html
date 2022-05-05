@@ -100,14 +100,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- <tr class="dnd-moved" id="essentials0" data-id="0" style="cursor: pointer;">
-                                            <td contenteditable="false" class="arrow pointer" id="groupedReports"
-                                                style="cursor: pointer !important;">Grouped Reports</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
-                                            <td contenteditable="false"><input id="edtRecipients0" name="edtRecipients0"
-                                                    class="es-input highlightSelect edtRecipients" type="search"></td>
-                                        </tr> -->
                                         {{#each item in employeescheduledrecord}}
                                             {{#if checkIfEssentials item.formID}}
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
@@ -135,38 +127,12 @@
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
-                                                    <!-- {{#if equals item.MsUpdateSiteCode "Time"}}
-                                                        <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td>
-                                                    {{else}} -->
-                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td>
-                                                    <!-- {{/if}} -->
-                                                    <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
+                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td>
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
                                                             class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
                                                 </tr>
                                             {{/if}}
                                         {{/each}}
-                                        <!-- <tr class="dnd-moved" id="essentials54" data-id="54" style="cursor: pointer;">
-                                            <td contenteditable="false" class="arrow">Invoices</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
-                                            <td contenteditable="false"><input id="edtRecipients" name="edtRecipients"
-                                                    class="es-input highlightSelect edtRecipients" type="search"></td>
-                                        </tr>
-                                        <tr class="dnd-moved" id="essentials129" data-id="129" style="cursor: pointer;">
-                                            <td contenteditable="false" class="arrow">Profit and Loss</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
-                                            <td contenteditable="false"><input id="edtRecipients2" name="edtRecipients2"
-                                                    class="es-input highlightSelect edtRecipients" type="search"></td>
-                                        </tr>
-                                        <tr class="dnd-moved" id="essentials177" data-id="177" style="cursor: pointer;">
-                                            <td contenteditable="false" class="arrow">Statements</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
-                                            <td contenteditable="false"><input id="edtRecipients3" name="edtRecipients3"
-                                                    class="es-input highlightSelect edtRecipients" type="search"></td>
-                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>

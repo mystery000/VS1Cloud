@@ -443,12 +443,27 @@ Template.emailsettings.onRendered(function () {
                             if (n.id == '1' && empData[i].fields.BeginFromOption === "S") formIds.push(empData[i].fields.FormID);
                             const startDate = empData[i].fields.StartDate.split(' ')[0];
                             const startTime = empData[i].fields.StartDate.split(' ')[1];
+
+                            //TODO: Getting BasedOnType from localstorage
+                            let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
+                            let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
+                            let isInOut = basedOnTypeData ? JSON.parse(basedOnTypeData).ISEmpty : false;
+                            if (basedOnType == "P") basedOnType = "On Print";
+                            else if (basedOnType == "S") basedOnType = "On Save";
+                            else if (basedOnType == "T") basedOnType = "On Transaction Date";
+                            else if (basedOnType == "D") basedOnType = "On Due Date";
+                            else if (basedOnType == "O") basedOnType = "If Outstanding";
+                            else if (basedOnType == "E") basedOnType = "On Event";
+                            else basedOnType = '';
+
                             empDataCurr = {
                                 employeeid: recipientIds.join('; ') || '',
                                 every: empData[i].fields.Every || '',
                                 formID: n.id || '',
                                 employeeEmailID: recipients.join('; ') || '',
                                 formname: n.name || '',
+                                basedOnType: basedOnType,
+                                isEmpty: isInOut,
                                 frequency: empData[i].fields.Frequency || '',
                                 id: empData[i].fields.ID || '',
                                 monthDays: empData[i].fields.MonthDays || '',
@@ -483,7 +498,9 @@ Template.emailsettings.onRendered(function () {
                     satAction: '',
                     sunAction: '',
                     beginFromOption: '',
-                    formIDs: ''
+                    formIDs: '',
+                    basedOnType: '',
+                    isEmpty: false
                 }
 
                 let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
@@ -491,7 +508,6 @@ Template.emailsettings.onRendered(function () {
                     employeeScheduledRecord.push(empDataCurr);
                 }
             });
-            console.log(employeeScheduledRecord);
 
             // Initialize Grouped Reports Modal
             const groupedReportData = employeeScheduledRecord.filter(schedule => schedule.formID == '1');
@@ -812,6 +828,14 @@ Template.emailsettings.onRendered(function () {
                                     BasedOnType: basedOnType,
                                     ISEmpty: isEmpty
                                 }));
+
+                                const nextDueDate = await new Promise((resolve, reject) => {
+                                    Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
+                                        if (error) return reject(error);
+                                        resolve(result);
+                                    });
+                                });
+                                objDetail.fields.NextDueDate = nextDueDate;
                                 
                                 Meteor.call('addTask', objDetail.fields);
                             } else {
@@ -871,6 +895,8 @@ Template.emailsettings.onRendered(function () {
                             }
                         });
                         console.log(saveResult);
+                        //TODO: Set basedon type here
+                        localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
                     }
                 });
                 await Promise.all(promise1);
@@ -1015,6 +1041,7 @@ Template.emailsettings.onRendered(function () {
                 return {success: true};
             }
         } catch(e) {
+            console.log(e);
             return {success: false, message: 'Something went wrong. Please try again later.'};
         }
     }
@@ -1412,6 +1439,8 @@ Template.emailsettings.events({
         else if (basedOnType === "On Event") {
             $('#onEventSettings').css('display', 'block');
             $('#basedOnEvent').prop('checked', true);
+            const isInOut = $(event.target).attr('data-inout');
+            if (isInOut == "true") $('#settingsOnLogout').prop('checked', true);
         }
         $("#basedOnModal").modal('toggle');
     },
