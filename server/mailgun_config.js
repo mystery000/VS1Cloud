@@ -24,8 +24,8 @@ Meteor.startup(function(){
       // SyncedCron.remove(1);
 
       FutureTasks.find().forEach(function(mail) {
-        console.log(mail)
-        console.log(mail.date);
+        // console.log(mail)
+        // console.log(mail.date);
         if (mail.date < new Date()) {
           Meteor.call('sendEmail', mail);
         } else {
@@ -54,7 +54,7 @@ Meteor.methods({
     })
   },
   sendEmail: function (details) {
-    console.log(details);
+    // console.log(details);
     // check([mailFields.to, mailFields.from, mailFields.subject, mailFields.text, mailFields.html], [String]);
     this.unblock();
     if(details.attachments === undefined){
@@ -70,13 +70,13 @@ Meteor.methods({
 
     SSR.compileTemplate("emailtemplate", Assets.getText('email/templates/reportemail.html'));
     const groupedReports = Meteor.call('groupedReports', details.FormID, details.FormIDs ? details.FormIDs.split(',') : [], details.HostURL);
-    console.log(groupedReports);
+    // console.log(groupedReports);
     const html = SSR.render("emailtemplate", {groupedReports, name: details.FormName, isGrouped: details.FormID == '1'});
 
     try {
       Email.send({
-        // to: details.EmployeeEmail,
-        to: 'silvertiger0321@gmail.com',
+        to: details.EmployeeEmail,
+        // to: 'silvertiger0321@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
         subject: 'Report Email',
@@ -92,7 +92,7 @@ Meteor.methods({
   },
   addTask: function(details) {
     if (details.Active) {
-      console.log(new Date(details.NextDueDate));
+      // console.log(new Date(details.NextDueDate));
       SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
       SyncedCron.add({
         name: details.EmployeeId + "_" + details.FormID,
@@ -106,7 +106,7 @@ Meteor.methods({
           Meteor.call('calculateNextDate', details, function(error, result) {
             if (result !== '') {
               details.NextDueDate = result;
-              console.log('New next due date for rescheduling: ', result);
+              // console.log('New next due date for rescheduling: ', result);
               Meteor.call('addTask', details);
             }
             return details.EmployeeId + "_" + details.FormID;
@@ -144,7 +144,7 @@ Meteor.methods({
           i++;
       }
 
-      console.log('Monthly next date for email scheduling =============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
+      // console.log('Monthly next date for email scheduling =============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (details.Frequency === "W") {
       const selectedDay = details.WeekDay;
@@ -154,7 +154,7 @@ Meteor.methods({
         suggestedNextDate = moment(suggestedNextDate).add(everyWeeks, 'w');
       }
 
-      console.log('Weekly next date for email scheduling ===============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
+      // console.log('Weekly next date for email scheduling ===============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (details.Frequency === "D") {
       const satAction = details.SatAction;
@@ -170,11 +170,11 @@ Meteor.methods({
         } else if (satAction === 'P' && sunAction === 'P' && everyDays !== -1) suggestedNextDate = moment(suggestedNextDate).add(everyDays, 'd');
       }
 
-      console.log('Daily next date for email scheduling ================================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
+      // console.log('Daily next date for email scheduling ================================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
       return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (details.Frequency === "" && details.StartDate === details.EndDate) {
       const suggestedNextDate = moment(startDate);
-      console.log('One Time Only next date for email scheduling ===============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
+      // console.log('One Time Only next date for email scheduling ===============================>', suggestedNextDate.format('YYYY-MM-DD HH:mm'));
       if (moment().valueOf() > suggestedNextDate.valueOf()) return '';
       else return suggestedNextDate.format('YYYY-MM-DD HH:mm');
     } else if (!details.Frequency) {
@@ -300,8 +300,8 @@ Meteor.methods({
       },
     ];
 
-    console.log(id);
-    console.log(ids);
+    // console.log(id);
+    // console.log(ids);
     let returnedValue = [];
     if (id == '1') {
         for (let i = 0; i < ids.length; i++) {
