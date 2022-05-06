@@ -1195,7 +1195,19 @@ getAllContactCombineVS1(limitcount, limitfrom) {
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
      };
-    }else{
+   }else if(currentDate == "Bill"){
+       options = {
+         IgnoreDates:true,
+         IncludePOs:false,
+         IncludeBills:true,
+         IncludeCredits:false,
+         Paid:false,
+         Unpaid:true,
+         OrderBy:"PurchaseOrderID desc",
+         LimitCount:'"'+limitcount+'"',
+         LimitFrom:'"'+limitfrom+'"'
+      };
+     }else{
       options = {
         IgnoreDates:true,
         IncludePOs:true,

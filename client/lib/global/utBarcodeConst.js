@@ -143,5 +143,7 @@ if(Session.get('ERPLoggedCountry') == "South Africa"){
    }
 }
 
+checkResponseError ="You have lost internet connection, please log out and log back in.";
+
 //loggedTaxCodePurchaseInc = Session.get('ERPTaxCodePurchaseInc');
 //loggedTaxCodeSalesInc = Session.get('ERPTaxCodeSalesInc');
