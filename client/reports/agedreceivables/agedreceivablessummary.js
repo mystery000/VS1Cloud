@@ -582,6 +582,7 @@ let grandOlder = 0;
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+        document.title = 'Aged Receivables Summary Report';
       $(".printReport").print({
           title   :  document.title +" | Aged Receivables | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",

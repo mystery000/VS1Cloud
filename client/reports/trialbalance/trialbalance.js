@@ -477,8 +477,9 @@ let grandOlder = 0;
       Meteor._reload.reload();
     },
     'click .btnPrintReport':function (event) {
+      document.title = 'Trial Balance Report';
       $(".printReport").print({
-          title   :  document.title +" | Aged Receivables | "+loggedCompany,
+          title   :  document.title +" | Trial Balance | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
       })
     },

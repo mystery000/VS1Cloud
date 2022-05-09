@@ -573,8 +573,9 @@ Template.purchasesreport.events({
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport': function(event) {
+        document.title = 'Purchase Report';
         $(".printReport").print({
-            title: document.title + " | Aged Receivables | " + loggedCompany,
+            title: document.title + " | Purchase | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
         })
     },

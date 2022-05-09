@@ -536,6 +536,7 @@ let grandOlder = 0;
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+      document.title = 'General Ledger Report';
       $(".printReport").print({
           title: "General Ledger | "+loggedCompany,
           noPrintSelector: ".addSummaryEditor"

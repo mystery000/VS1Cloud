@@ -596,6 +596,7 @@ Template.purchasesummaryreport.events({
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport': function(event) {
+        document.title = 'Purchase Summary Report';
         $(".printReport").print({
             title: document.title + " | Purchase Summary Report | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
@@ -611,7 +612,7 @@ Template.purchasesummaryreport.events({
         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-        const filename = loggedCompany + '-Purchase' + '.csv';
+        const filename = loggedCompany + '-Purchase Summary' + '.csv';
         utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
         let rows = [];
         let data = templateObject.reportrecords.get();

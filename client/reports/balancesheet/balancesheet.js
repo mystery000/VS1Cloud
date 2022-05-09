@@ -908,8 +908,9 @@ Template.balancesheetreport.events({
     },
     'click .btnPrintReport':function (event) {
       $("a").attr("href", "/");
+      document.title = 'Balance Sheet Report';
       $(".printReport").print({
-          title   :  document.title +" | Aged Receivables | "+loggedCompany,
+          title   :  document.title +" | Balance Sheet | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
           mediaPrint: false,
       });
