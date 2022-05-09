@@ -88,6 +88,9 @@ Template.quoteslist.onRendered(function() {
 
         $('td.colStatus').each(function(){
             if($(this).text() == "Deleted") $(this).addClass('text-deleted');
+            if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
+            if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
+            if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
         });
     };
 
@@ -1652,7 +1655,7 @@ Template.quoteslist.onRendered(function() {
                          "fnInitComplete": function () {
 
                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                           if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                           if (urlParametersPage || FlowRouter.current().queryParams.ignoredate||FlowRouter.current().queryParams.converted) {
                                this.fnPageChange('last');
                            }
                          $("<button class='btn btn-primary btnRefreshQuoteList' type='button' id='btnRefreshQuoteList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblquotelist_filter");

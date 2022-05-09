@@ -1004,6 +1004,29 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       return this.getList(this.ERPObjects.TSalesOrderList, options);
     }
 
+    getAllTSalesOrderListFilterData(filterData, dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+    let options = '';
+
+    if(filterData == true){
+      options = {
+        IgnoreDates:true,
+        OrderBy:"SaleID desc",
+        Search:'Converted = '+filterData+'',
+        LimitCount:'"'+limitcount+'"',
+        LimitFrom:'"'+limitfrom+'"'
+        };
+      }else{
+        options = {
+          IgnoreDates:true,
+          OrderBy:"SaleID desc",
+          Search:'Converted != true',
+          LimitCount:'"'+limitcount+'"',
+          LimitFrom:'"'+limitfrom+'"'
+          };
+      }
+        return this.getList(this.ERPObjects.TSalesOrderList, options);
+    }
+
   getAllPurchaseOrderList(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){

@@ -104,6 +104,9 @@ Template.invoicelist.onRendered(function () {
 
         $('td.colStatus').each(function(){
             if($(this).text() == "Deleted") $(this).addClass('text-deleted');
+            if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
+            if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
+            if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
         });
     };
 
@@ -155,6 +158,12 @@ Template.invoicelist.onRendered(function () {
                           salestatus = "Deleted";
                         }else if(data.tinvoicelist[i].CustomerName == ''){
                           salestatus = "Deleted";
+                        }else if(data.tinvoicelist[i].Deleted != true){
+                          if(data.tinvoicelist[i].Paid == true){
+                            salestatus = "Full";
+                          }else if ((data.tinvoicelist[i].Balance > 0) && (data.tinvoicelist[i].TotalAmountInc > data.tinvoicelist[i].Balance)){
+                            salestatus = "Part";
+                          }
                         };
                         var dataList = {
                             id: data.tinvoicelist[i].SaleID || '',
@@ -447,7 +456,6 @@ Template.invoicelist.onRendered(function () {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-
                 let useData = data;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -471,6 +479,12 @@ Template.invoicelist.onRendered(function () {
                       salestatus = "Deleted";
                     }else if(data.tinvoicelist[i].CustomerName == ''){
                       salestatus = "Deleted";
+                    }else if(data.tinvoicelist[i].Deleted != true){
+                      if(data.tinvoicelist[i].Paid == true){
+                        salestatus = "Full";
+                      }else if ((data.tinvoicelist[i].Balance > 0) && (data.tinvoicelist[i].TotalAmountInc > data.tinvoicelist[i].Balance)){
+                        salestatus = "Part";
+                      }
                     };
                     var dataList = {
                         id: data.tinvoicelist[i].SaleID || '',
@@ -781,6 +795,12 @@ Template.invoicelist.onRendered(function () {
                     salestatus = "Deleted";
                   }else if(data.tinvoicelist[i].CustomerName == ''){
                     salestatus = "Deleted";
+                  }else if(data.tinvoicelist[i].Deleted != true){
+                    if(data.tinvoicelist[i].Paid == true){
+                      salestatus = "Full";
+                    }else if ((data.tinvoicelist[i].Balance > 0) && (data.tinvoicelist[i].TotalAmountInc > data.tinvoicelist[i].Balance)){
+                      salestatus = "Part";
+                    }
                   };
                   var dataList = {
                       id: data.tinvoicelist[i].SaleID || '',
@@ -1144,6 +1164,12 @@ Template.invoicelist.events({
                           salestatus = "Deleted";
                         }else if(data.tinvoiceex[i].fields.CustomerName == ''){
                           salestatus = "Deleted";
+                        }else if(data.tinvoiceex[i].fields.Deleted != true){
+                          if(data.tinvoiceex[i].fields.IsPaid == true){
+                            salestatus = "Full";
+                          }else if ((data.tinvoiceex[i].fields.TotalBalance > 0) && (data.tinvoiceex[i].fields.TotalAmountInc > data.tinvoiceex[i].fields.TotalBalance)){
+                            salestatus = "Part";
+                          }
                         };
                         var dataList = {
                             id: data.tinvoiceex[i].fields.ID || '',

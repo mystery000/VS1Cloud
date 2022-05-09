@@ -480,3 +480,16 @@ td.td-input {
 .ui-datepicker-trigger {
     height: 38px !important;
 }
+
+.text-fullyPaid {
+    background-color: #fd7e14 !important;
+    color: #fff !important;
+}
+.text-partialPaid {
+    background-color: #f6c23e !important;
+    color: #000 !important;
+}
+.text-reconciled {
+    background-color: #1cc88a !important;
+    color: #fff !important;
+}
