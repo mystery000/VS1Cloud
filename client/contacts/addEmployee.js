@@ -5801,7 +5801,7 @@ Template.employeescard.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {}
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
                     else if (result.dismiss === 'cancel') {}
                 });
                 $('.fullScreenSpin').css('display', 'none');

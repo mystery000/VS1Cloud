@@ -548,6 +548,7 @@ let grandtotalqty = 0;
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+      document.title = 'Product Sales Report';
       $(".printReport").print({
           title   :  document.title +" | Product Sales Report | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
@@ -562,7 +563,7 @@ let grandtotalqty = 0;
         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth()+1) + "-" + dateFrom.getDate();
         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth()+1) + "-" + dateTo.getDate();
 
-        const filename = loggedCompany + '-Sales' + '.csv';
+        const filename = loggedCompany + '-Product Sales' + '.csv';
         utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
         let rows = [];
         // reportService.getAllProductSalesDetails(formatDateFrom,formatDateTo,false).then(function (data) {

@@ -511,8 +511,9 @@ let grandbalance = 0;
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+      document.title = '1099 Transactional Report';
       $(".printReport").print({
-          title   :  document.title +" | Aged Receivables | "+loggedCompany,
+          title   :  document.title +" | 1099 Transactional | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",
       })
     },

@@ -905,7 +905,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   }
 
   getCheckLeadData(limitcount, limitfrom) {
-
+  
     let options = '';
     if(limitcount == 'All'){
        options = {
@@ -915,7 +915,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }else{
        options = {
             ListType: "Detail",
-            select: '[Active]=true',
+            select: '[Active]=true',   
       };
     }
     return this.getList(this.ERPObjects.TLeads, options);
@@ -1002,6 +1002,29 @@ getAllContactCombineVS1(limitcount, limitfrom) {
      };
     }
       return this.getList(this.ERPObjects.TSalesOrderList, options);
+    }
+
+    getAllTSalesOrderListFilterData(filterData, dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+    let options = '';
+
+    if(filterData == true){
+      options = {
+        IgnoreDates:true,
+        OrderBy:"SaleID desc",
+        Search:'Converted = '+filterData+'',
+        LimitCount:'"'+limitcount+'"',
+        LimitFrom:'"'+limitfrom+'"'
+        };
+      }else{
+        options = {
+          IgnoreDates:true,
+          OrderBy:"SaleID desc",
+          Search:'Converted != true',
+          LimitCount:'"'+limitcount+'"',
+          LimitFrom:'"'+limitfrom+'"'
+          };
+      }
+        return this.getList(this.ERPObjects.TSalesOrderList, options);
     }
 
   getAllPurchaseOrderList(limitcount, limitfrom) {
@@ -1195,7 +1218,19 @@ getAllContactCombineVS1(limitcount, limitfrom) {
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
      };
-    }else{
+   }else if(currentDate == "Bill"){
+       options = {
+         IgnoreDates:true,
+         IncludePOs:false,
+         IncludeBills:true,
+         IncludeCredits:false,
+         Paid:false,
+         Unpaid:true,
+         OrderBy:"PurchaseOrderID desc",
+         LimitCount:'"'+limitcount+'"',
+         LimitFrom:'"'+limitfrom+'"'
+      };
+     }else{
       options = {
         IgnoreDates:true,
         IncludePOs:true,
@@ -1915,9 +1950,17 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   }
 
   getCurrencies() {
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = dd+'/'+mm+'/'+ yyyy;   
+    let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
     let options = {
       PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
-      select: "[Active]=true",
+      select: "[Active]=true AND [MsTimeStamp]>'"+msTimeStamp+"'",
+      ListType: "Detail"
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }

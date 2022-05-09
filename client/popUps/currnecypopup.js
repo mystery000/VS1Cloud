@@ -58,15 +58,15 @@ Template.currencypop.onRendered(function() {
                     for (let i = 0; i < data.tcurrency.length; i++) {
                         // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                         var dataList = {
-                            id: data.tcurrency[i].Id || '',
-                            code: data.tcurrency[i].Code || '-',
-                            currency: data.tcurrency[i].Currency || '-',
-                            symbol: data.tcurrency[i].CurrencySymbol || '-',
-                            buyrate: data.tcurrency[i].BuyRate || '-',
-                            sellrate: data.tcurrency[i].SellRate || '-',
-                            country: data.tcurrency[i].Country || '-',
-                            description: data.tcurrency[i].CurrencyDesc || '-',
-                            ratelastmodified: data.tcurrency[i].RateLastModified || '-',
+                            id: data.tcurrency[i].fields.Id || '',
+                            code: data.tcurrency[i].fields.Code || '-',
+                            currency: data.tcurrency[i].fields.Currency || '-',
+                            symbol: data.tcurrency[i].fields.CurrencySymbol || '-',
+                            buyrate: data.tcurrency[i].fields.BuyRate || '-',
+                            sellrate: data.tcurrency[i].fields.SellRate || '-',
+                            country: data.tcurrency[i].fields.Country || '-',
+                            description: data.tcurrency[i].fields.CurrencyDesc || '-',
+                            ratelastmodified: data.tcurrency[i].fields.RateLastModified || '-',
 
 
                         };
@@ -236,15 +236,15 @@ Template.currencypop.onRendered(function() {
                 for (let i = 0; i < data.tcurrency.length; i++) {
                     // let taxRate = (useData[i].fields.Rate * 100).toFixed(2) + '%';
                     var dataList = {
-                        id: data.tcurrency[i].Id || '',
-                        code: data.tcurrency[i].Code || '-',
-                        currency: data.tcurrency[i].Currency || '-',
-                        symbol: data.tcurrency[i].CurrencySymbol || '-',
-                        buyrate: data.tcurrency[i].BuyRate || '-',
-                        sellrate: data.tcurrency[i].SellRate || '-',
-                        country: data.tcurrency[i].Country || '-',
-                        description: data.tcurrency[i].CurrencyDesc || '-',
-                        ratelastmodified: data.tcurrency[i].RateLastModified || '-',
+                        id: data.tcurrency[i].fields.Id || '',
+                        code: data.tcurrency[i].fields.Code || '-',
+                        currency: data.tcurrency[i].fields.Currency || '-',
+                        symbol: data.tcurrency[i].fields.CurrencySymbol || '-',
+                        buyrate: data.tcurrency[i].fields.BuyRate || '-',
+                        sellrate: data.tcurrency[i].fields.SellRate || '-',
+                        country: data.tcurrency[i].fields.Country || '-',
+                        description: data.tcurrency[i].fields.CurrencyDesc || '-',
+                        ratelastmodified: data.tcurrency[i].fields.RateLastModified || '-',
 
 
                     };
@@ -376,15 +376,15 @@ Template.currencypop.onRendered(function() {
                 for (let i = 0; i < data.tcurrency.length; i++) {
                     // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                     var dataList = {
-                        id: data.tcurrency[i].Id || '',
-                        code: data.tcurrency[i].Code || '-',
-                        currency: data.tcurrency[i].Currency || '-',
-                        symbol: data.tcurrency[i].CurrencySymbol || '-',
-                        buyrate: data.tcurrency[i].BuyRate || '-',
-                        sellrate: data.tcurrency[i].SellRate || '-',
-                        country: data.tcurrency[i].Country || '-',
-                        description: data.tcurrency[i].CurrencyDesc || '-',
-                        ratelastmodified: data.tcurrency[i].RateLastModified || '-',
+                        id: data.tcurrency[i].fields.Id || '',
+                        code: data.tcurrency[i].fields.Code || '-',
+                        currency: data.tcurrency[i].fields.Currency || '-',
+                        symbol: data.tcurrency[i].fields.CurrencySymbol || '-',
+                        buyrate: data.tcurrency[i].fields.BuyRate || '-',
+                        sellrate: data.tcurrency[i].fields.SellRate || '-',
+                        country: data.tcurrency[i].fields.Country || '-',
+                        description: data.tcurrency[i].fields.CurrencyDesc || '-',
+                        ratelastmodified: data.tcurrency[i].fields.RateLastModified || '-',
 
 
                     };

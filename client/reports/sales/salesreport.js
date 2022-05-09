@@ -575,6 +575,7 @@ Template.salesreport.events({
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport': function(event) {
+      document.title = 'Sales Report';
         $(".printReport").print({
             title: document.title + " | Sales Report | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",

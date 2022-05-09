@@ -385,12 +385,12 @@
     font-size: 18px;
 }
 
-#myModal2 .modal-body {
-    font-size: 11px;
+.taxRatesSettings #myModal2 .modal-body {
+    /* font-size: 11px; */
     background: #fbfbfb;
 }
 
-#myModal2 .modal-body p {
+.taxRatesSettings #myModal2 .modal-body p {
     margin-bottom: 10px;
 }
 

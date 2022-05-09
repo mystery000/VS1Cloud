@@ -2497,9 +2497,8 @@ Template.addemployeepop.events({
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {
-                    //Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {}
+                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                 else if (result.dismiss === 'cancel') {}
             });
             $('.fullScreenSpin').css('display', 'none');
         });
@@ -3814,7 +3813,7 @@ Template.addemployeepop.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {}
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
                     else if (result.dismiss === 'cancel') {}
                 });
                 $('.fullScreenSpin').css('display', 'none');

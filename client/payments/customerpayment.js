@@ -81,9 +81,9 @@ Template.customerpayment.onRendered(function() {
         });
         $('td.colStatus').each(function(){
             if($(this).text() == "Deleted") $(this).addClass('text-deleted');
-            if ($(this).text() == "Reconciled") $(this).addClass('text-reconciled');
-            if ($(this).text() == "Paid") $(this).addClass('text-fullyPaid');
-            if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
+            if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
+            if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
+            if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
         });
     };
 

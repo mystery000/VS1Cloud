@@ -828,8 +828,9 @@ Template.agedpayables.events({
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport': function (event) {
+        document.title = 'Aged Payables Report';
         $(".printReport").print({
-            title: document.title + " | Aged Payable | " + loggedCompany,
+            title: document.title + " | Aged Payables | " + loggedCompany,
             noPrintSelector: ".addSummaryEditor",
         })
     },

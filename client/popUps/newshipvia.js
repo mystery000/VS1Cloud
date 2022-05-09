@@ -69,7 +69,8 @@ Template.newshipvia.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {} else if (result.dismiss === 'cancel') {}
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                    else if (result.dismiss === 'cancel') {}
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
@@ -82,7 +83,8 @@ Template.newshipvia.events({
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
             }).then((result) => {
-                if (result.value) {} else if (result.dismiss === 'cancel') {}
+                if (result.value) {}
+                else if (result.dismiss === 'cancel') {}
             });
         }
     }

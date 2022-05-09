@@ -508,6 +508,7 @@ yearRange: "-90:+10",
         // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
     },
     'click .btnPrintReport':function (event) {
+      document.title = 'Tax Summary Report';
       $(".printReport").print({
           title   :  document.title +" | Tax Summary | "+loggedCompany,
           noPrintSelector : ".addSummaryEditor",

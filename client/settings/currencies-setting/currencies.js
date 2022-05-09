@@ -59,15 +59,15 @@ Template.currenciesSettings.onRendered(function() {
             for(let i=0; i<data.tcurrency.length; i++){
               // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
                  var dataList = {
-                   id: data.tcurrency[i].Id || '',
-                   code: data.tcurrency[i].Code || '-',
-                   currency:data.tcurrency[i].Currency || '-',
-                   symbol:data.tcurrency[i].CurrencySymbol || '-',
-                   buyrate:data.tcurrency[i].BuyRate || '-',
-                   sellrate:data.tcurrency[i].SellRate || '-',
-                   country: data.tcurrency[i].Country || '-',
-                   description: data.tcurrency[i].CurrencyDesc || '-',
-                   ratelastmodified:data.tcurrency[i].RateLastModified || '-',
+                   id: data.tcurrency[i].fields.Id || '',
+                   code: data.tcurrency[i].fields.Code || '-',
+                   currency:data.tcurrency[i].fields.Currency || '-',
+                   symbol:data.tcurrency[i].fields.CurrencySymbol || '-',
+                   buyrate:data.tcurrency[i].fields.BuyRate || '-',
+                   sellrate:data.tcurrency[i].fields.SellRate || '-',
+                   country: data.tcurrency[i].fields.Country || '-',
+                   description: data.tcurrency[i].fields.CurrencyDesc || '-',
+                   ratelastmodified:data.tcurrency[i].fields.RateLastModified || '-',
 
 
                };
@@ -223,26 +223,30 @@ Template.currenciesSettings.onRendered(function() {
           let data = JSON.parse(dataObject[0].data);
           let useData = data.tcurrency;
           let lineItems = [];
-    let lineItemObj = {};
-    for(let i=0; i<useData.length; i++){
+           let lineItemObj = {};
+       
+          for(let i=0; i<useData.length; i++){
       // let taxRate = (useData[i].fields.Rate * 100).toFixed(2) + '%';
-         var dataList = {
-           id: useData[i].Id || '',
-           code: useData[i].Code || '-',
-           currency:useData[i].Currency || '-',
-           symbol:useData[i].CurrencySymbol || '-',
-           buyrate:useData[i].BuyRate || '-',
-           sellrate:useData[i].SellRate || '-',
-           country: useData[i].Country || '-',
-           description: useData[i].CurrencyDesc || '-',
-           ratelastmodified:useData[i].RateLastModified || '-',
+           
+           var dataList = {
+           id: useData[i].fields.Id || '',
+           code: useData[i].fields.Code || '-',
+           currency:useData[i].fields.Currency || '-',
+           symbol:useData[i].fields.CurrencySymbol || '-',
+           buyrate:useData[i].fields.BuyRate || '-',
+           sellrate:useData[i].fields.SellRate || '-',
+           country: useData[i].fields.Country || '-',
+           description: useData[i].fields.CurrencyDesc || '-',
+           ratelastmodified:useData[i].fields.RateLastModified || '-',
 
 
-       };
+          };
 
-        dataTableList.push(dataList);
+        
+
+           dataTableList.push(dataList);
         //}
-    }
+      }
 
     templateObject.datatablerecords.set(dataTableList);
 
@@ -838,14 +842,88 @@ Template.currenciesSettings.events({
 
 
   'click .synbutton':function(){
-    
-    HTTP.call( 'GET', 'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json', { "options": "" }, function( error, response ) {
-     
-         let data = response.data;
-         let date = response.date;
+    let taxRateService = new TaxRateService();
+    HTTP.call( 'GET', 'http://data.fixer.io/api/latest?access_key=d980fa1efb7dab62b2240c1f56606217', { "options": "" }, function( error, response ) {
+       
+      let data = response.data;
+      let date = data.date;
+      let rates = data.rates;
 
-         console.log(data.aud);
-      
+      let codearray = [
+        'AED','AFN','ALL','AMD','ANG','AOA','ARS','AUD','AWG','AZN','BAM','BBD','BDT','BGN',
+        'BHD','BIF','BMD','BND','BOB','BRL','BSD','BTC','BTN','BWP','BYN','BYR','BZD','CAD','CDF','CHF',
+        'CLF','CLP','CNY','COP','CRC','CUC','CUP','CVE','CZK','DJF','DKK','DOP','DZD','EGP','ERN','ETB',
+        'EUR','FJD','FKP','GBP','GEL','GGP','GHS','GIP','GMD','GNF','GTQ','GYD','HKD','HNL','HRK','HTG',
+        'HUF','IDR','ILS','IMP','INR','IQD','IRR','ISK','JEP','JMD','JOD','JPY','KES','KGS','KHR','KMF',
+        'KPW','KRW','KWD','KYD','KZT','LAK','LBP','LKR','LRD','LSL','LTL','LVL','LYD','MAD','MDL','MGA',
+        'MKD','MMK','MNT','MOP','MRO','MUR','MVR','MWK','MXN','MYR','MZN','NAD','NGN','NIO','NOK','NPR',
+        'NZD','OMR','PAB','PEN','PGK','PHP','PKR','PLN','PYG','QAR','RON','RSD','RUB','RWF','SAR','SBD',
+        'SCR','SDG','SEK','SGD','SHP','SLL','SOS','SRD','STD','SVC','SYP','SZL','THB','TJS','TMT','TND',
+        'TOP','TRY','TTD','TWD','TZS','UAH','UGX','USD','UYU','UZS','VEF','VND','VUV','WST','XAF','XAG',
+        'XAU','XCD','XDR','XOF','XPF','YER','ZAR','ZMK','ZMW','ZWL'
+      ];
+
+
+
+       for (let i = 0; i < codearray.length; i++)
+       {   
+          let code  = codearray[i];
+          let value =  rates[code];
+
+          objDetails = {
+            type: "TCurrency",
+            fields: {
+                Active: true,
+                Code: code,
+                Currency: code,
+                BuyRate: parseFloat(value)||1,
+                SellRate: parseFloat(value) ||1,
+                CurrencyDesc:"Testing Tcurrecny",
+                MsTimeStamp:date
+            }
+         };
+           
+          taxRateService.saveCurrency(objDetails).then(function (objDetails) {
+       
+             sideBarService.getCurrencies().then(function(dataReload) {
+              addVS1Data('TCurrency',JSON.stringify(dataReload)).then(function (datareturn) {
+                //Meteor._reload.reload();
+              
+                 if(i == codearray.length - 1)
+                 {
+                  Meteor._reload.reload();
+                 }
+
+               }).catch(function (err) {
+                Meteor._reload.reload();
+              });
+              }).catch(function(err) {
+              Meteor._reload.reload();
+             });
+          
+        
+
+         }).catch(function (err) {
+          swal({
+          title: 'Oooops...',
+          text: err,
+          type: 'error',
+          showCancelButton: true,
+          confirmButtonText: 'Try Again'
+          }).then((result) => {
+          if (result.value) {
+          
+          } else if (result.dismiss === 'cancel') {
+        
+          }
+          });
+            $('.fullScreenSpin').css('display','none');
+          });
+
+
+
+       }
+ 
 
      });
   },

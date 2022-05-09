@@ -2710,9 +2710,8 @@ Template.new_quote.onRendered(() => {
                                 showCancelButton: false,
                                 confirmButtonText: 'Try Again'
                             }).then((result) => {
-                                if (result.value) {
-                                    Meteor._reload.reload();
-                                } else if (result.dismiss === 'cancel') {
+                                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                                else if (result.dismiss === 'cancel') {
 
                                 }
                             });
@@ -3235,9 +3234,8 @@ Template.new_quote.onRendered(() => {
                                     showCancelButton: false,
                                     confirmButtonText: 'Try Again'
                                 }).then((result) => {
-                                    if (result.value) {
-                                        Meteor._reload.reload();
-                                    } else if (result.dismiss === 'cancel') {
+                                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                                    else if (result.dismiss === 'cancel') {
 
                                     }
                                 });
@@ -3575,9 +3573,8 @@ Template.new_quote.onRendered(() => {
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
-                            if (result.value) {
-                                Meteor._reload.reload();
-                            } else if (result.dismiss === 'cancel') {
+                            if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                            else if (result.dismiss === 'cancel') {
 
                             }
                         });
@@ -4051,9 +4048,8 @@ Template.new_quote.onRendered(() => {
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
-                            if (result.value) {
-                                Meteor._reload.reload();
-                            } else if (result.dismiss === 'cancel') {
+                            if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                            else if (result.dismiss === 'cancel') {
 
                             }
                         });
@@ -4633,9 +4629,8 @@ Template.new_quote.onRendered(() => {
                                 showCancelButton: false,
                                 confirmButtonText: 'Try Again'
                             }).then((result) => {
-                                if (result.value) {
-                                    Meteor._reload.reload();
-                                } else if (result.dismiss === 'cancel') {
+                                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                                else if (result.dismiss === 'cancel') {
 
                                 }
                             });
@@ -4935,9 +4930,8 @@ Template.new_quote.onRendered(() => {
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
-                        if (result.value) {
-                            Meteor._reload.reload();
-                        } else if (result.dismiss === 'cancel') {
+                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                        else if (result.dismiss === 'cancel') {
 
                         }
                     });
@@ -8342,9 +8336,8 @@ Template.new_quote.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {
-
-                    } else if (result.dismiss === 'cancel') {
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                    else if (result.dismiss === 'cancel') {
 
                     }
                 });
@@ -9191,9 +9184,8 @@ Template.new_quote.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {
-
-                    } else if (result.dismiss === 'cancel') {
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                    else if (result.dismiss === 'cancel') {
 
                     }
                 });
@@ -10249,9 +10241,8 @@ Template.new_quote.events({
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
-                            if (result.value) {
-
-                            } else if (result.dismiss === 'cancel') {
+                            if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                            else if (result.dismiss === 'cancel') {
 
                             }
                         });
@@ -10520,9 +10511,8 @@ Template.new_quote.events({
                     showCancelButton: false,
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
-                    if (result.value) {
-
-                    } else if (result.dismiss === 'cancel') {
+                    if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                    else if (result.dismiss === 'cancel') {
 
                     }
                 });
@@ -10785,9 +10775,8 @@ Template.new_quote.events({
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
-                        if (result.value) {
-
-                        } else if (result.dismiss === 'cancel') {
+                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                        else if (result.dismiss === 'cancel') {
 
                         }
                     });
@@ -11049,9 +11038,8 @@ Template.new_quote.events({
                         showCancelButton: false,
                         confirmButtonText: 'Try Again'
                     }).then((result) => {
-                        if (result.value) {
-
-                        } else if (result.dismiss === 'cancel') {
+                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                        else if (result.dismiss === 'cancel') {
 
                         }
                     });

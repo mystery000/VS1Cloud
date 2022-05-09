@@ -866,8 +866,9 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    document.title = 'Profit and Loss Report';
     $(".printReport").print({
-      title: document.title + " | Aged Receivables | " + loggedCompany,
+      title: document.title + " | Profit and Loss | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor, .excludeButton",
       exportOptions: {
         stripHtml: false,
