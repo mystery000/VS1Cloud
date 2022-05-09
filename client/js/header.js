@@ -1752,6 +1752,7 @@ Template.header.events({
     'click .btnGlobalSearch': function(event) {
         let templateObject = Template.instance();
         var searchData = $('.txtGlobalSearch').val().toLowerCase();
+        console.log(searchData);
         setTimeout(function() {
             $('#tblSearchOverview_filter .form-control-sm').val(searchData);
         }, 200);

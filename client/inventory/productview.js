@@ -2777,7 +2777,7 @@ Template.productview.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         templateObject.getAllProductRecentTransactions();
-
+        console.log(templateObject);
     },
     'click #btnSave': async function () {
         let productService = new ProductService();
@@ -3537,6 +3537,7 @@ Template.productview.events({
     'click #chkTrack': function (event) {
         const templateObject = Template.instance();
         let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
+        console.log(cloudPackage);
         if (cloudPackage == "Simple Start") {
             $('#upgradeModal').modal('toggle');
             templateObject.isTrackChecked.set(false);
@@ -3583,6 +3584,28 @@ Template.productview.events({
         //   $('.trackItem').css('display','none');
         //   $('.trackItemvisible').css('visibility','hidden');
         // }
+    },
+    'click #chkSNTrack': function(event) {
+        let setSNLOTtrack = false;
+        if (setSNLOTtrack == false) {
+            swal('You cannot turn on tracking.', '', 'info');
+            event.preventDefault();
+            return false;
+        }
+    },
+    'click #chkLotTrack': function(event) {
+        let setSNLOTtrack = false;
+        if (setSNLOTtrack == false) {
+            swal('You cannot turn on tracking.', '', 'info');
+            event.preventDefault();
+            return false;
+        }
+    },
+    'click #btnSNTrack': function(event) {
+        $('#SNTracklist').css({ 'display': 'block' });
+    },
+    'click #btnLotTrack': function(event) {
+        $('#LotTracklist').css({ 'display': 'block' });
     },
     'click #chkSellPrice': function (event) {
         if ($(event.target).is(':checked')) {
