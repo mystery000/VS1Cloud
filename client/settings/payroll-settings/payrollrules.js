@@ -102,9 +102,62 @@ Template.payrollrules.onRendered(function() {
 
     }
     else if(tabid == "payitem"){
+        let itemtype = FlowRouter.current().queryParams.itemtype;
+
+       
 
         $('#pay-tab').addClass('active');
         $('#payitems').addClass('active show');
+
+
+        if(itemtype === 'deduction')
+        {
+            $('#deductions').css('display', 'block');
+            $('#earnings').css('display', 'none');
+            $('#allowances').css('display', 'none');
+            $('#reimbursements').css('display', 'none');
+            $('#leave').css('display', 'none');
+
+        }
+        else if(itemtype === 'resimu')
+        {   
+            $('#deductions').css('display', 'none');
+            $('#earnings').css('display', 'none');
+            $('#allowances').css('display', 'none');
+            $('#reimbursements').css('display', 'block');
+            $('#leave').css('display', 'none');
+
+        }
+        else if(itemtype === 'earning')
+        {
+            $('#deductions').css('display', 'none');
+            $('#earnings').css('display', 'block');
+            $('#allowances').css('display', 'none');
+            $('#reimbursements').css('display', 'none');
+            $('#leave').css('display', 'none');
+
+        }
+        else if(itemtype === 'paidleave')
+        {
+            $('#deductions').css('display', 'none');
+            $('#earnings').css('display', 'none');
+            $('#allowances').css('display', 'none');
+            $('#reimbursements').css('display', 'none');
+            $('#leave').css('display', 'block');
+
+        }
+        else
+        {
+            $('#deductions').css('display', 'none');
+            $('#earnings').css('display', 'none');
+            $('#allowances').css('display', 'block');
+            $('#reimbursements').css('display', 'none');
+            $('#leave').css('display', 'none');
+
+        }
+
+
+
         $('#cal-tab').removeClass('active');
         $('#calendars').removeClass('active show');
         $('#org-tab').removeClass('active');
@@ -9423,8 +9476,8 @@ Template.payrollrules.onRendered(function() {
           if(imageData)
           {
               $('#uploadedImage').attr('src', imageData);
-              $('#uploadedImage').attr('width','50%');
-              $('#uploadedImage').attr('height','100%');
+             $('#uploadedImage').attr('width','100%');
+             $('#uploadedImage').attr('height','100%');
               $('#removeLogo').show();
               $('#changeLogo').show();
           }
@@ -18281,7 +18334,7 @@ Template.payrollrules.events({
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
-        today = yyyy+'-'+mm+'-'+dd;       
+        today = dd+'/'+mm+'/'+ yyyy;       
         $('#edtStartDate').val(today);
         $('#edtFirstPaymentDate').val(today)
         $('#paycalendarId').val(0);
@@ -18665,7 +18718,7 @@ Template.payrollrules.events({
 
      if (edtEarningsNameAllowance === '') {
         $('.fullScreenSpin').css('display','none');
-        swal('Earning has not been selected!', '', 'warning');
+        swal('Allowance Name has not been selected!', '', 'warning');
         e.preventDefault();
     } 
      else 
@@ -19365,16 +19418,16 @@ Template.payrollrules.events({
                             addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addductionmodelhide').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             }).catch(function (err) {
                                 $('#addductionmodelhide').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             });
                           }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
                 
@@ -19431,16 +19484,16 @@ Template.payrollrules.events({
                             addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addductionmodelhide').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             }).catch(function (err) {
                                 $('#addductionmodelhide').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                             });
                           }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                               window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
                 
@@ -19501,16 +19554,16 @@ Template.payrollrules.events({
                         addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#addductionmodelhide').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         }).catch(function (err) {
                             $('#addductionmodelhide').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         });
                       }).catch(function (err) {
                         $('#addductionmodelhide').trigger('click');
                         $('.fullScreenSpin').css('display','inline-block');
-                        window.open('/payrollrules?active_key=payitem','_self');
+                        window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
             
@@ -20104,16 +20157,16 @@ Template.payrollrules.events({
                                 addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closeresim').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                 }).catch(function (err) {
                                     $('#closeresim').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closeresim').trigger('click');
                                  $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                 window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -20159,16 +20212,16 @@ Template.payrollrules.events({
                                         $('#closeresim').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
                                       
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     }).catch(function (err) {
                                         $('#closeresim').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#closeresim').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -20220,16 +20273,16 @@ Template.payrollrules.events({
                                     addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closeresim').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     }).catch(function (err) {
                                         $('#closeresim').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#closeresim').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -20326,16 +20379,16 @@ Template.payrollrules.events({
                                 addVS1Data("TPaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closepaidleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 }).catch(function (err) {
                                     $('#closepaidleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closepaidleave').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -20395,16 +20448,16 @@ Template.payrollrules.events({
                                     addVS1Data("TPaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closepaidleave').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     }).catch(function (err) {
                                         $('#closepaidleave').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#closepaidleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -20457,18 +20510,18 @@ Template.payrollrules.events({
                                 addVS1Data("TPaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closepaidleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 }).catch(function (err) {
                                     $('#closepaidleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                    
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closepaidleave').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
                                
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                               });
                            }else if (result.dismiss === 'cancel') {
                        
@@ -20562,16 +20615,16 @@ Template.payrollrules.events({
                                 addVS1Data("TUnpaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closeunpaid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 }).catch(function (err) {
                                     $('#closeunpaid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closeunpaid').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                   window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -20617,16 +20670,16 @@ Template.payrollrules.events({
                                         addVS1Data("TUnpaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                             $('#closeunpaid').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                         }).catch(function (err) {
                                             $('#closeunpaid').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                         });
                                       }).catch(function (err) {
                                         $('#closeunpaid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                           window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -20679,16 +20732,16 @@ Template.payrollrules.events({
                                         addVS1Data("TUnpaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                             $('#closeunpaid').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                         }).catch(function (err) {
                                             $('#closeunpaid').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                         });
                                       }).catch(function (err) {
                                         $('#closeunpaid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -20794,16 +20847,16 @@ Template.payrollrules.events({
                                 addVS1Data("TOrdinaryTimeEarnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closeaddordintimemodel').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#closeaddordintimemodel').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closeaddordintimemodel').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -20867,16 +20920,16 @@ Template.payrollrules.events({
                                     addVS1Data("TOrdinaryTimeEarnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#closeaddordintimemodel').trigger('click');
                                        $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) {
                                         $('#closeaddordintimemodel').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
                                        $('#closeaddordintimemodel').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                       window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -20930,16 +20983,16 @@ Template.payrollrules.events({
                                         addVS1Data("TOrdinaryTimeEarnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                             $('#closeaddordintimemodel').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         }).catch(function (err) {
                                             $('#closeaddordintimemodel').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         });
                                       }).catch(function (err) {
                                         $('#closeaddordintimemodel').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                           window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -21051,16 +21104,16 @@ Template.payrollrules.events({
                             addVS1Data("Tovertimeearnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                 $('#addovertimeeringmodel').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }).catch(function (err) {
                                 $('#addovertimeeringmodel').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             });
                           }).catch(function (err) {
                             $('#addovertimeeringmodel').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                           });
                     }else if (result.dismiss === 'cancel') {
                 
@@ -21123,7 +21176,7 @@ Template.payrollrules.events({
                             if (result.value) {
                                 $('#addovertimeeringmodel').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                             }else if (result.dismiss === 'cancel') {
                         
                             }
@@ -21176,16 +21229,16 @@ Template.payrollrules.events({
                                 addVS1Data("Tovertimeearnings", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#addovertimeeringmodel').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#addovertimeeringmodel').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#addovertimeeringmodel').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21287,16 +21340,16 @@ Template.payrollrules.events({
                                 addVS1Data("Tearningsbonusescommissions", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');  
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#bonusescloseid').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21358,16 +21411,16 @@ Template.payrollrules.events({
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                   
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#bonusescloseid').trigger('click');
                                  $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                 window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21421,18 +21474,18 @@ Template.payrollrules.events({
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                  
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#bonusescloseid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                   
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#bonusescloseid').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
                                 
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21534,18 +21587,18 @@ Template.payrollrules.events({
                                     $('#addlumpsumlabelid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                     
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
 
                                     $('#addlumpsumlabelid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
 
                                     $('#addlumpsumlabelid').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21607,19 +21660,19 @@ Template.payrollrules.events({
                                             $('#addlumpsumlabelid').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block'); 
                                          
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         }).catch(function (err) {
 
                                              
                                                 $('#addlumpsumlabelid').trigger('click');
                                                 $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         });
                                       }).catch(function (err) {
 
                                         $('#addlumpsumlabelid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -21674,18 +21727,18 @@ Template.payrollrules.events({
                                         $('#addlumpsumlabelid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
                                     
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) { 
                                            
                                         $('#addlumpsumlabelid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
 
                                         $('#addlumpsumlabelid').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -21790,16 +21843,16 @@ Template.payrollrules.events({
                                     $('#addemployeterm').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                    
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#addemployeterm').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#addemployeterm').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                   window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -21867,16 +21920,16 @@ Template.payrollrules.events({
                                         $('#addemployeterm').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
                                         
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) {
                                         $('#addemployeterm').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');       
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#addemployeterm').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                         window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -21934,16 +21987,16 @@ Template.payrollrules.events({
                                             addVS1Data("TTerminationSimple", JSON.stringify(dataReload)).then(function (datareturn) {
                                                 $('#addemployeterm').trigger('click');
                                                 $('.fullScreenSpin').css('display','inline-block');
-                                                window.open('/payrollrules?active_key=payitem','_self');
+                                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                             }).catch(function (err) {
                                                 $('#addemployeterm').trigger('click');
                                                $('.fullScreenSpin').css('display','inline-block');
-                                                window.open('/payrollrules?active_key=payitem','_self');
+                                               window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                             });
                                           }).catch(function (err) {
                                             $('#addemployeterm').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                           });
                                     }else if (result.dismiss === 'cancel') {
                                 
@@ -22045,16 +22098,16 @@ Template.payrollrules.events({
                                 addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
                                     $('#closedirect').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#closedirect').trigger('click');
                                      $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                     window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#closedirect').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -22111,18 +22164,18 @@ Template.payrollrules.events({
                                         addVS1Data("Tdirectorsfees", JSON.stringify(dataReload)).then(function (datareturn) {
                                             $('#closedirect').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         }).catch(function (err) {
                                             $('#closedirect').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
                                           
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         });
                                       }).catch(function (err) {
                                         $('#closedirect').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
                                         
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -22176,18 +22229,18 @@ Template.payrollrules.events({
                                             $('#closedirect').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
                                          
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         }).catch(function (err) {
                                             $('#closedirect').trigger('click');
                                             $('.fullScreenSpin').css('display','inline-block');
                                         
-                                            window.open('/payrollrules?active_key=payitem','_self');
+                                            window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                         });
                                       }).catch(function (err) {
                                         $('#closedirect').trigger('click');
                                                 $('.fullScreenSpin').css('display','inline-block');
                                         
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                       });
                                 }else if (result.dismiss === 'cancel') {
                             
@@ -22296,16 +22349,16 @@ Template.payrollrules.events({
                                    
                                     $('#lumpSumWLabelclose').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 }).catch(function (err) {
                                     $('#lumpSumWLabelclose').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                 });
                               }).catch(function (err) {
                                 $('#lumpSumWLabelclose').trigger('click');
                                 $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=payitem','_self');
+                                window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                               });
                         }else if (result.dismiss === 'cancel') {
                     
@@ -22350,16 +22403,16 @@ Template.payrollrules.events({
                                     addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#lumpSumWLabelclose').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) {
                                         $('#lumpSumWLabelclose').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#lumpSumWLabelclose').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -22413,16 +22466,16 @@ Template.payrollrules.events({
                                     addVS1Data("TLumpSumW", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#lumpSumWLabelclose').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     }).catch(function (err) {
                                         $('#lumpSumWLabelclose').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#lumpSumWLabelclose').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=earning','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -22888,16 +22941,16 @@ Template.payrollrules.events({
                                     addVS1Data("TPaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delleave').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     }).catch(function (err) {
                                         $('#delleave').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#delleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                   });
                                 
                             }else if (result.dismiss === 'cancel') {
@@ -22969,16 +23022,16 @@ Template.payrollrules.events({
                                     addVS1Data("TUnpaidLeave", JSON.stringify(dataReload)).then(function (datareturn) {
                                         $('#delleave').trigger('click');
                                          $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                         window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     }).catch(function (err) {
                                         $('#delleave').trigger('click');
                                         $('.fullScreenSpin').css('display','inline-block');
-                                        window.open('/payrollrules?active_key=payitem','_self');
+                                        window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                     });
                                   }).catch(function (err) {
                                     $('#delleave').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=payitem','_self');
+                                    window.open('/payrollrules?active_key=payitem&itemtype=paidleave','_self');
                                   });
                             }else if (result.dismiss === 'cancel') {
                         
@@ -23233,16 +23286,16 @@ Template.payrollrules.events({
                         addVS1Data("TReimbursement", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#delres').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                         }).catch(function (err) {
                             $('#delres').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                         });
                       }).catch(function (err) {
                         $('#delres').trigger('click');
                         $('.fullScreenSpin').css('display','inline-block');
-                        window.open('/payrollrules?active_key=payitem','_self');
+                          window.open('/payrollrules?active_key=payitem&itemtype=resimu','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
                 
@@ -23333,16 +23386,16 @@ Template.payrollrules.events({
                         addVS1Data("TDeduction", JSON.stringify(dataReload)).then(function (datareturn) {
                             $('#deldeu').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         }).catch(function (err) {
                             $('#deldeu').trigger('click');
                             $('.fullScreenSpin').css('display','inline-block');
-                            window.open('/payrollrules?active_key=payitem','_self');
+                            window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                         });
                       }).catch(function (err) {
                         $('#deldeu').trigger('click');
                         $('.fullScreenSpin').css('display','inline-block');
-                          window.open('/payrollrules?active_key=payitem','_self');
+                        window.open('/payrollrules?active_key=payitem&itemtype=deduction','_self');
                       });
                 }else if (result.dismiss === 'cancel') {
             
@@ -23594,7 +23647,7 @@ Template.payrollrules.events({
             console.log(imageData);
             localStorage.setItem("Image",imageData);
             $('#uploadedImage').attr('src', imageData);
-            $('#uploadedImage').attr('width','50%');
+            //$('#uploadedImage').attr('width','100%');
             $('#removeLogo').show();
             $('#changeLogo').show();
         }
