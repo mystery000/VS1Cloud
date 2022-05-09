@@ -58,6 +58,22 @@ Template.tasklist_sidebar.events({
     }
   },
 
+  // 'click .menuTasklist': function (e) {
+  //   FlowRouter.go('/tasklist');
+  // },
+
+  // 'click .menuTasktoday': function (e) {
+  //   FlowRouter.go('/tasktoday');
+  // },
+
+  // 'click .menuTaskupcoming': function (e) {
+  //   FlowRouter.go('/taskupcoming');
+  // },
+
+  'click .menuFilterslabels': function (e) {
+    FlowRouter.go('/filterslabels');
+  },
+
   // delete project
   'click .delete-project': function (e) {
     let id = e.target.dataset.id;

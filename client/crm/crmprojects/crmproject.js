@@ -19,17 +19,6 @@ Template.projects.onCreated(function () {
 });
 
 Template.projects.onRendered(function () {
-  $("#task_items_wrapper").sortable({
-    handle: '.taskDrag',
-    update: function (event, ui) {
-      var sorted = $("#task_items_wrapper").sortable("serialize", { key: "sort" });
-      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
-
-      let current_id = ui.item[0].id;
-      let prev_id = ui.item[0].previousElementSibling.id;
-      let next_id = ui.item[0].nextElementSibling.id;
-    },
-  });
 
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
@@ -1020,7 +1009,26 @@ Template.projects.events({
       });
     }
   },
+  'click .menuTasklist': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=all');
+    }
+  },
 
+  'click .menuTasktoday': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=today');
+    }
+  },
+
+  'click .menuTaskupcoming': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=upcoming');
+    }
+  },
 });
 
 Template.projects.helpers({
