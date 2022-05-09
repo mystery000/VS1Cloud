@@ -12,7 +12,6 @@ Template.smssettings.onCreated(() => {
   templateObject.saveSettingObject = async function(data) {
     return new Promise((resolve) => {
       const oldSetting = templateObject.smsSettingDetails.get().filter((field) => field.PrefName === data.eKey);
-      console.log(oldSetting);
       let settingObject = {};
       if (oldSetting.length > 0) {
         settingObject = {
@@ -65,12 +64,12 @@ Template.smssettings.onRendered(function () {
       templateObject.smsSettingDetails.set(result.terppreference);
       for (let i = 0; i < result.terppreference.length; i++) {
         switch(result.terppreference[i].PrefName) {
-          case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
-          case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
-          case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
-          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
-          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
-          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+          case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountId; break;
+          case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountToken; break;
+          case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue || smsSettings.twilioTelephoneNumber; break;
+          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.saveAppointmentSMSMessage; break;
+          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.startAppointmentSMSMessage; break;
+          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.stopAppointmentSMSMessage;
         }
       }
 
