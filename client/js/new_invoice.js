@@ -2548,8 +2548,9 @@ Template.new_invoice.onRendered(() => {
                             showCancelButton: false,
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
-                            if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                            else if (result.dismiss === 'cancel') {}
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === 'cancel') {}
                         });
                         $('.fullScreenSpin').css('display', 'none');
                     });
@@ -6156,11 +6157,7 @@ Template.new_invoice.onRendered(() => {
           }).catch(function (err) {
 
           });
-
-        }
-
-
-
+         }
         templateObject.getDepartments();
         templateObject.getTerms();
 
@@ -6598,6 +6595,7 @@ Template.new_invoice.onRendered(() => {
 
         $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
             $('#sltCurrency').val($(this).find(".colCode").text());
+            $('#exchange_rate').val($(this).find(".colBuyRate").text());
             $('#currencyModal').modal('toggle');
 
             $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -7141,9 +7139,11 @@ Template.new_invoice.onRendered(() => {
 
         $('#sltCurrency').editableSelect()
         .on('click.editable-select', function (e, li) {
+            
             var $earch = $(this);
             var offset = $earch.offset();
             var currencyDataName = e.target.value || '';
+
             $('#edtCurrencyID').val('');
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                 $('#currencyModal').modal('toggle');
@@ -7155,19 +7155,21 @@ Template.new_invoice.onRendered(() => {
                         if (dataObject.length == 0) {
                             $('.fullScreenSpin').css('display', 'inline-block');
                             sideBarService.getCurrencies().then(function (data) {
+                             
                                 for (let i in data.tcurrency) {
                                     if (data.tcurrency[i].Code === currencyDataName) {
-                                        $('#edtCurrencyID').val(data.tcurrency[i].Id);
+                                        $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
                                         setTimeout(function () {
-                                            $('#sedtCountry').val(data.tcurrency[i].Country);
+                                            $('#sedtCountry').val(data.tcurrency[i].fields.Country);
                                         }, 200);
                                         //$('#sedtCountry').val(data.tcurrency[i].Country);
                                         $('#currencyCode').val(currencyDataName);
-                                        $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                        $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                        $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                        $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                        $('#edtSellRate').val(data.tcurrency[i].SellRate);
+                                        $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+                                        $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+                                        $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+                                        $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+                                        $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+                                        $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
                                     }
                                 }
                                 setTimeout(function () {
@@ -7178,17 +7180,20 @@ Template.new_invoice.onRendered(() => {
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
+                          
+                        
                             let useData = data.tcurrency;
                             for (let i = 0; i < data.tcurrency.length; i++) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].Id);
-                                    $('#sedtCountry').val(data.tcurrency[i].Country);
+                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+                                    $('#sedtCountry').val(data.tcurrency[i].fields.Country);
                                     $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].SellRate);
+                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
                                 }
                             }
                             setTimeout(function () {
@@ -7202,17 +7207,18 @@ Template.new_invoice.onRendered(() => {
                         sideBarService.getCurrencies().then(function (data) {
                             for (let i in data.tcurrency) {
                                 if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].Id);
+                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
                                     setTimeout(function () {
-                                        $('#sedtCountry').val(data.tcurrency[i].Country);
+                                        $('#sedtCountry').val(data.tcurrency[i].fields.Country);
                                     }, 200);
                                     //$('#sedtCountry').val(data.tcurrency[i].Country);
                                     $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].SellRate);
+                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
                                 }
                             }
                             setTimeout(function () {
@@ -7236,6 +7242,8 @@ Template.new_invoice.onRendered(() => {
                 }
             }
         });
+
+    
 
         $('#edtCustomerName').editableSelect()
         .on('click.editable-select', function (e, li) {
@@ -8466,6 +8474,8 @@ Template.new_invoice.onRendered(() => {
               $('.fullScreenSpin').css('display', 'none');
           });
         },
+
+
         'click #edtSaleCustField1': function(event) {
             clickedInput = "one";
             $('#clickedControl').val(clickedInput);
