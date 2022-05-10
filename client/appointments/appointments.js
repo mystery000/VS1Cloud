@@ -8318,7 +8318,7 @@ Template.appointments.events({
                                             const smsUser = $('#chkSMSUser').is(':checked');
                                             const smsSettings = templateObject.defaultSMSSettings.get();
                                             let sendSMSRes = true;
-                                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+                                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                                                 sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
                                             if (!sendSMSRes.success) {
                                                 swal({
@@ -8346,6 +8346,9 @@ Template.appointments.events({
                                                 localStorage.setItem('fromStartOrStop', true);
                                                 templateObject.checkRefresh.set(true);
                                             }
+                                          }else{
+                                            $('#frmAppointment').submit();
+                                          }
                                         }).catch(function (err) {
                                             swal({
                                                 title: 'Oooops...',
@@ -8399,7 +8402,7 @@ Template.appointments.events({
                                         const smsUser = $('#chkSMSUser').is(':checked');
                                         const smsSettings = templateObject.defaultSMSSettings.get();
                                         let sendSMSRes = true;
-                                        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+                                        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                                             sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
                                         if (!sendSMSRes.success) {
                                             swal({
@@ -8427,6 +8430,9 @@ Template.appointments.events({
                                             localStorage.setItem('fromStartOrStop', true);
                                             templateObject.checkRefresh.set(true);
                                         }
+                                      }else{
+                                        $('#frmAppointment').submit();
+                                      }
                                     }).catch(function (err) {
                                         swal({
                                             title: 'Oooops...',
@@ -8537,7 +8543,7 @@ Template.appointments.events({
                                 const smsUser = $('#chkSMSUser').is(':checked');
                                 const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
-                                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+                                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                                     sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
                                 if (!sendSMSRes.success) {
                                     swal({
@@ -8565,6 +8571,9 @@ Template.appointments.events({
                                     localStorage.setItem('fromStartOrStop', true);
                                     templateObject.checkRefresh.set(true);
                                 }
+                              }else{
+                                  $('#frmAppointment').submit();
+                              }
                             }).catch(function (err) {
                                 swal({
                                     title: 'Oooops...',
@@ -8627,7 +8636,7 @@ Template.appointments.events({
                 const smsUser = $('#chkSMSUser').is(':checked');
                 const smsSettings = templateObject.defaultSMSSettings.get();
                 let sendSMSRes = true;
-                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                     sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
                 if (!sendSMSRes.success) {
                     swal({
@@ -8654,6 +8663,11 @@ Template.appointments.events({
                     $('#frmAppointment').submit();
                     localStorage.setItem('fromStartOrStop', true);
                 }
+              }else{
+                $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                $('#btnCloseStartAppointmentModal').trigger('click');
+                $("#btnSaveAppointment").trigger("click");
+              }
             }
         } else {
             //TODO: Start Appointment SMS sent here
@@ -8662,7 +8676,7 @@ Template.appointments.events({
             const smsUser = $('#chkSMSUser').is(':checked');
             const smsSettings = templateObject.defaultSMSSettings.get();
             let sendSMSRes = true;
-            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                 sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
             if (!sendSMSRes.success) {
                 swal({
@@ -8691,6 +8705,11 @@ Template.appointments.events({
                 $('#frmAppointment').submit();
                 localStorage.setItem('fromStartOrStop', true);
             }
+          }else{
+            $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+            $('#btnCloseStartAppointmentModal').trigger('click');
+            $("#btnSaveAppointment").trigger("click");
+          }
         }
     },
     'click #btnStartAppointment': function() {
@@ -8749,7 +8768,8 @@ Template.appointments.events({
                     $('#startAppointmentSMSMessage').val(startAppointmentSMS);
                 }
             } else {
-                $('#btnStartAppointmentConfirm').trigger('click');
+              $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+              $("#btnSaveAppointment").trigger("click");
             }
         }
     },
@@ -8829,7 +8849,9 @@ Template.appointments.events({
                         $('#btnSaveAppointmentSubmit').trigger('click');
                     }
                 })
-            } else $('#btnSaveAppointmentSubmit').trigger('click');
+            } else {
+              $('#btnSaveAppointmentSubmit').trigger('click');
+            }
         } else {
             const templateObject = Template.instance();
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -8889,7 +8911,7 @@ Template.appointments.events({
         const customerPhone = $('#mobile').val();
         const smsSettings = templateObject.defaultSMSSettings.get();
         let sendSMSRes = true;
-        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
             sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone);
         if (!sendSMSRes.success) {
             swal({
@@ -8922,6 +8944,9 @@ Template.appointments.events({
             });
             $('#frmAppointment').submit();
         }
+      }else{
+        $('#frmAppointment').submit();
+      }
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {
@@ -8978,7 +9003,7 @@ Template.appointments.events({
                             const smsUser = $('#chkSMSUser').is(':checked');
                             const smsSettings = templateObject.defaultSMSSettings.get();
                             let sendSMSRes = true;
-                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) 
+                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
                                 sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone);
                             if (!sendSMSRes.success) {
                                 swal({
@@ -9004,6 +9029,10 @@ Template.appointments.events({
                                 $('#frmAppointment').submit();
                                 localStorage.setItem('fromStartOrStop', true);
                             }
+                          }else{
+                            $('#btnCloseStopAppointmentModal').trigger('click');
+                            $("#btnSaveAppointment").trigger("click");
+                          }
 
                         } else if (result.dismiss === 'cancel') {
                             document.getElementById('tActualEndTime').value = '';
