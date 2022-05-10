@@ -1006,11 +1006,12 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
     getAllTSalesOrderListFilterData(filterData, dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
     let options = '';
-    if(filterData == 'true'){
+
+    if(filterData == true){
       options = {
         IgnoreDates:true,
         OrderBy:"SaleID desc",
-        Search:'Converted = '+true+'',
+        Search:'Converted = '+filterData+'',
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
         };
@@ -1254,7 +1255,6 @@ getAllContactCombineVS1(limitcount, limitfrom) {
         IncludeIsQuote:false,
         IncludeIsRefund:true,
         IncludeISSalesOrder:false,
-        IncludeLines:false,
         Paid:false,
         Unpaid:true,
         OrderBy:"SaleID desc",
@@ -1268,7 +1268,6 @@ getAllContactCombineVS1(limitcount, limitfrom) {
        IncludeIsQuote:false,
        IncludeIsRefund:true,
        IncludeISSalesOrder:false,
-       IncludeLines:false,
        Paid:false,
        Unpaid:true,
        OrderBy:"SaleID desc",
@@ -1399,11 +1398,12 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
     getAllTQuoteListFilterData(filterData, dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
     let options = '';
-    if(filterData == 'true'){
+
+    if(filterData == true){
       options = {
         IgnoreDates:true,
         OrderBy:"SaleID desc",
-        Search:'Converted = '+true+'',
+        Search:'Converted = '+filterData+'',
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
         };

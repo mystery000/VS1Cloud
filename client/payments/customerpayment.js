@@ -113,6 +113,7 @@ Template.customerpayment.onRendered(function() {
            sideBarService.getAllTCustomerPaymentListDataByPaymentID(customerName).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
+              console.log(data);
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
@@ -122,6 +123,7 @@ Template.customerpayment.onRendered(function() {
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
                   for(let i=0; i<data.tcustomerpaymentlist.length; i++){
+                    console.log(data.tcustomerpaymentlist[i].Reconciled);
                       let amount = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Amount)|| 0.00;
                       let applied = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Applied) || 0.00;
                       // Currency+''+data.tcustomerpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -656,6 +658,7 @@ Template.customerpayment.onRendered(function() {
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tcustomerpaymentlist;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -668,7 +671,8 @@ Template.customerpayment.onRendered(function() {
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
             for(let i=0; i<data.tcustomerpaymentlist.length; i++){
-
+              console.log(data.tcustomerpaymentlist[i].Reconciled);
+              console.log(data.tcustomerpaymentlist[i].PaymentID);
                 let amount = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Amount)|| 0.00;
                 let applied = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Applied) || 0.00;
                 // Currency+''+data.tcustomerpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});

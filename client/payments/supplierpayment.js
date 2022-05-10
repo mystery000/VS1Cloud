@@ -133,15 +133,7 @@ Template.supplierpayment.onRendered(function() {
                 let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                 if(data.tsupplierpaymentlist[i].Deleted == true){
                   paystatus = "Deleted";
-                }else if (data.tsupplierpaymentlist[i].Reconciled == true){
-                  paystatus = "Rec";
-                }else if(data.tsupplierpaymentlist[i].Deleted != true){
-                  if ((data.tsupplierpaymentlist[i].Applied > 0) && (data.tsupplierpaymentlist[i].Balance > data.tsupplierpaymentlist[i].Applied)){
-                    paystatus = "Part";
-                  }else{
-                    paystatus = "Full";
-                  }
-                };
+                }
                 var dataList = {
                     id: data.tsupplierpaymentlist[i].PaymentID || '',
                     sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -362,15 +354,7 @@ Template.supplierpayment.onRendered(function() {
                         let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                         if(data.tsupplierpaymentlist[i].Deleted == true){
                           paystatus = "Deleted";
-                        }else if (data.tsupplierpaymentlist[i].Reconciled == true){
-                          paystatus = "Rec";
-                        }else if(data.tsupplierpaymentlist[i].Deleted != true){
-                          if ((data.tsupplierpaymentlist[i].Applied > 0) && (data.tsupplierpaymentlist[i].Balance > data.tsupplierpaymentlist[i].Applied)){
-                            paystatus = "Part";
-                          }else{
-                            paystatus = "Full";
-                          }
-                        };
+                        }
                         var dataList = {
                             id: data.tsupplierpaymentlist[i].PaymentID || '',
                             sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -665,15 +649,7 @@ Template.supplierpayment.onRendered(function() {
                     let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                     if(data.tsupplierpaymentlist[i].Deleted == true){
                       paystatus = "Deleted";
-                    }else if (data.tsupplierpaymentlist[i].Reconciled == true){
-                      paystatus = "Rec";
-                    }else if(data.tsupplierpaymentlist[i].Deleted != true){
-                      if ((data.tsupplierpaymentlist[i].Applied > 0) && (data.tsupplierpaymentlist[i].Balance > data.tsupplierpaymentlist[i].Applied)){
-                        paystatus = "Part";
-                      }else{
-                        paystatus = "Full";
-                      }
-                    };
+                    }
                     var dataList = {
                         id: data.tsupplierpaymentlist[i].PaymentID || '',
                         sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -964,15 +940,7 @@ Template.supplierpayment.onRendered(function() {
                   let paystatus = data.tsupplierpaymentlist[i].QuoteStatus || '';
                   if(data.tsupplierpaymentlist[i].Deleted == true){
                     paystatus = "Deleted";
-                  }else if (data.tsupplierpaymentlist[i].Reconciled == true){
-                    paystatus = "Rec";
-                  }else if(data.tsupplierpaymentlist[i].Deleted != true){
-                    if ((data.tsupplierpaymentlist[i].Applied > 0) && (data.tsupplierpaymentlist[i].Balance > data.tsupplierpaymentlist[i].Applied)){
-                      paystatus = "Part";
-                    }else{
-                      paystatus = "Full";
-                    }
-                  };
+                  }
                   var dataList = {
                       id: data.tsupplierpaymentlist[i].PaymentID || '',
                       sortdate: data.tsupplierpaymentlist[i].PaymentDate !=''? moment(data.tsupplierpaymentlist[i].PaymentDate).format("YYYY/MM/DD"): data.tsupplierpaymentlist[i].PaymentDate,
@@ -1336,15 +1304,7 @@ Template.supplierpayment.events({
                         paystatus = "Deleted";
                       }else if(data.tsupplierpayment[i].fields.Lines == null){
                         paystatus = "Deleted";
-                      }else if(data.tsupplierpayment[i].fields.Deleted != true){
-                        if(data.tsupplierpayment[i].fields.Payment == true){
-                          paystatus = "Full";
-                        }else if ((data.tsupplierpayment[i].fields.Applied > 0) && (data.tsupplierpayment[i].fields.Amount > data.tsupplierpayment[i].fields.Applied)){
-                          paystatus = "Part";
-                        }else if (data.tsupplierpayment[i].fields.Reconciled == true){
-                          paystatus = "Rec";
-                        }
-                      };
+                      }
                       var dataList = {
                           id: data.tsupplierpayment[i].fields.ID || '',
                           sortdate: data.tsupplierpayment[i].fields.PaymentDate !=''? moment(data.tsupplierpayment[i].fields.PaymentDate).format("YYYY/MM/DD"): data.tsupplierpayment[i].fields.PaymentDate,
