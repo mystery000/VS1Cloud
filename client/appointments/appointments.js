@@ -8318,37 +8318,39 @@ Template.appointments.events({
                                             const smsUser = $('#chkSMSUser').is(':checked');
                                             const smsSettings = templateObject.defaultSMSSettings.get();
                                             let sendSMSRes = true;
-                                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+                                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                                                 sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
-                                            if (!sendSMSRes.success) {
-                                                swal({
-                                                    title: 'Oooops...',
-                                                    text: sendSMSRes.message,
-                                                    type: 'error',
-                                                    showCancelButton: false,
-                                                    confirmButtonText: 'Try again'
-                                                }).then((result) => {
-                                                    if (result.value) {
-                                                        $('#btnCloseStartAppointmentModal').trigger('click');
-                                                    }
-                                                });
+                                                if (!sendSMSRes.success) {
+                                                    swal({
+                                                        title: 'Oooops...',
+                                                        text: sendSMSRes.message,
+                                                        type: 'error',
+                                                        showCancelButton: false,
+                                                        confirmButtonText: 'Try again'
+                                                    }).then((result) => {
+                                                        if (result.value) {
+                                                            $('#btnCloseStartAppointmentModal').trigger('click');
+                                                        }
+                                                    });
+                                                } else {
+                                                    swal({
+                                                        title: 'SMS was sent successfully',
+                                                        text: "SMS was sent successfully",
+                                                        type: 'success',
+                                                        showCancelButton: false,
+                                                        confirmButtonText: 'Ok'
+                                                    });
+                                                    $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                                                    $('#btnCloseStartAppointmentModal').trigger('click');
+                                                    $('#frmAppointment').trigger('submit');
+                                                    templateObject.checkRefresh.set(true);
+                                                }
                                             } else {
-                                                swal({
-                                                    title: 'SMS was sent successfully',
-                                                    text: "SMS was sent successfully",
-                                                    type: 'success',
-                                                    showCancelButton: false,
-                                                    confirmButtonText: 'Ok'
-                                                });
                                                 $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-                                                $('#btnCloseStartAppointmentModal').trigger('click');
-                                                $('#frmAppointment').submit();
-                                                localStorage.setItem('fromStartOrStop', true);
-                                                templateObject.checkRefresh.set(true);
+                                                    $('#btnCloseStartAppointmentModal').trigger('click');
+                                                    $('#frmAppointment').trigger('submit');
+                                                    templateObject.checkRefresh.set(true);
                                             }
-                                          }else{
-                                            $('#frmAppointment').submit();
-                                          }
                                         }).catch(function (err) {
                                             swal({
                                                 title: 'Oooops...',
@@ -8402,37 +8404,39 @@ Template.appointments.events({
                                         const smsUser = $('#chkSMSUser').is(':checked');
                                         const smsSettings = templateObject.defaultSMSSettings.get();
                                         let sendSMSRes = true;
-                                        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+                                        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                                             sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
-                                        if (!sendSMSRes.success) {
-                                            swal({
-                                                title: 'Oooops...',
-                                                text: sendSMSRes.message,
-                                                type: 'error',
-                                                showCancelButton: false,
-                                                confirmButtonText: 'Try again'
-                                            }).then((result) => {
-                                                if (result.value) {
-                                                    $('#startAppointmentModal').modal('hide');
-                                                }
-                                            });
+                                            if (!sendSMSRes.success) {
+                                                swal({
+                                                    title: 'Oooops...',
+                                                    text: sendSMSRes.message,
+                                                    type: 'error',
+                                                    showCancelButton: false,
+                                                    confirmButtonText: 'Try again'
+                                                }).then((result) => {
+                                                    if (result.value) {
+                                                        $('#startAppointmentModal').modal('hide');
+                                                    }
+                                                });
+                                            } else {
+                                                swal({
+                                                    title: 'SMS was sent successfully',
+                                                    text: "SMS was sent successfully",
+                                                    type: 'success',
+                                                    showCancelButton: false,
+                                                    confirmButtonText: 'Ok'
+                                                });
+                                                $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                                                $('#btnCloseStartAppointmentModal').trigger('click');
+                                                $('#frmAppointment').trigger('submit');
+                                                templateObject.checkRefresh.set(true);
+                                            }
                                         } else {
-                                            swal({
-                                                title: 'SMS was sent successfully',
-                                                text: "SMS was sent successfully",
-                                                type: 'success',
-                                                showCancelButton: false,
-                                                confirmButtonText: 'Ok'
-                                            });
                                             $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                             $('#btnCloseStartAppointmentModal').trigger('click');
-                                            $('#frmAppointment').submit();
-                                            localStorage.setItem('fromStartOrStop', true);
+                                            $('#frmAppointment').trigger('submit');
                                             templateObject.checkRefresh.set(true);
                                         }
-                                      }else{
-                                        $('#frmAppointment').submit();
-                                      }
                                     }).catch(function (err) {
                                         swal({
                                             title: 'Oooops...',
@@ -8543,37 +8547,39 @@ Template.appointments.events({
                                 const smsUser = $('#chkSMSUser').is(':checked');
                                 const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
-                                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+                                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                                     sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
-                                if (!sendSMSRes.success) {
-                                    swal({
-                                        title: 'Oooops...',
-                                        text: sendSMSRes.message,
-                                        type: 'error',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'Try again'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            $('#startAppointmentModal').modal('hide');
-                                        }
-                                    });
+                                    if (!sendSMSRes.success) {
+                                        swal({
+                                            title: 'Oooops...',
+                                            text: sendSMSRes.message,
+                                            type: 'error',
+                                            showCancelButton: false,
+                                            confirmButtonText: 'Try again'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                $('#startAppointmentModal').modal('hide');
+                                            }
+                                        });
+                                    } else {
+                                        swal({
+                                            title: 'SMS was sent successfully',
+                                            text: "SMS was sent successfully",
+                                            type: 'success',
+                                            showCancelButton: false,
+                                            confirmButtonText: 'Ok'
+                                        });
+                                        $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                                        $('#btnCloseStartAppointmentModal').trigger('click');
+                                        $('#frmAppointment').submit();
+                                        templateObject.checkRefresh.set(true);
+                                    }
                                 } else {
-                                    swal({
-                                        title: 'SMS was sent successfully',
-                                        text: "SMS was sent successfully",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'Ok'
-                                    });
                                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                     $('#frmAppointment').submit();
-                                    localStorage.setItem('fromStartOrStop', true);
                                     templateObject.checkRefresh.set(true);
                                 }
-                              }else{
-                                  $('#frmAppointment').submit();
-                              }
                             }).catch(function (err) {
                                 swal({
                                     title: 'Oooops...',
@@ -8636,8 +8642,47 @@ Template.appointments.events({
                 const smsUser = $('#chkSMSUser').is(':checked');
                 const smsSettings = templateObject.defaultSMSSettings.get();
                 let sendSMSRes = true;
-                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+                if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                     sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                    if (!sendSMSRes.success) {
+                        swal({
+                            title: 'Oooops...',
+                            text: sendSMSRes.message,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try again'
+                        }).then((result) => {
+                            if (result.value) {
+                                $('#startAppointmentModal').modal('hide');
+                            }
+                        });
+                    } else {
+                        swal({
+                            title: 'SMS was sent successfully',
+                            text: "SMS was sent successfully",
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Ok'
+                        });
+                        $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                        $('#btnCloseStartAppointmentModal').trigger('click');
+                        $('#frmAppointment').trigger('submit');
+                    }
+                } else {
+                    $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                    $('#btnCloseStartAppointmentModal').trigger('click');
+                    $('#frmAppointment').trigger('submit');
+                }
+            }
+        } else {
+            //TODO: Start Appointment SMS sent here
+            const customerPhone = $('#mobile').val();
+            const smsCustomer = $('#chkSMSCustomer').is(':checked');
+            const smsUser = $('#chkSMSUser').is(':checked');
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            let sendSMSRes = true;
+            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
+                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
                 if (!sendSMSRes.success) {
                     swal({
                         title: 'Oooops...',
@@ -8648,6 +8693,8 @@ Template.appointments.events({
                     }).then((result) => {
                         if (result.value) {
                             $('#startAppointmentModal').modal('hide');
+                        } else {
+                            // window.open('/appointments', '_self');
                         }
                     });
                 } else {
@@ -8660,56 +8707,13 @@ Template.appointments.events({
                     });
                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                     $('#btnCloseStartAppointmentModal').trigger('click');
-                    $('#frmAppointment').submit();
-                    localStorage.setItem('fromStartOrStop', true);
+                    $('#frmAppointment').trigger('submit');
                 }
-              }else{
-                $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-                $('#btnCloseStartAppointmentModal').trigger('click');
-                $("#btnSaveAppointment").trigger("click");
-              }
-            }
-        } else {
-            //TODO: Start Appointment SMS sent here
-            const customerPhone = $('#mobile').val();
-            const smsCustomer = $('#chkSMSCustomer').is(':checked');
-            const smsUser = $('#chkSMSUser').is(':checked');
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            let sendSMSRes = true;
-            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
-                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
-            if (!sendSMSRes.success) {
-                swal({
-                    title: 'Oooops...',
-                    text: sendSMSRes.message,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try again'
-                }).then((result) => {
-                    if (result.value) {
-                        $('#startAppointmentModal').modal('hide');
-                    } else {
-                        // window.open('/appointments', '_self');
-                    }
-                });
             } else {
-                swal({
-                    title: 'SMS was sent successfully',
-                    text: "SMS was sent successfully",
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonText: 'Ok'
-                });
                 $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                 $('#btnCloseStartAppointmentModal').trigger('click');
-                $('#frmAppointment').submit();
-                localStorage.setItem('fromStartOrStop', true);
+                $('#frmAppointment').trigger('submit');
             }
-          }else{
-            $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-            $('#btnCloseStartAppointmentModal').trigger('click');
-            $("#btnSaveAppointment").trigger("click");
-          }
         }
     },
     'click #btnStartAppointment': function() {
@@ -8911,42 +8915,42 @@ Template.appointments.events({
         const customerPhone = $('#mobile').val();
         const smsSettings = templateObject.defaultSMSSettings.get();
         let sendSMSRes = true;
-        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
             sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone);
-        if (!sendSMSRes.success) {
-            swal({
-                title: 'Oooops...',
-                text: sendSMSRes.message,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try again'
-            }).then((result) => {
-                if (result.value) {
-                    $('#saveAppointmentModal').modal('hide');
-                } else {
-                    // window.open('/appointments', '_self');
-                }
-            });
+            if (!sendSMSRes.success) {
+                swal({
+                    title: 'Oooops...',
+                    text: sendSMSRes.message,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try again'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#saveAppointmentModal').modal('hide');
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
+            } else {
+                $('#saveAppointmentModal').modal('hide');
+                swal({
+                    title: 'SMS was sent successfully',
+                    text: "SMS was sent successfully",
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#event-modal').modal('hide');
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
+                $('#frmAppointment').trigger('submit');
+            }
         } else {
-            $('#saveAppointmentModal').modal('hide');
-            swal({
-                title: 'SMS was sent successfully',
-                text: "SMS was sent successfully",
-                type: 'success',
-                showCancelButton: false,
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    $('#event-modal').modal('hide');
-                } else {
-                    // window.open('/appointments', '_self');
-                }
-            });
-            $('#frmAppointment').submit();
+            $('#frmAppointment').trigger('submit');
         }
-      }else{
-        $('#frmAppointment').submit();
-      }
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {
@@ -9003,37 +9007,35 @@ Template.appointments.events({
                             const smsUser = $('#chkSMSUser').is(':checked');
                             const smsSettings = templateObject.defaultSMSSettings.get();
                             let sendSMSRes = true;
-                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId){
+                            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                                 sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone);
-                            if (!sendSMSRes.success) {
-                                swal({
-                                    title: 'Oooops...',
-                                    text: sendSMSRes.message,
-                                    type: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Try again'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $('#startAppointmentModal').modal('hide');
-                                    }
-                                });
+                                if (!sendSMSRes.success) {
+                                    swal({
+                                        title: 'Oooops...',
+                                        text: sendSMSRes.message,
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try again'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            $('#startAppointmentModal').modal('hide');
+                                        }
+                                    });
+                                } else {
+                                    swal({
+                                        title: 'SMS was sent successfully',
+                                        text: "SMS was sent successfully",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Ok'
+                                    });
+                                    $('#btnCloseStopAppointmentModal').trigger('click');
+                                    $('#frmAppointment').trigger('submit');
+                                }
                             } else {
-                                swal({
-                                    title: 'SMS was sent successfully',
-                                    text: "SMS was sent successfully",
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Ok'
-                                });
                                 $('#btnCloseStopAppointmentModal').trigger('click');
-                                $('#frmAppointment').submit();
-                                localStorage.setItem('fromStartOrStop', true);
+                                $('#frmAppointment').trigger('submit');
                             }
-                          }else{
-                            $('#btnCloseStopAppointmentModal').trigger('click');
-                            $("#btnSaveAppointment").trigger("click");
-                          }
-
                         } else if (result.dismiss === 'cancel') {
                             document.getElementById('tActualEndTime').value = '';
                             document.getElementById('txtActualHoursSpent').value = '0';
