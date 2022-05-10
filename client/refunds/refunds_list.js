@@ -158,6 +158,12 @@ Template.refundlist.onRendered(function () {
                           salestatus = "Deleted";
                         }else if(data.trefundsalelist[i].CustomerName == ''){
                           salestatus = "Deleted";
+                        }else if(data.trefundsalelist[i].Deleted != true){
+                          if(data.trefundsalelist[i].Paid == true){
+                            salestatus = "Full";
+                          }else if ((data.trefundsalelist[i].Balance > 0) && (data.trefundsalelist[i].TotalAmountInc > data.trefundsalelist[i].Balance)){
+                            salestatus = "Part";
+                          }
                         };
                         var dataList = {
                             id: data.trefundsalelist[i].SaleID || '',
@@ -474,6 +480,12 @@ Template.refundlist.onRendered(function () {
                       salestatus = "Deleted";
                     }else if(data.trefundsalelist[i].CustomerName == ''){
                       salestatus = "Deleted";
+                    }else if(data.trefundsalelist[i].Deleted != true){
+                      if(data.trefundsalelist[i].Paid == true){
+                        salestatus = "Full";
+                      }else if ((data.trefundsalelist[i].Balance > 0) && (data.trefundsalelist[i].TotalAmountInc > data.trefundsalelist[i].Balance)){
+                        salestatus = "Part";
+                      }
                     };
                     var dataList = {
                         id: data.trefundsalelist[i].SaleID || '',
@@ -785,6 +797,12 @@ Template.refundlist.onRendered(function () {
                     salestatus = "Deleted";
                   }else if(data.trefundsalelist[i].CustomerName == ''){
                     salestatus = "Deleted";
+                  }else if(data.trefundsalelist[i].Deleted != true){
+                    if(data.trefundsalelist[i].Paid == true){
+                      salestatus = "Full";
+                    }else if ((data.trefundsalelist[i].Balance > 0) && (data.trefundsalelist[i].TotalAmountInc > data.trefundsalelist[i].Balance)){
+                      salestatus = "Part";
+                    }
                   };
                   var dataList = {
                       id: data.trefundsalelist[i].SaleID || '',
@@ -1148,6 +1166,12 @@ Template.refundlist.events({
                           salestatus = "Deleted";
                         }else if(data.trefundsale[i].fields.CustomerName == ''){
                           salestatus = "Deleted";
+                        }else if(data.trefundsale[i].fields.Deleted != true){
+                          if(data.trefundsale[i].fields.IsPaid == true){
+                            salestatus = "Full";
+                          }else if ((data.trefundsale[i].fields.TotalBalance > 0) && (data.trefundsale[i].fields.TotalAmountInc > data.trefundsale[i].fields.TotalBalance)){
+                            salestatus = "Part";
+                          }
                         };
                         var dataList = {
                             id: data.trefundsale[i].fields.ID || '',
