@@ -136,8 +136,8 @@ Template.journalentrylist.onRendered(function() {
                       orderstatus = "Deleted";
                     }else if(data.tjournalentrylist[i].IsOnHOLD == true){
                       orderstatus = "On Hold";
-                    }else if(data.tjournalentrylist[i].IsReconciled == true){
-                      orderstatus = "Reconciled";
+                    }else if(data.tjournalentrylist[i].Reconciled == true){
+                      orderstatus = "Rec";
                     }
 
                        var dataList = {
@@ -431,8 +431,8 @@ Template.journalentrylist.onRendered(function() {
                     orderstatus = "Deleted";
                   }else if(data.tjournalentrylist[i].IsOnHOLD == true){
                     orderstatus = "On Hold";
-                  }else if(data.tjournalentrylist[i].IsReconciled == true){
-                    orderstatus = "Reconciled";
+                  }else if(data.tjournalentrylist[i].Reconciled == true){
+                    orderstatus = "Rec";
                   }
 
                      var dataList = {
@@ -721,8 +721,8 @@ Template.journalentrylist.onRendered(function() {
                     orderstatus = "Deleted";
                   }else if(data.tjournalentrylist[i].IsOnHOLD == true){
                     orderstatus = "On Hold";
-                  }else if(data.tjournalentrylist[i].IsReconciled == true){
-                    orderstatus = "Reconciled";
+                  }else if(data.tjournalentrylist[i].Reconciled == true){
+                    orderstatus = "Rec";
                   }
 
                      var dataList = {

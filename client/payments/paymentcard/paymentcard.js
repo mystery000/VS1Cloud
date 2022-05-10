@@ -1742,7 +1742,7 @@ Template.paymentcard.onRendered(() => {
         var currentSalesID = getsale_id[getsale_id.length - 1];
         if (getsale_id[1]) {
             currentSalesID = parseInt(currentSalesID);
-            getVS1Data('TCustomerPayment').then(function(dataObject) {
+            getVS1Data('TCustomerPayment1').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     paymentService.getOneCustomerPayment(currentSalesID).then(function(data) {
                         let lineItems = [];

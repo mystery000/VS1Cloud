@@ -1228,7 +1228,9 @@ Template.invoicelist.events({
 
                         }
                         $('.dataTables_info').html('Showing 1 to ' + data.tinvoiceex.length + ' of ' + data.tinvoiceex.length + ' entries');
-
+                        setTimeout(function() {
+                        	makeNegativeGlobal();
+                        }, 100);
                     }
 
                 } else {

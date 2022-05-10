@@ -129,6 +129,18 @@ $('.dropdown-toggle').on("click",function(event){
 };
 
 
+  makeNegativeGlobal = function () {
+    $('td').each(function() {
+        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+    });
+    $('td.colStatus').each(function(){
+        if($(this).text() == "Deleted") $(this).addClass('text-deleted');
+        if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
+        if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
+        if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
+    });
+  };
+
 batchUpdateCall = function (url) {
     var erpGet = erpDb();
     let dashboardArray = [];

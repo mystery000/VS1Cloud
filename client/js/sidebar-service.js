@@ -905,7 +905,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   }
 
   getCheckLeadData(limitcount, limitfrom) {
-  
+
     let options = '';
     if(limitcount == 'All'){
        options = {
@@ -915,7 +915,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }else{
        options = {
             ListType: "Detail",
-            select: '[Active]=true',   
+            select: '[Active]=true',
       };
     }
     return this.getList(this.ERPObjects.TLeads, options);
@@ -1537,7 +1537,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
          IncludeIsRefund:true,
          IncludeISSalesOrder:true,
          IsDetailReport:false,
-         Paid:false,
+         Paid:true,
          Unpaid:true,
          LimitCount:'"'+limitcount+'"',
          LimitFrom:'"'+limitfrom+'"'
@@ -1553,7 +1553,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
         IncludeIsQuote:true,
         IncludeIsRefund:true,
         IncludeISSalesOrder:true,
-        Paid:false,
+        Paid:true,
         Unpaid:true,
         LimitCount:'"'+limitcount+'"',
         LimitFrom:'"'+limitfrom+'"'
@@ -1955,7 +1955,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-    today = dd+'/'+mm+'/'+ yyyy;   
+    today = dd+'/'+mm+'/'+ yyyy;
     let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
     let options = {
       PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",

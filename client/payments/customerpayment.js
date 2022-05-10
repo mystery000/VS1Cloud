@@ -113,7 +113,7 @@ Template.customerpayment.onRendered(function() {
            sideBarService.getAllTCustomerPaymentListDataByPaymentID(customerName).then(function (data) {
               let lineItems = [];
               let lineItemObj = {};
-
+              console.log(data);
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
@@ -123,7 +123,7 @@ Template.customerpayment.onRendered(function() {
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
                   for(let i=0; i<data.tcustomerpaymentlist.length; i++){
-
+                    console.log(data.tcustomerpaymentlist[i].Reconciled);
                       let amount = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Amount)|| 0.00;
                       let applied = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Applied) || 0.00;
                       // Currency+''+data.tcustomerpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -134,7 +134,15 @@ Template.customerpayment.onRendered(function() {
                       let paystatus = data.tcustomerpaymentlist[i].QuoteStatus || '';
                       if(data.tcustomerpaymentlist[i].Deleted == true){
                         paystatus = "Deleted";
-                      }
+                      }else if (data.tcustomerpaymentlist[i].Reconciled == true){
+                        paystatus = "Rec";
+                      }else if(data.tcustomerpaymentlist[i].Deleted != true){
+                        if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
+                          paystatus = "Part";
+                        }else{
+                          paystatus = "Full";
+                        }
+                      };
 
                       var dataList = {
                           id: data.tcustomerpaymentlist[i].PaymentID || '',
@@ -365,7 +373,15 @@ Template.customerpayment.onRendered(function() {
                             let paystatus = data.tcustomerpaymentlist[i].QuoteStatus || '';
                             if(data.tcustomerpaymentlist[i].Deleted == true){
                               paystatus = "Deleted";
-                            }
+                            }else if (data.tcustomerpaymentlist[i].Reconciled == true){
+                              paystatus = "Rec";
+                            }else if(data.tcustomerpaymentlist[i].Deleted != true){
+                              if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
+                                paystatus = "Part";
+                              }else{
+                                paystatus = "Full";
+                              }
+                            };
 
                             var dataList = {
                                 id: data.tcustomerpaymentlist[i].PaymentID || '',
@@ -642,6 +658,7 @@ Template.customerpayment.onRendered(function() {
                 });
             }else{
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tcustomerpaymentlist;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -654,18 +671,27 @@ Template.customerpayment.onRendered(function() {
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
             for(let i=0; i<data.tcustomerpaymentlist.length; i++){
-
+              console.log(data.tcustomerpaymentlist[i].Reconciled);
+              console.log(data.tcustomerpaymentlist[i].PaymentID);
                 let amount = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Amount)|| 0.00;
                 let applied = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Applied) || 0.00;
                 // Currency+''+data.tcustomerpayment[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
                 let balance = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Balance)|| 0.00;
                 let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].TotalPaid)|| 0.00;
-                let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].TotalBalance)|| 0.00;
+                let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tcustomerpaymentlist[i].Balance)|| 0.00;
 
                 let paystatus = data.tcustomerpaymentlist[i].QuoteStatus || '';
                 if(data.tcustomerpaymentlist[i].Deleted == true){
                   paystatus = "Deleted";
-                }
+                }else if (data.tcustomerpaymentlist[i].Reconciled == true){
+                  paystatus = "Rec";
+                }else if(data.tcustomerpaymentlist[i].Deleted != true){
+                  if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
+                    paystatus = "Part";
+                  }else{
+                    paystatus = "Full";
+                  }
+                };
 
                 var dataList = {
                     id: data.tcustomerpaymentlist[i].PaymentID || '',
@@ -962,7 +988,15 @@ Template.customerpayment.onRendered(function() {
                       let paystatus = data.tcustomerpaymentlist[i].QuoteStatus || '';
                       if(data.tcustomerpaymentlist[i].Deleted == true){
                         paystatus = "Deleted";
-                      }
+                      }else if (data.tcustomerpaymentlist[i].Reconciled == true){
+                        paystatus = "Rec";
+                      }else if(data.tcustomerpaymentlist[i].Deleted != true){
+                        if ((data.tcustomerpaymentlist[i].Applied > 0) && (data.tcustomerpaymentlist[i].Balance > data.tcustomerpaymentlist[i].Applied)){
+                          paystatus = "Part";
+                        }else{
+                          paystatus = "Full";
+                        }
+                      };
 
                       var dataList = {
                           id: data.tcustomerpaymentlist[i].PaymentID || '',
@@ -1346,7 +1380,15 @@ Template.customerpayment.events({
                     paystatus = "Deleted";
                   }else if(data.tcustomerpayment[i].fields.Lines == null){
                     paystatus = "Deleted";
-                  }
+                  }else if(data.tcustomerpayment[i].fields.Deleted != true){
+                    if(data.tcustomerpayment[i].fields.Payment == true){
+                      paystatus = "Full";
+                    }else if ((data.tcustomerpayment[i].fields.Applied > 0) && (data.tcustomerpayment[i].fields.Amount > data.tcustomerpayment[i].fields.Applied)){
+                      paystatus = "Part";
+                    }else if (data.tcustomerpayment[i].fields.Reconciled == true){
+                      paystatus = "Rec";
+                    }
+                  };
 
                   var dataList = {
                       id: data.tcustomerpayment[i].fields.ID || '',
