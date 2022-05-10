@@ -103,7 +103,7 @@
         </header>
         <div style="padding: 0px 16px;">
             <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
-                <div class="col-lg-6 col-md-12 col-sm-12 productCard" id="productCard">
+                <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 productCard" id="productCard">
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div>
@@ -347,8 +347,8 @@
                                     <hr class="reporthr" style="margin: 4px; border-width: 3px;">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
+                            <div class="row ps-0 pe-0 px-0">
+                                <div class="col-lg-3 col-md-12 px-0 mx-0 my-1">
                                     {{#if equals includeInventory false}}
                                     <script>
                                         $('#chkTrack').attr("disabled","disabled");
@@ -358,21 +358,17 @@
                                         $('#chkTrack').removeAttr("disabled");
                                     </script>
                                     {{/if}}
-                                    <div style="margin: 4px;">
-                                        <div class="custom-control custom-switch">
-                                            <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
-                                            <label class="custom-control-label {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
-                                        </div>
+                                    <div class="custom-control custom-switch d-flex align-items-center">
+                                        <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
+                                        <label class="custom-control-label {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
                                     </div>
-                                </div>
-                                <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
                                     <div id="trackdiv">
                                         <div class="trackItem" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
                                             <div class="form-group" style="margin: 4px;width: 250px;">
                                                 <label>Inventory Account</label>
-                                                 <select type="search" class="form-control" id="sltinventoryacount" name="sltinventoryacount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
-                                              <!--   <select class="form-control pointer" id="sltinventoryacount" name="sltinventoryacount" style="background-color:rgb(255, 255, 255); ">
+                                                    <select type="search" class="form-control" id="sltinventoryacount" name="sltinventoryacount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                </select>
+                                                <!--   <select class="form-control pointer" id="sltinventoryacount" name="sltinventoryacount" style="background-color:rgb(255, 255, 255); ">
                                                     <option value="{{productrecord.accountname}}" selected="">{{productrecord.assetaccount}}</option>
                                                     {{#each item in inventoryaccountrecords}}
 
@@ -382,6 +378,33 @@
                                                 </select> -->
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 px-0 mx-0 my-1 d-flex align-items-center" style="height: fit-content;">
+                                    <div class="custom-control custom-switch d-flex align-items-center">
+                                        <input class="custom-control-input" type="checkbox" id="chkSNTrack" name="chkSNTrack" checked="{{#if includePlus}}{{#if isSNTrackChecked}}checked{{/if}}{{else}}{{/if}}">
+                                        <label class="custom-control-label position-relative" for="chkSNTrack">I Track SN</label>
+                                    </div>
+                                    <div class="px-1">
+                                        <span href="mymoday12-1" class="addClientType">+</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 px-0 mx-0 my-1 d-flex align-items-center" style="height: fit-content;">
+                                    <div class="custom-control custom-switch d-flex align-items-center">
+                                        <input class="custom-control-input" type="checkbox" id="chkLotTrack" name="chkLotTrack" checked="{{#if includePlus}}{{#if isLotTrackChecked}}checked{{/if}}{{else}}{{/if}}">
+                                        <label class="custom-control-label position-relative" for="chkLotTrack">I Track Lot</label>
+                                    </div>
+                                    <div class="px-1">
+                                        <span href="mymoday12-2" class="addClientType">+</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-12 px-0 mx-0 my-1 d-flex align-items-center" style="height: fit-content;">
+                                    <div class="custom-control custom-switch d-flex align-items-center">
+                                        <input class="custom-control-input" type="checkbox" id="chkAddSN" name="chkAddSN" checked="{{#if includePlus}}{{#if isLotTrackChecked}}checked{{/if}}{{else}}{{/if}}">
+                                        <label class="custom-control-label position-relative" for="chkAddSN">Add Serial Number</label>
+                                    </div>
+                                    <div class="px-1">
+                                        <span href="mymoday12-3" class="addClientType">+</span>
                                     </div>
                                 </div>
                             </div>

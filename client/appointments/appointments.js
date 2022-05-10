@@ -8343,14 +8343,12 @@ Template.appointments.events({
                                                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                                     $('#frmAppointment').trigger('submit');
-                                                    localStorage.setItem('fromStartOrStop', true);
                                                     templateObject.checkRefresh.set(true);
                                                 }
                                             } else {
                                                 $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                                     $('#frmAppointment').trigger('submit');
-                                                    localStorage.setItem('fromStartOrStop', true);
                                                     templateObject.checkRefresh.set(true);
                                             }
                                         }).catch(function (err) {
@@ -8431,14 +8429,12 @@ Template.appointments.events({
                                                 $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                                 $('#btnCloseStartAppointmentModal').trigger('click');
                                                 $('#frmAppointment').trigger('submit');
-                                                localStorage.setItem('fromStartOrStop', true);
                                                 templateObject.checkRefresh.set(true);
                                             }
                                         } else {
                                             $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                             $('#btnCloseStartAppointmentModal').trigger('click');
                                             $('#frmAppointment').trigger('submit');
-                                            localStorage.setItem('fromStartOrStop', true);
                                             templateObject.checkRefresh.set(true);
                                         }
                                     }).catch(function (err) {
@@ -8576,14 +8572,12 @@ Template.appointments.events({
                                         $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                         $('#btnCloseStartAppointmentModal').trigger('click');
                                         $('#frmAppointment').submit();
-                                        localStorage.setItem('fromStartOrStop', true);
                                         templateObject.checkRefresh.set(true);
                                     }
                                 } else {
                                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                     $('#frmAppointment').submit();
-                                    localStorage.setItem('fromStartOrStop', true);
                                     templateObject.checkRefresh.set(true);
                                 }
                             }).catch(function (err) {
@@ -8673,13 +8667,11 @@ Template.appointments.events({
                         $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                         $('#btnCloseStartAppointmentModal').trigger('click');
                         $('#frmAppointment').trigger('submit');
-                        localStorage.setItem('fromStartOrStop', true);
                     }
                 } else {
                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                     $('#btnCloseStartAppointmentModal').trigger('click');
                     $('#frmAppointment').trigger('submit');
-                    localStorage.setItem('fromStartOrStop', true);
                 }
             }
         } else {
@@ -8716,13 +8708,11 @@ Template.appointments.events({
                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                     $('#btnCloseStartAppointmentModal').trigger('click');
                     $('#frmAppointment').trigger('submit');
-                    localStorage.setItem('fromStartOrStop', true);
                 }
             } else {
                 $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                 $('#btnCloseStartAppointmentModal').trigger('click');
                 $('#frmAppointment').trigger('submit');
-                localStorage.setItem('fromStartOrStop', true);
             }
         }
     },
@@ -8782,7 +8772,8 @@ Template.appointments.events({
                     $('#startAppointmentSMSMessage').val(startAppointmentSMS);
                 }
             } else {
-                $('#btnStartAppointmentConfirm').trigger('click');
+              $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+              $("#btnSaveAppointment").trigger("click");
             }
         }
     },
@@ -8862,7 +8853,9 @@ Template.appointments.events({
                         $('#btnSaveAppointmentSubmit').trigger('click');
                     }
                 })
-            } else $('#btnSaveAppointmentSubmit').trigger('click');
+            } else {
+              $('#btnSaveAppointmentSubmit').trigger('click');
+            }
         } else {
             const templateObject = Template.instance();
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -9038,12 +9031,10 @@ Template.appointments.events({
                                     });
                                     $('#btnCloseStopAppointmentModal').trigger('click');
                                     $('#frmAppointment').trigger('submit');
-                                    localStorage.setItem('fromStartOrStop', true);
                                 }
                             } else {
                                 $('#btnCloseStopAppointmentModal').trigger('click');
                                 $('#frmAppointment').trigger('submit');
-                                localStorage.setItem('fromStartOrStop', true);
                             }
                         } else if (result.dismiss === 'cancel') {
                             document.getElementById('tActualEndTime').value = '';
