@@ -17,19 +17,7 @@ Template.alltasks.onCreated(function () {
 });
 
 Template.alltasks.onRendered(function () {
-
-  $("#task_items_wrapper").sortable({
-    handle: '.taskDrag',
-    update: function (event, ui) {
-      var sorted = $("#task_items_wrapper").sortable("serialize", { key: "sort" });
-      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
-
-      let current_id = ui.item[0].id;
-      let prev_id = ui.item[0].previousElementSibling.id;
-      let next_id = ui.item[0].nextElementSibling.id;
-    },
-  });
-
+  // console.log('alltasks render')
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);
   templateObject.selected_ttodo.set(null);
@@ -188,12 +176,6 @@ Template.alltasks.onRendered(function () {
 });
 
 Template.alltasks.events({
-
-  'click .mainTaskCol': function (event) {
-    if (!event.target.classList.contains('no-modal')) {
-      $('#taskModal').modal('toggle');
-    }
-  },
 
   'click .btnAddSubTask': function (event) {
 
@@ -740,7 +722,7 @@ Template.alltasks.events({
     let templateObject = Template.instance();
 
     let due_date = $('.crmEditDatepicker').val();
-    due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : '';
+    due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : moment().format('YYYY-MM-DD hh:mm:ss');
 
     let priority = 0;
     priority = $('#chkPriority1').prop('checked') ? 1 : ($('#chkPriority2').prop('checked') ? 2 : ($('#chkPriority3').prop('checked') ? 3 : 0));
@@ -1012,17 +994,14 @@ Template.alltasks.helpers({
   },
 
   overdueRecords: () => {
-    // return Template.instance().overdueRecords.get().slice(0, 3);
     return Template.instance().overdueRecords.get();
   },
 
   todayRecords: () => {
-    // return Template.instance().allrecords.get().slice(4, 6);
     return Template.instance().todayRecords.get();
   },
 
   upcomingRecords: () => {
-    // return Template.instance().allrecords.get().slice(7, 9);
     return Template.instance().upcomingRecords.get();
   },
 

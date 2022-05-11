@@ -133,7 +133,26 @@ Template.filterslabels.onRendered(function () {
 });
 
 Template.filterslabels.events({
+  'click .menuTasklist': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=all');
+    }
+  },
 
+  'click .menuTasktoday': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=today');
+    }
+  },
+
+  'click .menuTaskupcoming': function (e) {
+    let path = FlowRouter.current().path;
+    if (path != '/crmoverview') {
+      FlowRouter.go('/crmoverview?id=upcoming');
+    }
+  },
 
 });
 
