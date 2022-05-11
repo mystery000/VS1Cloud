@@ -177,12 +177,6 @@ Template.alltasks.onRendered(function () {
 
 Template.alltasks.events({
 
-  'click .mainTaskCol': function (event) {
-    if (!event.target.classList.contains('no-modal')) {
-      $('#taskModal').modal('toggle');
-    }
-  },
-
   'click .btnAddSubTask': function (event) {
 
     let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
@@ -1000,17 +994,14 @@ Template.alltasks.helpers({
   },
 
   overdueRecords: () => {
-    // return Template.instance().overdueRecords.get().slice(0, 3);
     return Template.instance().overdueRecords.get();
   },
 
   todayRecords: () => {
-    // return Template.instance().allrecords.get().slice(4, 6);
     return Template.instance().todayRecords.get();
   },
 
   upcomingRecords: () => {
-    // return Template.instance().allrecords.get().slice(7, 9);
     return Template.instance().upcomingRecords.get();
   },
 

@@ -8,8 +8,8 @@
       <div class="task_items_wrapper">
 
         {{#each item in allrecords}}
-        <div class="col-12 taskCol mainTaskCol crmalltasks" id="ttodo_{{item.fields.ID}}">
-          <div class="row justify-content-between">
+        <div class="col-12 taskCol mainTaskCol crmalltasks" data-id="{{item.fields.ID}}" id="ttodo_{{item.fields.ID}}">
+          <div class="row justify-content-between" data-id="{{item.fields.ID}}">
             <div style="display: inline-flex;" class="">
               <i class="fas fa-grip-vertical taskActionButton taskDrag no-modal"></i>
               <div
@@ -190,10 +190,10 @@
 
             </div>
           </div>
-          <div class="row justify-content-between">
+          <div class="row justify-content-between" data-id="{{item.fields.ID}}">
             <span class="taskDescription text-secondary">{{getDescription item.fields.TaskDescription}}</span>
           </div>
-          <div class="row justify-content-between">
+          <div class="row justify-content-between" data-id="{{item.fields.ID}}">
             <div class="dueDateTags no-modal" style="display: inline-flex;">
               <span class="taskDueDate no-modal {{getTaskStyleClass item.fields.due_date}}" data-toggle="dropdown"><i
                   class="far fa-calendar-plus no-modal" style="margin-right: 5px;"></i>

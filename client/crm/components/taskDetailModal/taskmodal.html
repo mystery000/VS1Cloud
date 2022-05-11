@@ -2,8 +2,8 @@
 
   <div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskNameLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content" style="min-height: 90vh;">
-        <div class="modal-header">
+      <div class="modal-content" style="min-height: 90vh; padding: 20px;">
+        <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
           <div style="display: grid;">
             <span class="taskLocation"><a class="taganchor" href=""><i class="fas fa-inbox text-primary"
                   style="margin-right: 5px;"></i>All Tasks</a></span>
@@ -13,7 +13,7 @@
                   value="">
                 <label class="custom-control-label chkBox pointer" for="taskitem_id"></label>
               </div>
-              <h5 class="modal-title" id="taskNameLabel">[Task Name]</h5>
+              <h5 class="modal-title" style="padding-top: 5px;" id="taskmodalNameLabel">[Task Name]</h5>
             </div>
           </div>
 
@@ -21,18 +21,22 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+
         <div class="modal-body">
           <div class="row">
+
             <div class="col-12">
-              <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i>Apr
-                4</span>
-              <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                    style="margin-right: 5px;"></i>[label]</a></span>
-              <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                    style="margin-right: 5px;"></i>[label]</a></span>
+              <div id="taskmodalDescription" style="padding: 0 30px 15px 30px; margin-top: -10px;"></div>
             </div>
+            <div class="col-12" style="display: flex;">
+              <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i><span
+                  id="taskmodalDuedate"></span></span>
+              <div id="taskmodalLabels" style="margin-top:4px;">
+                <span class="taskTag"><i class="fas fa-tag"></i></span>
+              </div>
+            </div>
+
             <div class="col-12" style="display: inline-flex; justify-content: end;">
-              <!-- <i class="fas fa-Select a project-ul taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Select a project..."></i> -->
               <div class="dropdown">
                 <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
@@ -190,43 +194,10 @@
                 <div class="tab-pane fade show active" id="nav-subtasks" style="height: 60vh;" role="tabpanel"
                   aria-labelledby="nav-subtasks-tab">
                   <div class="row no-gutters">
-                    <div class="col-12 taskCol subtaskCol" id="subtask_1">
-                      <div class="row justify-content-between">
-                        <div style="display: inline-flex;">
-                          <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
-                          <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin: 4px;">
-                            <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
-                              id="subtaskitem_1" value="">
-                            <label class="custom-control-label chkBox pointer" for="subtaskitem_1"></label>
-                          </div>
-                          <span class="taskName">Sub-Task #1</span>
-                        </div>
-                        <div style="display: inline-flex;">
-                          <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                            title="Edit task..."></i>
-                          <i class="far fa-calendar-plus taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                            title="Set due date..."></i>
-                          <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                            title="Comment on task..."></i>
-                          <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                            title="More task actions..."></i>
-                        </div>
-                      </div>
-                      <div class="row justify-content-between">
-                      </div>
-                      <div class="row justify-content-between">
-                        <div class="dueDateTags" style="display: inline-flex;">
-                          <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus"
-                              style="margin-right: 5px;"></i>Apr 4</span>
-                          <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                                style="margin-right: 5px;"></i>[label]</a></span>
-                        </div>
-                        <div style="display: inline-flex;">
-                          <!-- <span class="taskLocation"><a class="taganchor" href="">All Tasks<i class="fas fa-inbox text-primary" style="margin-left: 5px;"></i></a></span> -->
-                        </div>
-                      </div>
-                      <hr />
+                    <div class="subtask-row col-12">
+
                     </div>
+
                     <div class="col-12">
                       <div class="row newTaskRow" style="display: none;">
                         <div class="col-12">
@@ -435,86 +406,54 @@
                     </div>
                   </div>
                 </div>
+
                 <div class="tab-pane fade" id="nav-comments" style="height: 60vh;" role="tabpanel"
                   aria-labelledby="nav-comments-tab">
                   <div class="row">
-                    <div class="col-12 taskComment" style="padding: 16px 32px;">
-                      <div class="row commentRow">
-                        <div class="col-1">
-                          <div class="commentUser">BB</div>
-                        </div>
-                        <div class="col-11" style="padding-left: 24px;">
-                          <div class="row">
-                            <div>
-                              <span class="commenterName">Bruno Braga</span>
-                              <span class="commentDateTime">Apr 6 2:28 PM</span>
-                            </div>
+                    <div class="task-comment-row col-12">
+                      <div class="col-12 taskComment" style="padding: 16px 32px;">
+                        <div class="row commentRow">
+                          <div class="col-1">
+                            <div class="commentUser">BB</div>
                           </div>
-                          <div class="row">
-                            <span class="commentText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                              do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+                          <div class="col-11" style="padding-left: 24px;">
+                            <div class="row">
+                              <div>
+                                <span class="commenterName">Bruno Braga</span>
+                                <span class="commentDateTime">Apr 6 2:28 PM</span>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <span class="commentText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 taskComment" style="padding: 16px 32px;">
-                      <div class="row commentRow">
-                        <div class="col-1">
-                          <div class="commentUser">AR</div>
-                        </div>
-                        <div class="col-11" style="padding-left: 24px;">
-                          <div class="row">
-                            <div>
-                              <span class="commenterName">Ariyibi Rasheed</span>
-                              <span class="commentDateTime">Apr 6 2:32 PM</span>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <span class="commentText">Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit.</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
                     <div class="col-12 commentSection" style="padding: 16px 42px; position: absolute; bottom: 0;">
                       <div class="row">
                         <div class="form-group" style="width: 100%;">
                           <label>Comment</label>
-                          <textarea class="form-control" rows="4" id="" name="" autocomplete="off"></textarea>
+                          <textarea class="form-control" rows="4" id="txtCommentsDescription" name=""
+                            autocomplete="off"></textarea>
+                          <input type="hidden" id="txtCrmTaskID" value="" />
+                          <input type="hidden" id="txtCrmProjectID" value="" />
                         </div>
-                        <button type="button" class="btn btn-primary">Comment</button>
+                        <button type="button" class="btn btn-primary btnCrmAddComment">Comment</button>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="tab-pane fade" id="nav-activity" style="height: 60vh;" role="tabpanel"
                   aria-labelledby="nav-activity-tab">
                   <div class="row">
                     <span class="activityAdded">Added on Apr 5 1:42 PM</span>
                     <hr style="width: 100%; margin: 0px 32px;" />
                   </div>
-                  <div class="row" style="padding: 16px;">
-                    <div class="col-12">
-                      <span class="activityDate">Apr 6 - Today</span>
-                    </div>
-                    <hr style="width: 100%; margin: 8px 16px;" />
-                    <div class="col-1">
-                      <div class="commentUser">AR</div>
-                    </div>
-                    <div class="col-11" style="padding-left: 24px;">
-                      <div class="row">
-                        <span class="activityName">Ariyibi Rasheed </span> <span class="activityAction">added a
-                          comment to </span> <span class="activityTaskName">Task #1:</span>
-                      </div>
-                      <div class="row">
-                        <span class="activityComment">Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit.</span>
-                      </div>
-                      <div class="row">
-                        <span class="activityTime">2:32 PM</span>
-                      </div>
-                    </div>
-                    <hr style="width: 100%; margin: 16px;" />
+                  <div class="col-12 task-activity-row">
                   </div>
                 </div>
               </div>
@@ -530,4 +469,14 @@
       </div>
     </div>
   </div>
+  <style>
+    #taskmodalLabels .fa-tag {
+      margin-right: 5px;
+    }
+
+    .task-comment-row {
+      height: 35vh;
+      overflow-y: auto;
+    }
+  </style>
 </template>
