@@ -14,7 +14,7 @@ Template.printstatement.onRendered(()=>{
   let templateObject = Template.instance();
   let salesOrderTable;
   var splashArray = new Array();
-    
+
     $("#date-input,#dtSODate,#printfromdate, #printtodate").datepicker({
         showOn: 'button',
         buttonText: 'Show Date',
@@ -26,7 +26,15 @@ Template.printstatement.onRendered(()=>{
         selectOtherMonths: true,
         changeMonth: true,
         changeYear: true,
-yearRange: "-90:+10",
+        yearRange: "-90:+10",
+        onChangeMonthYear: function(year, month, inst){
+        // Set date to picker
+        $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+        // Hide (close) the picker
+        $(this).datepicker('hide');
+        // Change ttrigger the on change function
+        $(this).trigger('change');
+       }
     });
 
   });
