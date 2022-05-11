@@ -137,9 +137,6 @@ Template.crmoverview.onRendered(function () {
 });
 
 Template.crmoverview.events({
-  "click #btnTaskList": function (event) {
-    FlowRouter.go("/tasklist");
-  },
   "click .editCardBtn": function (e) {
     e.preventDefault();
     $(".card-visibility").removeClass('hideelement');
