@@ -762,6 +762,7 @@ Template.paymentoverview.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tpaymentlist;
                 if (data.Params.IgnoreDates == true) {
                     FlowRouter.go('/paymentoverview?ignoredate=true');
