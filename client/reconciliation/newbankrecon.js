@@ -37,6 +37,7 @@ Template.newbankrecon.onRendered(function() {
     let reconService = new ReconService();
     let productService = new ProductService();
     let purchaseService = new PurchaseBoardService();
+    let accountService = new AccountService();
 
     let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
     templateObject.page_number.set(page_number);
@@ -54,6 +55,8 @@ Template.newbankrecon.onRendered(function() {
     let statementDate = localStorage.getItem('statementdate')|| '';
     let selectedAccountFlag = '';
     let selectedDepositID = null;
+
+    connectYodlee();
 
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
@@ -992,3 +995,77 @@ Template.newbankrecon.helpers({
         return Template.instance().fa_sortWithdrawReceived.get();
     }
 });
+
+function connectYodlee() {
+    (function (window) {
+        //Open FastLink
+
+        let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
+        let fastLinkToken = 'Bearer sbMem5f85b3fb4145c1'; // Fastlink Token
+        let getFileValue = "bcGBUzPpGRBmC8N3Qn6x4DuwGpDp";  // Fastlink Token
+        const client_id = "KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4";
+        const secret = "TqDOhdMCOYHJq1se";
+        const admin_login_name = "ae5a538c-f854-4255-9dcb-f234410e4fd2_ADMIN";
+        const user_name = "sbMem5f85b3fb4145c1";
+        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+        // let token_url = "https://sandbox.api.yodlee.com/ysl/auth/token";
+        let token_url = "https://sandbox.api.yodlee.com.au/ysl/auth/token";
+        HTTP.post( token_url, {
+            data: {
+                // 'userName': user_name,
+                'clientId': client_id,
+                'secret': secret
+                // 'body': 'clientId='+client_id+'&secret='+secret
+            },
+            // data: 'clientId='+client_id+'&secret='+secret,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                // 'Content-Type': 'application/json',
+                'Api-Version': '1.1',
+                'loginName': user_name,
+            }
+        }, (error, result) => {
+            console.log(result);
+            if (!error) {
+                Session.set('twizzled', true);
+            }
+        });
+        
+        // window.addEventListener(
+        //     'load',
+        //     function() {
+        //         window.fastlink.open({
+        //                 fastLinkURL: fastLinkURL,
+        //                 accessToken: fastLinkToken,
+        //                 params: {
+        //                     configName: 'Verification'
+        //                 },
+        //                 onSuccess: function (data) {
+        //                     // will be called on success. For list of possible message, refer to onSuccess(data) Method.
+        //                     console.log(data);
+        //                     //window.alert(JSON.data.sites[0]);
+        //                     //window.alert(JSON.data.sites[1]);
+        //
+        //                 },
+        //                 onError: function (data) {
+        //                     // will be called on error. For list of possible message, refer to onError(data) Method.
+        //                     console.log(data);
+        //                 },
+        //                 onClose: function (data) {
+        //                     // will be called called to close FastLink. For list of possible message, refer to onClose(data) Method.
+        //                     //window.alert(JSON.stringify(data));
+        //
+        //                     console.log(data);
+        //                     //window.fastlink.close();
+        //
+        //                 },
+        //                 onEvent: function (data) {
+        //                     // will be called on intermittent status update.
+        //                     console.log(data);
+        //                 }
+        //             },
+        //             'container-fastlink');
+        //     },
+        //     false);
+    }(window));
+}
