@@ -512,7 +512,6 @@ Template.alltaskdatatable.events({
   'click .delete-task': function (e) {
     let id = e.target.dataset.id;
     if (id == 'edit') id = $('#txtCrmTaskID').val();
-    console.log('delete ', id)
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -538,7 +537,6 @@ Template.alltaskdatatable.events({
   'click .duplicate-task': function (e) {
     let templateObject = Template.instance();
     let id = e.target.dataset.id;
-    console.log('duplicate ', id)
     if (id) {
       $('.fullScreenSpin').css('display', 'inline-block');
       crmService.getTaskDetail(id).then(function (data) {
@@ -859,7 +857,6 @@ Template.alltaskdatatable.events({
     if (id == 'edit') {
       id = '';
     }
-    console.log('chkPriority', id)
     $('#chkPriority0' + id).prop('checked', false);
     $('#chkPriority1' + id).prop('checked', false);
     $('#chkPriority2' + id).prop('checked', false);
@@ -1246,7 +1243,6 @@ Template.alltaskdatatable.events({
   'click .taskDropSecondFlag': function (e) {
     let id = e.target.dataset.id;
     let priority = e.target.dataset.priority;
-    console.log(id, priority)
 
     if (id && priority) {
       if (id == 'edit') {
