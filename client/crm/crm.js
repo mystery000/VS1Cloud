@@ -137,6 +137,7 @@ Template.crmoverview.onRendered(function () {
 });
 
 Template.crmoverview.events({
+
   "click .editCardBtn": function (e) {
     e.preventDefault();
     $(".card-visibility").removeClass('hideelement');
@@ -158,6 +159,7 @@ Template.crmoverview.events({
     }
     return false
   },
+
   "click .cardShowBtn": function (e) {
     e.preventDefault();
     if ($(e.target).find('.far').hasClass('fa-eye')) {
@@ -174,7 +176,6 @@ Template.crmoverview.events({
     return false
   },
 
-
   'click .menuTasklist': function (e) {
     Template.instance().crmtaskmitem.set('all');
   },
@@ -188,8 +189,8 @@ Template.crmoverview.events({
   },
 
   // open task detail modal
-  'click .mainTaskCol': function (e) {
-    let id = e.target.dataset.id;
+  'click .openEditTaskModal': function (e) {
+    let type = e.target.dataset.ttype;
     // console.log('task id==', id, e.target)
 
     if (!e.target.classList.contains('no-modal')) {
@@ -452,8 +453,13 @@ Template.crmoverview.events({
           }
           $('.task-activity-row').html(activities)
 
-
+          if (type == 'comment') {
+            $('#nav-comments-tab').click();
+          } else {
+            $('#nav-subtasks-tab').click();
+          }
           $('#taskModal').modal('toggle');
+
         } else {
 
           swal('Cannot edit this task', '', 'warning');

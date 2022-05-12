@@ -1,4 +1,8 @@
 <template name="crmoverview">
+  <div class="fullScreenSpin" style="display:none;">
+    <div class="spinner"></div>
+  </div>
+
   <div style="margin-top: -24px;">
 
     <header style="padding: 16px;padding-bottom: 0px;">
@@ -12,7 +16,9 @@
 
     {{> alltaskdatatable}}
 
-    <div class="row justify-content-center">
+    <!-- {{> taskdatatable}} -->
+
+    <!-- <div class="row justify-content-center">
 
       {{> tasklist_sidebar}}
 
@@ -38,12 +44,73 @@
 
       </div>
 
-      {{> taskmodal}}
-    </div>
+    </div> -->
 
   </div>
 
   <style>
+    th {
+      background-color: #ededed;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: white !important;
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+      background-color: #0000000d !important;
+    }
+
+    .JColResizer>tbody>tr>td,
+    .JColResizer>tbody>tr>th {
+      padding: .75rem !important;
+    }
+
+    .hiddenColumn {
+      display: none;
+    }
+
+    .showColumn {
+      display: table-cell;
+      padding: .75rem;
+      vertical-align: top;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+
+    .colDate {
+      width: 5%;
+    }
+
+    .colTaskName {
+      width: 20%;
+    }
+
+    .colTaskDesc {
+      width: 25%;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .colTaskActions {
+      width: 14%;
+    }
+
+    .btnTaskTableAction {
+      height: 38px !important;
+      width: 44px !important;
+      margin-right: 2px;
+    }
+
+    td .btnTaskTableAction {
+      display: inline-flex;
+    }
+
     .banklink:hover {
       color: #00a3d3 !important;
       text-decoration: underline;
@@ -82,14 +149,14 @@
     }
 
     .chk_complete:before {
-      width: 18px;
-      height: 18px;
-      margin: 3px;
-      border-radius: 100% !important;
+      /* width: 18px;
+      height: 18px; */
+      /* margin: 3px; */
+      /* border-radius: 100% !important; */
     }
 
     .chk_complete:after {
-      margin: 4px;
+      /* margin: 4px; */
     }
 
     .taskNodate {
