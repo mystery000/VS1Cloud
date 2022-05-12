@@ -9,12 +9,11 @@ import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
-import { URL } from 'url';
-
+import { YodleeService } from '../js/yodlee-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
+let yodleeService = new YodleeService();
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
 
@@ -602,7 +601,7 @@ Template.newbankrecon.onRendered(function() {
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
-            
+
             $('#ctaxRate_'+item.DepositLineID).editableSelect();
             $('#ctaxRate_'+item.DepositLineID).editableSelect().on("click.editable-select", function (e, li) {
                 const $each = $(this);
@@ -1017,9 +1016,10 @@ Template.newbankrecon.helpers({
     }
 });
 
-function connectYodlee() {
+ function connectYodlee() {
     (function (window) {
         //Open FastLink
+
 
         let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
         let fastLinkToken = 'Bearer sbMem5f85b3fb4145c1'; // Fastlink Token
@@ -1056,6 +1056,16 @@ function connectYodlee() {
         formBody = formBody.join("&");
         console.log(formBody);
         // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+        yodleeService.POST(user_name, client_id, secret).then(function(data) {
+            console.log(data.token.accessToken);
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+        // let token_url = "https://sandbox.api.yodlee.com/ysl/auth/token";
+        /*
+        let token_url = "https://sandbox.api.yodlee.com.au/ysl/auth/token";
         HTTP.post( token_url, {
             // data: {
             //     // 'userName': user_name,
@@ -1077,7 +1087,8 @@ function connectYodlee() {
                 Session.set('twizzled', true);
             }
         });
-        
+        */
+
         // window.addEventListener(
         //     'load',
         //     function() {
