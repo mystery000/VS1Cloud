@@ -9,10 +9,11 @@ import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
+import {YodleeService} from '../js/yodlee-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
+let yodleeService = new YodleeService();
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
 
@@ -584,7 +585,7 @@ Template.newbankrecon.onRendered(function() {
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
-            
+
             $('#ctaxRate_'+item.DepositLineID).editableSelect();
             $('#ctaxRate_'+item.DepositLineID).editableSelect().on("click.editable-select", function (e, li) {
                 const $each = $(this);
@@ -996,9 +997,10 @@ Template.newbankrecon.helpers({
     }
 });
 
-function connectYodlee() {
+ function connectYodlee() {
     (function (window) {
         //Open FastLink
+
 
         let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
         let fastLinkToken = 'Bearer sbMem5f85b3fb4145c1'; // Fastlink Token
@@ -1007,8 +1009,16 @@ function connectYodlee() {
         const secret = "TqDOhdMCOYHJq1se";
         const admin_login_name = "ae5a538c-f854-4255-9dcb-f234410e4fd2_ADMIN";
         const user_name = "sbMem5f85b3fb4145c1";
+
+         yodleeService.POST(user_name, client_id, secret).then(function(data) {
+            console.log(data.token.accessToken);
+        }).catch(function (err) {
+          console.log(err);
+        });
+
         // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
         // let token_url = "https://sandbox.api.yodlee.com/ysl/auth/token";
+        /*
         let token_url = "https://sandbox.api.yodlee.com.au/ysl/auth/token";
         HTTP.post( token_url, {
             data: {
@@ -1030,7 +1040,8 @@ function connectYodlee() {
                 Session.set('twizzled', true);
             }
         });
-        
+        */
+
         // window.addEventListener(
         //     'load',
         //     function() {

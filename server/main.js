@@ -4,6 +4,7 @@ import {loadStripe} from '@stripe/stripe-js';
 const stripe = loadStripe('pk_test_51H019EDvlF0UkKE2KE9etEOQmp7Ujth0Zzuhxp8y7rrrj5NwowQDWqKZVCZTIlQGOWd3RH8ANsAaYqEg57ODSW6D00TNGazZJU');
 const braintree = require('braintree');
 var yodlee = require('yodlee');
+var request = require('request');
 const Magento2 = require('node-magento2');
 "use strict";
 
@@ -85,14 +86,39 @@ Meteor.startup(() => {
   };
 
 yodlee.getAccessToken({
-    username: 'sbMem5f7qb50a65a361',
-    password: 'site16441.2'
+    clientId: 'KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4',
+    secret: 'TqDOhdMCOYHJq1se'
 }).then(function(accessToken) {
-
+  console.log(accessToken);
   })
   .catch(function(error) {
-
+    console.log(accessToken);
   });
+
+  callYodleeApi = function (loginName, clientID, secretKey, cb) {
+
+    var options = {
+      'method': 'POST',
+      'url': 'https://sandbox.api.yodlee.com/ysl/auth/token',
+      'headers': {
+        'Api-Version': '1.1',
+        'loginName': loginName,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      form: {
+        'clientId': clientID,
+        'secret': secretKey
+      }
+    };
+    request(options,  function (error, response) {
+      if (error) {
+        cb(error, null);
+      } else {
+        cb(null, response.body);
+      }
+    });
+
+  };
 
   callVerifiApi = function (imageData, fileName, cb) {
     let apiUrl = "https://api.veryfi.com/api/v7/partner/documents/";
@@ -122,6 +148,12 @@ yodlee.getAccessToken({
   },
 
   Meteor.methods({
+    'getYodleeAccessToken':  function(loginName, clientID, secretKey) {
+      let getResponse =  "";
+      this.unblock();
+        var resultData = Meteor.wrapAsync(callYodleeApi)(loginName, clientID, secretKey);
+        return resultData;
+    },
     'getOcrResultFromVerifi': function(imageData, fileName) {
 
       this.unblock();
