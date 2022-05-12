@@ -27,7 +27,7 @@
             <!-- End Help View Modal -->
         </h3>
 
-        <div class="row mb-3">
+        <div id="update-fx-settings" class="row mb-3">
             <div class="col">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3">
@@ -90,26 +90,26 @@
                                     <tbody>
                                         <tr class="dnd-moved" id="54" style="cursor: pointer;">
                                             <td contenteditable="false" class="arrow">Invoices</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
+                                            <td contenteditable="false" class="colFrequency s-input edtFrequency" id="edtFrequency"></td>
+                                            <td contenteditable="false" class="colSend s-input edtBasedOn" id="edtBasedOn"></td>
                                             <td contenteditable="false"><input id="edtRecipients" name="edtRecipients" class="es-input highlightSelect edtRecipients" type="search"></td>
                                         </tr>
                                         <tr class="dnd-moved" id="129" style="cursor: pointer;">
                                             <td contenteditable="false" class="arrow">Profit and Loss</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
+                                            <td contenteditable="false" class="colFrequency s-input edtFrequency" id="edtFrequency"></td>
+                                            <td contenteditable="false" class="colSend s-input edtBasedOn" id="edtBasedOn"></td>
                                             <td contenteditable="false"><input id="edtRecipients2" name="edtRecipients2" class="es-input highlightSelect edtRecipients" type="search"></td>
                                         </tr>
                                         <tr class="dnd-moved" id="177" style="cursor: pointer;">
                                             <td contenteditable="false" class="arrow">Statements</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
+                                            <td contenteditable="false" class="colFrequency s-input edtFrequency" id="edtFrequency"></td>
+                                            <td contenteditable="false" class="colSend s-input edtBasedOn" id="edtBasedOn"></td>
                                             <td contenteditable="false"><input id="edtRecipients3" name="edtRecipients3" class="es-input highlightSelect edtRecipients" type="search"></td>
                                         </tr>
                                         <tr class="dnd-moved" id="139" style="cursor: pointer;">
                                             <td contenteditable="false" class="arrow pointer" id="groupedReports" style="cursor: pointer !important;">Grouped Reports</td>
-                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
-                                            <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
+                                            <td contenteditable="false" class="colFrequency s-input edtFrequency" id="edtFrequency"></td>
+                                            <td contenteditable="false" class="colSend s-input edtBasedOn" id="edtBasedOn"></td>
                                             <td contenteditable="false"><input id="edtRecipients4" name="edtRecipients4" class="es-input highlightSelect edtRecipients" type="search"></td>
                                         </tr>
                                     </tbody>
@@ -300,8 +300,8 @@
                                         {{#each item in employeescheduledrecord}}
                                             <tr class="dnd-moved" id="{{item.formID}}" style="cursor: pointer;">
                                                 <td contenteditable="false" class="arrow">{{item.formname}}</td>
-                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency">{{item.frequency}}</td>
-                                                <td contenteditable="false" class="colSend s-input" id="edtBasedOn"></td>
+                                                <td contenteditable="false" class="colFrequency s-input edtFrequency" id="edtFrequency">{{item.frequency}}</td>
+                                                <td contenteditable="false" class="colSend s-input edtBasedOn" id="edtBasedOn"></td>
                                                 <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                 <td contenteditable="false"><input id="edtRecipients-{{item.formID}}" class="es-input highlightSelect edtRecipients" type="search"></td>
                                             </tr>
@@ -894,16 +894,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-5">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="basedOnRadio" id="basedOnSave">
-                                                            <label class="form-check-label" for="basedOnSave">
-                                                                On Save
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                          
                                                 <div class="row">
                                                     <div class="col-12 col-lg-5">
                                                         <div class="form-check">
