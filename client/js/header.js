@@ -1000,6 +1000,12 @@ Template.header.onRendered(function() {
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
+            }else if (segs[0] == Barcode_Prefix_Serial) {
+              //Code Here
+              $('.fullScreenSpin').css('display', 'none');
+            }else if (segs[0] == Barcode_Prefix_LOT) {
+                //Code Here
+                $('.fullScreenSpin').css('display', 'none');
             } else {
                 productService.getGlobalSearchReport(searchName).then(function(data) {
                     let dataSelectID = '';
