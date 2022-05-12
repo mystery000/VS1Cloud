@@ -32,7 +32,15 @@ Template.reconciliation.onRendered(function() {
       selectOtherMonths: true,
       changeMonth: true,
       changeYear: true,
-yearRange: "-90:+10",
+      yearRange: "-90:+10",
+      onChangeMonthYear: function(year, month, inst){
+      // Set date to picker
+      $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+      // Hide (close) the picker
+      $(this).datepicker('hide');
+      // Change ttrigger the on change function
+      $(this).trigger('change');
+     }
     });
       const accountnamerecords = [];
     templateObject.getAccountNames = function(){

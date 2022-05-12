@@ -60,4 +60,8 @@ export class CRMService extends BaseService {
   getOneTTodoTask(id) {
     return this.getOneById(this.ERPObjects.TToDo, id);
   }
+
+  saveComment(data) {
+    return this.POST(this.ERPObjects.Tprojecttask_comments, data);
+  }
 }

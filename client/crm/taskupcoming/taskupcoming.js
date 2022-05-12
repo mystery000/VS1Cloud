@@ -17,20 +17,7 @@ Template.taskupcoming.onCreated(function () {
 });
 
 Template.taskupcoming.onRendered(function () {
-
-  console.log('taskupcoming rendered...')
-  $("#task_items_wrapper").sortable({
-    handle: '.taskDrag',
-    update: function (event, ui) {
-      var sorted = $("#task_items_wrapper").sortable("serialize", { key: "sort" });
-      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
-
-      let current_id = ui.item[0].id;
-      let prev_id = ui.item[0].previousElementSibling.id;
-      let next_id = ui.item[0].nextElementSibling.id;
-      console.log('taskDrag update =>', sorted, sortedIDs, current_id, prev_id, next_id, ui)
-    },
-  });
+  // console.log('taskupcoming render')
 
   let templateObject = Template.instance();
   templateObject.selected_id.set(0);

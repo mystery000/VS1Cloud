@@ -9,10 +9,11 @@ import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
+import { YodleeService } from '../js/yodlee-service';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-
+let yodleeService = new YodleeService();
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
 
@@ -37,6 +38,7 @@ Template.newbankrecon.onRendered(function() {
     let reconService = new ReconService();
     let productService = new ProductService();
     let purchaseService = new PurchaseBoardService();
+    let accountService = new AccountService();
 
     let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
     templateObject.page_number.set(page_number);
@@ -54,6 +56,8 @@ Template.newbankrecon.onRendered(function() {
     let statementDate = localStorage.getItem('statementdate')|| '';
     let selectedAccountFlag = '';
     let selectedDepositID = null;
+
+    connectYodlee();
 
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
@@ -196,6 +200,22 @@ Template.newbankrecon.onRendered(function() {
                         "StatementLineID": 15,
                         "StatementTransactionDate": '2022-04-17',
                         "StatementAmount": 1500,
+                        "StatementDescription": 'Manual'
+                    },
+                    {
+                        "Amount" : 700,
+                        "DepositDate": '2022-05-02',
+                        "CompanyName": 'Yuga',
+                        "Notes": '',
+                        "DepositID": 116,
+                        "ReferenceNo": 'ac-78',
+                        "Seqno": 333,
+                        "PaymentID": 116,
+                        "DepositLineID": 116,
+                        "CusID": 3,
+                        "StatementLineID": 15,
+                        "StatementTransactionDate": '2022-04-17',
+                        "StatementAmount": 700,
                         "StatementDescription": 'Manual'
                     }
                 ]
@@ -581,7 +601,7 @@ Template.newbankrecon.onRendered(function() {
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
-            
+
             $('#ctaxRate_'+item.DepositLineID).editableSelect();
             $('#ctaxRate_'+item.DepositLineID).editableSelect().on("click.editable-select", function (e, li) {
                 const $each = $(this);
@@ -708,6 +728,9 @@ Template.newbankrecon.onRendered(function() {
                 FlowRouter.go('/recontransactiondetail');
                 // let queryParams = {ID: item.DepositLineID, who: who, what: what, why: why, taxRate: taxRate};
                 // FlowRouter.go('/recontransactiondetail', queryParams);
+            });
+            $('#btnFindMatch_'+item.DepositLineID).on('click', function(e, li) {
+                FlowRouter.go('/bankrecon?id='+item.DepositLineID);
             });
         })
     }
@@ -992,3 +1015,115 @@ Template.newbankrecon.helpers({
         return Template.instance().fa_sortWithdrawReceived.get();
     }
 });
+
+ function connectYodlee() {
+    (function (window) {
+        //Open FastLink
+
+
+        let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
+        let fastLinkToken = 'Bearer sbMem5f85b3fb4145c1'; // Fastlink Token
+        let getFileValue = "bcGBUzPpGRBmC8N3Qn6x4DuwGpDp";  // Fastlink Token
+        let client_id = "KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4";
+        // client_id = encodeURIComponent(client_id);
+        let secret = "TqDOhdMCOYHJq1se";
+        // secret = encodeURIComponent(secret);
+        // let body = encodeURIComponent('clientId')+'='+client_id+'&'+encodeURIComponent('secret')+'='+secret;
+        // console.log(body);
+        const admin_login_name = "ae5a538c-f854-4255-9dcb-f234410e4fd2_ADMIN";
+        const user_name = "sbMem5f85b3fb4145c1";
+
+        let token_url = "https://sandbox.api.yodlee.com/ysl/auth/token";
+        // let token_url = "https://sandbox.api.yodlee.com.au/ysl/auth/token";
+        let url2 = new URL(token_url);
+        let body2 = url2.URLSearchParams;
+        body2.append('clientId', client_id);
+        body2.append('secret', secret);
+
+        const details = {
+            'client_id': client_id,
+            'secret': secret
+        };
+
+        let formBody = [];
+        for (const property in details) {
+            const encodedKey = encodeURIComponent(property);
+            console.log(encodedKey);
+            const encodedValue = encodeURIComponent(details[property]);
+            console.log(encodedValue);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+        console.log(formBody);
+        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+        yodleeService.POST(user_name, client_id, secret).then(function(data) {
+            console.log(data.token.accessToken);
+        }).catch(function (err) {
+            console.log(err);
+        });
+
+        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+        // let token_url = "https://sandbox.api.yodlee.com/ysl/auth/token";
+        /*
+        let token_url = "https://sandbox.api.yodlee.com.au/ysl/auth/token";
+        HTTP.post( token_url, {
+            // data: {
+            //     // 'userName': user_name,
+            //     'clientId': client_id,
+            //     'secret': secret
+            //     // 'body': 'clientId='+client_id+'&secret='+secret
+            // },
+            // data: 'clientId='+client_id+'&secret='+secret,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                // 'Content-Type': 'application/json',
+                'Api-Version': '1.1',
+                'loginName': user_name,
+            },
+            data: body2
+        }, (error, result) => {
+            console.log(result);
+            if (!error) {
+                Session.set('twizzled', true);
+            }
+        });
+        */
+
+        // window.addEventListener(
+        //     'load',
+        //     function() {
+        //         window.fastlink.open({
+        //                 fastLinkURL: fastLinkURL,
+        //                 accessToken: fastLinkToken,
+        //                 params: {
+        //                     configName: 'Verification'
+        //                 },
+        //                 onSuccess: function (data) {
+        //                     // will be called on success. For list of possible message, refer to onSuccess(data) Method.
+        //                     console.log(data);
+        //                     //window.alert(JSON.data.sites[0]);
+        //                     //window.alert(JSON.data.sites[1]);
+        //
+        //                 },
+        //                 onError: function (data) {
+        //                     // will be called on error. For list of possible message, refer to onError(data) Method.
+        //                     console.log(data);
+        //                 },
+        //                 onClose: function (data) {
+        //                     // will be called called to close FastLink. For list of possible message, refer to onClose(data) Method.
+        //                     //window.alert(JSON.stringify(data));
+        //
+        //                     console.log(data);
+        //                     //window.fastlink.close();
+        //
+        //                 },
+        //                 onEvent: function (data) {
+        //                     // will be called on intermittent status update.
+        //                     console.log(data);
+        //                 }
+        //             },
+        //             'container-fastlink');
+        //     },
+        //     false);
+    }(window));
+}
