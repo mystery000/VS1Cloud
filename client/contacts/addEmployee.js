@@ -4556,6 +4556,7 @@ Template.employeescard.events({
     'click .removePayTempEarning': function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
+        // $(e.target).parents('.earningLinesContainer').remove();
         let payLines = templateObject.payTemplateEarningLineInfo.get();
         let updatedLines = payLines.filter((item, index) => {
             if ( parseInt( index ) != parseInt( deleteID ) ) {
@@ -4590,6 +4591,18 @@ Template.employeescard.events({
     },
 
     'click .removePayTempReimbursement': function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                return item;
+            }
+        });
+        templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+    },
+
+    'click .removeObEarning': function(e){
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
