@@ -2969,6 +2969,94 @@ Template.employeescard.onRendered(function () {
     }
     templateObject.getTBankAccounts();
     // Standard drop down
+    templateObject.setEarningLineDropDown = function() {
+        setTimeout(function () {
+            $('.earningLineDropDown').editableSelect();
+            $('.earningLineDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                let $search = $(this);
+                let offset = $search.offset();
+                let dropDownID = $search.attr('id')
+                templateObject.currentDrpDownID.set(dropDownID);
+                let currencyDataName = e.target.value || '';
+                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                    $('#earningRateSettingsModal').modal('show');
+                } else {
+                    if (currencyDataName.replace(/\s/g, '') != '') {
+                        console.log('step 2')
+                    }
+                }
+            });
+        }, 1000);
+    }
+    templateObject.setEarningLineDropDown();
+
+    templateObject.setDeductionLineDropDown = function() {
+        setTimeout(function () {
+            $('.deductionLineDropDown').editableSelect();
+            $('.deductionLineDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let offset = $search.offset();
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#deductionSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setDeductionLineDropDown();
+
+    templateObject.setSuperannuationDropDown = function() {
+        setTimeout(function () {
+            $('.superannuationDropDown').editableSelect();
+            $('.superannuationDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let offset = $search.offset();
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#superannuationSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setSuperannuationDropDown();
+
+    templateObject.setReimbursementDropDown = function() {
+        setTimeout(function () {
+            $('.reimbursementDropDown').editableSelect();
+            $('.reimbursementDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let offset = $search.offset();
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#reimbursementSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setReimbursementDropDown();
+    
     $(document).ready(function () {
         setTimeout(function () {
             $('#leaveTypeSelect').editableSelect();
@@ -2988,121 +3076,6 @@ Template.employeescard.onRendered(function () {
                         }
                     }
                 });
-            $('#earningRateSelect').editableSelect();
-            $('#earningRateSelect').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    let $search = $(this);
-                    let offset = $search.offset();
-                    let dropDownID = $search.attr('id')
-                    templateObject.currentDrpDownID.set(dropDownID);
-                    let currencyDataName = e.target.value || '';
-                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                        $('#earningRateSettingsModal').modal('show');
-                    } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
-                        }
-                    }
-                });
-            $('#deductionTypeSelect').editableSelect();
-            $('#deductionTypeSelect').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    let $search = $(this);
-                    let offset = $search.offset();
-                    let dropDownID = $search.attr('id')
-                    templateObject.currentDrpDownID.set(dropDownID);
-                    let currencyDataName = e.target.value || '';
-                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                        $('#deductionSettingsModal').modal('show');
-                    } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
-                        }
-                    }
-                });
-            $('#superannuationFund').editableSelect();
-            $('#superannuationFund').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    let $search = $(this);
-                    let dropDownID = $search.attr('id')
-                    templateObject.currentDrpDownID.set(dropDownID);
-                    let offset = $search.offset();
-                    let currencyDataName = e.target.value || '';
-                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                        $('#superannuationSettingsModal').modal('show');
-                    } else {
-                        if (currencyDataName.replace(/\s/g, '') != '') {
-                            // console.log('step 2')
-                        }
-                    }
-                });
-                $('#reimbursementTypeSelect').editableSelect();
-                $('#reimbursementTypeSelect').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#reimbursementSettingsModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
-
-                $('#obEarningsRate').editableSelect();
-                $('#obEarningsRate').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#earningRateSettingsModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
-
-                $('#obDeductionType').editableSelect();
-                $('#obDeductionType').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#deductionSettingsModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
-
-                $('#obSuperannuationFund').editableSelect();
-                $('#obSuperannuationFund').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#superannuationSettingsModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
 
                 $('#edtExpenseAccount').editableSelect();
                 $('#edtExpenseAccount').editableSelect()
@@ -3114,23 +3087,6 @@ Template.employeescard.onRendered(function () {
                         let currencyDataName = e.target.value || '';
                         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                             $('#accountListModal').modal('show');
-                        } else {
-                            if (currencyDataName.replace(/\s/g, '') != '') {
-                                // console.log('step 2')
-                            }
-                        }
-                    });
-                    
-                $('#obReimbursementType').editableSelect();
-                $('#obReimbursementType').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        let $search = $(this);
-                        let dropDownID = $search.attr('id')
-                        templateObject.currentDrpDownID.set(dropDownID);
-                        let offset = $search.offset();
-                        let currencyDataName = e.target.value || '';
-                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                            $('#reimbursementSettingsModal').modal('show');
                         } else {
                             if (currencyDataName.replace(/\s/g, '') != '') {
                                 // console.log('step 2')
@@ -4083,6 +4039,20 @@ Template.employeescard.events({
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obEarningsRate').val('');
         $('#addEarningsLineModal2').modal('hide');
+        await templateObject.setEarningLineDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obEarningRate' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
         $('.fullScreenSpin').css('display', 'none');
     },
 
@@ -4117,6 +4087,20 @@ Template.employeescard.events({
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obDeductionType').val('');
         $('#addDeductionLineModal2').modal('hide');
+        await templateObject.setDeductionLineDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obDeductionLine' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
         $('.fullScreenSpin').css('display', 'none');
     },
 
@@ -4154,6 +4138,20 @@ Template.employeescard.events({
         $('#obSuperannuationFund').val('');
         $('#obContributionType').val('');
         $('#addSuperannuationLineModal2').modal('hide');
+        await templateObject.setSuperannuationDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'SuperannuationLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obSuperannuationFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
         $('.fullScreenSpin').css('display', 'none');
     },
 
@@ -4188,6 +4186,20 @@ Template.employeescard.events({
         templateObject.openingBalanceInfo.set(openingBalances);
         $('#obReimbursementType').val('');
         $('#addReimbursementLineModal2').modal('hide');
+        await templateObject.setReimbursementDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'ReimbursementLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obReimbursementFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
         $('.fullScreenSpin').css('display', 'none');
     },
 
@@ -4340,7 +4352,7 @@ Template.employeescard.events({
     },
 
     // Pay Template Tab
-    'click #addEarningsLine': function(){        
+    'click #addEarningsLine': async function(){        
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4366,10 +4378,15 @@ Template.employeescard.events({
         templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
         $('input[name=calculationType]:checked').attr('checked', false);
         $('#expenseAccount').val('');
+        await templateObject.setEarningLineDropDown();
+        setTimeout(function () {
+            let index = payEarningLinesTemp.length - 1;
+            $('#ptEarningRate' + index).val(payEarningLinesTemp[index].fields.EarningRate);
+        }, 1000);
         $('#addEarningsLineModal').modal('hide');
     },
 
-    'click #addDeductionLine': function(){
+    'click #addDeductionLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4398,10 +4415,15 @@ Template.employeescard.events({
         $('#deductionTypeSelect').val('FBT');
         $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
         $('#controlAccountDeduction').val('');
+        await templateObject.setDeductionLineDropDown();
+        setTimeout(function () {
+            let index = payDeductionLinesTemp.length - 1;
+            $('#ptDeductionType' + index).val(payDeductionLinesTemp[index].fields.DeductionType);
+        }, 1000);
         $('#addDeductionLineModal').modal('hide');
     },
 
-    'click #addSuperannuationLine': function(){
+    'click #addSuperannuationLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4447,6 +4469,11 @@ Template.employeescard.events({
         $('#liabilityAccount').val('');
         $('#paymentFrequency').val('Monthly');
         $('#edtPeriodPaymentDate').val('');
+        await templateObject.setSuperannuationDropDown();
+        setTimeout(function () {
+            let index = payLinesTemp.length - 1;
+            $('#ptSuperannuationFund' + index).val(payLinesTemp[index].fields.Fund);
+        }, 1000);
         $('#addSuperannuationLineModal').modal('hide');
     },
 
@@ -4467,7 +4494,7 @@ Template.employeescard.events({
         }
     },
 
-    'click #addReiumbursementLine': function(){
+    'click #addReiumbursementLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4495,6 +4522,11 @@ Template.employeescard.events({
         $('#reimbursementTypeSelect').val('');
         $('#reiumbursementDescription').val('');
         $('#controlExpenseAccount').val('');
+        await templateObject.setReimbursementDropDown();
+        setTimeout(function () {
+            let index = payLinesTemp.length - 1;
+            $('#ptReimbursementType' + index).val(payLinesTemp[index].fields.ReiumbursementType);
+        }, 1000);
         $('#addReimbursementLineModal').modal('hide');
     },
 
@@ -4520,6 +4552,54 @@ Template.employeescard.events({
     //         break;
     //     }
     // }, 
+
+    'click .removePayTempEarning': function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateEarningLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                return item;
+            }
+        });
+        templateObject.payTemplateEarningLineInfo.set(updatedLines);
+    },
+
+    'click .removePayTempDeduction': function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateDeductionLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                return item;
+            }
+        });
+        templateObject.payTemplateDeductionLineInfo.set(updatedLines);
+    },
+
+    'click .removePayTempSuperannuation': function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                return item;
+            }
+        });
+        templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
+    },
+
+    'click .removePayTempReimbursement': function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                return item;
+            }
+        });
+        templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+    },
 
     'change .obCalculateEarningTotalAmount': function(e){
         let totalAmount = 0;
