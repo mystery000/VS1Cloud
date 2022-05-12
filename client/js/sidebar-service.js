@@ -1601,6 +1601,14 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       return this.getList(this.ERPObjects.TStockAdjustEntry, options);
   }
 
+  getAllSerialNumber() {
+      let options = '';
+      options = {
+          
+      };
+      return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
+  }
+
   getAllStockTransferEntry(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){
