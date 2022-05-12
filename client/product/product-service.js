@@ -348,5 +348,11 @@ export class ProductService extends BaseService {
       };
       return this.getList(this.ERPObjects.TProduct, options);
     }
+    getSerialNumberList(ProductID) {
+        let option = {
+            find: "[Params.ProductId]='" + ProductID + "'"
+        };
+        return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, option);
+    }
 
 }

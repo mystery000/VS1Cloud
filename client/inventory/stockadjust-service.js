@@ -82,5 +82,11 @@ export class StockTransferService extends BaseService {
       };
       return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
   }
+  getTSLNumberList(ProductID) {
+        let options = {
+            ProductId: ProductID
+        };
+        return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
+    }
 
   }

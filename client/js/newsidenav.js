@@ -6917,6 +6917,18 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenaveserialnumberlist': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/serialnumberlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavelotnumberlist': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/lotnumberlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavnewstockadjust': function(event) {
         //window.open('/stockadjustmentcard', '_self');
         event.preventDefault();

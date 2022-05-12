@@ -610,6 +610,24 @@ authenticatedRoutes.route('/productlist', {
     }
 });
 
+authenticatedRoutes.route('/serialnumberlist', {
+    name: 'serialnumberlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serialnumberlist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/lotnumberlist', {
+    name: 'lotnumberlist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'lotnumberlist'
+        });
+    }
+});
+
 authenticatedRoutes.route('/paymentcard', {
     name: 'paymentcard',
     action() {
