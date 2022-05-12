@@ -67,13 +67,13 @@ Template.recontransactiondetail.onRendered(function() {
             });
             clientDetail = clientDetail[0];
             // let clientDetail = (what !== null && templateObject.clientrecords.get().hasOwnProperty(what))?templateObject.clientrecords.get()[what]:null;
-            let discountAmount = (clientDetail !== null)? amount*clientDetail.discount/100: 0;
+            let discountAmount = (clientDetail !== undefined)? amount*clientDetail.discount/100: 0;
             // let taxCodeDetail = (taxRate !== null && templateObject.taxraterecords.get().hasOwnProperty(taxRate))?templateObject.taxraterecords.get()[taxRate]:null;
             let taxCodeDetail = templateObject.taxraterecords.get().filter(taxcode => {
                 return taxcode.codename === taxRate;
             });
             taxCodeDetail = taxCodeDetail[0];
-            let taxAmount = (taxCodeDetail !== null)?amount*taxCodeDetail.coderate/100:0;
+            let taxAmount = (taxCodeDetail !== undefined)?amount*taxCodeDetail.coderate/100:0;
             selectLineID = Random.id();
             let basedataObj = {
                 lineID: selectLineID,
@@ -83,9 +83,9 @@ Template.recontransactiondetail.onRendered(function() {
                 unitPrice: utilityService.modifynegativeCurrencyFormat(amount),
                 unitPriceInc: utilityService.modifynegativeCurrencyFormat(amount + taxAmount),
                 subtotal: utilityService.modifynegativeCurrencyFormat(amount),
-                account: (clientDetail !== null)? clientDetail.customername:'',
+                account: (clientDetail !== undefined)? clientDetail.customername:'',
                 discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
-                taxrate: (taxCodeDetail !== null)? taxCodeDetail.codename:'',
+                taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
                 taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
                 amount: amount,
                 totalAmount: utilityService.modifynegativeCurrencyFormat(amount - discountAmount),
@@ -665,7 +665,7 @@ Template.recontransactiondetail.events({
         }
 
         reconService.saveReconciliation(objDetails).then(function(data) {
-            FlowRouter.go('/reconciliationlist?success=true');
+            FlowRouter.go('/newbankrecon');
         }).catch(function(err) {
             swal({
                 title: 'Oooops...',
@@ -675,7 +675,7 @@ Template.recontransactiondetail.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                else if (result.dismiss == 'cancel') {}
+                else if (result.dismiss === 'cancel') {}
             });
             $('.fullScreenSpin').css('display', 'none');
         });
