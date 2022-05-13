@@ -211,6 +211,138 @@ Template.taskdatatable.onRendered(function() {
         $('.fullScreenSpin').css('display', 'none');
     }, 0);
 
+    setTimeout(function() {
+        $('#tblFilters').DataTable({
+            columnDefs: [
+                {
+                    "orderable": false,
+                    "targets": 2
+                }
+            ],
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '',
+                download: 'open',
+                className: "btntabletocsv hiddenColumn",
+                filename: "Project List" + moment().format(),
+                orientation: 'portrait',
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function(data, row, column) {
+                            if (data.includes("</span>")) {
+                                var res = data.split("</span>");
+                                data = res[1];
+                            }
+
+                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                        }
+                    }
+                }
+            }, {
+                extend: 'print',
+                download: 'open',
+                className: "btntabletopdf hiddenColumn",
+                text: '',
+                title: 'Project List',
+                filename: "Project List" + moment().format(),
+                exportOptions: {
+                    columns: ':visible',
+                    stripHtml: false
+                }
+            }],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "desc"]
+            ],
+            action: function() {
+                $('#tblFilters').DataTable().ajax.reload();
+            },
+            "fnInitComplete": function() {
+                $("<button class='btn btn-primary btnNewFilter' type='button' id='btnNewFilter' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Filter</button>").insertAfter("#tblFilters_filter");
+                $("<button class='btn btn-primary btnRefreshFilters' type='button' id='btnRefreshFilters' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblFilters_filter");
+            }
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }, 0);
+
+    setTimeout(function() {
+        $('#tblLabels').DataTable({
+            columnDefs: [
+                {
+                    "orderable": false,
+                    "targets": 2
+                }
+            ],
+            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [{
+                extend: 'excelHtml5',
+                text: '',
+                download: 'open',
+                className: "btntabletocsv hiddenColumn",
+                filename: "Project List" + moment().format(),
+                orientation: 'portrait',
+                exportOptions: {
+                    columns: ':visible',
+                    format: {
+                        body: function(data, row, column) {
+                            if (data.includes("</span>")) {
+                                var res = data.split("</span>");
+                                data = res[1];
+                            }
+
+                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                        }
+                    }
+                }
+            }, {
+                extend: 'print',
+                download: 'open',
+                className: "btntabletopdf hiddenColumn",
+                text: '',
+                title: 'Project List',
+                filename: "Project List" + moment().format(),
+                exportOptions: {
+                    columns: ':visible',
+                    stripHtml: false
+                }
+            }],
+            select: true,
+            destroy: true,
+            colReorder: true,
+            pageLength: initialDatatableLoad,
+            lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+            ],
+            info: true,
+            responsive: true,
+            "order": [
+                [1, "desc"]
+            ],
+            action: function() {
+                $('#tblLabels').DataTable().ajax.reload();
+            },
+            "fnInitComplete": function() {
+                $("<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>").insertAfter("#tblLabels_filter");
+                $("<button class='btn btn-primary btnRefreshLabels' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLabels_filter");
+            }
+        });
+        $('.fullScreenSpin').css('display', 'none');
+    }, 0);
+
 });
 
 Template.taskdatatable.events({
@@ -235,6 +367,12 @@ Template.taskdatatable.events({
         $('.sectionOpened').css('display','inline-flex');
         $('.sectionClosed').css('display','none');
         $('.sectionCol1').css('display','inline');
+    },
+    'click .btnNewFilter': function(event) {
+        $('#newFilterModal').modal('toggle');
+    },
+    'click .btnNewLabel': function(event) {
+        $('#newLabelModal').modal('toggle');
     },
 });
 

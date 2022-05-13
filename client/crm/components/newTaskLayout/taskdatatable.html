@@ -359,6 +359,78 @@
         </div>
     </div>
 
+    <div class="modal fade" id="newFilterModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Create New Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Filter Name</label>
+                                <input class="form-control" type="text" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Filter Query</label>
+                                <input class="form-control" type="text" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Filter Color</label>
+                                <input type="color" class="form-control" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newLabelModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Create New Label</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Label Name</label>
+                                <input class="form-control" type="text" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="">Label Color</label>
+                                <input type="color" class="form-control" id="" name="" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row no-gutters" style="padding: 12px 30px;">
         <div class="col-12">
 
@@ -1002,6 +1074,117 @@
                             </div>
 
                             <div class="tab-pane fade" id="filterLabelsTab" role="tabpanel" aria-labelledby="filterLabelsTab-tab">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h5>Filters</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <style>
+                                                .colFilterCreatedDate {
+                                                    width: 5%;
+                                                }
+
+                                                .colFilterActions {
+                                                    width: 8%;
+                                                }
+
+                                                .btnFilterAction {
+                                                    height: 38px !important;
+                                                    width: 44px !important;
+                                                    margin-right: 2px;
+                                                }
+
+                                                td .btnFilterAction {
+                                                    display: inline-flex;
+                                                }
+                                            </style>
+                                            <table id="tblFilters" name="tblFilters" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblFilters">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="th colFilterCreatedDate">Created</th>
+                                                        <th class="th colFilterName">Filter</th>
+                                                        <th class="th colFilterActions">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
+                                                        <td contenteditable="false" class=" colFilterCreatedDate">05/11/2022</td>
+                                                        <td contenteditable="false" class=" colFilterName">[Filter Name]</td>
+                                                        <td contenteditable="false" class=" colFilterActions">
+                                                            <div class="dropdown btnFilterAction">
+                                                                <button type="button" class="btn btn-primary btnEditFilter"><i class="far fa-edit" style="width: 16px;"></i></button>
+                                                            </div>
+
+                                                            <div class="dropdown btnFilterAction">
+                                                                <button type="button" class="btn btn-danger btnDeleteFilter"><i class="far fa-trash-alt" style="width: 16px;"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <h5>Labels</h5>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="table-responsive">
+                                            <style>
+                                                #tblFilters_wrapper {
+                                                    min-height: 10vh !important;
+                                                }
+
+                                                #tblLabels_wrapper {
+                                                    min-height: 10vh !important;
+                                                }
+
+                                                .colLabelCreatedDate {
+                                                    width: 5%;
+                                                }
+
+                                                .colLabelActions {
+                                                    width: 8%;
+                                                }
+
+                                                .btnLabelActions {
+                                                    height: 38px !important;
+                                                    width: 44px !important;
+                                                    margin-right: 2px;
+                                                }
+
+                                                td .btnLabelActions {
+                                                    display: inline-flex;
+                                                }
+                                            </style>
+                                            <table id="tblLabels" name="tblLabels" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblLabels">
+                                                <thead>
+                                                    <tr class="dnd-moved">
+                                                        <th class="th colLabelCreatedDate">Created</th>
+                                                        <th class="th colLabel">Labels</th>
+                                                        <th class="th colLabelActions">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="dnd-moved" id="" style="cursor: pointer;">
+                                                        <td contenteditable="false" class=" colFilterCreatedDate">05/11/2022</td>
+                                                        <td contenteditable="false" class=" colFilterName">[Label Name]</td>
+                                                        <td contenteditable="false" class=" colLabelActions">
+                                                            <div class="dropdown btnLabelActions">
+                                                                <button type="button" class="btn btn-primary btnEditLAbel"><i class="far fa-edit" style="width: 16px;"></i></button>
+                                                            </div>
+
+                                                            <div class="dropdown btnLabelActions">
+                                                                <button type="button" class="btn btn-danger btnDeleteLabel"><i class="far fa-trash-alt" style="width: 16px;"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
