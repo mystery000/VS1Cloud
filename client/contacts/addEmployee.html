@@ -2506,6 +2506,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <style>
+                                                                    .btn i {
+                                                                        pointer-events: none;
+                                                                    }
+                                                                </style>
                                                                 <div class="row mb-3">
                                                                     <div class="col-12">                                                                        
                                                                         <div class="card shadow" style="padding: 8px 16px;">
@@ -2522,18 +2527,19 @@
                                                                                                 </div> -->
                                                                                             </div>
                                                                                         </div>
+
                                                                                         {{#if equals item.fields.CalculationType "fixedamount"}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="ptDeductionAmount{{ @index }}">
+                                                                                                    <input type="text" class="form-control" id="ptDeductionAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="ptDeductionPercentage{{ @index }}">
+                                                                                                    <input type="text" class="form-control" id="ptDeductionPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2630,14 +2636,14 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="ptSuperannuationAmount{{ @index }}">
+                                                                                                    <input type="text" class="form-control" id="ptSuperannuationAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="ptSuperannuationPercentage{{ @index }}">
+                                                                                                    <input type="text" class="form-control" id="ptSuperannuationPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2776,7 +2782,7 @@
                                                                                         <div class="col-5 col-md-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control" id="">
+                                                                                                <input type="text" class="form-control" id="ptReimbursementAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
@@ -2910,19 +2916,9 @@
                                                                                 {{#if obEarningLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obEarningTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateEarningTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalAmount = 0;
-                                                                                        let amount = 0;
-                                                                                        $('.obCalculateEarningTotalAmount').each(function(){
-                                                                                            amount = $(this).val();
-                                                                                            amount = ( amount === null || amount == '') ? 0 : amount;
-                                                                                            totalAmount += parseFloat( amount );
-                                                                                        });
-                                                                                        $('#obEarningTotalAmount').text(totalAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -2947,7 +2943,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObDeduction" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -2986,19 +2982,9 @@
                                                                                 {{#if obDeductionLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obDeductionTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateDeductionTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalDeductionAmount = 0;
-                                                                                        let amountDeduction = 0;
-                                                                                        $('.obCalculateDeductionTotalAmount').each(function(){
-                                                                                            amountDeduction = $(this).val();
-                                                                                            amountDeduction = ( amountDeduction === null || amountDeduction == '') ? 0 : amountDeduction;
-                                                                                            totalAmount += parseFloat( amountDeduction );
-                                                                                        });
-                                                                                        $('#obDeductionTotalAmount').text(totalDeductionAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -3046,7 +3032,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObSuperannuation" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -3092,19 +3078,9 @@
                                                                                 {{#if obSuperannuationLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obSuperannuationTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateSuperannuationTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalSuperannuationAmount = 0;
-                                                                                        let amountSuperannuation = 0;
-                                                                                        $('.obCalculateSuperannuationTotalAmount').each(function(){
-                                                                                            amountSuperannuation = $(this).val();
-                                                                                            amountSuperannuation = ( amountSuperannuation === null || amountSuperannuation == '') ? 0 : amountSuperannuation;
-                                                                                            totalAmount += parseFloat( amountSuperannuation );
-                                                                                        });
-                                                                                        $('#obSuperannuationTotalAmount').text(totalSuperannuationAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -3129,7 +3105,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObReimbursement" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -3169,19 +3145,9 @@
                                                                                 {{#if obReimbursementLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obReimbursementTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateReimbursementTotalAmount'}}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalReimbursementAmount = 0;
-                                                                                        let amountReimbursement = 0;
-                                                                                        $('.obCalculateReimbursementTotalAmount').each(function(){
-                                                                                            amountReimbursement = $(this).val();
-                                                                                            amountReimbursement = ( amountReimbursement === null || amountReimbursement == '') ? 0 : amountReimbursement;
-                                                                                            totalAmount += parseFloat( amountReimbursement );
-                                                                                        });
-                                                                                        $('#obReimbursementTotalAmount').text(totalReimbursementAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
