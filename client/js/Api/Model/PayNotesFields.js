@@ -3,14 +3,14 @@ export default class PayNotesFields {
         EmployeeID,
         ID,
         Notes,
-        Date,
+        CreatedAt,
         UserID,
         UserName,
     }){
         this.EmployeeID = EmployeeID;
         this.ID = ID;
         this.Notes = Notes;
-        this.Date = Date;
+        this.CreatedAt = CreatedAt;
         this.UserID = UserID;
         this.UserName = UserName;
     }
