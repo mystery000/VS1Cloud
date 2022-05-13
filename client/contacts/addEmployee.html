@@ -2424,17 +2424,17 @@
                                                                                             <div class="col-6 col-md-7">
                                                                                                 <div class="form-group">
                                                                                                     <label class="borderBottom1">Earnings Rate</label>
-                                                                                                    <input type="text" class="form-control" id="" value="{{ item.fields.EarningRate }}">
+                                                                                                    <input type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                    <input type="text" class="form-control" id="ptEarningAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                                <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempEarning" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -2458,7 +2458,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Earnings Rate</label>
-                                                                                                                <input type="search" class="form-control" id="earningRateSelect">
+                                                                                                                <input type="search" class="form-control earningLineDropDown" id="earningRateSelect">
                                                                                                                 <input type="hidden" id="earningRateSelectID" value="0">
                                                                                                                 <!-- <select class="form-control" id="earningRateSelect" style="cursor: pointer;">
                                                                                                                     <option value="Allowances exempt from tax withholding and super">Allowances exempt from tax withholding and super</option>
@@ -2506,6 +2506,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <style>
+                                                                    .btn i {
+                                                                        pointer-events: none;
+                                                                    }
+                                                                </style>
                                                                 <div class="row mb-3">
                                                                     <div class="col-12">
                                                                         <div class="card shadow" style="padding: 8px 16px;">
@@ -2516,29 +2521,30 @@
                                                                                         <div class="col-6 col-md-7">
                                                                                             <div class="form-group">
                                                                                                 <label class="borderBottom1">Deduction Type</label>
-                                                                                                <input type="text" class="form-control" id="" value="{{ item.fields.DeductionType }}">
+                                                                                                <input type="search" class="form-control deductionLineDropDown" id="ptDeductionType{{ @index }}" value="{{ item.fields.DeductionType }}">
                                                                                                 <!-- <div class="ordanryHoursDiv">
                                                                                                     <a href="javascript:void(0)">{{ item.fields.DeductionType }}</a>
                                                                                                 </div> -->
                                                                                             </div>
                                                                                         </div>
+
                                                                                         {{#if equals item.fields.CalculationType "fixedamount"}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                    <input type="text" class="form-control" id="ptDeductionAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                    <input type="text" class="form-control" id="ptDeductionPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempDeduction" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2562,7 +2568,7 @@
                                                                                                             <div class="col-12">
                                                                                                                 <div class="form-group">
                                                                                                                     <label>Deduction Type</label>
-                                                                                                                    <input type="search" class="form-control" id="deductionTypeSelect">
+                                                                                                                    <input type="search" class="form-control deductionLineDropDown" id="deductionTypeSelect">
                                                                                                                     <input type="hidden" id="deductionTypeSelectID" value="0">
                                                                                                                     <!-- <select class="form-control" id="deductionTypeSelect" style="cursor: pointer;">
                                                                                                                         <option value="FBT">FBT</option>
@@ -2620,7 +2626,7 @@
                                                                                         <div class="col-6 col-md-7">
                                                                                             <div class="form-group">
                                                                                                 <label class="borderBottom1">Superannuation Fund</label>
-                                                                                                <input type="text" class="form-control" id="" value="{{ item.fields.Fund }}">
+                                                                                                <input type="text" class="form-control superannuationDropDown" id="ptSuperannuationFund{{ @index }}" value="{{ item.fields.Fund }}">
                                                                                                 <!-- <div class="ordanryHoursDiv">
                                                                                                     <a href="javascript:void(0)">{{ item.fields.Fund }}</a>
                                                                                                 </div> -->
@@ -2630,19 +2636,19 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                    <input type="text" class="form-control" id="ptSuperannuationAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="">
+                                                                                                    <input type="text" class="form-control" id="ptSuperannuationPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempSuperannuation" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2666,7 +2672,7 @@
                                                                                                             <div class="form-group">
                                                                                                                 <label>Superannuation Fund</label>
                                                                                                                 <input type="hidden" id="superannuationFundID" value="0">
-                                                                                                                <input type="search" class="form-control" id="superannuationFund">
+                                                                                                                <input type="search" class="form-control superannuationDropDown" id="superannuationFund">
                                                                                                             </div>
                                                                                                         </div>
                                                                                                         <div class="col-12">
@@ -2767,7 +2773,7 @@
                                                                                         <div class="col-6 col-md-7">
                                                                                             <div class="form-group">
                                                                                                 <label class="borderBottom1">Reimbursement Type</label>
-                                                                                                <input type="text" class="form-control" id="" value="{{ item.fields.ReiumbursementType }}">
+                                                                                                <input type="text" class="form-control reimbursementDropDown" id="ptReimbursementType{{ @index }}" value="{{ item.fields.ReiumbursementType }}">
                                                                                                 <!-- <div class="ordanryHoursDiv">
                                                                                                     <a href="javascript:void(0)">{{ item.fields.ReiumbursementType }}</a>
                                                                                                 </div> -->
@@ -2776,11 +2782,11 @@
                                                                                         <div class="col-5 col-md-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control" id="">
+                                                                                                <input type="text" class="form-control" id="ptReimbursementAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removePayTempReimbursement" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -2803,7 +2809,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Reiumbursement Type</label>
-                                                                                                                <input type="search" class="form-control" id="reimbursementTypeSelect">
+                                                                                                                <input type="search" class="form-control reimbursementDropDown" id="reimbursementTypeSelect">
                                                                                                                 <input type="hidden" id="reimbursementTypeSelectID" value="0">
                                                                                                                 <!-- <select class="form-control" id="reimbursementTypeSelect" style="cursor: pointer;">
                                                                                                                     <option value="Other Reimbursable Costs">Other Reimbursable Costs</option>
@@ -2860,7 +2866,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Earnings Rate</label>
-                                                                                                <input type="text" class="form-control" value="{{ item.fields.BalanceField }}" id="">
+                                                                                                <input type="text" class="form-control earningLineDropDown" value="{{ item.fields.BalanceField }}" id="obEarningRate{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -2870,7 +2876,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObEarning" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -2893,7 +2899,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Earnings Rate</label>
-                                                                                                                <input type="search" class="form-control" id="obEarningsRate">
+                                                                                                                <input type="search" class="form-control earningLineDropDown" id="obEarningsRate">
                                                                                                                 <input type="hidden" id="obEarningsRateID" value="0">
                                                                                                             </div>
                                                                                                         </div>
@@ -2910,19 +2916,9 @@
                                                                                 {{#if obEarningLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obEarningTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateEarningTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalAmount = 0;
-                                                                                        let amount = 0;
-                                                                                        $('.obCalculateEarningTotalAmount').each(function(){
-                                                                                            amount = $(this).val();
-                                                                                            amount = ( amount === null || amount == '') ? 0 : amount;
-                                                                                            totalAmount += parseFloat( amount );
-                                                                                        });
-                                                                                        $('#obEarningTotalAmount').text(totalAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -2937,7 +2933,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Deduction Type</label>
-                                                                                                <input type="text" class="form-control" value="{{ item.fields.BalanceField }}" id="">
+                                                                                                <input type="text" class="form-control deductionLineDropDown" value="{{ item.fields.BalanceField }}" id="obDeductionLine{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -2947,7 +2943,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObDeduction" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -2969,7 +2965,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Deduction Type</label>
-                                                                                                                <input type="text" class="form-control" id="obDeductionType">
+                                                                                                                <input type="text" class="form-control deductionLineDropDown" id="obDeductionType">
                                                                                                                 <input type="hidden" id="obDeductionTypeID" value="0">
                                                                                                             </div>
                                                                                                         </div>
@@ -2986,19 +2982,9 @@
                                                                                 {{#if obDeductionLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obDeductionTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateDeductionTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalDeductionAmount = 0;
-                                                                                        let amountDeduction = 0;
-                                                                                        $('.obCalculateDeductionTotalAmount').each(function(){
-                                                                                            amountDeduction = $(this).val();
-                                                                                            amountDeduction = ( amountDeduction === null || amountDeduction == '') ? 0 : amountDeduction;
-                                                                                            totalAmount += parseFloat( amountDeduction );
-                                                                                        });
-                                                                                        $('#obDeductionTotalAmount').text(totalDeductionAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -3036,7 +3022,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Superannuation Fund</label>
-                                                                                                <input type="text" class="form-control" value="{{ item.fields.BalanceField }}" id="">
+                                                                                                <input type="text" class="form-control superannuationDropDown" value="{{ item.fields.BalanceField }}" id="obSuperannuationFund{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -3046,7 +3032,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObSuperannuation" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -3069,7 +3055,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Superannuation Fund</label>
-                                                                                                                <input type="text" class="form-control" id="obSuperannuationFund">
+                                                                                                                <input type="text" class="form-control superannuationDropDown" id="obSuperannuationFund">
                                                                                                                 <input type="hidden" id="obSuperannuationFundID" value="0">
                                                                                                             </div>
                                                                                                         </div>
@@ -3092,19 +3078,9 @@
                                                                                 {{#if obSuperannuationLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obSuperannuationTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateSuperannuationTotalAmount' }}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalSuperannuationAmount = 0;
-                                                                                        let amountSuperannuation = 0;
-                                                                                        $('.obCalculateSuperannuationTotalAmount').each(function(){
-                                                                                            amountSuperannuation = $(this).val();
-                                                                                            amountSuperannuation = ( amountSuperannuation === null || amountSuperannuation == '') ? 0 : amountSuperannuation;
-                                                                                            totalAmount += parseFloat( amountSuperannuation );
-                                                                                        });
-                                                                                        $('#obSuperannuationTotalAmount').text(totalSuperannuationAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>
@@ -3119,7 +3095,7 @@
                                                                                         <div class="col-7">
                                                                                             <div class="form-group">
                                                                                                 <label>Reimbursement Fund</label>
-                                                                                                <input type="text" class="form-control" value="{{ item.fields.BalanceField }}" id="">
+                                                                                                <input type="text" class="form-control reimbursementDropDown" value="{{ item.fields.BalanceField }}" id="obReimbursementFund{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-2">
@@ -3129,7 +3105,7 @@
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
-                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
+                                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm removeObReimbursement" data-id="{{ @index }}" style="margin-bottom: 24px;"><i class="fa fa-remove"></i></button>
                                                                                         </div>
                                                                                     </div>
                                                                                 {{/each}}
@@ -3152,7 +3128,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Reimbursement Type</label>
-                                                                                                                <input type="text" class="form-control" id="obReimbursementType">
+                                                                                                                <input type="text" class="form-control reimbursementDropDown" id="obReimbursementType">
                                                                                                                 <input type="hidden" id="obReimbursementTypeID" value="0">
                                                                                                             </div>
                                                                                                         </div>
@@ -3169,19 +3145,9 @@
                                                                                 {{#if obReimbursementLines}}
                                                                                     <div class="col-2">
                                                                                         <p id="obReimbursementTotalAmount" style="margin-bottom: 0px; margin-top: 4px; font-size: 20px; font-weight: 700; border-top: 1px solid; border-bottom: 1px solid;">
-                                                                                            0.00
+                                                                                            {{ calculateOpeningBalanceTotal 'obCalculateReimbursementTotalAmount'}}
                                                                                         </p>
                                                                                     </div>
-                                                                                    <script>
-                                                                                        let totalReimbursementAmount = 0;
-                                                                                        let amountReimbursement = 0;
-                                                                                        $('.obCalculateReimbursementTotalAmount').each(function(){
-                                                                                            amountReimbursement = $(this).val();
-                                                                                            amountReimbursement = ( amountReimbursement === null || amountReimbursement == '') ? 0 : amountReimbursement;
-                                                                                            totalAmount += parseFloat( amountReimbursement );
-                                                                                        });
-                                                                                        $('#obReimbursementTotalAmount').text(totalReimbursementAmount);
-                                                                                    </script>
                                                                                 {{/if}}
                                                                             </div>
                                                                         </div>

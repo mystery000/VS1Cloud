@@ -11,6 +11,7 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import FxUpdater from "./FxUpdater";
 let sideBarService = new SideBarService();
 Template.fixUpdates.onCreated(function() {
     const templateObject = Template.instance();
@@ -801,23 +802,27 @@ Template.fixUpdates.events({
 
         }
 
+        console.log(objDetails);
 
-        taxRateService.saveScheduleSettings(objDetails).then(function(data) {
-            Meteor._reload.reload();
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {
-                    Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
+
+        // taxRateService.saveScheduleSettings(objDetails).then(function(data) {
+        //     Meteor._reload.reload();
+        // }).catch(function(err) {
+        //     swal({
+        //         title: 'Oooops...',
+        //         text: err,
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'Try Again'
+        //     }).then((result) => {
+        //         if (result.value) {
+        //             Meteor._reload.reload();
+        //         } else if (result.dismiss === 'cancel') {}
+        //     });
+        //     $('.fullScreenSpin').css('display', 'none');
+        // });
+
+        $('.fullScreenSpin').css('display', 'none');
    
     },
     'click .chkBoxDays': function(event) {
@@ -835,48 +840,56 @@ Template.fixUpdates.events({
 
         $("#formid").val(formId);
 
-        var result = scheduleData.filter(data => {
-            return data.formID == formId
-        });
-        if (result.length > 0) {
-          let startDateVal = result[0].startDate != '' ? moment(result[0].startDate).format("DD/MM/YYYY") : result[0].startDate;
-            templateObject.assignFrequency(result[0].frequency);
-            templateObject.getMonths(result[0].startDate, result[0].endDate);
-            $('#frequencyid').val(result[0].id);
+        templateObject.assignFrequency("Daily");
+        let currentDate = new Date();
 
-            const _frequencies = [
-                "Monthly",
-                "Weekly",
-                "Daily"
-            ];
+        $('#edtDailyStartTime').val("08:00:00");
+       // $('#edtDailyStartDate').val(startDateVal);
 
-            if(_frequencies.includes(result[0].frequency) == true) {
+        // This is the default previous data
+        // var result = scheduleData.filter(data => {
+        //     return data.formID == formId
+        // });
+        // if (result.length > 0) {
+        //   let startDateVal = result[0].startDate != '' ? moment(result[0].startDate).format("DD/MM/YYYY") : result[0].startDate;
+        //     templateObject.assignFrequency(result[0].frequency);
+        //     templateObject.getMonths(result[0].startDate, result[0].endDate);
+        //     $('#frequencyid').val(result[0].id);
+
+        //     const _frequencies = [
+        //         "Monthly",
+        //         "Weekly",
+        //         "Daily"
+        //     ];
+
+        //     if(_frequencies.includes(result[0].frequency) == true) {
                
+        //        console.log(result[0].startTime);
 
-                if (result[0].frequency == "Monthly") {
+        //         if (result[0].frequency == "Monthly") {
 
-                    $('#sltDayOccurence').val(result[0].every);
-                    $('#sltDayOfWeek').val(result[0].monthDays);
-                    $('#edtMonthlyStartTime').val(result[0].startTime);
-                    $('#edtMonthlyStartDate').val(startDateVal);
-                }else if (result[0].frequency == "Weekly") {
-                    $('#weeklyEveryXWeeks').val(result[0].every);
-                    $('#edtWeeklyStartTime').val(result[0].startTime);
-                    $('#edtWeeklyStartDate').val(startDateVal);
-                    templateObject.getDayName(result[0].weekDay);
+        //             $('#sltDayOccurence').val(result[0].every);
+        //             $('#sltDayOfWeek').val(result[0].monthDays);
+        //             $('#edtMonthlyStartTime').val(result[0].startTime);
+        //             $('#edtMonthlyStartDate').val(startDateVal);
+        //         }else if (result[0].frequency == "Weekly") {
+        //             $('#weeklyEveryXWeeks').val(result[0].every);
+        //             $('#edtWeeklyStartTime').val(result[0].startTime);
+        //             $('#edtWeeklyStartDate').val(startDateVal);
+        //             templateObject.getDayName(result[0].weekDay);
                      
-                } else if (result[0].frequency == "Daily") {
-                    $('#dailyEveryXDays').val(result[0].every);
-                    $('#edtDailyStartTime').val(result[0].startTime);
-                    $('#edtDailyStartDate').val(startDateVal);
+        //         } else if (result[0].frequency == "Daily") {
+        //             $('#dailyEveryXDays').val(result[0].every);
+        //             $('#edtDailyStartTime').val(result[0].startTime);
+        //             $('#edtDailyStartDate').val(startDateVal);
                  
-                }
-                $(event.currentTarget).text(result[0].frequency);
+        //         }
+        //         $(event.currentTarget).text(result[0].frequency);
                
-            }
+        //     }
 
 
-        }
+        // }
 
         $("#frequencyModal").modal('toggle');
     },
@@ -1055,6 +1068,12 @@ Template.fixUpdates.events({
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         location.reload(true);
+    },
+    'click #fx-save-settings': (e) => {
+        let fxUpdater = new FxUpdater();
+
+        fxUpdater.buildObject(e);
+
     }
 });
 
