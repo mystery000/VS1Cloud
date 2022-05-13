@@ -1257,7 +1257,7 @@
                                                             <h5 class="card-title">Annual Salary</h5>
                                                             <button onclick="showAnnualSalary()" type="button" class="btn btn-primary" id="btnViewAnnual"><i class="far fa-eye" style="margin-right: 5px;"></i> View</button>
                                                             <p style="font-size: 25px; font-weight: 600; margin-bottom: 0px; display: none;" id="annualSalary">
-                                                                <span id="annualSalaryValue">{{ employeePaySetting.AnnSalary }}</span>
+                                                                <span id="annualSalaryValue">{{ formatPrice employeePaySetting.AnnualSalary }}</span>
                                                                 <button onclick="showAnnualSalary()" class="btn btn-primary float-right"><i class="far fa-eye-slash" style="margin-right: 5px;"></i> Hide</button>
                                                             </p>
                                                             <script>
@@ -1282,7 +1282,7 @@
                                                             <h5 class="card-title">Earnings YTD</h5>
                                                             <button onclick="showEarnings()" type="button" class="btn btn-primary" id="btnShowEarnings"><i class="far fa-eye" style="margin-right: 5px;"></i> View</button>
                                                             <p style="font-size: 25px; font-weight: 600; margin-bottom: 0px; display: none;" id="earningsYtd">
-                                                                <span id="earningsYtdValue">$250,000</span>
+                                                                <span id="earningsYtdValue">{{ formatPrice employeePaySetting.EarningYTD }}</span>
                                                                 <button onclick="showEarnings()" class="btn btn-primary float-right"><i class="far fa-eye-slash" style="margin-right: 5px;"></i> Hide</button>
                                                             </p>
                                                             <script>
@@ -1306,7 +1306,7 @@
                                                         <div class="card-body">
                                                             <h5 class="card-title">Next Pay Day</h5>
                                                             <p style="font-size: 25px; font-weight: 600; margin-bottom: 0px;">
-                                                                31/01/2022
+                                                                {{ formatDate employeePaySetting.NextPayDate }}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -3210,26 +3210,27 @@
                                                                                     vertical-align: top;
                                                                                 }
                                                                             </style>
-                                                                            <table id="tblPayrollNotes" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayrollNotes">
+                                                                            <table id="tblEmpPayrollNotes" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayrollNotes">
                                                                                 <thead>
                                                                                     <tr class="dnd-moved">
-                                                                                        <th class="th colPayrollNotesDate" style="">Date</th>
-                                                                                        <th class="th colPayrollNotesUser" style="">User</th>
-                                                                                        <th class="th colPayrollNotes" style="">Note</th>
+                                                                                        <th class="th colEmpPayrollID hiddenColumn" style="width:20px">ID</th>
+                                                                                        <th class="th colEmpPayrollNotesDate" style="">Date</th>
+                                                                                        <th class="th colEmpPayrollNotesUser" style="">User</th>
+                                                                                        <th class="th colEmpPayrollNotes" style="">Note</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    {{#if payNotesInfo}}
-                                                                                        {{#each item in payNotesInfo}}
-                                                                                        <tr class="dnd-moved" id="{{item.fields.id}}" style="cursor: pointer;">
-                                                                                            <td contenteditable="false" class="colPayrollNotesDate">{{ item.fields.Date }}</td>
-                                                                                            <td contenteditable="false" class="colPayrollNotesUser">{{ item.fields.UserName }}</td>
-                                                                                            <td contenteditable="false" class="colPayrollNotes">{{ item.fields.Notes }}</td>
-                                                                                        </tr>
+                                                                                    {{#if datanotestablerecords}}
+                                                                                        {{#each item in datanotestablerecords}}
+                                                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                                                                <td contenteditable="false" class="colEmpPayrollID hiddenColumn">{{item.id}}</td>
+                                                                                                <td contenteditable="false" class="colEmpPayrollNotesDate">{{item.createdat}}</td>
+                                                                                                <td contenteditable="false" class="colEmpPayrollNotesUser">{{item.username}}</td>
+                                                                                                <td contenteditable="false" class="colEmpPayrollNotes" style="text-align: right!important;">{{item.notes}}</td>
+                                                                                            </tr>
                                                                                         {{/each}}
                                                                                     {{/if}}
                                                                                 </tbody>
-
                                                                             </table>
                                                                         </div>
                                                                     </div>

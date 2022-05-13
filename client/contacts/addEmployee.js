@@ -73,7 +73,9 @@ Template.employeescard.onCreated(function () {
     templateObject.empPriorities = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
 
-    templateObject.datatablerecords = new ReactiveVar([]);
+    templateObject.datatablerecords = new ReactiveVar([]);   
+    templateObject.datanotestablerecords = new ReactiveVar([]);   
+    
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.isCloudUserPass = new ReactiveVar();
@@ -2820,8 +2822,19 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-            // console.log('useData', useData)
+            console.log('useData', useData)
             templateObject.payNotesInfos.set(useData);
+            let dataTableList = []
+            Array.prototype.forEach.call(useData, (item, index) => {
+                let ID = index + 1
+                dataTableList.push({
+                    id: ID || '',
+                    createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
+                    username: item.fields.UserName || '',
+                    notes: item.fields.Notes || ''
+                })
+            })
+            templateObject.datanotestablerecords.set(dataTableList);            
         }  
     };
     templateObject.getPayNotesTypes(); 
@@ -2893,13 +2906,16 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
-                // console.log('TEmployeepaysettingData', useData)
+                console.log('TEmployeepaysettingData', useData)
 
                 let employeePaySettings = useData[0]
 
 
                 let objEmployeePaySettings = {
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                    AnnualSalary: employeePaySettings.fields.AnnualSalary,
+                    EarningYTD: employeePaySettings.fields.EarningYTD,
+                    NextPayDate: employeePaySettings.fields.NextPayDate,
                     AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
                     TFN: employeePaySettings.fields.Employee.fields.TFN,
                     Country: employeePaySettings.fields.Employee.fields.Country,
@@ -4410,7 +4426,7 @@ Template.employeescard.events({
                 fields: new PayNotesFields({
                     EmployeeID: employeeID,
                     Notes: Notes,
-                    Date: moment().format('DD/MM/YYYY'),
+                    CreatedAt: moment(),
                     UserID: Session.get("mySessionEmployeeLoggedID"),
                     UserName: Session.get('mySessionEmployee') || '',
                 }),
@@ -4421,7 +4437,18 @@ Template.employeescard.events({
             tpaynotes: paynotes,
         }
         await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));            
-        templateObject.getPayNotesTypes();         
+        let dataTableList = []
+        Array.prototype.forEach.call(paynotes, (item, index) => {
+            let ID = index + 1
+            dataTableList.push({
+                id: ID || '',
+                createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
+                username: item.fields.UserName || '',
+                notes: item.fields.Notes || ''
+            })
+        })
+        templateObject.datanotestablerecords.set(dataTableList);
+        $('#payRollNotes').val('');         
         $('#newNoteModal').modal('hide');   
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -6798,6 +6825,13 @@ Template.employeescard.helpers({
         let utilityService = new UtilityService();
         return utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
     },
+    formatPrice( amount ){
+        let utilityService = new UtilityService();
+        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    },
+    formatDate: ( date ) => {
+        return moment(date).format("DD/MM/YYYY");
+    },
     extraUserPrice: () => {
         return addExtraUserPrice || '$35';
     },
@@ -6844,6 +6878,10 @@ Template.employeescard.helpers({
             return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+    datanotestablerecords: () => {
+        return Template.instance().datanotestablerecords.get();
+    },
+    
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
