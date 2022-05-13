@@ -1422,14 +1422,13 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
                     if (FlowRouter.current().queryParams.overdue) {
-                      FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true&page=last');
+                      FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
                     }else if (FlowRouter.current().queryParams.type) {
                       if(FlowRouter.current().queryParams.type == 'po'){
-                        FlowRouter.go('/supplierawaitingpurchaseorder?type=po&page=last');
+                        FlowRouter.go('/supplierawaitingpurchaseorder?type=po');
                       }else{
-                        FlowRouter.go('/supplierawaitingpurchaseorder?type=bill&page=last');
+                        FlowRouter.go('/supplierawaitingpurchaseorder?type=bill');
                       }
-
                     }
 
                 } else {
@@ -1743,9 +1742,9 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                     FlowRouter.go('/supplierawaitingpurchaseorder?overdue=true');
                   }else if (FlowRouter.current().queryParams.type) {
                     if(FlowRouter.current().queryParams.type == 'po'){
-                      FlowRouter.go('/supplierawaitingpurchaseorder?type=po&page=last');
+                      FlowRouter.go('/supplierawaitingpurchaseorder?type=po');
                     }else{
-                      FlowRouter.go('/supplierawaitingpurchaseorder?type=bill&page=last');
+                      FlowRouter.go('/supplierawaitingpurchaseorder?type=bill');
                     }
                   }
               } else {
