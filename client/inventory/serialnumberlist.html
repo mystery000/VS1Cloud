@@ -44,22 +44,22 @@
                     <table id="tblSerialNumberList" style="width:100%;" class="dataTable table table-striped table-bordered tblStockTransferList">
                         <thead>
                             <tr class="dnd-moved">
-                                <th class="th text-center colProductName"  style="width:25%;">Product Name</th>
-                                <th class="th text-center colDepartment"  style="width:20%;">Department</th>
-                                <th class="th text-center colSerialNumber" style="width:20%;">Serial Number</th>
-                                <th class="th text-center colStatus" style="width:15%;">Status</th>
-                                <th class="th text-center colDate" style="width:20%;">Date</th>
+                                <th class="th text-start colProductName"  style="width:25%;">Product Name</th>
+                                <th class="th text-start colDepartment"  style="width:20%;">Department</th>
+                                <th class="th text-start colSerialNumber" style="width:20%;">Serial Number</th>
+                                <th class="th text-start colStatus" style="width:15%;">Status</th>
+                                <th class="th text-start colDate" style="width:20%;">Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#if datatablerecords}}
                             {{#each item in datatablerecords}}
                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colProductName text-center">{{item.productname}}</td>
-                                <td contenteditable="false" class="colDepartment text-center">{{item.department}}</td>
-                                <td contenteditable="false" class="colSerialNumber text-center" >{{item.serialnumber}}</td>
-                                <td contenteditable="false" class="colStatus text-center">{{item.status}}</td>
-                                <td contenteditable="false" class="colDate text-center">{{item.date}}</td>
+                                <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
+                                <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                <td contenteditable="false" class="colSerialNumber text-start" >{{item.serialnumber}}</td>
+                                <td contenteditable="false" class="colStatus {{ item.cssclass }} text-start">{{item.status}}</td>
+                                <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
                             </tr>
                             {{/each}}
                             {{/if}}
@@ -112,21 +112,21 @@
                                 <table class="table table-sm">
                                     <thead class="text-secondary" style="color: rgb(251,251,251);">
                                         <tr>
-                                            <th class="th colProductName text-center"  style="width:25%;">Product Name</th>
-                                            <th class="th colDepartment text-center"  style="width:20%;">Department</th>
-                                            <th class="th colSerialNumber text-center" style="width:20%;">Serial Number</th>
-                                            <th class="th colStatus text-center" style="width:15%;">Status</th>
-                                            <th class="th colDate text-center" style="width:20%;">Date</th>
+                                            <th class="th colProductName text-start"  style="width:25%;">Product Name</th>
+                                            <th class="th colDepartment text-start"  style="width:20%;">Department</th>
+                                            <th class="th colSerialNumber text-start" style="width:20%;">Serial Number</th>
+                                            <th class="th colStatus text-start" style="width:15%;">Status</th>
+                                            <th class="th colDate text-start" style="width:20%;">Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {{#each item in datatablerecords}}
                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                            <td contenteditable="false" class="colProductName text-center">{{item.productname}}</td>
-                                            <td contenteditable="false" class="colDepartment text-center">{{item.department}}</td>
-                                            <td contenteditable="false" class="colSerialNumber text-center" >{{item.serialnumber}}</td>
-                                            <td contenteditable="false" class="colStatus text-center">{{item.status}}</td>
-                                            <td contenteditable="false" class="colDate text-center">{{item.date}}</td>
+                                            <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
+                                            <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                            <td contenteditable="false" class="colSerialNumber text-start" >{{item.serialnumber}}</td>
+                                            <td contenteditable="false" class="colStatus {{ item.cssclass }} text-start">{{item.status}}</td>
+                                            <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
                                         </tr>
                                         {{/each}}
                                     </tbody>

@@ -35,6 +35,8 @@ Template.inventorylist.onCreated(function() {
 
     templateObject.includeStockAdjustment = new ReactiveVar();
     templateObject.includeStockAdjustment.set(false);
+    templateObject.isSNTrackChecked = new ReactiveVar();
+    templateObject.isSNTrackChecked.set(false);
 });
 
 Template.inventorylist.onRendered(function() {
@@ -42,6 +44,15 @@ Template.inventorylist.onRendered(function() {
 
     if (FlowRouter.current().queryParams.success) {
         $(".btnRefresh").addClass("btnRefreshAlertOverview");
+    }
+    let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
+    console.log(cloudPackage);
+    if(cloudPackage=="PLUS"){
+      templateObject.isSNTrackChecked.set(true);
+      console.log("cloudPackage: true");
+    }else{
+      templateObject.isSNTrackChecked.set(false);
+      console.log("localsss: false");
     }
 
     let templateObject = Template.instance();
@@ -1368,6 +1379,10 @@ Template.inventorylist.helpers({
     includeStockAdjustment: () => {
         return Template.instance().includeStockAdjustment.get();
     },
+    isSNTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isSNTrackChecked.get();
+    }
 });
 
 Template.inventorylist.events({

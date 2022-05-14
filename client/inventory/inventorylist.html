@@ -7,7 +7,7 @@
 
         }
     </style>
-    <div class="container-fluid" >
+    <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
@@ -70,7 +70,8 @@
                         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 style="margin-left: 16px;">New Product</h4><button type="button" class="close"
+                                    <h4 style="margin-left: 16px;">New Product</h4>
+                                    <button type="button" class="close"
                                         data-dismiss="modal" aria-label="Close"><span
                                             aria-hidden="true">×</span></button>
                                 </div>
@@ -259,11 +260,12 @@
                 <button class="btn btn-primary btnStockTrans" id="btnStockTrans" type="button" style="margin: 16px;"><i
                         class="fas fa-exchange-alt" style="padding-right: 5px;"></i>Stock Transfers</button>
                 {{/if}}
+                {{#if equals isSNTrackChecked true}}
                 <button class="btn btn-primary btnSNTrack" id="btnSNTrack" type="button" style="margin: 16px;"><i
                     class="fa fa-list-alt" style="padding-right: 5px;"></i>Serial Number Track</button>
                 <button class="btn btn-primary btnLotTrack" id="btnLotTrack" type="button" style="margin: 16px;"><i
                     class="fa fa-list-ul" style="padding-right: 5px;"></i>Lot Number Track</button>
-
+                {{/if}}
             </div>
             <div class="col">
                 <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"
