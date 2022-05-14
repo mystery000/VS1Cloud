@@ -7,6 +7,7 @@ Template.alltaskdatatable.onCreated(function () {
 
   let templateObject = Template.instance();
   templateObject.alllabels = new ReactiveVar([]);
+  templateObject.allfilters = new ReactiveVar([]);
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.allrecords = new ReactiveVar([]);
   templateObject.todayRecords = new ReactiveVar([]);
@@ -417,6 +418,9 @@ Template.alltaskdatatable.onRendered(function () {
 
     }).catch(function (err) {
     });
+  }
+
+  templateObject.getAllFilters = function () {
   }
 
   templateObject.getTProjectList = function () {
@@ -1591,6 +1595,8 @@ Template.alltaskdatatable.helpers({
 
   getTodoDate: (date, format) => {
     if (date == "" || date == null) return '';
+    return moment(date).format(format);
+
     if (moment().format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {
       return 'Today';
     } else if (moment().add(1, 'day').format('YYYY-MM-DD') == moment(date).format('YYYY-MM-DD')) {

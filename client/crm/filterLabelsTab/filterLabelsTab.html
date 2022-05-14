@@ -6,25 +6,6 @@
       </div>
       <div class="col-12">
         <div class="table-responsive">
-          <style>
-            .colFilterCreatedDate {
-              width: 5%;
-            }
-
-            .colFilterActions {
-              width: 8%;
-            }
-
-            .btnFilterAction {
-              height: 38px !important;
-              width: 44px !important;
-              margin-right: 2px;
-            }
-
-            td .btnFilterAction {
-              display: inline-flex;
-            }
-          </style>
           <table id="tblFilters" name="tblFilters" style="width:100%"
             class="dataTable table table-hover table-striped table-bordered tblFilters">
             <thead>
@@ -60,33 +41,6 @@
       </div>
       <div class="col-12">
         <div class="table-responsive">
-          <style>
-            #tblFilters_wrapper {
-              min-height: 10vh !important;
-            }
-
-            #tblLabels_wrapper {
-              min-height: 10vh !important;
-            }
-
-            .colLabelCreatedDate {
-              width: 5%;
-            }
-
-            .colLabelActions {
-              width: 8%;
-            }
-
-            .btnLabelActions {
-              height: 38px !important;
-              width: 44px !important;
-              margin-right: 2px;
-            }
-
-            td .btnLabelActions {
-              display: inline-flex;
-            }
-          </style>
           <table id="tblLabels" name="tblLabels" style="width:100%"
             class="dataTable table table-hover table-striped table-bordered tblLabels">
             <thead>
@@ -97,9 +51,11 @@
               </tr>
             </thead>
             <tbody>
+              {{#each label in alllabels}}
               <tr class="dnd-moved" id="" style="cursor: pointer;">
-                <td contenteditable="false" class=" colFilterCreatedDate">05/11/2022</td>
-                <td contenteditable="false" class=" colFilterName">[Label Name]</td>
+                <td contenteditable="false" class=" colFilterCreatedDate">{{getTodoDate label.fields.MsTimeStamp
+                  'MM/DD/YYYY'}}</td>
+                <td contenteditable="false" class=" colFilterName">{{label.fields.TaskLabelName}}</td>
                 <td contenteditable="false" class=" colLabelActions">
                   <div class="dropdown btnLabelActions">
                     <button type="button" class="btn btn-primary btnEditLAbel"><i class="far fa-edit"
@@ -112,6 +68,7 @@
                   </div>
                 </td>
               </tr>
+              {{/each}}
             </tbody>
           </table>
         </div>
@@ -120,7 +77,10 @@
 
   </div>
 
-  <div class="modal fade" id="newFilterModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+  {{> newLabelModal}}
+  {{> newFilterModal}}
+
+  <!-- <div class="modal fade" id="newFilterModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -194,5 +154,51 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+
+  <style>
+    #tblFilters_wrapper {
+      min-height: 10vh !important;
+    }
+
+    #tblLabels_wrapper {
+      min-height: 10vh !important;
+    }
+
+    .colLabelCreatedDate {
+      width: 5%;
+    }
+
+    .colLabelActions {
+      width: 8%;
+    }
+
+    .btnLabelActions {
+      height: 38px !important;
+      width: 44px !important;
+      margin-right: 2px;
+    }
+
+    td .btnLabelActions {
+      display: inline-flex;
+    }
+
+    .colFilterCreatedDate {
+      width: 5%;
+    }
+
+    .colFilterActions {
+      width: 8%;
+    }
+
+    .btnFilterAction {
+      height: 38px !important;
+      width: 44px !important;
+      margin-right: 2px;
+    }
+
+    td .btnFilterAction {
+      display: inline-flex;
+    }
+  </style>
 </template>
