@@ -458,7 +458,7 @@ Template.crmoverview.events({
           } else {
             $('#nav-subtasks-tab').click();
           }
-          $('#taskModal').modal('toggle');
+          $('#taskDetailModal').modal('toggle');
 
         } else {
 

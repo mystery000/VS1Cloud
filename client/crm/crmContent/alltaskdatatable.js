@@ -83,7 +83,7 @@ Template.alltaskdatatable.onRendered(function () {
   }
 
   templateObject.initTable = function () {
-    $('#tblTaskListDatatable').DataTable({
+    $('#tblAllTaskDatatable').DataTable({
       columnDefs: [{
         "orderable": false,
         "targets": 0
@@ -145,7 +145,7 @@ Template.alltaskdatatable.onRendered(function () {
         [1, "desc"]
       ],
       action: function () {
-        $('#tblTaskListDatatable').DataTable().ajax.reload();
+        $('#tblAllTaskDatatable').DataTable().ajax.reload();
       },
       "fnDrawCallback": function (oSettings) {
         setTimeout(function () {
@@ -153,7 +153,7 @@ Template.alltaskdatatable.onRendered(function () {
         }, 100);
       },
       "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaskListDatatable_filter");
+        $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAllTaskDatatable_filter");
       }
     });
     $('#tblTodayTaskDatatable').DataTable({
@@ -448,7 +448,7 @@ Template.alltaskdatatable.onRendered(function () {
   templateObject.getTProjectList();
 
   setTimeout(() => {
-    templateObject.initTable();
+    // templateObject.initTable();
   }, 2000);
 
   ////////////////////
@@ -737,14 +737,14 @@ Template.alltaskdatatable.events({
     $(".addTaskModal").css("display", "none");
   },
 
-  // 'click #tblTaskListDatatable td.colOpenTask': function (event) {
-  //   $('#taskModal').modal('toggle');
+  // 'click #tblAllTaskDatatable td.colOpenTask': function (event) {
+  //   $('#taskDetailModal').modal('toggle');
   // },
   // 'click .btnEditTask': function (event) {
-  //   $('#taskModal').modal('toggle');
+  //   $('#taskDetailModal').modal('toggle');
   // },
   'click .btnCommentTask': function (event) {
-    $('#taskModal').modal('toggle');
+    $('#taskDetailModal').modal('toggle');
   },
 
 
@@ -1541,10 +1541,10 @@ Template.alltaskdatatable.events({
 
   //////////////////////// 
   'click .btnEditTask': function (event) {
-    $('#taskModal').modal('toggle');
+    $('#taskDetailModal').modal('toggle');
   },
   'click .btnCommentTask': function (event) {
-    $('#taskModal').modal('toggle');
+    $('#taskDetailModal').modal('toggle');
   },
   'click #tblNewProjectsDatatable tr': function (event) {
     $('#newProjectTasksModal').modal('toggle');
@@ -1572,6 +1572,8 @@ Template.alltaskdatatable.helpers({
     return Template.instance().alllabels.get();
   },
   allrecords: () => {
+    console.log('allrecords get=>', Template.instance().allrecords.get())
+
     return Template.instance().allrecords.get();
   },
 
