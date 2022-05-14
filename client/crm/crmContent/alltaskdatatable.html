@@ -1,0 +1,57 @@
+<template name="alltaskdatatable">
+
+  <div id="add_task_wrapper">
+    {{> addTask}}
+  </div>
+  <div class="row no-gutters" style="padding: 0px 32px;">
+    <div class="col-12">
+      <div class="card shadow mb-3">
+        <div class="card-header"
+          style="padding: 0px !important;background-color: rgba(0,0,0,0); border-top: 0px; border-left: 0px; border-right: 0px;">
+          <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist" style="border-bottom: 0px;">
+            <li class="nav-item">
+              <a class="nav-link active" id="allTasks-tab" data-toggle="tab" href="#allTasks" role="tab"
+                aria-selected="true">All Tasks</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="todayTab-tab" data-toggle="tab" href="#todayTab" role="tab"
+                aria-selected="false">Today</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="upcomingTab-tab" data-toggle="tab" href="#upcomingTab" role="tab"
+                aria-selected="false">Upcoming</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="projectsTab-tab" data-toggle="tab" href="#projectsTab" role="tab"
+                aria-selected="false">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterLabelsTab-tab" data-toggle="tab" href="#filterLabelsTab" role="tab"
+                aria-selected="false">Filters & Labels</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card-body">
+          <div class="card-body p-3 rounded">
+            <div class="tab-content" id="myTabContent">
+
+              {{> allTasksTab}}
+              {{> todayTab}}
+              {{> upcomingTab}}
+              {{> projectsTab}}
+              {{> filterLabelsTab}}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{> taskDetailModal}}
+  {{> newTaskModal}}
+  {{> newProjectModal}}
+
+
+
+</template>
