@@ -5,6 +5,12 @@ import EmployeeModel from "./Employee";
  export default class EmployeePaySettingFields {
   constructor({
     Abn,
+    AnnualSalary,
+    BankAccountBSB,
+    BankAccountName,
+    BankAccountNo,
+    EarningYTD,
+    NextPayDate,
     DateLastActuallyPaid,
     Employee,
     Employeeid,
@@ -39,6 +45,12 @@ import EmployeeModel from "./Employee";
     Uktaxcode,
   }) {
     this.Abn = Abn;
+    this.AnnualSalary = AnnualSalary;
+    this.BankAccountBSB = BankAccountBSB;
+    this.BankAccountName = BankAccountName; 
+    this.BankAccountNo = BankAccountNo;
+    this.EarningYTD = EarningYTD; 
+    this.NextPayDate = NextPayDate;
     this.DateLastActuallyPaid = DateLastActuallyPaid;
     if (Employee instanceof EmployeeModel) {
       this.Employee = Employee;

@@ -749,9 +749,9 @@ Template.paymentoverview.onRendered(function() {
                         var transactiontype = $(event.target).closest("tr").find(".colType").text();
                         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                         if ((listData) && (transactiontype)) {
-                            if (checkDeleted == "Deleted") {
-                                swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                            } else {
+                            // if (checkDeleted == "Deleted") {
+                            //     swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                            // } else {
                                 if (transactiontype === 'Customer Payment') {
                                     FlowRouter.go('/paymentcard?id=' + listData);
                                 } else if (transactiontype === 'Supplier Payment') {
@@ -759,7 +759,7 @@ Template.paymentoverview.onRendered(function() {
                                 } else {
                                     FlowRouter.go('/paymentcard?id=' + listData);
                                 }
-                            }
+                            //}
                         }
                     });
 
@@ -1071,9 +1071,9 @@ Template.paymentoverview.onRendered(function() {
                     var transactiontype = $(event.target).closest("tr").find(".colType").text();
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                     if ((listData) && (transactiontype)) {
-                        if (checkDeleted == "Deleted") {
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                        } else {
+                        // if (checkDeleted == "Deleted") {
+                        //     swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                        // } else {
                             if (transactiontype === 'Customer Payment') {
                                 FlowRouter.go('/paymentcard?id=' + listData);
                             } else if (transactiontype === 'Supplier Payment') {
@@ -1081,7 +1081,7 @@ Template.paymentoverview.onRendered(function() {
                             } else {
                                 FlowRouter.go('/paymentcard?id=' + listData);
                             }
-                        }
+                        //}
                     }
                 });
             }
@@ -1392,9 +1392,9 @@ Template.paymentoverview.onRendered(function() {
                     var transactiontype = $(event.target).closest("tr").find(".colType").text();
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                     if ((listData) && (transactiontype)) {
-                        if (checkDeleted == "Deleted") {
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                        } else {
+                        // if (checkDeleted == "Deleted") {
+                        //     swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                        // } else {
                             if (transactiontype === 'Customer Payment') {
                                 FlowRouter.go('/paymentcard?id=' + listData);
                             } else if (transactiontype === 'Supplier Payment') {
@@ -1402,7 +1402,7 @@ Template.paymentoverview.onRendered(function() {
                             } else {
                                 FlowRouter.go('/paymentcard?id=' + listData);
                             }
-                        }
+                        //}
                     }
                 });
 

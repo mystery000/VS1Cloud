@@ -1,6 +1,9 @@
 [
     {
         "transactionType": "my type",
+        "reportNames": [
+            "name of the report"
+        ],
         "frequency": {
             "frequency": {
                 "type": "Every",
