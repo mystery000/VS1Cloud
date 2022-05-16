@@ -12,7 +12,11 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import FxUpdater from "./FxUpdater";
+import FxUpdateSetting, { FxFrequencyDaily } from "./FxUpdateSetting";
 let sideBarService = new SideBarService();
+
+let fxUpdateObject;
+
 Template.fixUpdates.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -723,6 +727,8 @@ Template.fixUpdates.events({
         var startdateTimeDaily = new Date($("#edtDailyStartDate").datepicker("getDate"));
         var startdateTimeOneTime = new Date($("#edtOneTimeOnlyDate").datepicker("getDate"));
 
+        console.log("tes");
+
         if ($('#frequencyMonthly').is(":checked")) {
             startTime = $('#edtMonthlyStartTime').val();
             startDate = startdateTimeMonthly.getFullYear() + "-" + (startdateTimeMonthly.getMonth() + 1) + "-" + startdateTimeMonthly.getDate()||'';
@@ -834,6 +840,11 @@ Template.fixUpdates.events({
         });
     },
     'click .edtFrequency': (event) => {
+        fxUpdateObject = new FxUpdateSetting({
+            transactionType: "daily",
+            frequency: new FxFrequencyDaily()
+        });
+
         let templateObject = Template.instance();
         let scheduleData = templateObject.employeescheduledrecord.get();
         let formId = $(event.target).closest("tr").attr("id");
