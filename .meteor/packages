@@ -44,7 +44,6 @@ cunneen:mailgun
 check
 harrison:papa-parse
 
-standard-minifier-js@2.2.0
 matb33:collection-hooks
 email
 #mrgalaxy:stripe
