@@ -11,6 +11,7 @@ var CronJob = require('cron').CronJob;
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let sideBarService = new SideBarService();
+
 Template.newsidenav.onCreated(function() {
 
     const templateObject = Template.instance();
@@ -108,6 +109,8 @@ Template.newsidenav.onCreated(function() {
     templateObject.isPurchaseSummaryReport.set(false);
     templateObject.isPrintStatement = new ReactiveVar();
     templateObject.isPrintStatement.set(false);
+    templateObject.isSNTrackChecked = new ReactiveVar();
+    templateObject.isSNTrackChecked.set(false);
 
     $(document).ready(function() {
         var erpGet = erpDb();
@@ -168,8 +171,15 @@ Template.newsidenav.onRendered(function() {
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
-
-
+    let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
+    console.log(cloudPackage);
+    if(cloudPackage=="PLUS"){
+      templateObject.isSNTrackChecked.set(true);
+      console.log("cloudPackage: true");
+    }else{
+      templateObject.isSNTrackChecked.set(false);
+      console.log("localsss: false");
+    }
 
     templateObject.getSetSideNavFocus = function() {
         var currentLoc = FlowRouter.current().route.path;
@@ -6917,6 +6927,18 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenaveserialnumberlist': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/serialnumberlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavelotnumberlist': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/lotnumberlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavnewstockadjust': function(event) {
         //window.open('/stockadjustmentcard', '_self');
         event.preventDefault();
@@ -7630,5 +7652,8 @@ Template.newsidenav.helpers({
     },
     showTimesheet : () => {
         return Session.get('CloudShowTimesheet') || false;
+    },
+    isSNTrackChecked: () => {
+      return Template.instance().isSNTrackChecked.get();
     },
 });

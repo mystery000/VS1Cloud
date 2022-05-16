@@ -1968,12 +1968,7 @@ Template.accountsoverview.onRendered(function () {
       .text();
     let columnBalClass = $(event.target).attr("class");
     let accountService = new AccountService();
-    FlowRouter.go(
-      "/balancetransactionlist?accountName=" +
-        accountName +
-        "&isTabItem=" +
-        false
-    );
+    FlowRouter.go("/balancetransactionlist?accountName=" +accountName +"&isTabItem=" +false);
     //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
   });
 

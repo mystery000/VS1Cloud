@@ -11,6 +11,7 @@ import {
     SideBarService
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
+import FxUpdater from "./FxUpdater";
 let sideBarService = new SideBarService();
 Template.fixUpdates.onCreated(function() {
     const templateObject = Template.instance();
@@ -801,23 +802,28 @@ Template.fixUpdates.events({
 
         }
 
+        console.log(objDetails);
 
-        taxRateService.saveScheduleSettings(objDetails).then(function(data) {
-            Meteor._reload.reload();
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {
-                    Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
+
+        // taxRateService.saveScheduleSettings(objDetails).then(function(data) {
+        //     Meteor._reload.reload();
+        // }).catch(function(err) {
+        //     swal({
+        //         title: 'Oooops...',
+        //         text: err,
+        //         type: 'error',
+        //         showCancelButton: false,
+        //         confirmButtonText: 'Try Again'
+        //     }).then((result) => {
+        //         if (result.value) {
+        //             Meteor._reload.reload();
+        //         } else if (result.dismiss === 'cancel') {}
+        //     });
+        //     $('.fullScreenSpin').css('display', 'none');
+        // });
+
+        $('.fullScreenSpin').css('display', 'none');
+   
     },
     'click .chkBoxDays': function(event) {
         var checkboxes = document.querySelectorAll('.chkBoxDays');
@@ -827,48 +833,63 @@ Template.fixUpdates.events({
             }
         });
     },
-    'click #edtFrequency': function(event) {
+    'click .edtFrequency': (event) => {
         let templateObject = Template.instance();
         let scheduleData = templateObject.employeescheduledrecord.get();
         let formId = $(event.target).closest("tr").attr("id");
 
-
         $("#formid").val(formId);
-        var result = scheduleData.filter(data => {
-            return data.formID == formId
-        });
-        if (result.length > 0) {
-          let startDateVal = result[0].startDate != '' ? moment(result[0].startDate).format("DD/MM/YYYY") : result[0].startDate;
-            templateObject.assignFrequency(result[0].frequency);
-            templateObject.getMonths(result[0].startDate, result[0].endDate);
-            $('#frequencyid').val(result[0].id);
-            if (result[0].frequency == "Monthly") {
-                $('#sltDayOccurence').val(result[0].every);
-                $('#sltDayOfWeek').val(result[0].monthDays);
-                $('#edtMonthlyStartTime').val(result[0].startTime);
-                $('#edtMonthlyStartDate').val(startDateVal);
-                $('#edtFrequency').text("Monthly");
-            }
 
-            if (result[0].frequency == "Weekly") {
-                setTimeout(function() {
-                    $('#weeklyEveryXWeeks').val(result[0].every);
-                    $('#edtWeeklyStartTime').val(result[0].startTime);
-                    $('#edtWeeklyStartDate').val(startDateVal);
-                    templateObject.getDayName(result[0].weekDay);
-                    $('#edtFrequency').text("Weekly");
-                }, 500);
-            }
+        templateObject.assignFrequency("Daily");
+        let currentDate = new Date();
 
-            if (result[0].frequency == "Daily") {
-                setTimeout(function() {
-                    $('#dailyEveryXDays').val(result[0].every);
-                    $('#edtDailyStartTime').val(result[0].startTime);
-                    $('#edtDailyStartDate').val(startDateVal);
-                    $('#edtFrequency').text("Daily");
-                }, 500);
-            }
-        }
+        $('#edtDailyStartTime').val("08:00:00");
+       // $('#edtDailyStartDate').val(startDateVal);
+
+        // This is the default previous data
+        // var result = scheduleData.filter(data => {
+        //     return data.formID == formId
+        // });
+        // if (result.length > 0) {
+        //   let startDateVal = result[0].startDate != '' ? moment(result[0].startDate).format("DD/MM/YYYY") : result[0].startDate;
+        //     templateObject.assignFrequency(result[0].frequency);
+        //     templateObject.getMonths(result[0].startDate, result[0].endDate);
+        //     $('#frequencyid').val(result[0].id);
+
+        //     const _frequencies = [
+        //         "Monthly",
+        //         "Weekly",
+        //         "Daily"
+        //     ];
+
+        //     if(_frequencies.includes(result[0].frequency) == true) {
+               
+        //        console.log(result[0].startTime);
+
+        //         if (result[0].frequency == "Monthly") {
+
+        //             $('#sltDayOccurence').val(result[0].every);
+        //             $('#sltDayOfWeek').val(result[0].monthDays);
+        //             $('#edtMonthlyStartTime').val(result[0].startTime);
+        //             $('#edtMonthlyStartDate').val(startDateVal);
+        //         }else if (result[0].frequency == "Weekly") {
+        //             $('#weeklyEveryXWeeks').val(result[0].every);
+        //             $('#edtWeeklyStartTime').val(result[0].startTime);
+        //             $('#edtWeeklyStartDate').val(startDateVal);
+        //             templateObject.getDayName(result[0].weekDay);
+                     
+        //         } else if (result[0].frequency == "Daily") {
+        //             $('#dailyEveryXDays').val(result[0].every);
+        //             $('#edtDailyStartTime').val(result[0].startTime);
+        //             $('#edtDailyStartDate').val(startDateVal);
+                 
+        //         }
+        //         $(event.currentTarget).text(result[0].frequency);
+               
+        //     }
+
+
+        // }
 
         $("#frequencyModal").modal('toggle');
     },
@@ -886,7 +907,7 @@ Template.fixUpdates.events({
         $("#groupedReportsModal").modal('toggle');
 
     },
-    'click input[name="frequencyRadio"]': function() {
+    'click input[name="frequencyRadio"]': (event) => {
         if (event.target.id == "frequencyMonthly") {
             document.getElementById("monthlySettings").style.display = "block";
             document.getElementById("weeklySettings").style.display = "none";
@@ -921,7 +942,7 @@ Template.fixUpdates.events({
             $("#frequencyModal").modal('toggle');
         }
     },
-    'click input[name="settingsMonthlyRadio"]': function() {
+    'click input[name="settingsMonthlyRadio"]': (event) => {
         if (event.target.id == "settingsMonthlyEvery") {
             $('.settingsMonthlyEveryOccurence').attr('disabled', false);
             $('.settingsMonthlyDayOfWeek').attr('disabled', false);
@@ -934,7 +955,7 @@ Template.fixUpdates.events({
             $("#frequencyModal").modal('toggle');
         }
     },
-    'click input[name="dailyRadio"]': function() {
+    'click input[name="dailyRadio"]': (event) => {
         if (event.target.id == "dailyEveryDay") {
             $('.dailyEveryXDays').attr('disabled', true);
         } else if (event.target.id == "dailyWeekdays") {
@@ -977,59 +998,69 @@ Template.fixUpdates.events({
     //         $("#frequencyModal").modal('toggle');
     //     }
     // },
-    'click #edtBasedOn': function() {
+    'click .edtBasedOn': (e) => {
+        const lineId = $(e.currentTarget).parent(".dnd-moved").attr('id');
+       
+        // We just open the dialog
+        $("#basedOnModal").attr('cell-id', lineId);
         $("#basedOnModal").modal('toggle');
     },
-    'click input[name="basedOnRadio"]': function() {
-        if (event.target.id == "basedOnPrint") {
+    'click input[name="basedOnRadio"]': (e) => {
+        if (e.target.id == "basedOnPrint") {
             $('#edtBasedOnDate').attr('disabled', true);
-        } else if (event.target.id == "basedOnSave") {
+        } else if (e.target.id == "basedOnSave") {
             $('#edtBasedOnDate').attr('disabled', true);
-        } else if (event.target.id == "basedOnTransactionDate") {
+        } else if (e.target.id == "basedOnTransactionDate") {
             $('#edtBasedOnDate').attr('disabled', true);
-        } else if (event.target.id == "basedOnDueDate") {
+        } else if (e.target.id == "basedOnDueDate") {
             $('#edtBasedOnDate').attr('disabled', true);
-        } else if (event.target.id == "basedOnDate") {
+        } else if (e.target.id == "basedOnDate") {
             $('#edtBasedOnDate').attr('disabled', false);
-        } else if (event.target.id == "basedOnOutstanding") {
+        } else if (e.target.id == "basedOnOutstanding") {
             $('#edtBasedOnDate').attr('disabled', true);
         } else {
             $("#basedOnModal").modal('toggle');
         }
     },
-    'click .btnSaveBasedOn': function() {
+    'click .btnSaveBasedOn': (e) => {
         let radioFrequency = $('input[type=radio][name=basedOnRadio]:checked').attr('id');
 
+        // We get the ID of the row
+        const cellId = $(e.target).parents('.modal#basedOnModal').attr('cell-id');
+        console.log(cellId);
+        let cell = $(`#update-fx-settings .dnd-moved#${cellId} .edtBasedOn`);
+        console.log(cell);
+
         if (radioFrequency == "basedOnPrint") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("On Print");
+        
+                cell.html("On Print");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+
         } else if (radioFrequency == "basedOnSave") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("On Save");
+        
+                cell.html("On Save");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+         
         } else if (radioFrequency == "basedOnTransactionDate") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("On Transaction Date");
+         
+                cell.html("On Transaction Date");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+       
         } else if (radioFrequency == "basedOnDueDate") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("On Due Date");
+      
+                cell.html("On Due Date");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+           
         } else if (radioFrequency == "basedOnDate") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("On Date");
+           
+                cell.html("On Date");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+           
         } else if (radioFrequency == "basedOnOutstanding") {
-            setTimeout(function() {
-                $('#edtBasedOn').html("If Outstanding");
+           
+                cell.html("If Outstanding");
                 $("#basedOnModal").modal('toggle');
-            }, 100);
+       
         } else {
             $("#basedOnModal").modal('toggle');
         }
@@ -1037,6 +1068,12 @@ Template.fixUpdates.events({
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         location.reload(true);
+    },
+    'click #fx-save-settings': (e) => {
+        let fxUpdater = new FxUpdater();
+
+        fxUpdater.buildObject(e);
+
     }
 });
 

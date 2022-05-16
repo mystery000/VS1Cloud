@@ -13,6 +13,7 @@ import { AppointmentService } from '../appointments/appointment-service';
 import '../lib/global/indexdbstorage.js';
 import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
 import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
+import 'jquery-editable-select';
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
 import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
 import PayTemplateEarningLine from "../js/Api/Model/PayTemplateEarningLine";
@@ -23,23 +24,46 @@ import PayTemplateSuperannuationLine from "../js/Api/Model/PayTemplateSuperannua
 import PayTemplateSuperannuationLineFields from "../js/Api/Model/PayTemplateSuperannuationLineFields";
 import PayTemplateReiumbursementLine from "../js/Api/Model/PayTemplateReiumbursementLine";
 import PayTemplateReiumbursementLineFields from "../js/Api/Model/PayTemplateReiumbursementLineFields";
+import OpeningBalance from "../js/Api/Model/OpeningBalance";
+import OpeningBalanceFields from "../js/Api/Model/OpeningBalanceFields";
 import ApiService from "../js/Api/Module/ApiService";
 import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
+import PayNotes from "../js/Api/Model/PayNotes";
+import PayNotesFields from "../js/Api/Model/PayNotesFields";
+import { functionsIn } from "lodash";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let edtProductSelect = "";
+
+function handleTotalAmount( amountField, totalAmountCont ) {
+    let totalAmount = 0;
+    let amount = 0;
+    $('.' + amountField).each(function(){
+        amount = $(this).val();
+        amount = ( amount === null || amount == '') ? 0 : amount;
+        totalAmount += parseFloat( amount );
+    });
+    let utilityService = new UtilityService();
+    let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+    $('#' + totalAmountCont).text(totalFomattedAmount);
+}
+
+
 Template.employeescard.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.payTemplateEarningLineInfo = new ReactiveVar();
+    templateObject.openingBalanceInfo = new ReactiveVar();
     templateObject.payTemplateDeductionLineInfo = new ReactiveVar();
     templateObject.payTemplateSuperannuationLineInfo = new ReactiveVar();
-    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();
+    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();    
+    templateObject.currentDrpDownID = new ReactiveVar();    
     templateObject.employeePayInfos = new ReactiveVar();
     templateObject.employeePaySettings = new ReactiveVar();
     templateObject.leaveTypesDrpDown = new ReactiveVar();
     templateObject.assignLeaveTypeInfos = new ReactiveVar();
+    templateObject.payNotesInfos = new ReactiveVar();    
     templateObject.leaveRequestInfos = new ReactiveVar();
     templateObject.bankAccList = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
@@ -49,7 +73,9 @@ Template.employeescard.onCreated(function () {
     templateObject.empPriorities = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
 
-    templateObject.datatablerecords = new ReactiveVar([]);
+    templateObject.datatablerecords = new ReactiveVar([]);   
+    templateObject.datanotestablerecords = new ReactiveVar([]);   
+    
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.isCloudUserPass = new ReactiveVar();
@@ -108,7 +134,7 @@ Template.employeescard.onRendered(function () {
 
     let salestaxcode = '';
     let totAmount = 0;
-    let totAmountOverDue = 0;
+    let totAmountOverDue = 0;  
 
     setTimeout(function() {
         $('#tblLeaveRequests').DataTable({
@@ -2785,6 +2811,34 @@ Template.employeescard.onRendered(function () {
     };
     templateObject.getLeaveRequests();
 
+    templateObject.getPayNotesTypes = async () => {
+        let TPayNotes = await getVS1Data('TPayNotes');
+        if( TPayNotes.length ){
+            let TPayNotesData = JSON.parse(TPayNotes[0].data);
+            let useData = PayNotes.fromList(
+                TPayNotesData.tpaynotes
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            console.log('useData', useData)
+            templateObject.payNotesInfos.set(useData);
+            let dataTableList = []
+            Array.prototype.forEach.call(useData, (item, index) => {
+                let ID = index + 1
+                dataTableList.push({
+                    id: ID || '',
+                    createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
+                    username: item.fields.UserName || '',
+                    notes: item.fields.Notes || ''
+                })
+            })
+            templateObject.datanotestablerecords.set(dataTableList);            
+        }  
+    };
+    templateObject.getPayNotesTypes(); 
+
     templateObject.getAssignLeaveTypes = async () => {
         let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
         if( TAssignLeaveTypes.length ){
@@ -2802,12 +2856,48 @@ Template.employeescard.onRendered(function () {
     };
     templateObject.getAssignLeaveTypes();
 
+    templateObject.filterOpeningBalance = ( type ) => {
+        const templateObject = Template.instance();
+        let openingBalanceLines = []
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalanceLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == type ) {
+                    return item;
+                }
+            });
+        }
+        return openingBalanceLines;
+    };
+
+    templateObject.getOpeningBalances = async () => {
+        // TO DO
+        let TOpeningBalances = await getVS1Data('TOpeningBalances');
+        if( TOpeningBalances.length ){
+            let TOpeningBalancesData = JSON.parse(TOpeningBalances[0].data);
+            let openingBalances = OpeningBalance.fromList(
+                TOpeningBalancesData.topeningbalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
+            // console.log(openingBalances)
+            templateObject.openingBalanceInfo.set(openingBalances);
+        }        
+    };
+    templateObject.getOpeningBalances();
+
     templateObject.getEmployeePaySettings = async () => {
         try {
             // EmployeePayrollApi fetch data from indexDB
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
-                let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
+                let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2816,11 +2906,16 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
+                console.log('TEmployeepaysettingData', useData)
+
                 let employeePaySettings = useData[0]
 
 
                 let objEmployeePaySettings = {
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                    AnnualSalary: employeePaySettings.fields.AnnualSalary,
+                    EarningYTD: employeePaySettings.fields.EarningYTD,
+                    NextPayDate: employeePaySettings.fields.NextPayDate,
                     AnnSalary: employeePaySettings.fields.Employee.fields.Wages * 12,
                     TFN: employeePaySettings.fields.Employee.fields.TFN,
                     Country: employeePaySettings.fields.Employee.fields.Country,
@@ -2921,9 +3016,256 @@ Template.employeescard.onRendered(function () {
         });
     }
     templateObject.getTBankAccounts();
+    // Display pay template tab inputs
+    templateObject.displayPayTempEarningLines = function() {
+        let payLines = templateObject.payTemplateEarningLineInfo.get();
+        if( payLines ){
+            Array.prototype.forEach.call(payLines, (item, index) => {
+                $('#ptEarningRate' + index).val(item.fields.EarningRate);
+                $('#ptEarningAmount' + index).val(item.fields.Amount);
+            })
+        }
+    }
 
+    templateObject.displayPayTempDeductionLines = function() {
+        let payLines = templateObject.payTemplateDeductionLineInfo.get();
+        if( payLines ){
+            Array.prototype.forEach.call(payLines, (item, index) => {
+                $('#ptDeductionType' + index).val(item.fields.DeductionType);
+                $('#ptDeductionAmount' + index).val(item.fields.Amount);
+                $('#ptDeductionPercentage' + index).val(item.fields.Percentage);
+            })
+        }
+    }
+
+    templateObject.displayPayTempSuperannuationLines = function() {
+        let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
+        if( payLines ){
+            Array.prototype.forEach.call(payLines, (item, index) => {
+                $('#ptSuperannuationFund' + index).val(item.fields.Fund);
+                $('#ptSuperannuationAmount' + index).val(item.fields.Amount);
+                $('#ptSuperannuationPercentage' + index).val(item.fields.Percentage);
+            })
+        }
+    }
+
+    templateObject.displayPayTempReimbursementLines = function() {
+        let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
+        if( payLines ){
+            Array.prototype.forEach.call(payLines, (item, index) => {
+                $('#ptReimbursementType' + index).val(item.fields.ReiumbursementType);
+                $('#ptReimbursementAmount' + index).val(item.fields.Amount);
+            })
+        }
+    }
+
+    // Standard drop down
+    templateObject.setEarningLineDropDown = function() {
+        setTimeout(function () {
+            $('.earningLineDropDown').editableSelect();
+            $('.earningLineDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                let $search = $(this);
+                let offset = $search.offset();
+                let dropDownID = $search.attr('id')
+                templateObject.currentDrpDownID.set(dropDownID);
+                let currencyDataName = e.target.value || '';
+                if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                    $('#earningRateSettingsModal').modal('show');
+                } else {
+                    if (currencyDataName.replace(/\s/g, '') != '') {
+                        console.log('step 2')
+                    }
+                }
+            });
+        }, 1000);
+    }
+    templateObject.setEarningLineDropDown();
+
+    templateObject.setDeductionLineDropDown = function() {
+        setTimeout(function () {
+            $('.deductionLineDropDown').editableSelect();
+            $('.deductionLineDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let offset = $search.offset();
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#deductionSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setDeductionLineDropDown();
+
+    templateObject.setSuperannuationDropDown = function() {
+        setTimeout(function () {
+            $('.superannuationDropDown').editableSelect();
+            $('.superannuationDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let offset = $search.offset();
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#superannuationSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setSuperannuationDropDown();
+
+    templateObject.setReimbursementDropDown = function() {
+        setTimeout(function () {
+            $('.reimbursementDropDown').editableSelect();
+            $('.reimbursementDropDown').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let offset = $search.offset();
+                    let currencyDataName = e.target.value || '';
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#reimbursementSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+        }, 1000);
+    }
+    templateObject.setReimbursementDropDown();
+    
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('#leaveTypeSelect').editableSelect();
+            $('#leaveTypeSelect').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    let $search = $(this);
+                    let offset = $search.offset();
+                    let dropDownID = $search.attr('id')
+                    templateObject.currentDrpDownID.set(dropDownID);
+                    let currencyDataName = e.target.value || '';
+                    // console.log( currencyDataName )
+                    if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                        $('#leaveTypeSettingsModal').modal('show');
+                    } else {
+                        if (currencyDataName.replace(/\s/g, '') != '') {
+                            // console.log('step 2')
+                        }
+                    }
+                });
+
+                $('#edtExpenseAccount').editableSelect();
+                $('#edtExpenseAccount').editableSelect()
+                    .on('click.editable-select', function (e, li) {
+                        let $search = $(this);
+                        let dropDownID = $search.attr('id')
+                        templateObject.currentDrpDownID.set(dropDownID);
+                        let offset = $search.offset();
+                        let currencyDataName = e.target.value || '';
+                        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                            $('#accountListModal').modal('show');
+                        } else {
+                            if (currencyDataName.replace(/\s/g, '') != '') {
+                                // console.log('step 2')
+                            }
+                        }
+                    });
+        }, 1000);
+        $(document).on("click", "#tblLeaves tbody tr", function (e) {
+            var table = $(this);
+            let name = table.find(".colLeaveName").text()||'';
+            let ID = table.find(".colLeaveID").text()||'';
+            let searchFilterID = templateObject.currentDrpDownID.get()            
+            $('#' + searchFilterID).val(name);
+            $('#' + searchFilterID + 'ID').val(ID);
+            $('#leaveTypeSettingsModal').modal('toggle');
+        });
+        //On Click Earnings List
+        $(document).on("click", "#tblEarnings tbody tr", function (e) {
+            var table = $(this);
+            let earningsName = table.find(".colEarningsNames").text()||'';
+            let earningsID = table.find(".colEarningsID").text()||'';
+            let account = table.find(".colEarningsAccounts").text()||'';
+            let searchFilterID = templateObject.currentDrpDownID.get()            
+            $('#' + searchFilterID).val(earningsName);
+            $('#' + searchFilterID + 'ID').val(earningsID);
+            if( searchFilterID == 'earningRateSelect'){
+                $('#expenseAccount').val(account)
+            }
+            $('#earningRateSettingsModal').modal('toggle');
+        });
+        //On Click Deduction List
+        $(document).on("click", "#tblDeductions tbody tr", function (e) {
+            var table = $(this);
+            let deductionName = table.find(".colDeductionsNames").text()||'';
+            let deductionID = table.find(".colDeductionsID").text()||'';
+            let account = table.find(".colDeductionsAccounts").text()||'';
+            let searchFilterID = templateObject.currentDrpDownID.get()
+            $('#' + searchFilterID).val(deductionName);
+            $('#' + searchFilterID + 'ID').val(deductionID);
+            if( searchFilterID == 'deductionTypeSelect'){
+                $('#controlAccountDeduction').val(account)
+            }
+            $('#deductionSettingsModal').modal('toggle');
+        });
+        //On Click Superannuation List
+        $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
+            var table = $(this);
+            let name = table.find(".colSuperannuationName").text()||'';
+            let ID = table.find(".colSuperannuationID").text()||'';            
+            let account = table.find(".colaccountname").text()||'';
+            let searchFilterID = templateObject.currentDrpDownID.get()
+            $('#' + searchFilterID).val(name);
+            $('#' + searchFilterID + 'ID').val(ID);
+            if( searchFilterID == 'superannuationFund'){
+                $('#expenseSuperannuationAccount').val(account)
+            }
+            $('#superannuationSettingsModal').modal('toggle');
+        });
+        //On Click Superannuation List
+        $(document).on("click", "#tblReimbursements tbody tr", function (e) {
+            var table = $(this);
+            let name = table.find(".colReimbursementName").text()||'';
+            let ID = table.find(".colReimbursementID").text()||'';
+            let account = table.find(".colReimbursementAccount").text()||'';            
+            let searchFilterID = templateObject.currentDrpDownID.get()
+            $('#' + searchFilterID).val(name);
+            $('#' + searchFilterID + 'ID').val(ID);
+            if( searchFilterID == 'reimbursementTypeSelect'){
+                $('#controlExpenseAccount').val(account)
+            }
+            $('#reimbursementSettingsModal').modal('toggle');
+        });
+        
+
+        $(document).on("click", "#tblAccount tbody tr", function (e) {
+            var table = $(this);
+            let name = table.find(".productName").text()||'';
+            let searchFilterID = templateObject.currentDrpDownID.get()
+            $('#' + searchFilterID).val(name);
+            $('#accountListModal').modal('toggle');
+        });
+        
+    });
 });
 Template.employeescard.events({
+    'click .closeModel': function(e){
+        $('.modal').modal('hide');
+    },
     'click #customerShipping-1': function (event) {
         if ($(event.target).is(':checked')) {
             $('.customerShipping-2').css('display', 'none');
@@ -3756,7 +4098,203 @@ Template.employeescard.events({
         });
 
     },
-    // Save LeaveRequest Popup
+
+    'click #saveObEarningsRate': async function(event) {
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let EarningsRate = $('#obEarningsRate').val();
+        const openingBalances = [];
+
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalances = checkOpeningBalances
+        }
+
+        openingBalances.push(
+            new OpeningBalance({
+                type: "TOpeningBalances",
+                fields: new OpeningBalanceFields({
+                    EmployeeID: employeeID,
+                    Type: 'EarningLine',
+                    Amount: 0,
+                    BalanceField: EarningsRate,
+                }),
+            })
+        );
+        // let updatedOpeningBalance = {
+        //     topeningbalances: openingBalances,
+        // }
+        // console.log('useData', payEarningLinesTemp)
+        templateObject.openingBalanceInfo.set(openingBalances);
+        $('#obEarningsRate').val('');
+        $('#addEarningsLineModal2').modal('hide');
+        await templateObject.setEarningLineDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obEarningRate' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    'click #saveObDeductionType': async function(event) {
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let DeductionType = $('#obDeductionType').val();
+        const openingBalances = [];
+
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalances = checkOpeningBalances
+        }
+
+        openingBalances.push(
+            new OpeningBalance({
+                type: "TOpeningBalances",
+                fields: new OpeningBalanceFields({
+                    EmployeeID: employeeID,
+                    Type: 'DeductionLine',
+                    Amount: 0,
+                    BalanceField: DeductionType,
+                }),
+            })
+        );
+        // let updatedOpeningBalance = {
+        //     topeningbalances: openingBalances,
+        // }
+        // console.log('useData', payEarningLinesTemp)
+        templateObject.openingBalanceInfo.set(openingBalances);
+        $('#obDeductionType').val('');
+        $('#addDeductionLineModal2').modal('hide');
+        await templateObject.setDeductionLineDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obDeductionLine' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    'click #saveObSuperannuationType': async function(event) {
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let SuperannuationFund = $('#obSuperannuationFund').val();
+        let ContributionType = $('#obContributionType').val();
+        const openingBalances = [];
+
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalances = checkOpeningBalances
+        }
+
+        openingBalances.push(
+            new OpeningBalance({
+                type: "TOpeningBalances",
+                fields: new OpeningBalanceFields({
+                    EmployeeID: employeeID,
+                    Type: 'SuperannuationLine',
+                    Amount: 0,
+                    ContributionType: ContributionType,
+                    BalanceField: SuperannuationFund,
+                }),
+            })
+        );
+        // let updatedOpeningBalance = {
+        //     topeningbalances: openingBalances,
+        // }
+        // console.log('useData', payEarningLinesTemp)
+        templateObject.openingBalanceInfo.set(openingBalances);
+        $('#obSuperannuationFund').val('');
+        $('#obContributionType').val('');
+        $('#addSuperannuationLineModal2').modal('hide');
+        await templateObject.setSuperannuationDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'SuperannuationLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obSuperannuationFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    'click #saveobReimbursement': async function(event) {
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let Reimbursement = $('#obReimbursementType').val();
+        const openingBalances = [];
+
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalances = checkOpeningBalances
+        }
+
+        openingBalances.push(
+            new OpeningBalance({
+                type: "TOpeningBalances",
+                fields: new OpeningBalanceFields({
+                    EmployeeID: employeeID,
+                    Type: 'ReimbursementLine',
+                    Amount: 0,
+                    BalanceField: Reimbursement,
+                }),
+            })
+        );
+        // let updatedOpeningBalance = {
+        //     topeningbalances: openingBalances,
+        // }
+        // console.log('useData', payEarningLinesTemp)
+        templateObject.openingBalanceInfo.set(openingBalances);
+        $('#obReimbursementType').val('');
+        $('#addReimbursementLineModal2').modal('hide');
+        await templateObject.setReimbursementDropDown();
+        // Set Dropdown fields manually
+        openingBalanceFilter = openingBalances.filter((item) => {
+            if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'ReimbursementLine' ) {
+                return item;
+            }
+        });
+
+        if( openingBalanceFilter.length ){
+            setTimeout(function () {
+                let index = openingBalanceFilter.length - 1;
+                $('#obReimbursementFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
+            }, 1000); 
+        }
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
+    // Save LeaveRequest Popup   
     'click #btnSaveLeaveRequest': async function(event) {
         $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
@@ -3867,9 +4405,56 @@ Template.employeescard.events({
         $('.fullScreenSpin').css('display', 'none');
     },
 
+    // TO DO
+    'click #savePayRollNotes': async function(){    
+        $('.fullScreenSpin').css('display', 'block');    
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let Notes = $('#payRollNotes').val();
+        const paynotes = [];
+        let TPayNotes = await getVS1Data('TPayNotes');
+        if( TPayNotes.length ){
+            let TPayNotesData = JSON.parse(TPayNotes[0].data);
+            paynotes = PayNotes.fromList(
+                TPayNotesData.tpaynotes
+            );
+        }          
+        paynotes.push(
+            new PayNotes({
+                type: "TPayNotes",
+                fields: new PayNotesFields({
+                    EmployeeID: employeeID,
+                    Notes: Notes,
+                    CreatedAt: moment(),
+                    UserID: Session.get("mySessionEmployeeLoggedID"),
+                    UserName: Session.get('mySessionEmployee') || '',
+                }),
+            })
+        );
+        // console.log('paynotes', paynotes)
+        let updatedNotes = {
+            tpaynotes: paynotes,
+        }
+        await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));            
+        let dataTableList = []
+        Array.prototype.forEach.call(paynotes, (item, index) => {
+            let ID = index + 1
+            dataTableList.push({
+                id: ID || '',
+                createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
+                username: item.fields.UserName || '',
+                notes: item.fields.Notes || ''
+            })
+        })
+        templateObject.datanotestablerecords.set(dataTableList);
+        $('#payRollNotes').val('');         
+        $('#newNoteModal').modal('hide');   
+        $('.fullScreenSpin').css('display', 'none');
+    },
+
     // Pay Template Tab
-    'click #addEarningsLine': function(){
-        // TO DO
+    'click #addEarningsLine': async function(){        
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -3893,13 +4478,17 @@ Template.employeescard.events({
             })
         )
         templateObject.payTemplateEarningLineInfo.set(payEarningLinesTemp);
-        $('#earningRateSelect').val('Allowances exempt from tax withholding and super');
         $('input[name=calculationType]:checked').attr('checked', false);
         $('#expenseAccount').val('');
+        await templateObject.setEarningLineDropDown();
+        setTimeout(function () {
+            let index = payEarningLinesTemp.length - 1;
+            $('#ptEarningRate' + index).val(payEarningLinesTemp[index].fields.EarningRate);
+        }, 1000);
         $('#addEarningsLineModal').modal('hide');
     },
 
-    'click #addDeductionLine': function(){
+    'click #addDeductionLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -3928,10 +4517,15 @@ Template.employeescard.events({
         $('#deductionTypeSelect').val('FBT');
         $('input[name=calculationTypeDeduction]:checked').attr('checked', false);
         $('#controlAccountDeduction').val('');
+        await templateObject.setDeductionLineDropDown();
+        setTimeout(function () {
+            let index = payDeductionLinesTemp.length - 1;
+            $('#ptDeductionType' + index).val(payDeductionLinesTemp[index].fields.DeductionType);
+        }, 1000);
         $('#addDeductionLineModal').modal('hide');
     },
 
-    'click #addSuperannuationLine': function(){
+    'click #addSuperannuationLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -3977,6 +4571,11 @@ Template.employeescard.events({
         $('#liabilityAccount').val('');
         $('#paymentFrequency').val('Monthly');
         $('#edtPeriodPaymentDate').val('');
+        await templateObject.setSuperannuationDropDown();
+        setTimeout(function () {
+            let index = payLinesTemp.length - 1;
+            $('#ptSuperannuationFund' + index).val(payLinesTemp[index].fields.Fund);
+        }, 1000);
         $('#addSuperannuationLineModal').modal('hide');
     },
 
@@ -3997,7 +4596,7 @@ Template.employeescard.events({
         }
     },
 
-    'click #addReiumbursementLine': function(){
+    'click #addReiumbursementLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4025,30 +4624,310 @@ Template.employeescard.events({
         $('#reimbursementTypeSelect').val('');
         $('#reiumbursementDescription').val('');
         $('#controlExpenseAccount').val('');
+        await templateObject.setReimbursementDropDown();
+        setTimeout(function () {
+            let index = payLinesTemp.length - 1;
+            $('#ptReimbursementType' + index).val(payLinesTemp[index].fields.ReiumbursementType);
+        }, 1000);
         $('#addReimbursementLineModal').modal('hide');
     },
 
     // Pay Template Earning Line Drop Down
-    'click #earningRateSelect': function(){
-        let earningRate = $('#earningRateSelect').val();
-        $('.calculationType').removeAttr("checked");
-        switch( earningRate ){
-            case 'JobKeeper Payment top up':
-                $('#CalculationType1').attr('disabled', true)
-                $('#CalculationType2').attr('disabled', false)
-                $('#CalculationType3').attr('disabled', true)
-            break;
-            case 'Overtime Hours (exempt from super)':
-                $('#CalculationType1').attr('disabled', false)
-                $('#CalculationType2').attr('disabled', true)
-                $('#CalculationType3').attr('disabled', true)
-            break;
-            default:
-                $('#CalculationType1').attr('disabled', true)
-                $('#CalculationType2').attr('disabled', false)
-                $('#CalculationType3').attr('disabled', false)
-            break;
+    // 'click #earningRateSelect': function(){
+    //     let earningRate = $('#earningRateSelect').val();
+    //     $('.calculationType').removeAttr("checked");
+    //     switch( earningRate ){
+    //         case 'JobKeeper Payment top up':
+    //             $('#CalculationType1').attr('disabled', true)
+    //             $('#CalculationType2').attr('disabled', false)
+    //             $('#CalculationType3').attr('disabled', true)
+    //         break;
+    //         case 'Overtime Hours (exempt from super)':
+    //             $('#CalculationType1').attr('disabled', false)
+    //             $('#CalculationType2').attr('disabled', true)
+    //             $('#CalculationType3').attr('disabled', true)
+    //         break;
+    //         default:
+    //             $('#CalculationType1').attr('disabled', true)
+    //             $('#CalculationType2').attr('disabled', false)
+    //             $('#CalculationType3').attr('disabled', false)
+    //         break;
+    //     }
+    // }, 
+
+    'click .removePayTempEarning': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        // $(e.target).parents('.earningLinesContainer').remove();
+        let payLines = templateObject.payTemplateEarningLineInfo.get();
+        let updatedLines = PayTemplateEarningLine.fromList(
+            payLines
+        ).filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.EarningRate = $('#ptEarningRate' + index).val();
+                item.fields.Amount = $('#ptEarningAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.payTemplateEarningLineInfo.set(updatedLines);
+        await templateObject.displayPayTempEarningLines();
+    },
+
+    'click .removePayTempDeduction': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateDeductionLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.DeductionType = $('#ptDeductionType' + index).val();
+                item.fields.Amount = $('#ptDeductionAmount' + index).val();
+                item.fields.Percentage = $('#ptDeductionPercentage' + index).val();
+                return item;
+            }
+        });
+        await templateObject.payTemplateDeductionLineInfo.set(updatedLines);
+        await templateObject.displayPayTempDeductionLines()
+    },
+
+    'click .removePayTempSuperannuation': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateSuperannuationLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.Fund = $('#ptSuperannuationFund' + index).val();
+                item.fields.Amount = $('#ptSuperannuationAmount' + index).val();
+                item.fields.Percentage = $('#ptSuperannuationPercentage' + index).val();
+                return item;
+            }
+        });
+        await templateObject.payTemplateSuperannuationLineInfo.set(updatedLines);
+        await templateObject.displayPayTempSuperannuationLines();
+    },
+
+    'click .removePayTempReimbursement': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let payLines = templateObject.payTemplateReiumbursementLineInfo.get();
+        let updatedLines = payLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.ReiumbursementType = $('#ptReimbursementType' + index).val();
+                item.fields.Amount = $('#ptReimbursementAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.payTemplateReiumbursementLineInfo.set(updatedLines);
+        await templateObject.displayPayTempReimbursementLines();
+    },
+
+    'click .removeObEarning': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let obLines = templateObject.filterOpeningBalance('EarningLine');
+        let updatedLines = obLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.BalanceField = $('#obEarningRate' + index).val();
+                item.fields.Amount = $('#obEarningAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.openingBalanceInfo.set(updatedLines);
+        let totalAmount = 0;
+        let amount = 0;
+        Array.prototype.forEach.call(updatedLines, (item, index) => {
+            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+            totalAmount += parseFloat( amount );
+            $('#obEarningRate' + index).val(item.fields.BalanceField);
+            $('#obEarningAmount' + index).val(item.fields.Amount);
+        })
+        let utilityService = new UtilityService();
+        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        $('#obEarningTotalAmount').text(totalFomattedAmount);
+    },
+
+    'click .removeObDeduction': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let obLines = templateObject.filterOpeningBalance('DeductionLine');
+        let updatedLines = obLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.BalanceField = $('#obDeductionLine' + index).val();
+                item.fields.Amount = $('#obDeductionAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.openingBalanceInfo.set(updatedLines);
+        let totalAmount = 0;
+        let amount = 0;
+        Array.prototype.forEach.call(updatedLines, (item, index) => {
+            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+            totalAmount += parseFloat( amount );
+            $('#obDeductionLine' + index).val(item.fields.BalanceField);
+            $('#obDeductionAmount' + index).val(item.fields.Amount);
+        })
+        let utilityService = new UtilityService();
+        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        $('#obDeductionTotalAmount').text(totalFomattedAmount);
+    },
+
+    'click .removeObSuperannuation': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let obLines = templateObject.filterOpeningBalance('SuperannuationLine');
+        let updatedLines = obLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.BalanceField = $('#obSuperannuationFund' + index).val();
+                item.fields.Amount = $('#obSuperannuationAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.openingBalanceInfo.set(updatedLines);
+        let totalAmount = 0;
+        let amount = 0;
+        Array.prototype.forEach.call(updatedLines, (item, index) => {
+            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+            totalAmount += parseFloat( amount );
+            $('#obSuperannuationFund' + index).val(item.fields.BalanceField);
+            $('#obSuperannuationAmount' + index).val(item.fields.Amount);
+        })
+        let utilityService = new UtilityService();
+        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        $('#obSuperannuationTotalAmount').text(totalFomattedAmount);
+    },
+
+    'click .removeObReimbursement': async function(e){
+        let templateObject = Template.instance();
+        let deleteID = $(e.target).data('id');
+        let obLines = templateObject.filterOpeningBalance('ReimbursementLine');
+        let updatedLines = obLines.filter((item, index) => {
+            if ( parseInt( index ) != parseInt( deleteID ) ) {
+                item.fields.BalanceField = $('#obReimbursementFund' + index).val();
+                item.fields.Amount = $('#obReimbursementAmount' + index).val();
+                return item;
+            }
+        });
+        await templateObject.openingBalanceInfo.set(updatedLines);
+        let totalAmount = 0;
+        let amount = 0;
+        Array.prototype.forEach.call(updatedLines, (item, index) => {
+            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+            totalAmount += parseFloat( amount );
+            $('#obReimbursementFund' + index).val(item.fields.BalanceField);
+            $('#obReimbursementAmount' + index).val(item.fields.Amount);
+        })
+        let utilityService = new UtilityService();
+        let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+        $('#obReimbursementTotalAmount').text(totalFomattedAmount);
+    },
+
+    'change .obCalculateEarningTotalAmount': function(e){
+        handleTotalAmount( 'obCalculateEarningTotalAmount', 'obEarningTotalAmount' )
+    },
+
+    'change .obCalculateDeductionTotalAmount': function(e){
+        handleTotalAmount( 'obCalculateDeductionTotalAmount', 'obDeductionTotalAmount' )
+    },
+
+    'change .obCalculateSuperannuationTotalAmount': function(e){
+        handleTotalAmount( 'obCalculateSuperannuationTotalAmount', 'obSuperannuationTotalAmount' )
+    },
+
+    'change .obCalculateReimbursementTotalAmount': function(e){
+        handleTotalAmount( 'obCalculateReimbursementTotalAmount', 'obReimbursementTotalAmount' )
+    },
+
+    'click #saveOpeningBalance': async function(e){
+        // TO DO
+        $('.fullScreenSpin').css('display', 'block');
+        let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+        let openingBalances = []  
+        let TOpeningBalances = await getVS1Data('TOpeningBalances');
+        if( TOpeningBalances.length ){
+            let TOpeningBalancesData = JSON.parse(TOpeningBalances[0].data);
+            openingBalances = OpeningBalance.fromList(
+                TOpeningBalancesData.topeningbalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) !== parseInt( employeeID ) ) {
+                    return item;
+                }
+            });
         }
+        let obEarningLines = []
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        if( Array.isArray( checkOpeningBalances ) ){
+            obEarningLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+                    return item;
+                }
+            });
+        } 
+
+        if( obEarningLines.length ){
+            Array.prototype.forEach.call(obEarningLines, (EarningLine, index) => {
+                EarningLine.fields.Amount = $('#obEarningAmount' + index).val();
+                openingBalances.push(EarningLine);
+            })
+        }
+
+
+        let obDeductionLines = []
+        if( Array.isArray( checkOpeningBalances ) ){
+            obDeductionLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
+                    return item;
+                }
+            });
+        }
+        if( obDeductionLines.length ){
+            Array.prototype.forEach.call(obDeductionLines, (DeductionLine, index) => {
+                DeductionLine.fields.Amount = $('#obDeductionAmount' + index).val();
+                openingBalances.push(DeductionLine);
+            })
+        }
+        let obSuperannuationLines = []
+        if( Array.isArray( checkOpeningBalances ) ){
+            obSuperannuationLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'SuperannuationLine' ) {
+                    return item;
+                }
+            });
+        }
+        if( obSuperannuationLines.length ){
+            Array.prototype.forEach.call(obEarningLines(), (obSuperannuationLine, index) => {
+                obSuperannuationLine.fields.Amount = $('#obSuperannuationAmount' + index).val();
+                openingBalances.push(obSuperannuationLine);
+            })
+        }
+
+        let obReimbursementLines = []
+        if( Array.isArray( checkOpeningBalances ) ){
+            obReimbursementLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'ReimbursementLine' ) {
+                    return item;
+                }
+            });
+        }
+        if( obReimbursementLines.length ){
+            Array.prototype.forEach.call(obEarningLines(), (obReimbursementLine, index) => {
+                obReimbursementLine.fields.Amount = $('#obReimbursementAmount' + index).val();
+                openingBalances.push(obReimbursementLine);
+            })
+        }
+        let updatedOpeningBalances = {
+            topeningbalances: openingBalances,
+        }
+        await addVS1Data('TOpeningBalances', JSON.stringify(updatedOpeningBalances));
+        $('.fullScreenSpin').css('display', 'none');
     },
 
     // Save active tab data
@@ -5894,6 +6773,9 @@ Template.employeescard.helpers({
     assignLeaveTypeInfo: () => {
         return Template.instance().assignLeaveTypeInfos.get();
     },
+    payNotesInfo: () => {
+        return Template.instance().payNotesInfos.get();
+    },    
     leaveRequestInfo: () => {
         return Template.instance().leaveRequestInfos.get();
     },
@@ -5903,6 +6785,26 @@ Template.employeescard.helpers({
     payTemplateEarningLines: () => {
         return Template.instance().payTemplateEarningLineInfo.get();
     },
+    obEarningLines: () => {
+        const templateObject = Template.instance();
+        let obEarningLines = templateObject.filterOpeningBalance('EarningLine');
+        return obEarningLines;        
+    },
+    obDeductionLines: () => {
+        const templateObject = Template.instance();
+        let obEarningLines = templateObject.filterOpeningBalance('DeductionLine');
+        return obEarningLines;
+    },   
+    obSuperannuationLines: () => {
+        const templateObject = Template.instance();
+        let obEarningLines = templateObject.filterOpeningBalance('SuperannuationLine');
+        return obEarningLines;
+    },   
+    obReimbursementLines: () => {
+        const templateObject = Template.instance();
+        let obEarningLines = templateObject.filterOpeningBalance('ReimbursementLine');
+        return obEarningLines;
+    },   
     payTemplateDeductionLines: () => {
         return Template.instance().payTemplateDeductionLineInfo.get();
     },
@@ -5911,6 +6813,24 @@ Template.employeescard.helpers({
     },
     payTemplateReiumbursementLines: () => {
         return Template.instance().payTemplateReiumbursementLineInfo.get();
+    },
+    calculateOpeningBalanceTotal( amountField ){
+        let totalAmount = 0;
+        let amount = 0;
+        $('.' + amountField).each(function(){
+            amount = $(this).val();
+            amount = ( amount === null || amount == '') ? 0 : amount;
+            totalAmount += parseFloat( amount );
+        });
+        let utilityService = new UtilityService();
+        return utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
+    },
+    formatPrice( amount ){
+        let utilityService = new UtilityService();
+        return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    },
+    formatDate: ( date ) => {
+        return moment(date).format("DD/MM/YYYY");
     },
     extraUserPrice: () => {
         return addExtraUserPrice || '$35';
@@ -5958,6 +6878,10 @@ Template.employeescard.helpers({
             return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+    datanotestablerecords: () => {
+        return Template.instance().datanotestablerecords.get();
+    },
+    
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },

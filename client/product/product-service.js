@@ -349,4 +349,10 @@ export class ProductService extends BaseService {
       return this.getList(this.ERPObjects.TProduct, options);
     }
 
+    getSerialNumberList(ProductID) {
+        let options = {
+           ProductId: ProductID
+        };
+        return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
+    }
 }
