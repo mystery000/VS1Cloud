@@ -54,17 +54,29 @@ Template.lotnumberlist.onRendered(function() {
         sideBarService.getAllSerialNumber().then(function(data) {
 
             for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                let dateep = new Date(data.tserialnumberlistcurrentreport[i].BatchExpiryDate);
+                let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
+                if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                    tclass="text-sold";
+                }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                    tclass="text-instock";
+                }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                    tclass="text-transfered";
+                }else{
+                    tclass='';
+                }
                 let dataList = {
                     productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                     department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
                     lotnumber: data.tserialnumberlistcurrentreport[i].BatchNumber,
                     status: data.tserialnumberlistcurrentreport[i].AllocType,
-                    date: data.tserialnumberlistcurrentreport[i].TransDate != '' ? data.tserialnumberlistcurrentreport[i].TransDate : 'Unknown',
-                    expirydate: data.tserialnumberlistcurrentreport[i].BatchExpiryDate != '' ? data.tserialnumberlistcurrentreport[i].BatchExpiryDate : 'Unknown'
+                    date: sdatet,
+                    expirydate: sdateep,
+                    cssclass: tclass
                 };
-
                 dataTableList.push(dataList);
-
             }
 
             templateObject.datatablerecords.set(dataTableList);
@@ -98,7 +110,6 @@ Template.lotnumberlist.onRendered(function() {
 
                     }
                 });
-
 
                 setTimeout(function() {
                     MakeNegative();
@@ -322,15 +333,31 @@ Template.lotnumberlist.onRendered(function() {
                 let lineItemObj = {};
                 addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-
-                    var dataList = {
+                    let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                    let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                    let dateep = new Date(data.tserialnumberlistcurrentreport[i].BatchExpiryDate);
+                    let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                        tclass="text-sold";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        tclass="text-instock";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                        tclass="text-transfered";
+                    }else{
+                        tclass='';
+                    }
+                    let dataList = {
                         productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                         department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
-                        serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
+                        lotnumber: data.tserialnumberlistcurrentreport[i].BatchNumber,
                         status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: data.tserialnumberlistcurrentreport[i].TransDate != '' ? data.tserialnumberlistcurrentreport[i].TransDate : 'Unknown'
+                        date: sdatet,
+                        expirydate: sdateep,
+                        cssclass: tclass
                     };
+    
                     dataTableList.push(dataList);
+    
                 }
 
                 templateObject.datatablerecords.set(dataTableList);

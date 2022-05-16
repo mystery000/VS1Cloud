@@ -425,7 +425,6 @@ Template.emailsettings.onRendered(function () {
     }
     templateObject.getScheduleInfo = function () {
         taxRateService.getScheduleSettings().then(function(data) {
-            console.log(data);
             let empData = data.treportschedules;
             templateObject.originScheduleData.set(data.treportschedules);
             var empDataCurr = '';
@@ -693,12 +692,17 @@ Template.emailsettings.onRendered(function () {
 
     templateObject.saveSchedules = async function(settings, isEssential) {
         return new Promise(async (resolve, reject) => {
+
+            //TODO: Remove all BasedOnType localstorage variables(No need this part in production mode)
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => storage.includes('BasedOnType_'));
+            basedOnTypeStorages.forEach(storage => localStorage.removeItem(storage));
+
             const oldSettings = templateObject.originScheduleData.get();
             // Filter old settings according to the types of email setting(Essential one or Automated one)
             if (!isEssential) {
                 oldSettings = oldSettings.filter(oldSetting => oldSetting.fields.FormID != 54 && oldSetting.fields.FormID != 177 && oldSetting.fields.FormID != 129);
             }
-            console.log(oldSettings);
             try {
                 let promise = settings.map(async (setting) => {
                     const formID = $(setting).attr('data-id');
@@ -707,7 +711,6 @@ Template.emailsettings.onRendered(function () {
                     const sendEl = $(setting).find('#edtBasedOn');
                     let recipientIds = $(setting).find('input.edtRecipients').attr('data-ids');
                     let recipients = $(setting).find('input.edtRecipients').val();
-                    console.log(recipientIds, recipients);
                     // Check if this setting has got recipients
                     const basedOnTypeText = sendEl.text();
                     let basedOnType = '';
@@ -720,7 +723,6 @@ Template.emailsettings.onRendered(function () {
                     else if (basedOnTypeText == "On Event") {
                         basedOnType = "E";
                         const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
-                        console.log(eventRadios);
                         if (eventRadios == "settingsOnLogon") isEmpty = false;
                         else isEmpty = true;
                     }
@@ -734,7 +736,6 @@ Template.emailsettings.onRendered(function () {
                             const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
         
                             const frequencyName = frequencyEl.text();
-                            console.log(formID, recipientId);
                             let objDetail = {
                                 type: "TReportSchedules",
                                 fields: {
@@ -796,16 +797,12 @@ Template.emailsettings.onRendered(function () {
                                         || oldSetting.fields.EmployeeId != parseInt(recipientId);
                                     });
                                 });
-                                console.log(oldSettings);
-
                                 // Add synced cron job here
                                 objDetail.fields.FormIDs = formIDs.join(',');
                                 objDetail.fields.FormID = 1;
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
-
-                                console.log(objDetail.fields);
 
                                 //TODO: Set basedon type here
                                 const basedOnTypeText = sendEl.text();
@@ -818,8 +815,7 @@ Template.emailsettings.onRendered(function () {
                                 else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
                                 else if (basedOnTypeText == "On Event") {
                                     basedOnType = "E";
-                                    const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
-                                    console.log(eventRadios);
+                                    const eventRadios = $('#basedOnModal input[name="settingsOnEvents"]:checked').attr('id');
                                     if (eventRadios == "settingsOnLogon") isEmpty = false;
                                     else isEmpty = true;
                                 }
@@ -877,8 +873,6 @@ Template.emailsettings.onRendered(function () {
                 });
                 savedSchedules = await Promise.all(promise);
                 
-                console.log('Unsaved old settings => ', oldSettings);
-
                 let promise1 = oldSettings.map(async setting => {
                     if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54 
                         || setting.fields.FormID == 177 && setting.fields.FormID == 129)) || (!isEssential
@@ -894,7 +888,6 @@ Template.emailsettings.onRendered(function () {
                                 ID: setting.fields.ID
                             }
                         });
-                        console.log(saveResult);
                         //TODO: Set basedon type here
                         localStorage.removeItem(`BasedOnType_${setting.fields.FormID}_${setting.fields.EmployeeId}`);
                     }
@@ -945,7 +938,6 @@ Template.emailsettings.onRendered(function () {
                             NextDueDate: '',
                         }
                     };
-                    console.log("AA", objDetail)
             
                     if (frequencyName === "Monthly") {
                         const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
@@ -978,26 +970,16 @@ Template.emailsettings.onRendered(function () {
                     } else {
                         objDetail.fields.Active = false;
                     }
-                    console.log(objDetail, oldSettings, recipientId)
-                    console.log(groupedReports.length);
                     let promises = groupedReports.map(async (groupedReport) => {
-                        console.log($(groupedReport).closest('tr').attr('id'));
                         objDetail.fields.FormID = parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''));
                         objDetail.fields.ISEmpty = true;
-                        console.log(objDetail);
-                        console.log(oldSettings);
     
                         const oldSetting = oldSettings.filter((setting) => {
-                            console.log(setting, $(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''), recipientId)
                             return setting.fields.FormID == $(groupedReport).closest('tr').attr('id').replace('groupedReports-', '') && setting.fields.EmployeeId == parseInt(recipientId)
                         });
-                        console.log('---------------------------------------------------',oldSetting)
                         oldSettings = oldSettings.filter((setting) => {
-                            console.log(setting.fields.FormID != $(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''));
-                            console.log(setting.fields.EmployeeId != parseInt(recipientId));
                             return setting.fields.FormID != $(groupedReport).closest('tr').attr('id').replace('groupedReports-', '') || setting.fields.EmployeeId != parseInt(recipientId)
                         });
-                        console.log($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''), parseInt(recipientId))
                         if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
                         else delete objDetail.fields.ID;
     
@@ -1021,7 +1003,6 @@ Template.emailsettings.onRendered(function () {
                         await taxRateService.saveScheduleSettings(objDetail);
                     });
                     await Promise.all(promises);
-                    console.log(oldSettings);
                     let removeSetting = oldSettings.map(async (setting) => {
                         if (setting.fields.BeginFromOption === "S") {
                             await taxRateService.saveScheduleSettings({
@@ -1110,7 +1091,6 @@ Template.emailsettings.events({
                 ofMonths += isFirst ? $(this).val() : ',' + $(this).val();
                 isFirst = false;
             });
-            console.log(ofMonths);
             const startTime = $('#edtMonthlyStartTime').val();
             const startDate = $('#edtMonthlyStartDate').val();
 
@@ -1125,7 +1105,6 @@ Template.emailsettings.events({
         } else if (radioFrequency == "frequencyWeekly") {
             const everyWeeks = $("#weeklyEveryXWeeks").val();
             const selectDays = $(".selectDays input[type=checkbox]:checked").val();
-            console.log(selectDays);
             selectDays = templateObject.getDayNumber(selectDays);
             const startTime = $('#edtWeeklyStartTime').val();
             const startDate = $('#edtWeeklyStartDate').val();
@@ -1178,13 +1157,8 @@ Template.emailsettings.events({
         const essentialSettings = $('#tblEssentialAutomatedEmails tbody tr').map(function() {return $(this)}).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
-        console.log(essentialSettings);
-
         const saveResult = await templateObject.saveSchedules(essentialSettings, true);
         const saveGroupResult = await templateObject.saveGroupedReports();
-
-        console.log(saveResult);
-        console.log(saveGroupResult);
 
         if (saveResult.success && saveGroupResult.success)
             swal({
@@ -1213,11 +1187,7 @@ Template.emailsettings.events({
         const normalSettings = $('#tblAutomatedEmails tbody tr').map(function() {return $(this)}).get();
         $('.fullScreenSpin').css('display', 'inline-block');
 
-        console.log(normalSettings);
-
         const saveResult = await templateObject.saveSchedules(normalSettings, false);
-
-        console.log(saveResult);
 
         if (saveResult.success) {
             swal({
@@ -1275,7 +1245,6 @@ Template.emailsettings.events({
         $('.colSettings').css('display', 'none'); // Hide all left-settings part
 
         const frequencyType = $(event.target).html();
-        console.log(frequencyType);
         const startDate = $(event.target).attr('data-startdate') ? $(event.target).attr('data-startdate') : '';
         const startTime = $(event.target).attr('data-starttime') ? $(event.target).attr('data-starttime') : '';
         if (frequencyType === 'Monthly') {
@@ -1347,7 +1316,6 @@ Template.emailsettings.events({
         let recipientsID = event.target.id || '';
         $('#customerSelectLineID').val(recipientsID);
         const recipients = event.target.value ? event.target.value.split('; ') : [];
-        console.log(recipients);
         $('.chkServiceCard').prop('checked', false);
         $('#swtAllCustomers').prop('checked', false);
         $('#swtAllEmployees').prop('checked', false);
@@ -1425,7 +1393,6 @@ Template.emailsettings.events({
         $('#edtBasedOnDate').val('');
         $('#basedOnPrint').prop('checked', true);
         $('#onEventSettings').css('display', 'none');
-        console.log(basedOnType);
         if (basedOnType === "On Time") {
             const dateTime = $(event.target).attr('data-time');
             $('#edtBasedOnDate').val(dateTime);

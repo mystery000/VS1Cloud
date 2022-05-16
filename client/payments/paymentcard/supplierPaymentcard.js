@@ -1872,6 +1872,7 @@ Template.supplierpaymentcard.onRendered(() => {
                             bankAccount: data.fields.AccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Notes,
+                            deleted: data.fields.Deleted,
                             LineItems: lineItems,
                             checkpayment: data.fields.PaymentMethodName,
                             department: data.fields.DeptClassName,
@@ -2050,6 +2051,7 @@ Template.supplierpaymentcard.onRendered(() => {
                                 bankAccount: useData[d].fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Notes,
+                                deleted: useData[d].fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: useData[d].fields.PaymentMethodName,
                                 department: useData[d].fields.DeptClassName,
@@ -2223,6 +2225,7 @@ Template.supplierpaymentcard.onRendered(() => {
                                 bankAccount: data.fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Notes,
+                                deleted: data.fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: data.fields.PaymentMethodName,
                                 department: data.fields.DeptClassName,
@@ -2394,6 +2397,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
+                        deleted: data.fields.Deleted,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,
@@ -4207,6 +4211,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         minimumFractionDigits: 2
                     }) || 0,
                     notes: notes || '',
+                    deleted: data.fields.Deleted,
                     LineItems: lineItems,
                     checkpayment: Session.get('paymentmethod') || checkpayment || '',
                     department: Session.get('department') || department || '',
@@ -8411,6 +8416,58 @@ Template.supplierpaymentcard.events({
               }
             }
 
+        }
+    },
+    'click .btnRecoverPayment': function(event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let paymentService = new PaymentsService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var objDetails = {
+                type: "TSuppPayments",
+                fields: {
+                    ID: currentInvoice,
+                    Deleted: false
+                }
+            };
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Recover Payment',
+                text: 'Are you sure that you want to recover this payment?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Recover',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
+                        $('.modal-backdrop').css('display', 'none');
+                        FlowRouter.go('/paymentoverview?success=true');
+                    }).catch(function(err) {
+                        swal({
+                            title: 'Oooops...',
+                            text: err,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === 'cancel') {}
+                        });
+
+                    });
+                } else if (result.dismiss === 'cancel') {}
+            });
+
+
+        } else {
+            FlowRouter.go('/paymentoverview?success=true');
         }
     },
     'click .btnDeletePayment': function(event) {
