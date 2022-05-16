@@ -151,14 +151,6 @@ Template.billlist.onRendered(function() {
                           orderstatus = "Deleted";
                         }else if(data.tbilllist[i].SupplierName == ''){
                           orderstatus = "Deleted";
-                        }else if(data.tbilllist[i].Deleted != true){
-                          if(data.tbilllist[i].Paid == true){
-                            orderstatus = "Full";
-                          }else if ((data.tbilllist[i].Balance > 0) && (data.tbilllist[i].TotalAmountInc > data.tbilllist[i].Balance)){
-                            orderstatus = "Part";
-                          }else if (data.tbilllist[i].Reconciled == true){
-                            orderstatus = "Rec";
-                          }
                         };
                         var dataList = {
                             id: data.tbilllist[i].PurchaseOrderID || '',
@@ -467,14 +459,6 @@ Template.billlist.onRendered(function() {
                       orderstatus = "Deleted";
                     }else if(data.tbilllist[i].SupplierName == ''){
                       orderstatus = "Deleted";
-                    }else if(data.tbilllist[i].Deleted != true){
-                      if(data.tbilllist[i].Paid == true){
-                        orderstatus = "Full";
-                      }else if ((data.tbilllist[i].Balance > 0) && (data.tbilllist[i].TotalAmountInc > data.tbilllist[i].Balance)){
-                        orderstatus = "Part";
-                      }else if (data.tbilllist[i].Reconciled == true){
-                        orderstatus = "Rec";
-                      }
                     };
                     var dataList = {
                         id: data.tbilllist[i].PurchaseOrderID || '',
@@ -779,14 +763,6 @@ Template.billlist.onRendered(function() {
                     orderstatus = "Deleted";
                   }else if(data.tbilllist[i].SupplierName == ''){
                     orderstatus = "Deleted";
-                  }else if(data.tbilllist[i].Deleted != true){
-                    if(data.tbilllist[i].Paid == true){
-                      orderstatus = "Full";
-                    }else if ((data.tbilllist[i].Balance > 0) && (data.tbilllist[i].TotalAmountInc > data.tbilllist[i].Balance)){
-                      orderstatus = "Part";
-                    }else if (data.tbilllist[i].Reconciled == true){
-                      orderstatus = "Rec";
-                    }
                   };
                   var dataList = {
                       id: data.tbilllist[i].PurchaseOrderID || '',
@@ -1160,14 +1136,6 @@ Template.billlist.events({
                           orderstatus = "Deleted";
                         }else if(data.tbillex[i].fields.CustomerName == ''){
                           orderstatus = "Deleted";
-                        }else if(data.tbillex[i].fields.Deleted != true){
-                          if(data.tbillex[i].fields.IsPaid == true){
-                            orderstatus = "Full";
-                          }else if ((data.tbillex[i].fields.TotalBalance > 0) && (data.tbillex[i].fields.TotalAmountInc > data.tbillex[i].fields.TotalBalance)){
-                            orderstatus = "Part";
-                          }else if (data.tbillex[i].fields.Reconciled == true){
-                            orderstatus = "Rec";
-                          }
                         };
                         var dataList = {
                             id: data.tbillex[i].fields.ID || '',

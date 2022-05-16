@@ -2019,8 +2019,9 @@ Template.bankingoverview.events({
         FlowRouter.go('/chequelist');
     },
     'click .opentrans': function(event) {
-        let id = $(event.target).closest('.openaccountreceivable').attr('id');
-        FlowRouter.go('/accounttransactions?id=' + id);
+        let bankAccountName = $(event.target).closest('.openaccountreceivable').attr('id');
+        // FlowRouter.go('/accounttransactions?id=' + id);
+        FlowRouter.go("/balancetransactionlist?accountName=" +bankAccountName +"&isTabItem=" +false);
     },
     'click .btnPrinStatment': function() {
         FlowRouter.go('/statementlist');
