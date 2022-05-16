@@ -43,6 +43,7 @@
                 .pageHeader {
                     margin: 14px 4px !important;
                 }
+
                 .helpBtn {
                     float: right;
                     margin-top: 8px;
@@ -330,7 +331,7 @@
     </div>
 
     <div class="modal fade" id="viewReceiptModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Edit Receipt Entry</h5>
@@ -340,13 +341,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <div class="row justify-content-end">
-                                <!-- <div class="col-1">
-                                    <div style="padding: 5px;">
-                                        <i class="fa fa-money"></i> Cash
-                                    </div>
-                                </div> -->
                                 <div class="col-3" style="display: inline-flex; max-width: 210px;">
                                     <div style="padding: 6px; width: 75px;">
                                         <i class="fa fa-money"></i> Cash
@@ -355,7 +351,7 @@
                                     <button type="button" class="btn btn-primary" style="display: none; float: right; margin-bottom: 16px;">View Report</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-12 col-md-6">
                             <div class="row">
                                 <div class="col-6">
@@ -387,22 +383,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-8">
+                                <div class="col-6 col-md-6">
                                     <div class="form-group">
                                         <label>Total Amount</label>
                                         <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-group">
-                                        <label>Currency</label>
-                                        <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                {{#if isCurrencyEnable}}
+                                    <div class="col-6 col-md-6">
+                                        <div class="form-group">
+                                            <label>Currency</label>
+                                            <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                        </div>
                                     </div>
-                                </div>
+                                {{/if}}
                                 <div class="col-6">
                                     <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursable" style="cursor: pointer;" checked="{{#if editExpenseClaim.Reimbursement}}checked{{/if}}">
-                                        <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reiumbursable</label>
+                                        <label class="custom-control-label" for="swtReiumbursable" style="cursor: pointer;">Reimbursable</label>
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -464,10 +462,6 @@
                             }
                         </style>
 
-                        <script>
-
-                        </script>
-
                         <div class="col-12 col-md-6">
                             <div class="row">
                                 <div class="col-12 img-placeholder" style="text-align: center;">
@@ -480,19 +474,19 @@
                             </div>
                         </div>
                         <div class="col-12 ">
-                            <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload</button>
+                            <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Receipt</button>
                             <input type="file" class="attachment-upload" style="display:none" accept=".jpg,.png,.pdf,.jpeg">
-                            <button type="button" class="btn btn-primary btn-download" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-download" style="margin-right: 8px;"></i>Download</button>
+                            <button type="button" class="btn btn-primary btn-download" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-download" style="margin-right: 8px;"></i>Download Receipt</button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer" style="justify-content: space-between;">
                     <div style="float: left;">
                         <!-- Detach receipt removes the currently attached receipt -->
-                        <button type="button float-left" class="btn btn-secondary btn-detach">Detach Receipt</button>
-                        <button type="button float-left" class="btn btn-secondary" id="btnShowSplitModal" data-dismiss="modal">Split Expense</button>
-                        <button type="button float-left" class="btn btn-secondary" id="btnShowMergeModal" data-dismiss="modal">Merge</button>
-                        <button type="button float-left" class="btn btn-secondary" id="btnDuplicate">Duplicate</button>
+                        <button type="button float-left" class="btn btn-primary btn-detach"><i class="fas fa-unlink" style="margin-right: 5px;"></i>Detach Receipt</button>
+                        <button type="button float-left" class="btn btn-info" id="btnShowSplitModal" data-dismiss="modal"><i class="far fa-clone" style="margin-right: 5px;"></i>Split Expense</button>
+                        <button type="button float-left" class="btn btn-success" id="btnShowMergeModal" data-dismiss="modal"><i class="fas fa-layer-group" style="margin-right: 5px;"></i>Merge</button>
+                        <button type="button float-left" class="btn btn-warning" id="btnDuplicate"><i class="far fa-copy" style="margin-right: 5px;"></i>Duplicate</button>
                         <button type="button" class="btn btn-danger" id="btnDeleteReceipt"><i class="fas fa-trash-alt"></i></button>
                     </div>
                     <div style="float: right;">
@@ -758,7 +752,7 @@
                                         <label>Expense to keep</label>
                                         <select class="form-control" id="sltExpenseKeep">
                                             {{#each item in mergeReceiptRecords}}
-                                            <option value="{{@index}}" selected="{{#if equals @index 0}}selected{{/if}}">{{item.DateTime}} - {{item.SupplierName}} ${{item.AmountInc}}</option>
+                                                <option value="{{@index}}" selected="{{#if equals @index 0}}selected{{/if}}">{{item.DateTime}} - {{item.SupplierName}} ${{item.AmountInc}}</option>
                                             {{/each}}
                                         </select>
                                     </div>
@@ -766,7 +760,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Employee</label>
-                                        <input class="form-control" id="mergedEmployee" value="{{mergeReceiptRecords.[0].EmployeeName}}" readonly/>
+                                        <input class="form-control" id="mergedEmployee" value="{{mergeReceiptRecords.[0].EmployeeName}}" readonly />
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -774,7 +768,7 @@
                                         <label>Transaction Type</label>
                                         <select class="form-control" id="mergedTransactionType">
                                             {{#each item in mergeReceiptRecords}}
-                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Paymethod}}</option>
+                                                <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Paymethod}}</option>
                                             {{/each}}
                                         </select>
                                     </div>
@@ -782,7 +776,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Merchant</label>
-                                        <input class="form-control" id="mergedMerchant" value="{{mergeReceiptRecords.[0].SupplierName}}" readonly/>
+                                        <input class="form-control" id="mergedMerchant" value="{{mergeReceiptRecords.[0].SupplierName}}" readonly />
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -790,27 +784,29 @@
                                         <label>Date</label>
                                         <select class="form-control" id="mergedDateTime">
                                             {{#each item in mergeReceiptRecords}}
-                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.DateTime}}</option>
+                                                <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.DateTime}}</option>
                                             {{/each}}
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-8">
+                                <div class="col-6 col-md-6">
                                     <div class="form-group">
                                         <label>Total Amount</label>
                                         <select class="form-control" id="mergedAmount">
                                             {{#each item in mergeReceiptRecords}}
-                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">${{item.AmountInc}}</option>
+                                                <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">${{item.AmountInc}}</option>
                                             {{/each}}
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-group">
-                                        <label>Currency</label>
-                                        <input class="form-control" value="{{sessionCurrency}}" readonly/>
+                                {{#if isCurrencyEnable}}
+                                    <div class="col-6 col-md-6">
+                                        <div class="form-group">
+                                            <label>Currency</label>
+                                            <input class="form-control" value="{{sessionCurrency}}" readonly />
+                                        </div>
                                     </div>
-                                </div>
+                                {{/if}}
                                 <div class="col-6">
                                     <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtMergedReiumbursable" style="cursor: pointer;">
@@ -820,7 +816,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label>Chart of Accounts</label>
-                                        <input class="form-control" id="mergedAccount" value="{{mergeReceiptRecords.[0].AccountName}}" readonly/>
+                                        <input class="form-control" id="mergedAccount" value="{{mergeReceiptRecords.[0].AccountName}}" readonly />
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -872,11 +868,11 @@
                                         <label>Receipt</label>
                                         <select class="form-control" id="mergedReceipt">
                                             {{#each item in mergeReceiptRecords}}
-                                            {{#if item.Attachments}}
-                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Attachments.[0].fields.AttachmentName}}</option>
-                                            {{else}}
-                                            <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">No Receipt</option>
-                                            {{/if}}
+                                                {{#if item.Attachments}}
+                                                    <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">{{item.Attachments.[0].fields.AttachmentName}}</option>
+                                                {{else}}
+                                                    <option value="{{@index}}" selected="{{#if equals @index mergeReceiptSelectedIndex}}selected{{/if}}">No Receipt</option>
+                                                {{/if}}
                                             {{/each}}
                                         </select>
                                     </div>
@@ -957,18 +953,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-8">
+                                        <div class="col-6 col-md-6">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="form-group">
-                                                <label>Currency</label>
-                                                <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                        {{#if isCurrencyEnable}}
+                                            <div class="col-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label>Currency</label>
+                                                    <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        {{/if}}
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableExpense" style="cursor: pointer;">
@@ -1091,18 +1089,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-8">
+                                        <div class="col-6 col-md-6">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="form-group">
-                                                <label>Currency</label>
-                                                <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                        {{#if isCurrencyEnable}}
+                                            <div class="col-6 col-md-6">
+                                                <div class="form-group">
+                                                    <label>Currency</label>
+                                                    <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        {{/if}}
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">
@@ -1193,7 +1193,9 @@
                                         <th class="th" style="width: 160px;">Date</th>
                                         <th class="th" style="width: 20%;">Merchant</th>
                                         <th class="th" style="width: 100px;">Amount</th>
-                                        <th class="th" style="width: 10%;">Currency</th>
+                                        {{#if isCurrencyEnable}}
+                                            <th class="th" style="width: 10%;">Currency</th>
+                                        {{/if}}
                                         <th class="th" style="width: 3%;"></th>
                                         <th class="th" style="width: 20%;">Account</th>
                                         <th class="th">Description</th>
@@ -1216,7 +1218,9 @@
                                             <td>
                                                 <input id="multipleAmount-{{@index}}" class="form-control multipleAmount" style="text-align: right; width: 100%;" value="${{item.amount}}" />
                                             </td>
-                                            <td contenteditable="false">{{item.currency}}</td>
+                                            {{#if isCurrencyEnable}}
+                                                <td contenteditable="false">{{item.currency}}</td>
+                                            {{/if}}
                                             <td contenteditable="false" id="multipleAttach-{{@index}}" class="multipleAttach"><i class="fa fa-cloud-upload"></i></td>
                                             <td contenteditable="false">
                                                 <select type="search" id="multipleAccount-{{@index}}" class="form-control multipleAccount" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
