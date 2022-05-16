@@ -13,6 +13,9 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accSelected = "";
 let taxSelected = "";
+let setSNTrack = false;
+let setLOTtrack = false;
+
 Template.productview.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -32,6 +35,8 @@ Template.productview.onCreated(() => {
     templateObject.totaldeptquantity = new ReactiveVar();
     templateObject.isTrackChecked = new ReactiveVar();
     templateObject.isTrackChecked.set(false);
+    templateObject.isSNTrackChecked = new ReactiveVar();
+    templateObject.isSNTrackChecked.set(false);
 
     templateObject.isExtraSellChecked = new ReactiveVar();
     templateObject.isExtraSellChecked.set(false);
@@ -62,6 +67,15 @@ Template.productview.onRendered(function() {
     var splashArrayTaxRateList = new Array();
     var splashArrayAccountList = new Array();
     let clientType = [];
+    let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
+    console.log(cloudPackage);
+    if(cloudPackage=="PLUS"){
+      templateObject.isSNTrackChecked.set(true);
+      console.log("cloudPackage: true");
+    }else{
+      templateObject.isSNTrackChecked.set(false);
+      console.log("localsss: false");
+    }
 
     templateObject.getAllLastInvDatas = function() {
         productService.getAllProductList1().then(function(data) {
@@ -1884,13 +1898,25 @@ Template.productview.onRendered(function() {
             productService.getSerialNumberList(currentProductID).then(function(data) {
                 serialnumberList = [];
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                    let datet = new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                    let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                        tclass="text-sold";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        tclass="text-instock";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                        tclass="text-transfered";
+                    }else{
+                        tclass='';
+                    }
                     let serialnumberObject = {
                         Productid: currentProductID,
                         PP: data.ProductId,
                         SerialNumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                         Status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: data.tserialnumberlistcurrentreport[i].TransDate,
+                        date: sdatet,
                         department: data.tserialnumberlistcurrentreport[i].DepartmentName,
+                        cssclass: tclass
                     }
                     serialnumberList.push(serialnumberObject);
                 }
@@ -1928,12 +1954,26 @@ Template.productview.onRendered(function() {
             productService.getSerialNumberList(currentProductID).then(function(data) {
                 lotnumberList = [];
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                    let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                    let dateep=new Date(daa.tserialnumberlistcurrentreport[i].BatchExpiryDate);
+                    let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                    let sdateep = `${dateep.getDate()}/${dateep.getMonth()}/${dateep.getFullYear()}`;
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                        tclass="text-sold";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        tclass="text-instock";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                        tclass="text-transfered";
+                    }else{
+                        tclass='';
+                    }
                     let lotnumberObject = {
                         LotNumber: data.tserialnumberlistcurrentreport[i].BatchNumber,
                         Status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: data.tserialnumberlistcurrentreport[i].TransDate,
-                        expriydate: data.tserialnumberlistcurrentreport[i].BatchExpiryDate,
+                        date: sdatet,
+                        expriydate: sdateep,
                         department: data.tserialnumberlistcurrentreport[i].DepartmentName,
+                        cssclass: tclass
                     }
                     lotnumberList.push(lotnumberObject);
                 }
@@ -2701,6 +2741,7 @@ Template.productview.onRendered(function() {
 });
 
 Template.productview.helpers({
+
     productrecord: () => {
         return Template.instance().records.get();
     },
@@ -2785,6 +2826,10 @@ Template.productview.helpers({
             userid: Session.get('mycloudLogonID'),
             PrefName: 'productview'
         });
+    },
+    isSNTrackChecked: () => {
+        let templateObj = Template.instance();
+        return templateObj.isSNTrackChecked.get();
     },
     isTrackChecked: () => {
         let templateObj = Template.instance();
@@ -3641,7 +3686,6 @@ Template.productview.events({
     'click #chkTrack': function(event) {
         const templateObject = Template.instance();
         let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
-        console.log(cloudPackage);
         if (cloudPackage == "Simple Start") {
             $('#upgradeModal').modal('toggle');
             templateObject.isTrackChecked.set(false);
@@ -3690,30 +3734,43 @@ Template.productview.events({
         // }
     },
     'click #chkSNTrack': function(event) {
-        let setSNLOTtrack = false;
-        if (setSNLOTtrack == false) {
-            swal('You cannot turn on tracking.', '', 'info');
-            event.preventDefault();
-            return false;
-        }
+        setSNTrack = true;
+        setLOTtrack = false;
+        $('#chkSNTrack').attr('checked');
+        $('#chkLotTrack').removeAttr('checked');
     },
     'click #chkLotTrack': function(event) {
-        let setSNLOTtrack = false;
-        if (setSNLOTtrack == false) {
-            swal('You cannot turn on tracking.', '', 'info');
+        setLOTtrack = true;
+        setSNTrack = false;
+        $('#chkSNTrack').removeAttr('checked');
+        $('#chkLotTrack').attr('checked');
+    },
+    'click #btnSNTrack': function(event) {
+        console.log("SN:", setSNTrack, "Lot:", setLOTtrack);
+        if(setSNTrack == true){
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let templateObject = Template.instance();
+            templateObject.getSerialNumberList();
+            $('#SerialNumberModal').modal('show');
+        } else{
+            swal('You have to set Serial Number Track.', '', 'info');
             event.preventDefault();
             return false;
         }
-    },
-    'click #btnSNTrack': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        templateObject.getSerialNumberList();
+        
     },
     'click #btnLotTrack': function(event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        templateObject.getLotNumberList();
+        console.log("SN:", setSNTrack, "Lot:", setLOTtrack);
+        if(setLOTtrack==true){
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let templateObject = Template.instance();
+            templateObject.getLotNumberList();
+            $('#LotNumberModal').modal('show');
+        } else{
+            swal('You have to set Lot Number Track.', '', 'info');
+            event.preventDefault();
+            return false;
+        }
     },
     'click #chkSellPrice': function(event) {
         if ($(event.target).is(':checked')) {

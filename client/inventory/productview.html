@@ -377,9 +377,37 @@
                                         $('#chkTrack').removeAttr("disabled");
                                     </script>
                                     {{/if}}
-                                    <div class="custom-control custom-switch d-flex align-items-center">
-                                        <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
-                                        <label class="custom-control-label {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
+                                    <div class="d-flex">
+                                        <div class="custom-control custom-switch d-flex align-items-center justify-content-center">
+                                            <input class="custom-control-input" type="checkbox" id="chkTrack" name="chkTrack" checked="{{#if includeInventory}}{{#if isTrackChecked}}checked{{/if}}{{else}}{{/if}}">
+                                            <label class="custom-control-label position-relative {{#if includeInventory}}inventorytracking{{else}}inventorynottracking{{/if}}" for="chkTrack">I Track This Product</label>
+                                        </div>
+                                        {{#if equals isSNTrackChecked true}}
+                                        <div class="d-flex align-items-center">
+                                            <div class="custom-control custom-switch d-flex align-items-center">
+                                                <input class="custom-control-input" type="checkbox" id="chkSNTrack" name="chkSNTrack">
+                                                <label class="custom-control-label position-relative" for="chkSNTrack">I Track Serial Numbers</label>
+                                                <div class="px-1">
+                                                    <span id="btnSNTrack" class="btnSpinType">+</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="custom-control custom-switch d-flex align-items-center">
+                                                <input class="custom-control-input" type="checkbox" id="chkLotTrack" name="chkLotTrack">
+                                                <label class="custom-control-label position-relative" for="chkLotTrack">I Track Lot Numbers</label>
+                                                <div class="px-1">
+                                                    <span id="btnLotTrack" class="btnSpinType">+</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="custom-control custom-switch d-flex align-items-center">
+                                                <input class="custom-control-input" type="checkbox" id="chkAddSN" name="chkAddSN">
+                                                <label class="custom-control-label position-relative" for="chkAddSN">Add Serial Number</label>
+                                            </div>
+                                        </div>
+                                        {{/if}}
                                     </div>
                                     
                                     <div id="trackdiv">
@@ -426,112 +454,13 @@
                                 </div>
                                 {{/each}}
                             </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="d-flex align-items-center">
-                                        <div class="custom-control custom-switch d-flex align-items-center">
-                                            <input class="custom-control-input" type="checkbox" id="chkSNTrack" name="chkSNTrack" checked="{{#if includeInventory}}{{#if isSNTrackChecked}}checked{{/if}}{{else}}{{/if}}">
-                                            <label class="custom-control-label position-relative" for="chkSNTrack">I Track Serial Numbers</label>
-                                        </div>
-                                        <div class="px-1">
-                                            <span id="btnSNTrack" class="btnSpinType">+</span>
-                                        </div>
-                                    </div>
-                                    <div id="SNTracklist" style="display:none; padding-right: 0px; padding-left: 0px;">
-                                        <hr class="reporthr" style="margin: 4px; border-width: 3px;">
-                                        <h3>Serial Number Track list</h3>
-                                        <div class="table-responsive">
-                                            <table id="serialnumberlist" class="dataTable table table-striped table-bordered table-centered serialnumberlist">
-                                                <thead>
-                                                    <tr class="dnd-moved">
-                                                        <th class="text-center" style="width: 30%">Serial Numbers</th>
-                                                        <th class="text-center" style="width: 20%">Status</th>
-                                                        <th class="text-center" style="width: 25%">Date</th>
-                                                        <th class="text-center" style="width: 25%">Department</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {{#each item in tserialnumberList}}
-                                                    <tr id="{{item.SerialNumber}}">
-                                                        <td class="text-center">{{item.SerialNumber}}</td>
-                                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                                                        <td class="text-center">{{item.date}}</td>
-                                                        <td class="text-center">{{item.department}}</td>
-                                                    </tr>
-                                                    {{/each}}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="custom-control custom-switch d-flex align-items-center">
-                                            <input class="custom-control-input" type="checkbox" id="chkLotTrack" name="chkLotTrack">
-                                            <label class="custom-control-label position-relative" for="chkLotTrack">I Track Lot Numbers</label>
-                                        </div>
-                                        <div class="px-1">
-                                            <span id="btnLotTrack" class="btnSpinType">+</span>
-                                        </div>
-                                    </div>
-                                    <div id="LotTracklist" style="display: none; padding-right: 0px; padding-left: 0px;">
-                                        <hr class="reporthr" style="margin: 4px; border-width: 3px;">
-                                        <h3>Lot Number Track list</h3>
-                                        <div class="table-responsive">
-                                            <table id="lotnumberlist" class="dataTable table table-striped table-bordered lotnumberlist">
-                                                <thead>
-                                                    <tr class="dnd-moved">
-                                                        <th class="text-center" style="width: 25%">Lot Numbers</th>
-                                                        <th class="text-center" style="width: 15%">Status</th>
-                                                        <th class="text-center" style="width: 20%">Date</th>
-                                                        <th class="text-center" style="width: 20%;">Expiry Date</th>
-                                                        <th class="text-center" style="width: 20%">Department</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {{#each item in tlotnumberList}}
-                                                    
-                                                    <tr id="{{item.transactionno}}">
-                                                        <td class="text-center">{{item.LotNumber}}</td>
-                                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
-                                                        <td class="text-center">{{item.date}}</td>
-                                                        <td class="text-center">{{item.expriydate}}</td>
-                                                        <td class="text-center">{{item.department}}</td>
-                                                    </tr>
-                                                    {{/each}}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="custom-control custom-switch d-flex align-items-center">
-                                            <input class="custom-control-input" type="checkbox" id="chkAddSN" name="chkAddSN" checked="{{#if includePlus}}{{#if isLotTrackChecked}}checked{{/if}}{{else}}{{/if}}">
-                                            <label class="custom-control-label position-relative" for="chkAddSN">Add Serial Number</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
                                 <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
                                     <hr class="reporthr" style="margin: 4px; border-width: 3px;">
                                 </div>
                             </div>
-
-                            <!-- Sell Price -->
-                            <!-- <div class="row">
-<div class="col-12" style="padding-right: 0px; padding-left: 0px;">
-<hr class="reporthr" style="margin: 4px; border-width: 3px;">
-</div>
-</div> -->
                             <div class="row">
                                 <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
-                                    <!-- {{#if equals includeInventory false}}
-<script>
-$('#chkSellPrice').attr("disabled","disabled");
-</script>
-{{else}}
-<script>
-$('#chkSellPrice').removeAttr("disabled");
-</script>
-{{/if}} -->
                                     <div style="margin: 4px;">
                                         <div class="custom-control custom-switch">
                                             <input class="custom-control-input" type="checkbox" id="chkSellPrice" name="chkSellPrice" checked="{{#if isExtraSellChecked}}checked{{else}}{{/if}}">
@@ -539,7 +468,6 @@ $('#chkSellPrice').removeAttr("disabled");
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                             <div class="row">
                                 <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
@@ -730,6 +658,89 @@ $('#chkSellPrice').removeAttr("disabled");
 
     <!-- End Help Video Modal -->
 
+    <!-- Start Serial Number Modal -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="SerialNumberModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+                    <h4 class="title-header" >Serial Number List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id="SNTracklist" style="display:none; padding-right: 0px; padding-left: 0px;">
+                        <div class="table-responsive">
+                            <table id="serialnumberlist" class="dataTable table table-striped table-bordered table-centered serialnumberlist">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="text-center" style="width: 30%">Serial Numbers</th>
+                                        <th class="text-center" style="width: 20%">Status</th>
+                                        <th class="text-center" style="width: 25%">Date</th>
+                                        <th class="text-center" style="width: 25%">Department</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each item in tserialnumberList}}
+                                    <tr id="{{item.SerialNumber}}">
+                                        <td class="text-center">{{item.SerialNumber}}</td>
+                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
+                                        <td class="text-center">{{item.date}}</td>
+                                        <td class="text-center">{{item.department}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Serial Number Modal -->
+
+    <!-- Start Lot number Modal -->
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="LotNumberModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content" >
+                <div class="modal-header" >
+                    <h4 class="title-header" >Lot Number List</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div id="LotTracklist" style="display: none; padding-right: 0px; padding-left: 0px;">
+                        <div class="table-responsive">
+                            <table id="lotnumberlist" class="dataTable table table-striped table-bordered lotnumberlist">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="text-center" style="width: 25%">Lot Numbers</th>
+                                        <th class="text-center" style="width: 15%">Status</th>
+                                        <th class="text-center" style="width: 20%">Date</th>
+                                        <th class="text-center" style="width: 20%;">Expiry Date</th>
+                                        <th class="text-center" style="width: 20%">Department</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each item in tlotnumberList}}
+                                    
+                                    <tr id="{{item.transactionno}}">
+                                        <td class="text-center">{{item.LotNumber}}</td>
+                                        <td id="transactiontype" class="text-center">{{item.Status}}</td>
+                                        <td class="text-center">{{item.date}}</td>
+                                        <td class="text-center">{{item.expriydate}}</td>
+                                        <td class="text-center">{{item.department}}</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Lot Number Modal -->
 
     <!-- Upgrade POP ACCESS -->
     <div class="modal fade" role="dialog" tabindex="-1" id="upgradeModal">

@@ -187,12 +187,6 @@ Template.salesoverview.onRendered(function () {
                     salestatus = "Deleted";
                   }else if(data.tsaleslist[i].CustomerName == ''){
                     salestatus = "Deleted";
-                  }else if(data.tsaleslist[i].Done != true){
-                    if(data.tsaleslist[i].Paid == true){
-                      salestatus = "Full";
-                    }else if ((data.tsaleslist[i].Payment > 0) && (data.tsaleslist[i].TotalAmountinc > data.tsaleslist[i].Balance)){
-                      salestatus = "Part";
-                    }
                   };
                 var dataList = {
                   id: data.tsaleslist[i].SaleId || "",
@@ -626,12 +620,6 @@ Template.salesoverview.onRendered(function () {
                 salestatus = "Deleted";
               }else if(useData[i].CustomerName == ''){
                 salestatus = "Deleted";
-              }else if(useData[i].Done != true){
-                if(useData[i].Paid == true){
-                  salestatus = "Full";
-                }else if ((useData[i].Payment > 0) && (useData[i].TotalAmountinc > useData[i].Balance)){
-                  salestatus = "Part";
-                }
               };
 
             var dataList = {
@@ -1039,12 +1027,6 @@ Template.salesoverview.onRendered(function () {
                   salestatus = "Deleted";
                 }else if(data.tsaleslist[i].CustomerName == ''){
                   salestatus = "Deleted";
-                }else if(data.tsaleslist[i].Done != true){
-                  if(data.tsaleslist[i].Paid == true){
-                    salestatus = "Full";
-                  }else if ((data.tsaleslist[i].Payment > 0) && (data.tsaleslist[i].TotalAmountinc > data.tsaleslist[i].Balance)){
-                    salestatus = "Part";
-                  }
                 };
               var dataList = {
                 id: data.tsaleslist[i].SaleId || "",
