@@ -147,14 +147,6 @@ Template.creditlist.onRendered(function() {
                         orderstatus = "Deleted";
                       }else if(data.tcreditlist[i].SupplierName == ''){
                         orderstatus = "Deleted";
-                      }else if(data.tcreditlist[i].Deleted != true){
-                        if(data.tcreditlist[i].Paid == true){
-                          orderstatus = "Full";
-                        }else if ((data.tcreditlist[i].Balance > 0) && (data.tcreditlist[i].TotalAmountInc > data.tcreditlist[i].Balance)){
-                          orderstatus = "Part";
-                        }else if (data.tcreditlist[i].Reconciled == true){
-                          orderstatus = "Rec";
-                        }
                       };
                       var dataList = {
                           id: data.tcreditlist[i].PurchaseOrderID || '',
@@ -470,14 +462,6 @@ Template.creditlist.onRendered(function() {
                       orderstatus = "Deleted";
                     }else if(data.tcreditlist[i].SupplierName == ''){
                       orderstatus = "Deleted";
-                    }else if(data.tcreditlist[i].Deleted != true){
-                      if(data.tcreditlist[i].Paid == true){
-                        orderstatus = "Full";
-                      }else if ((data.tcreditlist[i].Balance > 0) && (data.tcreditlist[i].TotalAmountInc > data.tcreditlist[i].Balance)){
-                        orderstatus = "Part";
-                      }else if (data.tcreditlist[i].Reconciled == true){
-                        orderstatus = "Rec";
-                      }
                     };
                     var dataList = {
                         id: data.tcreditlist[i].PurchaseOrderID || '',
@@ -787,14 +771,6 @@ Template.creditlist.onRendered(function() {
                     orderstatus = "Deleted";
                   }else if(data.tcreditlist[i].SupplierName == ''){
                     orderstatus = "Deleted";
-                  }else if(data.tcreditlist[i].Deleted != true){
-                    if(data.tcreditlist[i].Paid == true){
-                      orderstatus = "Full";
-                    }else if ((data.tcreditlist[i].Balance > 0) && (data.tcreditlist[i].TotalAmountInc > data.tcreditlist[i].Balance)){
-                      orderstatus = "Part";
-                    }else if (data.tcreditlist[i].Reconciled == true){
-                      orderstatus = "Rec";
-                    }
                   };
                   var dataList = {
                       id: data.tcreditlist[i].PurchaseOrderID || '',
@@ -1175,14 +1151,6 @@ Template.creditlist.events({
                     orderstatus = "Deleted";
                   }else if(data.tcredit[i].fields.CustomerName == ''){
                     orderstatus = "Deleted";
-                  }else if(data.tcredit[i].fields.Deleted != true){
-                    if(data.tcredit[i].fields.IsPaid == true){
-                      orderstatus = "Full";
-                    }else if ((data.tcredit[i].fields.TotalBalance > 0) && (data.tcredit[i].fields.TotalAmountInc > data.tcredit[i].fields.TotalBalance)){
-                      orderstatus = "Part";
-                    }else if (data.tcredit[i].fields.Reconciled == true){
-                      orderstatus = "Rec";
-                    }
                   };
                   var dataList = {
                       id: data.tcredit[i].fields.ID || '',
