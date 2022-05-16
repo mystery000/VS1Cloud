@@ -3,7 +3,13 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
+
         {{#if record}}
+
+            {{#if record.deleted}}
+                {{> deletedOverlay}}
+            {{/if}}
+
             <form>
                 <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
                     <h2 style="margin: 16px;margin-bottom: 0px;">Customer Payment {{record.lid}}
@@ -53,7 +59,8 @@
                                     <textarea class="form-control" rows="5" id="txabillingAddress" name="txabillingAddress" autocomplete="off" style="display:none!important;"></textarea>
 
                                     <div class="form-group" style="margin-left: 35px; Width:50%;">
-                                        <input class="custom-control-input chkEmailRep" type="checkbox" id="formCheck-two" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-two" style="color: rgb(73,80,87);">Email User</label>
+                                        <input class="custom-control-input chkEmailRep" type="checkbox" id="formCheck-two" style="font-size: 22px;"><label class="custom-control-label" for="formCheck-two" style="color: rgb(73,80,87);">Email
+                                            User</label>
                                     </div>
                                 </div>
                             </div>
@@ -534,6 +541,7 @@
                                                         .colNotes {
                                                             width: 200px !important;
                                                         }
+
                                                         .thcheckbox {
                                                             width: 3% !important;
                                                         }
@@ -541,12 +549,15 @@
                                                         .colPaymentAmount {
                                                             width: 7% !important;
                                                         }
+
                                                         .colAppliedPop {
                                                             width: 7% !important;
                                                         }
+
                                                         .colBalancePop {
                                                             width: 7% !important;
                                                         }
+
                                                         .colPaymentDate {
                                                             width: 80px !important;
                                                         }
@@ -560,7 +571,8 @@
                                                             <tr class="dnd-moved">
                                                                 <th class="th chkBox thcheckbox" style="width: 3% !important;">
                                                                     <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All">
-                                                                        <label class="custom-control-label chkBoxAll" for="formCheck-All"></label></div>
+                                                                        <label class="custom-control-label chkBoxAll" for="formCheck-All"></label>
+                                                                    </div>
                                                                 </th>
                                                                 <th class="th colSortDate hiddenColumn">id</th>
                                                                 <th class="th colPaymentDate" style="width:50px;">Date</th>
@@ -801,6 +813,11 @@
                             </div>
                         </div>
                         <hr style="border-top: 3px solid #696969;" />
+                        {{#if record.deleted}}
+                            <div class="row justify-content-center">
+                                <button type="button" class="btn btn-danger btnRecoverPayment" style="z-index: 5; margin-top: 16px;"><i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Recover Payment</button>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
 
@@ -938,13 +955,13 @@
                                                     href="{{organizationurl}}">{{organizationurl}}</a></div>
                                             <div class="d-lg-flex d-xl-flex justify-content-lg-center align-items-xl-start card-text">
                                                 <div style="padding-left: 16px;font-weight: bold;">
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">ABN: {{companyabn}}</p>
-                                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">Phone: {{companyphone}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{organizationname}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress1}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyaddress2}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{city}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{state}} {{poBox}} </p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">ABN: {{companyabn}}</p>
+                                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">Phone: {{companyphone}}</p>
                                                 </div>
                                             </div>
                                         </div>
