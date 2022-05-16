@@ -2040,7 +2040,7 @@ Template.bankingoverview.events({
         FlowRouter.go('/reconciliationlist');
     },
     //handle cards buttons
-    "click .editCardBtn": function (e) {
+    "click .editCardBtn, click .openbank": function (e) {
         e.preventDefault();
         $(".card-visibility").removeClass('hideelement');
         if( $('.editCardBtn').find('i').hasClass('fa-cog') ){
