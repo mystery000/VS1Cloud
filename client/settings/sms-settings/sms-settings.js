@@ -67,9 +67,9 @@ Template.smssettings.onRendered(function () {
           case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountId; break;
           case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountToken; break;
           case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue || smsSettings.twilioTelephoneNumber; break;
-          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.saveAppointmentSMSMessage; break;
-          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.startAppointmentSMSMessage; break;
-          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue || smsSettings.stopAppointmentSMSMessage;
+          case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.saveAppointmentSMSMessage; break;
+          case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.startAppointmentSMSMessage; break;
+          case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.stopAppointmentSMSMessage;
         }
       }
 

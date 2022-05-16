@@ -1493,6 +1493,25 @@ Template.vs1login.onRendered(function () {
                                             if (oReqCheckActive.readyState == 4 && oReqCheckActive.status == 200) {
                                                 var dataDBActive = JSON.parse(oReqCheckActive.responseText);
 
+                                                //TODO: Email scheduling for reports when login
+                                                let values = [];
+                                                let basedOnTypeStorages = Object.keys(localStorage);
+                                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                                    let employeeId = storage.split('_')[2];
+                                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                });
+                                                let i = basedOnTypeStorages.length;
+                                                if (i > 0) {
+                                                    while (i--) {
+                                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                                    }
+                                                }
+                                                values.forEach(value => {
+                                                    const reportData = JSON.parse(value);
+                                                    if (reportData.BasedOnType === "E" && !reportData.ISEmpty)
+                                                        Meteor.call('sendNormalEmail', reportData);
+                                                });
+
                                                 if (dataDBActive.tvs1_clients_simple[0].EmailVarified) {
 
                                                     //Code Here
@@ -1665,9 +1684,9 @@ Template.vs1login.onRendered(function () {
                                                     var ERPuserName = userLoginEmail;
                                                     var ERPLoggeduserName = userLoginEmail;
                                                     var ERPpassword = userLoginPassword.replace('%20', " ").replace('%21', '!').replace('%22', '"')
-                                                .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
-                                                .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
-                                                .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
+                                                        .replace('%23', "#").replace('%24', "$").replace('%25', "%").replace('%26', "&").replace('%27', "'")
+                                                        .replace('%28', "(").replace('%29', ")").replace('%2A', "*").replace('%2B', "+")
+                                                        .replace('%2C', ",").replace('%2D', "-").replace('%2E', ".").replace('%2F', "/") || '';
 
                                                     let erpdbname = ERPIPAdderess + ',' + ERPdbName + ',' + ERPuserName + ',' + ERPpassword + ',' + ERPport;
                                                     let licenceOptions = dataReturnRes.ProcessLog.Modules.Modules;
