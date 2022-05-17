@@ -110,7 +110,427 @@ Template.quotedinvoicedamounts.onRendered(() => {
             if (dataObject.length == 0) {
 
                sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
+                    setTimeout(function () {
+                        let filterData = _.filter(data.tsaleslist, function (data) {
+                            return data.CustomerName
+                        });
 
+                        let graphData = _.orderBy(filterData, 'SaleDate');
+                        let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
+                        for (let l = 0; l < initialData.length; l++) {
+
+                            let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
+                            if (initialData[l].Type === "Quote") {
+                                if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment2 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment3 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment4 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment5 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment6 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment7 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalQuotePayment8 += initialData[l].TotalAmountinc;
+
+                                }
+                            } else if (initialData[l].Type === "Sales Order") {
+                                if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment2 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment3 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment4 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment5 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment6 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment7 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalSOPayment8 += initialData[l].TotalAmountinc;
+
+                                }
+                            } else if (initialData[l].Type === "Invoice") {
+                                if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment2 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment3 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment4 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment5 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment6 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment7 += initialData[l].TotalAmountinc;
+
+                                } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                    totalInvPayment8 += initialData[l].TotalAmountinc;
+
+                                }
+                            }
+
+                        }
+                        // topData.topTenData.set(data);
+                        let currentMonth = moment().format("MMMM").substring(0, 3);
+                        let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3); // Current date (date month and year)
+                        let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
+                        let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
+                        let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
+                        let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
+                        let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
+                        let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
+
+                        var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
+                        var myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: [
+                                    prevMonth7,
+                                    prevMonth6,
+                                    prevMonth5,
+                                    prevMonth4,
+                                    prevMonth3,
+                                    prevMonth2,
+                                    prevMonth,
+                                    currentMonth
+                                ],
+                                datasets: [{
+                                        "label": "Quotes",
+                                        "fill": true,
+                                        "data": [
+                                            totalQuotePayment8,
+                                            totalQuotePayment7,
+                                            totalQuotePayment6,
+                                            totalQuotePayment5,
+                                            totalQuotePayment4,
+                                            totalQuotePayment3,
+                                            totalQuotePayment2,
+                                            totalQuotePayment
+                                        ],
+                                        "backgroundColor": "rgba(28,200,138,0.16)",
+                                        "borderColor": "#1cc88a"
+                                    }, {
+                                        "label": "Invoices",
+                                        "fill": true,
+                                        "data": [
+                                            totalInvPayment8,
+                                            totalInvPayment7,
+                                            totalInvPayment6,
+                                            totalInvPayment5,
+                                            totalInvPayment4,
+                                            totalInvPayment3,
+                                            totalInvPayment2,
+                                            totalInvPayment
+                                        ],
+                                        "borderColor": "#f6c23e",
+                                        "backgroundColor": "rgba(246,194,62,0.17)"
+                                    }
+                                ]
+                            },
+                            options: {
+
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                tooltips: {
+                                    callbacks: {
+                                        label: function (tooltipItem, data) {
+                                            return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
+
+                                        }
+                                    }
+                                },
+                            //      bezierCurve : true,
+                            // animation: {
+                            //     onComplete: done
+                            // },
+                                "legend": {
+                                    "display": true,
+                                    "position": "bottom",
+                                },
+                                onClick: chartClickEvent,
+                                "title": {},
+                                "scales": {
+                                    "xAxes": [{
+                                            "gridLines": {
+                                                "color": "rgb(234, 236, 244)",
+                                                "zeroLineColor": "rgb(234, 236, 244)",
+                                                "drawBorder": false,
+                                                "drawTicks": false,
+                                                "borderDash": ["2"],
+                                                "zeroLineBorderDash": ["2"],
+                                                "drawOnChartArea": false
+                                            },
+                                            "ticks": {
+                                                "fontColor": "#858796",
+                                                "padding": 20
+                                            }
+                                        }
+                                    ],
+                                    "yAxes": [{
+                                            "gridLines": {
+                                                "color": "rgb(234, 236, 244)",
+                                                "zeroLineColor": "rgb(234, 236, 244)",
+                                                "drawBorder": false,
+                                                "drawTicks": false,
+                                                "borderDash": ["2"],
+                                                "zeroLineBorderDash": ["2"]
+                                            },
+                                            "ticks": {
+                                                "fontColor": "#858796",
+                                                "padding": 20
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        });
+                    }, 1000)
+                });
+            } else {
+                setTimeout(function () {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tsaleslist;
+                    let filterData = _.filter(useData, function (data) {
+                        return data.CustomerName
+                    });
+
+                    let graphData = _.orderBy(filterData, 'SaleDate');
+                    let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
+                    for (let l = 0; l < initialData.length; l++) {
+
+                        let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
+                        let getYear = new Date(initialData[l].SaleDate).getFullYear();
+                        if (initialData[l].Type === "Quote") {
+
+                            if ((parseFloat(getMonth) === parseFloat(currentMonthDate)) && (parseFloat(currentYear) === parseFloat(getYear))) {
+                                totalQuotePayment += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment2 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment3 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment4 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment5 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment6 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment7 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalQuotePayment8 += initialData[l].TotalAmountinc;
+
+                            }
+                        } else if (initialData[l].Type === "Sales Order") {
+                            if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment2 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment3 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment4 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment5 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment6 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment7 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalSOPayment8 += initialData[l].TotalAmountinc;
+
+                            }
+                        } else if (initialData[l].Type === "Invoice") {
+                            if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment2 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment3 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment4 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment5 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment6 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment7 += initialData[l].TotalAmountinc;
+
+                            } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                                totalInvPayment8 += initialData[l].TotalAmountinc;
+
+                            }
+                        }
+
+                    }
+                    // topData.topTenData.set(data);
+                    let currentMonth = moment().format("MMMM").substring(0, 3);
+                    let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3); // Current date (date month and year)
+                    let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
+                    let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
+                    let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
+                    let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
+                    let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
+                    let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
+                    var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [
+                                prevMonth7,
+                                prevMonth6,
+                                prevMonth5,
+                                prevMonth4,
+                                prevMonth3,
+                                prevMonth2,
+                                prevMonth,
+                                currentMonth
+                            ],
+                            datasets: [{
+                                    "label": "Quotes",
+                                    "fill": true,
+                                    "data": [
+                                        totalQuotePayment8,
+                                        totalQuotePayment7,
+                                        totalQuotePayment6,
+                                        totalQuotePayment5,
+                                        totalQuotePayment4,
+                                        totalQuotePayment3,
+                                        totalQuotePayment2,
+                                        totalQuotePayment
+                                    ],
+                                    "backgroundColor": "rgba(28,200,138,0.16)",
+                                    "borderColor": "#1cc88a"
+                                }, {
+                                    "label": "Invoices",
+                                    "fill": true,
+                                    "data": [
+                                        totalInvPayment8,
+                                        totalInvPayment7,
+                                        totalInvPayment6,
+                                        totalInvPayment5,
+                                        totalInvPayment4,
+                                        totalInvPayment3,
+                                        totalInvPayment2,
+                                        totalInvPayment
+                                    ],
+                                    "borderColor": "#f6c23e",
+                                    "backgroundColor": "rgba(246,194,62,0.17)"
+                                }
+                            ]
+                        },
+                        options: {
+
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            tooltips: {
+                                callbacks: {
+                                    label: function (tooltipItem, data) {
+                                        return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
+
+                                    }
+                                }
+                            },
+                            //  bezierCurve : true,
+                            // animation: {
+                            //   onComplete: done
+                            // },
+                            "legend": {
+                                "display": true,
+                                "position": "bottom",
+                            },
+                            onClick: chartClickEvent,
+                            "title": {},
+                            "scales": {
+                                "xAxes": [{
+                                        "gridLines": {
+                                            "color": "rgb(234, 236, 244)",
+                                            "zeroLineColor": "rgb(234, 236, 244)",
+                                            "drawBorder": false,
+                                            "drawTicks": false,
+                                            "borderDash": ["2"],
+                                            "zeroLineBorderDash": ["2"],
+                                            "drawOnChartArea": false
+                                        },
+                                        "ticks": {
+                                            "fontColor": "#858796",
+                                            "padding": 20
+                                        }
+                                    }
+                                ],
+                                "yAxes": [{
+                                        "gridLines": {
+                                            "color": "rgb(234, 236, 244)",
+                                            "zeroLineColor": "rgb(234, 236, 244)",
+                                            "drawBorder": false,
+                                            "drawTicks": false,
+                                            "borderDash": ["2"],
+                                            "zeroLineBorderDash": ["2"]
+                                        },
+                                        "ticks": {
+                                            "fontColor": "#858796",
+                                            "padding": 20
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+                }, 1000)    
+            }
+        }).catch(function (err) {
+           sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
+                setTimeout(function () {
                     let filterData = _.filter(data.tsaleslist, function (data) {
                         return data.CustomerName
                     });
@@ -270,10 +690,10 @@ Template.quotedinvoicedamounts.onRendered(() => {
                                     }
                                 }
                             },
-                        //      bezierCurve : true,
-                        // animation: {
-                        //     onComplete: done
-                        // },
+                            // bezierCurve : true,
+                            // animation: {
+                            //     onComplete: done
+                            // },
                             "legend": {
                                 "display": true,
                                 "position": "bottom",
@@ -315,566 +735,149 @@ Template.quotedinvoicedamounts.onRendered(() => {
                             }
                         }
                     });
-
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsaleslist;
-                let filterData = _.filter(useData, function (data) {
-                    return data.CustomerName
-                });
-
-                let graphData = _.orderBy(filterData, 'SaleDate');
-                let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
-                for (let l = 0; l < initialData.length; l++) {
-
-                    let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
-                    let getYear = new Date(initialData[l].SaleDate).getFullYear();
-                    if (initialData[l].Type === "Quote") {
-
-                        if ((parseFloat(getMonth) === parseFloat(currentMonthDate)) && (parseFloat(currentYear) === parseFloat(getYear))) {
-                            totalQuotePayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    } else if (initialData[l].Type === "Sales Order") {
-                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    } else if (initialData[l].Type === "Invoice") {
-                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    }
-
-                }
-                // topData.topTenData.set(data);
-                let currentMonth = moment().format("MMMM").substring(0, 3);
-                let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3); // Current date (date month and year)
-                let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
-                var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [
-                            prevMonth7,
-                            prevMonth6,
-                            prevMonth5,
-                            prevMonth4,
-                            prevMonth3,
-                            prevMonth2,
-                            prevMonth,
-                            currentMonth
-                        ],
-                        datasets: [{
-                                "label": "Quotes",
-                                "fill": true,
-                                "data": [
-                                    totalQuotePayment8,
-                                    totalQuotePayment7,
-                                    totalQuotePayment6,
-                                    totalQuotePayment5,
-                                    totalQuotePayment4,
-                                    totalQuotePayment3,
-                                    totalQuotePayment2,
-                                    totalQuotePayment
-                                ],
-                                "backgroundColor": "rgba(28,200,138,0.16)",
-                                "borderColor": "#1cc88a"
-                            }, {
-                                "label": "Invoices",
-                                "fill": true,
-                                "data": [
-                                    totalInvPayment8,
-                                    totalInvPayment7,
-                                    totalInvPayment6,
-                                    totalInvPayment5,
-                                    totalInvPayment4,
-                                    totalInvPayment3,
-                                    totalInvPayment2,
-                                    totalInvPayment
-                                ],
-                                "borderColor": "#f6c23e",
-                                "backgroundColor": "rgba(246,194,62,0.17)"
-                            }
-                        ]
-                    },
-                    options: {
-
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
-
-                                }
-                            }
-                        },
-                        //  bezierCurve : true,
-                        // animation: {
-                        //   onComplete: done
-                        // },
-                        "legend": {
-                            "display": true,
-                            "position": "bottom",
-                        },
-                        onClick: chartClickEvent,
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"],
-                                        "drawOnChartArea": false
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "padding": 20
-                                    }
-                                }
-                            ],
-                            "yAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"]
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "padding": 20
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                });
-
-            }
-        }).catch(function (err) {
-           sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
-
-                let filterData = _.filter(data.tsaleslist, function (data) {
-                    return data.CustomerName
-                });
-
-                let graphData = _.orderBy(filterData, 'SaleDate');
-                let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
-                for (let l = 0; l < initialData.length; l++) {
-
-                    let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
-                    if (initialData[l].Type === "Quote") {
-                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalQuotePayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    } else if (initialData[l].Type === "Sales Order") {
-                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalSOPayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    } else if (initialData[l].Type === "Invoice") {
-                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment2 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment3 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment4 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment5 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment6 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment7 += initialData[l].TotalAmountinc;
-
-                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
-                            totalInvPayment8 += initialData[l].TotalAmountinc;
-
-                        }
-                    }
-
-                }
-                // topData.topTenData.set(data);
-                let currentMonth = moment().format("MMMM").substring(0, 3);
-                let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3); // Current date (date month and year)
-                let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
-                let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
-
-                var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
-                var myChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [
-                            prevMonth7,
-                            prevMonth6,
-                            prevMonth5,
-                            prevMonth4,
-                            prevMonth3,
-                            prevMonth2,
-                            prevMonth,
-                            currentMonth
-                        ],
-                        datasets: [{
-                                "label": "Quotes",
-                                "fill": true,
-                                "data": [
-                                    totalQuotePayment8,
-                                    totalQuotePayment7,
-                                    totalQuotePayment6,
-                                    totalQuotePayment5,
-                                    totalQuotePayment4,
-                                    totalQuotePayment3,
-                                    totalQuotePayment2,
-                                    totalQuotePayment
-                                ],
-                                "backgroundColor": "rgba(28,200,138,0.16)",
-                                "borderColor": "#1cc88a"
-                            }, {
-                                "label": "Invoices",
-                                "fill": true,
-                                "data": [
-                                    totalInvPayment8,
-                                    totalInvPayment7,
-                                    totalInvPayment6,
-                                    totalInvPayment5,
-                                    totalInvPayment4,
-                                    totalInvPayment3,
-                                    totalInvPayment2,
-                                    totalInvPayment
-                                ],
-                                "borderColor": "#f6c23e",
-                                "backgroundColor": "rgba(246,194,62,0.17)"
-                            }
-                        ]
-                    },
-                    options: {
-
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
-
-                                }
-                            }
-                        },
-                        // bezierCurve : true,
-                        // animation: {
-                        //     onComplete: done
-                        // },
-                        "legend": {
-                            "display": true,
-                            "position": "bottom",
-                        },
-                        onClick: chartClickEvent,
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"],
-                                        "drawOnChartArea": false
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "padding": 20
-                                    }
-                                }
-                            ],
-                            "yAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"]
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "padding": 20
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                });
-
+                }, 1000)    
             });
         });
     } else {
-        let data = JSON.parse(localStorage.getItem('VS1SalesListReport_dash'));
-        var currentDate2 = new Date();
-        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-        var dateFrom = new Date();
-        dateFrom.setMonth(dateFrom.getMonth() - 6);
-        dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-        $("#sales1").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
-        let monthData1 = data[0].fields.MONTH3.replace("-", " ") || '';
-        let monthData2 = data[1].fields.MONTH3.replace("-", " ") || '';
-        let monthData3 = data[2].fields.MONTH3.replace("-", " ") || '';
-        let monthData4 = data[3].fields.MONTH3.replace("-", " ") || '';
-        let monthData5 = data[4].fields.MONTH3.replace("-", " ") || '';
-        let monthData6 = data[5].fields.MONTH3.replace("-", " ") || '';
-        let monthData7 = data[6].fields.MONTH3.replace("-", " ") || '';
+        setTimeout(function () {
+            let data = JSON.parse(localStorage.getItem('VS1SalesListReport_dash'));
+            var currentDate2 = new Date();
+            var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+            var dateFrom = new Date();
+            dateFrom.setMonth(dateFrom.getMonth() - 6);
+            dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
+            $("#sales1").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
+            let monthData1 = data[0].fields.MONTH3.replace("-", " ") || '';
+            let monthData2 = data[1].fields.MONTH3.replace("-", " ") || '';
+            let monthData3 = data[2].fields.MONTH3.replace("-", " ") || '';
+            let monthData4 = data[3].fields.MONTH3.replace("-", " ") || '';
+            let monthData5 = data[4].fields.MONTH3.replace("-", " ") || '';
+            let monthData6 = data[5].fields.MONTH3.replace("-", " ") || '';
+            let monthData7 = data[6].fields.MONTH3.replace("-", " ") || '';
 
-        let totalQuotePayment1 = data[0].fields.quotetotal || 0;
-        let totalQuotePayment2 = data[1].fields.quotetotal || 0;
-        let totalQuotePayment3 = data[2].fields.quotetotal || 0;
-        let totalQuotePayment4 = data[3].fields.quotetotal || 0;
-        let totalQuotePayment5 = data[4].fields.quotetotal || 0;
-        let totalQuotePayment6 = data[5].fields.quotetotal || 0;
-        let totalQuotePayment7 = data[6].fields.quotetotal || 0;
+            let totalQuotePayment1 = data[0].fields.quotetotal || 0;
+            let totalQuotePayment2 = data[1].fields.quotetotal || 0;
+            let totalQuotePayment3 = data[2].fields.quotetotal || 0;
+            let totalQuotePayment4 = data[3].fields.quotetotal || 0;
+            let totalQuotePayment5 = data[4].fields.quotetotal || 0;
+            let totalQuotePayment6 = data[5].fields.quotetotal || 0;
+            let totalQuotePayment7 = data[6].fields.quotetotal || 0;
 
-        let totalInvPayment1 = data[0].fields.invoicetotal || 0;
-        let totalInvPayment2 = data[1].fields.invoicetotal || 0;
-        let totalInvPayment3 = data[2].fields.invoicetotal || 0;
-        let totalInvPayment4 = data[3].fields.invoicetotal || 0;
-        let totalInvPayment5 = data[4].fields.invoicetotal || 0;
-        let totalInvPayment6 = data[5].fields.invoicetotal || 0;
-        let totalInvPayment7 = data[6].fields.invoicetotal || 0;
+            let totalInvPayment1 = data[0].fields.invoicetotal || 0;
+            let totalInvPayment2 = data[1].fields.invoicetotal || 0;
+            let totalInvPayment3 = data[2].fields.invoicetotal || 0;
+            let totalInvPayment4 = data[3].fields.invoicetotal || 0;
+            let totalInvPayment5 = data[4].fields.invoicetotal || 0;
+            let totalInvPayment6 = data[5].fields.invoicetotal || 0;
+            let totalInvPayment7 = data[6].fields.invoicetotal || 0;
 
-        // for (let l = 0; l < data.length; l++) {
-        //
-        // }
+            // for (let l = 0; l < data.length; l++) {
+            //
+            // }
 
-        var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [
-                    monthData1,
-                    monthData2,
-                    monthData3,
-                    monthData4,
-                    monthData5,
-                    monthData6,
-                    monthData7
-                ],
-                datasets: [{
-                        "label": "Quoted Amounts",
-                        "fill": true,
-                        "data": [
-                            totalQuotePayment1,
-                            totalQuotePayment2,
-                            totalQuotePayment3,
-                            totalQuotePayment4,
-                            totalQuotePayment5,
-                            totalQuotePayment6,
-                            totalQuotePayment7
-                        ],
-                        "backgroundColor": "rgba(28,200,138,0.16)",
-                        "borderColor": "#1cc88a"
-                    }, {
-                        "label": "Invoiced Amounts",
-                        "fill": true,
-                        "data": [
-                            totalInvPayment1,
-                            totalInvPayment2,
-                            totalInvPayment3,
-                            totalInvPayment4,
-                            totalInvPayment5,
-                            totalInvPayment6,
-                            totalInvPayment7
-                        ],
-                        "borderColor": "#f6c23e",
-                        "backgroundColor": "rgba(246,194,62,0.17)"
-                    }
-                ]
-            },
-            options: {
-
-                maintainAspectRatio: false,
-                responsive: true,
-                tooltips: {
-                    callbacks: {
-                        label: function (tooltipItem, data) {
-                            return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
-
-                        }
-                    }
-                },
-                // bezierCurve : true,
-                //         animation: {
-                //             onComplete: done
-                //         },
-                "legend": {
-                    "display": true,
-                    "position": "bottom",
-                    "reverse": false
-                },
-                onClick: chartClickEvent,
-                "title": {},
-                "scales": {
-                    "xAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"],
-                                "drawOnChartArea": false
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "padding": 20
-                            }
-                        }
+            var ctx = document.getElementById("quotedinvoicedamounts").getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [
+                        monthData1,
+                        monthData2,
+                        monthData3,
+                        monthData4,
+                        monthData5,
+                        monthData6,
+                        monthData7
                     ],
-                    "yAxes": [{
-                            "gridLines": {
-                                "color": "rgb(234, 236, 244)",
-                                "zeroLineColor": "rgb(234, 236, 244)",
-                                "drawBorder": false,
-                                "drawTicks": false,
-                                "borderDash": ["2"],
-                                "zeroLineBorderDash": ["2"]
-                            },
-                            "ticks": {
-                                "fontColor": "#858796",
-                                "padding": 20
-                            }
+                    datasets: [{
+                            "label": "Quoted Amounts",
+                            "fill": true,
+                            "data": [
+                                totalQuotePayment1,
+                                totalQuotePayment2,
+                                totalQuotePayment3,
+                                totalQuotePayment4,
+                                totalQuotePayment5,
+                                totalQuotePayment6,
+                                totalQuotePayment7
+                            ],
+                            "backgroundColor": "rgba(28,200,138,0.16)",
+                            "borderColor": "#1cc88a"
+                        }, {
+                            "label": "Invoiced Amounts",
+                            "fill": true,
+                            "data": [
+                                totalInvPayment1,
+                                totalInvPayment2,
+                                totalInvPayment3,
+                                totalInvPayment4,
+                                totalInvPayment5,
+                                totalInvPayment6,
+                                totalInvPayment7
+                            ],
+                            "borderColor": "#f6c23e",
+                            "backgroundColor": "rgba(246,194,62,0.17)"
                         }
                     ]
+                },
+                options: {
+
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
+
+                            }
+                        }
+                    },
+                    // bezierCurve : true,
+                    //         animation: {
+                    //             onComplete: done
+                    //         },
+                    "legend": {
+                        "display": true,
+                        "position": "bottom",
+                        "reverse": false
+                    },
+                    onClick: chartClickEvent,
+                    "title": {},
+                    "scales": {
+                        "xAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"],
+                                    "drawOnChartArea": false
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "padding": 20
+                                }
+                            }
+                        ],
+                        "yAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"]
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "padding": 20
+                                }
+                            }
+                        ]
+                    }
                 }
-            }
-        });
+            });
+        }, 1000)
     }
 
     function chartClickEvent(event, array) {

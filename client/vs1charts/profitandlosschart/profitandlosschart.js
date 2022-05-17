@@ -127,25 +127,26 @@ Template.profitandlosschart.onRendered(()=>{
 
         if((!isNaN(sumTotalExpense))&&(!isNaN(totalSales))){
           // totalnetIncome = totalSales -  totalExpense;
-          totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
+          setTimeout(function  (){
+            totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
 
 
-           totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
+            totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
 
-          totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
+            totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
 
-          templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
-          templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
+            templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
+            templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
 
-           templateObject.salesperc.set(totalSalesPerc);
-           if(totalExpensePerc < 0 ){
-             templateObject.expenseperc.set(Math.abs(totalExpensePerc));
-             $('.cssExpense').addClass('bg-danger');
-             $('.cssExpense').removeClass('bg-success');
-           }else{
-             templateObject.expenseperc.set(totalExpensePerc);
-           }
-
+            templateObject.salesperc.set(totalSalesPerc);
+            if(totalExpensePerc < 0 ){
+              templateObject.expenseperc.set(Math.abs(totalExpensePerc));
+              $('.cssExpense').addClass('bg-danger');
+              $('.cssExpense').removeClass('bg-success');
+            }else{
+              templateObject.expenseperc.set(totalExpensePerc);
+            }
+          }, 1000)  
 
         }
         templateObject.records.set(records);
@@ -192,23 +193,25 @@ Template.profitandlosschart.onRendered(()=>{
 
 
         if((!isNaN(sumTotalExpense))&&(!isNaN(totalSales))){
-          totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
+          setTimeout(function  (){
+            totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
 
-           totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
-           totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
-           let totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
-           templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
-          templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
-          templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
+            totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
+            totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
+            let totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
+            templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
+            templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
+            templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
 
-           templateObject.salesperc.set(totalSalesPerc);
-           if(totalExpensePerc < 0 ){
-             templateObject.expenseperc.set(Math.abs(totalExpensePerc));
-             $('.cssExpense').addClass('bg-danger');
-             $('.cssExpense').removeClass('bg-success');
-           }else{
-             templateObject.expenseperc.set(totalExpensePerc);
-           }
+            templateObject.salesperc.set(totalSalesPerc);
+            if(totalExpensePerc < 0 ){
+              templateObject.expenseperc.set(Math.abs(totalExpensePerc));
+              $('.cssExpense').addClass('bg-danger');
+              $('.cssExpense').removeClass('bg-success');
+            }else{
+              templateObject.expenseperc.set(totalExpensePerc);
+            }
+          }, 1000)
 
 
         }
