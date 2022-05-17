@@ -42,6 +42,9 @@ Template.supplierpaymentcard.onCreated(() => {
     templateObject.datatablerecords1 = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
+
+    templateObject.isInvoiceNo = new ReactiveVar();
+    templateObject.isInvoiceNo.set(true);
 });
 
 Template.supplierpaymentcard.onRendered(() => {
@@ -2572,6 +2575,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
 
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName;
                         let getPaymentMethodVal = '';
@@ -2703,7 +2709,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
-
+                            if(useData[d].fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -2833,7 +2841,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
-
+                            if(data.fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -2962,7 +2972,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
 
@@ -3097,7 +3109,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
-
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
 
@@ -3229,6 +3243,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
+                            if(useData[d].fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -3355,7 +3372,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                           };
                           templateObject.record.set(record);
-
+                          if(data.fields.SupplierInvoiceNumber == ""){
+                            templateObject.isInvoiceNo.set(false);
+                          };
                           let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                           let getPaymentMethodVal = '';
 
@@ -3484,7 +3503,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
 
@@ -4344,6 +4365,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                if(data.fields.SupplierInvoiceNumber == ""){
+                  templateObject.isInvoiceNo.set(false);
+                };
                 let getDepartmentVal = Session.get('department') || data.fields.DeptClassName;
                 let getPaymentMethodVal = '';
 
@@ -4662,7 +4686,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
-
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
 
@@ -4792,6 +4818,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
@@ -5050,6 +5079,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
@@ -5472,6 +5504,16 @@ Template.supplierpaymentcard.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+        let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
+        console.log(checkSuppInvoiceNo);
+        if(checkSuppInvoiceNo){
+
+        }else{
+          $('.fullScreenSpin').css('display', 'none');
+          swal('You need to apply an Invoice Number', '', 'warning');
+          event.preventDefault();
+          return false;
+        }
         var url = FlowRouter.current().path;
         let newURL = '/paymentoverview?success=true';
         if ((url.indexOf('?id=') > 0)) {
