@@ -261,7 +261,7 @@ Template.allChartLists.onRendered(function () {
     if (tvs1ChartDashboardPreference.length > 0) {
       // if charts to be displayed are specified
       tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
-        // setTimeout(() => {
+        setTimeout(() => {
         // this is good to see how the charts are apearing or not
         //if (tvs1chart.fields.ChartGroup == "Dashboard") {
         const itemName =
@@ -341,7 +341,7 @@ Template.allChartLists.onRendered(function () {
         }
         //}
         //}
-        // }, index * 100);
+        }, 100);
       });
       // Handle sorting
       let $chartWrappper = $(".connectedChartSortable");
@@ -355,18 +355,7 @@ Template.allChartLists.onRendered(function () {
       displayedCharts = document.querySelectorAll(
         ".chart-visibility:not(.hideelement)"
       );
-      // console.log("itemlist", defaultChartList);
       if (displayedCharts.length == 0) {
-        // this will show all by default
-        //console.log("No charts are being displayed, so show everything");
-        // defaultChartList.forEach((item) => {
-        //   $(`[key='${item}'] .on-editor-change-mode`).text("Hide");
-        //   $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
-        //   $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
-        //   $(`[key='${item}']`).removeClass("hideelement");
-        //   $(`[key='${item}']`).addClass("chart-visibility");
-        // });
-
         // show only the first one
         let item = defaultChartList.length ? defaultChartList[0] : "";
         if (item) {
@@ -378,37 +367,7 @@ Template.allChartLists.onRendered(function () {
           ChartHandler.buildPositions();
         }
       }
-    } else {
-      // This made to fix the charts display if char
-      //$(".sortable-chart-widget-js").removeClass('col-md-6');
-      //$(".sortable-chart-widget-js ").css('width', "50%");
-      // $('.expense-widget').css('width', "50%");
-      // $(".sortable-chart-widget-js canvas").css("height", "320px"); // default height
-    }
-    // $('[key=purchases__expenses_breakdown]').css('width', "50%");
-    // $('#expensebreakdownchart').css('height', '320px');
-    // $('#expensebreakdownchart').attr('height', "320");
-
-    // let sortableWidgets = $('.sortable-chart-widget-js');
-    // // and now we need to sort
-    // var sort_by_position = function (a, b) {
-    //   // console.log(a.getAttribute('position'));
-    //   // console.log(b.getAttribute('position'));
-    //   if(parseInt(a.getAttribute('position'))
-    //   .localeCompare(parseInt(b.getAttribute('position'))) == parseInt(a.getAttribute('position'))) {
-    //     return a.innerHtml;
-    //   }else {
-    //     return b.innerHtml;
-    //   }
-
-    // };
-    // sortableWidgets.sort(sort_by_position);
-    // for (var i = 0; i < sortableWidgets.length; i++) {
-    //   sortableWidgets[i].parentNode.appendChild(sortableWidgets[i]);
-    // }
-
-    /// after everything will add the nessecary css to let the chart adjust in the
-    $(".chart-area").addClass("responsive-chart");
+    } 
   };
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
