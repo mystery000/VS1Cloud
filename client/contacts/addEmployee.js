@@ -2898,6 +2898,7 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
+                // console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2906,13 +2907,14 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
-                console.log('TEmployeepaysettingData', useData)
+                // console.log('TEmployeepaysettingData', useData)
 
                 let employeePaySettings = useData[0]
 
 
                 let objEmployeePaySettings = {
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                    BankAccountName: employeePaySettings.fields.BankAccountName,
                     AnnualSalary: employeePaySettings.fields.AnnualSalary,
                     EarningYTD: employeePaySettings.fields.EarningYTD,
                     NextPayDate: employeePaySettings.fields.NextPayDate,

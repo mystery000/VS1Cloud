@@ -19,13 +19,14 @@ export default class ChartHandler {
   static calculateWidth( chart ){
       let elementWidth = $(chart).width();
       let elementParentWidth = $('.connectedChartSortable').width();
-      let widthPercentage = Math.round(100 * elementWidth / elementParentWidth);
+      let widthPercentage = Math.round(100 * elementWidth / elementParentWidth) + 2;
       if( parseInt( widthPercentage ) < 20 ){
         widthPercentage = 20
       }
       if( parseInt( widthPercentage ) > 100 ){
         widthPercentage = 100
       }
+      console.log('widthPercentage', widthPercentage)
       return widthPercentage;
   }
 
