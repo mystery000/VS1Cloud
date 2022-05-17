@@ -334,7 +334,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Receipt Entry</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Receipt Entry <span class="receiptID"></span></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -896,7 +896,7 @@
     </div>
 
     <div class="modal fade" id="newReceiptModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" id="newExpenseModalDialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">New Expense</h5>
@@ -909,9 +909,6 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="nav-expense-tab" data-toggle="tab" href="#nav-expense" type="button" role="tab" aria-controls="expense" aria-selected="true">Expense</a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a class="nav-link" id="nav-distance-tab" data-toggle="tab" href="#nav-distance" type="button" role="tab" aria-controls="distance" aria-selected="false">Distance</a>
-                        </li> -->
                         <li class="nav-item">
                             <a class="nav-link" id="nav-time-tab" data-toggle="tab" href="#nav-time" type="button" role="tab" aria-controls="time" aria-selected="false">Time</a>
                         </li>
@@ -970,7 +967,7 @@
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableExpense" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="swtReiumbursableExpense" style="cursor: pointer;">Reiumbursable</label>
+                                                <label class="custom-control-label" for="swtReiumbursableExpense" style="cursor: pointer;">Reimbursable</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -979,17 +976,6 @@
                                                 <select class="form-control chart-accounts" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-6">
-                                            <div class="form-group">
-                                                <label>Grouped Report</label>
-                                                <select class="form-control" id="sltLinkedReport">
-                                                    <option>Trip to Europe</option>
-                                                    <option>Trip to SA</option>
-                                                    <option>Trip to Australia</option>
-                                                    <option>Trip to Europe 2</option>
-                                                </select>
-                                            </div>
-                                        </div> -->
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label>Description</label>
@@ -1044,8 +1030,8 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-secondary btn-detach" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fas fa-remove" style="margin-right: 8px;"></i>Detach</button>
-                                    <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload</button>
+                                    <button type="button" class="btn btn-danger btn-detach" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete Receipt</button>
+                                    <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload Receipt</button>
                                     <input type="file" class="attachment-upload" style="display:none" accept=".jpg,.png,.pdf,.jpeg">
                                 </div>
                             </div>
@@ -1106,7 +1092,7 @@
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="swtReiumbursableTime" style="cursor: pointer;">Reiumbursable</label>
+                                                <label class="custom-control-label" for="swtReiumbursableTime" style="cursor: pointer;">Reimbursable</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -1180,8 +1166,8 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-secondary btn-detach" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fas fa-remove" style="margin-right: 8px;"></i>Detach</button>
-                                    <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload</button>
+                                    <button type="button" class="btn btn-secondary btn-detach" style="float: right; margin-left: 8px; margin-top: 16px;"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete Receipt</button>
+                                    <button type="button" class="btn btn-primary btn-upload" style="float: right; margin-right: 8px; margin-top: 16px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload Receipt</button>
                                     <input type="file" class="attachment-upload" style="display:none" accept=".jpg,.png,.pdf,.jpeg">
                                 </div>
                             </div>
