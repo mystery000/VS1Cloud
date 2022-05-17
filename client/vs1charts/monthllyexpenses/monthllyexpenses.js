@@ -56,156 +56,158 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
     let totalPayment8  = 0;
     var sessionmyExpenses = Session.get('myExpenses');
     if(sessionmyExpenses){
-      let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
-            return sessionmyExpenses.Name
-        });
+      setTimeout(function () {
+        let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
+              return sessionmyExpenses.Name
+          });
 
-        let graphData = _.orderBy(filterData, 'OrderDate');
-      let initialData = _.filter(graphData, obj => (obj.OrderDate !== ''));
+          let graphData = _.orderBy(filterData, 'OrderDate');
+        let initialData = _.filter(graphData, obj => (obj.OrderDate !== ''));
 
-        for (let l = 0; l < initialData.length; l++) {
-                let getMonth = new Date(initialData[l].OrderDate).getMonth() + 1;
-                if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment += initialData[l].OriginalAmount;
+          for (let l = 0; l < initialData.length; l++) {
+                  let getMonth = new Date(initialData[l].OrderDate).getMonth() + 1;
+                  if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment2 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment2 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment3 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment3 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment4 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment4 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment5 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment5 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment6 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment6 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment7 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment7 += initialData[l].OriginalAmount;
 
-                } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
-                    totalPayment8 += initialData[l].OriginalAmount;
+                  } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].OrderDate).getFullYear()) {
+                      totalPayment8 += initialData[l].OriginalAmount;
+
+                  }
+              }
+
+
+          // topData.topTenData.set(data);
+          let currentMonth = moment().format("MMMM").substring(0, 3);
+          let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3);// Current date (date month and year)
+          let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
+          let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
+          let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
+          let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
+          let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
+          let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
+
+          var ctx = document.getElementById("myMonthlyExpensesChart").getContext("2d");
+          var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+            labels: [
+            prevMonth7,
+            prevMonth6,
+            prevMonth5,
+            prevMonth4,
+            prevMonth3,
+            prevMonth2,
+            prevMonth,
+            currentMonth
+          ],
+            datasets: [{
+            label: 'Amount #'+ this.value,
+            data: [
+              '-'+totalPayment,
+              '-'+totalPayment2,
+              '-'+totalPayment3,
+              '-'+totalPayment4,
+              '-'+totalPayment5,
+              '-'+totalPayment6,
+              '-'+totalPayment7,
+              '-'+totalPayment8
+            ],
+
+            backgroundColor: [
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e',
+            '#f6c23e'
+            ],
+            borderColor: [
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)',
+            'rgba(78,115,223,0)'
+            ],
+            borderWidth: 1
+            }]
+            },
+            options: {
+              'onClick' : function (evt, item) {
+                if(item[0]['_model'].label){
+                  var activePoints = item[0]['_model'].label;
+                  FlowRouter.go('/agedpayables?month=' + activePoints);
+                }
+
+              },
+              maintainAspectRatio: false,
+              responsive: true,
+            tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel))|| 0.00;
 
                 }
             }
-
-
-        // topData.topTenData.set(data);
-        let currentMonth = moment().format("MMMM").substring(0, 3);
-        let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3);// Current date (date month and year)
-        let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
-
-        var ctx = document.getElementById("myMonthlyExpensesChart").getContext("2d");
-        var myChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-          labels: [
-           prevMonth7,
-           prevMonth6,
-           prevMonth5,
-           prevMonth4,
-           prevMonth3,
-           prevMonth2,
-           prevMonth,
-           currentMonth
-         ],
-          datasets: [{
-          label: 'Amount #'+ this.value,
-          data: [
-            '-'+totalPayment,
-            '-'+totalPayment2,
-            '-'+totalPayment3,
-            '-'+totalPayment4,
-            '-'+totalPayment5,
-            '-'+totalPayment6,
-            '-'+totalPayment7,
-            '-'+totalPayment8
-          ],
-
-          backgroundColor: [
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e',
-          '#f6c23e'
-          ],
-          borderColor: [
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)',
-          'rgba(78,115,223,0)'
-          ],
-          borderWidth: 1
-          }]
-          },
-          options: {
-            'onClick' : function (evt, item) {
-              if(item[0]['_model'].label){
-                var activePoints = item[0]['_model'].label;
-                FlowRouter.go('/agedpayables?month=' + activePoints);
-              }
-
+        },
+            "legend":{
+            "display":false
             },
-            maintainAspectRatio: false,
-            responsive: true,
-          tooltips: {
-          callbacks: {
-              label: function(tooltipItem, data) {
-                  return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel))|| 0.00;
-
-              }
-          }
-      },
-          "legend":{
-          "display":false
-          },
-          "title":{},
-          "scales":{
-          "xAxes":[
-          {"gridLines":{
-          "color":"rgb(234, 236, 244)",
-          "zeroLineColor":"rgb(234, 236, 244)",
-          "drawBorder":false,
-          "drawTicks":false,
-          "borderDash":["2"],
-          "zeroLineBorderDash":["2"],
-          "drawOnChartArea":false},
-          "ticks":{
-          "fontColor":"#858796",
-          "beginAtZero":true,
-          "padding":20}}],
-          "yAxes":[{
-          "gridLines":{"color":"rgb(234, 236, 244)",
-          "zeroLineColor":"rgb(234, 236, 244)",
-          "drawBorder":false,
-          "drawTicks":false,
-          "borderDash":["2"],
-          "zeroLineBorderDash":["2"]},
-          "ticks":{
-          "fontColor":"#858796",
-          "beginAtZero":true,
-          "padding":20
-          }
-          }
-          ]
-          }
-          }
-          });
+            "title":{},
+            "scales":{
+            "xAxes":[
+            {"gridLines":{
+            "color":"rgb(234, 236, 244)",
+            "zeroLineColor":"rgb(234, 236, 244)",
+            "drawBorder":false,
+            "drawTicks":false,
+            "borderDash":["2"],
+            "zeroLineBorderDash":["2"],
+            "drawOnChartArea":false},
+            "ticks":{
+            "fontColor":"#858796",
+            "beginAtZero":true,
+            "padding":20}}],
+            "yAxes":[{
+            "gridLines":{"color":"rgb(234, 236, 244)",
+            "zeroLineColor":"rgb(234, 236, 244)",
+            "drawBorder":false,
+            "drawTicks":false,
+            "borderDash":["2"],
+            "zeroLineBorderDash":["2"]},
+            "ticks":{
+            "fontColor":"#858796",
+            "beginAtZero":true,
+            "padding":20
+            }
+            }
+            ]
+            }
+            }
+            });
+      }, 1000);
     }else{
       setTimeout(function () {
         let filterData = _.filter(sessionmyExpenses.tapreport, function (sessionmyExpenses) {
@@ -435,6 +437,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
   }
 
 }else{
+  setTimeout(function () {
   let data = JSON.parse(localStorage.getItem('VS1PNLPeriodReport_dash'));
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -611,6 +614,7 @@ var myChart = new Chart(ctx, {
   }
   }
   });
+}, 1000)
 }
   });
 

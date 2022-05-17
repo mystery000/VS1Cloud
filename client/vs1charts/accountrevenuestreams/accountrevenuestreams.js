@@ -137,262 +137,264 @@ Template.accountrevenuestreams.onRendered(() => {
       vs1chartService
         .getProfitLossPeriodReportData(prevMonth7, fromDate)
         .then((data) => {
-          let month_1 = data.tprofitandlossperiodreport[0].DateDesc_1 || "";
-          let month_2 = data.tprofitandlossperiodreport[0].DateDesc_2 || "";
-          let month_3 = data.tprofitandlossperiodreport[0].DateDesc_3 || "";
-          let month_4 = data.tprofitandlossperiodreport[0].DateDesc_4 || "";
-          let month_5 = data.tprofitandlossperiodreport[0].DateDesc_5 || "";
-          let month_6 = data.tprofitandlossperiodreport[0].DateDesc_6 || "";
-          let month_7 = data.tprofitandlossperiodreport[0].DateDesc_7 || "";
-          let month_8 = data.tprofitandlossperiodreport[0].DateDesc_8 || "";
+          setTimeout(function () {
+            let month_1 = data.tprofitandlossperiodreport[0].DateDesc_1 || "";
+            let month_2 = data.tprofitandlossperiodreport[0].DateDesc_2 || "";
+            let month_3 = data.tprofitandlossperiodreport[0].DateDesc_3 || "";
+            let month_4 = data.tprofitandlossperiodreport[0].DateDesc_4 || "";
+            let month_5 = data.tprofitandlossperiodreport[0].DateDesc_5 || "";
+            let month_6 = data.tprofitandlossperiodreport[0].DateDesc_6 || "";
+            let month_7 = data.tprofitandlossperiodreport[0].DateDesc_7 || "";
+            let month_8 = data.tprofitandlossperiodreport[0].DateDesc_8 || "";
 
-          let month_1_diff = 0;
-          let month_2_diff = 0;
-          let month_3_diff = 0;
-          let month_4_diff = 0;
-          let month_5_diff = 0;
-          let month_6_diff = 0;
-          let month_7_diff = 0;
-          let month_8_diff = 0;
+            let month_1_diff = 0;
+            let month_2_diff = 0;
+            let month_3_diff = 0;
+            let month_4_diff = 0;
+            let month_5_diff = 0;
+            let month_6_diff = 0;
+            let month_7_diff = 0;
+            let month_8_diff = 0;
 
-          let month_1_profit = 0;
-          let month_2_profit = 0;
-          let month_3_profit = 0;
-          let month_4_profit = 0;
-          let month_5_profit = 0;
-          let month_6_profit = 0;
-          let month_7_profit = 0;
-          let month_8_profit = 0;
+            let month_1_profit = 0;
+            let month_2_profit = 0;
+            let month_3_profit = 0;
+            let month_4_profit = 0;
+            let month_5_profit = 0;
+            let month_6_profit = 0;
+            let month_7_profit = 0;
+            let month_8_profit = 0;
 
-          let month_1_loss = 0;
-          let month_2_loss = 0;
-          let month_3_loss = 0;
-          let month_4_loss = 0;
-          let month_5_loss = 0;
-          let month_6_loss = 0;
-          let month_7_loss = 0;
-          let month_8_loss = 0;
+            let month_1_loss = 0;
+            let month_2_loss = 0;
+            let month_3_loss = 0;
+            let month_4_loss = 0;
+            let month_5_loss = 0;
+            let month_6_loss = 0;
+            let month_7_loss = 0;
+            let month_8_loss = 0;
 
-          let month_1_loss_exp = 0;
-          let month_2_loss_exp = 0;
-          let month_3_loss_exp = 0;
-          let month_4_loss_exp = 0;
-          let month_5_loss_exp = 0;
-          let month_6_loss_exp = 0;
-          let month_7_loss_exp = 0;
-          let month_8_loss_exp = 0;
+            let month_1_loss_exp = 0;
+            let month_2_loss_exp = 0;
+            let month_3_loss_exp = 0;
+            let month_4_loss_exp = 0;
+            let month_5_loss_exp = 0;
+            let month_6_loss_exp = 0;
+            let month_7_loss_exp = 0;
+            let month_8_loss_exp = 0;
 
-          let total_month_1_loss = 0;
-          let total_month_2_loss = 0;
-          let total_month_3_loss = 0;
-          let total_month_4_loss = 0;
-          let total_month_5_loss = 0;
-          let total_month_6_loss = 0;
-          let total_month_7_loss = 0;
-          let total_month_8_loss = 0;
+            let total_month_1_loss = 0;
+            let total_month_2_loss = 0;
+            let total_month_3_loss = 0;
+            let total_month_4_loss = 0;
+            let total_month_5_loss = 0;
+            let total_month_6_loss = 0;
+            let total_month_7_loss = 0;
+            let total_month_8_loss = 0;
 
-          for (let l = 0; l < data.tprofitandlossperiodreport.length; l++) {
-            if (
-              data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
-                /\s/g,
-                ""
-              ) == "TotalExpenses"
-            ) {
-              month_1_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_1 || 0;
-              month_2_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_2 || 0;
-              month_3_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_3 || 0;
-              month_4_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_4 || 0;
-              month_5_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_5 || 0;
-              month_6_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_6 || 0;
-              month_7_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_7 || 0;
-              month_8_loss_exp =
-                data.tprofitandlossperiodreport[l].Amount_8 || 0;
+            for (let l = 0; l < data.tprofitandlossperiodreport.length; l++) {
+              if (
+                data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
+                  /\s/g,
+                  ""
+                ) == "TotalExpenses"
+              ) {
+                month_1_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_1 || 0;
+                month_2_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_2 || 0;
+                month_3_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_3 || 0;
+                month_4_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_4 || 0;
+                month_5_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_5 || 0;
+                month_6_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_6 || 0;
+                month_7_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_7 || 0;
+                month_8_loss_exp =
+                  data.tprofitandlossperiodreport[l].Amount_8 || 0;
+              }
+
+              if (
+                data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
+                  /\s/g,
+                  ""
+                ) == "TotalCOGS"
+              ) {
+                month_1_loss = data.tprofitandlossperiodreport[l].Amount_1 || 0;
+                month_2_loss = data.tprofitandlossperiodreport[l].Amount_2 || 0;
+                month_3_loss = data.tprofitandlossperiodreport[l].Amount_3 || 0;
+                month_4_loss = data.tprofitandlossperiodreport[l].Amount_4 || 0;
+                month_5_loss = data.tprofitandlossperiodreport[l].Amount_5 || 0;
+                month_6_loss = data.tprofitandlossperiodreport[l].Amount_6 || 0;
+                month_7_loss = data.tprofitandlossperiodreport[l].Amount_7 || 0;
+                month_8_loss = data.tprofitandlossperiodreport[l].Amount_8 || 0;
+              }
+
+              if (
+                data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
+                  /\s/g,
+                  ""
+                ) == "TotalIncome"
+              ) {
+                month_1_profit = data.tprofitandlossperiodreport[l].Amount_1 || 0;
+                month_2_profit = data.tprofitandlossperiodreport[l].Amount_2 || 0;
+                month_3_profit = data.tprofitandlossperiodreport[l].Amount_3 || 0;
+                month_4_profit = data.tprofitandlossperiodreport[l].Amount_4 || 0;
+                month_5_profit = data.tprofitandlossperiodreport[l].Amount_5 || 0;
+                month_6_profit = data.tprofitandlossperiodreport[l].Amount_6 || 0;
+                month_7_profit = data.tprofitandlossperiodreport[l].Amount_7 || 0;
+                month_8_profit = data.tprofitandlossperiodreport[l].Amount_8 || 0;
+              }
             }
 
-            if (
-              data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
-                /\s/g,
-                ""
-              ) == "TotalCOGS"
-            ) {
-              month_1_loss = data.tprofitandlossperiodreport[l].Amount_1 || 0;
-              month_2_loss = data.tprofitandlossperiodreport[l].Amount_2 || 0;
-              month_3_loss = data.tprofitandlossperiodreport[l].Amount_3 || 0;
-              month_4_loss = data.tprofitandlossperiodreport[l].Amount_4 || 0;
-              month_5_loss = data.tprofitandlossperiodreport[l].Amount_5 || 0;
-              month_6_loss = data.tprofitandlossperiodreport[l].Amount_6 || 0;
-              month_7_loss = data.tprofitandlossperiodreport[l].Amount_7 || 0;
-              month_8_loss = data.tprofitandlossperiodreport[l].Amount_8 || 0;
-            }
+            total_month_1_loss = Number(month_1_loss) + Number(month_1_loss_exp);
+            total_month_2_loss = Number(month_2_loss) + Number(month_2_loss_exp);
+            total_month_3_loss = Number(month_3_loss) + Number(month_3_loss_exp);
+            total_month_4_loss = Number(month_4_loss) + Number(month_4_loss_exp);
+            total_month_5_loss = Number(month_5_loss) + Number(month_5_loss_exp);
+            total_month_6_loss = Number(month_6_loss) + Number(month_6_loss_exp);
+            total_month_7_loss = Number(month_7_loss) + Number(month_7_loss_exp);
+            total_month_8_loss = Number(month_8_loss) + Number(month_8_loss_exp);
 
-            if (
-              data.tprofitandlossperiodreport[l].AccountTypeDesc.replace(
-                /\s/g,
-                ""
-              ) == "TotalIncome"
-            ) {
-              month_1_profit = data.tprofitandlossperiodreport[l].Amount_1 || 0;
-              month_2_profit = data.tprofitandlossperiodreport[l].Amount_2 || 0;
-              month_3_profit = data.tprofitandlossperiodreport[l].Amount_3 || 0;
-              month_4_profit = data.tprofitandlossperiodreport[l].Amount_4 || 0;
-              month_5_profit = data.tprofitandlossperiodreport[l].Amount_5 || 0;
-              month_6_profit = data.tprofitandlossperiodreport[l].Amount_6 || 0;
-              month_7_profit = data.tprofitandlossperiodreport[l].Amount_7 || 0;
-              month_8_profit = data.tprofitandlossperiodreport[l].Amount_8 || 0;
-            }
-          }
+            month_1_diff = Number(month_1_profit) + Number(total_month_1_loss);
+            month_2_diff = Number(month_2_profit) + Number(total_month_2_loss);
+            month_3_diff = Number(month_3_profit) + Number(total_month_3_loss);
+            month_4_diff = Number(month_4_profit) + Number(total_month_4_loss);
+            month_5_diff = Number(month_5_profit) + Number(total_month_5_loss);
+            month_6_diff = Number(month_6_profit) + Number(total_month_6_loss);
+            month_7_diff = Number(month_7_profit) + Number(total_month_7_loss);
+            month_8_diff = Number(month_8_profit) + Number(total_month_8_loss);
 
-          total_month_1_loss = Number(month_1_loss) + Number(month_1_loss_exp);
-          total_month_2_loss = Number(month_2_loss) + Number(month_2_loss_exp);
-          total_month_3_loss = Number(month_3_loss) + Number(month_3_loss_exp);
-          total_month_4_loss = Number(month_4_loss) + Number(month_4_loss_exp);
-          total_month_5_loss = Number(month_5_loss) + Number(month_5_loss_exp);
-          total_month_6_loss = Number(month_6_loss) + Number(month_6_loss_exp);
-          total_month_7_loss = Number(month_7_loss) + Number(month_7_loss_exp);
-          total_month_8_loss = Number(month_8_loss) + Number(month_8_loss_exp);
-
-          month_1_diff = Number(month_1_profit) + Number(total_month_1_loss);
-          month_2_diff = Number(month_2_profit) + Number(total_month_2_loss);
-          month_3_diff = Number(month_3_profit) + Number(total_month_3_loss);
-          month_4_diff = Number(month_4_profit) + Number(total_month_4_loss);
-          month_5_diff = Number(month_5_profit) + Number(total_month_5_loss);
-          month_6_diff = Number(month_6_profit) + Number(total_month_6_loss);
-          month_7_diff = Number(month_7_profit) + Number(total_month_7_loss);
-          month_8_diff = Number(month_8_profit) + Number(total_month_8_loss);
-
-          var ctx = document
-            .getElementById("revenuestreamschart")
-            .getContext("2d");
-          var myChart = new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: [
-                month_1,
-                month_2,
-                month_3,
-                month_4,
-                month_5,
-                month_6,
-                month_7,
-                month_8,
-              ],
-              datasets: [
-                {
-                  label: "Sales",
-                  fill: true,
-                  backgroundColor: "rgba(54,185,204,0.17)",
-                  borderColor: "#36b9cc",
-                  data: [
-                    month_1_profit,
-                    month_2_profit,
-                    month_3_profit,
-                    month_4_profit,
-                    month_5_profit,
-                    month_6_profit,
-                    month_7_profit,
-                    month_8_profit,
-                  ],
-                },
-                {
-                  label: "Expenses",
-                  fill: true,
-                  borderColor: "#e74a3b",
-                  backgroundColor: "rgba(231,74,59,0.16)",
-                  data: [
-                    total_month_1_loss,
-                    total_month_2_loss,
-                    total_month_3_loss,
-                    total_month_4_loss,
-                    total_month_5_loss,
-                    total_month_6_loss,
-                    total_month_7_loss,
-                    total_month_8_loss,
-                  ],
-                },
-                {
-                  label: "Net Income",
-                  fill: true,
-                  borderColor: "#1cc88a",
-                  backgroundColor: "rgba(28,200,138,0.16)",
-                  data: [
-                    month_1_diff,
-                    month_2_diff,
-                    month_3_diff,
-                    month_4_diff,
-                    month_5_diff,
-                    month_6_diff,
-                    month_7_diff,
-                    month_8_diff,
-                  ],
-                },
-              ],
-            },
-            options: {
-              maintainAspectRatio: false,
-              responsive: true,
-              tooltips: {
-                callbacks: {
-                  label: function (tooltipItem, data) {
-                    return (
-                      utilityService.modifynegativeCurrencyFormat(
-                        Math.abs(tooltipItem.yLabel)
-                      ) || 0.0
-                    );
-                  },
-                },
-              },
-              legend: {
-                display: true,
-                position: "right",
-                reverse: false,
-              },
-              onClick: chartClickEvent,
-              title: {},
-              scales: {
-                xAxes: [
-                  {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"],
-                      drawOnChartArea: false,
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      padding: 20,
-                    },
-                  },
+            var ctx = document
+              .getElementById("revenuestreamschart")
+              .getContext("2d");
+            var myChart = new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: [
+                  month_1,
+                  month_2,
+                  month_3,
+                  month_4,
+                  month_5,
+                  month_6,
+                  month_7,
+                  month_8,
                 ],
-                yAxes: [
+                datasets: [
                   {
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      drawTicks: false,
-                      borderDash: ["2"],
-                      zeroLineBorderDash: ["2"],
-                    },
-                    ticks: {
-                      fontColor: "#858796",
-                      beginAtZero: true,
-                      padding: 20,
-                    },
+                    label: "Sales",
+                    fill: true,
+                    backgroundColor: "rgba(54,185,204,0.17)",
+                    borderColor: "#36b9cc",
+                    data: [
+                      month_1_profit,
+                      month_2_profit,
+                      month_3_profit,
+                      month_4_profit,
+                      month_5_profit,
+                      month_6_profit,
+                      month_7_profit,
+                      month_8_profit,
+                    ],
+                  },
+                  {
+                    label: "Expenses",
+                    fill: true,
+                    borderColor: "#e74a3b",
+                    backgroundColor: "rgba(231,74,59,0.16)",
+                    data: [
+                      total_month_1_loss,
+                      total_month_2_loss,
+                      total_month_3_loss,
+                      total_month_4_loss,
+                      total_month_5_loss,
+                      total_month_6_loss,
+                      total_month_7_loss,
+                      total_month_8_loss,
+                    ],
+                  },
+                  {
+                    label: "Net Income",
+                    fill: true,
+                    borderColor: "#1cc88a",
+                    backgroundColor: "rgba(28,200,138,0.16)",
+                    data: [
+                      month_1_diff,
+                      month_2_diff,
+                      month_3_diff,
+                      month_4_diff,
+                      month_5_diff,
+                      month_6_diff,
+                      month_7_diff,
+                      month_8_diff,
+                    ],
                   },
                 ],
               },
-            },
-          });
+              options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      return (
+                        utilityService.modifynegativeCurrencyFormat(
+                          Math.abs(tooltipItem.yLabel)
+                        ) || 0.0
+                      );
+                    },
+                  },
+                },
+                legend: {
+                  display: true,
+                  position: "right",
+                  reverse: false,
+                },
+                onClick: chartClickEvent,
+                title: {},
+                scales: {
+                  xAxes: [
+                    {
+                      gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        drawTicks: false,
+                        borderDash: ["2"],
+                        zeroLineBorderDash: ["2"],
+                        drawOnChartArea: false,
+                      },
+                      ticks: {
+                        fontColor: "#858796",
+                        padding: 20,
+                      },
+                    },
+                  ],
+                  yAxes: [
+                    {
+                      gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        drawTicks: false,
+                        borderDash: ["2"],
+                        zeroLineBorderDash: ["2"],
+                      },
+                      ticks: {
+                        fontColor: "#858796",
+                        beginAtZero: true,
+                        padding: 20,
+                      },
+                    },
+                  ],
+                },
+              },
+            });
+          }, 1000)
         });
     });
 
@@ -404,259 +406,261 @@ Template.accountrevenuestreams.onRendered(() => {
       });
     }
   } else {
-    let data = JSON.parse(localStorage.getItem("VS1PNLPeriodReport_dash"));
-    var currentDate2 = new Date();
-    var dateFrom = new Date();
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      Math.floor(currentDate2.getFullYear() - 1) +
-      "-" +
-      Math.floor(currentDate2.getMonth() + 1) +
-      "-" +
-      currentDate2.getDate();
-    dateFrom.setMonth(dateFrom.getMonth() - 6);
-    dateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
-      "-" +
-      ("0" + dateFrom.getDate()).slice(-2);
-    $("#profitloss2").attr(
-      "href",
-      "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
-    );
-    let month_1 = data[0].fields.DateDesc_1 || "";
-    let month_2 = data[0].fields.DateDesc_2 || "";
-    let month_3 = data[0].fields.DateDesc_3 || "";
-    let month_4 = data[0].fields.DateDesc_4 || "";
-    let month_5 = data[0].fields.DateDesc_5 || "";
-    let month_6 = data[0].fields.DateDesc_6 || "";
-    let month_7 = data[0].fields.DateDesc_7 || "";
-    // let month_8 = data.fields[0].DateDesc_8||currentMonth;
+    setTimeout(function () {
+      let data = JSON.parse(localStorage.getItem("VS1PNLPeriodReport_dash"));
+      var currentDate2 = new Date();
+      var dateFrom = new Date();
+      var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+      let getDateFrom =
+        Math.floor(currentDate2.getFullYear() - 1) +
+        "-" +
+        Math.floor(currentDate2.getMonth() + 1) +
+        "-" +
+        currentDate2.getDate();
+      dateFrom.setMonth(dateFrom.getMonth() - 6);
+      dateFrom =
+        dateFrom.getFullYear() +
+        "-" +
+        ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
+        "-" +
+        ("0" + dateFrom.getDate()).slice(-2);
+      $("#profitloss2").attr(
+        "href",
+        "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+      );
+      let month_1 = data[0].fields.DateDesc_1 || "";
+      let month_2 = data[0].fields.DateDesc_2 || "";
+      let month_3 = data[0].fields.DateDesc_3 || "";
+      let month_4 = data[0].fields.DateDesc_4 || "";
+      let month_5 = data[0].fields.DateDesc_5 || "";
+      let month_6 = data[0].fields.DateDesc_6 || "";
+      let month_7 = data[0].fields.DateDesc_7 || "";
+      // let month_8 = data.fields[0].DateDesc_8||currentMonth;
 
-    let month_1_diff = 0;
-    let month_2_diff = 0;
-    let month_3_diff = 0;
-    let month_4_diff = 0;
-    let month_5_diff = 0;
-    let month_6_diff = 0;
-    let month_7_diff = 0;
-    let month_8_diff = 0;
+      let month_1_diff = 0;
+      let month_2_diff = 0;
+      let month_3_diff = 0;
+      let month_4_diff = 0;
+      let month_5_diff = 0;
+      let month_6_diff = 0;
+      let month_7_diff = 0;
+      let month_8_diff = 0;
 
-    let month_1_profit = 0;
-    let month_2_profit = 0;
-    let month_3_profit = 0;
-    let month_4_profit = 0;
-    let month_5_profit = 0;
-    let month_6_profit = 0;
-    let month_7_profit = 0;
-    let month_8_profit = 0;
+      let month_1_profit = 0;
+      let month_2_profit = 0;
+      let month_3_profit = 0;
+      let month_4_profit = 0;
+      let month_5_profit = 0;
+      let month_6_profit = 0;
+      let month_7_profit = 0;
+      let month_8_profit = 0;
 
-    let month_1_loss = 0;
-    let month_2_loss = 0;
-    let month_3_loss = 0;
-    let month_4_loss = 0;
-    let month_5_loss = 0;
-    let month_6_loss = 0;
-    let month_7_loss = 0;
-    let month_8_loss = 0;
+      let month_1_loss = 0;
+      let month_2_loss = 0;
+      let month_3_loss = 0;
+      let month_4_loss = 0;
+      let month_5_loss = 0;
+      let month_6_loss = 0;
+      let month_7_loss = 0;
+      let month_8_loss = 0;
 
-    let month_1_loss_exp = 0;
-    let month_2_loss_exp = 0;
-    let month_3_loss_exp = 0;
-    let month_4_loss_exp = 0;
-    let month_5_loss_exp = 0;
-    let month_6_loss_exp = 0;
-    let month_7_loss_exp = 0;
-    let month_8_loss_exp = 0;
+      let month_1_loss_exp = 0;
+      let month_2_loss_exp = 0;
+      let month_3_loss_exp = 0;
+      let month_4_loss_exp = 0;
+      let month_5_loss_exp = 0;
+      let month_6_loss_exp = 0;
+      let month_7_loss_exp = 0;
+      let month_8_loss_exp = 0;
 
-    let total_month_1_loss = 0;
-    let total_month_2_loss = 0;
-    let total_month_3_loss = 0;
-    let total_month_4_loss = 0;
-    let total_month_5_loss = 0;
-    let total_month_6_loss = 0;
-    let total_month_7_loss = 0;
-    let total_month_8_loss = 0;
+      let total_month_1_loss = 0;
+      let total_month_2_loss = 0;
+      let total_month_3_loss = 0;
+      let total_month_4_loss = 0;
+      let total_month_5_loss = 0;
+      let total_month_6_loss = 0;
+      let total_month_7_loss = 0;
+      let total_month_8_loss = 0;
 
-    let total_month_1_net = 0;
-    let total_month_2_net = 0;
-    let total_month_3_net = 0;
-    let total_month_4_net = 0;
-    let total_month_5_net = 0;
-    let total_month_6_net = 0;
-    let total_month_7_net = 0;
+      let total_month_1_net = 0;
+      let total_month_2_net = 0;
+      let total_month_3_net = 0;
+      let total_month_4_net = 0;
+      let total_month_5_net = 0;
+      let total_month_6_net = 0;
+      let total_month_7_net = 0;
 
-    for (let l = 0; l < data.length; l++) {
-      if (
-        data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalExpenses"
-      ) {
-        month_1_loss_exp = data[l].fields.Amount_1 || 0;
-        month_2_loss_exp = data[l].fields.Amount_2 || 0;
-        month_3_loss_exp = data[l].fields.Amount_3 || 0;
-        month_4_loss_exp = data[l].fields.Amount_4 || 0;
-        month_5_loss_exp = data[l].fields.Amount_5 || 0;
-        month_6_loss_exp = data[l].fields.Amount_6 || 0;
-        month_7_loss_exp = data[l].fields.Amount_7 || 0;
-        // month_8_loss_exp = data[l].Amount_8 ||0;
+      for (let l = 0; l < data.length; l++) {
+        if (
+          data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalExpenses"
+        ) {
+          month_1_loss_exp = data[l].fields.Amount_1 || 0;
+          month_2_loss_exp = data[l].fields.Amount_2 || 0;
+          month_3_loss_exp = data[l].fields.Amount_3 || 0;
+          month_4_loss_exp = data[l].fields.Amount_4 || 0;
+          month_5_loss_exp = data[l].fields.Amount_5 || 0;
+          month_6_loss_exp = data[l].fields.Amount_6 || 0;
+          month_7_loss_exp = data[l].fields.Amount_7 || 0;
+          // month_8_loss_exp = data[l].Amount_8 ||0;
+        }
+
+        if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalCOGS") {
+          month_1_loss = data[l].fields.Amount_1 || 0;
+          month_2_loss = data[l].fields.Amount_2 || 0;
+          month_3_loss = data[l].fields.Amount_3 || 0;
+          month_4_loss = data[l].fields.Amount_4 || 0;
+          month_5_loss = data[l].fields.Amount_5 || 0;
+          month_6_loss = data[l].fields.Amount_6 || 0;
+          month_7_loss = data[l].fields.Amount_7 || 0;
+          //month_8_loss = data[l].Amount_8 || 0;
+        }
+
+        if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalIncome") {
+          month_1_profit = data[l].fields.Amount_1 || 0;
+          month_2_profit = data[l].fields.Amount_2 || 0;
+          month_3_profit = data[l].fields.Amount_3 || 0;
+          month_4_profit = data[l].fields.Amount_4 || 0;
+          month_5_profit = data[l].fields.Amount_5 || 0;
+          month_6_profit = data[l].fields.Amount_6 || 0;
+          month_7_profit = data[l].fields.Amount_7 || 0;
+          //month_8_profit = data[l].Amount_8 || 0;
+        }
+
+        if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "NetIncome") {
+          total_month_1_net = data[l].fields.Amount_1 || 0;
+          total_month_2_net = data[l].fields.Amount_2 || 0;
+          total_month_3_net = data[l].fields.Amount_3 || 0;
+          total_month_4_net = data[l].fields.Amount_4 || 0;
+          total_month_5_net = data[l].fields.Amount_5 || 0;
+          total_month_6_net = data[l].fields.Amount_6 || 0;
+          total_month_7_net = data[l].fields.Amount_7 || 0;
+        }
       }
 
-      if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalCOGS") {
-        month_1_loss = data[l].fields.Amount_1 || 0;
-        month_2_loss = data[l].fields.Amount_2 || 0;
-        month_3_loss = data[l].fields.Amount_3 || 0;
-        month_4_loss = data[l].fields.Amount_4 || 0;
-        month_5_loss = data[l].fields.Amount_5 || 0;
-        month_6_loss = data[l].fields.Amount_6 || 0;
-        month_7_loss = data[l].fields.Amount_7 || 0;
-        //month_8_loss = data[l].Amount_8 || 0;
-      }
+      total_month_1_loss = Number(month_1_loss) + Number(month_1_loss_exp);
+      total_month_2_loss = Number(month_2_loss) + Number(month_2_loss_exp);
+      total_month_3_loss = Number(month_3_loss) + Number(month_3_loss_exp);
+      total_month_4_loss = Number(month_4_loss) + Number(month_4_loss_exp);
+      total_month_5_loss = Number(month_5_loss) + Number(month_5_loss_exp);
+      total_month_6_loss = Number(month_6_loss) + Number(month_6_loss_exp);
+      total_month_7_loss = Number(month_7_loss) + Number(month_7_loss_exp);
 
-      if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalIncome") {
-        month_1_profit = data[l].fields.Amount_1 || 0;
-        month_2_profit = data[l].fields.Amount_2 || 0;
-        month_3_profit = data[l].fields.Amount_3 || 0;
-        month_4_profit = data[l].fields.Amount_4 || 0;
-        month_5_profit = data[l].fields.Amount_5 || 0;
-        month_6_profit = data[l].fields.Amount_6 || 0;
-        month_7_profit = data[l].fields.Amount_7 || 0;
-        //month_8_profit = data[l].Amount_8 || 0;
-      }
-
-      if (data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "NetIncome") {
-        total_month_1_net = data[l].fields.Amount_1 || 0;
-        total_month_2_net = data[l].fields.Amount_2 || 0;
-        total_month_3_net = data[l].fields.Amount_3 || 0;
-        total_month_4_net = data[l].fields.Amount_4 || 0;
-        total_month_5_net = data[l].fields.Amount_5 || 0;
-        total_month_6_net = data[l].fields.Amount_6 || 0;
-        total_month_7_net = data[l].fields.Amount_7 || 0;
-      }
-    }
-
-    total_month_1_loss = Number(month_1_loss) + Number(month_1_loss_exp);
-    total_month_2_loss = Number(month_2_loss) + Number(month_2_loss_exp);
-    total_month_3_loss = Number(month_3_loss) + Number(month_3_loss_exp);
-    total_month_4_loss = Number(month_4_loss) + Number(month_4_loss_exp);
-    total_month_5_loss = Number(month_5_loss) + Number(month_5_loss_exp);
-    total_month_6_loss = Number(month_6_loss) + Number(month_6_loss_exp);
-    total_month_7_loss = Number(month_7_loss) + Number(month_7_loss_exp);
-
-    var ctx = document
-      .getElementById("revenuestreamschart")
-      .getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [month_1, month_2, month_3, month_4, month_5, month_6, month_7],
-        datasets: [
-          {
-            label: "Sales",
-            fill: true,
-            backgroundColor: "rgba(54,185,204,0.17)",
-            borderColor: "#36b9cc",
-            data: [
-              month_1_profit,
-              month_2_profit,
-              month_3_profit,
-              month_4_profit,
-              month_5_profit,
-              month_6_profit,
-              month_7_profit,
-            ],
-          },
-          {
-            label: "Expenses",
-            fill: true,
-            borderColor: "#e74a3b",
-            backgroundColor: "rgba(231,74,59,0.16)",
-            data: [
-              total_month_1_loss,
-              total_month_2_loss,
-              total_month_3_loss,
-              total_month_4_loss,
-              total_month_5_loss,
-              total_month_6_loss,
-              total_month_7_loss,
-            ],
-          },
-          {
-            label: "Net Income",
-            fill: true,
-            borderColor: "#1cc88a",
-            backgroundColor: "rgba(28,200,138,0.16)",
-            data: [
-              total_month_1_net,
-              total_month_2_net,
-              total_month_3_net,
-              total_month_4_net,
-              total_month_5_net,
-              total_month_6_net,
-              total_month_7_net,
-              //month_8_diff
-            ],
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data) {
-              return (
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.abs(tooltipItem.yLabel)
-                ) || 0.0
-              );
-            },
-          },
-        },
-        legend: {
-          display: true,
-          position: "right",
-          reverse: false,
-        },
-        onClick: chartClickEvent,
-        title: {},
-        scales: {
-          xAxes: [
+      var ctx = document
+        .getElementById("revenuestreamschart")
+        .getContext("2d");
+      var myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [month_1, month_2, month_3, month_4, month_5, month_6, month_7],
+          datasets: [
             {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-                drawOnChartArea: false,
-              },
-              ticks: {
-                fontColor: "#858796",
-                padding: 20,
-              },
+              label: "Sales",
+              fill: true,
+              backgroundColor: "rgba(54,185,204,0.17)",
+              borderColor: "#36b9cc",
+              data: [
+                month_1_profit,
+                month_2_profit,
+                month_3_profit,
+                month_4_profit,
+                month_5_profit,
+                month_6_profit,
+                month_7_profit,
+              ],
             },
-          ],
-          yAxes: [
             {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-              },
-              ticks: {
-                fontColor: "#858796",
-                beginAtZero: true,
-                padding: 20,
-              },
+              label: "Expenses",
+              fill: true,
+              borderColor: "#e74a3b",
+              backgroundColor: "rgba(231,74,59,0.16)",
+              data: [
+                total_month_1_loss,
+                total_month_2_loss,
+                total_month_3_loss,
+                total_month_4_loss,
+                total_month_5_loss,
+                total_month_6_loss,
+                total_month_7_loss,
+              ],
+            },
+            {
+              label: "Net Income",
+              fill: true,
+              borderColor: "#1cc88a",
+              backgroundColor: "rgba(28,200,138,0.16)",
+              data: [
+                total_month_1_net,
+                total_month_2_net,
+                total_month_3_net,
+                total_month_4_net,
+                total_month_5_net,
+                total_month_6_net,
+                total_month_7_net,
+                //month_8_diff
+              ],
             },
           ],
         },
-      },
-    });
+        options: {
+          maintainAspectRatio: false,
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                return (
+                  utilityService.modifynegativeCurrencyFormat(
+                    Math.abs(tooltipItem.yLabel)
+                  ) || 0.0
+                );
+              },
+            },
+          },
+          legend: {
+            display: true,
+            position: "right",
+            reverse: false,
+          },
+          onClick: chartClickEvent,
+          title: {},
+          scales: {
+            xAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                  drawOnChartArea: false,
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  padding: 20,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  beginAtZero: true,
+                  padding: 20,
+                },
+              },
+            ],
+          },
+        },
+      });
+    }, 1000)
   }
 });
 

@@ -181,76 +181,78 @@ Template.allChartLists.onRendered(function () {
       // console.log('chartlist', chartList);
       // the goal here is to get the right names so it can be used for preferences
       chartList.forEach((chart) => {
-        //chart.fields.active = false; // Will set evething to false
-        chart.fields._chartSlug =
-          chart.fields.ChartGroup.toLowerCase() +
-          "__" +
-          chart.fields.ChartName.toLowerCase().split(" ").join("_");
+        setTimeout(() => {
+          //chart.fields.active = false; // Will set evething to false
+          chart.fields._chartSlug =
+            chart.fields.ChartGroup.toLowerCase() +
+            "__" +
+            chart.fields.ChartName.toLowerCase().split(" ").join("_");
 
-        $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-id",
-          chart.fields.ID
-        );
-
-        if (chart.fields.ChartGroup == _chartGroup) {
-          // Default charts
-          defaultChartList.push(chart.fields._chartSlug);
-
-          $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
-            "Hide"
+          $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-id",
+            chart.fields.ID
           );
-          $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-            "is-hidden",
-            "false"
-          );
-          $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
-          if( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
-            $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
+
+          if (chart.fields.ChartGroup == _chartGroup) {
+            // Default charts
+            defaultChartList.push(chart.fields._chartSlug);
+
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
+              "Hide"
+            );
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
+              "is-hidden",
+              "false"
+            );
+            $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
+            if( chart.fields._chartSlug == 'accounts__profit_and_loss' ){
+              $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
+            }
+            if( chart.fields._chartSlug == 'sales__sales_overview'){
+              $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
+              $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
+            }
+            if( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
+              $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
+            }
+          } else {
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
+              "Show"
+            );
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
+              "is-hidden",
+              "true"
+            );
           }
-          if( chart.fields._chartSlug == 'sales__sales_overview'){
-            $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
-            $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
-          }
-          if( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
-            $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
-          }
-        } else {
-          $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
-            "Show"
+
+          // $(`[key='${chart.fields._chartSlug}']`).attr(
+          //   "pref-id",
+          //   chart.fields.ID
+          // );
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-slug",
+            chart.fields._chartSlug
           );
-          $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-            "is-hidden",
-            "true"
+
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-group",
+            chart.fields.ChartGroup
           );
-        }
 
-        // $(`[key='${chart.fields._chartSlug}']`).attr(
-        //   "pref-id",
-        //   chart.fields.ID
-        // );
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-slug",
-          chart.fields._chartSlug
-        );
-
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-group",
-          chart.fields.ChartGroup
-        );
-
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-name",
-          chart.fields.ChartName
-        );
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-active",
-          chart.fields.Active
-        );
-        $(`[key='${chart.fields._chartSlug}']`).attr(
-          "chart-user-pref-is-hidden",
-          !chart.fields.Active
-        );
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-name",
+            chart.fields.ChartName
+          );
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-active",
+            chart.fields.Active
+          );
+          $(`[key='${chart.fields._chartSlug}']`).attr(
+            "chart-user-pref-is-hidden",
+            !chart.fields.Active
+          );
+        }, 500);
       });
     }
 
@@ -341,7 +343,7 @@ Template.allChartLists.onRendered(function () {
         }
         //}
         //}
-        }, 100);
+        }, 500);
       });
       // Handle sorting
       let $chartWrappper = $(".connectedChartSortable");

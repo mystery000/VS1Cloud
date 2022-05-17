@@ -89,7 +89,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
     getVS1Data('TSalesList').then(function (dataObject) {
     if(dataObject.length == 0){
        sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
-
+            setTimeout(function () {
             let filterData = _.filter(data.tsaleslist, function (data) {
                   return data.CustomerName
               });
@@ -308,7 +308,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
                 }
                 });
 
-
+        }, 1000)
 
 
         });
@@ -324,15 +324,15 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
         }else{
            graphData = filterData;
         }
-
-      let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
-       var currentDate2 = new Date();
-       var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-       var dateFrom = new Date();
-       dateFrom.setMonth(dateFrom.getMonth()-6);
-       dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-      $("#sales").attr("href", "/salesreport?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
-        for (let l = 0; l < initialData.length; l++) {
+        setTimeout(function () {
+            let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
+            var currentDate2 = new Date();
+            var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+            var dateFrom = new Date();
+            dateFrom.setMonth(dateFrom.getMonth()-6);
+            dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
+            $("#sales").attr("href", "/salesreport?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+            for (let l = 0; l < initialData.length; l++) {
 
                 let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
                 let getYear = new Date(initialData[l].SaleDate).getFullYear();
@@ -419,139 +419,139 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
                 }
 
             }
-        // topData.topTenData.set(data);
-        let currentMonth = moment().format("MMMM").substring(0, 3);
-        let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3);// Current date (date month and year)
-        let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
-        let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
+            // topData.topTenData.set(data);
+            let currentMonth = moment().format("MMMM").substring(0, 3);
+            let prevMonth = (moment().subtract(1, 'months')).format("MMMM").substring(0, 3);// Current date (date month and year)
+            let prevMonth2 = (moment().subtract(2, 'months')).format("MMMM").substring(0, 3);
+            let prevMonth3 = (moment().subtract(3, 'months')).format("MMMM").substring(0, 3);
+            let prevMonth4 = (moment().subtract(4, 'months')).format("MMMM").substring(0, 3);
+            let prevMonth5 = (moment().subtract(5, 'months')).format("MMMM").substring(0, 3);
+            let prevMonth6 = (moment().subtract(6, 'months')).format("MMMM").substring(0, 3);
+            let prevMonth7 = (moment().subtract(7, 'months')).format("MMMM").substring(0, 3);
 
-        var ctx = document.getElementById("quotedsoinvoicedamounts").getContext("2d");
-        var myChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-          labels: [
-           //prevMonth7,
-           prevMonth6,
-           prevMonth5,
-           prevMonth4,
-           prevMonth3,
-           prevMonth2,
-           prevMonth,
-           currentMonth
-         ],
-          datasets: [
+            var ctx = document.getElementById("quotedsoinvoicedamounts").getContext("2d");
+            var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+            labels: [
+            //prevMonth7,
+            prevMonth6,
+            prevMonth5,
+            prevMonth4,
+            prevMonth3,
+            prevMonth2,
+            prevMonth,
+            currentMonth
+            ],
+            datasets: [
+                {
+                "label":"Quotes",
+                "fill":true,
+                "data":[
+                //totalQuotePayment8,
+                totalQuotePayment7,
+                totalQuotePayment6,
+                totalQuotePayment5,
+                totalQuotePayment4,
+                totalQuotePayment3,
+                totalQuotePayment2,
+                totalQuotePayment
+                ],
+                "backgroundColor":"rgba(28,200,138,0.16)",
+                "borderColor":"#1cc88a"
+            },
             {
-            "label":"Quotes",
-            "fill":true,
-            "data":[
-               //totalQuotePayment8,
-               totalQuotePayment7,
-               totalQuotePayment6,
-               totalQuotePayment5,
-               totalQuotePayment4,
-               totalQuotePayment3,
-               totalQuotePayment2,
-               totalQuotePayment
-            ],
-            "backgroundColor":"rgba(28,200,138,0.16)",
-            "borderColor":"#1cc88a"
-         },
-         {
-            "label":"Sales Orders",
-            "fill":true,
-            "data":[
-               //totalSOPayment8,
-               totalSOPayment7,
-               totalSOPayment6,
-               totalSOPayment5,
-               totalSOPayment4,
-               totalSOPayment3,
-               totalSOPayment2,
-               totalSOPayment
-            ],
-            "borderColor":"#36b9cc",
-            "backgroundColor":"rgba(54,185,204,0.17)"
-         },
-         {
-            "label":"Invoices",
-            "fill":true,
-            "data":[
-               //totalInvPayment8,
-               totalInvPayment7,
-               totalInvPayment6,
-               totalInvPayment5,
-               totalInvPayment4,
-               totalInvPayment3,
-               totalInvPayment2,
-               totalInvPayment
-            ],
-            "borderColor":"#f6c23e",
-            "backgroundColor":"rgba(246,194,62,0.17)"
-         }]
-          },
-          options: {
+                "label":"Sales Orders",
+                "fill":true,
+                "data":[
+                //totalSOPayment8,
+                totalSOPayment7,
+                totalSOPayment6,
+                totalSOPayment5,
+                totalSOPayment4,
+                totalSOPayment3,
+                totalSOPayment2,
+                totalSOPayment
+                ],
+                "borderColor":"#36b9cc",
+                "backgroundColor":"rgba(54,185,204,0.17)"
+            },
+            {
+                "label":"Invoices",
+                "fill":true,
+                "data":[
+                //totalInvPayment8,
+                totalInvPayment7,
+                totalInvPayment6,
+                totalInvPayment5,
+                totalInvPayment4,
+                totalInvPayment3,
+                totalInvPayment2,
+                totalInvPayment
+                ],
+                "borderColor":"#f6c23e",
+                "backgroundColor":"rgba(246,194,62,0.17)"
+            }]
+            },
+            options: {
 
-            maintainAspectRatio: false,
-            responsive: true,
-          tooltips: {
-          callbacks: {
-              label: function(tooltipItem, data) {
-                  return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel))|| 0.00;
+                maintainAspectRatio: false,
+                responsive: true,
+            tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel))|| 0.00;
 
-              }
-          }
-      },
-          "legend":{
-          "display":true,
-          "position":"bottom",
-          },
-          onClick: chartClickEvent,
-          "title":{},
-          "scales":{
-          "xAxes":[
-          {"gridLines":{
-          "color":"rgb(234, 236, 244)",
-          "zeroLineColor":"rgb(234, 236, 244)",
-          "drawBorder":false,
-          "drawTicks":false,
-          "borderDash":["2"],
-          "zeroLineBorderDash":["2"],
-          "drawOnChartArea":false},
-          "ticks":{
-          "fontColor":"#858796",
-          "padding":20}}],
-          "yAxes":[{
-          "gridLines":{"color":"rgb(234, 236, 244)",
-          "zeroLineColor":"rgb(234, 236, 244)",
-          "drawBorder":false,
-          "drawTicks":false,
-          "borderDash":["2"],
-          "zeroLineBorderDash":["2"]},
-          "ticks":{
-          "fontColor":"#858796",
-          "padding":20
-          }
-          }
-          ]
-          }
-          }
-          });
-
+                }
+            }
+        },
+            "legend":{
+            "display":true,
+            "position":"bottom",
+            },
+            onClick: chartClickEvent,
+            "title":{},
+            "scales":{
+            "xAxes":[
+            {"gridLines":{
+            "color":"rgb(234, 236, 244)",
+            "zeroLineColor":"rgb(234, 236, 244)",
+            "drawBorder":false,
+            "drawTicks":false,
+            "borderDash":["2"],
+            "zeroLineBorderDash":["2"],
+            "drawOnChartArea":false},
+            "ticks":{
+            "fontColor":"#858796",
+            "padding":20}}],
+            "yAxes":[{
+            "gridLines":{"color":"rgb(234, 236, 244)",
+            "zeroLineColor":"rgb(234, 236, 244)",
+            "drawBorder":false,
+            "drawTicks":false,
+            "borderDash":["2"],
+            "zeroLineBorderDash":["2"]},
+            "ticks":{
+            "fontColor":"#858796",
+            "padding":20
+            }
+            }
+            ]
+            }
+            }
+            });
+        }, 1000)  
     }
     }).catch(function (err) {
        sideBarService.getSalesListData(prevMonth11Date,toDate, false,initialReportLoad,0).then((data) => {
+            setTimeout(function () {
+                let filterData = _.filter(data.tsaleslist, function (data) {
+                    return data.CustomerName
+                });
 
-            let filterData = _.filter(data.tsaleslist, function (data) {
-                  return data.CustomerName
-              });
-
-              let graphData = _.orderBy(filterData, 'SaleDate');
-            let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
-              for (let l = 0; l < initialData.length; l++) {
+                let graphData = _.orderBy(filterData, 'SaleDate');
+                let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
+                for (let l = 0; l < initialData.length; l++) {
 
                       let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
                       if(initialData[l].Type === "Quote"){
@@ -758,7 +758,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
                 });
 
 
-
+            }, 1000);
 
         });
     });

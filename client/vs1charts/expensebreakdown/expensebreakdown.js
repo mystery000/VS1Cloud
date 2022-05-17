@@ -70,48 +70,50 @@ Template.expensebreakdown.onRendered(function() {
   templateObject.getAllPurchaseOrderAll = async (e) => {
     let totalExpense = 0;
     let useData = [];
-    let billReportObj = await getVS1Data("TbillReport");
-    if (billReportObj.length == 0) {
-      var currentBeginDate = new Date();
-      let fromDateMonth = currentBeginDate.getMonth() + 1;
-      let fromDateDay = currentBeginDate.getDate();
-      if (currentBeginDate.getMonth() + 1 < 10) {
-        fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-      } else {
-        fromDateMonth = currentBeginDate.getMonth() + 1;
-      }
+    setTimeout( async function () {
+      let billReportObj = await getVS1Data("TbillReport");
+      if (billReportObj.length == 0) {
+        var currentBeginDate = new Date();
+        let fromDateMonth = currentBeginDate.getMonth() + 1;
+        let fromDateDay = currentBeginDate.getDate();
+        if (currentBeginDate.getMonth() + 1 < 10) {
+          fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+          fromDateMonth = currentBeginDate.getMonth() + 1;
+        }
 
-      if (currentBeginDate.getDate() < 10) {
-        fromDateDay = "0" + currentBeginDate.getDate();
+        if (currentBeginDate.getDate() < 10) {
+          fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
+        let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
+        let data = await sideBarService.getAllPurchaseOrderListAll(prevMonth11Date, toDate, false, initialReportLoad, 0 )
+        useData = data.tbillreport;
+      }else{
+        let data = JSON.parse(billReportObj[0].data);
+        useData = data.tbillreport;
       }
-      var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-      let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-      let data = await sideBarService.getAllPurchaseOrderListAll(prevMonth11Date, toDate, false, initialReportLoad, 0 )
-      useData = data.tbillreport;
-    }else{
-      let data = JSON.parse(billReportObj[0].data);
-      useData = data.tbillreport;
-    }
-    // get common data from both request
-    if( useData.length ){
-      for (let i = 0; i < useData.length; i++) {
-        totalExpense += Number(useData[i]["Total Amount (Inc)"]);
-        if (useData[i].Type == "Credit") {
-          totCreditCount++;
-        }
-        if (useData[i].Type == "Bill") {
-          totBillCount++;
-        }
-        if (useData[i].Type == "Purchase Order") {
-          totPOCount++;
+      // get common data from both request
+      if( useData.length ){
+        for (let i = 0; i < useData.length; i++) {
+          totalExpense += Number(useData[i]["Total Amount (Inc)"]);
+          if (useData[i].Type == "Credit") {
+            totCreditCount++;
+          }
+          if (useData[i].Type == "Bill") {
+            totBillCount++;
+          }
+          if (useData[i].Type == "Purchase Order") {
+            totPOCount++;
+          }
         }
       }
-    }
-    $(".spExpenseTotal").text(
-      utilityService.modifynegativeCurrencyFormat(totalExpense)
-    );
-    // show chart
-    templateObject.displayExpenseChart();
+      $(".spExpenseTotal").text(
+        utilityService.modifynegativeCurrencyFormat(totalExpense)
+      );
+      // show chart
+      templateObject.displayExpenseChart();
+    }, 1000)
   };
   templateObject.getAllPurchaseOrderAll();
 });
