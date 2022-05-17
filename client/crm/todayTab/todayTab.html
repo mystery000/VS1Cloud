@@ -21,7 +21,8 @@
         <tbody>
           {{#each item in todayRecords}}
           <tr class="dnd-moved" style="cursor: pointer;">
-            <td contenteditable="false" class="colCompleteTask" style="width: 2%;">
+            <td contenteditable="false" class="colCompleteTask  task_priority_{{item.fields.priority}}"
+              style="width: 2%;">
               <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.fields.priority}}"
                 style="width:15px;margin-right: -6px;">
                 <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
@@ -30,16 +31,20 @@
                   for="formCheck-{{item.fields.ID}}"></label>
               </div>
             </td>
-            <td contenteditable="false" class="openEditTaskModal colDate" data-id="{{item.fields.ID}}">
+            <td contenteditable="false" class="openEditTaskModal colDate" data-id="{{item.fields.ID}}"
+              data-catg="Today">
               {{getTodoDate item.fields.due_date
               'DD/MM/YYYY'}}</td>
-            <td contenteditable="false" class="openEditTaskModal colTaskName" data-id="{{item.fields.ID}}">
+            <td contenteditable="false" class="openEditTaskModal colTaskName" data-id="{{item.fields.ID}}"
+              data-catg="Today">
               {{item.fields.TaskName}}</td>
-            <td contenteditable="false" class="openEditTaskModal colTaskDesc" data-id="{{item.fields.ID}}">
+            <td contenteditable="false" class="openEditTaskModal colTaskDesc" data-id="{{item.fields.ID}}"
+              data-catg="Today">
               {{getDescription
               item.fields.TaskDescription}}
             </td>
-            <td contenteditable="false" class="openEditTaskModal colTaskLabels" data-id="{{item.fields.ID}}">
+            <td contenteditable="false" class="openEditTaskModal colTaskLabels" data-id="{{item.fields.ID}}"
+              data-catg="Today">
               {{#if item.fields.TaskLabel}}
               {{#if item.fields.TaskLabel.fields}}
               <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
@@ -56,8 +61,9 @@
             </td>
             <td contenteditable="false" class="colTaskActions">
               <div class="dropdown btnTaskTableAction">
-                <button type="button" class="btn btn-primary openEditTaskModal" data-id="{{item.fields.ID}}"><i
-                    class="far fa-edit" style="width: 16px;" data-id="{{item.fields.ID}}"></i></button>
+                <button type="button" class="btn btn-primary openEditTaskModal" data-id="{{item.fields.ID}}"
+                  data-catg="Today"><i class="far fa-edit" style="width: 16px;" data-id="{{item.fields.ID}}"
+                    data-catg="Today"></i></button>
               </div>
 
               <div class="dropdown btnTaskTableAction">
@@ -107,16 +113,17 @@
 
               <div class="dropdown btnTaskTableAction">
                 <button type="button" class="btn btn-warning openEditTaskModal" data-id="{{item.fields.ID}}"
-                  data-ttype="comment"><i class="far fa-comment-alt" data-id="{{item.fields.ID}}"
-                    data-ttype="comment"></i></button>
+                  data-ttype="comment" data-catg="Today"><i class="far fa-comment-alt" data-id="{{item.fields.ID}}"
+                    data-ttype="comment" data-catg="Today"></i></button>
               </div>
 
               <div class="dropdown btnTaskTableAction">
                 <button type="button" class="btn btn-secondary" data-toggle="dropdown" data-placement="bottom"
                   title="More task actions..."><i class="fas fa-ellipsis-h"></i></button>
                 <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
-                  <a class="dropdown-item no-modal openEditTaskModal" data-id="{{item.fields.ID}}">
-                    <i class="far fa-edit" style="margin-right: 8px;" data-id="{{item.fields.ID}}"></i>Edit
+                  <a class="dropdown-item no-modal openEditTaskModal" data-id="{{item.fields.ID}}" data-catg="Today">
+                    <i class="far fa-edit" style="margin-right: 8px;" data-id="{{item.fields.ID}}"
+                      data-catg="Today"></i>Edit
                     Task</a>
 
                   <div class="dropdown-divider"></div>

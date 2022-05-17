@@ -64,4 +64,8 @@ export class CRMService extends BaseService {
   saveComment(data) {
     return this.POST(this.ERPObjects.Tprojecttask_comments, data);
   }
+
+  getAllFilters() {
+    return
+  }
 }

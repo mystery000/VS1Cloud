@@ -190,12 +190,12 @@ Template.crmoverview.events({
 
   // open task detail modal
   'click .openEditTaskModal': function (e) {
-    let type = e.target.dataset.ttype;
-    // console.log('task id==', id, e.target)
 
     if (!e.target.classList.contains('no-modal')) {
 
       let id = e.target.dataset.id;
+      let type = e.target.dataset.ttype;
+      let catg = e.target.dataset.catg;
       let templateObject = Template.instance();
 
       $('.fullScreenSpin').css('display', 'inline-block');
@@ -209,10 +209,18 @@ Template.crmoverview.events({
           $('#txtCrmProjectID').val(selected_record.ProjectID);
           $('#txtCommentsDescription').val('');
 
+          $('#taskDetailModalCategoryLabel').html(`<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`)
           $('#taskmodalNameLabel').html(selected_record.TaskName);
           $('.activityAdded').html('Added on ' + moment(selected_record.MsTimeStamp).format('MMM D h:mm A'));
           $('#taskmodalDuedate').html(moment(selected_record.due_date).format('D MMM'));
           $('#taskmodalDescription').html(selected_record.TaskDescription);
+
+          $('#chkComplete_taskEditLabel').removeClass("task_priority_0");
+          $('#chkComplete_taskEditLabel').removeClass("task_priority_1");
+          $('#chkComplete_taskEditLabel').removeClass("task_priority_2");
+          $('#chkComplete_taskEditLabel').removeClass("task_priority_3");
+          $('#chkComplete_taskEditLabel').addClass("task_priority_" + selected_record.priority);
+
           let taskmodalLabels = '';
           if (selected_record.TaskLabel) {
             if (selected_record.TaskLabel.fields != undefined) {
@@ -240,8 +248,8 @@ Template.crmoverview.events({
                     <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
                     <div class="custom-control custom-checkbox chkBox pointer"
                       style="width: 15px; margin: 4px;">
-                      <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
-                        id="subtaskitem_1" value="">
+                      <input class="custom-control-input chkBox pointer task_priority_${subtask.priority}" type="checkbox"
+                        id="subtaskitem_${subtask.ID}" value="">
                       <label class="custom-control-label chkBox pointer" for="subtaskitem_${subtask.ID}"></label>
                     </div>
                     <span class="taskName">${subtask.SubTaskName}</span>
@@ -281,7 +289,7 @@ Template.crmoverview.events({
                       <div class="custom-control custom-checkbox chkBox pointer"
                         style="width: 15px; margin: 4px;">
                         <input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox"
-                          id="subtaskitem_1" value="">
+                          id="subtaskitem_${subtask.ID}" value="">
                         <label class="custom-control-label chkBox pointer" for="subtaskitem_${subtask.ID}"></label>
                       </div>
                       <span class="taskName">${subtask.SubTaskName}</span>
@@ -494,7 +502,6 @@ Template.crmoverview.events({
         CommentsDescription: comment
       }
     };
-    // console.log(taskID, projectID, comment);
 
     if (taskID != '' && projectID != '' && comment != '') {
       $('.fullScreenSpin').css('display', 'inline-block');
@@ -545,6 +552,25 @@ Template.crmoverview.events({
         $('.fullScreenSpin').css('display', 'none');
       });
     }
+  },
+
+  'click .btnRefresh': function () {
+    Meteor._reload.reload();
+  },
+
+  'click #exportbtn': function () {
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+    jQuery('#tblAllTaskDatatable_wrapper .dt-buttons .btntabletoexcel').click();
+    $('.fullScreenSpin').css('display', 'none');
+
+  },
+
+  'click .printConfirm': function (event) {
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+    jQuery('#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf').click();
+    $('.fullScreenSpin').css('display', 'none');
   },
 
 });

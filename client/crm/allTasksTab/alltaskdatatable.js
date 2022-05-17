@@ -16,6 +16,10 @@ Template.alltaskdatatable.onCreated(function () {
   templateObject.selected_id = new ReactiveVar(0);
   templateObject.selected_ttodo = new ReactiveVar('');
   templateObject.due_date = new ReactiveVar(null);
+
+  templateObject.active_projects = new ReactiveVar([]);
+  templateObject.archived_projects = new ReactiveVar([]);
+  templateObject.favorite_projects = new ReactiveVar([]);
 });
 
 Template.alltaskdatatable.onRendered(function () {
@@ -315,7 +319,7 @@ Template.alltaskdatatable.onRendered(function () {
         let today = moment().format('YYYY-MM-DD');
         let allrecords = data.tprojecttasks;
         allrecords = allrecords.filter(item => item.fields.ProjectID == 11);
-        console.log('allrecords=>', allrecords)
+        // console.log('allrecords=>', allrecords)
 
         // tempcode until fields are added in backend
         // let allrecords = data.tprojecttasks.sort(function (a, b) {
@@ -439,8 +443,20 @@ Template.alltaskdatatable.onRendered(function () {
         $('#goProjectWrapper').html(add_projectlist);
         $('.goProjectWrapper').html(add_projectlist);
 
+        let all_projects = data.tprojectlist.filter(project => project.fields.Active == true && project.fields.ID != 11);
+        let archived_projects = all_projects.filter(project => project.fields.Archive == true);
+        let active_projects = all_projects.filter(project => project.fields.Archive == false);
+        let favorite_projects = active_projects.filter(project => project.fields.AddToFavourite == true);
+
+        templateObject.active_projects.set(active_projects);
+        templateObject.archived_projects.set(archived_projects);
+        templateObject.favorite_projects.set(favorite_projects);
+
+        $('.crm_project_count').html(active_projects.length)
+
       } else {
         templateObject.tprojectlist.set([]);
+        $('.crm_project_count').html(0)
       }
 
     }).catch(function (err) {
@@ -514,7 +530,6 @@ Template.alltaskdatatable.onRendered(function () {
     });
     $('.fullScreenSpin').css('display', 'none');
   }, 0);
-
 
   setTimeout(function () {
     $('#tblProjectTasks').DataTable({
@@ -834,7 +849,7 @@ Template.alltaskdatatable.events({
             $('.fullScreenSpin').css('display', 'none');
             swal(err, '', 'error');
             return;
-          });;
+          });
 
         } else {
 
@@ -1145,11 +1160,13 @@ Template.alltaskdatatable.events({
   // set priority in add
   'click .chkPriorityAdd': function (e) {
     let value = e.target.value
-    $('#chkPriority0').prop('checked', false);
-    $('#chkPriority1').prop('checked', false);
-    $('#chkPriority2').prop('checked', false);
-    $('#chkPriority3').prop('checked', false);
-    $('#chkPriority' + value).prop('checked', true);
+    value = value == undefined ? 3 : value;
+
+    $('#chkPriorityAdd0').prop('checked', false);
+    $('#chkPriorityAdd1').prop('checked', false);
+    $('#chkPriorityAdd2').prop('checked', false);
+    $('#chkPriorityAdd3').prop('checked', false);
+    $('#chkPriorityAdd' + value).prop('checked', true);
 
   },
 
@@ -1178,7 +1195,7 @@ Template.alltaskdatatable.events({
     due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : '';
 
     let priority = 0;
-    priority = $('#chkPriority1' + selected_id).prop('checked') ? 1 : $('#chkPriority2' + selected_id).prop('checked') ? 2 : $('#chkPriority3' + selected_id).prop('checked') ? 3 : 0;
+    priority = $('#chkPriorityAdd1' + selected_id).prop('checked') ? 1 : $('#chkPriorityAdd2' + selected_id).prop('checked') ? 2 : $('#chkPriorityAdd3' + selected_id).prop('checked') ? 3 : 0;
 
     // handle save process here
     let edit_task_name = $('#edit_task_name').val();
@@ -1319,6 +1336,8 @@ Template.alltaskdatatable.events({
 
         //////////////////////////////
         templateObject.getAllTaskList();
+        $("#newTaskModal").modal("hide");
+
       }
 
       $('.fullScreenSpin').css('display', 'none');
@@ -1547,28 +1566,79 @@ Template.alltaskdatatable.events({
   'click .btnEditTask': function (event) {
     $('#taskDetailModal').modal('toggle');
   },
+
   'click .btnCommentTask': function (event) {
     $('#taskDetailModal').modal('toggle');
   },
-  'click #tblNewProjectsDatatable tr': function (event) {
-    $('#newProjectTasksModal').modal('toggle');
-  },
+
   'click .sectionOpened': function (event) {
     $('.sectionOpened').css('display', 'none');
     $('.sectionClosed').css('display', 'inline-flex');
     $('.sectionCol1').css('display', 'none');
   },
+
   'click .sectionClosed': function (event) {
     $('.sectionOpened').css('display', 'inline-flex');
     $('.sectionClosed').css('display', 'none');
     $('.sectionCol1').css('display', 'inline');
   },
+
   'click .btnNewFilter': function (event) {
     $('#newFilterModal').modal('toggle');
   },
+
   'click .btnNewLabel': function (event) {
     $('#newLabelModal').modal('toggle');
   },
+
+  // submit save new project
+  'click .btnSaveNewCrmProject': function (e) {
+    let projectName = $('#crmProjectName').val();
+    let projectColor = $('#crmProjectColor').val();
+    let swtNewCrmProjectFavorite = $("#swtNewCrmProjectFavorite").prop("checked");
+
+    if (projectName === '' || projectName === null) {
+      swal('Project name is not entered!', '', 'warning');
+      return;
+    }
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+
+    var objDetails = {
+      type: "Tprojectlist",
+      fields: {
+        Active: true,
+        ProjectName: projectName,
+        ProjectColour: projectColor,
+        AddToFavourite: swtNewCrmProjectFavorite
+      }
+    };
+    let templateObject = Template.instance();
+
+    crmService.updateProject(objDetails).then(function (data) {
+
+      templateObject.getTProjectList();
+
+      $('#crmProjectName').val('');
+      $('#crmProjectColor').val('#000000');
+      $("#swtNewCrmProjectFavorite").prop("checked", false);
+
+      $('#newCrmProject').modal('hide');
+      $('.fullScreenSpin').css('display', 'none');
+      // Meteor._reload.reload();
+    }).catch(function (err) {
+      swal({
+        title: 'Oooops...',
+        text: err,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Try Again'
+      }).then((result) => {
+      });
+      $('.fullScreenSpin').css('display', 'none');
+    });
+  },
+
 });
 
 Template.alltaskdatatable.helpers({
@@ -1576,8 +1646,6 @@ Template.alltaskdatatable.helpers({
     return Template.instance().alllabels.get();
   },
   allrecords: () => {
-    console.log('allrecords get=>', Template.instance().allrecords.get())
-
     return Template.instance().allrecords.get();
   },
 
@@ -1649,4 +1717,17 @@ Template.alltaskdatatable.helpers({
       return labels.fields.TaskLabelName;
     }
   },
+
+  active_projects: () => {
+    return Template.instance().active_projects.get();
+  },
+
+  archived_projects: () => {
+    return Template.instance().archived_projects.get();
+  },
+
+  favorite_projects: () => {
+    return Template.instance().favorite_projects.get();
+  },
+
 });

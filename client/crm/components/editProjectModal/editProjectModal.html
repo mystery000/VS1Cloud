@@ -33,46 +33,15 @@
                   Favorites</label>
               </div>
             </div>
-            <div class="col-12 mb-4">
-              <label>View</label>
-              <div class="row">
-                <div class="col-6 listCol">
-                  <div class="listoptiondiv mb-2"
-                    style="background-image: url('images/listoption.svg'); height: 85px; width: 100%; border-radius: 5px; border: 2px solid #d1d3e2;">
-                  </div>
-                  <!-- <img src="images/listoption.svg" style="width: 100%; "> -->
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="crmViewOption" id="editCrmViewOptionList"
-                      value="listoption" checked>
-                    <label class="form-check-label" for="editCrmViewOptionList">
-                      List
-                    </label>
-                  </div>
-                </div>
-                <div class="col-6 boardCol">
-                  <div class="boardoptiondiv mb-2"
-                    style="background-image: url('images/gridoption.svg'); height: 85px; width: 100%; border-radius: 5px; border: 2px solid #d1d3e2;">
-                  </div>
-                  <!-- <img src="images/gridoption.svg" style="width: 100%;"> -->
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="crmViewOption" id="editCrmViewOptionGrid"
-                      value="gridoption">
-                    <label class="form-check-label" for="editCrmViewOptionGrid">
-                      Board
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-12">
-              <p>View is synced between teammates in shared projects. Learn more.</p>
-            </div>
           </div>
         </div>
+        <input type="hidden" id="editProjectID">
+
         <div class="modal-footer">
-          <input type="hidden" id="editProjectID">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary btnEditCrmProject" data-dismiss="modal">Save</button>
+          <button class="btn btn-success btnEditCrmProject" type="button"><i class="fa fa-save"
+              style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+              style="margin-right: 5px;"></i>Close</button>
         </div>
       </div>
     </div>

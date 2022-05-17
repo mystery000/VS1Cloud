@@ -6,14 +6,15 @@
       <div class="modal-content" style="min-height: 90vh; padding: 20px;">
         <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
           <div style="display: grid;">
-            <span class="taskLocation"><a class="taganchor" href=""><i class="fas fa-inbox text-primary"
-                  style="margin-right: 5px;"></i>All Tasks</a></span>
+            <span class="taskLocation"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
+                  class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
             <div style="display: inline-flex;">
-              <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; margin-top: 7px;">
+              <div class="custom-control custom-checkbox chkBox pointer"
+                style="width: 15px; margin-top: 7px; background: transparent;" id="chkComplete_taskEditLabel">
                 <input class="custom-control-input chkBox chkComplete pointer chk_complete" type="checkbox"
-                  id="taskitem_id" value="" data-dismiss="modal">
-                <label class="custom-control-label chkBox pointer chk_complete" for="taskitem_id" data-dismiss="modal"
-                  data-id="edit"></label>
+                  id="chkComplete_taskEdit" value="" style="background: transparent !important;" data-dismiss="modal">
+                <label class="custom-control-label chkBox pointer chk_complete" for="chkComplete_taskEdit"
+                  data-dismiss="modal" data-id="edit"></label>
               </div>
               <h5 class="modal-title" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
             </div>
