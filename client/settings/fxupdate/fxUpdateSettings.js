@@ -12,10 +12,41 @@ import {
 } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 import FxUpdater from "./FxUpdater";
-import FxUpdateSetting, { FxFrequencyDaily } from "./FxUpdateSetting";
+import FxUpdateSetting, { FxFrequencyDaily, FxFrequencyMonthly } from "./Model/FxUpdateSetting";
+import FxSettingsEditor from "./FxSettingsEditor";
 let sideBarService = new SideBarService();
 
+
+// This is the Fx Update settings table
 let fxUpdateObject;
+
+let FxEditorSetting = new FxSettingsEditor({
+    onEditEnabled: () => {
+        // This is the default object to build when you click here
+        fxUpdateObject = new FxUpdateSetting({
+            transactionType: "daily",
+            frequency: new FxFrequencyDaily({
+                days: "*",
+                every: "1",
+                startTime: "08:00:00",
+                startDate: "",
+            }),
+        });
+
+
+        console.log(fxUpdateObject);
+    },
+    onEditDisabled: () => {
+        fxUpdateObject = null;
+
+    },
+    onCanceled: () => {
+        console.log('canceled edit mode')
+    },
+    onSaved: () => {
+        console.log('on Saved');
+    }
+});
 
 Template.fixUpdates.onCreated(function() {
     const templateObject = Template.instance();
@@ -660,6 +691,7 @@ Template.fixUpdates.onRendered(function() {
         $('#'+selectDataID).val(listData);
         //$('#'+selectLineID+" .lineAccountName").val('');
     });
+    
 });
 
 Template.fixUpdates.events({
@@ -708,6 +740,8 @@ Template.fixUpdates.events({
         // } else {}
     },
     'click .btnSaveFrequency': function() {
+        //FxEditorSetting.save();
+
         $('.fullScreenSpin').css('display', 'inline-block');
         let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
@@ -831,6 +865,9 @@ Template.fixUpdates.events({
         $('.fullScreenSpin').css('display', 'none');
    
     },
+    'click .btnCancelFrequency': (e) => {
+        FxEditorSetting.cancel();
+    },
     'click .chkBoxDays': function(event) {
         var checkboxes = document.querySelectorAll('.chkBoxDays');
         checkboxes.forEach((item) => {
@@ -840,22 +877,22 @@ Template.fixUpdates.events({
         });
     },
     'click .edtFrequency': (event) => {
-        fxUpdateObject = new FxUpdateSetting({
-            transactionType: "daily",
-            frequency: new FxFrequencyDaily()
-        });
-
         let templateObject = Template.instance();
         let scheduleData = templateObject.employeescheduledrecord.get();
         let formId = $(event.target).closest("tr").attr("id");
 
+        FxEditorSetting.enableEditMode();
+
         $("#formid").val(formId);
 
-        templateObject.assignFrequency("Daily");
-        let currentDate = new Date();
+        console.log(fxUpdateObject.frequency.rythm.charAt(0).toUpperCase() + fxUpdateObject.frequency.rythm.slice(1));
 
-        $('#edtDailyStartTime').val("08:00:00");
-       // $('#edtDailyStartDate').val(startDateVal);
+        templateObject.assignFrequency(fxUpdateObject.frequency.rythm.charAt(0).toUpperCase() + fxUpdateObject.frequency.rythm.slice(1));
+        let currentDate = new Date();
+        let currentDateTime = currentDate.getDay() + "/" + currentDate.getMonth() + "/" + currentDate.getFullYear();
+
+        $('#edtDailyStartTime').val(fxUpdateObject.frequency.startTime);
+        $('#edtDailyStartDate').val(currentDateTime);
 
         // This is the default previous data
         // var result = scheduleData.filter(data => {
@@ -925,6 +962,13 @@ Template.fixUpdates.events({
             document.getElementById("dailySettings").style.display = "none";
             document.getElementById("oneTimeOnlySettings").style.display = "none";
             document.getElementById("onEventSettings").style.display = "none";
+
+            // fxUpdateObject.frequency = new FxFrequencyMonthly({
+            //     everyDay: "month",
+            //     ofMonths: []
+            // });
+            // console.log(fxUpdateObject);
+            
         } else if (event.target.id == "frequencyWeekly") {
             document.getElementById("weeklySettings").style.display = "block";
             document.getElementById("monthlySettings").style.display = "none";
