@@ -1519,6 +1519,15 @@ Template.receiptsoverview.onRendered(function() {
 });
 
 Template.receiptsoverview.events({
+    'click #nav-multiple-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-lg" ).addClass( "modal-xl" );
+    },
+    'click #nav-expense-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-xl" ).addClass( "modal-lg" );
+    },
+    'click #nav-time-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-xl" ).addClass( "modal-lg" );
+    },
     'click a#showManuallyCreate, click .btnNewReceipt, click #newReceiptModal #nav-expense-tab': function() {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-expense-tab').addClass('active');
@@ -1716,6 +1725,7 @@ Template.receiptsoverview.events({
 
         $('#viewReceiptModal').modal('toggle');
 
+        $('#viewReceiptModal .receiptID').html(selectedId);
         $('#viewReceiptModal .employees').val(selectedClaim.EmployeeName);
         $('#viewReceiptModal .employees').attr('data-id', selectedClaim.EmployeeID);
         $('#viewReceiptModal .merchants').val(selectedClaim.SupplierName);
