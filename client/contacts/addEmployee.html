@@ -2036,6 +2036,42 @@
                                                                             color: red !important;
                                                                         }
                                                                     </style>
+                                                                    <div class="row bankAccContainer primaryContainer">
+                                                                        <div class="col-12">
+                                                                            <h5>Primary Bank Account</h5>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label>Statement Text</label>
+                                                                                <input type="text" class="form-control primaryStatementText" id="bankAccountStatement" value="{{employeePaySetting.BankAccountStatement}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label>Account Name</label>
+                                                                                <input type="text" class="form-control primaryAccName" id="bankAccountName" value="{{employeePaySetting.BankAccountName}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label>BSB Number</label>
+                                                                                <input type="text" class="form-control primaryBsbNumber" id="bankAccountBSB" value="{{employeePaySetting.BankAccountBSB}}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6 col-md-3">
+                                                                            <div class="form-group">
+                                                                                <label>Account Number</label>
+                                                                                <input type="text" class="form-control primaryAccNumber" id="bankAccountNo" value="{{employeePaySetting.BankAccountNo}}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- div class="bankAccListContainer">
+                                                                    <style>
+                                                                        .btnRemoveAccount{
+                                                                            color: red !important;
+                                                                        }
+                                                                    </style>
                                                                     {{#if bankAccountList}}
                                                                         {{#if bankAccountList.primary}}
                                                                             <div class="row bankAccContainer primaryContainer">
@@ -2320,18 +2356,17 @@
                                                                         </div>
                                                                     </div>
                                                                     {{/if}}
-                                                                </div>
+                                                                </div -->
 
-                                                                <div class="row">
+                                                                <!--div class="row">
                                                                     <div class="col-12 addBankAccountCol">
-                                                                        <!-- <button type="button" class="btn btn-link" id="btnAddBankAcc" data-toggle="modal" data-target="#newBankAccountModal">Add Another Bank Account</button> -->
                                                                         <button type="button" class="btn btn-link" id="btnAddBankAcc">Add Another Bank Account</button>
                                                                         <span class="bankAccountsRemaining"></span>
                                                                         <div class="modal fade" id="newBankAccountModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                                             {{> addaccountpop}}
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </div -->
                                                             </div>
                                                             <div class="tab-pane fade" id="payslips" role="tabpanel" aria-labelledby="-tab">
                                                                 <div class="row mb-2">
