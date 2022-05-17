@@ -35,6 +35,9 @@ Template.inventorylist.onCreated(function() {
 
     templateObject.includeStockAdjustment = new ReactiveVar();
     templateObject.includeStockAdjustment.set(false);
+
+    templateObject.isSNTrackchecked = new ReactiveVar();
+    templateObject.isSNTrackchecked.set(false);
 });
 
 Template.inventorylist.onRendered(function() {
@@ -43,6 +46,8 @@ Template.inventorylist.onRendered(function() {
     if (FlowRouter.current().queryParams.success) {
         $(".btnRefresh").addClass("btnRefreshAlertOverview");
     }
+    
+
 
     let templateObject = Template.instance();
     let productService = new ProductService();
@@ -76,6 +81,11 @@ Template.inventorylist.onRendered(function() {
     if (isStockAdjustment) {
         templateObject.includeStockAdjustment.set(true);
     }
+
+    if(localStorage.getItem('vs1cloudlicenselevel')=='PLUS'){
+        templateObject.isSNTrackchecked.set(true);
+    }
+
     Meteor.call(
         "readPrefMethod",
         Session.get("mycloudLogonID"),
@@ -1368,6 +1378,9 @@ Template.inventorylist.helpers({
     includeStockAdjustment: () => {
         return Template.instance().includeStockAdjustment.get();
     },
+    isSNTrackchecked: () => {
+        return Template.instance().isSNTrackchecked.get();
+    }
 });
 
 Template.inventorylist.events({
