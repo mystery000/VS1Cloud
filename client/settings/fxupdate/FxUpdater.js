@@ -1,4 +1,3 @@
-import FxUpdateSetting from "./FxUpdateSetting";
 
 
 export default class FxUpdater {
