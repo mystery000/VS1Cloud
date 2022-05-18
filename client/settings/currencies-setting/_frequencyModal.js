@@ -218,6 +218,14 @@ Template._frequencyModal.events({
      * Now we need to save the freqency object
      */
 
+    addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject))
+      .then(function (datareturn) {
+        //location.reload(true);
+      })
+      .catch(function (err) {
+        //location.reload(true);
+      });
+
     console.log(fxUpdateObject);
   },
   'click input[name="frequencyRadio"]': (event) => {
