@@ -210,7 +210,13 @@ Template._frequencyModal.events({
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
       fxUpdateObject.startTime = $("#edtDailyStartTime").val();
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
+      fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
+      fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
     }
+
+    /**
+     * Now we need to save the freqency object
+     */
 
     console.log(fxUpdateObject);
   },
