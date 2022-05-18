@@ -33,7 +33,6 @@
                 <button id="btnRefresh" class="btn btn-primary btnRefresh btnNav" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
             </div>
             <div class="col">
-                <a class="btn btnOpenSettings float-right" role="button" style="margin: 16px;" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                 <button class="btn btn-primary export float-right btnNav" type="button" style="margin: 16px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
             </div>
@@ -45,24 +44,24 @@
                     <table id="tblLotNumberList" style="width:100%;" class="dataTable table table-striped table-bordered tblStockTransferList">
                         <thead>
                             <tr class="dnd-moved">
-                                <th class="th text-center colProductName"  style="width:20%;">Product Name</th>
-                                <th class="th text-center colDepartment"  style="width:15%;">Department</th>
-                                <th class="th text-center colSerialNumber" style="width:15%;">Lot Number</th>
-                                <th class="th text-center colStatus" style="width:15%;">Status</th>
-                                <th class="th text-center colDate" style="width:20%;">Date</th>
-                                <th class="th text-center colExpiryDate" style="width:15%">Expiry Date</th>
+                                <th class="th text-start colProductName"  style="width:20%;">Product Name</th>
+                                <th class="th text-start colDepartment"  style="width:15%;">Department</th>
+                                <th class="th text-start colSerialNumber" style="width:15%;">Lot Number</th>
+                                <th class="th text-start colStatus" style="width:15%;">Status</th>
+                                <th class="th text-start colDate" style="width:20%;">Date</th>
+                                <th class="th text-start colExpiryDate" style="width:15%">Expiry Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#if datatablerecords}}
                             {{#each item in datatablerecords}}
                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colProductName text-center">{{item.productname}}</td>
-                                <td contenteditable="false" class="colDepartment text-center">{{item.department}}</td>
-                                <td contenteditable="false" class="colSerialNumber text-center" >{{item.lotnumber}}</td>
-                                <td contenteditable="false" class="colStatus text-center">{{item.status}}</td>
-                                <td contenteditable="false" class="colDate text-center">{{item.date}}</td>
-                                <td contenteditable="false" class="colExpiryDate text-center">{{item.date}}</td>
+                                <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
+                                <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                <td contenteditable="false" class="colSerialNumber text-start" >{{item.lotnumber}}</td>
+                                <td contenteditable="false" class="colStatus {{ item.cssclass}} text-start">{{item.status}}</td>
+                                <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
+                                <td contenteditable="false" class="colExpiryDate text-start">{{item.expirydate}}</td>
                             </tr>
                             {{/each}}
                             {{/if}}
@@ -115,23 +114,23 @@
                                 <table class="table table-sm">
                                     <thead class="text-secondary" style="color: rgb(251,251,251);">
                                         <tr>
-                                            <th class="th text-center colProductName"  style="width:25%;">Product Name</th>
-                                            <th class="th text-center colDepartment"  style="width:20%;">Department</th>
-                                            <th class="th text-center colSerialNumber" style="width:20%;">Lot Number</th>
-                                            <th class="th text-center colStatus" style="width:15%;">Status</th>
-                                            <th class="th text-center colDate" style="width:20%;">Date</th>
-                                            <th class="th text-center colExpiryDate" style="width:15%">Expiry Date</th>
+                                            <th class="th text-start colProductName"  style="width:25%;">Product Name</th>
+                                            <th class="th text-start colDepartment"  style="width:20%;">Department</th>
+                                            <th class="th text-start colSerialNumber" style="width:20%;">Lot Number</th>
+                                            <th class="th text-start colStatus" style="width:15%;">Status</th>
+                                            <th class="th text-start colDate" style="width:20%;">Date</th>
+                                            <th class="th text-start colExpiryDate" style="width:15%">Expiry Date</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {{#each item in datatablerecords}}
                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                            <td contenteditable="false" class="colProductName text-center">{{item.productname}}</td>
-                                            <td contenteditable="false" class="colDepartment text-center">{{item.department}}</td>
-                                            <td contenteditable="false" class="colSerialNumber text-center" >{{item.lotnumber}}</td>
-                                            <td contenteditable="false" class="colStatus text-center">{{item.status}}</td>
-                                            <td contenteditable="false" class="colDate text-center">{{item.date}}</td>
-                                            <td contenteditable="false" class="colExpiryDate text-center">{{item.date}}</td>
+                                            <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
+                                            <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                            <td contenteditable="false" class="colSerialNumber text-start" >{{item.lotnumber}}</td>
+                                            <td contenteditable="false" class="colStatus {{ item.cssclass }} text-start">{{item.status}}</td>
+                                            <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
+                                            <td contenteditable="false" class="colExpiryDate text-start">{{item.expirdate}}</td>
                                         </tr>
                                         {{/each}}
                                     </tbody>

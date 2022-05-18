@@ -44,7 +44,6 @@ cunneen:mailgun
 check
 harrison:papa-parse
 
-
 matb33:collection-hooks
 email
 #mrgalaxy:stripe
@@ -56,3 +55,4 @@ kadira:flow-router
 kadira:blaze-layout
 littledata:synced-cron
 meteorhacks:ssr
+aldeed:template-extension

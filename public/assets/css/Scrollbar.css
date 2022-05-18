@@ -493,3 +493,18 @@ td.td-input {
     background-color: #1cc88a !important;
     color: #fff !important;
 }
+
+.text-instock {
+    background-color: #fd7e14 !important;
+    color: #fff !important;
+}
+
+.text-sold {
+    background-color: #1cc88a !important;
+    color: #fff !important;
+}
+
+.text-transferred {
+    background-color: #e74a3b !important;
+    color: #fff !important;
+}

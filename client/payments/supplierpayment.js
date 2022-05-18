@@ -324,11 +324,11 @@ Template.supplierpayment.onRendered(function() {
                 var listData = $(this).closest('tr').attr('id');
                 var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                 if(listData){
-                  if(checkDeleted == "Deleted"){
-                    swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                  }else{
+                  // if(checkDeleted == "Deleted"){
+                  //   swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                  // }else{
                     FlowRouter.go('/supplierpaymentcard?id=' + listData);
-                  }
+                  //}
                 }
             });
 
@@ -621,11 +621,11 @@ Template.supplierpayment.onRendered(function() {
                         var listData = $(this).closest('tr').attr('id');
                         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                         if(listData){
-                          if(checkDeleted == "Deleted"){
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                          }else{
+                          // if(checkDeleted == "Deleted"){
+                          //   swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                          // }else{
                             FlowRouter.go('/supplierpaymentcard?id=' + listData);
-                          }
+                          //}
                         }
                     });
 
@@ -916,11 +916,11 @@ Template.supplierpayment.onRendered(function() {
                     var listData = $(this).closest('tr').attr('id');
                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                     if(listData){
-                      if(checkDeleted == "Deleted"){
-                        swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                      }else{
+                      // if(checkDeleted == "Deleted"){
+                      //   swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                      // }else{
                         FlowRouter.go('/supplierpaymentcard?id=' + listData);
-                      }
+                      //}
                     }
                 });
 
@@ -1207,11 +1207,11 @@ Template.supplierpayment.onRendered(function() {
                   var listData = $(this).closest('tr').attr('id');
                   var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                   if(listData){
-                    if(checkDeleted == "Deleted"){
-                      swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                    }else{
+                    // if(checkDeleted == "Deleted"){
+                    //   swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+                    // }else{
                       FlowRouter.go('/supplierpaymentcard?id=' + listData);
-                    }
+                    //}
                   }
               });
 

@@ -54,8 +54,31 @@ Meteor.methods({
     })
   },
   sendEmail: function (details) {
-    // console.log(details);
-    // check([mailFields.to, mailFields.from, mailFields.subject, mailFields.text, mailFields.html], [String]);
+    check([mailFields.to, mailFields.from, mailFields.subject, mailFields.text, mailFields.html], [String]);
+    this.unblock();
+    if(details.attachments === undefined){
+        details.attachments = [];
+    }else{
+
+    }
+    try {
+      Email.send({
+        to: details.to,
+        // to: 'silvertiger0321@gmail.com',
+        from: details.from,
+        cc: details.cc,
+        subject: details.subject,
+        text: details.text,
+        html: html,
+        attachments: details.attachments
+      });
+    } catch(e) {
+        if (e) {
+            throw new Meteor.Error("error", e.response);
+        }
+    }
+  },
+  sendNormalEmail: function (details) {
     this.unblock();
     if(details.attachments === undefined){
         details.attachments = [];
@@ -100,7 +123,7 @@ Meteor.methods({
           return parser.recur().on(new Date(details.NextDueDate)).fullDate();
         },
         job: function() {
-          Meteor.call('sendEmail', details);
+          Meteor.call('sendNormalEmail', details);
           FutureTasks.remove(details.EmployeeId + "_" + details.FormID);
           SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
           Meteor.call('calculateNextDate', details, function(error, result) {

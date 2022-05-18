@@ -143,7 +143,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
           let month_10_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_10||0;
           let month_11_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_11||0;
           let month_12_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_12||0;
-
+          setTimeout(function () {
            var data = {
                 labels: [
                  month_1,
@@ -213,11 +213,12 @@ Template.invstockonhandanddemand.onRendered(()=>{
              options: options,
              data: data
              });
+          }, 1000)
        });
       }else{
-        let data = JSON.parse(dataObject[0].data);
-
-        let useData = data.tproductstocknsaleperiodreport[0];
+        
+        let dataobj = JSON.parse(dataObject[0].data);
+        let useData = dataobj.tproductstocknsaleperiodreport[0];
         let month_1 = useData.TypeDesc_1.replace('-', ' ')||'';
         let month_2 = useData.TypeDesc_2.replace('-', ' ')||'';
         let month_3 = useData.TypeDesc_3.replace('-', ' ')||'';
@@ -256,7 +257,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
         let month_10_shipped = useData.SalesShipQty_10||0;
         let month_11_shipped = useData.SalesShipQty_11||0;
         let month_12_shipped = useData.SalesShipQty_12||0;
-
+        setTimeout(function () {
          var data = {
               labels: [
                month_1,
@@ -326,50 +327,51 @@ Template.invstockonhandanddemand.onRendered(()=>{
            options: options,
            data: data
            });
+        }, 1000)
       }
     }).catch(function (err) {
 
       vs1chartService.getProductStocknSaleReportData(prevMonth11Date, fromDate).then((data) => {
-        addVS1Data('TProductStocknSalePeriodReport',JSON.stringify(data));
-        let month_1 = data.tproductstocknsaleperiodreport[0].TypeDesc_1||'';
-        let month_2 = data.tproductstocknsaleperiodreport[0].TypeDesc_2||'';
-        let month_3 = data.tproductstocknsaleperiodreport[0].TypeDesc_3||'';
-        let month_4 = data.tproductstocknsaleperiodreport[0].TypeDesc_4||'';
-        let month_5 = data.tproductstocknsaleperiodreport[0].TypeDesc_5||'';
-        let month_6 = data.tproductstocknsaleperiodreport[0].TypeDesc_6||'';
-        let month_7 = data.tproductstocknsaleperiodreport[0].TypeDesc_7||'';
-        let month_8 = data.tproductstocknsaleperiodreport[0].TypeDesc_8||'';
-        let month_9 = data.tproductstocknsaleperiodreport[0].TypeDesc_9||'';
-        let month_10 = data.tproductstocknsaleperiodreport[0].TypeDesc_10||'';
-        let month_11 = data.tproductstocknsaleperiodreport[0].TypeDesc_11||'';
-        let month_12 = data.tproductstocknsaleperiodreport[0].TypeDesc_12||'';
+          addVS1Data('TProductStocknSalePeriodReport',JSON.stringify(data));
+          let month_1 = data.tproductstocknsaleperiodreport[0].TypeDesc_1||'';
+          let month_2 = data.tproductstocknsaleperiodreport[0].TypeDesc_2||'';
+          let month_3 = data.tproductstocknsaleperiodreport[0].TypeDesc_3||'';
+          let month_4 = data.tproductstocknsaleperiodreport[0].TypeDesc_4||'';
+          let month_5 = data.tproductstocknsaleperiodreport[0].TypeDesc_5||'';
+          let month_6 = data.tproductstocknsaleperiodreport[0].TypeDesc_6||'';
+          let month_7 = data.tproductstocknsaleperiodreport[0].TypeDesc_7||'';
+          let month_8 = data.tproductstocknsaleperiodreport[0].TypeDesc_8||'';
+          let month_9 = data.tproductstocknsaleperiodreport[0].TypeDesc_9||'';
+          let month_10 = data.tproductstocknsaleperiodreport[0].TypeDesc_10||'';
+          let month_11 = data.tproductstocknsaleperiodreport[0].TypeDesc_11||'';
+          let month_12 = data.tproductstocknsaleperiodreport[0].TypeDesc_12||'';
 
-        let month_1_onhand = data.tproductstocknsaleperiodreport[0].StockQty_1||0;
-        let month_2_onhand = data.tproductstocknsaleperiodreport[0].StockQty_2||0;
-        let month_3_onhand = data.tproductstocknsaleperiodreport[0].StockQty_3||0;
-        let month_4_onhand = data.tproductstocknsaleperiodreport[0].StockQty_4||0;
-        let month_5_onhand = data.tproductstocknsaleperiodreport[0].StockQty_5||0;
-        let month_6_onhand = data.tproductstocknsaleperiodreport[0].StockQty_6||0;
-        let month_7_onhand = data.tproductstocknsaleperiodreport[0].StockQty_7||0;
-        let month_8_onhand = data.tproductstocknsaleperiodreport[0].StockQty_8||0;
-        let month_9_onhand = data.tproductstocknsaleperiodreport[0].StockQty_9||0;
-        let month_10_onhand = data.tproductstocknsaleperiodreport[0].StockQty_10||0;
-        let month_11_onhand = data.tproductstocknsaleperiodreport[0].StockQty_11||0;
-        let month_12_onhand = data.tproductstocknsaleperiodreport[0].StockQty_12||0;
+          let month_1_onhand = data.tproductstocknsaleperiodreport[0].StockQty_1||0;
+          let month_2_onhand = data.tproductstocknsaleperiodreport[0].StockQty_2||0;
+          let month_3_onhand = data.tproductstocknsaleperiodreport[0].StockQty_3||0;
+          let month_4_onhand = data.tproductstocknsaleperiodreport[0].StockQty_4||0;
+          let month_5_onhand = data.tproductstocknsaleperiodreport[0].StockQty_5||0;
+          let month_6_onhand = data.tproductstocknsaleperiodreport[0].StockQty_6||0;
+          let month_7_onhand = data.tproductstocknsaleperiodreport[0].StockQty_7||0;
+          let month_8_onhand = data.tproductstocknsaleperiodreport[0].StockQty_8||0;
+          let month_9_onhand = data.tproductstocknsaleperiodreport[0].StockQty_9||0;
+          let month_10_onhand = data.tproductstocknsaleperiodreport[0].StockQty_10||0;
+          let month_11_onhand = data.tproductstocknsaleperiodreport[0].StockQty_11||0;
+          let month_12_onhand = data.tproductstocknsaleperiodreport[0].StockQty_12||0;
 
-        let month_1_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_1||0;
-        let month_2_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_2||0;
-        let month_3_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_3||0;
-        let month_4_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_4||0;
-        let month_5_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_5||0;
-        let month_6_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_6||0;
-        let month_7_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_7||0;
-        let month_8_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_8||0;
-        let month_9_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_9||0;
-        let month_10_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_10||0;
-        let month_11_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_11||0;
-        let month_12_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_12||0;
-
+          let month_1_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_1||0;
+          let month_2_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_2||0;
+          let month_3_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_3||0;
+          let month_4_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_4||0;
+          let month_5_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_5||0;
+          let month_6_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_6||0;
+          let month_7_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_7||0;
+          let month_8_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_8||0;
+          let month_9_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_9||0;
+          let month_10_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_10||0;
+          let month_11_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_11||0;
+          let month_12_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_12||0;
+        setTimeout(function () {
          var data = {
               labels: [
                month_1,
@@ -438,6 +440,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
            options: options,
            data: data
            });
+        }, 1000)
      });
     });
 

@@ -302,6 +302,23 @@
     {{#if isGreenTrack}}
         <script>
             function logOutFunc() {
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    const reportData = JSON.parse(value);
+                    if (reportData.BasedOnType === "E" && reportData.ISEmpty)
+                        Meteor.call('sendNormalEmail', reportData);
+                });
                 window.open('/vs1greentracklogin', '_self');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
@@ -315,6 +332,23 @@
     {{else}}
         <script>
             function logOutFunc() {
+                let values = [];
+                let basedOnTypeStorages = Object.keys(localStorage);
+                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                    let employeeId = storage.split('_')[2];
+                    return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                });
+                let i = basedOnTypeStorages.length;
+                if (i > 0) {
+                    while (i--) {
+                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                    }
+                }
+                values.forEach(value => {
+                    const reportData = JSON.parse(value);
+                    if (reportData.BasedOnType === "E" && reportData.ISEmpty)
+                        Meteor.call('sendNormalEmail', reportData);
+                });
                 window.open('/', '_self');
                 CloudUser.update({
                     _id: Session.get('mycloudLogonID')
@@ -670,7 +704,6 @@
 
                             .colStatusth {
                                 width: 5% !important;
-                                s
                             }
 
                             .globalRefTh {
@@ -688,7 +721,7 @@
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="searchIDth" style="width: 10%;">ID</th>
-                                    <th class="nameTh" style="width:;">Name</th>
+                                    <th class="nameTh">Name</th>
                                     <th class="typeTh" style="width: 15%;">Type</th>
                                     <th class="globalRefTh" style="width: 20%;">Global Ref</th>
                                     <th class="th colStatus colStatusth" style="width: 5%;">Status</th>

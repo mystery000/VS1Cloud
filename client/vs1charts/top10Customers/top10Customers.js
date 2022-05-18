@@ -23,136 +23,138 @@ Template.top10Customers.onRendered(function () {
   let topData = this;
 
   getInvSales(function (data) {
-    let customerList = [];
-    topTenData1 = _.take(data, 10);
-    let totalBalance = 0;
-    let itemName = [];
-    let itemBalance = [];
+    setTimeout(function () {
+      let customerList = [];
+      topTenData1 = _.take(data, 10);
+      let totalBalance = 0;
+      let itemName = [];
+      let itemBalance = [];
 
-    topTenData1.map(function (item) {
-      item.totalbalance = +parseFloat(item.totalbalance).toFixed(2);
-      if (item.totalbalance > 0) {
-        //itemName.push(item.name);
-        //itemBalance.push(item.totalbalance);
-        customerList.push(
-          new Customer({
-            name: item.name,
-            totalbalance: item.totalbalance,
-          })
-        );
-      }
-      // itemName.push(item.name);
-      // itemBalance.push(item.totalbalance);
-    });
+      topTenData1.map(function (item) {
+        item.totalbalance = +parseFloat(item.totalbalance).toFixed(2);
+        if (item.totalbalance > 0) {
+          //itemName.push(item.name);
+          //itemBalance.push(item.totalbalance);
+          customerList.push(
+            new Customer({
+              name: item.name,
+              totalbalance: item.totalbalance,
+            })
+          );
+        }
+        // itemName.push(item.name);
+        // itemBalance.push(item.totalbalance);
+      });
 
-    let otherData = _.difference(data, topTenData1, _.isEqual);
+      let otherData = _.difference(data, topTenData1, _.isEqual);
 
-    let totalPayment = 0;
-    let overDuePayment = 0;
+      let totalPayment = 0;
+      let overDuePayment = 0;
 
-    topData.topTenData.set(data);
+      topData.topTenData.set(data);
 
-    //console.log(topTenData1);
+      //console.log(topTenData1);
 
-    templateObject.topTenData.set(topTenData1);
+      templateObject.topTenData.set(topTenData1);
 
-    // Chart.js
-    var ctx = document.getElementById("top10customers").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "horizontalBar",
-      data: {
-        labels: customerList.map((customer) => customer.name),
-        datasets: [
-          {
-            label: "Amount #" + this.name,
-            data: customerList.map((customer) => customer.totalbalance),
-
-            backgroundColor: [
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-            ],
-            borderColor: [
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        onClick: function (evt, item) {
-          if (item[0]["_model"].label) {
-            var activePoints = item[0]["_model"].label;
-            FlowRouter.go("/salesreport?contact=" + activePoints);
-          }
-        },
-        maintainAspectRatio: false,
-        responsive: true,
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data) {
-              return (
-                utilityService.modifynegativeCurrencyFormat(
-                  tooltipItem.xLabel
-                ) || 0.0
-              );
-              // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
-              //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
-              // });
-            },
-          },
-        },
-        legend: {
-          display: false,
-        },
-        title: {},
-        scales: {
-          xAxes: [
+      // Chart.js
+      var ctx = document.getElementById("top10customers").getContext("2d");
+      var myChart = new Chart(ctx, {
+        type: "horizontalBar",
+        data: {
+          labels: customerList.map((customer) => customer.name),
+          datasets: [
             {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-                drawOnChartArea: false,
-              },
-              ticks: {
-                fontColor: "#858796",
-                beginAtZero: true,
-                padding: 20,
-              },
-            },
-          ],
-          yAxes: [
-            {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-              },
-              ticks: {
-                fontColor: "#858796",
-                beginAtZero: true,
-                padding: 20,
-              },
+              label: "Amount #" + this.name,
+              data: customerList.map((customer) => customer.totalbalance),
+
+              backgroundColor: [
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+              ],
+              borderColor: [
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+              ],
+              borderWidth: 1,
             },
           ],
         },
-      },
-    });
+        options: {
+          onClick: function (evt, item) {
+            if (item[0]["_model"].label) {
+              var activePoints = item[0]["_model"].label;
+              FlowRouter.go("/salesreport?contact=" + activePoints);
+            }
+          },
+          maintainAspectRatio: false,
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                return (
+                  utilityService.modifynegativeCurrencyFormat(
+                    tooltipItem.xLabel
+                  ) || 0.0
+                );
+                // Currency + Number(tooltipItem.xLabel).toFixed(2).replace(/./g, function(c, i, a) {
+                //     return i > 0 && c !== "." && (a.length - i) % 3 === 0 ? "," + c : c;
+                // });
+              },
+            },
+          },
+          legend: {
+            display: false,
+          },
+          title: {},
+          scales: {
+            xAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                  drawOnChartArea: false,
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  beginAtZero: true,
+                  padding: 20,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  beginAtZero: true,
+                  padding: 20,
+                },
+              },
+            ],
+          },
+        },
+      });
+    }, 1000)
   });
 
   function getInvSales(callback) {

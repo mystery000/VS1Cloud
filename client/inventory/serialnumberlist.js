@@ -52,18 +52,29 @@ Template.serialnumberlist.onRendered(function() {
     }
     templateObject.getAllSerialNumberData = function() {
         sideBarService.getAllSerialNumber().then(function(data) {
-
             for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+                let tclass = '';
+                let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                
+                if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                    tclass="text-sold";
+                }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                    tclass="text-instock";
+                }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                    tclass="text-transfered";
+                }else{
+                    tclass='';
+                }
                 let dataList = {
                     productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                     department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
                     serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                     status: data.tserialnumberlistcurrentreport[i].AllocType,
-                    date: data.tserialnumberlistcurrentreport[i].TransDate != '' ? data.tserialnumberlistcurrentreport[i].TransDate : 'Unknown'
+                    date: sdatet,
+                    cssclass:tclass 
                 };
-
                 dataTableList.push(dataList);
-
             }
 
             templateObject.datatablerecords.set(dataTableList);
@@ -318,17 +329,32 @@ Template.serialnumberlist.onRendered(function() {
             sideBarService.getAllSerialNumber().then(function(data) {
                 let lineItems = [];
                 let lineItemObj = {};
+                let tclass = '';
                 addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
                 for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
-
-                    var dataList = {
+                    let datet=new Date(data.tserialnumberlistcurrentreport[i].TransDate);
+                    let sdatet = `${datet.getDate()}/${datet.getMonth()}/${datet.getFullYear()}`;
+                    
+                    if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+                        tclass="text-sold";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                        tclass="text-instock";
+                    }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+                        tclass="text-transfered";
+                    }else{
+                        tclass='';
+                    }
+                    let dataList = {
                         productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                         department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
                         serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                         status: data.tserialnumberlistcurrentreport[i].AllocType,
-                        date: data.tserialnumberlistcurrentreport[i].TransDate != '' ? data.tserialnumberlistcurrentreport[i].TransDate : 'Unknown'
+                        date: sdatet,
+                        cssclass:tclass 
                     };
+    
                     dataTableList.push(dataList);
+    
                 }
 
                 templateObject.datatablerecords.set(dataTableList);
