@@ -47,6 +47,10 @@ export class CRMService extends BaseService {
     return this.getOneById(this.ERPObjects.Tprojecttask_TaskLabel, id);
   }
 
+  updateLabel(data) {
+    return this.POST(this.ERPObjects.Tprojecttask_TaskLabel, data);
+  }
+
   getTTodoTaskList() {
     let options = {
       orderby: '"ToDoByDate asc"',

@@ -21,16 +21,17 @@
               <tr class="dnd-moved" id="" style="cursor: pointer;">
                 <td contenteditable="false" class=" colFilterCreatedDate">{{getTodoDate label.fields.MsTimeStamp
                   'MM/DD/YYYY'}}</td>
-                <td contenteditable="false" class=" colFilterName">{{label.fields.TaskLabelName}}</td>
+                <td contenteditable="false" class="btnEditLabel colFilterName" data-id="{{label.fields.ID}}">
+                  {{label.fields.TaskLabelName}}</td>
                 <td contenteditable="false" class=" colLabelActions">
                   <div class="dropdown btnLabelActions">
-                    <button type="button" class="btn btn-primary btnEditLAbel"><i class="far fa-edit"
-                        style="width: 16px;"></i></button>
+                    <button type="button" class="btn btn-primary btnEditLabel" data-id="{{label.fields.ID}}"><i
+                        class="far fa-edit" style="width: 16px;" data-id="{{label.fields.ID}}"></i></button>
                   </div>
 
                   <div class="dropdown btnLabelActions">
-                    <button type="button" class="btn btn-danger btnDeleteLabel"><i class="far fa-trash-alt"
-                        style="width: 16px;"></i></button>
+                    <button type="button" class="btn btn-danger btnDeleteLabel" data-id="{{label.fields.ID}}"><i
+                        class="far fa-trash-alt" style="width: 16px;" data-id="{{label.fields.ID}}"></i></button>
                   </div>
                 </td>
               </tr>
@@ -80,6 +81,7 @@
   </div>
 
   {{> newLabelModal}}
+  {{> editLabelModal}}
   {{> newFilterModal}}
 
   <style>

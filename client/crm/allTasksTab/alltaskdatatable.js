@@ -128,8 +128,8 @@ Template.alltaskdatatable.onRendered(function () {
         download: 'open',
         className: "btntabletopdf hiddenColumn",
         text: '',
-        title: 'Shipping List',
-        filename: "Shipping List" + moment().format(),
+        title: 'Task List',
+        filename: "Task List" + moment().format(),
         exportOptions: {
           columns: ':visible',
           stripHtml: false
@@ -161,6 +161,7 @@ Template.alltaskdatatable.onRendered(function () {
         $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAllTaskDatatable_filter");
       }
     });
+
     $('#tblTodayTaskDatatable').DataTable({
       columnDefs: [{
         "orderable": false,
@@ -201,8 +202,8 @@ Template.alltaskdatatable.onRendered(function () {
         download: 'open',
         className: "btntabletopdf hiddenColumn",
         text: '',
-        title: 'Shipping List',
-        filename: "Shipping List" + moment().format(),
+        title: 'Task List',
+        filename: "Task List" + moment().format(),
         exportOptions: {
           columns: ':visible',
           stripHtml: false
@@ -275,8 +276,8 @@ Template.alltaskdatatable.onRendered(function () {
         download: 'open',
         className: "btntabletopdf hiddenColumn",
         text: '',
-        title: 'Shipping List',
-        filename: "Shipping List" + moment().format(),
+        title: 'Task List',
+        filename: "Task List" + moment().format(),
         exportOptions: {
           columns: ':visible',
           stripHtml: false
@@ -376,9 +377,7 @@ Template.alltaskdatatable.onRendered(function () {
 
         setTimeout(() => {
           templateObject.initDatepicker();
-          // templateObject.initTable();
         }, 500);
-
 
         $('.fullScreenSpin').css('display', 'none');
 
@@ -386,9 +385,11 @@ Template.alltaskdatatable.onRendered(function () {
         $('.crm_all_count').text(0);
         $('.crm_today_count').text(0);
         $('.crm_upcoming_count').text(0);
+        $('.fullScreenSpin').css('display', 'none');
       }
 
     }).catch(function (err) {
+      $('.fullScreenSpin').css('display', 'none');
 
     });
   }
@@ -415,6 +416,11 @@ Template.alltaskdatatable.onRendered(function () {
         });
         $('#addTaskLabelWrapper').html(label_dropdowns);
         $('.addTaskLabelWrapper').html(label_dropdowns);
+
+        // setTimeout(() => {
+        //   console.log('templateObject.alllabels', templateObject.alllabels.get())
+        //   templateObject.initLabelsTable();
+        // }, 2000);
 
       } else {
         templateObject.alllabels.set([]);
@@ -464,276 +470,12 @@ Template.alltaskdatatable.onRendered(function () {
   }
 
   templateObject.getAllTaskList();
-  templateObject.getAllLabels();
-  templateObject.getTProjectList();
+  // templateObject.getAllLabels();
+  // templateObject.getTProjectList();
 
   setTimeout(() => {
-    // templateObject.initTable();
-  }, 2000);
-
-  ////////////////////
-  setTimeout(function () {
-    $('#tblNewProjectsDatatable').DataTable({
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Project List" + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible',
-          format: {
-            body: function (data, row, column) {
-              if (data.includes("</span>")) {
-                var res = data.split("</span>");
-                data = res[1];
-              }
-
-              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-            }
-          }
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Project List',
-        filename: "Project List" + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [1, "desc"]
-      ],
-      action: function () {
-        $('#tblProjectsDatatable').DataTable().ajax.reload();
-      },
-      "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshTableProjects' type='button' id='btnRefreshTableProjects' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblNewProjectsDatatable_filter");
-      }
-    });
-    $('.fullScreenSpin').css('display', 'none');
-  }, 0);
-
-  setTimeout(function () {
-    $('#tblProjectTasks').DataTable({
-      columnDefs: [{
-        "orderable": false,
-        "targets": 0
-      },
-      {
-        "orderable": false,
-        "targets": 5
-      }
-      ],
-      colReorder: {
-        fixedColumnsLeft: 0
-      },
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Task List" + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible',
-          format: {
-            body: function (data, row, column) {
-              if (data.includes("</span>")) {
-                var res = data.split("</span>");
-                data = res[1];
-              }
-
-              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-            }
-          }
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Shipping List',
-        filename: "Shipping List" + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [4, "desc"],
-        [1, "desc"]
-      ],
-      action: function () {
-        $('#tblProjectTasks').DataTable().ajax.reload();
-      },
-      "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshProjectTasks' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblProjectTasks_filter");
-      }
-    });
-    $('.fullScreenSpin').css('display', 'none');
-  }, 0);
-
-  setTimeout(function () {
-    $('#tblFilters').DataTable({
-      columnDefs: [
-        {
-          "orderable": false,
-          "targets": 2
-        }
-      ],
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Project List" + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible',
-          format: {
-            body: function (data, row, column) {
-              if (data.includes("</span>")) {
-                var res = data.split("</span>");
-                data = res[1];
-              }
-
-              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-            }
-          }
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Project List',
-        filename: "Project List" + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [1, "desc"]
-      ],
-      action: function () {
-        $('#tblFilters').DataTable().ajax.reload();
-      },
-      "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnNewFilter' type='button' id='btnNewFilter' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Filter</button>").insertAfter("#tblFilters_filter");
-        $("<button class='btn btn-primary btnRefreshFilters' type='button' id='btnRefreshFilters' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblFilters_filter");
-      }
-    });
-    $('.fullScreenSpin').css('display', 'none');
-  }, 0);
-
-  setTimeout(function () {
-    $('#tblLabels').DataTable({
-      columnDefs: [
-        {
-          "orderable": false,
-          "targets": 2
-        }
-      ],
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Project List" + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible',
-          format: {
-            body: function (data, row, column) {
-              if (data.includes("</span>")) {
-                var res = data.split("</span>");
-                data = res[1];
-              }
-
-              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-            }
-          }
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Project List',
-        filename: "Project List" + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
-      select: true,
-      destroy: true,
-      colReorder: true,
-      pageLength: initialDatatableLoad,
-      lengthMenu: [
-        [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
-      ],
-      info: true,
-      responsive: true,
-      "order": [
-        [1, "desc"]
-      ],
-      action: function () {
-        $('#tblLabels').DataTable().ajax.reload();
-      },
-      "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>").insertAfter("#tblLabels_filter");
-        $("<button class='btn btn-primary btnRefreshLabels' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLabels_filter");
-      }
-    });
-    $('.fullScreenSpin').css('display', 'none');
-  }, 0);
+    templateObject.initTable();
+  }, 9000);
 
 });
 
@@ -741,13 +483,15 @@ Template.alltaskdatatable.events({
 
   'click .btnAddSubTask': function (event) {
 
-    let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
-    $('#addTaskModal').remove();
-    $('#newTaskRowWrapper').html(addTaskModal)
+    $('#newTaskModal').modal('toggle');
 
-    $(".newTaskRow").css("display", "inline-flex");
-    $(".addTaskModal").css("display", "inline-flex");
-    $(".btnAddSubTask").css("display", "none");
+    // let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
+    // $('#addTaskModal').remove();
+    // $('#newTaskRowWrapper').html(addTaskModal)
+
+    // $(".newTaskRow").css("display", "inline-flex");
+    // $(".addTaskModal").css("display", "inline-flex");
+    // $(".btnAddSubTask").css("display", "none");
   },
 
   'click .btnCancelAddTask': function (event) {
@@ -1295,6 +1039,10 @@ Template.alltaskdatatable.events({
 
   },
 
+  'click .btnNewTask': function (e) {
+    $('#editProjectID').val('')
+  },
+
   // submit save new task
   'click .btnSaveAddTask': function (e) {
 
@@ -1314,6 +1062,7 @@ Template.alltaskdatatable.events({
     }
     $('.fullScreenSpin').css('display', 'inline-block');
     let projectID = $('#addProjectID').val() ? $('#addProjectID').val() : 11;
+    projectID = $('#editProjectID').val() ? $('#editProjectID').val() : projectID;
 
     var objDetails = {
       type: "Tprojecttasks",
@@ -1337,6 +1086,7 @@ Template.alltaskdatatable.events({
         //////////////////////////////
         templateObject.getAllTaskList();
         $("#newTaskModal").modal("hide");
+        $("#newProjectTasksModal").modal("hide");
 
       }
 

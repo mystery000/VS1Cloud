@@ -5,6 +5,122 @@ Template.projectsTab.inheritsHooksFrom('alltaskdatatable');
 import { CRMService } from '../crm-service';
 let crmService = new CRMService();
 
+Template.projectsTab.onCreated(function () {
+
+  let templateObject = Template.instance();
+  templateObject.tprojectlist = new ReactiveVar([]);
+
+  templateObject.active_projects = new ReactiveVar([]);
+  templateObject.archived_projects = new ReactiveVar([]);
+  templateObject.favorite_projects = new ReactiveVar([]);
+});
+
+Template.projectsTab.onRendered(function () {
+
+  let templateObject = Template.instance();
+
+  templateObject.getTProjectList = function () {
+    crmService.getTProjectList().then(function (data) {
+      if (data.tprojectlist && data.tprojectlist.length > 0) {
+
+        let tprojectlist = data.tprojectlist;
+        tprojectlist = tprojectlist.filter(proj => proj.fields.ID != 11);
+        templateObject.tprojectlist.set(tprojectlist);
+
+        let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
+          style="margin-right: 8px;"></i>All Tasks</a>`;
+        tprojectlist.forEach(proj => {
+          add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
+        });
+        $('#goProjectWrapper').html(add_projectlist);
+        $('.goProjectWrapper').html(add_projectlist);
+
+        let all_projects = data.tprojectlist.filter(project => project.fields.Active == true && project.fields.ID != 11);
+        let archived_projects = all_projects.filter(project => project.fields.Archive == true);
+        let active_projects = all_projects.filter(project => project.fields.Archive == false);
+        let favorite_projects = active_projects.filter(project => project.fields.AddToFavourite == true);
+
+        templateObject.active_projects.set(active_projects);
+        templateObject.archived_projects.set(archived_projects);
+        templateObject.favorite_projects.set(favorite_projects);
+
+        $('.crm_project_count').html(active_projects.length);
+
+        setTimeout(() => {
+          templateObject.initProjectsTable();
+        }, 100);
+
+      } else {
+        templateObject.tprojectlist.set([]);
+        $('.crm_project_count').html(0)
+      }
+
+    }).catch(function (err) {
+    });
+  }
+
+  templateObject.initProjectsTable = function () {
+
+    $('#tblNewProjectsDatatable').DataTable({
+      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [{
+        extend: 'excelHtml5',
+        text: '',
+        download: 'open',
+        className: "btntabletocsv hiddenColumn",
+        filename: "Project List" + moment().format(),
+        orientation: 'portrait',
+        exportOptions: {
+          columns: ':visible',
+          format: {
+            body: function (data, row, column) {
+              if (data.includes("</span>")) {
+                var res = data.split("</span>");
+                data = res[1];
+              }
+
+              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+            }
+          }
+        }
+      }, {
+        extend: 'print',
+        download: 'open',
+        className: "btntabletopdf hiddenColumn",
+        text: '',
+        title: 'Project List',
+        filename: "Project List" + moment().format(),
+        exportOptions: {
+          columns: ':visible',
+          stripHtml: false
+        }
+      }],
+      select: true,
+      destroy: true,
+      colReorder: true,
+      pageLength: initialDatatableLoad,
+      lengthMenu: [
+        [initialDatatableLoad, -1],
+        [initialDatatableLoad, "All"]
+      ],
+      info: true,
+      responsive: true,
+      "order": [
+        [1, "desc"]
+      ],
+      action: function () {
+        $('#tblProjectsDatatable').DataTable().ajax.reload();
+      },
+      "fnInitComplete": function () {
+        $("<button class='btn btn-primary btnRefreshTableProjects' type='button' id='btnRefreshTableProjects' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblNewProjectsDatatable_filter");
+      }
+    });
+  }
+
+  templateObject.getTProjectList();
+});
+
 Template.projectsTab.events({
 
   'click .projectName': function (e) {
@@ -414,7 +530,7 @@ Template.projectsTab.events({
             if (selected_record.projecttasks.fields == undefined) {
               projecttasks = selected_record.projecttasks;
             } else {
-              projecttasks.push({ fields: selected_record.projecttasks })
+              projecttasks.push(selected_record.projecttasks)
             }
 
             let due_date = '';
@@ -603,6 +719,80 @@ Template.projectsTab.events({
           }
 
           $('#tblProjectTasksBody').html(tr);
+
+          return;
+          setTimeout(function () {
+            $('#tblProjectTasks').DataTable({
+              columnDefs: [{
+                "orderable": false,
+                "targets": 0
+              },
+              {
+                "orderable": false,
+                "targets": 5
+              }
+              ],
+              colReorder: {
+                fixedColumnsLeft: 0
+              },
+              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              buttons: [{
+                extend: 'excelHtml5',
+                text: '',
+                download: 'open',
+                className: "btntabletocsv hiddenColumn",
+                filename: "Project List" + moment().format(),
+                orientation: 'portrait',
+                exportOptions: {
+                  columns: ':visible',
+                  format: {
+                    body: function (data, row, column) {
+                      if (data.includes("</span>")) {
+                        var res = data.split("</span>");
+                        data = res[1];
+                      }
+
+                      return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                    }
+                  }
+                }
+              }, {
+                extend: 'print',
+                download: 'open',
+                className: "btntabletopdf hiddenColumn",
+                text: '',
+                title: 'Project List',
+                filename: "Project List" + moment().format(),
+                exportOptions: {
+                  columns: ':visible',
+                  stripHtml: false
+                }
+              }],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              pageLength: initialDatatableLoad,
+              lengthMenu: [
+                [initialDatatableLoad, -1],
+                [initialDatatableLoad, "All"]
+              ],
+              info: true,
+              responsive: true,
+              "order": [
+                [4, "desc"],
+                [1, "desc"]
+              ],
+              action: function () {
+                $('#tblProjectTasks').DataTable().ajax.reload();
+              },
+              "fnInitComplete": function () {
+                $("<button class='btn btn-primary btnRefreshProjectTasks' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblProjectTasks_filter");
+              }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+          }, 300);
+
         } else {
           swal('Cannot edit this project', '', 'warning');
           return;
@@ -615,9 +805,26 @@ Template.projectsTab.events({
       });
     }
   },
+
+  // open new task modal
+  'click .addTaskOnProject': function (e) {
+    $('#newTaskModal').modal('toggle');
+  }
 });
 
 Template.projectsTab.helpers({
+
+  active_projects: () => {
+    return Template.instance().active_projects.get();
+  },
+
+  archived_projects: () => {
+    return Template.instance().archived_projects.get();
+  },
+
+  favorite_projects: () => {
+    return Template.instance().favorite_projects.get();
+  },
 
   getProjectColor: (color) => {
     if (color == 0) {

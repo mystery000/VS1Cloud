@@ -561,7 +561,7 @@ Template.crmoverview.events({
   'click #exportbtn': function () {
 
     $('.fullScreenSpin').css('display', 'inline-block');
-    jQuery('#tblAllTaskDatatable_wrapper .dt-buttons .btntabletoexcel').click();
+    jQuery('#tblAllTaskDatatable_wrapper .dt-buttons .btntabletocsv').click();
     $('.fullScreenSpin').css('display', 'none');
 
   },
