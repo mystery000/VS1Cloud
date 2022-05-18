@@ -104,7 +104,6 @@ Template.invstockonhandanddemand.onRendered(()=>{
 
       if(dataObject.length == 0){
         vs1chartService.getProductStocknSaleReportData(prevMonth11Date, fromDate).then((data) => {
-          setTimeout(function () {
           addVS1Data('TProductStocknSalePeriodReport',JSON.stringify(data));
           let month_1 = data.tproductstocknsaleperiodreport[0].TypeDesc_1||'';
           let month_2 = data.tproductstocknsaleperiodreport[0].TypeDesc_2||'';
@@ -144,7 +143,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
           let month_10_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_10||0;
           let month_11_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_11||0;
           let month_12_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_12||0;
-
+          setTimeout(function () {
            var data = {
                 labels: [
                  month_1,
@@ -217,7 +216,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
           }, 1000)
        });
       }else{
-        setTimeout(function () {
+        
         let dataobj = JSON.parse(dataObject[0].data);
         let useData = dataobj.tproductstocknsaleperiodreport[0];
         let month_1 = useData.TypeDesc_1.replace('-', ' ')||'';
@@ -258,7 +257,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
         let month_10_shipped = useData.SalesShipQty_10||0;
         let month_11_shipped = useData.SalesShipQty_11||0;
         let month_12_shipped = useData.SalesShipQty_12||0;
-
+        setTimeout(function () {
          var data = {
               labels: [
                month_1,
@@ -333,7 +332,6 @@ Template.invstockonhandanddemand.onRendered(()=>{
     }).catch(function (err) {
 
       vs1chartService.getProductStocknSaleReportData(prevMonth11Date, fromDate).then((data) => {
-        setTimeout(function () {
           addVS1Data('TProductStocknSalePeriodReport',JSON.stringify(data));
           let month_1 = data.tproductstocknsaleperiodreport[0].TypeDesc_1||'';
           let month_2 = data.tproductstocknsaleperiodreport[0].TypeDesc_2||'';
@@ -373,7 +371,7 @@ Template.invstockonhandanddemand.onRendered(()=>{
           let month_10_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_10||0;
           let month_11_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_11||0;
           let month_12_shipped = data.tproductstocknsaleperiodreport[0].SalesShipQty_12||0;
-
+        setTimeout(function () {
          var data = {
               labels: [
                month_1,
