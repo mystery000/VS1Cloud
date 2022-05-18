@@ -1698,6 +1698,8 @@ Template.vs1login.onRendered(function () {
                                                             isContactsLicence = true;
                                                         } else if ((option.ModuleName == 'Expense Claims / Receipt Claiming')) {
                                                             isExpenseClaimsLicence = true;
+                                                        }else if ((option.ModuleName == 'Expense Claims')) {
+                                                            isExpenseClaimsLicence = true;
                                                         } else if (option.ModuleName == 'CloudDashboard') {
                                                             isDashboardLicence = true;
                                                         } else if (option.ModuleName == 'CloudFixedAssets') {
@@ -2342,6 +2344,8 @@ Template.vs1login.onRendered(function () {
                                         isContactsLicence = true;
                                     } else if ((option.ModuleName == 'Expense Claims / Receipt Claiming')) {
                                         isExpenseClaimsLicence = true;
+                                    }else if ((option.ModuleName == 'Expense Claims')) {
+                                        isExpenseClaimsLicence = true;
                                     } else if (option.ModuleName == 'CloudDashboard') {
                                         isDashboardLicence = true;
                                     } else if (option.ModuleName == 'CloudFixedAssets') {
@@ -2848,6 +2852,8 @@ Template.vs1login.onRendered(function () {
                                                     } else if (option.ModuleName == 'Statements') {
                                                         isContactsLicence = true;
                                                     } else if ((option.ModuleName == 'Expense Claims / Receipt Claiming')) {
+                                                        isExpenseClaimsLicence = true;
+                                                    }else if ((option.ModuleName == 'Expense Claims')) {
                                                         isExpenseClaimsLicence = true;
                                                     } else if (option.ModuleName == 'CloudDashboard') {
                                                         isDashboardLicence = true;
@@ -4228,6 +4234,8 @@ Template.vs1login.onRendered(function () {
                                             } else if (option.ModuleName == 'Statements') {
                                                 isContactsLicence = true;
                                             } else if ((option.ModuleName == 'Expense Claims / Receipt Claiming')) {
+                                                isExpenseClaimsLicence = true;
+                                            }else if ((option.ModuleName == 'Expense Claims')) {
                                                 isExpenseClaimsLicence = true;
                                             } else if (option.ModuleName == 'CloudDashboard') {
                                                 isDashboardLicence = true;

@@ -1986,7 +1986,7 @@ Template.supplierpaymentcard.onRendered(() => {
                             let appliedAmt = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Applied).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
-
+                            if(useData[d].fields.Lines != null){
                             if (useData[d].fields.Lines.length) {
                                 for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                     let amountDue = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.AmountDue).toLocaleString(undefined, {
@@ -2046,6 +2046,24 @@ Template.supplierpaymentcard.onRendered(() => {
                                 };
                                 lineItems.push(lineItemObj);
                             }
+                          }else{
+                              lineItemObj = {
+
+                                  id: '',
+                                  invoiceid: '',
+                                  transid: '',
+                                  poid: '',
+                                  invoicedate: '',
+                                  refno:'',
+                                  transtype: '',
+                                  amountdue:0,
+                                  paymentamount: 0,
+                                  ouststandingamount: 0,
+                                  orginalamount: 0
+                              };
+                              lineItems.push(lineItemObj);
+                            }
+
                             let record = {
                                 lid: useData[d].fields.ID || '',
                                 customerName: useData[d].fields.CompanyName || '',
@@ -2219,7 +2237,23 @@ Template.supplierpaymentcard.onRendered(() => {
                                 lineItems.push(lineItemObj);
                             }
 
-                            }
+                          }else{
+                            lineItemObj = {
+
+                                id: '',
+                                invoiceid: '',
+                                transid: '',
+                                poid: '',
+                                invoicedate: '',
+                                refno:'',
+                                transtype: '',
+                                amountdue:0,
+                                paymentamount: 0,
+                                ouststandingamount: 0,
+                                orginalamount: 0
+                            };
+                            lineItems.push(lineItemObj);
+                          }
                             let record = {
                                 lid: data.fields.ID || '',
                                 customerName: data.fields.CompanyName || '',
@@ -5505,7 +5539,6 @@ Template.supplierpaymentcard.events({
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
-        console.log(checkSuppInvoiceNo);
         if(checkSuppInvoiceNo){
 
         }else{
