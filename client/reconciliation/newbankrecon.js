@@ -57,8 +57,6 @@ Template.newbankrecon.onRendered(function() {
     let selectedAccountFlag = '';
     let selectedDepositID = null;
 
-    connectYodlee();
-
     templateObject.getAccountNames = function() {
         reconService.getAccountNameVS1().then(function(data) {
             if (data.taccountvs1.length > 0) {
@@ -183,6 +181,22 @@ Template.newbankrecon.onRendered(function() {
         let reconData = [];
         ignoreDate = true;
         $('.fullScreenSpin').css('display', 'inline-block');
+        let yodleeData = [];
+        const client_id = "KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4";
+        const secret = "TqDOhdMCOYHJq1se";
+        const user_name = "sbMem5f85b3fb4145c1";
+
+        yodleeService.getAccessToken(user_name, client_id, secret).then(function(data) {
+            let access_token = data.token.accessToken;
+            yodleeService.getTransactionData(access_token, '2011-08-01').then(function(data) {
+                yodleeData = data;
+                console.log(yodleeData);
+            }).catch(function(err) {
+                return null;
+            });
+        }).catch(function (err) {
+            return null;
+        });
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
             data = {
                 "ttobereconcileddeposit":[
@@ -566,16 +580,16 @@ Template.newbankrecon.onRendered(function() {
         }, 500);
     }
 
-    function setTaxCodeVS1() {
+    function setTaxCodeVS1(taxRateDataName) {
         purchaseService.getTaxCodesVS1().then(function (data) {
-            setTaxRateData(data);
+            setTaxRateData(data, taxRateDataName);
         }).catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $(".fullScreenSpin").css("display", "none");
             // Meteor._reload.reload();
         });
     }
-    function setTaxRateData(data) {
+    function setTaxRateData(data, taxRateDataName) {
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
@@ -584,10 +598,9 @@ Template.newbankrecon.onRendered(function() {
                 let taxRate = (
                     data.ttaxcodevs1[i].Rate * 100
                 ).toFixed(2);
-                var taxRateID = data.ttaxcodevs1[i].Id || "";
-                var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                var taxRateDesc =
-                    data.ttaxcodevs1[i].Description || "";
+                const taxRateID = data.ttaxcodevs1[i].Id || "";
+                const taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                const taxRateDesc = data.ttaxcodevs1[i].Description || "";
                 $("#edtTaxID").val(taxRateID);
                 $("#edtTaxNamePop").val(taxRateName);
                 $("#edtTaxRatePop").val(taxRate);
@@ -616,14 +629,14 @@ Template.newbankrecon.onRendered(function() {
                         $(".taxcodepopheader").text("Edit Tax Rate");
                         getVS1Data("TTaxcodeVS1").then(function (dataObject) {
                             if (dataObject.length === 0) {
-                                setTaxCodeVS1();
+                                setTaxCodeVS1(taxRateDataName);
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
                                 $(".taxcodepopheader").text("Edit Tax Rate");
-                                setTaxRateData(data);
+                                setTaxRateData(data, taxRateDataName);
                             }
                         }).catch(function (err) {
-                            setTaxCodeVS1();
+                            setTaxCodeVS1(taxRateDataName);
                         });
                     } else {
                         $("#taxRateListModal").modal("toggle");
@@ -850,7 +863,7 @@ Template.newbankrecon.onRendered(function() {
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
-        var table = $(this);
+        const table = $(this);
         let accountname = table.find(".productName").text();
         let accountId = table.find(".colAccountID").text();
         $('#bankAccountListModal').modal('toggle');
@@ -1016,50 +1029,60 @@ Template.newbankrecon.helpers({
     }
 });
 
- function connectYodlee() {
-    (function (window) {
-        //Open FastLink
-
-        let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
-        let client_id = "KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4";
-        let secret = "TqDOhdMCOYHJq1se";
-        const user_name = "sbMem5f85b3fb4145c1";
-
-        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
-        yodleeService.POST(user_name, client_id, secret).then(function(data) {
-            window.fastlink.open({
-                fastLinkURL: fastLinkURL,
-                accessToken: 'Bearer ' + data.token.accessToken,
-                params: {
-                    configName: 'Verification'
-                },
-                onSuccess: function (data) {
-                    // will be called on success. For list of possible message, refer to onSuccess(data) Method.
-                    console.log(data);
-                    //window.alert(JSON.data.sites[0]);
-                    //window.alert(JSON.data.sites[1]);
-
-                },
-                onError: function (data) {
-                    // will be called on error. For list of possible message, refer to onError(data) Method.
-                    console.log(data);
-                },
-                onClose: function (data) {
-                    // will be called called to close FastLink. For list of possible message, refer to onClose(data) Method.
-                    //window.alert(JSON.stringify(data));
-                    console.log(data);
-                    //window.fastlink.close();
-
-                },
-                onEvent: function (data) {
-                    // will be called on intermittent status update.
-                    console.log(data);
-                }
-            },
-            'container-fastlink');
-        }).catch(function (err) {
-            console.log(err);
-        });
-        // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
-    }(window));
-}
+// function connectYodlee() {
+//     let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL
+//
+//
+//     // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+//     yodleeService.getAccessToken(user_name, client_id, secret).then(function(data) {
+//         let access_token = data.token.accessToken;
+//     }).catch(function (err) {
+//         return null;
+//     });
+//     // (function (window) {
+//     //     //Open FastLink
+//     //    // window.fastlink.open({
+//     //         //     fastLinkURL: fastLinkURL,
+//     //         //     accessToken: 'Bearer ' + data.token.accessToken,
+//     //         //     params: {
+//     //         //         configName: 'Verification'
+//     //         //     },
+//     //         //     onSuccess: function (data) {
+//     //         //         // will be called on success. For list of possible message, refer to onSuccess(data) Method.
+//     //         //         console.log(data);
+//     //         //         //window.alert(JSON.data.sites[0]);
+//     //         //         //window.alert(JSON.data.sites[1]);
+//     //         //
+//     //         //     },
+//     //         //     onError: function (data) {
+//     //         //         // will be called on error. For list of possible message, refer to onError(data) Method.
+//     //         //         console.log(data);
+//     //         //     },
+//     //         //     onClose: function (data) {
+//     //         //         // will be called called to close FastLink. For list of possible message, refer to onClose(data) Method.
+//     //         //         //window.alert(JSON.stringify(data));
+//     //         //         console.log(data);
+//     //         //         //window.fastlink.close();
+//     //         //
+//     //         //     },
+//     //         //     onEvent: function (data) {
+//     //         //         // will be called on intermittent status update.
+//     //         //         console.log(data);
+//     //         //     }
+//     //         // },
+//     //         // 'container-fastlink');
+//     //     // let fastLinkConfigName = urlvalue.searchParams.get("fastlinkconfigname");
+//     // }(window));
+// }
+// function getYodleeTransactionData(token) {
+//     yodleeService.getAccessToken(user_name, client_id, secret).then(function(data) {
+//         let access_token = data.token.accessToken;
+//         yodleeService.getTransactionData(access_token, '2021-08-01').then(function(data) {
+//             return data;
+//         }).catch(function(err) {
+//             return null;
+//         });
+//     }).catch(function (err) {
+//         return null;
+//     });
+// }

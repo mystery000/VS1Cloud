@@ -5,13 +5,13 @@ import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 Template.customerlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.selectedFile = new ReactiveVar();
 });
 
@@ -21,7 +21,7 @@ Template.customerlist.onRendered(function() {
     let contactService = new ContactService();
     const customerList = [];
     let salesOrderTable;
-    var splashArray = new Array();
+    var splashArray = [];
     const dataTableList = [];
     const tableHeaderList = [];
 
