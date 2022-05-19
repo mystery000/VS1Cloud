@@ -17,7 +17,12 @@
             <td contenteditable="false" class=" colPrjectDate" data-id="{{item.fields.ID}}">{{getTodoDate
               item.fields.ProjectStatedon
               'DD/MM/YYYY'}}</td>
-            <td contenteditable="false" class=" colProjectName" data-id="{{item.fields.ID}}">{{item.fields.ProjectName}}
+            <td contenteditable="false" class="colProjectName" data-id="{{item.fields.ID}}">
+              {{#if item.fields.Active}}
+              {{item.fields.ProjectName}}
+              {{else}}
+              <span class="text-danger ">{{item.fields.ProjectName}}</span>
+              {{/if}}
             </td>
             <td contenteditable="false" class=" colProjectDesc" data-id="{{item.fields.ID}}">{{getDescription
               item.fields.Description}}

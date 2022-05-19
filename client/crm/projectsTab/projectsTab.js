@@ -9,9 +9,10 @@ Template.projectsTab.onCreated(function () {
 
   let templateObject = Template.instance();
   templateObject.tprojectlist = new ReactiveVar([]);
+  templateObject.all_projects = new ReactiveVar([]);
 
   templateObject.active_projects = new ReactiveVar([]);
-  templateObject.archived_projects = new ReactiveVar([]);
+  templateObject.deleted_projects = new ReactiveVar([]);
   templateObject.favorite_projects = new ReactiveVar([]);
 });
 
@@ -23,25 +24,24 @@ Template.projectsTab.onRendered(function () {
     crmService.getTProjectList().then(function (data) {
       if (data.tprojectlist && data.tprojectlist.length > 0) {
 
-        let tprojectlist = data.tprojectlist;
-        tprojectlist = tprojectlist.filter(proj => proj.fields.ID != 11);
-        templateObject.tprojectlist.set(tprojectlist);
+        let all_projects = data.tprojectlist;
+        all_projects = all_projects.filter(proj => proj.fields.ID != 11);
 
         let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
           style="margin-right: 8px;"></i>All Tasks</a>`;
-        tprojectlist.forEach(proj => {
+        all_projects.forEach(proj => {
           add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
         });
         $('#goProjectWrapper').html(add_projectlist);
         $('.goProjectWrapper').html(add_projectlist);
 
-        let all_projects = data.tprojectlist.filter(project => project.fields.Active == true && project.fields.ID != 11);
-        let archived_projects = all_projects.filter(project => project.fields.Archive == true);
-        let active_projects = all_projects.filter(project => project.fields.Archive == false);
+        let active_projects = all_projects.filter(project => project.fields.Active == true);
+        let deleted_projects = all_projects.filter(project => project.fields.Active == false);
         let favorite_projects = active_projects.filter(project => project.fields.AddToFavourite == true);
 
+        templateObject.all_projects.set(all_projects);
         templateObject.active_projects.set(active_projects);
-        templateObject.archived_projects.set(archived_projects);
+        templateObject.deleted_projects.set(deleted_projects);
         templateObject.favorite_projects.set(favorite_projects);
 
         $('.crm_project_count').html(active_projects.length);
@@ -113,7 +113,7 @@ Template.projectsTab.onRendered(function () {
         $('#tblProjectsDatatable').DataTable().ajax.reload();
       },
       "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshTableProjects' type='button' id='btnRefreshTableProjects' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblNewProjectsDatatable_filter");
+        $("<button class='btn btn-primary btnSearchProjectTable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>View All</span></button>").insertAfter("#tblNewProjectsDatatable_filter");
       }
     });
   }
@@ -316,50 +316,6 @@ Template.projectsTab.events({
       });
     }
   },
-
-
-  // submit save new project
-  // 'click .btnNewCrmProject': function (e) {
-  //   let projectName = $('#crmProjectName').val();
-  //   let projectColor = $('#crmProjectColor').val();
-  //   let swtNewCrmProjectFavorite = $("#swtNewCrmProjectFavorite").prop("checked");
-
-  //   if (projectName === '' || projectName === null) {
-  //     swal('Project name is not entered!', '', 'warning');
-  //     return;
-  //   }
-
-  //   $('.fullScreenSpin').css('display', 'inline-block');
-
-  //   var objDetails = {
-  //     type: "Tprojectlist",
-  //     fields: {
-  //       Active: true,
-  //       ProjectName: projectName,
-  //       ProjectColour: projectColor,
-  //       AddToFavourite: swtNewCrmProjectFavorite
-  //     }
-  //   };
-  //   let templateObject = Template.instance();
-
-  //   crmService.updateProject(objDetails).then(function (data) {
-
-  //     templateObject.getTProjectList();
-
-  //     $('.fullScreenSpin').css('display', 'none');
-  //     // Meteor._reload.reload();
-  //   }).catch(function (err) {
-  //     swal({
-  //       title: 'Oooops...',
-  //       text: err,
-  //       type: 'error',
-  //       showCancelButton: false,
-  //       confirmButtonText: 'Try Again'
-  //     }).then((result) => {
-  //     });
-  //     $('.fullScreenSpin').css('display', 'none');
-  //   });
-  // },
 
   // open edit modal
   'click .edit-project': function (e) {
@@ -809,7 +765,24 @@ Template.projectsTab.events({
   // open new task modal
   'click .addTaskOnProject': function (e) {
     $('#newTaskModal').modal('toggle');
-  }
+  },
+
+  // view all project including delete
+  'click .btnViewProjectCompleted': function (e) {
+    let templateObject = Template.instance();
+    let all_projects = templateObject.all_projects.get();
+
+    let lblViewCompleted = $('#lblViewProjectCompleted').html().trim();
+    if (lblViewCompleted == 'View All') {
+      $('#lblViewProjectCompleted').html('View Actived');
+    } else {
+      all_projects = all_projects.filter(project => project.fields.Active == true);
+      $('#lblViewProjectCompleted').html('View All');
+    }
+
+    templateObject.active_projects.set(all_projects);
+  },
+
 });
 
 Template.projectsTab.helpers({
@@ -818,8 +791,8 @@ Template.projectsTab.helpers({
     return Template.instance().active_projects.get();
   },
 
-  archived_projects: () => {
-    return Template.instance().archived_projects.get();
+  deleted_projects: () => {
+    return Template.instance().deleted_projects.get();
   },
 
   favorite_projects: () => {

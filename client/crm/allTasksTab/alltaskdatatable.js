@@ -18,7 +18,7 @@ Template.alltaskdatatable.onCreated(function () {
   templateObject.due_date = new ReactiveVar(null);
 
   templateObject.active_projects = new ReactiveVar([]);
-  templateObject.archived_projects = new ReactiveVar([]);
+  templateObject.deleted_projects = new ReactiveVar([]);
   templateObject.favorite_projects = new ReactiveVar([]);
 });
 
@@ -451,12 +451,12 @@ Template.alltaskdatatable.onRendered(function () {
         $('.goProjectWrapper').html(add_projectlist);
 
         let all_projects = data.tprojectlist.filter(project => project.fields.Active == true && project.fields.ID != 11);
-        let archived_projects = all_projects.filter(project => project.fields.Archive == true);
+        let deleted_projects = all_projects.filter(project => project.fields.Archive == true);
         let active_projects = all_projects.filter(project => project.fields.Archive == false);
         let favorite_projects = active_projects.filter(project => project.fields.AddToFavourite == true);
 
         templateObject.active_projects.set(active_projects);
-        templateObject.archived_projects.set(archived_projects);
+        templateObject.deleted_projects.set(deleted_projects);
         templateObject.favorite_projects.set(favorite_projects);
 
         $('.crm_project_count').html(active_projects.length)
@@ -1537,8 +1537,8 @@ Template.alltaskdatatable.helpers({
     return Template.instance().active_projects.get();
   },
 
-  archived_projects: () => {
-    return Template.instance().archived_projects.get();
+  deleted_projects: () => {
+    return Template.instance().deleted_projects.get();
   },
 
   favorite_projects: () => {
