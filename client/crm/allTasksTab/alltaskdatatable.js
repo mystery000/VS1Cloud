@@ -7,9 +7,9 @@ Template.alltaskdatatable.onCreated(function () {
 
   let templateObject = Template.instance();
   templateObject.alllabels = new ReactiveVar([]);
-  templateObject.allfilters = new ReactiveVar([]);
   templateObject.tprojectlist = new ReactiveVar([]);
-  templateObject.allrecords = new ReactiveVar([]);
+  templateObject.allRecords = new ReactiveVar([]);
+  templateObject.allWithCompletedRecords = new ReactiveVar([]);
   templateObject.todayRecords = new ReactiveVar([]);
   templateObject.upcomingRecords = new ReactiveVar([]);
   templateObject.overdueRecords = new ReactiveVar([]);
@@ -158,7 +158,7 @@ Template.alltaskdatatable.onRendered(function () {
         }, 100);
       },
       "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAllTaskDatatable_filter");
+        $("<button class='btn btn-primary btnSearchAllTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>View Completed</span></button>").insertAfter("#tblAllTaskDatatable_filter");
       }
     });
 
@@ -232,7 +232,7 @@ Template.alltaskdatatable.onRendered(function () {
         }, 100);
       },
       "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTodayTaskDatatable_filter");
+        $("<button class='btn btn-primary btnSearchTodayTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>View Completed</span></button>").insertAfter("#tblTodayTaskDatatable_filter");
       }
     });
 
@@ -306,7 +306,7 @@ Template.alltaskdatatable.onRendered(function () {
         }, 100);
       },
       "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnRefreshShipping' type='button' id='btnRefreshStockAdjustment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblUpcomingTaskDatatable_filter");
+        $("<button class='btn btn-primary btnSearchUpcoming' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>View Completed</span></button>").insertAfter("#tblUpcomingTaskDatatable_filter");
       }
     });
   }
@@ -318,24 +318,28 @@ Template.alltaskdatatable.onRendered(function () {
       if (data.tprojecttasks && data.tprojecttasks.length > 0) {
 
         let today = moment().format('YYYY-MM-DD');
-        let allrecords = data.tprojecttasks;
-        allrecords = allrecords.filter(item => item.fields.ProjectID == 11);
-        // console.log('allrecords=>', allrecords)
+        let all_records = data.tprojecttasks;
+        all_records = all_records.filter(item => item.fields.ProjectID == 11);
+        templateObject.allWithCompletedRecords.set(all_records);
+
+        all_records = all_records.filter(item => item.fields.Completed == false);
+
+        // console.log('all_records=>', all_records)
 
         // tempcode until fields are added in backend
-        // let allrecords = data.tprojecttasks.sort(function (a, b) {
+        // let all_records = data.tprojecttasks.sort(function (a, b) {
         //   return (a.Recno < b.Recno) ? 1 : -1;
         // });
 
-        let today_records = allrecords.filter(item => item.fields.due_date.substring(0, 10) == today);
-        let upcoming_records = allrecords.filter(item => item.fields.due_date.substring(0, 10) > today);
-        let overdue_records = allrecords.filter(item => (!item.fields.due_date || item.fields.due_date.substring(0, 10) < today));
+        let today_records = all_records.filter(item => item.fields.due_date.substring(0, 10) == today);
+        let upcoming_records = all_records.filter(item => item.fields.due_date.substring(0, 10) > today);
+        let overdue_records = all_records.filter(item => (!item.fields.due_date || item.fields.due_date.substring(0, 10) < today));
 
-        $('.crm_all_count').text(allrecords.length);
+        $('.crm_all_count').text(all_records.length);
         $('.crm_today_count').text(today_records.length);
         $('.crm_upcoming_count').text(upcoming_records.length);
 
-        templateObject.allrecords.set(allrecords);
+        templateObject.allRecords.set(all_records);
         templateObject.todayRecords.set(today_records);
         templateObject.upcomingRecords.set(upcoming_records);
         templateObject.overdueRecords.set(overdue_records);
@@ -350,7 +354,7 @@ Template.alltaskdatatable.onRendered(function () {
         // var allTableDataList = [];
         // let record = []
 
-        // allrecords.forEach(item => {
+        // allRecords.forEach(item => {
         //   col1 = `<div
         //     class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${item.fields.priority}"
         //     style="width:15px;margin-right: -6px;">
@@ -428,9 +432,6 @@ Template.alltaskdatatable.onRendered(function () {
 
     }).catch(function (err) {
     });
-  }
-
-  templateObject.getAllFilters = function () {
   }
 
   templateObject.getTProjectList = function () {
@@ -1054,7 +1055,7 @@ Template.alltaskdatatable.events({
     due_date = due_date ? moment(due_date).format('YYYY-MM-DD hh:mm:ss') : moment().format('YYYY-MM-DD hh:mm:ss');
 
     let priority = 0;
-    priority = $('#chkPriority1').prop('checked') ? 1 : ($('#chkPriority2').prop('checked') ? 2 : ($('#chkPriority3').prop('checked') ? 3 : 0));
+    priority = $('#chkPriorityAdd1').prop('checked') ? 1 : ($('#chkPriorityAdd2').prop('checked') ? 2 : ($('#chkPriorityAdd3').prop('checked') ? 3 : 0));
 
     if (task_name === '') {
       swal('Task name is not entered!', '', 'warning');
@@ -1082,6 +1083,11 @@ Template.alltaskdatatable.events({
         $(".btnAddSubTask").css("display", "block");
         $(".newTaskRow").css("display", "none");
         $(".addTaskModal").css("display", "none");
+
+        $('#chkPriorityAdd0').prop('checked', false);
+        $('#chkPriorityAdd1').prop('checked', false);
+        $('#chkPriorityAdd2').prop('checked', false);
+        $('#chkPriorityAdd3').prop('checked', false);
 
         //////////////////////////////
         templateObject.getAllTaskList();
@@ -1389,14 +1395,73 @@ Template.alltaskdatatable.events({
     });
   },
 
+  // view all completed task
+  'click .btnViewAllCompleted': function (e) {
+    let templateObject = Template.instance();
+    let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+
+    let lblViewCompleted = $('#lblViewAllCompleted').html().trim();
+    if (lblViewCompleted == 'View Completed') {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == true);
+      $('#lblViewAllCompleted').html('View Task');
+    } else {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == false);
+      $('#lblViewAllCompleted').html('View Completed');
+    }
+
+    templateObject.allRecords.set(allCompletedRecords);
+  },
+
+  // view today completed task
+  'click .btnViewTodayCompleted': function (e) {
+    e.stopImmediatePropagation();
+
+    let templateObject = Template.instance();
+    let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+    let today = moment().format('YYYY-MM-DD');
+    allCompletedRecords = allCompletedRecords.filter(item => item.fields.due_date.substring(0, 10) == today);
+
+    let lblViewCompleted = $('#lblViewTodayCompleted').html().trim();
+    if (lblViewCompleted == 'View Completed') {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == true);
+      $('#lblViewTodayCompleted').html('View Task');
+    } else {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == false);
+      $('#lblViewTodayCompleted').html('View Completed');
+    }
+
+    templateObject.todayRecords.set(allCompletedRecords);
+  },
+
+  // view upcoming completed task
+  'click .btnViewUpcomingCompleted': function (e) {
+    e.stopImmediatePropagation();
+
+    let templateObject = Template.instance();
+    let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+
+    let today = moment().format('YYYY-MM-DD');
+    allCompletedRecords = allCompletedRecords.filter(item => item.fields.due_date.substring(0, 10) > today);
+
+    let lblViewCompleted = $('#lblViewUpcomingCompleted').html().trim();
+    if (lblViewCompleted == 'View Completed') {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == true);
+      $('#lblViewUpcomingCompleted').html('View Task');
+    } else {
+      allCompletedRecords = allCompletedRecords.filter(item => item.fields.Completed == false);
+      $('#lblViewUpcomingCompleted').html('View Completed');
+    }
+
+    templateObject.upcomingRecords.set(allCompletedRecords);
+  },
 });
 
 Template.alltaskdatatable.helpers({
   alllabels: () => {
     return Template.instance().alllabels.get();
   },
-  allrecords: () => {
-    return Template.instance().allrecords.get();
+  allRecords: () => {
+    return Template.instance().allRecords.get();
   },
 
   overdueRecords: () => {

@@ -6,7 +6,7 @@ export class CRMService extends BaseService {
       // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
       // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
-      select: "[Active]=true and [Completed]=false"
+      select: "[Active]=true"
     }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }

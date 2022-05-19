@@ -641,7 +641,7 @@ Template.projectsTab.events({
 
                   <div class="dropdown btnTaskTableAction">
                     <button type="button" class="btn btn-secondary" data-toggle="dropdown"
-                      data-placement="bottom" title="More task actions..."><i
+                      data-placement="bottom" title="More Options"><i
                         class="fas fa-ellipsis-h"></i></button>
                     <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
                       <a class="dropdown-item no-modal openEditTaskModal" data-id="${item.fields.ID}" data-catg="${projectName}">
