@@ -163,7 +163,7 @@
                                         Of Month(s)
                                     </label>
                                 </div>
-                                <div class="col-9">
+                                <div class="col-9 months-input-js">
                                     <div class="row">
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
@@ -288,7 +288,7 @@
                                     <div class="form-group dateTimePickerMobile" data-toggle="tooltip"
                                         data-placement="bottom" title="Date format: DD/MM/YYYY">
                                         <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="edtMonthlyStartDate"
+                                            <input type="date" class="form-control" id="edtMonthlyStartDate"
                                                 name="edtMonthlyStartDate">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
@@ -311,62 +311,62 @@
                                         Select Days
                                     </label>
                                 </div>
-                                <div class="col-9">
+                                <div class="col-9 weekly-input-js">
                                     <div class="row">
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-monday" value="monday" checked>
+                                                    id="formCheck-monday-weekly" value="monday" checked>
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-monday">Monday</label>
+                                                    for="formCheck-monday-weekly">Monday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-tuesday" value="tuesday">
+                                                    id="formCheck-tuesday-weekly" value="tuesday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-tuesday">Tuesday</label>
+                                                    for="formCheck-tuesday-weekly">Tuesday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-wednesday" value="wednesday">
+                                                    id="formCheck-wednesday-weekly" value="wednesday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-wednesday">Wednesday</label>
+                                                    for="formCheck-wednesday-weekly">Wednesday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-thursday" value="thursday">
+                                                    id="formCheck-thursday-weekly" value="thursday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-thursday">Thursday</label>
+                                                    for="formCheck-thursday-weekly">Thursday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-friday" value="friday">
+                                                    id="formCheck-friday-weekly" value="friday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-friday">Friday</label>
+                                                    for="formCheck-friday-weekly">Friday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-saturday" value="saturday">
+                                                    id="formCheck-saturday-weekly" value="saturday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-saturday">Saturday</label>
+                                                    for="formCheck-saturday-weekly">Saturday</label>
                                             </div>
                                         </div>
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-sunday" value="sunday">
+                                                    id="formCheck-sunday-weekly" value="sunday">
                                                 <label class="custom-control-label chkBox pointer"
-                                                    for="formCheck-sunday">Sunday</label>
+                                                    for="formCheck-sunday-weekly">Sunday</label>
                                             </div>
                                         </div>
                                     </div>
@@ -419,7 +419,7 @@
                                     <div class="form-group dateTimePickerMobile" data-toggle="tooltip"
                                         data-placement="bottom" title="Date format: DD/MM/YYYY">
                                         <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="edtWeeklyStartDate"
+                                            <input type="date" class="form-control" id="edtWeeklyStartDate"
                                                 name="edtWeeklyStartDate">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
@@ -440,28 +440,89 @@
                                 <div class="col-6 col-lg-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="dailyRadio"
-                                            id="dailyEveryDay" checked>
+                                            id="dailyEveryDay" data-value="every-days" checked>
                                         <label class="form-check-label" for="dailyEveryDay">
                                             Every Day
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" style="margin-bottom: 8px;">
-                                <div class="col-3 col-lg-3">
+                            <div class="row week-days-js" style="margin-bottom: 8px;">
+                                <div class="col-3">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="dailyRadio"
-                                            id="dailyWeekdays">
+                                            id="dailyWeekdays" data-value="week-days" >
                                         <label class="form-check-label" for="dailyWeekdays">
                                             Weekdays
                                         </label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-9 daily-input-js">
+                                    <div class="row">
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-monday-daily" value="monday" checked disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-monday-daily">Monday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-tuesday-daily" value="tuesday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-tuesday-daily">Tuesday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-wednesday-daily" value="wednesday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-wednesday-daily">Wednesday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-thursday-daily" value="thursday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-thursday-daily">Thursday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-friday-daily" value="friday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-friday-daily">Friday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-saturday-daily" value="saturday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-saturday-daily">Saturday</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-lg-4">
+                                            <div class="custom-control custom-checkbox chkBox pointer">
+                                                <input class="custom-control-input chkBoxDays pointer" type="checkbox"
+                                                    id="formCheck-sunday-daily" value="sunday" disabled>
+                                                <label class="custom-control-label chkBox pointer"
+                                                    for="formCheck-sunday-daily">Sunday</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-bottom: 8px;">
                                 <div class="col-3 col-lg-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="dailyRadio" id="dailyEvery">
+                                        <input class="form-check-input" data-value="every" type="radio" name="dailyRadio" id="dailyEvery">
                                         <label class="form-check-label" for="dailyEvery">
                                             Every
                                         </label>
@@ -503,7 +564,7 @@
                                     <div class="form-group dateTimePickerMobile" data-toggle="tooltip"
                                         data-placement="bottom" title="Date format: DD/MM/YYYY">
                                         <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="edtDailyStartDate"
+                                            <input type="date" class="form-control" id="edtDailyStartDate"
                                                 name="edtDailyStartDate">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
@@ -544,7 +605,7 @@
                                     <div class="form-group dateTimePickerMobile" data-toggle="tooltip"
                                         data-placement="bottom" title="Date format: DD/MM/YYYY">
                                         <div class="input-group date" style="cursor: pointer;">
-                                            <input type="text" class="form-control" id="edtOneTimeOnlyDate"
+                                            <input type="date" class="form-control" id="edtOneTimeOnlyDate"
                                                 name="edtOneTimeOnlyDate">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
