@@ -1128,24 +1128,25 @@ Template.customerscard.onRendered(function () {
     };
     templateObject.getCustomersList();
     function setAllCustomerSideDataVS1(data) {
+      console.log(data);
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.tcustomervs1.length; i++) {
             let classname = '';
             if (!isNaN(currentId.id)) {
-                if (data.tcustomervs1.Id === parseInt(currentId.id)) {
+                if (data.tcustomervs1[i].fields.ID === parseInt(currentId.id)) {
                     classname = 'currentSelect';
                 }
             }
             if (!isNaN(currentId.jobid)) {
-                if (data.tcustomervs1.Id === parseInt(currentId.jobid)) {
+                if (data.tcustomervs1[i].fields.ID === parseInt(currentId.jobid)) {
                     classname = 'currentSelect';
                 }
             }
             const dataList = {
-                id: data.tcustomervs1[i].Id || '',
-                company: data.tcustomervs1[i].ClientName || '',
-                isslectJob: data.tcustomervs1[i].IsJob || false,
+                id: data.tcustomervs1[i].fields.ID || '',
+                company: data.tcustomervs1[i].fields.ClientName || '',
+                isslectJob: data.tcustomervs1[i].fields.IsJob || false,
                 classname: classname
             };
             lineItems.push(dataList);
@@ -3215,7 +3216,7 @@ function getCheckPrefDetails() {
             const clientEmail = getcurrentCloudDetails.cloudEmail;
             checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'customerscard'});
             console.log('checkPrefDetails');
-            console.log(checkPrefDetails);            
+            console.log(checkPrefDetails);
         }
     }
     return checkPrefDetails;
