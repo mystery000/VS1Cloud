@@ -1759,7 +1759,8 @@
                                                                                     <div class="col-12">
                                                                                         <div class="form-group">
                                                                                             <label>Leave</label>
-                                                                                            <input type="search" class="form-control" style="background-color:rgb(255, 255, 255); cursor: pointer;" id="leaveTypeSelect" name="leaveTypeSelect">
+                                                                                            <select type="search" class="form-control" id="leaveTypeSelect" name="leaveTypeSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                            </select>
                                                                                             <!-- <input type="text" class="form-control" id="leaveTypeSelect" list="leaveTypeSelectOptions">
                                                                                             <datalist id="leaveTypeSelectOptions">
                                                                                                 <option value="Carer's Leave (unpaid)"></option>
@@ -2459,13 +2460,14 @@
                                                                                             <div class="col-6 col-md-7">
                                                                                                 <div class="form-group">
                                                                                                     <label class="borderBottom1">Earnings Rate</label>
-                                                                                                    <input type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}">
+                                                                                                    <select type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" name="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                                    </select>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="ptEarningAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1 col-md-1" style="padding-left: 0px;">
@@ -2493,7 +2495,8 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Earnings Rate</label>
-                                                                                                                <input type="search" class="form-control earningLineDropDown" id="earningRateSelect">
+                                                                                                                <select type="search" class="form-control earningLineDropDown" id="earningRateSelect" name="earningRateSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                                                                                </select>
                                                                                                                 <input type="hidden" id="earningRateSelectID" value="0">
                                                                                                                 <!-- <select class="form-control" id="earningRateSelect" style="cursor: pointer;">
                                                                                                                     <option value="Allowances exempt from tax withholding and super">Allowances exempt from tax withholding and super</option>
@@ -2567,7 +2570,7 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="ptDeductionAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
@@ -2671,7 +2674,7 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control" id="ptSuperannuationAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptSuperannuationAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
@@ -2817,7 +2820,7 @@
                                                                                         <div class="col-5 col-md-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control" id="ptReimbursementAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting" id="ptReimbursementAmount{{ @index }}" value="{{ item.fields.Amount }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
@@ -2907,7 +2910,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control obCalculateEarningTotalAmount" value="{{ item.fields.Amount }}" id="obEarningAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control obCalculateEarningTotalAmount edtPriceFormatting" value="{{ formatPrice item.fields.Amount }}" id="obEarningAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -2974,7 +2977,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control obCalculateDeductionTotalAmount" value="{{ item.fields.Amount }}" id="obDeductionAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateDeductionTotalAmount" value="{{ item.fields.Amount }}" id="obDeductionAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -3063,7 +3066,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control obCalculateSuperannuationTotalAmount" value="{{ item.fields.Amount }}" id="obSuperannuationAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateSuperannuationTotalAmount" value="{{ item.fields.Amount }}" id="obSuperannuationAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -3136,7 +3139,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control obCalculateReimbursementTotalAmount" value="{{ item.fields.Amount }}"  id="obReimbursementAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateReimbursementTotalAmount" value="{{ item.fields.Amount }}"  id="obReimbursementAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -3255,13 +3258,13 @@
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    {{#if datanotestablerecords}}
-                                                                                        {{#each item in datanotestablerecords}}
+                                                                                    {{#if notesrecords}}
+                                                                                        {{#each item in notesrecords}}
                                                                                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                                                                                 <td contenteditable="false" class="colEmpPayrollID hiddenColumn">{{item.id}}</td>
                                                                                                 <td contenteditable="false" class="colEmpPayrollNotesDate">{{item.createdat}}</td>
                                                                                                 <td contenteditable="false" class="colEmpPayrollNotesUser">{{item.username}}</td>
-                                                                                                <td contenteditable="false" class="colEmpPayrollNotes" style="text-align: right!important;">{{item.notes}}</td>
+                                                                                                <td contenteditable="false" class="colEmpPayrollNotes">{{item.notes}}</td>
                                                                                             </tr>
                                                                                         {{/each}}
                                                                                     {{/if}}
