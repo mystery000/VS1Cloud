@@ -16,36 +16,6 @@
 
     {{> alltaskdatatable}}
 
-    <!-- {{> taskdatatable}} -->
-
-    <!-- <div class="row justify-content-center">
-
-      {{> tasklist_sidebar}}
-
-      <div class="col-8">
-
-        {{#if isAllTasks}}
-        <div class="crmtasksall">
-          {{> alltasks}}
-        </div>
-        {{/if}}
-
-        {{#if isTaskToday}}
-        <div class="crmtasktoday">
-          {{> tasktoday}}
-        </div>
-        {{/if}}
-
-        {{#if isTaskUpcoming}}
-        <div class="crmtaskupcoming">
-          {{> taskupcoming}}
-        </div>
-        {{/if}}
-
-      </div>
-
-    </div> -->
-
   </div>
 
   <style>
@@ -117,35 +87,76 @@
     }
 
     .task_priority_0 {
-      color: #858796;
+      color: #1cc88a;
+      background: #1cc88a;
     }
 
     .task_priority_1 {
-      color: #0013bd;
+      color: #00a3d3;
+      background: #00a3d3;
     }
 
     .task_priority_2 {
-      color: #a76213;
+      color: #f6c23e;
+      background: #f6c23e;
     }
 
     .task_priority_3 {
-      color: #cb1705;
+      color: #e74a3b;
+      background: #e74a3b;
     }
 
     .task_priority_0 label:before {
-      border: 2px solid #b7b9cc !important;
+      border: 2px solid #1cc88a !important;
     }
 
     .task_priority_1 label:before {
-      border: 2px solid #0013bd !important;
+      border: 2px solid #00a3d3 !important;
     }
 
     .task_priority_2 label:before {
-      border: 2px solid #a76213 !important;
+      border: 2px solid #f6c23e !important;
     }
 
     .task_priority_3 label:before {
-      border: 2px solid #cb1705 !important;
+      border: 2px solid #e74a3b !important;
+    }
+
+
+    .task_modal_priority_0,
+    .task_modal_priority_0 a {
+      color: #1cc88a !important;
+    }
+
+    .task_modal_priority_1,
+    .task_modal_priority_1 a {
+      color: #00a3d3 !important;
+    }
+
+    .task_modal_priority_2,
+    .task_modal_priority_2 a {
+      color: #f6c23e !important;
+    }
+
+    .task_modal_priority_3,
+    .task_modal_priority_3 a {
+      color: #e74a3b !important;
+    }
+
+    .task_modal_priority_0 label:before {
+      border: 2px solid #1cc88a !important;
+    }
+
+    .task_modal_priority_1 label:before {
+      border: 2px solid #00a3d3 !important;
+    }
+
+    .task_modal_priority_2 label:before {
+      border: 2px solid #f6c23e !important;
+    }
+
+    .task_modal_priority_3 label:before {
+      border: 2px solid #e74a3b !important;
     }
 
     .chk_complete:before {
@@ -525,6 +536,46 @@
     .activityTime {
       font-size: 15px;
       color: #8f8f8f;
+    }
+
+    .colPrjectDate {
+      width: 5%;
+    }
+
+    .colProjectName {
+      width: 35%;
+    }
+
+    .colProjectDesc {
+      width: 60%;
+      max-width: 500px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .colProjectActions {
+      width: 10%;
+    }
+
+    .btnProjectOptions:after {
+      display: none;
+    }
+
+    .text-orange {
+      color: #fd7e14;
+    }
+
+    .dropdown .dropdown-menu {
+      font-size: 1rem;
+    }
+
+    #taskmodalDescription {
+      padding: 0 30px 15px 30px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      height: 10vh;
+      overflow-y: auto;
     }
   </style>
 

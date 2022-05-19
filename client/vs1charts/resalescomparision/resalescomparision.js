@@ -46,7 +46,7 @@ Template.resalescomparision.onRendered(()=>{
 
 if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
   getInvSales(function (data) {
-
+    setTimeout(function () {
       topTenData1 = _.take(data, 5);
       let totalBalance = 0;
       let itemName = [];
@@ -155,6 +155,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
         }
         }
         });
+    }, 1000)
   });
 
   function getInvSales(callback) {
@@ -200,113 +201,115 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
   }
 
 }else{
-  let data = JSON.parse(localStorage.getItem('VS1SalesEmpReport_dash'));
+  setTimeout(function () {
+    let data = JSON.parse(localStorage.getItem('VS1SalesEmpReport_dash'));
 
-  topTenData1 = _.take(data, 5);
-  let totalBalance = 0;
-  let itemName = [];
-  let itemBalance = [];
-  topTenData1.map(function (item) {
-      item.fields.Totalsales = +parseFloat(item.fields.Totalsales).toFixed(2);
-      if(item.fields.Totalsales >0){
-      itemName.push(item.fields.employeename);
-      itemBalance.push(item.fields.Totalsales);
-      }
-      // itemName.push(item.name);
-      // itemBalance.push(item.totalbalance);
-  });
-  let otherData = _.difference(data, topTenData1, _.isEqual);
-
-  let totalPayment  = 0;
-  let overDuePayment = 0;
-
-  // topData.topTenData.set(data);
-
-  templateObject.topTenData.set(topTenData1);
-  var ctx = document.getElementById("myChartCustomer").getContext("2d");
-  var myChart = new Chart(ctx, {
-    type: 'horizontalBar',
-    data: {
-    labels: itemName,
-    datasets: [{
-    label: 'Amount #'+ this.name,
-    data: itemBalance,
-
-    backgroundColor: [
-    '#f6c23e',
-    '#f6c23e',
-    '#f6c23e',
-    '#f6c23e',
-    '#f6c23e',
-    '#f6c23e'
-    ],
-    borderColor: [
-    'rgba(78,115,223,0)',
-    'rgba(78,115,223,0)',
-    'rgba(78,115,223,0)',
-    'rgba(78,115,223,0)',
-    'rgba(78,115,223,0)',
-    'rgba(78,115,223,0)'
-    ],
-    borderWidth: 1
-    }]
-    },
-    options: {
-      'onClick' : function (evt, item) {
-        if(item[0]['_model'].label){
-          var activePoints = item[0]['_model'].label;
-          FlowRouter.go('/salesreport?contact=' + activePoints);
+    topTenData1 = _.take(data, 5);
+    let totalBalance = 0;
+    let itemName = [];
+    let itemBalance = [];
+    topTenData1.map(function (item) {
+        item.fields.Totalsales = +parseFloat(item.fields.Totalsales).toFixed(2);
+        if(item.fields.Totalsales >0){
+        itemName.push(item.fields.employeename);
+        itemBalance.push(item.fields.Totalsales);
         }
-
-      },
-      maintainAspectRatio: false,
-      responsive: true,
-    tooltips: {
-    callbacks: {
-        label: function(tooltipItem, data) {
-            return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel)|| 0.00;
-        }
-    }
-},
- // bezierCurve : true,
- //                        animation: {
- //                            onComplete: done
- //                        },
-    "legend":{
-    "display":false
-    },
-    "title":{},
-    "scales":{
-    "xAxes":[
-    {"gridLines":{
-    "color":"rgb(234, 236, 244)",
-    "zeroLineColor":"rgb(234, 236, 244)",
-    "drawBorder":false,
-    "drawTicks":false,
-    "borderDash":["2"],
-    "zeroLineBorderDash":["2"],
-    "drawOnChartArea":false},
-    "ticks":{
-    "fontColor":"#858796",
-    "beginAtZero":true,
-    "padding":20}}],
-    "yAxes":[{
-    "gridLines":{"color":"rgb(234, 236, 244)",
-    "zeroLineColor":"rgb(234, 236, 244)",
-    "drawBorder":false,
-    "drawTicks":false,
-    "borderDash":["2"],
-    "zeroLineBorderDash":["2"]},
-    "ticks":{
-    "fontColor":"#858796",
-    "beginAtZero":true,
-    "padding":20
-    }
-    }
-    ]
-    }
-    }
+        // itemName.push(item.name);
+        // itemBalance.push(item.totalbalance);
     });
+    let otherData = _.difference(data, topTenData1, _.isEqual);
+
+    let totalPayment  = 0;
+    let overDuePayment = 0;
+
+    // topData.topTenData.set(data);
+
+    templateObject.topTenData.set(topTenData1);
+    var ctx = document.getElementById("myChartCustomer").getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+      labels: itemName,
+      datasets: [{
+      label: 'Amount #'+ this.name,
+      data: itemBalance,
+
+      backgroundColor: [
+      '#f6c23e',
+      '#f6c23e',
+      '#f6c23e',
+      '#f6c23e',
+      '#f6c23e',
+      '#f6c23e'
+      ],
+      borderColor: [
+      'rgba(78,115,223,0)',
+      'rgba(78,115,223,0)',
+      'rgba(78,115,223,0)',
+      'rgba(78,115,223,0)',
+      'rgba(78,115,223,0)',
+      'rgba(78,115,223,0)'
+      ],
+      borderWidth: 1
+      }]
+      },
+      options: {
+        'onClick' : function (evt, item) {
+          if(item[0]['_model'].label){
+            var activePoints = item[0]['_model'].label;
+            FlowRouter.go('/salesreport?contact=' + activePoints);
+          }
+
+        },
+        maintainAspectRatio: false,
+        responsive: true,
+      tooltips: {
+      callbacks: {
+          label: function(tooltipItem, data) {
+              return utilityService.modifynegativeCurrencyFormat(tooltipItem.xLabel)|| 0.00;
+          }
+      }
+  },
+  // bezierCurve : true,
+  //                        animation: {
+  //                            onComplete: done
+  //                        },
+      "legend":{
+      "display":false
+      },
+      "title":{},
+      "scales":{
+      "xAxes":[
+      {"gridLines":{
+      "color":"rgb(234, 236, 244)",
+      "zeroLineColor":"rgb(234, 236, 244)",
+      "drawBorder":false,
+      "drawTicks":false,
+      "borderDash":["2"],
+      "zeroLineBorderDash":["2"],
+      "drawOnChartArea":false},
+      "ticks":{
+      "fontColor":"#858796",
+      "beginAtZero":true,
+      "padding":20}}],
+      "yAxes":[{
+      "gridLines":{"color":"rgb(234, 236, 244)",
+      "zeroLineColor":"rgb(234, 236, 244)",
+      "drawBorder":false,
+      "drawTicks":false,
+      "borderDash":["2"],
+      "zeroLineBorderDash":["2"]},
+      "ticks":{
+      "fontColor":"#858796",
+      "beginAtZero":true,
+      "padding":20
+      }
+      }
+      ]
+      }
+      }
+      });
+  }, 1000)
 }
 
   });

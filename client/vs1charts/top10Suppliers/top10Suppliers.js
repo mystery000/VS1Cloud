@@ -20,117 +20,119 @@ Template.top10Suppliers.onRendered(() => {
 
 
   getSupplierPurchases(function (data) {
-    topTenSuppData1 = _.take(data, 10);
-    let totalBalance = 0;
-    let itemName = [];
-    let itemBalance = [];
-    topTenSuppData1.map(function (item) {
-      item.totalbalance = +parseFloat(item.totalbalance).toFixed(2);
-      if (item.totalbalance > 0) {
-        itemName.push(item.name);
-        itemBalance.push(item.totalbalance);
-      }
-    });
-    let otherData = _.difference(data, topTenSuppData1, _.isEqual);
+    setTimeout(function () {
+      topTenSuppData1 = _.take(data, 10);
+      let totalBalance = 0;
+      let itemName = [];
+      let itemBalance = [];
+      topTenSuppData1.map(function (item) {
+        item.totalbalance = +parseFloat(item.totalbalance).toFixed(2);
+        if (item.totalbalance > 0) {
+          itemName.push(item.name);
+          itemBalance.push(item.totalbalance);
+        }
+      });
+      let otherData = _.difference(data, topTenSuppData1, _.isEqual);
 
-    let totalPayment = 0;
-    let overDuePayment = 0;
+      let totalPayment = 0;
+      let overDuePayment = 0;
 
-    // topData.topTenData.set(data);
+      // topData.topTenData.set(data);
 
-    // templateObject.topTenData.set(topTenSuppData1);
-    var ctx = document.getElementById("myChart").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "horizontalBar",
-      data: {
-        labels: itemName,
-        datasets: [
-          {
-            label: "Earnings",
-            data: itemBalance,
-            backgroundColor: [
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-              "#f6c23e",
-            ],
-            borderColor: [
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-              "rgba(78,115,223,0)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        onClick: function (evt, item) {
-          if (item[0]["_model"].label) {
-            var activePoints = item[0]["_model"].label;
-            FlowRouter.go("/purchasesreport?contact=" + activePoints);
-          }
-        },
-        maintainAspectRatio: false,
-        responsive: true,
-        tooltips: {
-          callbacks: {
-            label: function (tooltipItem, data) {
-              return (
-                utilityService.modifynegativeCurrencyFormat(
-                  tooltipItem.xLabel
-                ) || 0.0
-              );
-            },
-          },
-        },
-        legend: {
-          display: false,
-        },
-        title: {},
-        scales: {
-          xAxes: [
+      // templateObject.topTenData.set(topTenSuppData1);
+      var ctx = document.getElementById("myChart").getContext("2d");
+      var myChart = new Chart(ctx, {
+        type: "horizontalBar",
+        data: {
+          labels: itemName,
+          datasets: [
             {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-                drawOnChartArea: false,
-              },
-              ticks: {
-                fontColor: "#858796",
-                beginAtZero: true,
-                padding: 20,
-              },
-            },
-          ],
-          yAxes: [
-            {
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                drawTicks: false,
-                borderDash: ["2"],
-                zeroLineBorderDash: ["2"],
-              },
-              ticks: {
-                fontColor: "#858796",
-                beginAtZero: true,
-                padding: 20,
-              },
+              label: "Earnings",
+              data: itemBalance,
+              backgroundColor: [
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+                "#f6c23e",
+              ],
+              borderColor: [
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+                "rgba(78,115,223,0)",
+              ],
+              borderWidth: 1,
             },
           ],
         },
-      },
-    });
+        options: {
+          onClick: function (evt, item) {
+            if (item[0]["_model"].label) {
+              var activePoints = item[0]["_model"].label;
+              FlowRouter.go("/purchasesreport?contact=" + activePoints);
+            }
+          },
+          maintainAspectRatio: false,
+          responsive: true,
+          tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                return (
+                  utilityService.modifynegativeCurrencyFormat(
+                    tooltipItem.xLabel
+                  ) || 0.0
+                );
+              },
+            },
+          },
+          legend: {
+            display: false,
+          },
+          title: {},
+          scales: {
+            xAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                  drawOnChartArea: false,
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  beginAtZero: true,
+                  padding: 20,
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  drawTicks: false,
+                  borderDash: ["2"],
+                  zeroLineBorderDash: ["2"],
+                },
+                ticks: {
+                  fontColor: "#858796",
+                  beginAtZero: true,
+                  padding: 20,
+                },
+              },
+            ],
+          },
+        },
+      });
+    }, 1000)
   });
   function getSupplierPurchases(callback) {
     return new Promise((res, rej) => {

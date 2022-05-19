@@ -32,6 +32,282 @@ Template.employeecompletedjobs.onRendered(() => {
         getVS1Data('TTimeSheet').then(function (dataObject) {
             if (dataObject == 0) {
                 sideBarService.getAllTimeSheetList().then(function (data) {
+                    setTimeout(function () {
+                        jobsCompleted = {};
+                        let itemName = [];
+                        let itemBalance = [];
+
+                        max = '',
+                        maxi = 0;
+                        for (let timesheetInfo of data.ttimesheet) {
+                            if(timesheetInfo.fields.InvoiceNotes == "completed") {
+                                if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                    jobsCompleted[timesheetInfo.fields.EmployeeName]++;
+                                } else {
+                                    jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
+                                }
+
+                                if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                    max = timesheetInfo;
+                                    maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
+                                }
+                            }
+                        }
+
+                        var sortable = [];
+                        for (var vehicle in jobsCompleted) {
+                            let dataObj = {
+                                name: vehicle,
+                                jobscompleted: jobsCompleted[vehicle]
+                            }
+                            sortable.push(dataObj);
+                        }
+
+                        sortable.sort(function (a, b) {
+                            return (b.jobscompleted > a.jobscompleted) ? 1 : -1;
+                        });
+
+                        for (let j = 0; j < 5; j++) {
+                            itemName.push(sortable[j].name);
+                            itemBalance.push(sortable[j].jobscompleted);
+                        }
+
+                        itemName.reverse();
+                        itemBalance.reverse();
+
+                        var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
+                        var myChart = new Chart(ctx, {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: itemName,
+                                datasets: [{
+                                        label: 'Total #' + this.name,
+                                        data: itemBalance,
+
+                                        backgroundColor: [
+                                            '#f6c23e',
+                                            '#f6c23e',
+                                            '#f6c23e',
+                                            '#f6c23e',
+                                            '#f6c23e',
+                                            '#f6c23e'
+                                        ],
+                                        borderColor: [
+                                            'rgba(78,115,223,0)',
+                                            'rgba(78,115,223,0)',
+                                            'rgba(78,115,223,0)',
+                                            'rgba(78,115,223,0)',
+                                            'rgba(78,115,223,0)',
+                                            'rgba(78,115,223,0)'
+                                        ],
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                'onClick': function (evt, item) {
+                                    if (item[0]['_model'].label) {
+                                        var activePoints = item[0]['_model'].label;
+                                        // FlowRouter.go('/salesreport?contact=' + activePoints);
+                                    }
+
+                                },
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                tooltips: {
+                                    callbacks: {
+                                        label: function (tooltipItem, data) {
+                                            return tooltipItem.xLabel;
+                                        }
+                                    }
+                                },
+                                "legend": {
+                                    "display": false
+                                },
+                                "title": {},
+                                "scales": {
+                                    "xAxes": [{
+                                            "gridLines": {
+                                                "color": "rgb(234, 236, 244)",
+                                                "zeroLineColor": "rgb(234, 236, 244)",
+                                                "drawBorder": false,
+                                                "drawTicks": false,
+                                                "borderDash": ["2"],
+                                                "zeroLineBorderDash": ["2"],
+                                                "drawOnChartArea": false
+                                            },
+                                            "ticks": {
+                                                "fontColor": "#858796",
+                                                "beginAtZero": true,
+                                                "padding": 20
+                                            }
+                                        }
+                                    ],
+                                    "yAxes": [{
+                                            "gridLines": {
+                                                "color": "rgb(234, 236, 244)",
+                                                "zeroLineColor": "rgb(234, 236, 244)",
+                                                "drawBorder": false,
+                                                "drawTicks": false,
+                                                "borderDash": ["2"],
+                                                "zeroLineBorderDash": ["2"]
+                                            },
+                                            "ticks": {
+                                                "fontColor": "#858796",
+                                                "beginAtZero": true,
+                                                "padding": 20
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        });
+
+                        $('.fullScreenSpin').css('display', 'none');
+                    }, 1000)
+                }).catch(function (err) {
+                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                    $('.fullScreenSpin').css('display', 'none');
+                    // Meteor._reload.reload();
+                });
+            } else {
+                setTimeout(function () {
+                    let data = JSON.parse(dataObject[0].data);
+                    jobsCompleted = {};
+                    let itemName = [];
+                    let itemBalance = [];
+                    max = '',
+                    maxi = 0;
+                    for (let timesheetInfo of data.ttimesheet) {
+                        if(timesheetInfo.fields.InvoiceNotes == "completed") {
+                            if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                jobsCompleted[timesheetInfo.fields.EmployeeName]++;
+                            } else {
+                                jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
+                            }
+
+                            if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                max = timesheetInfo;
+                                maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
+                            }
+                        }
+                    }
+
+                    var sortable = [];
+                    for (var vehicle in jobsCompleted) {
+                        let dataObj = {
+                            name: vehicle,
+                            jobscompleted: jobsCompleted[vehicle]
+                        }
+                        sortable.push(dataObj);
+                    }
+
+                    sortable.sort(function (a, b) {
+                        return (b.jobscompleted > a.jobscompleted) ? 1 : -1;
+                    });
+
+
+                    for (let j = 0; j < 5; j++) {
+                        itemName.push(sortable[j].name);
+                        itemBalance.push(sortable[j].jobscompleted);
+                    }
+
+                    itemName.reverse();
+                    itemBalance.reverse();
+
+                    var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
+                    var myChart = new Chart(ctx, {
+                        type: 'horizontalBar',
+                        data: {
+                            labels: itemName,
+                            datasets: [{
+                                    label: 'Total #' + this.name,
+                                    data: itemBalance,
+                                    backgroundColor: [
+                                        '#f6c23e',
+                                        '#f6c23e',
+                                        '#f6c23e',
+                                        '#f6c23e',
+                                        '#f6c23e',
+                                        '#f6c23e'
+                                    ],
+                                    borderColor: [
+                                        'rgba(78,115,223,0)',
+                                        'rgba(78,115,223,0)',
+                                        'rgba(78,115,223,0)',
+                                        'rgba(78,115,223,0)',
+                                        'rgba(78,115,223,0)',
+                                        'rgba(78,115,223,0)'
+                                    ],
+                                    borderWidth: 1
+                                }
+                            ]
+                        },
+                        options: {
+                            'onClick': function (evt, item) {
+                                if (item[0]['_model'].label) {
+                                    var activePoints = item[0]['_model'].label;
+                                    // FlowRouter.go('/salesreport?contact=' + activePoints);
+                                }
+
+                            },
+                            maintainAspectRatio: false,
+                            responsive: true,
+                            tooltips: {
+                                callbacks: {
+                                    label: function (tooltipItem, data) {
+                                        return tooltipItem.xLabel;
+                                    }
+                                }
+                            },
+                            "legend": {
+                                "display": false
+                            },
+                            "title": {},
+                            "scales": {
+                                "xAxes": [{
+                                        "gridLines": {
+                                            "color": "rgb(234, 236, 244)",
+                                            "zeroLineColor": "rgb(234, 236, 244)",
+                                            "drawBorder": false,
+                                            "drawTicks": false,
+                                            "borderDash": ["2"],
+                                            "zeroLineBorderDash": ["2"],
+                                            "drawOnChartArea": false
+                                        },
+                                        "ticks": {
+                                            "fontColor": "#858796",
+                                            "beginAtZero": true,
+                                            "padding": 20
+                                        }
+                                    }
+                                ],
+                                "yAxes": [{
+                                        "gridLines": {
+                                            "color": "rgb(234, 236, 244)",
+                                            "zeroLineColor": "rgb(234, 236, 244)",
+                                            "drawBorder": false,
+                                            "drawTicks": false,
+                                            "borderDash": ["2"],
+                                            "zeroLineBorderDash": ["2"]
+                                        },
+                                        "ticks": {
+                                            "fontColor": "#858796",
+                                            "beginAtZero": true,
+                                            "padding": 20
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    });
+                }, 1000)    
+                //let url = window.location.href;
+                $('.fullScreenSpin').css('display', 'none');
+            }
+        }).catch(function (err) {
+            sideBarService.getAllTimeSheetList().then(function (data) {
+                setTimeout(function () {
                     jobsCompleted = {};
                     let itemName = [];
                     let itemBalance = [];
@@ -40,18 +316,18 @@ Template.employeecompletedjobs.onRendered(() => {
                     maxi = 0;
                     for (let timesheetInfo of data.ttimesheet) {
                         if(timesheetInfo.fields.InvoiceNotes == "completed") {
-                        if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                            jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-                        } else {
-                            jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-                        }
+                            if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                jobsCompleted[timesheetInfo.fields.EmployeeName]++;
+                            } else {
+                                jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
+                            }
 
-                        if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                            max = timesheetInfo;
-                            maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
+                            if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
+                                max = timesheetInfo;
+                                maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
+                            }
                         }
                     }
-                }
 
                     var sortable = [];
                     for (var vehicle in jobsCompleted) {
@@ -161,280 +437,7 @@ Template.employeecompletedjobs.onRendered(() => {
                             }
                         }
                     });
-
-                    $('.fullScreenSpin').css('display', 'none');
-
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                jobsCompleted = {};
-                let itemName = [];
-                let itemBalance = [];
-                max = '',
-                maxi = 0;
-                for (let timesheetInfo of data.ttimesheet) {
-                    if(timesheetInfo.fields.InvoiceNotes == "completed") {
-                    if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                        jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-                    } else {
-                        jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-                    }
-
-                    if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                        max = timesheetInfo;
-                        maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
-                    }
-                }
-            }
-
-                var sortable = [];
-                for (var vehicle in jobsCompleted) {
-                    let dataObj = {
-                        name: vehicle,
-                        jobscompleted: jobsCompleted[vehicle]
-                    }
-                    sortable.push(dataObj);
-                }
-
-                sortable.sort(function (a, b) {
-                    return (b.jobscompleted > a.jobscompleted) ? 1 : -1;
-                });
-
-
-                for (let j = 0; j < 5; j++) {
-                    itemName.push(sortable[j].name);
-                    itemBalance.push(sortable[j].jobscompleted);
-                }
-
-                 itemName.reverse();
-                 itemBalance.reverse();
-
-                var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
-                var myChart = new Chart(ctx, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: itemName,
-                        datasets: [{
-                                label: 'Total #' + this.name,
-                                data: itemBalance,
-                                backgroundColor: [
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e'
-                                ],
-                                borderColor: [
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)'
-                                ],
-                                borderWidth: 1
-                            }
-                        ]
-                    },
-                    options: {
-                        'onClick': function (evt, item) {
-                            if (item[0]['_model'].label) {
-                                var activePoints = item[0]['_model'].label;
-                                // FlowRouter.go('/salesreport?contact=' + activePoints);
-                            }
-
-                        },
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    return tooltipItem.xLabel;
-                                }
-                            }
-                        },
-                        "legend": {
-                            "display": false
-                        },
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"],
-                                        "drawOnChartArea": false
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "beginAtZero": true,
-                                        "padding": 20
-                                    }
-                                }
-                            ],
-                            "yAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"]
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "beginAtZero": true,
-                                        "padding": 20
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                });
-
-                //let url = window.location.href;
-                $('.fullScreenSpin').css('display', 'none');
-            }
-        }).catch(function (err) {
-            sideBarService.getAllTimeSheetList().then(function (data) {
-                jobsCompleted = {};
-                let itemName = [];
-                let itemBalance = [];
-
-                max = '',
-                maxi = 0;
-                for (let timesheetInfo of data.ttimesheet) {
-                    if(timesheetInfo.fields.InvoiceNotes == "completed") {
-                    if (jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                        jobsCompleted[timesheetInfo.fields.EmployeeName]++;
-                    } else {
-                        jobsCompleted[timesheetInfo.fields.EmployeeName] = 1;
-                    }
-
-                    if (maxi < jobsCompleted[timesheetInfo.fields.EmployeeName]) {
-                        max = timesheetInfo;
-                        maxi = jobsCompleted[timesheetInfo.fields.EmployeeName]
-                    }
-                }
-            }
-
-                var sortable = [];
-                for (var vehicle in jobsCompleted) {
-                    let dataObj = {
-                        name: vehicle,
-                        jobscompleted: jobsCompleted[vehicle]
-                    }
-                    sortable.push(dataObj);
-                }
-
-                sortable.sort(function (a, b) {
-                    return (b.jobscompleted > a.jobscompleted) ? 1 : -1;
-                });
-
-                for (let j = 0; j < 5; j++) {
-                    itemName.push(sortable[j].name);
-                    itemBalance.push(sortable[j].jobscompleted);
-                }
-
-                itemName.reverse();
-                itemBalance.reverse();
-
-                var ctx = document.getElementById("employeecompletedjobchart").getContext("2d");
-                var myChart = new Chart(ctx, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: itemName,
-                        datasets: [{
-                                label: 'Total #' + this.name,
-                                data: itemBalance,
-
-                                backgroundColor: [
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e',
-                                    '#f6c23e'
-                                ],
-                                borderColor: [
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)',
-                                    'rgba(78,115,223,0)'
-                                ],
-                                borderWidth: 1
-                            }
-                        ]
-                    },
-                    options: {
-                        'onClick': function (evt, item) {
-                            if (item[0]['_model'].label) {
-                                var activePoints = item[0]['_model'].label;
-                                // FlowRouter.go('/salesreport?contact=' + activePoints);
-                            }
-
-                        },
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        tooltips: {
-                            callbacks: {
-                                label: function (tooltipItem, data) {
-                                    return tooltipItem.xLabel;
-                                }
-                            }
-                        },
-                        "legend": {
-                            "display": false
-                        },
-                        "title": {},
-                        "scales": {
-                            "xAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"],
-                                        "drawOnChartArea": false
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "beginAtZero": true,
-                                        "padding": 20
-                                    }
-                                }
-                            ],
-                            "yAxes": [{
-                                    "gridLines": {
-                                        "color": "rgb(234, 236, 244)",
-                                        "zeroLineColor": "rgb(234, 236, 244)",
-                                        "drawBorder": false,
-                                        "drawTicks": false,
-                                        "borderDash": ["2"],
-                                        "zeroLineBorderDash": ["2"]
-                                    },
-                                    "ticks": {
-                                        "fontColor": "#858796",
-                                        "beginAtZero": true,
-                                        "padding": 20
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                });
-
+                }, 1000)    
                 $('.fullScreenSpin').css('display', 'none');
 
             }).catch(function (err) {

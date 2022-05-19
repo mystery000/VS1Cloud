@@ -937,7 +937,7 @@ authenticatedRoutes.route('/trialbalance', {
     }
 });
 
-authenticatedRoutes.route('/currenciesSettings', {
+authenticatedRoutes.route('/settings/currencies', {
     name: 'currenciesSettings',
     action() {
         BlazeLayout.render('layout', {
@@ -1608,7 +1608,7 @@ authenticatedRoutes.route('/smssettings', {
     }
 });
 
-authenticatedRoutes.route('/fxupdatesetting', {
+authenticatedRoutes.route('/settings/fx-update', {
     name: 'fixUpdates',
     action() {
         BlazeLayout.render('layout', {
