@@ -1,22 +1,37 @@
 export class YodleeService {
-  constructor() {
+    constructor() {
 
-  }
+    }
 
-  POST(loginName, clientID, secretKey) {
-    let promise = new Promise(function (resolve, reject) {
-      Meteor.call("getYodleeAccessToken", loginName, clientID, secretKey, function(error, results) {
-        if (error) {
-          reject(error);
-        } else {
-          if (results) {
-            resolve(JSON.parse(results));
-          } else {
-            reject(results);
-          }
-        }
-      });
-    });
-    return promise;
-  }
+    getAccessToken(loginName, clientID, secretKey) {
+        return new Promise(function (resolve, reject) {
+            Meteor.call("getYodleeAccessToken", loginName, clientID, secretKey, function (error, results) {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (results) {
+                        resolve(JSON.parse(results));
+                    } else {
+                        reject(results);
+                    }
+                }
+            });
+        });
+    }
+
+    getTransactionData(token, fromDate) {
+        return new Promise(function (resolve, reject) {
+            Meteor.call("getYodleeTransactionData", token, fromDate, function (error, results) {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (results) {
+                        resolve(JSON.parse(results));
+                    } else {
+                        reject(results);
+                    }
+                }
+            });
+        });
+    }
 }

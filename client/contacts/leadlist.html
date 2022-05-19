@@ -1,5 +1,5 @@
 <template name="leadlist">
-    <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+    <div class="container-fluid" style="padding-left: 0; padding-right: 0px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
@@ -9,8 +9,8 @@
             }
         </style> -->
         <div style="margin-top: -24px;">
-            <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed;">
-                <h1 style="margin: 16px; margin-bottom: 0px;">Leads
+            <header style="padding: 16px; padding-bottom: 0; background-color: #ededed;">
+                <h1 style="margin: 16px; margin-bottom: 0;">Leads
                     <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                     <a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
@@ -24,7 +24,11 @@
                                     <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
                                     <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=16&p=20#p20" target="_blank" class="btn btn-primary">Download Help File</a></p>
                                     <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                                    <p class="text-center text-muted" style="margin: 0;">
+                                        <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">
+                                        Go To Forum
+                                        </a>
+                                    </p>
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
@@ -35,7 +39,7 @@
                     <style>
                         @media screen and (max-width: 376px) {
                             .btnOpenSettings {
-                                margin-right: 0px;
+                                margin-right: 0;
                             }
                         }
                     </style>
@@ -72,9 +76,6 @@
                                                     background-color: rgb(255, 255, 255);
                                                     background-clip: padding-box;
                                                     border: 1px solid rgb(133, 135, 150);
-                                                    border-radius: .3rem;
-                                                    border-style: solid;
-                                                    border-width: 1px;
                                                     padding: 2px;
                                                     border-radius: .35rem;
                                                     color: rgb(128, 128, 128);
@@ -100,7 +101,7 @@
                                                     <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
                                                 </div>
                                                 <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
+                                                    <label class="text-nowrap" style="padding-left: 0;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
                                                     <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
                                                     <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
                                                 </div>
@@ -133,12 +134,12 @@
                 </div>
             </header>
 
-            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
+            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0 20px 20px 20px; background-color: #ededed;">
 
                 <div class="col float-left flex-grow-1">
-                    <!-- <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
-                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 16px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button> -->
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button id="btnNewLeads" name="btnNewLeads" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Leasd</button>
+<!--                    <button class="btn btn-success btnAddVS1User" type="button" style="margin: 16px;"><i class="fa fa-plus" style="padding-right: 5px"></i>Add VS1 User</button>-->
                 </div>
 
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -225,7 +226,7 @@
 
 
             <div>
-                <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+                <div class="card-body p-3 rounded" style="margin: 0 16px;">
 
                     <!-- Start {{> optionNavSalesOverview}} -->
 

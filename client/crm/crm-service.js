@@ -6,7 +6,7 @@ export class CRMService extends BaseService {
       // orderby: '"ToDoByDate asc"',
       ListType: "Detail",
       // select: "[Active]=true and [Completed]=false and [ProjectID]=0"
-      select: "[Active]=true and [Completed]=false"
+      select: "[Active]=true"
     }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
@@ -47,6 +47,10 @@ export class CRMService extends BaseService {
     return this.getOneById(this.ERPObjects.Tprojecttask_TaskLabel, id);
   }
 
+  updateLabel(data) {
+    return this.POST(this.ERPObjects.Tprojecttask_TaskLabel, data);
+  }
+
   getTTodoTaskList() {
     let options = {
       orderby: '"ToDoByDate asc"',
@@ -63,5 +67,9 @@ export class CRMService extends BaseService {
 
   saveComment(data) {
     return this.POST(this.ERPObjects.Tprojecttask_comments, data);
+  }
+
+  getAllFilters() {
+    return
   }
 }

@@ -7111,6 +7111,9 @@ Template.new_salesorder.onRendered(function() {
     //$('#tblInventory').DataTable().column( 6 ).visible( false );
 });
 Template.new_salesorder.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
     },

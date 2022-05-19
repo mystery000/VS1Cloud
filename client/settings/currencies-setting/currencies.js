@@ -5,11 +5,13 @@ import { SideBarService } from '../../js/sidebar-service';
 import {HTTP} from 'meteor/http';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+
 Template.currenciesSettings.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
+  
 });
 
 Template.currenciesSettings.onRendered(function() {
@@ -650,7 +652,8 @@ if(listData){
 Template.currenciesSettings.events({
 
     'click .btnFxupdate' : function(event){
-    FlowRouter.go('/fxupdatesetting');
+      $("#frequencyModal").modal('toggle');
+      // FlowRouter.go('/settings/fx-update'); old wrong code
     },
     'click #btnNewInvoice':function(event){
         // FlowRouter.go('/invoicecard');

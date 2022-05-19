@@ -7,7 +7,9 @@ import {
 import {
     CoreService
 } from '../js/core-service';
-import {ContactService} from "../contacts/contact-service";
+import {
+    ContactService
+} from "../contacts/contact-service";
 import {
     AccountService
 } from "../accounts/account-service";
@@ -28,7 +30,7 @@ let accountService = new AccountService();
 let ocrService = new OCRService();
 let contactService = new ContactService();
 
-Template.receiptsoverview.onCreated(function () {
+Template.receiptsoverview.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.employees = new ReactiveVar([]);
     templateObject.suppliers = new ReactiveVar([]);
@@ -41,7 +43,7 @@ Template.receiptsoverview.onCreated(function () {
     templateObject.mergeReceiptSelectedIndex = new ReactiveVar(0);
 });
 
-Template.receiptsoverview.onRendered(function () {
+Template.receiptsoverview.onRendered(function() {
     let templateObject = Template.instance();
 
     if (FlowRouter.current().queryParams.success) {
@@ -112,7 +114,7 @@ Template.receiptsoverview.onRendered(function () {
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $earch.attr('data-id', '');
             $('#employeeListModal').modal('toggle');
-            setTimeout(function () {
+            setTimeout(function() {
                 $('#tblEmployeelist_filter .form-control-sm').focus();
                 $('#tblEmployeelist_filter .form-control-sm').val('');
                 $('#tblEmployeelist_filter .form-control-sm').trigger("input");
@@ -121,20 +123,20 @@ Template.receiptsoverview.onRendered(function () {
                 $('#tblEmployeelist_filter .form-control-sm').trigger("input");
             }, 500);
         } else {
-            if (employeeName.replace(/\s/g, '') != '') {    // edit employee
+            if (employeeName.replace(/\s/g, '') != '') { // edit employee
                 let editId = $('#viewReceiptModal .employees').attr('data-id');
 
-                getVS1Data('TEmployee').then(function (dataObject) {
+                getVS1Data('TEmployee').then(function(dataObject) {
 
                     if (dataObject.length == 0) {
-                        sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
+                        sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
                             addVS1Data('TEmployee', JSON.stringify(data));
                             for (let i = 0; i < data.temployee.length; i++) {
                                 if (data.temployee[i].fields.ID == editId) {
                                     showEditEmployeeView(data.temployee[i].fields);
                                 }
                             }
-                        }).catch(function (err) {
+                        }).catch(function(err) {
 
                         });
                     } else {
@@ -147,15 +149,15 @@ Template.receiptsoverview.onRendered(function () {
                             }
                         }
                     }
-                }).catch(function (err) {
-                    sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (data) {
+                }).catch(function(err) {
+                    sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data('TEmployee', JSON.stringify(data));
                         for (let i = 0; i < data.temployee.length; i++) {
                             if (data.temployee[i].fields.ID == editId) {
                                 showEditEmployeeView(data.temployee[i].fields);
                             }
                         }
-                    }).catch(function (err) {
+                    }).catch(function(err) {
 
                     });
                 });
@@ -164,9 +166,10 @@ Template.receiptsoverview.onRendered(function () {
             }
         }
     }
+
     function showEditEmployeeView(data) {
         $('.fullScreenSpin').css('display', 'none');
-        $('#add-customer-title').text('Edit Customer');
+        $('#add-customer-title').text('Edit Employee');
         let popCustomerID = data.ID || '';
         let popCustomerName = data.EmployeeName || '';
         let popCustomerEmail = data.Email || '';
@@ -218,12 +221,12 @@ Template.receiptsoverview.onRendered(function () {
         $('#edtCustomeField4').val(popCustomercustfield4);
         $('#edtGender').val(popGender);
 
-        setTimeout(function () {
+        setTimeout(function() {
             $('#addEmployeeModal').modal('show');
         }, 200);
     }
 
-    templateObject.setSupplierSelect = function (e) {
+    templateObject.setSupplierSelect = function(e) {
         var $earch = $(e.target);
         var offset = $earch.offset();
         $('#edtSupplierPOPID').val('');
@@ -288,6 +291,7 @@ Template.receiptsoverview.onRendered(function () {
             }
         }
     }
+
     function showEditSupplierView(data) {
         $('.fullScreenSpin').css('display', 'none');
 
@@ -430,6 +434,7 @@ Template.receiptsoverview.onRendered(function () {
             }
         }
     }
+
     function showEditCurrencyView(data) {
         $('#edtCurrencyID').val(data.Id);
         setTimeout(function() {
@@ -463,7 +468,7 @@ Template.receiptsoverview.onRendered(function () {
 
             }, 500);
         } else {
-            if (accountDataName.replace(/\s/g, '') != '') {    // edit employee
+            if (accountDataName.replace(/\s/g, '') != '') { // edit employee
                 getVS1Data('TAccountVS1').then(function(dataObject) {
                     if (dataObject.length == 0) {
                         accountService.getOneAccountByName(accountDataName).then(function(data) {
@@ -495,12 +500,12 @@ Template.receiptsoverview.onRendered(function () {
                         }
                         if (!added) {
                             accountService.getOneAccountByName(accountDataName).then(function(data) {
-                              $('#add-account-title').text('Edit Account Details');
-                              $('#edtAccountName').attr('readonly', true);
-                              $('#sltAccountType').attr('readonly', true);
-                              $('#sltAccountType').attr('disabled', 'disabled');
+                                $('#add-account-title').text('Edit Account Details');
+                                $('#edtAccountName').attr('readonly', true);
+                                $('#sltAccountType').attr('readonly', true);
+                                $('#sltAccountType').attr('disabled', 'disabled');
 
-                              showEditAccountView(data.taccountvs1[0]);
+                                showEditAccountView(data.taccountvs1[0]);
 
                             }).catch(function(err) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -510,16 +515,16 @@ Template.receiptsoverview.onRendered(function () {
                     }
                 }).catch(function(err) {
                     accountService.getOneAccountByName(accountDataName).then(function(data) {
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      let fullAccountTypeName = '';
-                      let accBalance = '';
-                      $('#add-account-title').text('Edit Account Details');
-                      $('#edtAccountName').attr('readonly', true);
-                      $('#sltAccountType').attr('readonly', true);
-                      $('#sltAccountType').attr('disabled', 'disabled');
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        let fullAccountTypeName = '';
+                        let accBalance = '';
+                        $('#add-account-title').text('Edit Account Details');
+                        $('#edtAccountName').attr('readonly', true);
+                        $('#sltAccountType').attr('readonly', true);
+                        $('#sltAccountType').attr('disabled', 'disabled');
 
-                      showEditAccountView(data.taccountvs1[0]);
+                        showEditAccountView(data.taccountvs1[0]);
 
                     }).catch(function(err) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -545,6 +550,7 @@ Template.receiptsoverview.onRendered(function () {
             }
         }
     }
+
     function showEditAccountView(data) {
         $('.fullScreenSpin').css('display', 'none');
         var accountid = data.fields.ID || '';
@@ -750,7 +756,7 @@ Template.receiptsoverview.onRendered(function () {
     }
 
     $.fn.dataTableExt.afnFiltering.push(
-        function( settings, data, dataIndex ) {
+        function(settings, data, dataIndex) {
             if (settings.nTable.id === 'tblReceiptList') {
                 var min = $('#dateFrom').val();
                 var max = $('#dateTo').val();
@@ -758,10 +764,10 @@ Template.receiptsoverview.onRendered(function () {
                 let endDate = moment(max, 'DD/MM/YYYY');
                 var date = moment(data[1], 'DD/MM/YYYY');
                 if (
-                    ( min === '' && max === '' ) ||
-                    ( min === '' && date <= endDate ) ||
-                    ( startDate <= date   && max === null ) ||
-                    ( startDate <= date   && date <= endDate )
+                    (min === '' && max === '') ||
+                    (min === '' && date <= endDate) ||
+                    (startDate <= date && max === null) ||
+                    (startDate <= date && date <= endDate)
                 ) {
                     return true;
                 }
@@ -776,10 +782,10 @@ Template.receiptsoverview.onRendered(function () {
                 let merchantFilter = $('#mergeModal .merchants').val();
                 let accountFilter = $('#mergeModal .chart-accounts').val();
 
-                if (( min === '' && max === '' ) ||
-                    ( min === '' && date <= endDate ) ||
-                    ( startDate <= date && max === null ) ||
-                    ( startDate <= date && date <= endDate )) {
+                if ((min === '' && max === '') ||
+                    (min === '' && date <= endDate) ||
+                    (startDate <= date && max === null) ||
+                    (startDate <= date && date <= endDate)) {
                     if ((merchantFilter == '' || merchantFilter == data[2]) && (accountFilter == '' || accountFilter == data[4])) {
                         return true;
                     }
@@ -792,7 +798,7 @@ Template.receiptsoverview.onRendered(function () {
         }
     );
 
-    setTimeout(function () {
+    setTimeout(function() {
         //$.fn.dataTable.moment('DD/MM/YY');
         $('#tblSplitExpense').DataTable({
             "columns": [{
@@ -816,11 +822,11 @@ Template.receiptsoverview.onRendered(function () {
                 render: function(data, type, row, meta) {
                     let index = meta.row + meta.settings._iDisplayStart;
                     let html = '<div class="input-group date" style="cursor: pointer;width: 140px;">' +
-                                    '<input type="text" class="form-control dtSplitReceipt" name="dtSplitReceipt" value="' + data + '">' +
-                                    '<div class="input-group-addon">' +
-                                        '<span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                                    '</div>' +
-                                '</div>';
+                        '<input type="text" class="form-control dtSplitReceipt" name="dtSplitReceipt" value="' + data + '">' +
+                        '<div class="input-group-addon">' +
+                        '<span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
+                        '</div>' +
+                        '</div>';
                     return html;
                 }
             }, {
@@ -860,7 +866,7 @@ Template.receiptsoverview.onRendered(function () {
                 exportOptions: {
                     columns: ':visible:not(.chkBox)',
                     format: {
-                        body: function (data, row, column) {
+                        body: function(data, row, column) {
                             if (data.includes("</span>")) {
                                 var res = data.split("</span>");
                                 data = res[1];
@@ -897,19 +903,19 @@ Template.receiptsoverview.onRendered(function () {
             "order": [
                 [1, "desc"]
             ],
-            action: function () {
+            action: function() {
                 // $('#tblSplitExpense').DataTable().ajax.reload();
             },
-            "fnInitComplete": function () {
+            "fnInitComplete": function() {
                 $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshSplit' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSplitExpense_filter");
                 // $('.myvarFilterFormSplit').appendTo(".colDateFilterSplit");
             }
-        }).on('page', function () {
-            setTimeout(function () {
+        }).on('page', function() {
+            setTimeout(function() {
                 MakeNegative();
             }, 100);
-        }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-            setTimeout(function () {
+        }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+            setTimeout(function() {
                 MakeNegative();
             }, 100);
         });
@@ -917,57 +923,57 @@ Template.receiptsoverview.onRendered(function () {
 
     $('.imageParent')
         // tile mouse actions
-        .on('mouseover', function () {
+        .on('mouseover', function() {
             $(this).children('.receiptPhoto').css({
                 'transform': 'scale(' + $(this).attr('data-scale') + ')'
             });
         })
-        .on('mouseout', function () {
+        .on('mouseout', function() {
             $(this).children('.receiptPhoto').css({
                 'transform': 'scale(1)'
             });
         })
-        .on('mousemove', function (e) {
+        .on('mousemove', function(e) {
             $(this).children('.receiptPhoto').css({
                 'transform-origin': ((e.pageX - $(this).offset().left) / $(this).width()) * 100 + '% ' + ((e.pageY - $(this).offset().top) / $(this).height()) * 100 + '%'
             });
         })
         // tiles set up
-        .each(function () {
+        .each(function() {
             $(this)
                 // add a photo container
                 .append('<div class="receiptPhoto"></div>')
-                // set up a background image for each tile based on data-image attribute
-                // .children('.receiptPhoto').css({
-                //     'background-image': 'url(' + $(this).attr('data-image') + ')'
-                // });
+            // set up a background image for each tile based on data-image attribute
+            // .children('.receiptPhoto').css({
+            //     'background-image': 'url(' + $(this).attr('data-image') + ')'
+            // });
         });
     $('.imageParentMerge')
         // tile mouse actions
-        .on('mouseover', function () {
+        .on('mouseover', function() {
             $(this).children('.receiptPhotoMerge').css({
                 'transform': 'scale(' + $(this).attr('data-scale') + ')'
             });
         })
-        .on('mouseout', function () {
+        .on('mouseout', function() {
             $(this).children('.receiptPhotoMerge').css({
                 'transform': 'scale(1)'
             });
         })
-        .on('mousemove', function (e) {
+        .on('mousemove', function(e) {
             $(this).children('.receiptPhotoMerge').css({
                 'transform-origin': ((e.pageX - $(this).offset().left) / $(this).width()) * 100 + '% ' + ((e.pageY - $(this).offset().top) / $(this).height()) * 100 + '%'
             });
         })
         // tiles set up
-        .each(function () {
+        .each(function() {
             $(this)
                 // add a photo container
                 .append('<div class="receiptPhotoMerge"></div>')
-                // set up a background image for each tile based on data-image attribute
-                // .children('.receiptPhoto').css({
-                //     'background-image': 'url(' + $(this).attr('data-image') + ')'
-                // });
+            // set up a background image for each tile based on data-image attribute
+            // .children('.receiptPhoto').css({
+            //     'background-image': 'url(' + $(this).attr('data-image') + ')'
+            // });
         });
 
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {
@@ -983,8 +989,8 @@ Template.receiptsoverview.onRendered(function () {
         }
     });
 
-    templateObject.getSuppliers = function () {
-        accountService.getSupplierVS1().then(function (data) {
+    templateObject.getSuppliers = function() {
+        accountService.getSupplierVS1().then(function(data) {
             let lineItems = [];
             for (let i in data.tsuppliervs1) {
                 let lineItem = {
@@ -994,205 +1000,205 @@ Template.receiptsoverview.onRendered(function () {
                 lineItems.push(lineItem);
             }
             templateObject.suppliers.set(lineItems);
-        }).catch(function (err) {
+        }).catch(function(err) {
 
         });
     };
     templateObject.getSuppliers();
 
-    templateObject.getExpenseClaims = function () {
+    templateObject.getExpenseClaims = function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         //Load Indexdb data
-        getVS1Data('TExpenseClaim').then(function (dataObject) {
+        getVS1Data('TExpenseClaim').then(function(dataObject) {
             if (dataObject.length == 0) { // check if no idexdb
-              accountService.getExpenseClaim().then(function (data) {
-                 addVS1Data('TExpenseClaim', JSON.stringify(data));
-                  let lineItems = [];
-                  console.log('expense', data)
-                  data.texpenseclaimex.forEach(expense => {
-                      if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
-                          expense.fields.Lines.forEach(claim => {
-                              let lineItem = claim.fields;
-                              lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
-                              lineItems.push(lineItem);
-                          })
-                      }else if(Object.prototype.toString.call(expense.fields.Lines) === "[object Object]"){
-                          let lineItem = expense.fields.Lines.fields;
-                          lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
-                          lineItems.push(lineItem);
-                      }
-                  });
+                accountService.getExpenseClaim().then(function(data) {
+                    addVS1Data('TExpenseClaim', JSON.stringify(data));
+                    let lineItems = [];
+                    console.log('expense', data)
+                    data.texpenseclaimex.forEach(expense => {
+                        if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
+                            expense.fields.Lines.forEach(claim => {
+                                let lineItem = claim.fields;
+                                lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
+                                lineItems.push(lineItem);
+                            })
+                        } else if (Object.prototype.toString.call(expense.fields.Lines) === "[object Object]") {
+                            let lineItem = expense.fields.Lines.fields;
+                            lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
+                            lineItems.push(lineItem);
+                        }
+                    });
 
-                  templateObject.expenseClaimList.set(lineItems);
+                    templateObject.expenseClaimList.set(lineItems);
 
-                  setTimeout(function () {
-                      //$.fn.dataTable.moment('DD/MM/YY');
-                      $('#tblReceiptList').DataTable({
-                          columnDefs: [{
-                              "orderable": false,
-                              "targets": 0
-                          }, {
-                              type: 'extract-date',
-                              targets: 1
-                          }],
-                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                          buttons: [{
-                              extend: 'excelHtml5',
-                              text: '',
-                              download: 'open',
-                              className: "btntabletocsv hiddenColumn",
-                              filename: "Awaiting Customer Payments List - " + moment().format(),
-                              orientation: 'portrait',
-                              exportOptions: {
-                                  columns: ':visible:not(.chkBox)',
-                                  format: {
-                                      body: function (data, row, column) {
-                                          if (data.includes("</span>")) {
-                                              var res = data.split("</span>");
-                                              data = res[1];
-                                          }
+                    setTimeout(function() {
+                        //$.fn.dataTable.moment('DD/MM/YY');
+                        $('#tblReceiptList').DataTable({
+                            columnDefs: [{
+                                "orderable": false,
+                                "targets": 0
+                            }, {
+                                type: 'extract-date',
+                                targets: 1
+                            }],
+                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-12 col-md-6 colDateFilter p-0'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            buttons: [{
+                                extend: 'excelHtml5',
+                                text: '',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBox)',
+                                    format: {
+                                        body: function(data, row, column) {
+                                            if (data.includes("</span>")) {
+                                                var res = data.split("</span>");
+                                                data = res[1];
+                                            }
 
-                                          return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
 
-                                      }
-                                  }
-                              }
-                          }, {
-                              extend: 'print',
-                              download: 'open',
-                              className: "btntabletopdf hiddenColumn",
-                              text: '',
-                              title: 'Supplier Payment',
-                              filename: "Awaiting Customer Payments List - " + moment().format(),
-                              exportOptions: {
-                                  columns: ':visible:not(.chkBox)',
-                                  stripHtml: false
-                              }
-                          }],
-                          select: true,
-                          destroy: true,
-                          colReorder: true,
-                          colReorder: {
-                              fixedColumnsLeft: 0
-                          },
-                          pageLength: initialReportDatatableLoad,
-                          "bLengthChange": false,
-                          info: true,
-                          responsive: true,
-                          "order": [
-                              [1, "desc"]
-                          ],
-                          action: function () {
-                              // $('#tblReceiptList').DataTable().ajax.reload();
-                          },
-                          "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
-                              $('.myvarFilterForm').appendTo(".colDateFilter");
-                          }
-                      }).on('page', function () {
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-
-                      }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      });
-
-                      $('#tblMerge').DataTable({
-                        columnDefs: [{
-                            orderable: false,
-                            targets: 0
-                        }, {
-                            type: 'extract-date',
-                            targets: 1
-                        }],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilterMerge'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                            extend: 'excelHtml5',
-                            text: '',
-                            download: 'open',
-                            className: "btntabletocsv hiddenColumn",
-                            filename: "Awaiting Customer Payments List - " + moment().format(),
-                            orientation: 'portrait',
-                            exportOptions: {
-                                columns: ':visible:not(.chkBoxMerge)',
-                                format: {
-                                    body: function (data, row, column) {
-                                        if (data.includes("</span>")) {
-                                            var res = data.split("</span>");
-                                            data = res[1];
                                         }
-
-                                        return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
                                     }
                                 }
+                            }, {
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'Supplier Payment',
+                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBox)',
+                                    stripHtml: false
+                                }
+                            }],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            colReorder: {
+                                fixedColumnsLeft: 0
+                            },
+                            pageLength: initialReportDatatableLoad,
+                            "bLengthChange": false,
+                            info: true,
+                            responsive: true,
+                            "order": [
+                                [1, "desc"]
+                            ],
+                            action: function() {
+                                // $('#tblReceiptList').DataTable().ajax.reload();
+                            },
+                            "fnInitComplete": function() {
+                                $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
+                                $('.myvarFilterForm').appendTo(".colDateFilter");
                             }
-                        }, {
-                            extend: 'print',
-                            download: 'open',
-                            className: "btntabletopdf hiddenColumn",
-                            text: '',
-                            title: 'Supplier Payment',
-                            filename: "Awaiting Customer Payments List - " + moment().format(),
-                            exportOptions: {
-                                columns: ':visible:not(.chkBoxMerge)',
-                                stripHtml: false
+                        }).on('page', function() {
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
+
+                        }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
+                        });
+
+                        $('#tblMerge').DataTable({
+                            columnDefs: [{
+                                orderable: false,
+                                targets: 0
+                            }, {
+                                type: 'extract-date',
+                                targets: 1
+                            }],
+                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilterMerge'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            buttons: [{
+                                extend: 'excelHtml5',
+                                text: '',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBoxMerge)',
+                                    format: {
+                                        body: function(data, row, column) {
+                                            if (data.includes("</span>")) {
+                                                var res = data.split("</span>");
+                                                data = res[1];
+                                            }
+
+                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                        }
+                                    }
+                                }
+                            }, {
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'Supplier Payment',
+                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBoxMerge)',
+                                    stripHtml: false
+                                }
+                            }],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            // colReorder: {
+                            //     fixedColumnsLeft: 0
+                            // },
+                            pageLength: initialReportDatatableLoad,
+                            "bLengthChange": false,
+                            info: true,
+                            responsive: true,
+                            "order": [
+                                [1, "desc"]
+                            ],
+                            action: function() {
+                                $('#tblMerge').DataTable().ajax.reload();
+                            },
+                            "fnInitComplete": function() {
+                                $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblMerge_filter");
+                                $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
                             }
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // colReorder: {
-                        //     fixedColumnsLeft: 0
-                        // },
-                        pageLength: initialReportDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [1, "desc"]
-                        ],
-                        action: function () {
-                            $('#tblMerge').DataTable().ajax.reload();
-                        },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblMerge_filter");
-                            $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
-                        }
-                      }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        // let draftRecord = templateObject.datatablerecords.get();
-                        // templateObject.datatablerecords.set(draftRecord);
-                      }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                      });
+                        }).on('page', function() {
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
+                            // let draftRecord = templateObject.datatablerecords.get();
+                            // templateObject.datatablerecords.set(draftRecord);
+                        }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                            setTimeout(function() {
+                                MakeNegative();
+                            }, 100);
+                        });
 
-                      $('.fullScreenSpin').css('display', 'none');
+                        $('.fullScreenSpin').css('display', 'none');
 
-                      templateObject.setTimeFilter('lastMonth');
-                      templateObject.setMergeTimeFilter('lastMonthMerge');
-                  }, 0);
+                        templateObject.setTimeFilter('lastMonth');
+                        templateObject.setMergeTimeFilter('lastMonthMerge');
+                    }, 0);
 
-                  // $('.dataTables_info').html('Showing 1 to '+ lineItems.length + ' of ' + lineItems.length + ' entries');
-              });
+                    // $('.dataTables_info').html('Showing 1 to '+ lineItems.length + ' of ' + lineItems.length + ' entries');
+                });
             } else { //else load data from indexdb
                 let data = JSON.parse(dataObject[0].data);
                 let lineItems = [];
                 data.texpenseclaimex.forEach(expense => {
-                    if(Object.prototype.toString.call(expense.fields.Lines) === "[object Array]"){
+                    if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
                         expense.fields.Lines.forEach(claim => {
                             let lineItem = claim.fields;
                             lineItem.DateTime = claim.fields.DateTime != '' ? moment(claim.fields.DateTime).format("DD/MM/YYYY") : '';
                             lineItems.push(lineItem);
                         })
-                    }else if(Object.prototype.toString.call(expense.fields.Lines) === "[object Object]"){
+                    } else if (Object.prototype.toString.call(expense.fields.Lines) === "[object Object]") {
                         let lineItem = expense.fields.Lines.fields;
                         lineItem.DateTime = lineItem.DateTime != '' ? moment(lineItem.DateTime).format("DD/MM/YYYY") : '';
                         lineItems.push(lineItem);
@@ -1201,7 +1207,7 @@ Template.receiptsoverview.onRendered(function () {
 
                 templateObject.expenseClaimList.set(lineItems);
 
-                setTimeout(function () {
+                setTimeout(function() {
                     //$.fn.dataTable.moment('DD/MM/YY');
                     $('#tblReceiptList').DataTable({
                         columnDefs: [{
@@ -1222,7 +1228,7 @@ Template.receiptsoverview.onRendered(function () {
                             exportOptions: {
                                 columns: ':visible:not(.chkBox)',
                                 format: {
-                                    body: function (data, row, column) {
+                                    body: function(data, row, column) {
                                         if (data.includes("</span>")) {
                                             var res = data.split("</span>");
                                             data = res[1];
@@ -1258,20 +1264,20 @@ Template.receiptsoverview.onRendered(function () {
                         "order": [
                             [1, "desc"]
                         ],
-                        action: function () {
+                        action: function() {
                             // $('#tblReceiptList').DataTable().ajax.reload();
                         },
-                        "fnInitComplete": function () {
+                        "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefresh' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReceiptList_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         }
-                    }).on('page', function () {
-                        setTimeout(function () {
+                    }).on('page', function() {
+                        setTimeout(function() {
                             MakeNegative();
                         }, 100);
 
-                    }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-                        setTimeout(function () {
+                    }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                        setTimeout(function() {
                             MakeNegative();
                         }, 100);
                     });
@@ -1295,7 +1301,7 @@ Template.receiptsoverview.onRendered(function () {
                             exportOptions: {
                                 columns: ':visible:not(.chkBoxMerge)',
                                 format: {
-                                    body: function (data, row, column) {
+                                    body: function(data, row, column) {
                                         if (data.includes("</span>")) {
                                             var res = data.split("</span>");
                                             data = res[1];
@@ -1331,21 +1337,21 @@ Template.receiptsoverview.onRendered(function () {
                         "order": [
                             [1, "desc"]
                         ],
-                        action: function () {
+                        action: function() {
                             $('#tblMerge').DataTable().ajax.reload();
                         },
-                        "fnInitComplete": function () {
+                        "fnInitComplete": function() {
                             $("<button class='btn btn-primary btnRefresh' type='button' id='btnRefreshMerge' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblMerge_filter");
                             $('.myvarFilterFormMerge').appendTo(".colDateFilterMerge");
                         }
-                    }).on('page', function () {
-                        setTimeout(function () {
+                    }).on('page', function() {
+                        setTimeout(function() {
                             MakeNegative();
                         }, 100);
                         // let draftRecord = templateObject.datatablerecords.get();
                         // templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () { }).on('length.dt', function (e, settings, len) {
-                        setTimeout(function () {
+                    }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                        setTimeout(function() {
                             MakeNegative();
                         }, 100);
                     });
@@ -1357,10 +1363,10 @@ Template.receiptsoverview.onRendered(function () {
                     templateObject.setMergeTimeFilter('lastMonthMerge');
 
                 }, 0);
-              }
-        }).catch(function (err) {
-          $('.fullScreenSpin').css('display', 'none');
-         });
+            }
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
 
     }
 
@@ -1412,8 +1418,7 @@ Template.receiptsoverview.onRendered(function () {
                     // create supplier with vendor data
                     objDetails = {
                         type: "TSupplier",
-                        fields:
-                        {
+                        fields: {
                             ClientName: data.vendor.name,
                             FirstName: data.vendor.name,
                             LastName: '',
@@ -1437,7 +1442,7 @@ Template.receiptsoverview.onRendered(function () {
                         }
                     };
 
-                    contactService.saveSupplier(objDetails).then(function (supplier) {
+                    contactService.saveSupplier(objDetails).then(function(supplier) {
                         console.log('supplier save', supplier);
                         //$('.fullScreenSpin').css('display','none');
                         //  Meteor._reload.reload();
@@ -1451,7 +1456,7 @@ Template.receiptsoverview.onRendered(function () {
                         });
                         templateObject.suppliers.set(suppliers);
 
-                    }).catch(function (err) {
+                    }).catch(function(err) {
                         //$('.fullScreenSpin').css('display','none');
                         console.log('supplier svae error', err);
                     });
@@ -1465,24 +1470,24 @@ Template.receiptsoverview.onRendered(function () {
             $(parentElement + ' .edtTotal').val('$' + data.total);
             $(parentElement + ' .transactionTypes').val(transactionTypeName);
 
-        }).catch(function (err) {
+        }).catch(function(err) {
             console.log('ocrresult err', err);
             $('.fullScreenSpin').css('display', 'none');
         });
     }
 
-    templateObject.base64data = function (file) {
+    templateObject.base64data = function(file) {
         return new Promise((resolve, reject) => {
             const fr = new FileReader();
             fr.onerror = reject;
-            fr.onload = function () {
+            fr.onload = function() {
                 resolve(fr.result);
             }
             fr.readAsDataURL(file);
         })
     };
 
-    templateObject.refreshSplitTable = function (rows) {
+    templateObject.refreshSplitTable = function(rows) {
         $splitDataTable = $('#tblSplitExpense').DataTable();
         $splitDataTable.clear();
         $splitDataTable.rows.add(rows);
@@ -1500,7 +1505,7 @@ Template.receiptsoverview.onRendered(function () {
             changeYear: true,
             yearRange: "-90:+10",
         });
-        $(".dtSplitReceipt").css('z-index','1600');
+        $(".dtSplitReceipt").css('z-index', '1600');
         $('.colReceiptAmount').css('vertical-align', 'middle');
 
         $('select[id^="splitAccount-"]').editableSelect();
@@ -1514,7 +1519,16 @@ Template.receiptsoverview.onRendered(function () {
 });
 
 Template.receiptsoverview.events({
-    'click a#showManuallyCreate, click .btnNewReceipt, click #newReceiptModal #nav-expense-tab': function () {
+    'click #nav-multiple-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-lg" ).addClass( "modal-xl" );
+    },
+    'click #nav-expense-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-xl" ).addClass( "modal-lg" );
+    },
+    'click #nav-time-tab':function (event) {
+         $("#newExpenseModalDialog").removeClass( "modal-xl" ).addClass( "modal-lg" );
+    },
+    'click a#showManuallyCreate, click .btnNewReceipt, click #newReceiptModal #nav-expense-tab': function() {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-expense-tab').addClass('active');
 
@@ -1545,7 +1559,7 @@ Template.receiptsoverview.events({
         $('#nav-expense .receiptPhoto').attr('data-name', "");
         $('#nav-expense .img-placeholder').css('opacity', 1);
     },
-    'click a#showMultiple, click #newReceiptModal #nav-multiple-tab': function () {
+    'click a#showMultiple, click #newReceiptModal #nav-multiple-tab': function() {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-multiple-tab').addClass('active');
 
@@ -1561,7 +1575,7 @@ Template.receiptsoverview.events({
         $('.multipleDescription').val('');
         $('.multipleAttach').attr('data-image', '');
     },
-    'click a#showTime, click #newReceiptModal #nav-time-tab': function () {
+    'click a#showTime, click #newReceiptModal #nav-time-tab': function() {
         $('a.nav-link.active').removeClass('active');
         $('a.nav-link#nav-time-tab').addClass('active');
 
@@ -1592,13 +1606,13 @@ Template.receiptsoverview.events({
         $('#nav-time .receiptPhoto').attr('data-name', "");
         $('#nav-time .img-placeholder').css('opacity', 1);
     },
-    'click #nav-expense .btn-upload': function (event) {
+    'click #nav-expense .btn-upload': function(event) {
         $('#nav-expense .attachment-upload').trigger('click');
     },
-    'click #nav-time .btn-upload': function (event) {
+    'click #nav-time .btn-upload': function(event) {
         $('#nav-time .attachment-upload').trigger('click');
     },
-    'click #viewReceiptModal .btn-upload': function (event) {
+    'click #viewReceiptModal .btn-upload': function(event) {
         $('#viewReceiptModal .attachment-upload').trigger('click');
     },
 
@@ -1640,23 +1654,23 @@ Template.receiptsoverview.events({
         })
     },
 
-    'change #dateFrom, change #dateTo': function (event) {
+    'change #dateFrom, change #dateTo': function(event) {
         var receiptTable = $('#tblReceiptList').DataTable();
         receiptTable.draw();
     },
-    'change #dateFromMerge, change #dateToMerge': function (event) {
+    'change #dateFromMerge, change #dateToMerge': function(event) {
         var receiptTable = $('#tblMerge').DataTable();
         receiptTable.draw();
     },
 
-    'click #formCheck-All': function (event) {
+    'click #formCheck-All': function(event) {
         if ($(event.target).is(':checked')) {
             $(".chkBox").prop("checked", true);
         } else {
             $(".chkBox").prop("checked", false);
         }
     },
-    'click #formCheckMerge-All': function (event) {
+    'click #formCheckMerge-All': function(event) {
         let template = Template.instance();
         if ($(event.target).is(':checked')) {
             $(".chkBoxMerge").prop("checked", true);
@@ -1669,7 +1683,7 @@ Template.receiptsoverview.events({
             template.mergeReceiptRecords.set([]);
         }
     },
-    'click input[id^="formCheckMerge-"]': function (e) {
+    'click input[id^="formCheckMerge-"]': function(e) {
 
         let template = Template.instance();
         let itemId = e.target.id.split('-')[1];
@@ -1690,18 +1704,18 @@ Template.receiptsoverview.events({
         }
     },
 
-    'click .timeFilter': function (event) {
+    'click .timeFilter': function(event) {
         let id = event.target.id;
         let template = Template.instance();
         template.setTimeFilter(id);
     },
-    'click .timeFilterMerge': function (event) {
+    'click .timeFilterMerge': function(event) {
         let id = event.target.id;
         let template = Template.instance();
         template.setMergeTimeFilter(id);
     },
 
-    'click #tblReceiptList tbody tr td:not(:first-child)': function (event) {
+    'click #tblReceiptList tbody tr td:not(:first-child)': function(event) {
         let template = Template.instance();
         var selectedId = $(event.target).closest('tr').attr('id');
         let selectedClaim = template.expenseClaimList.get().filter(claim => claim.ID == selectedId)[0];
@@ -1711,6 +1725,7 @@ Template.receiptsoverview.events({
 
         $('#viewReceiptModal').modal('toggle');
 
+        $('#viewReceiptModal .receiptID').html(selectedId);
         $('#viewReceiptModal .employees').val(selectedClaim.EmployeeName);
         $('#viewReceiptModal .employees').attr('data-id', selectedClaim.EmployeeID);
         $('#viewReceiptModal .merchants').val(selectedClaim.SupplierName);
@@ -1732,7 +1747,7 @@ Template.receiptsoverview.events({
         }
 
     },
-    'click #tblEmployeelist tbody tr': function (e) {
+    'click #tblEmployeelist tbody tr': function(e) {
         let employeeName = $(e.target).closest('tr').find(".colEmployeeName").text() || '';
         let employeeID = $(e.target).closest('tr').find(".colID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1749,7 +1764,7 @@ Template.receiptsoverview.events({
         }
         $('#employeeListModal').modal('toggle');
     },
-    'click #tblSupplierlist tbody tr': function (e) {
+    'click #tblSupplierlist tbody tr': function(e) {
         let supplierName = $(e.target).closest('tr').find(".colCompany").text() || '';
         let supplierID = $(e.target).closest('tr').find(".colID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1773,7 +1788,7 @@ Template.receiptsoverview.events({
         }
         $('#supplierListModal').modal('toggle');
     },
-    'click #tblCurrencyPopList tbody tr': function (e) {
+    'click #tblCurrencyPopList tbody tr': function(e) {
         let currencyName = $(e.target).closest('tr').find(".colCode").text() || '';
         let currencyID = $(e.target).closest('tr').attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1790,7 +1805,7 @@ Template.receiptsoverview.events({
         }
         $('#currencyModal').modal('toggle');
     },
-    'click #tblAccount tbody tr': function (e) {
+    'click #tblAccount tbody tr': function(e) {
         let accountName = $(e.target).closest('tr').find(".productName").text() || '';
         let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1825,7 +1840,7 @@ Template.receiptsoverview.events({
         }
         $('#accountListModal').modal('toggle');
     },
-    'click #paymentmethodList tbody tr': function (e) {
+    'click #paymentmethodList tbody tr': function(e) {
         let typeName = $(e.target).closest('tr').find(".colName").text() || '';
         let typeID = $(e.target).closest('tr').find("input.chkBox").attr('id') || '';
         let from = $('#employeeListModal').attr('data-from');
@@ -1871,7 +1886,7 @@ Template.receiptsoverview.events({
     },
 
     // update receipt record
-    'click #viewReceiptModal .btnSave': function (e) {
+    'click #viewReceiptModal .btnSave': function(e) {
 
         imageData = $('#viewReceiptModal .receiptPhoto').css('background-image');
         imageName = $('#viewReceiptModal .receiptPhoto').attr('data-name');
@@ -1881,24 +1896,22 @@ Template.receiptsoverview.events({
             imageData = imageData.split(/"/)[1];
             imageBase64 = imageData.split(',')[1];
             imageDescryption = imageData.split(',')[0];
-            attachment = [
-                {
-                    type: "TAttachment",
-                    fields: {
-                        Attachment: imageBase64,
-                        AttachmentName: imageName,
-                        Description: imageDescryption,
-                        TableName: "tblexpenseclaimline"
-                    }
+            attachment = [{
+                type: "TAttachment",
+                fields: {
+                    Attachment: imageBase64,
+                    AttachmentName: imageName,
+                    Description: imageDescryption,
+                    TableName: "tblexpenseclaimline"
                 }
-            ]
+            }]
         }
 
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
 
         let employeeId = $('#viewReceiptModal .employees').attr('data-id');
-        let employeeName = $('#viewReceiptModal .employees').val()  || ' ';
+        let employeeName = $('#viewReceiptModal .employees').val() || ' ';
         let transactionTypeId = $('#viewReceiptModal .transactionTypes').attr('data-id');
         let transactionTypeName = $('#viewReceiptModal .transactionTypes').val() || ' ';
         let supplierId = $('#viewReceiptModal .merchants').attr('data-id');
@@ -1953,10 +1966,10 @@ Template.receiptsoverview.events({
         console.log('ExpenseClaim', expenseClaim)
 
         $('.fullScreenSpin').css('display', 'inline-block');
-        accountService.saveReceipt(expenseClaim).then(function (data) {
+        accountService.saveReceipt(expenseClaim).then(function(data) {
             // $('.fullScreenSpin').css('display', 'none');
             // setTimeout(() => {
-                window.open('/receiptsoverview?success=true', '_self');
+            window.open('/receiptsoverview?success=true', '_self');
             // }, 200);
         });
     },
@@ -1978,7 +1991,7 @@ Template.receiptsoverview.events({
         }
     },
 
-    'click .btn-detach': function (e) {
+    'click .btn-detach': function(e) {
         let from = $('#employeeListModal').attr('data-from');
         var parentElement;
         if (from == "ViewReceipt") {
@@ -1994,7 +2007,7 @@ Template.receiptsoverview.events({
         $(parentElement + ' .img-placeholder').css('opacity', 1);
     },
 
-    'click #newReceiptModal .btnSave': function (e) {
+    'click #newReceiptModal .btnSave': function(e) {
 
         let template = Template.instance();
 
@@ -2055,12 +2068,12 @@ Template.receiptsoverview.events({
 
             $('.fullScreenSpin').css('display', 'inline-block');
             for (i = 0; i < receipts.length; i++) {
-                accountService.saveReceipt(receipts[i]).then(function (data) {
+                accountService.saveReceipt(receipts[i]).then(function(data) {
                     // $('.fullScreenSpin').css('display', 'none');
                     setTimeout(() => {
                         window.open('/receiptsoverview?success=true', '_self');
                     }, 500);
-                }).catch ( err => {
+                }).catch(err => {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             }
@@ -2076,21 +2089,19 @@ Template.receiptsoverview.events({
                 imageData = imageData.split(/"/)[1];
                 imageBase64 = imageData.split(',')[1];
                 imageDescryption = imageData.split(',')[0];
-                attachment = [
-                    {
-                        type: "TAttachment",
-                        fields: {
-                            Attachment: imageBase64,
-                            AttachmentName: imageName,
-                            Description: imageDescryption,
-                            TableName: "tblexpenseclaimline"
-                        }
+                attachment = [{
+                    type: "TAttachment",
+                    fields: {
+                        Attachment: imageBase64,
+                        AttachmentName: imageName,
+                        Description: imageDescryption,
+                        TableName: "tblexpenseclaimline"
                     }
-                ]
+                }]
             }
 
             let employeeId = $(parentElement + ' .employees').attr('data-id');
-            let employeeName = $(parentElement + ' .employees').val()  || ' ';
+            let employeeName = $(parentElement + ' .employees').val() || ' ';
             let transactionTypeId = $(parentElement + ' .transactionTypes').attr('data-id');
             let transactionTypeName = $(parentElement + ' .transactionTypes').val() || ' ';
             let supplierId = $(parentElement + ' .merchants').attr('data-id');
@@ -2145,11 +2156,11 @@ Template.receiptsoverview.events({
             console.log('ExpenseClaim', expenseClaim)
 
             $('.fullScreenSpin').css('display', 'inline-block');
-            accountService.saveReceipt(expenseClaim).then(function (data) {
+            accountService.saveReceipt(expenseClaim).then(function(data) {
                 console.log('update receipt result', data);
                 // $('.fullScreenSpin').css('display', 'none');
                 // setTimeout(() => {
-                    window.open('/receiptsoverview?success=true', '_self');
+                window.open('/receiptsoverview?success=true', '_self');
                 // }, 200);
             });
         }
@@ -2170,11 +2181,11 @@ Template.receiptsoverview.events({
             type: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes'
-          }).then((result) => {
+        }).then((result) => {
             if (result.value) {
 
                 let employeeId = $('#viewReceiptModal .employees').attr('data-id');
-                let employeeName = $('#viewReceiptModal .employees').val()  || ' ';
+                let employeeName = $('#viewReceiptModal .employees').val() || ' ';
                 let transactionTypeId = $('#viewReceiptModal .transactionTypes').attr('data-id');
                 let transactionTypeName = $('#viewReceiptModal .transactionTypes').val() || ' ';
                 let supplierId = $('#viewReceiptModal .merchants').attr('data-id');
@@ -2230,22 +2241,22 @@ Template.receiptsoverview.events({
                 console.log('ExpenseClaim', expenseClaim)
 
                 $('.fullScreenSpin').css('display', 'inline-block');
-                accountService.saveReceipt(expenseClaim).then(function (data) {
+                accountService.saveReceipt(expenseClaim).then(function(data) {
                     // $('.fullScreenSpin').css('display', 'none');
                     window.open('/receiptsoverview?success=true', '_self');
                 });
             } else if (result.dismiss === 'cancel') {
 
             }
-          });
+        });
     },
-    'click a#dropdownMenuLink': function (e) {
+    'click a#dropdownMenuLink': function(e) {
         let template = Template.instance();
         let receipt = template.editExpenseClaim.get();
         $('#dtSplitStart').datepicker('setDate', receipt.DateTime);
         $('#dtSplitEnd').datepicker('setDate', moment(receipt.DateTime, "DD/MM/YYYY").add(1, 'days').format("DD/MM/YYYY"));
     },
-    'click #btnSplitByDays': function (e) {
+    'click #btnSplitByDays': function(e) {
         let endDate = $('#dtSplitEnd').val();
         let startDate = $('#dtSplitStart').val();
 
@@ -2271,13 +2282,13 @@ Template.receiptsoverview.events({
         let receipt = template.editExpenseClaim.get();
 
         var receiptList = [];
-        let amount = Math.round(receipt.AmountInc*100 / diffDays)/100;
+        let amount = Math.round(receipt.AmountInc * 100 / diffDays) / 100;
         for (i = 0; i < diffDays; i++) {
             let lineItem = Object.assign({}, receipt);
             lineItem.DateTime = moment(lineItem.DateTime, "DD/MM/YYYY").add(i, 'days').format("DD/MM/YYYY");
 
             if (i == diffDays - 1) {
-                lineItem.AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
+                lineItem.AmountInc = Math.round((receipt.AmountInc - amount * i) * 100) / 100;
             } else {
                 lineItem.AmountInc = amount;
             }
@@ -2306,11 +2317,11 @@ Template.receiptsoverview.events({
         splitDataTable = $('#tblSplitExpense').DataTable();
         var lineItems = splitDataTable.rows().data();
 
-        let amount = Math.round(receipt.AmountInc*100 / (lineItems.length))/100;
+        let amount = Math.round(receipt.AmountInc * 100 / (lineItems.length)) / 100;
 
         for (i = 0; i < lineItems.length; i++) {
             if (i == lineItems.length - 1) {
-                lineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
+                lineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100) / 100;
             } else {
                 lineItems[i].AmountInc = amount;
             }
@@ -2332,7 +2343,7 @@ Template.receiptsoverview.events({
             totalAmount += amount;
         }
 
-        totalAmount = Math.trunc(totalAmount*100)/100;
+        totalAmount = Math.trunc(totalAmount * 100) / 100;
 
         if (totalAmount != receipt.AmountInc) {
             swal("Splited amount is not same as original receipt's", '', 'warning');
@@ -2413,12 +2424,12 @@ Template.receiptsoverview.events({
             }
 
             console.log('splited item', expenseClaim);
-            accountService.saveReceipt(expenseClaim).then(function (data) {
+            accountService.saveReceipt(expenseClaim).then(function(data) {
                 // $('.fullScreenSpin').css('display', 'none');
                 setTimeout(() => {
                     window.open('/receiptsoverview?success=true', '_self');
                 }, 500);
-            }).catch ( err => {
+            }).catch(err => {
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
@@ -2463,11 +2474,11 @@ Template.receiptsoverview.events({
             newLineItems.push(lineItems[i]);
         }
 
-        let amount = Math.round(receipt.AmountInc*100 / (newLineItems.length))/100;
+        let amount = Math.round(receipt.AmountInc * 100 / (newLineItems.length)) / 100;
 
         for (i = 0; i < newLineItems.length; i++) {
             if (i == newLineItems.length - 1) {
-                newLineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100)/100;
+                newLineItems[i].AmountInc = Math.round((receipt.AmountInc - amount * i) * 100) / 100;
             } else {
                 newLineItems[i].AmountInc = amount;
             }
@@ -2518,31 +2529,31 @@ Template.receiptsoverview.events({
 
         console.log('duplicate object', expenseClaim);
         $('.fullScreenSpin').css('display', 'inline-block');
-        accountService.saveReceipt(expenseClaim).then(function (data) {
+        accountService.saveReceipt(expenseClaim).then(function(data) {
             // $('.fullScreenSpin').css('display', 'none');
             // setTimeout(() => {
-                window.open('/receiptsoverview?success=true', '_self');
+            window.open('/receiptsoverview?success=true', '_self');
             // }, 200);
         });
     },
-    'click .btnRefresh': async function () {
+    'click .btnRefresh': async function() {
         $('.fullScreenSpin').css('display', 'inline-block');
 
-        await sideBarService.getAllExpenseCliamExDataVS1().then(function (expenseData) {
-            addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function (datareturn) {
-              //window.open('/receiptsoverview', '_self');
-              setTimeout(() => {
-                  window.open('/receiptsoverview', '_self');
-               }, 800);
-            }).catch(function (err) {
-              setTimeout(() => {
-                  window.open('/receiptsoverview', '_self');
-               }, 800);
+        await sideBarService.getAllExpenseCliamExDataVS1().then(function(expenseData) {
+            addVS1Data('TExpenseClaim', JSON.stringify(expenseData)).then(function(datareturn) {
+                //window.open('/receiptsoverview', '_self');
+                setTimeout(() => {
+                    window.open('/receiptsoverview', '_self');
+                }, 800);
+            }).catch(function(err) {
+                setTimeout(() => {
+                    window.open('/receiptsoverview', '_self');
+                }, 800);
             });
-        }).catch(function (err) {
-          setTimeout(() => {
-              window.open('/receiptsoverview', '_self');
-           }, 800);
+        }).catch(function(err) {
+            setTimeout(() => {
+                window.open('/receiptsoverview', '_self');
+            }, 800);
         });
     },
     'click #btnShowMergeModal': function(e) {
@@ -2632,21 +2643,21 @@ Template.receiptsoverview.events({
 
                 let selectedReceiptIndex = $('#mergedReceipt').children("option:selected").val();
                 mergedExpense.Attachments = receiptRecords[selectedReceiptIndex].Attachments;
-        
+
                 let selectedDateTime = $('#mergedDateTime option:selected').text();
                 mergedExpense.DateTime = selectedDateTime ? moment(selectedDateTime, 'DD/MM/YYYY').format('YYYY-MM-DD') : ''
-        
+
                 let selectedAmount = $('#mergedAmount option:selected').text();
                 mergedExpense.AmountInc = parseFloat(selectedAmount.replace('$', '')) || 0;
-        
+
                 let selectedPaymethod = $('#mergedTransactionType option:selected').text();
                 mergedExpense.Paymethod = selectedPaymethod;
-        
+
                 let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
                 mergedExpense.Reimbursement = selectedReiumbursable;
-        
+
                 console.log('merged expense', mergedExpense)
-        
+
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
                     fields: mergedExpense
@@ -2664,9 +2675,9 @@ Template.receiptsoverview.events({
                         RequestToEmployeeName: mergedExpense.EmployeeName,
                     }
                 }
-        
+
                 $('.fullScreenSpin').css('display', 'inline-block');
-                accountService.saveReceipt(expenseClaim).then(function (data) {
+                accountService.saveReceipt(expenseClaim).then(function(data) {
                     // $('.fullScreenSpin').css('display', 'none');
                     setTimeout(() => {
                         window.open('/receiptsoverview?success=true', '_self');
@@ -2714,7 +2725,7 @@ Template.receiptsoverview.events({
                 }
 
                 $('.fullScreenSpin').css('display', 'inline-block');
-                accountService.saveReceipt(expenseClaim).then(function (data) {
+                accountService.saveReceipt(expenseClaim).then(function(data) {
                     // $('.fullScreenSpin').css('display', 'none');
                 });
             }
@@ -2741,5 +2752,8 @@ Template.receiptsoverview.helpers({
     },
     sessionCurrency: () => {
         return Session.get('ERPCountryAbbr');
+    },
+    isCurrencyEnable: () => {
+        return Session.get('CloudUseForeignLicence');
     }
 });

@@ -3011,7 +3011,6 @@ Template.new_invoice.onRendered(() => {
                                                 '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
                                             ];
                                             lineItemsTable.push(dataListTable);
-                                            lineItems.push(lineItemObj);
                                         }
                                     } else {
                                         let AmountGbp = useData[d].fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {

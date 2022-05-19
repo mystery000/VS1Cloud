@@ -42,6 +42,7 @@ function handleTotalAmount( amountField, totalAmountCont ) {
     $('.' + amountField).each(function(){
         amount = $(this).val();
         amount = ( amount === null || amount == '') ? 0 : amount;
+        amount = Number(amount.replace(/[^0-9.-]+/g,""));
         totalAmount += parseFloat( amount );
     });
     let utilityService = new UtilityService();
@@ -68,13 +69,13 @@ Template.employeescard.onCreated(function () {
     templateObject.bankAccList = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
     templateObject.productsdatatable = new ReactiveVar();
+    templateObject.notesrecords = new ReactiveVar();    
     templateObject.empuserrecord = new ReactiveVar();
     templateObject.employeerecords = new ReactiveVar([]);
     templateObject.empPriorities = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
 
-    templateObject.datatablerecords = new ReactiveVar([]);   
-    templateObject.datanotestablerecords = new ReactiveVar([]);   
+    templateObject.datatablerecords = new ReactiveVar([]);    
     
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
@@ -2822,8 +2823,6 @@ Template.employeescard.onRendered(function () {
                     return item;
                 }
             });
-            console.log('useData', useData)
-            templateObject.payNotesInfos.set(useData);
             let dataTableList = []
             Array.prototype.forEach.call(useData, (item, index) => {
                 let ID = index + 1
@@ -2833,8 +2832,90 @@ Template.employeescard.onRendered(function () {
                     username: item.fields.UserName || '',
                     notes: item.fields.Notes || ''
                 })
-            })
-            templateObject.datanotestablerecords.set(dataTableList);            
+            })     
+            if ( $.fn.DataTable.isDataTable('#tblEmpPayrollNotes') ) {
+                $('#tblEmpPayrollNotes').DataTable().destroy();
+            }
+            templateObject.notesrecords.set(dataTableList);            
+            if( templateObject.notesrecords.get() ){ 
+                setTimeout(function () {
+                    $('#tblEmpPayrollNotes').DataTable({  
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [                              
+                        
+                        {
+                            className: "colEmpPayrollNotesID hiddenColumn",
+                            "targets": [0]
+                        },
+                        {
+                            className: "colEmpPayrollNotesDate",
+                            "targets": [1]
+                        },  
+                        {
+                            className: "colEmpPayrollNotesUser",
+                            "targets": [2]
+                        },      
+                        {
+                            className: "colEmpPayrollNotesDesc",
+                            "targets": [3]
+                        }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        order: [[0, "asc"]],
+                        action: function () {
+                            $('#tblEmpPayrollNotes').DataTable().ajax.reload();
+                        },
+                        fnDrawCallback: function (oSettings) {
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+    
+                                }
+                            } else {
+    
+                            }
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+    
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                                .on('click', function () {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    var splashArrayEarningListDupp = new Array();
+                                    let dataLenght = oSettings._iDisplayLength;
+                                    let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
+                                    // Pagination code here
+    
+                                });
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        fnInitComplete: function () {
+                            $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                            $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+                        }
+    
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                        let draftRecord = templateObject.notesrecords.get();
+                        templateObject.notesrecords.set(draftRecord);
+                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+                }, 100);
+            }    
         }  
     };
     templateObject.getPayNotesTypes(); 
@@ -2898,6 +2979,7 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
+                // console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2906,13 +2988,16 @@ Template.employeescard.onRendered(function () {
                     }
                 });
 
-                console.log('TEmployeepaysettingData', useData)
+                // console.log('TEmployeepaysettingData', useData)
 
                 let employeePaySettings = useData[0]
 
 
                 let objEmployeePaySettings = {
                     EmployeeName: employeePaySettings.fields.Employee.fields.EmployeeName,
+                    BankAccountName: employeePaySettings.fields.BankAccountName,
+                    BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
+                    BankAccountNo: employeePaySettings.fields.BankAccountNo,
                     AnnualSalary: employeePaySettings.fields.AnnualSalary,
                     EarningYTD: employeePaySettings.fields.EarningYTD,
                     NextPayDate: employeePaySettings.fields.NextPayDate,
@@ -3064,7 +3149,7 @@ Template.employeescard.onRendered(function () {
         setTimeout(function () {
             $('.earningLineDropDown').editableSelect();
             $('.earningLineDropDown').editableSelect()
-                .on('click.editable-select', function (e, li) {
+                .on('click.editable-select', function (e, li) {                    
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
@@ -4437,17 +4522,7 @@ Template.employeescard.events({
             tpaynotes: paynotes,
         }
         await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));            
-        let dataTableList = []
-        Array.prototype.forEach.call(paynotes, (item, index) => {
-            let ID = index + 1
-            dataTableList.push({
-                id: ID || '',
-                createdat: moment(item.fields.CreatedAt).format("DD/MM/YYYY") || '',
-                username: item.fields.UserName || '',
-                notes: item.fields.Notes || ''
-            })
-        })
-        templateObject.datanotestablerecords.set(dataTableList);
+        templateObject.getPayNotesTypes(); 
         $('#payRollNotes').val('');         
         $('#newNoteModal').modal('hide');   
         $('.fullScreenSpin').css('display', 'none');
@@ -6279,6 +6354,17 @@ Template.employeescard.events({
             $('.checkbox4div').css('display', 'none');
         }
     },
+    'blur .edtPriceFormatting':function (event) {
+        let utilityService = new UtilityService();
+        let sellPrice= $(event.target).val();
+        if (!isNaN(sellPrice)){
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(sellPrice));
+        }else{
+            sellPrice = Number($(event.target).val().replace(/[^0-9.-]+/g,""));
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(sellPrice));
+        }
+
+    },
     'blur .customField1Text': function (event) {
         var inputValue1 = $('.customField1Text').text();
         $('.lblCustomField1').text(inputValue1);
@@ -6820,6 +6906,7 @@ Template.employeescard.helpers({
         $('.' + amountField).each(function(){
             amount = $(this).val();
             amount = ( amount === null || amount == '') ? 0 : amount;
+            amount = Number(amount.replace(/[^0-9.-]+/g,""));
             totalAmount += parseFloat( amount );
         });
         let utilityService = new UtilityService();
@@ -6827,6 +6914,8 @@ Template.employeescard.helpers({
     },
     formatPrice( amount ){
         let utilityService = new UtilityService();
+        amount = ( amount === null || amount == '') ? 0 : amount;
+        amount = Number(amount.replace(/[^0-9.-]+/g,""));
         return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
     },
     formatDate: ( date ) => {
@@ -6868,18 +6957,15 @@ Template.employeescard.helpers({
             return (a.productname.toUpperCase() > b.productname.toUpperCase()) ? 1 : -1;
         });
     },
-    datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function (a, b) {
-            if (a.saledate == 'NA') {
+    notesrecords: () => {
+        return Template.instance().notesrecords.get().sort(function (a, b) {
+            if (a.createdat == 'NA') {
                 return 1;
-            } else if (b.saledate == 'NA') {
+            } else if (b.createdat == 'NA') {
                 return -1;
             }
-            return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
+            return (a.createdat.toUpperCase() > b.createdat.toUpperCase()) ? 1 : -1;
         });
-    },
-    datanotestablerecords: () => {
-        return Template.instance().datanotestablerecords.get();
     },
     
     tableheaderrecords: () => {

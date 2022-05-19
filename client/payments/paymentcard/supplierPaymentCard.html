@@ -4,6 +4,10 @@
             <div class="spinner"></div>
         </div>
         {{#if record}}
+
+            {{#if record.deleted}}
+                {{> deletedOverlay}}
+            {{/if}}
             <form>
                 <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
                     <h2 style="margin: 16px;margin-bottom: 0px;">
@@ -546,6 +550,7 @@
                                                         .colReceiptNo {
                                                             width: 85px !important;
                                                         }
+
                                                         .colPONumber {
                                                             width: 80px !important;
                                                         }
@@ -554,13 +559,15 @@
                                                             width: 80px !important;
                                                         }
 
-                                                        .colBalance, .colApplied {
+                                                        .colBalance,
+                                                        .colApplied {
                                                             width: 80px !important;
                                                         }
 
                                                         .colSupplierName {
                                                             width: 200px !important;
                                                         }
+
                                                         .colTypePayment {
                                                             width: 80px !important;
                                                         }
@@ -569,8 +576,8 @@
                                                         <thead style="width:100%">
                                                             <tr class="dnd-moved">
                                                                 <th class="th chkBox colChkBox" style="width: 2% !important;">
-                                                                    <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label
-                                                                            class="custom-control-label chkBoxAll" for="formCheck-All"></label></div>
+                                                                    <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
+                                                                            for="formCheck-All"></label></div>
                                                                 </th>
                                                                 <th class="th colSortDate hiddenColumn">id</th>
                                                                 <th class="th colPaymentDate" style="width:50px;">Date</th>
@@ -814,6 +821,11 @@
                             </div>
                         </div>
                         <hr style="border-top: 3px solid #696969;" />
+                        {{#if record.deleted}}
+                            <div class="row justify-content-center">
+                                <button type="button" class="btn btn-danger btnRecoverPayment" style="z-index: 5; margin-top: 16px;"><i class="fas fa-undo-alt" style="margin-right: 5px;"></i>Recover Payment</button>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
 

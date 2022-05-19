@@ -42,6 +42,9 @@ Template.supplierpaymentcard.onCreated(() => {
     templateObject.datatablerecords1 = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
+
+    templateObject.isInvoiceNo = new ReactiveVar();
+    templateObject.isInvoiceNo.set(true);
 });
 
 Template.supplierpaymentcard.onRendered(() => {
@@ -1872,6 +1875,7 @@ Template.supplierpaymentcard.onRendered(() => {
                             bankAccount: data.fields.AccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Notes,
+                            deleted: data.fields.Deleted,
                             LineItems: lineItems,
                             checkpayment: data.fields.PaymentMethodName,
                             department: data.fields.DeptClassName,
@@ -1982,7 +1986,7 @@ Template.supplierpaymentcard.onRendered(() => {
                             let appliedAmt = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Applied).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
-
+                            if(useData[d].fields.Lines != null){
                             if (useData[d].fields.Lines.length) {
                                 for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                                     let amountDue = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.AmountDue).toLocaleString(undefined, {
@@ -2042,6 +2046,24 @@ Template.supplierpaymentcard.onRendered(() => {
                                 };
                                 lineItems.push(lineItemObj);
                             }
+                          }else{
+                              lineItemObj = {
+
+                                  id: '',
+                                  invoiceid: '',
+                                  transid: '',
+                                  poid: '',
+                                  invoicedate: '',
+                                  refno:'',
+                                  transtype: '',
+                                  amountdue:0,
+                                  paymentamount: 0,
+                                  ouststandingamount: 0,
+                                  orginalamount: 0
+                              };
+                              lineItems.push(lineItemObj);
+                            }
+
                             let record = {
                                 lid: useData[d].fields.ID || '',
                                 customerName: useData[d].fields.CompanyName || '',
@@ -2050,6 +2072,7 @@ Template.supplierpaymentcard.onRendered(() => {
                                 bankAccount: useData[d].fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Notes,
+                                deleted: useData[d].fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: useData[d].fields.PaymentMethodName,
                                 department: useData[d].fields.DeptClassName,
@@ -2214,7 +2237,23 @@ Template.supplierpaymentcard.onRendered(() => {
                                 lineItems.push(lineItemObj);
                             }
 
-                            }
+                          }else{
+                            lineItemObj = {
+
+                                id: '',
+                                invoiceid: '',
+                                transid: '',
+                                poid: '',
+                                invoicedate: '',
+                                refno:'',
+                                transtype: '',
+                                amountdue:0,
+                                paymentamount: 0,
+                                ouststandingamount: 0,
+                                orginalamount: 0
+                            };
+                            lineItems.push(lineItemObj);
+                          }
                             let record = {
                                 lid: data.fields.ID || '',
                                 customerName: data.fields.CompanyName || '',
@@ -2223,6 +2262,7 @@ Template.supplierpaymentcard.onRendered(() => {
                                 bankAccount: data.fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Notes,
+                                deleted: data.fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: data.fields.PaymentMethodName,
                                 department: data.fields.DeptClassName,
@@ -2394,6 +2434,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
+                        deleted: data.fields.Deleted,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,
@@ -2568,6 +2609,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
 
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName;
                         let getPaymentMethodVal = '';
@@ -2699,7 +2743,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
-
+                            if(useData[d].fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -2829,7 +2875,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
-
+                            if(data.fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -2958,7 +3006,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
 
@@ -3093,7 +3143,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
-
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
 
@@ -3225,6 +3277,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                             };
                             templateObject.record.set(record);
+                            if(useData[d].fields.SupplierInvoiceNumber == ""){
+                              templateObject.isInvoiceNo.set(false);
+                            };
                             let getDepartmentVal = Session.get('department') || useData[d].fields.DeptClassName || defaultDept;
                             let getPaymentMethodVal = '';
 
@@ -3351,7 +3406,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                           };
                           templateObject.record.set(record);
-
+                          if(data.fields.SupplierInvoiceNumber == ""){
+                            templateObject.isInvoiceNo.set(false);
+                          };
                           let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                           let getPaymentMethodVal = '';
 
@@ -3480,7 +3537,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
-
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
 
@@ -4207,6 +4266,7 @@ Template.supplierpaymentcard.onRendered(() => {
                         minimumFractionDigits: 2
                     }) || 0,
                     notes: notes || '',
+                    deleted: data.fields.Deleted,
                     LineItems: lineItems,
                     checkpayment: Session.get('paymentmethod') || checkpayment || '',
                     department: Session.get('department') || department || '',
@@ -4339,6 +4399,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                 };
                 templateObject.record.set(record);
+                if(data.fields.SupplierInvoiceNumber == ""){
+                  templateObject.isInvoiceNo.set(false);
+                };
                 let getDepartmentVal = Session.get('department') || data.fields.DeptClassName;
                 let getPaymentMethodVal = '';
 
@@ -4657,7 +4720,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
-
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
 
@@ -4787,6 +4852,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                         };
                         templateObject.record.set(record);
+                        if(data.fields.SupplierInvoiceNumber == ""){
+                          templateObject.isInvoiceNo.set(false);
+                        };
                         //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
                         let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                         let getPaymentMethodVal = '';
@@ -5045,6 +5113,9 @@ Template.supplierpaymentcard.onRendered(() => {
 
                     };
                     templateObject.record.set(record);
+                    if(data.fields.SupplierInvoiceNumber == ""){
+                      templateObject.isInvoiceNo.set(false);
+                    };
                     //$('#edtSupplierName').editableSelect('add', data.fields.ClientName);
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
                     let getPaymentMethodVal = '';
@@ -5467,6 +5538,15 @@ Template.supplierpaymentcard.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+        let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
+        if(checkSuppInvoiceNo){
+
+        }else{
+          $('.fullScreenSpin').css('display', 'none');
+          swal('You need to apply an Invoice Number', '', 'warning');
+          event.preventDefault();
+          return false;
+        }
         var url = FlowRouter.current().path;
         let newURL = '/paymentoverview?success=true';
         if ((url.indexOf('?id=') > 0)) {
@@ -8411,6 +8491,58 @@ Template.supplierpaymentcard.events({
               }
             }
 
+        }
+    },
+    'click .btnRecoverPayment': function(event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let paymentService = new PaymentsService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var objDetails = {
+                type: "TSuppPayments",
+                fields: {
+                    ID: currentInvoice,
+                    Deleted: false
+                }
+            };
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Recover Payment',
+                text: 'Are you sure that you want to recover this payment?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Recover',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    paymentService.deleteSuppDepositData(objDetails).then(function(objDetails) {
+                        $('.modal-backdrop').css('display', 'none');
+                        FlowRouter.go('/paymentoverview?success=true');
+                    }).catch(function(err) {
+                        swal({
+                            title: 'Oooops...',
+                            text: err,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === 'cancel') {}
+                        });
+
+                    });
+                } else if (result.dismiss === 'cancel') {}
+            });
+
+
+        } else {
+            FlowRouter.go('/paymentoverview?success=true');
         }
     },
     'click .btnDeletePayment': function(event) {

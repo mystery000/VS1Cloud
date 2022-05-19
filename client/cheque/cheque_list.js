@@ -147,14 +147,6 @@ Template.chequelist.onRendered(function() {
                         orderstatus = "Deleted";
                       }else if(data.tchequelist[i].SupplierName == ''){
                         orderstatus = "Deleted";
-                      }else if(data.tchequelist[i].Deleted != true){
-                        if(data.tchequelist[i].Paid == true){
-                          orderstatus = "Full";
-                        }else if ((data.tchequelist[i].Balance > 0) && (data.tchequelist[i].TotalAmountInc > data.tchequelist[i].Balance)){
-                          orderstatus = "Part";
-                        }else if (data.tchequelist[i].Reconciled == true){
-                          orderstatus = "Rec";
-                        }
                       };
 
                       var dataList = {
@@ -461,14 +453,6 @@ Template.chequelist.onRendered(function() {
                       orderstatus = "Deleted";
                     }else if(data.tchequelist[i].SupplierName == ''){
                       orderstatus = "Deleted";
-                    }else if(data.tchequelist[i].Deleted != true){
-                      if(data.tchequelist[i].Paid == true){
-                        orderstatus = "Full";
-                      }else if ((data.tchequelist[i].Balance > 0) && (data.tchequelist[i].TotalAmountInc > data.tchequelist[i].Balance)){
-                        orderstatus = "Part";
-                      }else if (data.tchequelist[i].Reconciled == true){
-                        orderstatus = "Rec";
-                      }
                     };
 
                     var dataList = {
@@ -769,14 +753,6 @@ Template.chequelist.onRendered(function() {
                       orderstatus = "Deleted";
                     }else if(data.tchequelist[i].SupplierName == ''){
                       orderstatus = "Deleted";
-                    }else if(data.tchequelist[i].Deleted != true){
-                      if(data.tchequelist[i].Paid == true){
-                        orderstatus = "Full";
-                      }else if ((data.tchequelist[i].Balance > 0) && (data.tchequelist[i].TotalAmountInc > data.tchequelist[i].Balance)){
-                        orderstatus = "Part";
-                      }else if (data.tchequelist[i].Reconciled == true){
-                        orderstatus = "Rec";
-                      }
                     };
 
                     var dataList = {
@@ -1124,14 +1100,6 @@ Template.chequelist.events({
                           orderstatus = "Deleted";
                         }else if(data.tchequeex[i].fields.CustomerName == ''){
                           orderstatus = "Deleted";
-                        }else if(data.tchequeex[i].fields.Deleted != true){
-                          if(data.tchequeex[i].fields.IsPaid == true){
-                            orderstatus = "Full";
-                          }else if ((data.tchequeex[i].fields.TotalBalance > 0) && (data.tchequeex[i].fields.TotalAmountInc > data.tchequeex[i].fields.TotalBalance)){
-                            orderstatus = "Part";
-                          }else if (data.tchequeex[i].fields.Reconciled == true){
-                            orderstatus = "Rec";
-                          }
                         };
                         var dataList = {
                             id: data.tchequeex[i].fields.ID || '',

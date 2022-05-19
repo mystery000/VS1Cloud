@@ -526,6 +526,9 @@
                                                 <th class="th colInStockQty" style="width: 120px;">In-Stock Qty</th>
                                                 <th class="th colFinalQty" style="width: 100px;">Final Qty</th>
                                                 <th class="th colAdjustQty" style="width: 120px;">Adjust Qty</th>
+                                                {{#if isBatchSerialNoTracking 'true'}}
+                                                    <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                                                {{/if}}
                                                 <th class="th" style="width: 25px;"></th>
                                             </tr>
                                         </thead>
@@ -552,6 +555,9 @@
 
                                                     <td><input class="lineFinalQty colFinalQty highlightInput" type="text" value="{{item.finalqty}}"></td>
                                                     <td><input class="lineAdjustQty colAdjustQty highlightInput" type="text" value="{{item.adjustqty}}"></td>
+                                                    {{#if isBatchSerialNoTracking 'true'}}
+                                                        <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                                    {{/if}}
                                                     <td><span class="table-remove btnRemove"><button type="button" class="btn btnDeleteProduct btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                                 </tr>
                                             {{/each}}
@@ -702,6 +708,13 @@
 
         {{/if}}
     </div>
+
+    <!-- Start Serial/lot numbers Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+        {{> serialnumberpop}}
+    </div>
+    <!-- End Modal -->
+
     <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
         {{> taxratelistpop}}
     </div>

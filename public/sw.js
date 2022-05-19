@@ -1,5 +1,5 @@
 const HTMLToCache = '/';
-const version = 'MSW V0.147';
+const version = 'MSW V0.148';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(version).then((cache) => {

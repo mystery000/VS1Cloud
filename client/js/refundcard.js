@@ -5969,6 +5969,9 @@ Template.refundcard.onRendered(function() {
 
 });
 Template.refundcard.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     invoicerecord: () => {
         return Template.instance().invoicerecord.get();
     },

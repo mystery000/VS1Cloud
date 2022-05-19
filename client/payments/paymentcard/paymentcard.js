@@ -9,7 +9,9 @@ import {
 } from "../../utility-service";
 import '../../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
-import {AccountService} from "../../accounts/account-service";
+import {
+    AccountService
+} from "../../accounts/account-service";
 import 'jquery-ui-dist/jquery-ui';
 import {
     Random
@@ -111,27 +113,27 @@ Template.paymentcard.onRendered(() => {
     const accountnamerecords = [];
 
     templateObject.getLastPaymentData = function() {
-      let lastBankAccount = "Bank";
-      let lastDepartment = Session.get('department') || "";
+        let lastBankAccount = "Bank";
+        let lastDepartment = Session.get('department') || "";
         paymentService.getAllCustomerPaymentData1().then(function(data) {
-            if(data.tcustomerpayment.length > 0){
+            if (data.tcustomerpayment.length > 0) {
                 lastCheque = data.tcustomerpayment[data.tcustomerpayment.length - 1]
                 lastBankAccount = lastCheque.AccountName;
                 lastDepartment = lastCheque.DeptClassName;
-            } else{
+            } else {
 
             }
-            setTimeout(function(){
-                  $('#edtSelectBankAccountName').val(lastBankAccount);
-                  $('#sltDept').val(lastDepartment);
-            },50);
+            setTimeout(function() {
+                $('#edtSelectBankAccountName').val(lastBankAccount);
+                $('#sltDept').val(lastDepartment);
+            }, 50);
         }).catch(function(err) {
-          if(Session.get('bankaccount')){
-            $('#edtSelectBankAccountName').val(Session.get('bankaccount'));
-          }else{
-            $('#edtSelectBankAccountName').val(lastBankAccount);
-          };
-          $('#sltDept').val(lastDepartment);
+            if (Session.get('bankaccount')) {
+                $('#edtSelectBankAccountName').val(Session.get('bankaccount'));
+            } else {
+                $('#edtSelectBankAccountName').val(lastBankAccount);
+            };
+            $('#sltDept').val(lastDepartment);
         });
     };
 
@@ -170,11 +172,11 @@ Template.paymentcard.onRendered(() => {
                     for (var i = 0; i < clientList.length; i++) {
                         //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
                     }
-                    if(jQuery.isEmptyObject( FlowRouter.current().queryParams) == true){
-                      setTimeout(function () {
-                          $('#edtCustomerName').trigger("click");
-                      }, 400);
-                    }else{
+                    if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+                        setTimeout(function() {
+                            $('#edtCustomerName').trigger("click");
+                        }, 400);
+                    } else {
 
                     }
                 });
@@ -214,11 +216,11 @@ Template.paymentcard.onRendered(() => {
                     //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
                 }
 
-                if(jQuery.isEmptyObject( FlowRouter.current().queryParams) == true){
-                  setTimeout(function () {
-                      $('#edtCustomerName').trigger("click");
-                  }, 400);
-                }else{
+                if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+                    setTimeout(function() {
+                        $('#edtCustomerName').trigger("click");
+                    }, 400);
+                } else {
 
                 }
             }
@@ -256,11 +258,11 @@ Template.paymentcard.onRendered(() => {
                     //  $('#edtCustomerName').editableSelect('add', clientList[i].customername);
                 }
 
-                if(jQuery.isEmptyObject( FlowRouter.current().queryParams) == true){
-                  setTimeout(function () {
-                      $('#edtCustomerName').trigger("click");
-                  }, 400);
-                }else{
+                if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+                    setTimeout(function() {
+                        $('#edtCustomerName').trigger("click");
+                    }, 400);
+                } else {
 
                 }
             });
@@ -324,14 +326,14 @@ Template.paymentcard.onRendered(() => {
                             paymentmethod: data.tpaymentmethodvs1[i].PaymentMethodName || ' ',
                         };
 
-                        if(FlowRouter.current().queryParams.id){
+                        if (FlowRouter.current().queryParams.id) {
 
-                        }else{
-                          if(data.tpaymentmethodvs1[i].IsCreditCard == true){
-                            setTimeout(function() {
-                              $('#sltPaymentMethod').val(data.tpaymentmethodvs1[i].PaymentMethodName);
-                            }, 200);
-                          }
+                        } else {
+                            if (data.tpaymentmethodvs1[i].IsCreditCard == true) {
+                                setTimeout(function() {
+                                    $('#sltPaymentMethod').val(data.tpaymentmethodvs1[i].PaymentMethodName);
+                                }, 200);
+                            }
                         }
 
                         paymentmethodrecords.push(paymentmethodrecordObj);
@@ -348,14 +350,14 @@ Template.paymentcard.onRendered(() => {
                     let paymentmethodrecordObj = {
                         paymentmethod: useData[i].fields.PaymentMethodName || ' ',
                     };
-                    if(FlowRouter.current().queryParams.id){
+                    if (FlowRouter.current().queryParams.id) {
 
-                    }else{
-                      if(useData[i].fields.IsCreditCard == true){
-                        setTimeout(function() {
-                          $('#sltPaymentMethod').val(useData[i].fields.PaymentMethodName);
-                        }, 200);
-                      }
+                    } else {
+                        if (useData[i].fields.IsCreditCard == true) {
+                            setTimeout(function() {
+                                $('#sltPaymentMethod').val(useData[i].fields.PaymentMethodName);
+                            }, 200);
+                        }
                     }
 
                     paymentmethodrecords.push(paymentmethodrecordObj);
@@ -372,15 +374,15 @@ Template.paymentcard.onRendered(() => {
                     let paymentmethodrecordObj = {
                         paymentmethod: data.tpaymentmethodvs1[i].PaymentMethodName || ' ',
                     };
-                    if(FlowRouter.current().queryParams.id){
+                    if (FlowRouter.current().queryParams.id) {
 
-                    }else{
-                      if(data.tpaymentmethodvs1[i].IsCreditCard == true){
-                        setTimeout(function() {
-                          $('#sltPaymentMethod').val(data.tpaymentmethodvs1[i].PaymentMethodName);
-                        }, 200);
+                    } else {
+                        if (data.tpaymentmethodvs1[i].IsCreditCard == true) {
+                            setTimeout(function() {
+                                $('#sltPaymentMethod').val(data.tpaymentmethodvs1[i].PaymentMethodName);
+                            }, 200);
 
-                      }
+                        }
                     }
 
                     paymentmethodrecords.push(paymentmethodrecordObj);
@@ -400,202 +402,202 @@ Template.paymentcard.onRendered(() => {
         });
     };
     // $('#tblcustomerAwaitingPayment').DataTable();
-    let customerName = $('#edtCustomerName').val()||'';
+    let customerName = $('#edtCustomerName').val() || '';
     templateObject.getAllCustomerPaymentData = function(customerName) {
-      var splashArrayAwaitingCustList = new Array();
+        var splashArrayAwaitingCustList = new Array();
 
-      sideBarService.getAllAwaitingCustomerPaymentByCustomerName(customerName).then(function(data) {
-          let lineItems = [];
-          let lineItemObj = {};
-          let totalPaidCal = 0;
+        sideBarService.getAllAwaitingCustomerPaymentByCustomerName(customerName).then(function(data) {
+            let lineItems = [];
+            let lineItemObj = {};
+            let totalPaidCal = 0;
 
-          for (let i = 0; i < data.tsaleslist.length; i++) {
-              let amount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
-              let applied = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Payment) || 0.00;
-              // Currency+''+data.tsaleslist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-              let balance = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].BalanceBalance) || 0.00;
-              let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
-              let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
-              let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+            for (let i = 0; i < data.tsaleslist.length; i++) {
+                let amount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+                let applied = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Payment) || 0.00;
+                // Currency+''+data.tsaleslist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                let balance = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].BalanceBalance) || 0.00;
+                let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
 
 
-              if (data.tsaleslist[i].Balance != 0) {
+                if (data.tsaleslist[i].Balance != 0) {
 
-                      var dataListOLD = {
+                    var dataListOLD = {
                         id: data.tsaleslist[i].SaleId || '',
-                          sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
-                          paymentdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                          customername: data.tsaleslist[i].CustomerName || '',
-                          paymentamount: amount || 0.00,
-                          applied: applied || 0.00,
-                          balance: balance || 0.00,
-                          originalamount: totalOrginialAmount || 0.00,
-                          outsandingamount: totalOutstanding || 0.00,
-                          // bankaccount: data.tinvoiceex[i].GLAccountName || '',
-                          department: data.tsaleslist[i].ClassName || '',
-                          refno: data.tsaleslist[i].BORef || '',
-                          paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                          notes: data.tsaleslist[i].Comments || ''
-                      };
+                        sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
+                        paymentdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                        customername: data.tsaleslist[i].CustomerName || '',
+                        paymentamount: amount || 0.00,
+                        applied: applied || 0.00,
+                        balance: balance || 0.00,
+                        originalamount: totalOrginialAmount || 0.00,
+                        outsandingamount: totalOutstanding || 0.00,
+                        // bankaccount: data.tinvoiceex[i].GLAccountName || '',
+                        department: data.tsaleslist[i].ClassName || '',
+                        refno: data.tsaleslist[i].BORef || '',
+                        paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
+                        notes: data.tsaleslist[i].Comments || ''
+                    };
 
 
-                      var dataList = [
-                         '<div class="custom-control custom-checkbox chkBox pointer"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-'+data.tsaleslist[i].SaleId+'" value="'+totalOutstanding+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tsaleslist[i].SaleId+'"></label></div>',
-                          data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
-                          data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                          data.tsaleslist[i].BORef || '',
-                          data.tsaleslist[i].SaleId || '',
-                          amount || 0.00,
-                          applied || 0.00,
-                          // totalOrginialAmount || 0.00,
-                          totalOutstanding || 0.00,
-                          data.tsaleslist[i].CustomerName || '',
-                          'Invoice',
-                          data.tsaleslist[i].Comments || ''
-                      ];
+                    var dataList = [
+                        '<div class="custom-control custom-checkbox chkBox pointer"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-' + data.tsaleslist[i].SaleId + '" value="' + totalOutstanding + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tsaleslist[i].SaleId + '"></label></div>',
+                        data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
+                        data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                        data.tsaleslist[i].BORef || '',
+                        data.tsaleslist[i].SaleId || '',
+                        amount || 0.00,
+                        applied || 0.00,
+                        // totalOrginialAmount || 0.00,
+                        totalOutstanding || 0.00,
+                        data.tsaleslist[i].CustomerName || '',
+                        'Invoice',
+                        data.tsaleslist[i].Comments || ''
+                    ];
 
-                      //&& (data.tpurchaseorder[i].Invoiced == true)
-                          //if ((data.tsaleslist[i].Deleted == false)) {
-                              if(data.tsaleslist[i].CustomerName == customerName){
-                              dataTableList.push(dataListOLD);
-                              splashArrayAwaitingCustList.push(dataList);
+                    //&& (data.tpurchaseorder[i].Invoiced == true)
+                    //if ((data.tsaleslist[i].Deleted == false)) {
+                    if (data.tsaleslist[i].CustomerName == customerName) {
+                        dataTableList.push(dataListOLD);
+                        splashArrayAwaitingCustList.push(dataList);
+                    }
+                    //}
+
+                }
+            }
+            templateObject.datatablerecords.set(dataTableList);
+            templateObject.datatablerecords1.set(dataTableList);
+
+            $('.fullScreenSpin').css('display', 'none');
+            setTimeout(function() {
+                //$.fn.dataTable.moment('DD/MM/YY');
+                $('#tblcustomerAwaitingPayment').DataTable({
+                    data: splashArrayAwaitingCustList,
+                    columnDefs: [{
+                        className: "chkBox",
+                        "orderable": false,
+                        "targets": [0]
+                    }, {
+                        className: "colSortDate hiddenColumn",
+                        "targets": [1]
+                    }, {
+                        className: "colPaymentDate",
+                        "targets": [2]
+                    }, {
+                        className: "colReceiptNo",
+                        "targets": [3]
+                    }, {
+                        className: "colSaleNumber",
+                        "targets": [4]
+                    }, {
+                        className: "colPaymentAmount text-right",
+                        "targets": [5]
+                    }, {
+                        className: "colApplied text-right",
+                        "targets": [6]
+                    }, {
+                        className: "colBalance text-right",
+                        "targets": [7]
+                    }, {
+                        className: "colCustomerName",
+                        "targets": [8], // this will invoke the below function on all cells
+                        'createdCell': function(td, cellData, rowData, row, col) {
+                            // this will give each cell an ID
+                            $(td).closest('tr').attr('id', rowData[4]);
+                            $(td).attr('id', 'colCustomerName' + rowData[4]);
+                        }
+                    }, {
+                        className: "colTypePayment hiddenColumn",
+                        "targets": [9], // this will invoke the below function on all cells
+                        'createdCell': function(td, cellData, rowData, row, col) {
+                            // this will give each cell an ID
+                            $(td).attr('id', 'coltype' + rowData[4]);
+                        }
+                    }, {
+                        className: "colNotes",
+                        "targets": [10]
+                    }],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    buttons: [{
+                        extend: 'excelHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Awaiting Customer Payments List - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible:not(.chkBox)',
+                            format: {
+                                body: function(data, row, column) {
+                                    if (data.includes("</span>")) {
+                                        var res = data.split("</span>");
+                                        data = res[1];
+                                    }
+
+                                    return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                }
                             }
-                          //}
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Customer Payment',
+                        filename: "Awaiting Customer Payments List - " + moment().format(),
+                        exportOptions: {
+                            columns: ':visible:not(.chkBox)',
+                            stripHtml: false
+                        }
+                    }],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    colReorder: {
+                        fixedColumnsLeft: 1
+                    },
+                    paging: false,
+                    "scrollY": "400px",
+                    "scrollCollapse": true,
+                    info: true,
+                    responsive: true,
+                    "order": [
+                        [1, "desc"]
+                    ],
+                    // "aaSorting": [[1,'desc']],
+                    action: function() {
+                        $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
+                    },
+                    "fnDrawCallback": function(oSettings) {
+                        setTimeout(function() {
+                            MakeNegative();
+                        }, 100);
+                    },
 
-              }
-          }
-          templateObject.datatablerecords.set(dataTableList);
-          templateObject.datatablerecords1.set(dataTableList);
+                }).on('page', function() {
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                    let draftRecord = templateObject.datatablerecords.get();
+                    templateObject.datatablerecords.set(draftRecord);
+                }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            }, 0);
 
-          $('.fullScreenSpin').css('display', 'none');
-          setTimeout(function() {
-              //$.fn.dataTable.moment('DD/MM/YY');
-              $('#tblcustomerAwaitingPayment').DataTable({
-                  data: splashArrayAwaitingCustList,
-                  columnDefs: [{
-                      className: "chkBox",
-                      "orderable": false,
-                      "targets": [0]
-                  }, {
-                      className: "colSortDate hiddenColumn",
-                      "targets": [1]
-                  }, {
-                      className: "colPaymentDate",
-                      "targets": [2]
-                  }, {
-                      className: "colReceiptNo",
-                      "targets": [3]
-                  }, {
-                      className: "colSaleNumber",
-                      "targets": [4]
-                  }, {
-                      className: "colPaymentAmount text-right",
-                      "targets": [5]
-                  }, {
-                      className: "colApplied text-right",
-                      "targets": [6]
-                  }, {
-                      className: "colBalance text-right",
-                      "targets": [7]
-                  }, {
-                      className: "colCustomerName",
-                      "targets": [8],    // this will invoke the below function on all cells
-                      'createdCell': function(td, cellData, rowData, row, col) {
-                        // this will give each cell an ID
-                        $(td).closest('tr').attr('id', rowData[4]);
-                        $(td).attr('id', 'colCustomerName' + rowData[4]);
-                      }
-                  }, {
-                      className: "colTypePayment hiddenColumn",
-                      "targets": [9],    // this will invoke the below function on all cells
-                      'createdCell': function(td, cellData, rowData, row, col) {
-                        // this will give each cell an ID
-                        $(td).attr('id', 'coltype' + rowData[4]);
-                      }
-                  }, {
-                      className: "colNotes",
-                      "targets": [10]
-                  }],
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [{
-                      extend: 'excelHtml5',
-                      text: '',
-                      download: 'open',
-                      className: "btntabletocsv hiddenColumn",
-                      filename: "Awaiting Customer Payments List - " + moment().format(),
-                      orientation: 'portrait',
-                      exportOptions: {
-                          columns: ':visible:not(.chkBox)',
-                          format: {
-                              body: function(data, row, column) {
-                                  if (data.includes("</span>")) {
-                                      var res = data.split("</span>");
-                                      data = res[1];
-                                  }
-
-                                  return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-                              }
-                          }
-                      }
-                  }, {
-                      extend: 'print',
-                      download: 'open',
-                      className: "btntabletopdf hiddenColumn",
-                      text: '',
-                      title: 'Customer Payment',
-                      filename: "Awaiting Customer Payments List - " + moment().format(),
-                      exportOptions: {
-                          columns: ':visible:not(.chkBox)',
-                          stripHtml: false
-                      }
-                  }],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  colReorder: {
-                      fixedColumnsLeft: 1
-                  },
-                  paging: false,
-                  "scrollY": "400px",
-                  "scrollCollapse": true,
-                  info: true,
-                  responsive: true,
-                  "order": [
-                      [1, "desc"]
-                  ],
-                  // "aaSorting": [[1,'desc']],
-                  action: function() {
-                      $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function(oSettings) {
-                      setTimeout(function() {
-                          MakeNegative();
-                      }, 100);
-                  },
-
-              }).on('page', function() {
-                  setTimeout(function() {
-                      MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('column-reorder', function() {}).on('length.dt', function(e, settings, len) {
-                  setTimeout(function() {
-                      MakeNegative();
-                  }, 100);
-              });
-              $('.fullScreenSpin').css('display', 'none');
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
+            $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
 
-      }).catch(function(err) {
-          // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $('.fullScreenSpin').css('display', 'none');
-          // Meteor._reload.reload();
-      });
+        }).catch(function(err) {
+            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+            $('.fullScreenSpin').css('display', 'none');
+            // Meteor._reload.reload();
+        });
     }
 
     templateObject.getAccountNames = function() {
@@ -694,8 +696,8 @@ Template.paymentcard.onRendered(() => {
     templateObject.getPaymentMethods();
     templateObject.getAccountNames();
     setTimeout(function() {
-        if(customerName != ''){
-        templateObject.getAllCustomerPaymentData(customerName);
+        if (customerName != '') {
+            templateObject.getAllCustomerPaymentData(customerName);
         }
     }, 500)
 
@@ -727,25 +729,25 @@ Template.paymentcard.onRendered(() => {
         let selectedCustomer = $('#edtCustomerName').val();
         let isEmptyData = false;
 
-        if(jQuery.isEmptyObject(FlowRouter.current().queryParams) == true){
-          if($tblrows.length > 0){
-          $tblrows.each(function (index) {
-            var $tblrow = $(this);
-            if ($tblrow.find(".colTransNo").val() == '') {
+        if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+            if ($tblrows.length > 0) {
+                $tblrows.each(function(index) {
+                    var $tblrow = $(this);
+                    if ($tblrow.find(".colTransNo").val() == '') {
+                        isEmptyData = true;
+                    } else {
+                        isEmptyData = false;
+                    }
+                });
+            } else {
                 isEmptyData = true;
-            }else{
-              isEmptyData = false;
             }
-          });
-        }else{
-          isEmptyData = true;
-        }
-          setTimeout(function() {
+            setTimeout(function() {
 
-            if(isEmptyData){
-              $('#addRow').trigger('click');
-            }
-          }, 500);
+                if (isEmptyData) {
+                    $('#addRow').trigger('click');
+                }
+            }, 500);
 
         }
         // if (clientList) {
@@ -1754,65 +1756,65 @@ Template.paymentcard.onRendered(() => {
                         let appliedAmt = utilityService.modifynegativeCurrencyFormat(data.fields.Applied).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
-                        if(data.fields.Lines != null){
-                        if (data.fields.Lines.length) {
-                            for (let i = 0; i < data.fields.Lines.length; i++) {
-                                let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
+                        if (data.fields.Lines != null) {
+                            if (data.fields.Lines.length) {
+                                for (let i = 0; i < data.fields.Lines.length; i++) {
+                                    let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
 
+                                    lineItemObj = {
+                                        //lid:data.fields.Lines[i].fields.ID || '',
+                                        id: data.fields.Lines[i].fields.ID || '',
+                                        invoiceid: data.fields.Lines[i].fields.TransNo || '',
+                                        transid: data.fields.Lines[i].fields.TransNo || '',
+                                        invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
+                                        refno: data.fields.Lines[i].fields.RefNo || '',
+                                        transtype: data.fields.Lines[i].fields.TrnType || '',
+                                        amountdue: amountDue || 0,
+                                        paymentamount: paymentAmt || 0,
+                                        ouststandingamount: outstandingAmt,
+                                        orginalamount: originalAmt,
+                                        comments: ''
+                                    };
+                                    lineItems.push(lineItemObj);
+                                }
+                            } else {
+                                let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
                                 lineItemObj = {
-                                    //lid:data.fields.Lines[i].fields.ID || '',
-                                    id: data.fields.Lines[i].fields.ID || '',
-                                    invoiceid: data.fields.Lines[i].fields.TransNo || '',
-                                    transid: data.fields.Lines[i].fields.TransNo || '',
-                                    invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
-                                    refno: data.fields.Lines[i].fields.RefNo || '',
-                                    transtype: data.fields.Lines[i].fields.TrnType || '',
+                                    id: data.fields.Lines.fields.ID || '',
+                                    invoiceid: data.fields.Lines.fields.InvoiceId || '',
+                                    transid: data.fields.Lines.fields.InvoiceNo || '',
+                                    invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
+                                    refno: data.fields.Lines.fields.RefNo || '',
+                                    transtype: data.fields.Lines.fields.TrnType || '',
                                     amountdue: amountDue || 0,
                                     paymentamount: paymentAmt || 0,
                                     ouststandingamount: outstandingAmt,
-                                    orginalamount: originalAmt,
-                                    comments: ''
+                                    orginalamount: originalAmt
                                 };
                                 lineItems.push(lineItemObj);
                             }
-                        } else {
-                            let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            lineItemObj = {
-                                id: data.fields.Lines.fields.ID || '',
-                                invoiceid: data.fields.Lines.fields.InvoiceId || '',
-                                transid: data.fields.Lines.fields.InvoiceNo || '',
-                                invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
-                                refno: data.fields.Lines.fields.RefNo || '',
-                                transtype: data.fields.Lines.fields.TrnType || '',
-                                amountdue: amountDue || 0,
-                                paymentamount: paymentAmt || 0,
-                                ouststandingamount: outstandingAmt,
-                                orginalamount: originalAmt
-                            };
-                            lineItems.push(lineItemObj);
-                        }
                         }
                         let record = {
                             lid: data.fields.ID || '',
@@ -1822,6 +1824,7 @@ Template.paymentcard.onRendered(() => {
                             bankAccount: data.fields.AccountName || '',
                             paymentAmount: appliedAmt || 0,
                             notes: data.fields.Notes,
+                            deleted: data.fields.Deleted,
                             LineItems: lineItems,
                             checkpayment: data.fields.PaymentMethodName,
                             department: data.fields.DeptClassName,
@@ -1920,8 +1923,11 @@ Template.paymentcard.onRendered(() => {
                         $('.fullScreenSpin').css('display', 'none');
                     });
                 } else {
+
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tcustomerpayment;
+
+                    console.log(data);
 
                     var added = false;
                     for (let d = 0; d < useData.length; d++) {
@@ -2006,6 +2012,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: useData[d].fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: useData[d].fields.Notes,
+                                deleted: useData[d].fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: useData[d].fields.PaymentMethodName,
                                 department: useData[d].fields.DeptClassName,
@@ -2117,30 +2124,57 @@ Template.paymentcard.onRendered(() => {
                             let appliedAmt = utilityService.modifynegativeCurrencyFormat(data.fields.Applied).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
-                            if(data.fields.Lines != null){
-                            if (data.fields.Lines.length) {
-                                for (let i = 0; i < data.fields.Lines.length; i++) {
-                                    let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
-                                    let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    });
+                            if (data.fields.Lines != null) {
+                                if (data.fields.Lines.length) {
+                                    for (let i = 0; i < data.fields.Lines.length; i++) {
+                                        let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
+                                            minimumFractionDigits: 2
+                                        });
+                                        let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
+                                            minimumFractionDigits: 2
+                                        });
+                                        let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
+                                            minimumFractionDigits: 2
+                                        });
+                                        let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
+                                            minimumFractionDigits: 2
+                                        });
 
+                                        lineItemObj = {
+                                            //lid:data.fields.Lines[i].fields.ID || '',
+                                            id: data.fields.Lines[i].fields.ID || '',
+                                            invoiceid: data.fields.Lines[i].fields.TransNo || '',
+                                            transid: data.fields.Lines[i].fields.TransNo || '',
+                                            invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
+                                            refno: data.fields.Lines[i].fields.RefNo || '',
+                                            transtype: data.fields.Lines[i].fields.TrnType || '',
+                                            amountdue: amountDue || 0,
+                                            paymentamount: paymentAmt || 0,
+                                            ouststandingamount: outstandingAmt,
+                                            orginalamount: originalAmt
+                                        };
+                                        lineItems.push(lineItemObj);
+                                    }
+                                } else {
+                                    let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
+                                    let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
+                                        minimumFractionDigits: 2
+                                    });
                                     lineItemObj = {
-                                        //lid:data.fields.Lines[i].fields.ID || '',
-                                        id: data.fields.Lines[i].fields.ID || '',
-                                        invoiceid: data.fields.Lines[i].fields.TransNo || '',
-                                        transid: data.fields.Lines[i].fields.TransNo || '',
-                                        invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
-                                        refno: data.fields.Lines[i].fields.RefNo || '',
-                                        transtype: data.fields.Lines[i].fields.TrnType || '',
+                                        id: data.fields.Lines.fields.ID || '',
+                                        invoiceid: data.fields.Lines.fields.InvoiceId || '',
+                                        transid: data.fields.Lines.fields.InvoiceNo || '',
+                                        invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
+                                        refno: data.fields.Lines.fields.RefNo || '',
+                                        transtype: data.fields.Lines.fields.TrnType || '',
                                         amountdue: amountDue || 0,
                                         paymentamount: paymentAmt || 0,
                                         ouststandingamount: outstandingAmt,
@@ -2148,34 +2182,7 @@ Template.paymentcard.onRendered(() => {
                                     };
                                     lineItems.push(lineItemObj);
                                 }
-                            } else {
-                                let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                });
-                                lineItemObj = {
-                                    id: data.fields.Lines.fields.ID || '',
-                                    invoiceid: data.fields.Lines.fields.InvoiceId || '',
-                                    transid: data.fields.Lines.fields.InvoiceNo || '',
-                                    invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
-                                    refno: data.fields.Lines.fields.RefNo || '',
-                                    transtype: data.fields.Lines.fields.TrnType || '',
-                                    amountdue: amountDue || 0,
-                                    paymentamount: paymentAmt || 0,
-                                    ouststandingamount: outstandingAmt,
-                                    orginalamount: originalAmt
-                                };
-                                lineItems.push(lineItemObj);
                             }
-                           }
                             let record = {
                                 lid: data.fields.ID || '',
                                 customerName: data.fields.CompanyName || '',
@@ -2184,6 +2191,7 @@ Template.paymentcard.onRendered(() => {
                                 bankAccount: data.fields.AccountName || '',
                                 paymentAmount: appliedAmt || 0,
                                 notes: data.fields.Notes,
+                                deleted: data.fields.Deleted,
                                 LineItems: lineItems,
                                 checkpayment: data.fields.PaymentMethodName,
                                 department: data.fields.DeptClassName,
@@ -2295,30 +2303,57 @@ Template.paymentcard.onRendered(() => {
                         minimumFractionDigits: 2
                     });
 
-                    if(data.fields.Lines != null){
-                    if (data.fields.Lines.length) {
-                        for (let i = 0; i < data.fields.Lines.length; i++) {
-                            let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
-                            let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            });
+                    if (data.fields.Lines != null) {
+                        if (data.fields.Lines.length) {
+                            for (let i = 0; i < data.fields.Lines.length; i++) {
+                                let amountDue = Currency + '' + data.fields.Lines[i].fields.AmountDue.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let paymentAmt = Currency + '' + data.fields.Lines[i].fields.Payment.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let outstandingAmt = Currency + '' + data.fields.Lines[i].fields.AmountOutstanding.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
+                                let originalAmt = Currency + '' + data.fields.Lines[i].fields.OriginalAmount.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                });
 
+                                lineItemObj = {
+                                    //lid:data.fields.Lines[i].fields.ID || '',
+                                    id: data.fields.Lines[i].fields.ID || '',
+                                    invoiceid: data.fields.Lines[i].fields.TransNo || '',
+                                    transid: data.fields.Lines[i].fields.TransNo || '',
+                                    invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
+                                    refno: data.fields.Lines[i].fields.RefNo || '',
+                                    transtype: data.fields.Lines[i].fields.TrnType || '',
+                                    amountdue: amountDue || 0,
+                                    paymentamount: paymentAmt || 0,
+                                    ouststandingamount: outstandingAmt,
+                                    orginalamount: originalAmt
+                                };
+                                lineItems.push(lineItemObj);
+                            }
+                        } else {
+                            let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
                             lineItemObj = {
-                                //lid:data.fields.Lines[i].fields.ID || '',
-                                id: data.fields.Lines[i].fields.ID || '',
-                                invoiceid: data.fields.Lines[i].fields.TransNo || '',
-                                transid: data.fields.Lines[i].fields.TransNo || '',
-                                invoicedate: data.fields.Lines[i].fields.Date != '' ? moment(data.fields.Lines[i].fields.Date).format("DD/MM/YYYY") : data.fields.Lines[i].fields.Date,
-                                refno: data.fields.Lines[i].fields.RefNo || '',
-                                transtype: data.fields.Lines[i].fields.TrnType || '',
+                                id: data.fields.Lines.fields.ID || '',
+                                invoiceid: data.fields.Lines.fields.InvoiceId || '',
+                                transid: data.fields.Lines.fields.InvoiceNo || '',
+                                invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
+                                refno: data.fields.Lines.fields.RefNo || '',
+                                transtype: data.fields.Lines.fields.TrnType || '',
                                 amountdue: amountDue || 0,
                                 paymentamount: paymentAmt || 0,
                                 ouststandingamount: outstandingAmt,
@@ -2326,33 +2361,6 @@ Template.paymentcard.onRendered(() => {
                             };
                             lineItems.push(lineItemObj);
                         }
-                    } else {
-                        let amountDue = Currency + '' + data.fields.Lines.fields.AmountDue.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let paymentAmt = Currency + '' + data.fields.Lines.fields.Payment.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let outstandingAmt = Currency + '' + data.fields.Lines.fields.AmountOutstanding.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        let originalAmt = Currency + '' + data.fields.Lines.fields.OriginalAmount.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        });
-                        lineItemObj = {
-                            id: data.fields.Lines.fields.ID || '',
-                            invoiceid: data.fields.Lines.fields.InvoiceId || '',
-                            transid: data.fields.Lines.fields.InvoiceNo || '',
-                            invoicedate: data.fields.Lines.fields.Date != '' ? moment(data.fields.Lines.fields.Date).format("DD/MM/YYYY") : data.fields.Lines.fields.Date,
-                            refno: data.fields.Lines.fields.RefNo || '',
-                            transtype: data.fields.Lines.fields.TrnType || '',
-                            amountdue: amountDue || 0,
-                            paymentamount: paymentAmt || 0,
-                            ouststandingamount: outstandingAmt,
-                            orginalamount: originalAmt
-                        };
-                        lineItems.push(lineItemObj);
-                    }
                     }
                     let record = {
                         lid: data.fields.ID || '',
@@ -2362,6 +2370,7 @@ Template.paymentcard.onRendered(() => {
                         bankAccount: data.fields.AccountName || '',
                         paymentAmount: appliedAmt || 0,
                         notes: data.fields.Notes,
+                        deleted: data.fields.Deleted,
                         LineItems: lineItems,
                         checkpayment: data.fields.PaymentMethodName,
                         department: data.fields.DeptClassName,
@@ -2370,6 +2379,7 @@ Template.paymentcard.onRendered(() => {
                         })
 
                     };
+
                     templateObject.record.set(record);
                     $('#edtCustomerName').val(data.fields.CompanyName);
                     $('#edtSelectBankAccountName').val(data.fields.AccountName);
@@ -2778,7 +2788,7 @@ Template.paymentcard.onRendered(() => {
                         templateObject.record.set(record);
                         $('#edtCustomerName').val(data.fields.CustomerName);
                         $('#sltDept').val(getDepartmentVal);
-                        let bankAccountData = Session.get('bankaccount')||'Bank';
+                        let bankAccountData = Session.get('bankaccount') || 'Bank';
                         $('#edtSelectBankAccountName').val(bankAccountData);
                         templateObject.getLastPaymentData();
                         if (clientList) {
@@ -2901,7 +2911,7 @@ Template.paymentcard.onRendered(() => {
                             let getPaymentMethodVal = Session.get('paymentmethod') || useData[d].fields.PayMethod;
                             $('#sltPaymentMethod').val(getPaymentMethodVal);
                             $('#sltDept').val(getDepartmentVal);
-                            let bankAccountData = Session.get('bankaccount')||'Bank';
+                            let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
                             templateObject.getLastPaymentData();
                             if (clientList) {
@@ -2953,119 +2963,119 @@ Template.paymentcard.onRendered(() => {
                     }
 
                     if (!added) {
-                      paymentService.getOneInvoicePayment(currentSalesID).then(function(data) {
-                          let lineItems = [];
-                          let lineItemObj = {};
+                        paymentService.getOneInvoicePayment(currentSalesID).then(function(data) {
+                            let lineItems = [];
+                            let lineItemObj = {};
 
-                          let total = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          let appliedAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          var currentDate = new Date();
-                          var begunDate = moment(currentDate).format("DD/MM/YYYY");
-                          let amountDue = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          // Currency+''+data.fields.TotalBalance.toLocaleString(undefined, {minimumFractionDigits: 2});
-                          let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
-                              minimumFractionDigits: 2
-                          });
-                          // Currency+''+data.fields.TotalAmountInc.toLocaleString(undefined, {minimumFractionDigits: 2});
-                          lineItemObj = {
-                              id: data.fields.ID || '',
-                              invoiceid: data.fields.ID || '',
-                              transid: data.fields.ID || '',
-                              invoicedate: data.fields.SaleDate != '' ? moment(data.fields.SaleDate).format("DD/MM/YYYY") : data.fields.SaleDate,
-                              refno: data.fields.ReferenceNo || '',
-                              transtype: "Invoice" || '',
-                              amountdue: amountDue || 0,
-                              paymentamount: paymentAmt || 0,
-                              ouststandingamount: outstandingAmt,
-                              orginalamount: originalAmt,
-                              comments: data.fields.Comments || ''
-                          };
-                          lineItems.push(lineItemObj);
-                          let record = {
-                              lid: '',
-                              customerName: data.fields.CustomerName || '',
-                              paymentDate: begunDate,
-                              reference: data.fields.ReferenceNo || ' ',
-                              bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
-                              paymentAmount: appliedAmt || 0,
-                              notes: data.fields.Comments,
-                              LineItems: lineItems,
-                              checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
-                              department: Session.get('department') || data.fields.DeptClassName,
-                              applied: appliedAmt.toLocaleString(undefined, {
-                                  minimumFractionDigits: 2
-                              })
+                            let total = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let appliedAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            var currentDate = new Date();
+                            var begunDate = moment(currentDate).format("DD/MM/YYYY");
+                            let amountDue = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            // Currency+''+data.fields.TotalBalance.toLocaleString(undefined, {minimumFractionDigits: 2});
+                            let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                            });
+                            // Currency+''+data.fields.TotalAmountInc.toLocaleString(undefined, {minimumFractionDigits: 2});
+                            lineItemObj = {
+                                id: data.fields.ID || '',
+                                invoiceid: data.fields.ID || '',
+                                transid: data.fields.ID || '',
+                                invoicedate: data.fields.SaleDate != '' ? moment(data.fields.SaleDate).format("DD/MM/YYYY") : data.fields.SaleDate,
+                                refno: data.fields.ReferenceNo || '',
+                                transtype: "Invoice" || '',
+                                amountdue: amountDue || 0,
+                                paymentamount: paymentAmt || 0,
+                                ouststandingamount: outstandingAmt,
+                                orginalamount: originalAmt,
+                                comments: data.fields.Comments || ''
+                            };
+                            lineItems.push(lineItemObj);
+                            let record = {
+                                lid: '',
+                                customerName: data.fields.CustomerName || '',
+                                paymentDate: begunDate,
+                                reference: data.fields.ReferenceNo || ' ',
+                                bankAccount: Session.get('bankaccount') || data.fields.GLAccountName || '',
+                                paymentAmount: appliedAmt || 0,
+                                notes: data.fields.Comments,
+                                LineItems: lineItems,
+                                checkpayment: Session.get('paymentmethod') || data.fields.PayMethod,
+                                department: Session.get('department') || data.fields.DeptClassName,
+                                applied: appliedAmt.toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                })
 
-                          };
+                            };
 
-                          let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
-                          $('#sltPaymentMethod').val(getPaymentMethodVal);
+                            let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
+                            $('#sltPaymentMethod').val(getPaymentMethodVal);
 
-                          let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
-                          templateObject.record.set(record);
-                          $('#edtCustomerName').val(data.fields.CustomerName);
-                          $('#sltDept').val(getDepartmentVal);
-                          let bankAccountData = Session.get('bankaccount')||'Bank';
-                          $('#edtSelectBankAccountName').val(bankAccountData);
-                          templateObject.getLastPaymentData();
-                          if (clientList) {
-                              for (var i = 0; i < clientList.length; i++) {
-                                  if (clientList[i].customername == data.fields.CustomerName) {
-                                      $('#edtCustomerEmail').val(clientList[i].customeremail);
-                                      $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
-                                      let postalAddress = clientList[i].customername + '\n' + clientList[i].street + '\n' + clientList[i].street2 + '\n' + clientList[i].street3 + '\n' + clientList[i].suburb + '\n' + clientList[i].statecode + '\n' + clientList[i].country;
-                                      $('#txabillingAddress').val(postalAddress);
-                                  }
-                              }
-                          }
-                          Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
-                              if (error) {
+                            let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
+                            templateObject.record.set(record);
+                            $('#edtCustomerName').val(data.fields.CustomerName);
+                            $('#sltDept').val(getDepartmentVal);
+                            let bankAccountData = Session.get('bankaccount') || 'Bank';
+                            $('#edtSelectBankAccountName').val(bankAccountData);
+                            templateObject.getLastPaymentData();
+                            if (clientList) {
+                                for (var i = 0; i < clientList.length; i++) {
+                                    if (clientList[i].customername == data.fields.CustomerName) {
+                                        $('#edtCustomerEmail').val(clientList[i].customeremail);
+                                        $('#edtCustomerEmail').attr('customerid', clientList[i].customerid);
+                                        let postalAddress = clientList[i].customername + '\n' + clientList[i].street + '\n' + clientList[i].street2 + '\n' + clientList[i].street3 + '\n' + clientList[i].suburb + '\n' + clientList[i].statecode + '\n' + clientList[i].country;
+                                        $('#txabillingAddress').val(postalAddress);
+                                    }
+                                }
+                            }
+                            Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPaymentcard', function(error, result) {
+                                if (error) {
 
-                                  //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
-                              } else {
-                                  if (result) {
-                                      for (let i = 0; i < result.customFields.length; i++) {
-                                          let customcolumn = result.customFields;
-                                          let columData = customcolumn[i].label;
-                                          let columHeaderUpdate = customcolumn[i].thclass;
-                                          let hiddenColumn = customcolumn[i].hidden;
-                                          let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
-                                          let columnWidth = customcolumn[i].width;
+                                    //Bert.alert('<strong>Error:</strong> user-not-found, no user found please try again!', 'danger');
+                                } else {
+                                    if (result) {
+                                        for (let i = 0; i < result.customFields.length; i++) {
+                                            let customcolumn = result.customFields;
+                                            let columData = customcolumn[i].label;
+                                            let columHeaderUpdate = customcolumn[i].thclass;
+                                            let hiddenColumn = customcolumn[i].hidden;
+                                            let columnClass = columHeaderUpdate.substring(columHeaderUpdate.indexOf(".") + 1);
+                                            let columnWidth = customcolumn[i].width;
 
-                                          $("" + columHeaderUpdate + "").html(columData);
-                                          if (columnWidth != 0) {
-                                              $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
-                                          }
+                                            $("" + columHeaderUpdate + "").html(columData);
+                                            if (columnWidth != 0) {
+                                                $("" + columHeaderUpdate + "").css('width', columnWidth + '%');
+                                            }
 
-                                          if (hiddenColumn == true) {
-                                              $("." + columnClass + "").addClass('hiddenColumn');
-                                              $("." + columnClass + "").removeClass('showColumn');
-                                              $(".chk" + columnClass + "").removeAttr('checked');
-                                          } else if (hiddenColumn == false) {
-                                              $("." + columnClass + "").removeClass('hiddenColumn');
-                                              $("." + columnClass + "").addClass('showColumn');
-                                              $(".chk" + columnClass + "").attr('checked', 'checked');
-                                          }
+                                            if (hiddenColumn == true) {
+                                                $("." + columnClass + "").addClass('hiddenColumn');
+                                                $("." + columnClass + "").removeClass('showColumn');
+                                                $(".chk" + columnClass + "").removeAttr('checked');
+                                            } else if (hiddenColumn == false) {
+                                                $("." + columnClass + "").removeClass('hiddenColumn');
+                                                $("." + columnClass + "").addClass('showColumn');
+                                                $(".chk" + columnClass + "").attr('checked', 'checked');
+                                            }
 
-                                      }
-                                  }
+                                        }
+                                    }
 
-                              }
-                          });
-                          $('.fullScreenSpin').css('display', 'none');
-                      });
+                                }
+                            });
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
                     }
                 }
             }).catch(function(err) {
@@ -3133,7 +3143,7 @@ Template.paymentcard.onRendered(() => {
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
                     $('#sltDept').val(getDepartmentVal);
-                    let bankAccountData = Session.get('bankaccount')||'Bank';
+                    let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
@@ -3286,7 +3296,7 @@ Template.paymentcard.onRendered(() => {
                 let getPaymentMethodVal = Session.get('paymentmethod') || checkpayment || 'Cash';
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
                 $('#edtCustomerName').val(companyName);
-                let bankAccountData = Session.get('bankaccount')|| accountName||'Bank';
+                let bankAccountData = Session.get('bankaccount') || accountName || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
 
                 templateObject.record.set(record);
@@ -3464,7 +3474,7 @@ Template.paymentcard.onRendered(() => {
                 $('#sltPaymentMethod').val(getPaymentMethodVal);
 
                 $('#sltDept').val(getDepartmentVal);
-                let bankAccountData = Session.get('bankaccount')||'Bank';
+                let bankAccountData = Session.get('bankaccount') || 'Bank';
                 $('#edtSelectBankAccountName').val(bankAccountData);
                 if (clientList) {
                     for (var i = 0; i < clientList.length; i++) {
@@ -3594,7 +3604,7 @@ Template.paymentcard.onRendered(() => {
 
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     $('#sltDept').val(getDepartmentVal);
-                    let bankAccountData = Session.get('bankaccount')||'Bank';
+                    let bankAccountData = Session.get('bankaccount') || 'Bank';
                     $('#edtSelectBankAccountName').val(bankAccountData);
                     if (clientList) {
                         for (var i = 0; i < clientList.length; i++) {
@@ -3694,7 +3704,7 @@ Template.paymentcard.onRendered(() => {
         let paymentrecord = {
             id: '',
             lid: '',
-            bankAccount: Session.get('bankaccount') ||'Bank',
+            bankAccount: Session.get('bankaccount') || 'Bank',
             checkpayment: Session.get('paymentmethod') || '',
             department: Session.get('department') || '',
             accountname: '',
@@ -3724,7 +3734,7 @@ Template.paymentcard.onRendered(() => {
             termsName: '',
             Total: Currency + '' + 0.00,
             LineItems: lineItems,
-            isReconciled:false,
+            isReconciled: false,
             TotalTax: Currency + '' + 0.00,
             SubTotal: Currency + '' + 0.00,
             applied: Currency + '' + 0.00,
@@ -3742,17 +3752,17 @@ Template.paymentcard.onRendered(() => {
         $('#edtSelectBankAccountName').removeAttr('disabled');
         $('#edtSelectBankAccountName').attr('readonly', false);
         $('#edtSelectBankAccountName').attr('readonly', false);
-        setTimeout(function(){
-            if(localStorage.getItem('check_acc')){
-              $('#sltBankAccountName').val(localStorage.getItem('check_acc'));
-            }else{
-              // $('#sltBankAccountName').val('Bank');
+        setTimeout(function() {
+            if (localStorage.getItem('check_acc')) {
+                $('#sltBankAccountName').val(localStorage.getItem('check_acc'));
+            } else {
+                // $('#sltBankAccountName').val('Bank');
             }
 
             // setTimeout(function () {
             //     $('#edtCustomerName').trigger("click");
             // }, 500);
-        },500);
+        }, 500);
 
         $("#form :input").prop("disabled", false);
         templateObject.record.set(paymentrecord);
@@ -3761,7 +3771,7 @@ Template.paymentcard.onRendered(() => {
         let getPaymentMethodVal = Session.get('paymentmethod') || '';
         $('#sltPaymentMethod').val(getPaymentMethodVal);
         $('#sltDept').val(getDepartmentVal);
-        let bankAccountData = Session.get('bankaccount')||'Bank';
+        let bankAccountData = Session.get('bankaccount') || 'Bank';
         $('#edtSelectBankAccountName').val(bankAccountData);
         templateObject.getLastPaymentData();
 
@@ -3811,53 +3821,53 @@ Template.paymentcard.onRendered(() => {
     $(document).ready(function() {
         $('#edtSelectBankAccountName').editableSelect();
         $('#addRow').on('click', function() {
-          let custname = $('#edtCustomerName').val()||'';
-          if (custname === '') {
-              swal('Customer has not been selected!', '', 'warning');
-              e.preventDefault();
-        } else {
-            $(".chkBox").prop("checked", false);
-            let paymentList = [''];
-            $('.tblPaymentcard tbody tr').each(function() {
-                paymentList.push(this.id);
+            let custname = $('#edtCustomerName').val() || '';
+            if (custname === '') {
+                swal('Customer has not been selected!', '', 'warning');
+                e.preventDefault();
+            } else {
+                $(".chkBox").prop("checked", false);
+                let paymentList = [''];
+                $('.tblPaymentcard tbody tr').each(function() {
+                    paymentList.push(this.id);
 
-            });
+                });
 
-            setTimeout(function() {
-              $('.fullScreenSpin').css('display', 'inline-block');
-                templateObject.getAllCustomerPaymentData(custname);
-            }, 500);
+                setTimeout(function() {
+                    $('.fullScreenSpin').css('display', 'inline-block');
+                    templateObject.getAllCustomerPaymentData(custname);
+                }, 500);
 
-            let geturl = location.href;
-            let id = 0;
-            if (geturl.indexOf('?invid') > 0 || geturl.indexOf('?selectcust')) {
-                geturl = new URL(geturl);
-                id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
+                let geturl = location.href;
+                let id = 0;
+                if (geturl.indexOf('?invid') > 0 || geturl.indexOf('?selectcust')) {
+                    geturl = new URL(geturl);
+                    id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
+                }
+                let $tblrows = $("#tblPaymentcard tbody tr");
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let paymentData = templateObject.datatablerecords1.get();
+                let paymentDataList = [];
+                if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+                    for (let x = 0; x < paymentData.length; x++) {
+                        let found = paymentList.some(emp => emp == paymentData[x].id);
+                        if (custname == paymentData[x].customername && found == false) {
+                            paymentDataList.push(paymentData[x]);
+                        }
+                    }
+                } else {
+                    for (let x = 0; x < paymentData.length; x++) {
+                        let found = paymentList.some(emp => emp == paymentData[x].id);
+                        if (custname == paymentData[x].customername && id.includes(paymentData[x].id) == false && found == false) {
+                            paymentDataList.push(paymentData[x]);
+                        }
+                    }
+                }
+
+                $('.dataTables_info').hide();
+                templateObject.datatablerecords.set(paymentDataList);
+                $('#customerPaymentListModal').modal();
             }
-            let $tblrows = $("#tblPaymentcard tbody tr");
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let paymentData = templateObject.datatablerecords1.get();
-            let paymentDataList = [];
-            if(jQuery.isEmptyObject( FlowRouter.current().queryParams) == true){
-              for (let x = 0; x < paymentData.length; x++) {
-                  let found = paymentList.some(emp => emp == paymentData[x].id);
-                  if (custname == paymentData[x].customername && found == false) {
-                      paymentDataList.push(paymentData[x]);
-                  }
-              }
-            }else{
-              for (let x = 0; x < paymentData.length; x++) {
-                  let found = paymentList.some(emp => emp == paymentData[x].id);
-                  if (custname == paymentData[x].customername && id.includes(paymentData[x].id) == false && found == false) {
-                      paymentDataList.push(paymentData[x]);
-                  }
-              }
-            }
-
-            $('.dataTables_info').hide();
-            templateObject.datatablerecords.set(paymentDataList);
-            $('#customerPaymentListModal').modal();
-          }
             $('.fullScreenSpin').css('display', 'none');
         })
 
@@ -5692,16 +5702,16 @@ Template.paymentcard.events({
             let checkData = [];
             var currentSalesID = getsale_id[getsale_id.length - 1];
             checkData = Session.get('customerpayments') || [];
-            if(checkData.length > 0){
-            let getPayments = JSON.parse(Session.get('customerpayments') || []);
-            if(getPayments.length > 0) {
-                allData = getPayments;
+            if (checkData.length > 0) {
+                let getPayments = JSON.parse(Session.get('customerpayments') || []);
+                if (getPayments.length > 0) {
+                    allData = getPayments;
+                } else {
+                    allData = [];
+                }
             } else {
                 allData = [];
             }
-        } else {
-            allData = [];
-        }
             if (getsale_id[1]) {
                 // currentSalesID = parseInt(currentSalesID);
                 $('.tblPaymentcard > tbody > tr').each(function() {
@@ -5749,7 +5759,7 @@ Template.paymentcard.events({
 
                     paymentService.saveDepositData(objDetails).then(function(data) {
                         var customerID = $('#edtCustomerEmail').attr('customerid');
-                        if(allData.length > 0) {
+                        if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
                             Session.setPersistent('customerpayments', JSON.stringify(allData));
@@ -5852,10 +5862,10 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            window.open(url,'_self');
+                                            window.open(url, '_self');
 
                                         } else {
-                                            window.open(url,'_self');
+                                            window.open(url, '_self');
                                         }
                                     });
 
@@ -5879,9 +5889,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 }
                                             });
 
@@ -5911,9 +5921,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 }
                                             });
 
@@ -5931,7 +5941,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            window.open(url,'_self');
+                                            window.open(url, '_self');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -5942,9 +5952,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                    window.open(url,'_self');
+                                                    window.open(url, '_self');
                                                 }
                                             });
 
@@ -5953,7 +5963,7 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
-                                  window.open(url,'_self');
+                                    window.open(url, '_self');
                                 };
                             };
 
@@ -5992,7 +6002,7 @@ Template.paymentcard.events({
                         // FlowRouter.go('/paymentoverview?success=true');
                     }).catch(function(err) {
                         // FlowRouter.go('/paymentoverview?success=true');
-                        if(allData.length > 0) {
+                        if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
                             Session.setPersistent('customerpayments', JSON.stringify(allData));
@@ -6008,9 +6018,9 @@ Template.paymentcard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {
-                                window.open(newURL,'_self');
+                                window.open(newURL, '_self');
                             } else if (result.dismiss === 'cancel') {
-                                window.open(newURL,'_self');
+                                window.open(newURL, '_self');
                             }
                         });
                         $('.fullScreenSpin').css('display', 'none');
@@ -6038,7 +6048,7 @@ Template.paymentcard.events({
                     };
 
                     paymentService.saveDepositData(objDetails).then(function(data) {
-                      if(allData.length > 0) {
+                        if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
                             Session.setPersistent('customerpayments', JSON.stringify(allData));
@@ -6141,10 +6151,10 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            window.open(newURL,'_self');
+                                            window.open(newURL, '_self');
 
                                         } else {
-                                             window.open(newURL,'_self');
+                                            window.open(newURL, '_self');
                                         }
                                     });
 
@@ -6157,7 +6167,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                             window.open(newURL,'_self');
+                                            window.open(newURL, '_self');
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
                                             swal({
@@ -6168,9 +6178,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 }
                                             });
 
@@ -6188,7 +6198,7 @@ Template.paymentcard.events({
                                         attachments: attachment
                                     }, function(error, result) {
                                         if (error && error.error === "error") {
-                                            window.open(url,'_self');
+                                            window.open(url, '_self');
 
                                         } else {
                                             $('#html-2-pdfwrapper').css('display', 'none');
@@ -6200,9 +6210,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 }
                                             });
 
@@ -6231,9 +6241,9 @@ Template.paymentcard.events({
                                                 confirmButtonText: 'OK'
                                             }).then((result) => {
                                                 if (result.value) {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 } else if (result.dismiss === 'cancel') {
-                                                     window.open(newURL,'_self');
+                                                    window.open(newURL, '_self');
                                                 }
                                             });
 
@@ -6242,7 +6252,7 @@ Template.paymentcard.events({
                                     });
 
                                 } else {
-                                     window.open(newURL,'_self');
+                                    window.open(newURL, '_self');
                                 };
                             };
 
@@ -6281,7 +6291,7 @@ Template.paymentcard.events({
                         // FlowRouter.go('/paymentoverview?success=true');
                     }).catch(function(err) {
                         // FlowRouter.go('/paymentoverview?success=true');
-                      if(allData.length > 0) {
+                        if (allData.length > 0) {
                             newURL = '/paymentcard?selectcust=' + allData[0].selectCust;
                             allData.shift();
                             Session.setPersistent('customerpayments', JSON.stringify(allData));
@@ -6297,9 +6307,9 @@ Template.paymentcard.events({
                             confirmButtonText: 'Try Again'
                         }).then((result) => {
                             if (result.value) {
-                                window.open(newURL,'_self');
+                                window.open(newURL, '_self');
                             } else if (result.dismiss === 'cancel') {
-                                window.open(newURL,'_self');
+                                window.open(newURL, '_self');
                             }
                         });
                         $('.fullScreenSpin').css('display', 'none');
@@ -6307,30 +6317,30 @@ Template.paymentcard.events({
                 }
 
             }
-        }else{
+        } else {
 
-              $('.tblPaymentcard > tbody > tr').each(function() {
+            $('.tblPaymentcard > tbody > tr').each(function() {
                 if ($(this).closest('tr').find('.colType').text() != '') {
-                  var lineID = this.id;
-                  let linetype = $('#' + lineID + " .colType").text() || $(this).closest('tr').find('.colType').text()||'';
-                  let lineAmountDue = $('#' + lineID + " .lineAmountdue").text() || $(this).closest('tr').find('.lineAmountdue').text();
-                  let linePaymentAmt = $('#' + lineID + " .linePaymentamount").val() || $(this).closest('tr').find('.linePaymentamount').val();
-                  let Line = {
-                      type: 'TGuiCustPaymentLines',
-                      fields: {
-                          TransType: linetype,
-                          TransID: lineID,
-                          Paid: true,
-                          Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
-                      }
-                  };
-                  paymentData.push(Line);
-                  }
-              });
+                    var lineID = this.id;
+                    let linetype = $('#' + lineID + " .colType").text() || $(this).closest('tr').find('.colType').text() || '';
+                    let lineAmountDue = $('#' + lineID + " .lineAmountdue").text() || $(this).closest('tr').find('.lineAmountdue').text();
+                    let linePaymentAmt = $('#' + lineID + " .linePaymentamount").val() || $(this).closest('tr').find('.linePaymentamount').val();
+                    let Line = {
+                        type: 'TGuiCustPaymentLines',
+                        fields: {
+                            TransType: linetype,
+                            TransID: lineID,
+                            Paid: true,
+                            Payment: parseFloat(linePaymentAmt.replace(/[^0-9.-]+/g, "")) || 0,
+                        }
+                    };
+                    paymentData.push(Line);
+                }
+            });
 
-              let objDetails = {
-                  type: "TCustPayments",
-                  fields: {
+            let objDetails = {
+                type: "TCustPayments",
+                fields: {
                     AccountName: bankAccount,
                     ClientPrintName: customer,
                     CompanyName: customer,
@@ -6342,249 +6352,249 @@ Template.paymentcard.events({
                     PaymentDate: paymentDate,
                     PayMethodName: payMethod,
                     ReferenceNo: reference
-                  }
-              };
+                }
+            };
 
-              paymentService.saveDepositData(objDetails).then(function(data) {
-                  var customerID = $('#edtCustomerEmail').attr('customerid');
-                  // Send Email
-                  $('#html-2-pdfwrapper').css('display', 'block');
-                  $('.pdfCustomerName').html($('#edtCustomerName').val());
-                  $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                  async function addAttachment() {
-                      let attachment = [];
-                      let templateObject = Template.instance();
+            paymentService.saveDepositData(objDetails).then(function(data) {
+                var customerID = $('#edtCustomerEmail').attr('customerid');
+                // Send Email
+                $('#html-2-pdfwrapper').css('display', 'block');
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                async function addAttachment() {
+                    let attachment = [];
+                    let templateObject = Template.instance();
 
-                      let invoiceId = objDetails.fields.ID;
-                      let encodedPdf = await generatePdfForMail(invoiceId);
-                      let pdfObject = "";
-                      var reader = new FileReader();
-                      reader.readAsDataURL(encodedPdf);
-                      reader.onloadend = function() {
-                          var base64data = reader.result;
-                          base64data = base64data.split(',')[1];
+                    let invoiceId = objDetails.fields.ID;
+                    let encodedPdf = await generatePdfForMail(invoiceId);
+                    let pdfObject = "";
+                    var reader = new FileReader();
+                    reader.readAsDataURL(encodedPdf);
+                    reader.onloadend = function() {
+                        var base64data = reader.result;
+                        base64data = base64data.split(',')[1];
 
-                          pdfObject = {
-                              filename: 'Customer Payment ' + invoiceId + '.pdf',
-                              content: base64data,
-                              encoding: 'base64'
-                          };
-                          attachment.push(pdfObject);
-                          // let mailBody = "VS1 Cloud Test";
-                          let erpInvoiceId = objDetails.fields.ID;
+                        pdfObject = {
+                            filename: 'Customer Payment ' + invoiceId + '.pdf',
+                            content: base64data,
+                            encoding: 'base64'
+                        };
+                        attachment.push(pdfObject);
+                        // let mailBody = "VS1 Cloud Test";
+                        let erpInvoiceId = objDetails.fields.ID;
 
-                          let mailFromName = Session.get('vs1companyName');
-                          let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                          let customerEmailName = $('#edtCustomerName').val();
-                          let checkEmailData = $('#edtCustomerEmail').val();
-                          // let mailCC = templateObject.mailCopyToUsr.get();
-                          let grandtotal = $('#grandTotal').html();
-                          let amountDueEmail = $('#totalBalanceDue').html();
-                          let emailDueDate = $("#dtDueDate").val();
-                          let mailSubject = 'Payment ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                          let mailBody = "Hi " + customerEmailName + ",\n\n Here's payment " + erpInvoiceId + " for  " + grandtotal + "." +
-                              // "\n\nThe amount outstanding of "+amountDueEmail+" is due on "+emailDueDate+"." +
-                              "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+                        let mailFromName = Session.get('vs1companyName');
+                        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+                        let customerEmailName = $('#edtCustomerName').val();
+                        let checkEmailData = $('#edtCustomerEmail').val();
+                        // let mailCC = templateObject.mailCopyToUsr.get();
+                        let grandtotal = $('#grandTotal').html();
+                        let amountDueEmail = $('#totalBalanceDue').html();
+                        let emailDueDate = $("#dtDueDate").val();
+                        let mailSubject = 'Payment ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+                        let mailBody = "Hi " + customerEmailName + ",\n\n Here's payment " + erpInvoiceId + " for  " + grandtotal + "." +
+                            // "\n\nThe amount outstanding of "+amountDueEmail+" is due on "+emailDueDate+"." +
+                            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
 
-                          var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
-                              '    <tr>' +
-                              '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
-                              '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
-                              '        </td>' +
-                              '    </tr>' +
-                              '    <tr>' +
-                              '        <td style="padding: 40px 30px 40px 30px;">' +
-                              '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                              '                <tr>' +
-                              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
-                              '                        Hello there <span>' + customerEmailName + '</span>,' +
-                              '                    </td>' +
-                              '                </tr>' +
-                              '                <tr>' +
-                              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                              '                        Please find payment <span>' + erpInvoiceId + '</span> attached below.' +
-                              '                    </td>' +
-                              '                </tr>' +
-                              '                <tr>' +
-                              '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
-                              '                        Kind regards,' +
-                              '                        <br>' +
-                              '                        ' + mailFromName + '' +
-                              '                    </td>' +
-                              '                </tr>' +
-                              '            </table>' +
-                              '        </td>' +
-                              '    </tr>' +
-                              '    <tr>' +
-                              '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
-                              '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                              '                <tr>' +
-                              '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
-                              '                        If you have any question, please do not hesitate to contact us.' +
-                              '                    </td>' +
-                              '                    <td align="right">' +
-                              '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
-                              '                    </td>' +
-                              '                </tr>' +
-                              '            </table>' +
-                              '        </td>' +
-                              '    </tr>' +
-                              '</table>';
+                        var htmlmailBody = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+                            '    <tr>' +
+                            '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+                            '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+                            '        </td>' +
+                            '    </tr>' +
+                            '    <tr>' +
+                            '        <td style="padding: 40px 30px 40px 30px;">' +
+                            '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                            '                <tr>' +
+                            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+                            '                        Hello there <span>' + customerEmailName + '</span>,' +
+                            '                    </td>' +
+                            '                </tr>' +
+                            '                <tr>' +
+                            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+                            '                        Please find payment <span>' + erpInvoiceId + '</span> attached below.' +
+                            '                    </td>' +
+                            '                </tr>' +
+                            '                <tr>' +
+                            '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+                            '                        Kind regards,' +
+                            '                        <br>' +
+                            '                        ' + mailFromName + '' +
+                            '                    </td>' +
+                            '                </tr>' +
+                            '            </table>' +
+                            '        </td>' +
+                            '    </tr>' +
+                            '    <tr>' +
+                            '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+                            '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+                            '                <tr>' +
+                            '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+                            '                        If you have any question, please do not hesitate to contact us.' +
+                            '                    </td>' +
+                            '                    <td align="right">' +
+                            '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' + mailFrom + '">Contact Us</a>' +
+                            '                    </td>' +
+                            '                </tr>' +
+                            '            </table>' +
+                            '        </td>' +
+                            '    </tr>' +
+                            '</table>';
 
-                          if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                              Meteor.call('sendEmail', {
-                                  from: "" + mailFromName + " <" + mailFrom + ">",
-                                  to: checkEmailData,
-                                  subject: mailSubject,
-                                  text: '',
-                                  html: htmlmailBody,
-                                  attachments: attachment
-                              }, function(error, result) {
-                                  if (error && error.error === "error") {
-                                      FlowRouter.go('/paymentoverview?success=true');
+                        if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: checkEmailData,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/paymentoverview?success=true');
 
-                                  } else {}
-                              });
+                                } else {}
+                            });
 
-                              Meteor.call('sendEmail', {
-                                  from: "" + mailFromName + " <" + mailFrom + ">",
-                                  to: mailFrom,
-                                  subject: mailSubject,
-                                  text: '',
-                                  html: htmlmailBody,
-                                  attachments: attachment
-                              }, function(error, result) {
-                                  if (error && error.error === "error") {
-                                      FlowRouter.go('/paymentoverview?success=true');
-                                  } else {
-                                      $('#html-2-pdfwrapper').css('display', 'none');
-                                      swal({
-                                          title: 'SUCCESS',
-                                          text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                          type: 'success',
-                                          showCancelButton: false,
-                                          confirmButtonText: 'OK'
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              FlowRouter.go('/paymentoverview?success=true');
-                                          } else if (result.dismiss === 'cancel') {}
-                                      });
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: mailFrom,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/paymentoverview?success=true');
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            FlowRouter.go('/paymentoverview?success=true');
+                                        } else if (result.dismiss === 'cancel') {}
+                                    });
 
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  }
-                              });
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
 
-                          } else if (($('.chkEmailCopy').is(':checked'))) {
-                              Meteor.call('sendEmail', {
-                                  from: "" + mailFromName + " <" + mailFrom + ">",
-                                  to: checkEmailData,
-                                  subject: mailSubject,
-                                  text: '',
-                                  html: htmlmailBody,
-                                  attachments: attachment
-                              }, function(error, result) {
-                                  if (error && error.error === "error") {
-                                      FlowRouter.go('/paymentoverview?success=true');
+                        } else if (($('.chkEmailCopy').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: checkEmailData,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/paymentoverview?success=true');
 
-                                  } else {
-                                      $('#html-2-pdfwrapper').css('display', 'none');
-                                      swal({
-                                          title: 'SUCCESS',
-                                          text: "Email Sent To Customer: " + checkEmailData + " ",
-                                          type: 'success',
-                                          showCancelButton: false,
-                                          confirmButtonText: 'OK'
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              FlowRouter.go('/paymentoverview?success=true');
-                                          } else if (result.dismiss === 'cancel') {}
-                                      });
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To Customer: " + checkEmailData + " ",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            FlowRouter.go('/paymentoverview?success=true');
+                                        } else if (result.dismiss === 'cancel') {}
+                                    });
 
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  }
-                              });
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
 
-                          } else if (($('.chkEmailRep').is(':checked'))) {
-                              Meteor.call('sendEmail', {
-                                  from: "" + mailFromName + " <" + mailFrom + ">",
-                                  to: mailFrom,
-                                  subject: mailSubject,
-                                  text: '',
-                                  html: htmlmailBody,
-                                  attachments: attachment
-                              }, function(error, result) {
-                                  if (error && error.error === "error") {
-                                      FlowRouter.go('/paymentoverview?success=true');
-                                  } else {
-                                      $('#html-2-pdfwrapper').css('display', 'none');
-                                      swal({
-                                          title: 'SUCCESS',
-                                          text: "Email Sent To User: " + mailFrom + " ",
-                                          type: 'success',
-                                          showCancelButton: false,
-                                          confirmButtonText: 'OK'
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              FlowRouter.go('/paymentoverview?success=true');
-                                          } else if (result.dismiss === 'cancel') {}
-                                      });
+                        } else if (($('.chkEmailRep').is(':checked'))) {
+                            Meteor.call('sendEmail', {
+                                from: "" + mailFromName + " <" + mailFrom + ">",
+                                to: mailFrom,
+                                subject: mailSubject,
+                                text: '',
+                                html: htmlmailBody,
+                                attachments: attachment
+                            }, function(error, result) {
+                                if (error && error.error === "error") {
+                                    FlowRouter.go('/paymentoverview?success=true');
+                                } else {
+                                    $('#html-2-pdfwrapper').css('display', 'none');
+                                    swal({
+                                        title: 'SUCCESS',
+                                        text: "Email Sent To User: " + mailFrom + " ",
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            FlowRouter.go('/paymentoverview?success=true');
+                                        } else if (result.dismiss === 'cancel') {}
+                                    });
 
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  }
-                              });
+                                    $('.fullScreenSpin').css('display', 'none');
+                                }
+                            });
 
-                          } else {
-                              FlowRouter.go('/paymentoverview?success=true');
-                          };
-                      };
+                        } else {
+                            FlowRouter.go('/paymentoverview?success=true');
+                        };
+                    };
 
-                  }
-                  addAttachment();
+                }
+                addAttachment();
 
-                  function generatePdfForMail(invoiceId) {
-                      return new Promise((resolve, reject) => {
-                          let templateObject = Template.instance();
-                          // let data = templateObject.singleInvoiceData.get();
-                          let completeTabRecord;
-                          let doc = new jsPDF('p', 'pt', 'a4');
-                          doc.setFontSize(18);
-                          var source = document.getElementById('html-2-pdfwrapper');
-                          doc.addHTML(source, function() {
-                              //pdf.save('Invoice.pdf');
-                              resolve(doc.output('blob'));
-                              // $('#html-2-pdfwrapper').css('display','none');
-                          });
-                      });
-                  }
-                  // End Send Email
-                  if (customerID !== " ") {
-                      let customerEmailData = {
-                          type: "TCustomer",
-                          fields: {
-                              ID: customerID,
-                              Email: customerEmail
-                          }
-                      }
-                      // paymentService.saveCustomerEmail(customerEmailData).then(function (customerEmailData) {
-                      //
-                      // });
-                  };
-                  $('.fullScreenSpin').css('display', 'none');
-                  // window.open('/salesorderslist','_self');
-              }).catch(function(err) {
-                  swal({
-                      title: 'Oooops...',
-                      text: err,
-                      type: 'error',
-                      showCancelButton: false,
-                      confirmButtonText: 'Try Again'
-                  }).then((result) => {
-                      if (result.value) {
-                          //Meteor._reload.reload();
-                      } else if (result.dismiss === 'cancel') {}
-                  });
-                  $('.fullScreenSpin').css('display', 'none');
-              });
+                function generatePdfForMail(invoiceId) {
+                    return new Promise((resolve, reject) => {
+                        let templateObject = Template.instance();
+                        // let data = templateObject.singleInvoiceData.get();
+                        let completeTabRecord;
+                        let doc = new jsPDF('p', 'pt', 'a4');
+                        doc.setFontSize(18);
+                        var source = document.getElementById('html-2-pdfwrapper');
+                        doc.addHTML(source, function() {
+                            //pdf.save('Invoice.pdf');
+                            resolve(doc.output('blob'));
+                            // $('#html-2-pdfwrapper').css('display','none');
+                        });
+                    });
+                }
+                // End Send Email
+                if (customerID !== " ") {
+                    let customerEmailData = {
+                        type: "TCustomer",
+                        fields: {
+                            ID: customerID,
+                            Email: customerEmail
+                        }
+                    }
+                    // paymentService.saveCustomerEmail(customerEmailData).then(function (customerEmailData) {
+                    //
+                    // });
+                };
+                $('.fullScreenSpin').css('display', 'none');
+                // window.open('/salesorderslist','_self');
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                        //Meteor._reload.reload();
+                    } else if (result.dismiss === 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
 
 
         }
@@ -6597,53 +6607,53 @@ Template.paymentcard.events({
         // }
     },
     'click #tblPaymentcard tr .colTransNo': function(event) {
-      let custname = $('#edtCustomerName').val()||'';
-      if (custname === '') {
-          swal('Customer has not been selected!', '', 'warning');
-          e.preventDefault();
-    } else {
-    if($('#addRow').prop('disabled') == false) {
-        let templateObject = Template.instance();
-        $(".chkBox").prop("checked", false);
-        let paymentList = [''];
-        $('.tblPaymentcard tbody tr').each(function() {
-            paymentList.push(this.id);
+        let custname = $('#edtCustomerName').val() || '';
+        if (custname === '') {
+            swal('Customer has not been selected!', '', 'warning');
+            e.preventDefault();
+        } else {
+            if ($('#addRow').prop('disabled') == false) {
+                let templateObject = Template.instance();
+                $(".chkBox").prop("checked", false);
+                let paymentList = [''];
+                $('.tblPaymentcard tbody tr').each(function() {
+                    paymentList.push(this.id);
 
-        })
+                })
 
-        let geturl = location.href;
-        let id = 0;
-        if (geturl.indexOf('?invid') > 0 || geturl.indexOf('?selectcust')) {
-            geturl = new URL(geturl);
-            id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
-        }
-        let $tblrows = $("#tblPaymentcard tbody tr");
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let paymentData = templateObject.datatablerecords1.get();
+                let geturl = location.href;
+                let id = 0;
+                if (geturl.indexOf('?invid') > 0 || geturl.indexOf('?selectcust')) {
+                    geturl = new URL(geturl);
+                    id = geturl.searchParams.get("invid") || geturl.searchParams.get("selectcust");
+                }
+                let $tblrows = $("#tblPaymentcard tbody tr");
+                $('.fullScreenSpin').css('display', 'inline-block');
+                let paymentData = templateObject.datatablerecords1.get();
 
-        let paymentDataList = [];
-        if(jQuery.isEmptyObject( FlowRouter.current().queryParams) == true){
-          for (let x = 0; x < paymentData.length; x++) {
-              let found = paymentList.some(emp => emp == paymentData[x].id);
-              if (custname == paymentData[x].customername && found == false) {
-                  paymentDataList.push(paymentData[x]);
-              }
-          }
+                let paymentDataList = [];
+                if (jQuery.isEmptyObject(FlowRouter.current().queryParams) == true) {
+                    for (let x = 0; x < paymentData.length; x++) {
+                        let found = paymentList.some(emp => emp == paymentData[x].id);
+                        if (custname == paymentData[x].customername && found == false) {
+                            paymentDataList.push(paymentData[x]);
+                        }
+                    }
 
-      }else{
-        for (let x = 0; x < paymentData.length; x++) {
-            let found = paymentList.some(emp => emp == paymentData[x].id);
-            if (custname == paymentData[x].customername && id.includes(paymentData[x].id) == false && found == false) {
-                paymentDataList.push(paymentData[x]);
+                } else {
+                    for (let x = 0; x < paymentData.length; x++) {
+                        let found = paymentList.some(emp => emp == paymentData[x].id);
+                        if (custname == paymentData[x].customername && id.includes(paymentData[x].id) == false && found == false) {
+                            paymentDataList.push(paymentData[x]);
+                        }
+                    }
+                }
+                $('.dataTables_info').hide();
+                templateObject.datatablerecords.set(paymentDataList);
+                $('#customerPaymentListModal').modal();
+                $('.fullScreenSpin').css('display', 'none');
             }
         }
-      }
-        $('.dataTables_info').hide();
-        templateObject.datatablerecords.set(paymentDataList);
-        $('#customerPaymentListModal').modal();
-        $('.fullScreenSpin').css('display', 'none');
-    }
-     }
     },
     'click .chkPaymentCard': function() {
         var listData = $(this).closest('tr').attr('id');
@@ -6694,7 +6704,7 @@ Template.paymentcard.events({
         });
         templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
     },
-    'click .chkBoxAll': function () {
+    'click .chkBoxAll': function() {
         var listData = $(this).closest('tr').attr('id');
         var selectedClient = $(event.target).closest("tr").find(".colCustomerName").text();
         const templateObject = Template.instance();
@@ -6703,90 +6713,90 @@ Template.paymentcard.events({
         const selectedAwaitingPayment3 = [];
         if ($(event.target).is(':checked')) {
             $(".chkBox").prop("checked", true);
-             $('.chkPaymentCard:checkbox:checked').each(function() {
-            //$('.parentClass:not(span)').method
-            var chkIdLine = $(this).closest('tr').attr('id');
-            var date = $(this).closest("tr").find('.colPaymentDate').text();
-            var receiptNo = $(this).closest("tr").find('.colReceiptNo').text();
-            var orderNo = $(this).closest("tr").find('.colPONumber').text();
-            var paymentAmount = $(this).closest("tr").find('.colPaymentAmount').text();
-            var originalAmount = $(this).closest("tr").find('.colApplied').text();
-            var outstandingAmount = $(this).closest("tr").find('.colBalance').text();
-            var supplierName = $(this).closest("tr").find('.colSupplierName').text();
-            var comments = $(this).closest("tr").find('.colNotes').text();
-            var type = $(this).closest("tr").find('.colTypePayment').text();
-            let paymentTransObj = {
-                awaitingId: chkIdLine,
-                date: date,
-                receiptNo: receiptNo,
-                orderNo: orderNo,
-                paymentAmount: outstandingAmount,
-                originalAmount: originalAmount,
-                outstandingAmount: outstandingAmount,
-                supplierName: supplierName,
-                comments: comments,
-                type: type
-            };
+            $('.chkPaymentCard:checkbox:checked').each(function() {
+                //$('.parentClass:not(span)').method
+                var chkIdLine = $(this).closest('tr').attr('id');
+                var date = $(this).closest("tr").find('.colPaymentDate').text();
+                var receiptNo = $(this).closest("tr").find('.colReceiptNo').text();
+                var orderNo = $(this).closest("tr").find('.colPONumber').text();
+                var paymentAmount = $(this).closest("tr").find('.colPaymentAmount').text();
+                var originalAmount = $(this).closest("tr").find('.colApplied').text();
+                var outstandingAmount = $(this).closest("tr").find('.colBalance').text();
+                var supplierName = $(this).closest("tr").find('.colSupplierName').text();
+                var comments = $(this).closest("tr").find('.colNotes').text();
+                var type = $(this).closest("tr").find('.colTypePayment').text();
+                let paymentTransObj = {
+                    awaitingId: chkIdLine,
+                    date: date,
+                    receiptNo: receiptNo,
+                    orderNo: orderNo,
+                    paymentAmount: outstandingAmount,
+                    originalAmount: originalAmount,
+                    outstandingAmount: outstandingAmount,
+                    supplierName: supplierName,
+                    comments: comments,
+                    type: type
+                };
 
-            if (selectedAwaitingPayment.length > 0) {
-                var checkClient = selectedAwaitingPayment.filter(slctdAwtngPyment => {
-                    return slctdAwtngPyment.supplierName == $('#colSupplierName' + chkIdLine).text();
-                });
+                if (selectedAwaitingPayment.length > 0) {
+                    var checkClient = selectedAwaitingPayment.filter(slctdAwtngPyment => {
+                        return slctdAwtngPyment.supplierName == $('#colSupplierName' + chkIdLine).text();
+                    });
 
-                if (checkClient.length > 0) {
-                    selectedAwaitingPayment.push(paymentTransObj);
+                    if (checkClient.length > 0) {
+                        selectedAwaitingPayment.push(paymentTransObj);
+                    } else {
+                        swal('', 'You have selected multiple Suppliers,  a separate payment will be created for each', 'info');
+                        $(this).prop("checked", false);
+                    }
                 } else {
-                    swal('', 'You have selected multiple Suppliers,  a separate payment will be created for each', 'info');
-                    $(this).prop("checked", false);
+                    selectedAwaitingPayment.push(paymentTransObj);
                 }
-            } else {
-                selectedAwaitingPayment.push(paymentTransObj);
-            }
-        });
-        templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
+            });
+            templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
         } else {
             $(".chkBox").prop("checked", false);
-             $('.chkPaymentCard:checkbox:checked').each(function() {
-            //$('.parentClass:not(span)').method
-            var chkIdLine = $(this).closest('tr').attr('id');
-            var date = $(this).closest("tr").find('.colPaymentDate').text();
-            var receiptNo = $(this).closest("tr").find('.colReceiptNo').text();
-            var orderNo = $(this).closest("tr").find('.colPONumber').text();
-            var paymentAmount = $(this).closest("tr").find('.colPaymentAmount').text();
-            var originalAmount = $(this).closest("tr").find('.colApplied').text();
-            var outstandingAmount = $(this).closest("tr").find('.colBalance').text();
-            var supplierName = $(this).closest("tr").find('.colSupplierName').text();
-            var comments = $(this).closest("tr").find('.colNotes').text();
-            var type = $(this).closest("tr").find('.colTypePayment').text();
-            let paymentTransObj = {
-                awaitingId: chkIdLine,
-                date: date,
-                receiptNo: receiptNo,
-                orderNo: orderNo,
-                paymentAmount: outstandingAmount,
-                originalAmount: originalAmount,
-                outstandingAmount: outstandingAmount,
-                supplierName: supplierName,
-                comments: comments,
-                type: type
-            };
+            $('.chkPaymentCard:checkbox:checked').each(function() {
+                //$('.parentClass:not(span)').method
+                var chkIdLine = $(this).closest('tr').attr('id');
+                var date = $(this).closest("tr").find('.colPaymentDate').text();
+                var receiptNo = $(this).closest("tr").find('.colReceiptNo').text();
+                var orderNo = $(this).closest("tr").find('.colPONumber').text();
+                var paymentAmount = $(this).closest("tr").find('.colPaymentAmount').text();
+                var originalAmount = $(this).closest("tr").find('.colApplied').text();
+                var outstandingAmount = $(this).closest("tr").find('.colBalance').text();
+                var supplierName = $(this).closest("tr").find('.colSupplierName').text();
+                var comments = $(this).closest("tr").find('.colNotes').text();
+                var type = $(this).closest("tr").find('.colTypePayment').text();
+                let paymentTransObj = {
+                    awaitingId: chkIdLine,
+                    date: date,
+                    receiptNo: receiptNo,
+                    orderNo: orderNo,
+                    paymentAmount: outstandingAmount,
+                    originalAmount: originalAmount,
+                    outstandingAmount: outstandingAmount,
+                    supplierName: supplierName,
+                    comments: comments,
+                    type: type
+                };
 
-            if (selectedAwaitingPayment.length > 0) {
-                var checkClient = selectedAwaitingPayment.filter(slctdAwtngPyment => {
-                    return slctdAwtngPyment.supplierName == $('#colSupplierName' + chkIdLine).text();
-                });
+                if (selectedAwaitingPayment.length > 0) {
+                    var checkClient = selectedAwaitingPayment.filter(slctdAwtngPyment => {
+                        return slctdAwtngPyment.supplierName == $('#colSupplierName' + chkIdLine).text();
+                    });
 
-                if (checkClient.length > 0) {
-                    selectedAwaitingPayment.push(paymentTransObj);
+                    if (checkClient.length > 0) {
+                        selectedAwaitingPayment.push(paymentTransObj);
+                    } else {
+                        swal('', 'You have selected multiple Suppliers,  a separate payment will be created for each', 'info');
+                        $(this).prop("checked", false);
+                    }
                 } else {
-                    swal('', 'You have selected multiple Suppliers,  a separate payment will be created for each', 'info');
-                    $(this).prop("checked", false);
+                    selectedAwaitingPayment.push(paymentTransObj);
                 }
-            } else {
-                selectedAwaitingPayment.push(paymentTransObj);
-            }
-        });
-        templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
+            });
+            templateObject.selectedAwaitingPayment.set(selectedAwaitingPayment);
         }
     },
     'click .btnSelectCustomers': function(event) {
@@ -6797,17 +6807,17 @@ Template.paymentcard.events({
             currentApplied = parseFloat(currentApplied.match(/-?(?:\d+(?:\.\d*)?|\.\d+)/)[0])
             let total = currentApplied;
             for (let x = 0; x < selectedSupplierPayments.length; x++) {
-                var rowData = '<tr class="dnd-moved" id="'+selectedSupplierPayments[x].awaitingId+'" name="'+selectedSupplierPayments[x].awaitingId+'">\n'+
-                              '	<td contenteditable="false" class="colTransDate">'+selectedSupplierPayments[x].date+'</td>\n'+
-                              '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">Invoice</td>\n'+
-                              '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">'+selectedSupplierPayments[x].awaitingId+'</td>\n'+
-                              '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">'+selectedSupplierPayments[x].originalAmount+'</td>\n'+
-                              '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">'+selectedSupplierPayments[x].outstandingAmount+'</td>\n'+
-                              '	<td><input class="linePaymentamount highlightInput" type="text" value="'+selectedSupplierPayments[x].paymentAmount+'"></td>\n'+
-                              '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">'+selectedSupplierPayments[x].paymentAmount+'</td>\n'+
-                              '	<td contenteditable="true" class="colComments">'+selectedSupplierPayments[x].comments+'</td>\n'+
-                              '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n'+
-                              '</tr>';
+                var rowData = '<tr class="dnd-moved" id="' + selectedSupplierPayments[x].awaitingId + '" name="' + selectedSupplierPayments[x].awaitingId + '">\n' +
+                    '	<td contenteditable="false" class="colTransDate">' + selectedSupplierPayments[x].date + '</td>\n' +
+                    '	<td contenteditable="false" class="colType" style="color:#00a3d3; cursor: pointer; white-space: nowrap;">Invoice</td>\n' +
+                    '	<td contenteditable="false" class="colTransNo" style="color:#00a3d3">' + selectedSupplierPayments[x].awaitingId + '</td>\n' +
+                    '	<td contenteditable="false" class="lineOrginalamount" style="text-align: right!important;">' + selectedSupplierPayments[x].originalAmount + '</td>\n' +
+                    '	<td contenteditable="false" class="lineAmountdue" style="text-align: right!important;">' + selectedSupplierPayments[x].outstandingAmount + '</td>\n' +
+                    '	<td><input class="linePaymentamount highlightInput" type="text" value="' + selectedSupplierPayments[x].paymentAmount + '"></td>\n' +
+                    '	<td contenteditable="false" class="lineOutstandingAmount" style="text-align: right!important;">' + selectedSupplierPayments[x].paymentAmount + '</td>\n' +
+                    '	<td contenteditable="true" class="colComments">' + selectedSupplierPayments[x].comments + '</td>\n' +
+                    '	<td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>\n' +
+                    '</tr>';
 
                 //$('#tblPaymentcard tbody>tr:last').clone(true);
                 // $(".colTransDate", rowData).text(selectedSupplierPayments[x].date);
@@ -6820,18 +6830,18 @@ Template.paymentcard.events({
                 // $(".colComments", rowData).text(selectedSupplierPayments[x].comments);
                 // rowData.attr('id', selectedSupplierPayments[x].awaitingId);
                 // rowData.attr('name', selectedSupplierPayments[x].awaitingId);
-                let checkCompareID = selectedSupplierPayments[x].awaitingId||'';
+                let checkCompareID = selectedSupplierPayments[x].awaitingId || '';
                 let isCheckedTrue = true;
                 $('.tblPaymentcard > tbody > tr').each(function() {
-                  var lineID = this.id;
-                  if(lineID == checkCompareID){
-                    isCheckedTrue = false;
-                  }
+                    var lineID = this.id;
+                    if (lineID == checkCompareID) {
+                        isCheckedTrue = false;
+                    }
                 });
-              if(isCheckedTrue){
-                $("#tblPaymentcard tbody").append(rowData);
-                total = total + parseFloat(selectedSupplierPayments[x].paymentAmount.replace(/[^0-9.-]+/g, "")) || 0;
-              }
+                if (isCheckedTrue) {
+                    $("#tblPaymentcard tbody").append(rowData);
+                    total = total + parseFloat(selectedSupplierPayments[x].paymentAmount.replace(/[^0-9.-]+/g, "")) || 0;
+                }
                 //$('.appliedAmount').text(Currency + total.toFixed(2));
             }
             $('.appliedAmount').text(utilityService.modifynegativeCurrencyFormat(total.toFixed(2)));
@@ -6868,21 +6878,21 @@ Template.paymentcard.events({
         $('#edtPaymentAmount').val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
     },
     'blur .linePaymentamount': function(event) {
-        let paymentAmt = $(event.target).val()||0;
+        let paymentAmt = $(event.target).val() || 0;
 
-        let oustandingAmt = $(event.target).closest('tr').find('.lineOutstandingAmount').text()||0;
+        let oustandingAmt = $(event.target).closest('tr').find('.lineOutstandingAmount').text() || 0;
         let formatedoustandingAmt = Number(oustandingAmt.replace(/[^0-9.-]+/g, "")) || 0;
 
         let formatedpaymentAmt = Number(paymentAmt.replace(/[^0-9.-]+/g, "")) || 0;
 
-        if(formatedpaymentAmt > 0){
-        if(formatedpaymentAmt > formatedoustandingAmt){
-          $(event.target).closest('tr').find('.lineOutstandingAmount').text(Currency + 0);
-        }else{
-          let getUpdateOustanding = formatedoustandingAmt - formatedpaymentAmt;
-          $(event.target).closest('tr').find('.lineOutstandingAmount').text(utilityService.modifynegativeCurrencyFormat(getUpdateOustanding));
+        if (formatedpaymentAmt > 0) {
+            if (formatedpaymentAmt > formatedoustandingAmt) {
+                $(event.target).closest('tr').find('.lineOutstandingAmount').text(Currency + 0);
+            } else {
+                let getUpdateOustanding = formatedoustandingAmt - formatedpaymentAmt;
+                $(event.target).closest('tr').find('.lineOutstandingAmount').text(utilityService.modifynegativeCurrencyFormat(getUpdateOustanding));
+            }
         }
-       }
 
         $(event.target).val(utilityService.modifynegativeCurrencyFormat(formatedpaymentAmt));
         let $tblrows = $("#tblPaymentcard tbody tr");
@@ -6914,16 +6924,16 @@ Template.paymentcard.events({
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         var clicktimes = 0;
-        var targetID = $(event.target).closest('tr').attr('id')||0; // table row ID
+        var targetID = $(event.target).closest('tr').attr('id') || 0; // table row ID
         $('#selectDeleteLineID').val(targetID);
 
         times++;
         if (times == 1) {
-          if(targetID == 0){
-            $(event.target).closest('tr').remove();
-          }else{
-              $('#deleteLineModal').modal('toggle');
-          }
+            if (targetID == 0) {
+                $(event.target).closest('tr').remove();
+            } else {
+                $('#deleteLineModal').modal('toggle');
+            }
 
         } else {
             if ($('#tblPaymentcard tbody>tr').length > 1) {
@@ -6940,11 +6950,11 @@ Template.paymentcard.events({
                 return false;
 
             } else {
-              if(targetID == 0){
-                $(event.target).closest('tr').remove();
-              }else{
-                  $('#deleteLineModal').modal('toggle');
-              }
+                if (targetID == 0) {
+                    $(event.target).closest('tr').remove();
+                } else {
+                    $('#deleteLineModal').modal('toggle');
+                }
             }
 
         }
@@ -6990,6 +7000,58 @@ Template.paymentcard.events({
 
         // $('#deleteLineModal').modal('toggle');
     },
+    'click .btnRecoverPayment': function(event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let paymentService = new PaymentsService();
+        var url = FlowRouter.current().path;
+        var getso_id = url.split('?id=');
+        var currentInvoice = getso_id[getso_id.length - 1];
+        var objDetails = '';
+        if (getso_id[1]) {
+            currentInvoice = parseInt(currentInvoice);
+            var objDetails = {
+                type: "TCustPayments",
+                fields: {
+                    ID: currentInvoice,
+                    Deleted: false
+                }
+            };
+            $('.fullScreenSpin').css('display', 'none');
+            swal({
+                title: 'Recover Payment',
+                text: 'Are you sure that you want to recover this payment?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Recover',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    paymentService.deleteDepositData(objDetails).then(function(objDetails) {
+                        $('.modal-backdrop').css('display', 'none');
+                        FlowRouter.go('/paymentoverview?success=true');
+                    }).catch(function(err) {
+                        swal({
+                            title: 'Oooops...',
+                            text: err,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                            if (result.value) {
+                                Meteor._reload.reload();
+                            } else if (result.dismiss === 'cancel') {}
+                        });
+
+                    });
+                } else if (result.dismiss === 'cancel') {}
+            });
+
+
+        } else {
+            FlowRouter.go('/paymentoverview?success=true');
+        }
+    },
     'click .btnConfirmPayment': function(event) {
         $('.btnDeleteLine').hide();
         $('#deleteLineModal').modal('toggle');
@@ -6997,7 +7059,7 @@ Template.paymentcard.events({
     'click .btnDeleteLine': function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
-        let selectLineID = $('#selectDeleteLineID').val()||0;
+        let selectLineID = $('#selectDeleteLineID').val() || 0;
         if ($('#tblPaymentcard tbody>tr').length > 1) {
             this.click;
             let total = 0;

@@ -165,43 +165,45 @@ Template.purchasesaleschart.onRendered(()=>{
     };
 
     templateObject.setCardPositions = async () => {
-        let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
-        const cardList = [];
-        if( Tvs1CardPref.length ){
-            let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
-            let employeeID = Session.get("mySessionEmployeeLoggedID");
-            cardList = new Tvs1CardPreference.fromList(
-                Tvs1CardPreferenceData.tvs1cardpreference
-            ).filter((card) => {
-                if ( parseInt( card.fields.EmployeeID ) == employeeID && parseInt( card.fields.TabGroup ) == _tabGroup ) {
-                return card;
-                }
-            });
-        }
+        setTimeout(async function(){
+            let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
+            const cardList = [];
+            if( Tvs1CardPref.length ){
+                let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
+                let employeeID = Session.get("mySessionEmployeeLoggedID");
+                cardList = new Tvs1CardPreference.fromList(
+                    Tvs1CardPreferenceData.tvs1cardpreference
+                ).filter((card) => {
+                    if ( parseInt( card.fields.EmployeeID ) == employeeID && parseInt( card.fields.TabGroup ) == _tabGroup ) {
+                    return card;
+                    }
+                });
+            }
 
-        if( cardList.length ){
-            let cardcount = 0;
-            cardList.forEach((card) => {
-            $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
-            $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
-            if( card.fields.Active == false ){
-                cardcount++;
-                $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
-                $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
-                $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
+            if( cardList.length ){
+                let cardcount = 0;
+                cardList.forEach((card) => {
+                $(`[card-key='${card.fields.CardKey}']`).attr("position", card.fields.Position);
+                $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
+                if( card.fields.Active == false ){
+                    cardcount++;
+                    $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
+                    $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
+                    $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
+                }
+                })
+                if( cardcount == cardList.length ){
+                $('.card-visibility').eq(0).removeClass('hideelement')
+                }
+                let $chartWrappper = $(".connectedCardSortable");
+                $chartWrappper
+                .find(".card-visibility")
+                .sort(function (a, b) {
+                    return +a.getAttribute("position") - +b.getAttribute("position");
+                })
+                .appendTo($chartWrappper);
             }
-            })
-            if( cardcount == cardList.length ){
-            $('.card-visibility').eq(0).removeClass('hideelement')
-            }
-            let $chartWrappper = $(".connectedCardSortable");
-            $chartWrappper
-            .find(".card-visibility")
-            .sort(function (a, b) {
-                return +a.getAttribute("position") - +b.getAttribute("position");
-            })
-            .appendTo($chartWrappper);
-        }
+        }, 100);
     };
     templateObject.setCardPositions();
 

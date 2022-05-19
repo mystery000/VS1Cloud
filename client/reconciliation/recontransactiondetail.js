@@ -474,14 +474,14 @@ Template.recontransactiondetail.events({
                 $(".taxcodepopheader").text("Edit Tax Rate");
                 getVS1Data("TTaxcodeVS1").then(function (dataObject) {
                     if (dataObject.length === 0) {
-                        setTaxCodeVS1();
+                        setTaxCodeVS1(taxRateDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         $(".taxcodepopheader").text("Edit Tax Rate");
-                        setTaxRateData(data);
+                        setTaxRateData(data, taxRateDataName);
                     }
                 }).catch(function (err) {
-                    setTaxCodeVS1();
+                    setTaxCodeVS1(taxRateDataName);
                 });
             } else {
                 $("#taxRateListModal").modal("toggle");
@@ -878,16 +878,16 @@ function setCustomerModal(data) {
     }, 200);
 }
 
-function setTaxCodeVS1() {
+function setTaxCodeVS1(taxRateDataName) {
     purchaseService.getTaxCodesVS1().then(function (data) {
-        setTaxRateData(data);
+        setTaxRateData(data, taxRateDataName);
     }).catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
         $(".fullScreenSpin").css("display", "none");
         // Meteor._reload.reload();
     });
 }
-function setTaxRateData(data) {
+function setTaxRateData(data, taxRateDataName) {
     let lineItems = [];
     let lineItemObj = {};
     for (let i = 0; i < data.ttaxcodevs1.length; i++) {

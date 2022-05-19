@@ -454,6 +454,7 @@ Template.creditcard.onRendered(() => {
 
                                         lineItemsTable.push(dataListTable);
                                         lineItems.push(lineItemObj);
+                                        console.log("TEST:");
                                     }
                                 } else {
                                     let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -484,6 +485,7 @@ Template.creditcard.onRendered(() => {
                                         TaxRate: TaxRateGbp || 0
                                     };
                                     lineItems.push(lineItemObj);
+                                    console.log("TEST:");
                                 }
                             } else {
                                 var dataListTable = [
@@ -497,6 +499,7 @@ Template.creditcard.onRendered(() => {
                                 ];
                                 lineItemsTable.push(dataListTable);
                                 lineItems.push(lineItemObj);
+                                console.log("TEST:");
                             }
 
                             let creditrecord = {
@@ -692,6 +695,7 @@ Template.creditcard.onRendered(() => {
 
                                         lineItemsTable.push(dataListTable);
                                         lineItems.push(lineItemObj);
+                                        console.log("TEST:");
                                     }
                                 } else {
                                     let AmountGbp = useData[d].fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -722,6 +726,7 @@ Template.creditcard.onRendered(() => {
                                         TaxRate: TaxRateGbp || 0
                                     };
                                     lineItems.push(lineItemObj);
+                                    console.log("TEST:");
                                 }
 
                                 let creditrecord = {
@@ -905,6 +910,7 @@ Template.creditcard.onRendered(() => {
 
                                             lineItemsTable.push(dataListTable);
                                             lineItems.push(lineItemObj);
+                                            console.log("TEST:");
                                         }
                                     } else {
                                         let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -935,6 +941,7 @@ Template.creditcard.onRendered(() => {
                                             TaxRate: TaxRateGbp || 0
                                         };
                                         lineItems.push(lineItemObj);
+                                        console.log("TEST:");
                                     }
                                 } else {
                                     var dataListTable = [
@@ -948,6 +955,7 @@ Template.creditcard.onRendered(() => {
                                     ];
                                     lineItemsTable.push(dataListTable);
                                     lineItems.push(lineItemObj);
+                                    console.log("TEST:");
                                 }
 
                                 let creditrecord = {
@@ -1146,6 +1154,7 @@ Template.creditcard.onRendered(() => {
 
                                     lineItemsTable.push(dataListTable);
                                     lineItems.push(lineItemObj);
+                                    console.log("TEST:");
                                 }
                             } else {
                                 let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
@@ -1176,6 +1185,7 @@ Template.creditcard.onRendered(() => {
                                     TaxRate: TaxRateGbp || 0
                                 };
                                 lineItems.push(lineItemObj);
+                                console.log("TEST:");
                             }
                         } else {
                             var dataListTable = [
@@ -1189,6 +1199,7 @@ Template.creditcard.onRendered(() => {
                             ];
                             lineItemsTable.push(dataListTable);
                             lineItems.push(lineItemObj);
+                            console.log("TEST:");
                         }
 
                         let creditrecord = {
@@ -1364,6 +1375,7 @@ Template.creditcard.onRendered(() => {
         ];
         lineItemsTable.push(dataListTable);
         lineItems.push(lineItemObj);
+        console.log("TEST:");
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
         let creditrecord = {
@@ -3448,6 +3460,9 @@ Template.creditcard.onRendered(function() {
     tempObj.getAllTaxCodes();
 });
 Template.creditcard.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     creditrecord: () => {
         return Template.instance().creditrecord.get();
     },
@@ -5286,7 +5301,7 @@ Template.creditcard.events({
             }
 
             lineItems.push(lineItemObj);
-
+            console.log("TEST:");
 
 
         });

@@ -680,6 +680,7 @@ Template.purchaseordercard.onRendered(() => {
                                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalPaid);
                                 if (useData[d].fields.Lines.length) {
                                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+                                        console.log(useData[d].fields.Lines[i]);
                                         let AmountGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount);
                                         let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount);
                                         let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
@@ -3665,6 +3666,9 @@ Template.purchaseordercard.onRendered(function() {
 
 });
 Template.purchaseordercard.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     purchaseorderrecord: () => {
         return Template.instance().purchaseorderrecord.get();
     },
@@ -4483,7 +4487,6 @@ Template.purchaseordercard.events({
            }, 500);
        } else {
            if (taxRateDataName.replace(/\s/g, '') != '') {
-
                getVS1Data('TTaxcodeVS1').then(function (dataObject) {
                  if(dataObject.length == 0){
                    purchaseService.getTaxCodesVS1().then(function (data) {
@@ -4565,6 +4568,7 @@ Template.purchaseordercard.events({
                });
 
            } else {
+
                $('#taxRateListModal').modal('toggle');
                var targetID = $(event.target).closest('tr').attr('id');
                $('#selectLineID').val(targetID);
@@ -6069,9 +6073,6 @@ Template.purchaseordercard.events({
             }
 
             lineItems.push(lineItemObj);
-
-
-
         });
 
 

@@ -1349,6 +1349,9 @@ Template.stockadjustmentcard.onRendered(() => {
 
 });
 Template.stockadjustmentcard.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     record: () => {
         return Template.instance().record.get();
     },
