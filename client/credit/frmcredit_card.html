@@ -982,6 +982,9 @@
                                         <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
                                         <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
                                         <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                        {{#if isBatchSerialNoTracking 'true'}}
+                                            <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                                        {{/if}}
                                         <th class="th colCustomField1 thCustomField1 hiddenColumn" style="width: 110px;">Custom Field 1</th>
                                         <th class="th colCustomField2 thCustomField2 hiddenColumn" style="width: 110px;">Custom Field 2</th>
                                         <th class="th" style="width: 25px;"></th>
@@ -1003,6 +1006,9 @@
                                             <!-- <td contenteditable="false" class="lineTaxCode colTaxCode td-input" style="cursor: pointer;">{{item.taxCode}}</td> -->
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                            {{#if isBatchSerialNoTracking 'true'}}
+                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                            {{/if}}
                                             <td contenteditable="false" class="lineCustomField1 colCustomField1 hiddenColumn">{{item.CustomField1}}</td>
                                             <td contenteditable="false" class="lineCustomField2 colCustomField2 hiddenColumn">{{item.CustomField2}}</td>
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
@@ -1569,6 +1575,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- Start Serial/lot numbers Modal -->
+        <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+            {{> serialnumberpop}}
+        </div>
+        <!-- End Modal -->
         <!-- Modal print-button -modal -->
         <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
             {{> accountlistpop}}

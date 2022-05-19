@@ -4262,6 +4262,9 @@ Template.stocktransfercard.events({
 });
 
 Template.stocktransfercard.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     isPrintInvoice: () => {
         return Template.instance().includeIsPrintInvoice.get();
     },

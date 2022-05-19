@@ -7096,6 +7096,9 @@ Template.new_quote.onRendered(function() {
 });
 
 Template.new_quote.helpers({
+    isBatchSerialNoTracking: () => {
+        return Session.get('CloudShowSerial') || false;
+    },
     vs1companyBankName: () => {
         return localStorage.getItem('vs1companyBankName') || '';
     },
