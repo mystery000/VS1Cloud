@@ -1625,3 +1625,12 @@ authenticatedRoutes.route('/templatesettings', {
         });
     }
 });
+
+authenticatedRoutes.route('/setup', {
+    name: 'setup',
+    action() {
+        BlazeLayout.render('layoutlogin', {
+            yield: 'setup'
+        });
+    }
+});
