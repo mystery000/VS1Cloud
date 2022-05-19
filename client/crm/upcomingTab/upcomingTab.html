@@ -62,12 +62,12 @@
             <td contenteditable="false" class="colTaskActions">
               <div class="dropdown btnTaskTableAction">
                 <button type="button" class="btn btn-primary openEditTaskModal" data-id="{{item.fields.ID}}"
-                  data-catg="Upcoming"><i class="far fa-edit" style="width: 16px;" data-id="{{item.fields.ID}}"
-                    data-catg="Upcoming"></i></button>
+                  data-catg="Upcoming" title="Edit Task"><i class="far fa-edit" style="width: 16px;"
+                    data-id="{{item.fields.ID}}" data-catg="Upcoming"></i></button>
               </div>
 
               <div class="dropdown btnTaskTableAction">
-                <button type="button" class="btn btn-success" data-toggle="dropdown"><i
+                <button type="button" class="btn btn-success" data-toggle="dropdown" title="Reschedule Task"><i
                     class="far fa-calendar"></i></button>
                 <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
                   aria-labelledby="dropdownMenuButton" style="width: 275px;">
@@ -113,13 +113,13 @@
 
               <div class="dropdown btnTaskTableAction">
                 <button type="button" class="btn btn-warning openEditTaskModal" data-id="{{item.fields.ID}}"
-                  data-ttype="comment" data-catg="Upcoming"><i class="far fa-comment-alt" data-id="{{item.fields.ID}}"
-                    data-ttype="comment" data-catg="Upcoming"></i></button>
+                  data-ttype="comment" data-catg="Upcoming" title="Add a Comment"><i class="far fa-comment-alt"
+                    data-id="{{item.fields.ID}}" data-ttype="comment" data-catg="Upcoming"></i></button>
               </div>
 
               <div class="dropdown btnTaskTableAction">
                 <button type="button" class="btn btn-secondary" data-toggle="dropdown" data-placement="bottom"
-                  title="More task actions..."><i class="fas fa-ellipsis-h"></i></button>
+                  title="More Options"><i class="fas fa-ellipsis-h"></i></button>
                 <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
                   <a class="dropdown-item no-modal openEditTaskModal" data-id="{{item.fields.ID}}" data-catg="Upcoming">
                     <i class="far fa-edit" style="margin-right: 8px;" data-id="{{item.fields.ID}}"

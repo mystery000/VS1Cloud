@@ -24,7 +24,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" id="filterLabelsTab-tab" data-toggle="tab" href="#filterLabelsTab" role="tab"
-                aria-selected="false">Filters & Labels</a>
+                aria-selected="false">Labels</a>
             </li>
           </ul>
         </div>
@@ -40,10 +40,6 @@
                     <thead>
                       <tr class="dnd-moved">
                         <th class="th colCompleteTask" style="width: 2%;">
-                          <!-- <div class="custom-control custom-checkbox chkBox" style="width:15px;margin-right: -6px;">
-                            <input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All">
-                            <label class="custom-control-label chkBoxAll" for="formCheck-All"></label>
-                          </div> -->
                         </th>
                         <th class="th colDate">Date</th>
                         <th class="th colTaskName">Task</th>
@@ -53,7 +49,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{#each item in allrecords}}
+                      {{#each item in allRecords}}
                       <tr class="dnd-moved" style="cursor: pointer;">
                         <td contenteditable="false" class="colCompleteTask task_priority_{{item.fields.priority}}"
                           style="width: 2%;">
@@ -95,13 +91,13 @@
                         <td contenteditable="false" class="colTaskActions">
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-primary openEditTaskModal" data-id="{{item.fields.ID}}"
-                              data-catg="All Tasks"><i class="far fa-edit" style="width: 16px;"
+                              data-catg="All Tasks" title="Edit Task"><i class="far fa-edit" style="width: 16px;"
                                 data-id="{{item.fields.ID}}" data-catg="All Tasks"></i></button>
                           </div>
 
                           <div class="dropdown btnTaskTableAction">
-                            <button type="button" class="btn btn-success" data-toggle="dropdown"><i
-                                class="far fa-calendar"></i></button>
+                            <button type="button" class="btn btn-success" data-toggle="dropdown"
+                              title="Reschedule Task"><i class="far fa-calendar"></i></button>
                             <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
                               aria-labelledby="dropdownMenuButton" style="width: 275px;">
                               <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="{{item.fields.ID}}">
@@ -150,14 +146,14 @@
 
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-warning openEditTaskModal" data-id="{{item.fields.ID}}"
-                              data-ttype="comment" data-catg="All Tasks"><i class="far fa-comment-alt"
-                                data-id="{{item.fields.ID}}" data-ttype="comment" data-catg="All Tasks"></i></button>
+                              data-ttype="comment" data-catg="All Tasks" title="Add a Comment"><i
+                                class="far fa-comment-alt" data-id="{{item.fields.ID}}" data-ttype="comment"
+                                data-catg="All Tasks"></i></button>
                           </div>
 
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-secondary" data-toggle="dropdown"
-                              data-placement="bottom" title="More task actions..."><i
-                                class="fas fa-ellipsis-h"></i></button>
+                              data-placement="bottom" title="More Options"><i class="fas fa-ellipsis-h"></i></button>
                             <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
                               <a class="dropdown-item no-modal openEditTaskModal" data-id="{{item.fields.ID}}"
                                 data-catg="All Tasks">

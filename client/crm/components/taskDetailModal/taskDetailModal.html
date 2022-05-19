@@ -29,7 +29,7 @@
           <div class="row">
 
             <div class="col-12">
-              <div id="taskmodalDescription" style="padding: 0 30px 15px 30px; margin-top: -10px;"></div>
+              <div id="taskmodalDescription"></div>
             </div>
             <div class="col-12" style="display: flex;">
               <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i><span
@@ -61,7 +61,7 @@
                   aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                   style="width: 200px;">
-                  <a class="dropdown-item text-danger taskDropSecondFlag" title="Priority 1" data-priority="3"
+                  <a class="dropdown-item task_modal_priority_3 taskDropSecondFlag" title="Priority 1" data-priority="3"
                     data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;" data-priority="3"
                       data-id="edit"></i>Priority 1
                     <div style="width: 20%; float: right;" data-priority="3" data-id="edit">
@@ -74,7 +74,7 @@
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-warning taskDropSecondFlag" title="Priority 2" data-priority="2"
+                  <a class="dropdown-item task_modal_priority_2 taskDropSecondFlag" title="Priority 2" data-priority="2"
                     data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 2
                     <div style="width: 20%; float: right;">
                       <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
@@ -84,7 +84,7 @@
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-primary taskDropSecondFlag" title="Priority 3" data-priority="1"
+                  <a class="dropdown-item task_modal_priority_1 taskDropSecondFlag" title="Priority 3" data-priority="1"
                     data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 3
                     <div style="width: 20%; float: right;">
                       <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
@@ -94,7 +94,7 @@
                       </div>
                     </div>
                   </a>
-                  <a class="dropdown-item text-secondary taskDropSecondFlag" title="Priority 4" data-priority="0"
+                  <a class="dropdown-item task_modal_priority_0 taskDropSecondFlag" title="Priority 4" data-priority="0"
                     data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 4
                     <div style="width: 20%; float: right;">
                       <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
@@ -108,10 +108,10 @@
               </div>
               <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
                 title="Add reminder(s)..."></i>
-              <!-- <i class="fas fa-ellipsis-h taskModalAction" data-toggle="tooltip" data-placement="bottom" title="More task actions..."></i> -->
+              <!-- <i class="fas fa-ellipsis-h taskModalAction" data-toggle="tooltip" data-placement="bottom" title="More Options"></i> -->
               <div class="dropdown">
                 <i class="fas fa-ellipsis-h taskModalAction taskModalActionDropdown dropdown-toggle"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More task actions..."></i>
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More Options"></i>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                   style="width: 275px;">
                   <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Rename
@@ -146,7 +146,7 @@
               </ul>
               <div class="tab-content" id="nav-tabContent"
                 style="border: 1px solid #dddfeb; border-top: 0px solid #dddfeb;">
-                <div class="tab-pane fade show active" id="nav-subtasks" style="height: 60vh;" role="tabpanel"
+                <div class="tab-pane fade show active" id="nav-subtasks" style="height: 50vh;" role="tabpanel"
                   aria-labelledby="nav-subtasks-tab">
                   <div class="row no-gutters">
                     <div class="subtask-row col-12">
@@ -238,7 +238,7 @@
                               title="Set the priority..."></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                               style="width: 200px;">
-                              <a class="dropdown-item text-danger" href="#"><i class="fas fa-tag"
+                              <a class="dropdown-item task_modal_priority_3" href="#"><i class="fas fa-tag"
                                   style="margin-right: 8px;"></i>Priority 1
                                 <div style="width: 20%; float: right;">
                                   <div class="custom-control custom-checkbox chkBox pointer"
@@ -249,7 +249,7 @@
                                   </div>
                                 </div>
                               </a>
-                              <a class="dropdown-item text-warning" href="#"><i class="fas fa-tag"
+                              <a class="dropdown-item task_modal_priority_2" href="#"><i class="fas fa-tag"
                                   style="margin-right: 8px;"></i>Priority 2
                                 <div style="width: 20%; float: right;">
                                   <div class="custom-control custom-checkbox chkBox pointer"
@@ -260,7 +260,7 @@
                                   </div>
                                 </div>
                               </a>
-                              <a class="dropdown-item text-primary" href="#"><i class="fas fa-tag"
+                              <a class="dropdown-item task_modal_priority_1" href="#"><i class="fas fa-tag"
                                   style="margin-right: 8px;"></i>Priority 3
                                 <div style="width: 20%; float: right;">
                                   <div class="custom-control custom-checkbox chkBox pointer"
@@ -271,7 +271,7 @@
                                   </div>
                                 </div>
                               </a>
-                              <a class="dropdown-item text-secondary" href="#"><i class="fas fa-tag"
+                              <a class="dropdown-item task_modal_priority_0" href="#"><i class="fas fa-tag"
                                   style="margin-right: 8px;"></i>Priority 4
                                 <div style="width: 20%; float: right;">
                                   <div class="custom-control custom-checkbox chkBox pointer"
@@ -302,7 +302,7 @@
                   </div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-comments" style="height: 60vh;" role="tabpanel"
+                <div class="tab-pane fade" id="nav-comments" style="height: 50vh;" role="tabpanel"
                   aria-labelledby="nav-comments-tab">
                   <div class="row">
                     <div class="task-comment-row col-12">
@@ -323,7 +323,7 @@
                   </div>
                 </div>
 
-                <div class="tab-pane fade" id="nav-activity" style="height: 60vh;" role="tabpanel"
+                <div class="tab-pane fade" id="nav-activity" style="height: 50vh;" role="tabpanel"
                   aria-labelledby="nav-activity-tab">
                   <div class="row">
                     <span class="activityAdded"></span>

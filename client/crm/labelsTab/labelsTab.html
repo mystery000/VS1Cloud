@@ -24,12 +24,12 @@
                 <td contenteditable="false" class="btnEditLabel colFilterName" data-id="{{label.fields.ID}}">
                   {{label.fields.TaskLabelName}}</td>
                 <td contenteditable="false" class=" colLabelActions">
-                  <div class="dropdown btnLabelActions">
+                  <div class="dropdown btnLabelActions" title="Edit Label">
                     <button type="button" class="btn btn-primary btnEditLabel" data-id="{{label.fields.ID}}"><i
                         class="far fa-edit" style="width: 16px;" data-id="{{label.fields.ID}}"></i></button>
                   </div>
 
-                  <div class="dropdown btnLabelActions">
+                  <div class="dropdown btnLabelActions" title="Delete Label">
                     <button type="button" class="btn btn-danger btnDeleteLabel" data-id="{{label.fields.ID}}"><i
                         class="far fa-trash-alt" style="width: 16px;" data-id="{{label.fields.ID}}"></i></button>
                   </div>
@@ -41,54 +41,14 @@
         </div>
       </div>
 
-      <div class="col-12">
-        <h5>Filters</h5>
-      </div>
-      <div class="col-12">
-        <div class="table-responsive">
-          <table id="tblFilters" name="tblFilters" style="width:100%"
-            class="dataTable table table-hover table-striped table-bordered tblFilters">
-            <thead>
-              <tr class="dnd-moved">
-                <th class="th colFilterCreatedDate">Created</th>
-                <th class="th colFilterName">Filter</th>
-                <th class="th colFilterActions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- <tr class="dnd-moved" id="" style="cursor: pointer;">
-                <td contenteditable="false" class=" colFilterCreatedDate">05/11/2022</td>
-                <td contenteditable="false" class=" colFilterName">[Filter Name]</td>
-                <td contenteditable="false" class=" colFilterActions">
-                  <div class="dropdown btnFilterAction">
-                    <button type="button" class="btn btn-primary btnEditFilter"><i class="far fa-edit"
-                        style="width: 16px;"></i></button>
-                  </div>
-
-                  <div class="dropdown btnFilterAction">
-                    <button type="button" class="btn btn-danger btnDeleteFilter"><i class="far fa-trash-alt"
-                        style="width: 16px;"></i></button>
-                  </div>
-                </td>
-              </tr> -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
 
   </div>
 
   {{> newLabelModal}}
   {{> editLabelModal}}
-  {{> newFilterModal}}
 
   <style>
-    #tblFilters_wrapper {
-      min-height: 10vh !important;
-    }
-
     #tblLabels_wrapper {
       min-height: 10vh !important;
     }

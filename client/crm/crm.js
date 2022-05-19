@@ -28,7 +28,7 @@ Template.crmoverview.onRendered(function () {
   };
 
   templateObject.setCardPositions = async () => {
-    setTimeout(async function(){
+    setTimeout(async function () {
       let Tvs1CardPref = await getVS1Data('Tvs1CardPreference');
       const cardList = [];
       if (Tvs1CardPref.length) {
@@ -264,7 +264,7 @@ Template.crmoverview.events({
                     <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
                       title="Comment on task..."></i>
                     <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                      title="More task actions..."></i>
+                      title="More Options"></i>
                   </div>
                 </div>
                 <div class="row justify-content-between">
@@ -304,7 +304,7 @@ Template.crmoverview.events({
                       <i class="far fa-comment-alt taskActionButton" data-toggle="tooltip" data-placement="bottom"
                         title="Comment on task..."></i>
                       <i class="fas fa-ellipsis-h taskActionButton" data-toggle="tooltip" data-placement="bottom"
-                        title="More task actions..."></i>
+                        title="More Options"></i>
                     </div>
                   </div>
                   <div class="row justify-content-between">
