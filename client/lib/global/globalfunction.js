@@ -107,7 +107,25 @@ $("select[name='edtBankAccountName'] > option").each(function () {
                  $(event.target).val(tempDate);
              }
          }else {
+           let symbolArr = ['/', '-', '.', ' ',','];
+           symbolArr.forEach(function (e, i) {
+               if ($(event.target).val().indexOf(symbolArr[i]) > -1) {
+                   parts = $(event.target).val().split(symbolArr[i]);
+               }
+           });
+           if(parts.length > 1){
+             tempDay = parseInt(parts[0]);
+             tempMonth = parseInt(parts[1])-1;
+             tempYear = new Date().getFullYear();  // returns the current year
+             if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+                 $(event.target).val(moment().format('DD/MM/YYYY'));
+             }else {
+                 let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                 $(event.target).val(tempDate);
+             }
+           }else{
              $(event.target).val(moment().format('DD/MM/YYYY'));
+           }
          }
 });
 

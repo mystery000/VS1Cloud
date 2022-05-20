@@ -5,10 +5,12 @@ import { EmployeeProfileService } from "../js/profile-service";
 import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
 import { UtilityService } from "../utility-service";
+import { SMSService } from '../js/sms-settings-service';
 import { SalesBoardService } from '../js/sales-service';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
+let smsService = new SMSService();
 let utilityService = new UtilityService();
 Template.appointmentlist.onCreated(function () {
     const templateObject = Template.instance();
@@ -1338,6 +1340,46 @@ Template.appointmentlist.onRendered(function () {
        }
     });
 
+    // Get SMS Messaging Logs
+    templateObject.smsMessagingLogs = async function() {
+        const smsSettings = {
+            twilioAccountId: "",
+            twilioAccountToken: "",
+            twilioTelephoneNumber: "",
+        }
+        smsService.getSMSSettings().then((result) => {
+            console.log(result);
+            if (result.terppreference.length > 0) {
+                for (let i = 0; i < result.terppreference.length; i++) {
+                    switch(result.terppreference[i].PrefName) {
+                        case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                        case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                        case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                    }
+                }
+                $.ajax(
+                    {
+                        method: 'GET',
+                        url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json?PageSize=100',
+                        dataType: 'json',
+                        contentType: 'application/x-www-form-urlencoded', // !
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("Authorization",
+                                "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
+                            );
+                        },
+                        success: function(data) {
+                            console.log(data);
+                        },
+                        error: function(e) {
+                            console.log(e);
+                        }
+                    }
+                )
+            }
+        });
+    }
+    templateObject.smsMessagingLogs();
 
 });
 

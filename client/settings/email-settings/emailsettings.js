@@ -832,7 +832,7 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-                                
+                                objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                 Meteor.call('addTask', objDetail.fields);
                             } else {
                                 const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
@@ -875,7 +875,7 @@ Template.emailsettings.onRendered(function () {
                 
                 let promise1 = oldSettings.map(async setting => {
                     if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54 
-                        || setting.fields.FormID == 177 && setting.fields.FormID == 129)) || (!isEssential
+                        || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
                         && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
                         && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
                         // Remove all

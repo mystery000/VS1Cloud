@@ -1111,7 +1111,7 @@ Template.salesorderslist.onRendered(function() {
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
-                        if (FlowRouter.current().queryParams.converted == true) {
+                        if (FlowRouter.current().queryParams.converted == 'true') {
                           FlowRouter.go('/salesorderslist?converted=true');
                         }else {
                           FlowRouter.go('/salesorderslist?converted=false');
@@ -1432,10 +1432,10 @@ Template.salesorderslist.onRendered(function() {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    if (FlowRouter.current().queryParams.converted == true) {
-                      FlowRouter.go('/salesorderslist?converted=true&page=last');
+                    if (FlowRouter.current().queryParams.converted == 'true') {
+                      FlowRouter.go('/salesorderslist?converted=true');
                     }else {
-                      FlowRouter.go('/salesorderslist?converted=false&page=last');
+                      FlowRouter.go('/salesorderslist?converted=false');
                     }
                 } else {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
@@ -1750,7 +1750,7 @@ Template.salesorderslist.onRendered(function() {
               if (data.Params.IgnoreDates == true) {
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  if (FlowRouter.current().queryParams.converted == true) {
+                  if (FlowRouter.current().queryParams.converted == 'true') {
                     FlowRouter.go('/salesorderslist?converted=true');
                   }else {
                     FlowRouter.go('/salesorderslist?converted=false');
