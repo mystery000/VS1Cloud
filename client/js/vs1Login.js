@@ -1507,7 +1507,8 @@ Template.vs1login.onRendered(function () {
                                                     }
                                                 }
                                                 values.forEach(value => {
-                                                    const reportData = JSON.parse(value);
+                                                    let reportData = JSON.parse(value);
+                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                                     if (reportData.BasedOnType === "E" && !reportData.ISEmpty)
                                                         Meteor.call('sendNormalEmail', reportData);
                                                 });
