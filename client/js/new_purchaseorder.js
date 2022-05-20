@@ -1836,6 +1836,9 @@ Template.purchaseordercard.onRendered(() => {
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).text("");
             $(".lineQty", rowData).val("");
+            $(".lineOrdered", rowData).val("");
+            $(".lineBo", rowData).text("");
+            $(".lineQty", rowData).val("");
             $(".lineUnitPrice", rowData).val("");
             $(".lineTaxRate", rowData).text("");
             $(".lineTaxCode", rowData).val("");
