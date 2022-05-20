@@ -1382,6 +1382,7 @@ Template.timesheettimelog.onRendered(function () {
             $('.fullScreenSpin').css('display', 'inline-block');
             let timesheetData = templateObject.datatablerecords1.get();
             let timesheetList = [];
+            setTimeout(function(){
             //templateObject.datatablerecords.set('');
             let startDate = new Date($("#dateFrom").datepicker("getDate"));
             let endDate = new Date($("#dateTo").datepicker("getDate"));
@@ -1393,7 +1394,7 @@ Template.timesheettimelog.onRendered(function () {
             }
             templateObject.datatablerecords.set(timesheetList);
             $('.fullScreenSpin').css('display', 'none');
-
+            },500);
         },
         'change #dateFrom': function () {
             let templateObject = Template.instance();
@@ -1401,6 +1402,7 @@ Template.timesheettimelog.onRendered(function () {
             let timesheetData = templateObject.datatablerecords1.get();
             let timesheetList = [];
             //templateObject.datatablerecords.set('');
+            setTimeout(function(){
             let startDate = new Date($("#dateFrom").datepicker("getDate"));
             let endDate = new Date($("#dateTo").datepicker("getDate"));
             for (let x = 0; x < timesheetData.length; x++) {
@@ -1411,7 +1413,7 @@ Template.timesheettimelog.onRendered(function () {
             }
             templateObject.datatablerecords.set(timesheetList);
             $('.fullScreenSpin').css('display', 'none');
-
+            },500);
         },
         'click .btnAddNewAccounts': function () {
 

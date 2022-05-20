@@ -1913,6 +1913,7 @@ Template.paymentoverview.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1927,13 +1928,14 @@ Template.paymentoverview.events({
         } else {
             templateObject.getAllFilterPaymentsData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1948,7 +1950,7 @@ Template.paymentoverview.events({
         } else {
             templateObject.getAllFilterPaymentsData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'click #today': function() {
         let templateObject = Template.instance();

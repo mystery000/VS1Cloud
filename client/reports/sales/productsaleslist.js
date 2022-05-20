@@ -651,6 +651,7 @@ Template.productsaleslist.events({
         $('#dateTo').attr('readonly', false);
       //templateObject.datatablerecords.set('');
       //templateObject.grandrecords.set('');
+      setTimeout(function(){
       var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
       var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -667,7 +668,7 @@ Template.productsaleslist.events({
         templateObject.getAllProductSalesOrderData(formatDateFrom,formatDateTo,false);
         //templateObject.dateAsAt.set(formatDate);
       }
-
+      },500);
   },
   'change #dateFrom':function(){
       let templateObject = Template.instance();
@@ -676,6 +677,7 @@ Template.productsaleslist.events({
       $('#dateTo').attr('readonly', false);
       //templateObject.datatablerecords.set('');
       //templateObject.grandrecords.set('');
+      setTimeout(function(){
       var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
       var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -692,7 +694,7 @@ Template.productsaleslist.events({
         templateObject.getAllProductSalesOrderData(formatDateFrom,formatDateTo,false);
         //templateObject.dateAsAt.set(formatDate);
       }
-
+      },500);
 
   },
   'click #lastMonth':function(){

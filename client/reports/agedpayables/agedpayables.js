@@ -770,6 +770,7 @@ Template.agedpayables.events({
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -786,7 +787,7 @@ Template.agedpayables.events({
             templateObject.getAgedPayableReports(formatDateFrom, formatDateTo, false);
             templateObject.dateAsAt.set(formatDate);
         }
-
+        },500);
     },
     'change #dateFrom': function () {
         let templateObject = Template.instance();
@@ -795,6 +796,7 @@ Template.agedpayables.events({
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -811,7 +813,7 @@ Template.agedpayables.events({
             templateObject.getAgedPayableReports(formatDateFrom, formatDateTo, false);
             templateObject.dateAsAt.set(formatDate);
         }
-
+        },500);
     },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display', 'inline-block');

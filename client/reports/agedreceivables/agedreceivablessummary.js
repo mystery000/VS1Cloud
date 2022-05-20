@@ -525,6 +525,7 @@ let grandOlder = 0;
         $('.fullScreenSpin').css('display','inline-block');
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -541,13 +542,14 @@ let grandOlder = 0;
           templateObject.getAgedReceivableReports(formatDateFrom,formatDateTo,false);
           templateObject.dateAsAt.set(formatDate);
         }
-
+        },500);
     },
     'change #dateFrom':function(){
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -564,7 +566,7 @@ let grandOlder = 0;
           templateObject.getAgedReceivableReports(formatDateFrom,formatDateTo,false);
           templateObject.dateAsAt.set(formatDate);
         }
-
+        },500);
     },
     'click .btnRefresh': function () {
       $('.fullScreenSpin').css('display','inline-block');

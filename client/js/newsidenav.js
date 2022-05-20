@@ -172,13 +172,10 @@ Template.newsidenav.onRendered(function() {
     var LoggedDB = erpGet.ERPDatabase;
     var LoggedUser = localStorage.getItem('mySession');
     let cloudPackage = localStorage.getItem('vs1cloudlicenselevel');
-    console.log(cloudPackage);
     if(cloudPackage=="PLUS"){
       templateObject.isSNTrackChecked.set(true);
-      console.log("cloudPackage: true");
     }else{
       templateObject.isSNTrackChecked.set(false);
-      console.log("localsss: false");
     }
 
     templateObject.getSetSideNavFocus = function() {
