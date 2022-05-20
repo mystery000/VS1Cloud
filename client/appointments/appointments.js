@@ -2148,9 +2148,10 @@ Template.appointments.onRendered(function () {
                 sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                     addVS1Data('TAppointment', JSON.stringify(data));
                     $('.fullScreenSpin').css('display', 'inline-block');
-                    let appColor = '#00a3d3';
+                    let appColor = '';
                     let dataColor = '';
                     let allEmp = templateObject.employeerecords.get();
+
                     for (let i = 0; i < data.tappointmentex.length; i++) {
 
                         var employeeColor = allEmp.filter(apmt => {
@@ -2330,9 +2331,7 @@ Template.appointments.onRendered(function () {
                     $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
                     $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenWeekend");
                     if (templateObject.eventdata.get()) {
-                      setTimeout(function () {
                         templateObject.renderNormalCalendar();
-                      }, 200);
                     }
 
                     var currentDate = moment();
@@ -2465,7 +2464,7 @@ Template.appointments.onRendered(function () {
                         if (resourceChat.length > 0) {
                             if (date >= startWeek && date <= endWeek) {
                                 if (seeOwnAppointments == true) {
-                                    if (data.tappointmentex[t].fields.TrainerName == Session.get('mySessionEmployee')) {
+                                    if (useData[t].fields.TrainerName == Session.get('mySessionEmployee')) {
                                         let found = resourceChat.some(emp => emp.employeeName == data.tappointmentex[t].fields.TrainerName);
                                         if (!found) {
                                             resourceColor = templateObject.employeerecords.get();
@@ -2755,9 +2754,7 @@ Template.appointments.onRendered(function () {
                             tableRowData.push(tableRow);
 
                         }
-                        //setTimeout(function () {
                         $('#here_table table').append(tableRowData);
-                      //}, 500);
                         //templateObject.employeerecords.set(allEmp);
                         templateObject.resourceAllocation.set(resourceChat);
                         templateObject.resourceJobs.set(resourceJob);
@@ -2803,7 +2800,7 @@ Template.appointments.onRendered(function () {
                             }
                         },
                         headerToolbar: {
-                            left: 'prev,next today appointments allocation',
+                            left: 'prev,next today allocation',
                             center: 'title',
                             right: 'dayGridMonth,timeGridWeek,timeGridDay'
                         },
@@ -3969,7 +3966,7 @@ Template.appointments.onRendered(function () {
                     if (resourceChat.length > 0) {
                         if (date >= startWeek && date <= endWeek) {
                             if (seeOwnAppointments == true) {
-                                if (data.tappointmentex[t].fields.TrainerName == Session.get('mySessionEmployee')) {
+                                if (useData[t].fields.TrainerName == Session.get('mySessionEmployee')) {
                                     let found = resourceChat.some(emp => emp.employeeName == data.tappointmentex[t].fields.TrainerName);
                                     if (!found) {
                                         resourceColor = templateObject.employeerecords.get();
@@ -4044,7 +4041,7 @@ Template.appointments.onRendered(function () {
                     } else {
                         if (date >= startWeek && date <= endWeek) {
                             if (seeOwnAppointments == true) {
-                                if (data.tappointmentex[t].fields.TrainerName == Session.get('mySessionEmployee')) {
+                                if (useData[t].fields.TrainerName == Session.get('mySessionEmployee')) {
                                     resourceColor = resourceColor = templateObject.employeerecords.get();
 
                                     var result = resourceColor.filter(apmtColor => {
@@ -4305,7 +4302,7 @@ Template.appointments.onRendered(function () {
                         }
                     },
                     headerToolbar: {
-                        left: 'prev,next today appointments allocation',
+                        left: 'prev,next today allocation',
                         center: 'title',
                         right: 'dayGridMonth,timeGridWeek,timeGridDay'
                     },
