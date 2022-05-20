@@ -59,9 +59,9 @@ Template.agedpayables.onRendered(() => {
         // Set date to picker
         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         // Hide (close) the picker
-        $(this).datepicker('hide');
-        // Change ttrigger the on change function
-        $(this).trigger('change');
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
        }
     });
 
