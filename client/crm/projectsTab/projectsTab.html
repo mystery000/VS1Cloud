@@ -8,15 +8,17 @@
             <th class="th colPrjectDate">Date</th>
             <th class="th colProjectName">Project</th>
             <th class="th colProjectDesc">Description</th>
-            <!-- <th class="th colProjectActions">Actions</th> -->
+            <th class="th colProjectName">Status</th>
+            <th class="th">Tasks</th>
           </tr>
         </thead>
         <tbody>
           {{#each item in active_projects}}
-          <tr class="dnd-moved" data-id="{{item.fields.ID}}" style="cursor: pointer;">
-            <td contenteditable="false" class=" colPrjectDate" data-id="{{item.fields.ID}}">{{getTodoDate
-              item.fields.ProjectStatedon
-              'DD/MM/YYYY'}}</td>
+          <tr class="dnd-moved projectRow{{item.fields.ID}}" data-id="{{item.fields.ID}}" style="cursor: pointer;">
+            <td contenteditable="false" class=" colPrjectDate" data-id="{{item.fields.ID}}">
+              <span style="display: none;">{{item.fields.ProjectStatedon}}</span>{{getTodoDate
+              item.fields.ProjectStatedon 'DD/MM/YYYY'}}
+            </td>
             <td contenteditable="false" class="colProjectName" data-id="{{item.fields.ID}}">
               {{#if item.fields.Active}}
               {{item.fields.ProjectName}}
@@ -26,6 +28,13 @@
             </td>
             <td contenteditable="false" class=" colProjectDesc" data-id="{{item.fields.ID}}">{{getDescription
               item.fields.Description}}
+            </td>
+            <td contenteditable="false" class="colProjectStatus{{getProjectStatus
+              item.fields.Active}} colProjectDesc" data-id="{{item.fields.ID}}">{{getProjectStatus
+              item.fields.Active}}
+            </td>
+            <td contenteditable="false" class=" colProjectDesc" data-id="{{item.fields.ID}}">{{getProjectCount
+              item.fields.projecttasks}}
             </td>
           </tr>
           {{/each}}

@@ -1,12 +1,11 @@
-Template.projectsTab.inheritsHelpersFrom('alltaskdatatable');
-Template.projectsTab.inheritsEventsFrom('alltaskdatatable');
-Template.projectsTab.inheritsHooksFrom('alltaskdatatable');
+Template.projectsTab.inheritsHelpersFrom("alltaskdatatable");
+Template.projectsTab.inheritsEventsFrom("alltaskdatatable");
+Template.projectsTab.inheritsHooksFrom("alltaskdatatable");
 
-import { CRMService } from '../crm-service';
+import { CRMService } from "../crm-service";
 let crmService = new CRMService();
 
 Template.projectsTab.onCreated(function () {
-
   let templateObject = Template.instance();
   templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
@@ -17,314 +16,346 @@ Template.projectsTab.onCreated(function () {
 });
 
 Template.projectsTab.onRendered(function () {
-
   let templateObject = Template.instance();
 
   templateObject.getTProjectList = function () {
-    crmService.getTProjectList().then(function (data) {
-      if (data.tprojectlist && data.tprojectlist.length > 0) {
+    crmService
+      .getTProjectList()
+      .then(function (data) {
+        if (data.tprojectlist && data.tprojectlist.length > 0) {
+          let all_projects = data.tprojectlist;
+          all_projects = all_projects.filter(
+            (proj) => proj.fields.Active == true && proj.fields.ID != 11
+          );
 
-        let all_projects = data.tprojectlist;
-        all_projects = all_projects.filter(proj => proj.fields.ID != 11);
-
-        let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
+          let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
           style="margin-right: 8px;"></i>All Tasks</a>`;
-        all_projects.forEach(proj => {
-          add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
-        });
-        $('#goProjectWrapper').html(add_projectlist);
-        $('.goProjectWrapper').html(add_projectlist);
+          let ProjectName = "";
+          all_projects.forEach((proj) => {
+            ProjectName =
+              proj.fields.ProjectName.length > 26
+                ? proj.fields.ProjectName.substring(0, 26) + "..."
+                : proj.fields.ProjectName;
+            add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+          });
+          $("#goProjectWrapper").html(add_projectlist);
+          $(".goProjectWrapper").html(add_projectlist);
 
-        let active_projects = all_projects.filter(project => project.fields.Active == true);
-        let deleted_projects = all_projects.filter(project => project.fields.Active == false);
-        let favorite_projects = active_projects.filter(project => project.fields.AddToFavourite == true);
+          let active_projects = all_projects.filter(
+            (project) => project.fields.Active == true
+          );
+          let deleted_projects = all_projects.filter(
+            (project) => project.fields.Active == false
+          );
+          let favorite_projects = active_projects.filter(
+            (project) => project.fields.AddToFavourite == true
+          );
 
-        templateObject.all_projects.set(all_projects);
-        templateObject.active_projects.set(active_projects);
-        templateObject.deleted_projects.set(deleted_projects);
-        templateObject.favorite_projects.set(favorite_projects);
+          templateObject.all_projects.set(all_projects);
+          templateObject.active_projects.set(active_projects);
+          templateObject.deleted_projects.set(deleted_projects);
+          templateObject.favorite_projects.set(favorite_projects);
 
-        $('.crm_project_count').html(active_projects.length);
+          $(".crm_project_count").html(active_projects.length);
 
-        setTimeout(() => {
-          templateObject.initProjectsTable();
-        }, 100);
-
-      } else {
-        templateObject.tprojectlist.set([]);
-        $('.crm_project_count').html(0)
-      }
-
-    }).catch(function (err) {
-    });
-  }
+          setTimeout(() => {
+            templateObject.initProjectsTable();
+          }, 100);
+        } else {
+          templateObject.tprojectlist.set([]);
+          $(".crm_project_count").html(0);
+        }
+      })
+      .catch(function (err) {});
+  };
 
   templateObject.initProjectsTable = function () {
+    $("#tblNewProjectsDatatable").DataTable({
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [
+        {
+          extend: "excelHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "Project List" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+            format: {
+              body: function (data, row, column) {
+                if (data.includes("</span>")) {
+                  var res = data.split("</span>");
+                  data = res[1];
+                }
 
-    $('#tblNewProjectsDatatable').DataTable({
-      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '',
-        download: 'open',
-        className: "btntabletocsv hiddenColumn",
-        filename: "Project List" + moment().format(),
-        orientation: 'portrait',
-        exportOptions: {
-          columns: ':visible',
-          format: {
-            body: function (data, row, column) {
-              if (data.includes("</span>")) {
-                var res = data.split("</span>");
-                data = res[1];
-              }
-
-              return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-            }
-          }
-        }
-      }, {
-        extend: 'print',
-        download: 'open',
-        className: "btntabletopdf hiddenColumn",
-        text: '',
-        title: 'Project List',
-        filename: "Project List" + moment().format(),
-        exportOptions: {
-          columns: ':visible',
-          stripHtml: false
-        }
-      }],
+                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+              },
+            },
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Project List",
+          filename: "Project List" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+            stripHtml: false,
+          },
+        },
+      ],
       select: true,
       destroy: true,
       colReorder: true,
       pageLength: initialDatatableLoad,
       lengthMenu: [
         [initialDatatableLoad, -1],
-        [initialDatatableLoad, "All"]
+        [initialDatatableLoad, "All"],
       ],
       info: true,
       responsive: true,
-      "order": [
-        [1, "desc"]
-      ],
+      order: [[0, "desc"]],
       action: function () {
-        $('#tblProjectsDatatable').DataTable().ajax.reload();
+        $("#tblProjectsDatatable").DataTable().ajax.reload();
       },
-      "fnInitComplete": function () {
-        $("<button class='btn btn-primary btnSearchProjectTable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>View All</span></button>").insertAfter("#tblNewProjectsDatatable_filter");
-      }
+      fnInitComplete: function () {
+        $(
+          "<button class='btn btn-primary btnSearchProjectTable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>View All</span></button>"
+        ).insertAfter("#tblNewProjectsDatatable_filter");
+      },
     });
-  }
+  };
 
   templateObject.getTProjectList();
 });
 
 Template.projectsTab.events({
-
-  'click .projectName': function (e) {
+  "click .projectName": function (e) {
     let id = e.target.dataset.id;
     if (id) {
-      FlowRouter.go('/projects?id=' + id);
+      FlowRouter.go("/projects?id=" + id);
       Meteor._reload.reload();
     }
   },
 
-  'click .menuFilterslabels': function (e) {
-    FlowRouter.go('/filterslabels');
+  "click .menuFilterslabels": function (e) {
+    FlowRouter.go("/filterslabels");
   },
 
   // delete project
-  'click .delete-project': function (e) {
-    let id = $('#editProjectID').val();
+  "click .delete-project": function (e) {
+    let id = $("#editProjectID").val();
     // let id = e.target.dataset.id;
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
-      var objDetails = {
-        type: "Tprojectlist",
-        fields: {
-          ID: id,
-          Active: false
+      let templateObject = Template.instance();
+      swal({
+        title: "Delete Project",
+        text: "Are you sure want to delete this project?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.value) {
+          $(".fullScreenSpin").css("display", "inline-block");
+          var objDetails = {
+            type: "Tprojectlist",
+            fields: {
+              ID: id,
+              Active: false,
+            },
+          };
+          crmService
+            .updateProject(objDetails)
+            .then(function (data) {
+              $(".projectRow" + id).remove();
+              // templateObject.getTProjectList();
+              $("#editCrmProject").modal("hide");
+              $("#newProjectTasksModal").modal("hide");
+              $(".fullScreenSpin").css("display", "none");
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {});
+              $("#editCrmProject").modal("hide");
+              $("#newProjectTasksModal").modal("hide");
+              $(".fullScreenSpin").css("display", "none");
+            });
+        } else if (result.dismiss === "cancel") {
+        } else {
         }
-      };
-      crmService.updateProject(objDetails).then(function (data) {
-        // $('.projectName' + id).remove();
-        templateObject.getTProjectList();
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        swal({
-          title: 'Oooops...',
-          text: err,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonText: 'Try Again'
-        }).then((result) => {
-        });
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
       });
     }
   },
 
   // add to favorite project
-  'click .add-favorite': function (e) {
+  "click .add-favorite": function (e) {
     // let id = e.target.dataset.id;
-    let id = $('#editProjectID').val();
+    let id = $("#editProjectID").val();
 
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      $(".fullScreenSpin").css("display", "inline-block");
       let templateObject = Template.instance();
       var objDetails = {
         type: "Tprojectlist",
         fields: {
           ID: id,
-          AddToFavourite: true
-        }
+          AddToFavourite: true,
+        },
       };
-      crmService.updateProject(objDetails).then(function (data) {
-        // $('#li_favorite').css('display', 'block');
-        templateObject.getTProjectList();
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        swal({
-          title: 'Oooops...',
-          text: err,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonText: 'Try Again'
-        }).then((result) => {
+      crmService
+        .updateProject(objDetails)
+        .then(function (data) {
+          // $('#li_favorite').css('display', 'block');
+          templateObject.getTProjectList();
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {});
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
         });
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      });
     }
   },
 
   // remove favorite project
-  'click .remove-favorite': function (e) {
+  "click .remove-favorite": function (e) {
     // let id = e.target.dataset.id;
-    let id = $('#editProjectID').val();
+    let id = $("#editProjectID").val();
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      $(".fullScreenSpin").css("display", "inline-block");
       let templateObject = Template.instance();
       var objDetails = {
         type: "Tprojectlist",
         fields: {
           ID: id,
-          AddToFavourite: false
-        }
+          AddToFavourite: false,
+        },
       };
-      crmService.updateProject(objDetails).then(function (data) {
-        templateObject.getTProjectList();
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        swal({
-          title: 'Oooops...',
-          text: err,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonText: 'Try Again'
-        }).then((result) => {
+      crmService
+        .updateProject(objDetails)
+        .then(function (data) {
+          templateObject.getTProjectList();
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {});
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
         });
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      });
     }
   },
 
   // archive project
-  'click .archive-project': function (e) {
+  "click .archive-project": function (e) {
     // let id = e.target.dataset.id;
-    let id = $('#editProjectID').val();
+    let id = $("#editProjectID").val();
 
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      $(".fullScreenSpin").css("display", "inline-block");
       var objDetails = {
         type: "Tprojectlist",
         fields: {
           ID: id,
-          Archive: true
-        }
+          Archive: true,
+        },
       };
       let templateObject = Template.instance();
 
-      crmService.updateProject(objDetails).then(function (data) {
-        templateObject.getTProjectList();
+      crmService
+        .updateProject(objDetails)
+        .then(function (data) {
+          templateObject.getTProjectList();
 
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        swal({
-          title: 'Oooops...',
-          text: err,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonText: 'Try Again'
-        }).then((result) => {
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {});
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
         });
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      });
     }
   },
 
   // unarchive project
-  'click .unarchive-project': function (e) {
+  "click .unarchive-project": function (e) {
     // let id = e.target.dataset.id;
-    let id = $('#editProjectID').val();
+    let id = $("#editProjectID").val();
 
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      $(".fullScreenSpin").css("display", "inline-block");
       let templateObject = Template.instance();
       var objDetails = {
         type: "Tprojectlist",
         fields: {
           ID: id,
-          Archive: false
-        }
+          Archive: false,
+        },
       };
-      crmService.updateProject(objDetails).then(function (data) {
+      crmService
+        .updateProject(objDetails)
+        .then(function (data) {
+          templateObject.getTProjectList();
 
-        templateObject.getTProjectList();
-
-        $('#editCrmProject').modal('hide');
-        $('#newProjectTasksModal').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
-        swal({
-          title: 'Oooops...',
-          text: err,
-          type: 'error',
-          showCancelButton: false,
-          confirmButtonText: 'Try Again'
-        }).then((result) => {
+          $("#editCrmProject").modal("hide");
+          $("#newProjectTasksModal").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {});
+          $("#editCrmProject").modal("hide");
+          $(".fullScreenSpin").css("display", "none");
         });
-        $('#editCrmProject').modal('hide');
-        $('.fullScreenSpin').css('display', 'none');
-      });
     }
   },
 
   // open edit modal
-  'click .edit-project': function (e) {
+  "click .edit-project": function (e) {
     // let id = e.target.dataset.id;
     // let id = $('#editProjectID').val();
-
     // crmService.getTProjectDetail(id).then(function (data) {
     //   if (data.fields) {
-
     //     let projectName = data.fields.ProjectName;
     //     let ProjectColour = data.fields.ProjectColour;
     //     let AddToFavourite = data.fields.AddToFavourite;
@@ -337,19 +368,20 @@ Template.projectsTab.events({
     //     } else {
     //       $("#swteditCrmProjectFavorite").prop("checked", false);
     //     }
-
     //   }
-
-    // }).catch(function (err) { 
+    // }).catch(function (err) {
     // });
   },
 
   // submit edit project
-  'click .btnEditCrmProject': function (e) {
-    let id = $('#editProjectID').val();
-    let projectName = $('#editCrmProjectName').val();
-    let projectColor = $('#editCrmProjectColor').val();
-    let swtNewCrmProjectFavorite = $("#swteditCrmProjectFavorite").prop("checked");
+  "click .btnEditCrmProject": function (e) {
+    let id = $("#editProjectID").val();
+    let projectName = $("#editCrmProjectName").val();
+    let projectColor = $("#editCrmProjectColor").val();
+    let projectDescription = $("#editCrmProjectDescription").val();
+    // let swtNewCrmProjectFavorite = $("#swteditCrmProjectFavorite").prop(
+    //   "checked"
+    // );
 
     // // tempcode
     // let projecttasks = e.target.dataset.projecttasks;
@@ -359,17 +391,17 @@ Template.projectsTab.events({
     // }
     // // tempcode
 
-    if (id === '' || id === null) {
-      swal('Project is not selected correctly', '', 'warning');
+    if (id === "" || id === null) {
+      swal("Project is not selected correctly", "", "warning");
       return;
     }
 
-    if (projectName === '' || projectName === null) {
-      swal('Project name is not entered!', '', 'warning');
+    if (projectName === "" || projectName === null) {
+      swal("Project name is not entered!", "", "warning");
       return;
     }
 
-    $('.fullScreenSpin').css('display', 'inline-block');
+    $(".fullScreenSpin").css("display", "inline-block");
 
     var objDetails = {
       type: "Tprojectlist",
@@ -378,142 +410,163 @@ Template.projectsTab.events({
         Active: true,
         ProjectName: projectName,
         ProjectColour: projectColor,
-        AddToFavourite: swtNewCrmProjectFavorite
-      }
+        Description: projectDescription,
+        // AddToFavourite: swtNewCrmProjectFavorite,
+      },
     };
     let templateObject = Template.instance();
 
-    crmService.updateProject(objDetails).then(function (data) {
-      templateObject.getTProjectList();
+    crmService
+      .updateProject(objDetails)
+      .then(function (data) {
+        templateObject.getTProjectList();
 
-      $('.fullScreenSpin').css('display', 'none');
-      $('#editCrmProject').modal('hide');
-      $('#newProjectTasksModal').modal('hide');
-      // Meteor._reload.reload();
-    }).catch(function (err) {
-      swal({
-        title: 'Oooops...',
-        text: err,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Try Again'
-      }).then((result) => {
+        $(".fullScreenSpin").css("display", "none");
+        $("#editCrmProject").modal("hide");
+        $("#newProjectTasksModal").modal("hide");
+        // Meteor._reload.reload();
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {});
+        $(".fullScreenSpin").css("display", "none");
+        $("#editCrmProject").modal("hide");
+        $("#newProjectTasksModal").modal("hide");
       });
-      $('.fullScreenSpin').css('display', 'none');
-      $('#editCrmProject').modal('hide');
-      $('#newProjectTasksModal').modal('hide');
-    });
   },
 
-
   // submit duplicate project
-  'click .duplicate-project': function (e) {
-
-    let projectName = 'Copy of ' + e.target.dataset.name;
+  "click .duplicate-project": function (e) {
+    let projectName = "Copy of " + e.target.dataset.name;
     let projectColor = e.target.dataset.color;
     let projecttasks = e.target.dataset.projecttasks;
-    let projecttasks_count = '';
-    if (projecttasks != null && projecttasks != undefined && projecttasks != "undefined") {
+    let projecttasks_count = "";
+    if (
+      projecttasks != null &&
+      projecttasks != undefined &&
+      projecttasks != "undefined"
+    ) {
       projecttasks_count = projecttasks.lentgh;
     }
 
-    $('.fullScreenSpin').css('display', 'inline-block');
+    $(".fullScreenSpin").css("display", "inline-block");
 
     var objDetails = {
       type: "Tprojectlist",
       fields: {
         Active: true,
         ProjectName: projectName,
-        ProjectColour: projectColor
-      }
+        ProjectColour: projectColor,
+      },
     };
-    projectColor = projectColor == 0 ? 'gray' : projectColor;
+    projectColor = projectColor == 0 ? "gray" : projectColor;
     let templateObject = Template.instance();
 
-    crmService.updateProject(objDetails).then(function (data) {
+    crmService
+      .updateProject(objDetails)
+      .then(function (data) {
+        templateObject.getTProjectList();
 
-      templateObject.getTProjectList();
-
-      $('#editCrmProject').modal('hide');
-      $('.fullScreenSpin').css('display', 'none');
-      // Meteor._reload.reload();
-    }).catch(function (err) {
-      swal({
-        title: 'Oooops...',
-        text: err,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Try Again'
-      }).then((result) => {
+        $("#editCrmProject").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
+        // Meteor._reload.reload();
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {});
+        $("#editCrmProject").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
       });
-      $('#editCrmProject').modal('hide');
-      $('.fullScreenSpin').css('display', 'none');
-    });
   },
 
-  // open task-project modal
-  'click #tblNewProjectsDatatable tr': function (e) {
-    $('#newProjectTasksModal').modal('toggle');
+  // open task-project modal in projects table
+  "click #tblNewProjectsDatatable tbody tr": function (e) {
+    $("#newProjectTasksModal").modal("toggle");
     let id = e.target.dataset.id;
-    $('#editProjectID').val(id);
+    $("#editProjectID").val(id);
 
     if (id) {
-      $('.fullScreenSpin').css('display', 'inline-block');
+      $(".fullScreenSpin").css("display", "inline-block");
 
-      crmService.getTProjectDetail(id).then(function (data) {
-        $('.fullScreenSpin').css('display', 'none');
-        if (data.fields.ID == id) {
-          let selected_record = data.fields;
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
 
-          let projectName = data.fields.ProjectName;
-          let ProjectColour = data.fields.ProjectColour;
-          let AddToFavourite = data.fields.AddToFavourite;
-          // missing color, favorite fields
-          $('#editProjectID').val(id);
-          $('#editCrmProjectName').val(projectName);
-          $('.editCrmProjectName').html(projectName);
-          $('#editCrmProjectColor').val(ProjectColour);
-          if (AddToFavourite == true) {
-            $("#swteditCrmProjectFavorite").prop("checked", true);
-          } else {
-            $("#swteditCrmProjectFavorite").prop("checked", false);
-          }
+            let projectName = data.fields.ProjectName;
+            let ProjectColour = data.fields.ProjectColour;
+            let ProjectDescription = data.fields.Description;
 
-          // set task list
-          let tr = '';
-          let projecttasks = [];
-          if (selected_record.projecttasks) {
-            if (selected_record.projecttasks.fields == undefined) {
-              projecttasks = selected_record.projecttasks;
-            } else {
-              projecttasks.push(selected_record.projecttasks)
-            }
+            $("#editProjectID").val(id);
+            $("#editCrmProjectName").val(projectName);
+            $(".editCrmProjectName").html(projectName);
+            $("#editCrmProjectColor").val(ProjectColour);
+            $("#editCrmProjectDescription").val(ProjectDescription);
 
-            let due_date = '';
-            let description = '';
-            let labels = '';
-            let getTodayDate = moment().format('ddd');
-            let getTomorrowDay = moment().add(1, 'day').format('ddd');
-            let startDate = moment();
-            let getNextMonday = moment(startDate).day(1 + 7).format('ddd MMM D');
+            // let AddToFavourite = data.fields.AddToFavourite;
+            // if (AddToFavourite == true) {
+            //   $("#swteditCrmProjectFavorite").prop("checked", true);
+            // } else {
+            //   $("#swteditCrmProjectFavorite").prop("checked", false);
+            // }
 
-            projecttasks.forEach(item => {
-              due_date = item.fields.due_date ? moment(item.fields.due_date).format('DD/MM/YYYY') : '';
-              description = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + '...';
-              if (item.fields.TaskLabel) {
-                if (item.fields.TaskLabel.fields) {
-                  labels = `<span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                    style="margin-right: 5px;"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
-                }
-                else {
-                  item.fields.TaskLabel.forEach(lbl => {
-                    labels += `<span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                  style="margin-right: 5px;"></i>${lbl.fields.TaskLabelName}</a></span>`;
-                  });
-                }
+            // set task list
+            let tr = "";
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
               }
 
-              tr += `<tr class="dnd-moved" style="cursor: pointer;">
+              let due_date = "";
+              let description = "";
+              let labels = "";
+              let getTodayDate = moment().format("ddd");
+              let getTomorrowDay = moment().add(1, "day").format("ddd");
+              let startDate = moment();
+              let getNextMonday = moment(startDate)
+                .day(1 + 7)
+                .format("ddd MMM D");
+
+              let active_projecttasks = projecttasks.filter(
+                (item) => item.fields.Active == true
+              );
+
+              active_projecttasks.forEach((item) => {
+                due_date = item.fields.due_date
+                  ? moment(item.fields.due_date).format("DD/MM/YYYY")
+                  : "";
+                description =
+                  item.fields.TaskDescription.length < 80
+                    ? item.fields.TaskDescription
+                    : item.fields.TaskDescription.substring(0, 79) + "...";
+                if (item.fields.TaskLabel) {
+                  if (item.fields.TaskLabel.fields) {
+                    labels = `<span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
+                    style="margin-right: 5px;"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                  } else {
+                    item.fields.TaskLabel.forEach((lbl) => {
+                      labels += `<span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
+                  style="margin-right: 5px;"></i>${lbl.fields.TaskLabelName}</a></span>`;
+                    });
+                  }
+                }
+
+                tr += `<tr class="dnd-moved" style="cursor: pointer;">
                 <td contenteditable="false" class="colCompleteTask task_priority_${item.fields.priority}"
                   style="width: 2%;">
                   <div
@@ -600,7 +653,7 @@ Template.projectsTab.events({
                       data-placement="bottom" title="More Options"><i
                         class="fas fa-ellipsis-h"></i></button>
                     <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
-                      <a class="dropdown-item no-modal openEditTaskModal" data-id="${item.fields.ID}" data-catg="${projectName}">
+                      <a class="dropdown-item openEditTaskModal" data-id="${item.fields.ID}" data-catg="${projectName}">
                         <i class="far fa-edit" style="margin-right: 8px;" data-id="${item.fields.ID}" data-catg="${projectName}"></i>Edit Task</a>
 
                       <div class="dropdown-divider"></div>
@@ -671,122 +724,143 @@ Template.projectsTab.events({
 
                 </td>
               </tr>`;
-            });
+              });
+            }
+
+            $("#tblProjectTasksBody").html(tr);
+
+            return;
+            setTimeout(function () {
+              $("#tblProjectTasks").DataTable({
+                columnDefs: [
+                  {
+                    orderable: false,
+                    targets: 0,
+                  },
+                  {
+                    orderable: false,
+                    targets: 5,
+                  },
+                ],
+                colReorder: {
+                  fixedColumnsLeft: 0,
+                },
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                  {
+                    extend: "excelHtml5",
+                    text: "",
+                    download: "open",
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Project List" + moment().format(),
+                    orientation: "portrait",
+                    exportOptions: {
+                      columns: ":visible",
+                      format: {
+                        body: function (data, row, column) {
+                          if (data.includes("</span>")) {
+                            var res = data.split("</span>");
+                            data = res[1];
+                          }
+
+                          return column === 1
+                            ? data.replace(/<.*?>/gi, "")
+                            : data;
+                        },
+                      },
+                    },
+                  },
+                  {
+                    extend: "print",
+                    download: "open",
+                    className: "btntabletopdf hiddenColumn",
+                    text: "",
+                    title: "Project List",
+                    filename: "Project List" + moment().format(),
+                    exportOptions: {
+                      columns: ":visible",
+                      stripHtml: false,
+                    },
+                  },
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                  [initialDatatableLoad, -1],
+                  [initialDatatableLoad, "All"],
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                  [4, "desc"],
+                  [1, "desc"],
+                ],
+                action: function () {
+                  $("#tblProjectTasks").DataTable().ajax.reload();
+                },
+                fnInitComplete: function () {
+                  $(
+                    "<button class='btn btn-primary btnRefreshProjectTasks' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  ).insertAfter("#tblProjectTasks_filter");
+                },
+              });
+              $(".fullScreenSpin").css("display", "none");
+            }, 300);
+          } else {
+            swal("Cannot edit this project", "", "warning");
+            return;
           }
-
-          $('#tblProjectTasksBody').html(tr);
-
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          swal(err, "", "error");
           return;
-          setTimeout(function () {
-            $('#tblProjectTasks').DataTable({
-              columnDefs: [{
-                "orderable": false,
-                "targets": 0
-              },
-              {
-                "orderable": false,
-                "targets": 5
-              }
-              ],
-              colReorder: {
-                fixedColumnsLeft: 0
-              },
-              "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              buttons: [{
-                extend: 'excelHtml5',
-                text: '',
-                download: 'open',
-                className: "btntabletocsv hiddenColumn",
-                filename: "Project List" + moment().format(),
-                orientation: 'portrait',
-                exportOptions: {
-                  columns: ':visible',
-                  format: {
-                    body: function (data, row, column) {
-                      if (data.includes("</span>")) {
-                        var res = data.split("</span>");
-                        data = res[1];
-                      }
-
-                      return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-                    }
-                  }
-                }
-              }, {
-                extend: 'print',
-                download: 'open',
-                className: "btntabletopdf hiddenColumn",
-                text: '',
-                title: 'Project List',
-                filename: "Project List" + moment().format(),
-                exportOptions: {
-                  columns: ':visible',
-                  stripHtml: false
-                }
-              }],
-              select: true,
-              destroy: true,
-              colReorder: true,
-              pageLength: initialDatatableLoad,
-              lengthMenu: [
-                [initialDatatableLoad, -1],
-                [initialDatatableLoad, "All"]
-              ],
-              info: true,
-              responsive: true,
-              "order": [
-                [4, "desc"],
-                [1, "desc"]
-              ],
-              action: function () {
-                $('#tblProjectTasks').DataTable().ajax.reload();
-              },
-              "fnInitComplete": function () {
-                $("<button class='btn btn-primary btnRefreshProjectTasks' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblProjectTasks_filter");
-              }
-            });
-            $('.fullScreenSpin').css('display', 'none');
-          }, 300);
-
-        } else {
-          swal('Cannot edit this project', '', 'warning');
-          return;
-        }
-
-      }).catch(function (err) {
-        $('.fullScreenSpin').css('display', 'none');
-        swal(err, '', 'error');
-        return;
-      });
+        });
     }
   },
 
   // open new task modal
-  'click .addTaskOnProject': function (e) {
-    $('#newTaskModal').modal('toggle');
+  "click .addTaskOnProject": function (e) {
+    $("#newTaskModal").modal("toggle");
+
+    let projectName = $(".editCrmProjectName").html()
+      ? $(".editCrmProjectName").html().length > 26
+        ? $(".editCrmProjectName").html().substring(0, 26) + "..."
+        : $(".editCrmProjectName").html()
+      : "All Task";
+    $(".addTaskModalProjectName").html(projectName);
+
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
   },
 
   // view all project including delete
-  'click .btnViewProjectCompleted': function (e) {
+  "click .btnViewProjectCompleted": function (e) {
     let templateObject = Template.instance();
     let all_projects = templateObject.all_projects.get();
 
-    let lblViewCompleted = $('#lblViewProjectCompleted').html().trim();
-    if (lblViewCompleted == 'View All') {
-      $('#lblViewProjectCompleted').html('View Actived');
+    let lblViewCompleted = $("#lblViewProjectCompleted").html().trim();
+    if (lblViewCompleted == "View All") {
+      $("#lblViewProjectCompleted").html("View Actived");
     } else {
-      all_projects = all_projects.filter(project => project.fields.Active == true);
-      $('#lblViewProjectCompleted').html('View All');
+      all_projects = all_projects.filter(
+        (project) => project.fields.Active == true
+      );
+      $("#lblViewProjectCompleted").html("View All");
     }
 
     templateObject.active_projects.set(all_projects);
   },
 
+  // show completed tasks on project task modal
+  "click .showCompletedTaskOnProject": function (e) {},
 });
 
 Template.projectsTab.helpers({
-
   active_projects: () => {
     return Template.instance().active_projects.get();
   },
@@ -801,23 +875,28 @@ Template.projectsTab.helpers({
 
   getProjectColor: (color) => {
     if (color == 0) {
-      return 'gray';
+      return "gray";
     }
     return color;
   },
 
   getProjectCount: (tasks) => {
     if (tasks == null) {
-      return '';
-    } else if (tasks.fields != undefined) {
-      return 1;
+      return "";
+    } else if (Array.isArray(tasks) == true) {
+      return tasks.length;
     } else {
-      return tasks.lentgh;
+      return 1;
     }
   },
 
-  stringProjecttasks: (projecttasks) => {
+  getProjectStatus: (status) => {
+    if (status) {
+      return "Active";
+    } else {
+      return "Deleted";
+    }
+  },
 
-  }
-
+  stringProjecttasks: (projecttasks) => {},
 });
