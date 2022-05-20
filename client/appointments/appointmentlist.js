@@ -665,6 +665,7 @@ Template.appointmentlist.onRendered(function () {
               });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tappointmentlist;
                 let lineItems = [];
                 let lineItemObj = {};

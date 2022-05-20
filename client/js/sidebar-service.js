@@ -1514,26 +1514,51 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
 
     let options = '';
-    if(ignoreDate == true){
-      options = {
-         OrderBy:"CreationDate desc",
-         IgnoreDates:true,
-         IsDetailReport:false,
-         LimitCount:'"'+limitcount+'"',
-         LimitFrom:'"'+limitfrom+'"'
-     };
+    let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly')|| false;
+    let loggedEmpID = Session.get('mySessionEmployeeLoggedID')||0;
+    if (seeOwnAppointments == true) {//Check Access Level
+          if(ignoreDate == true){
+            options = {
+               OrderBy:"CreationDate desc",
+               IgnoreDates:true,
+               IsDetailReport:false,
+               LimitCount:'"'+limitcount+'"',
+               LimitFrom:'"'+limitfrom+'"',
+               Search:'TrainerID = '+loggedEmpID+'',
+           };
+         }else{
+           options = {
+              OrderBy:"CreationDate desc",
+              IgnoreDates:false,
+              IsDetailReport:false,
+              DateFrom:'"'+dateFrom+'"',
+              DateTo:'"'+dateTo+'"',
+              LimitCount:'"'+limitcount+'"',
+              LimitFrom:'"'+limitfrom+'"',
+              Search:'TrainerID = '+loggedEmpID+'',
+          };
+         }
    }else{
-     options = {
-        OrderBy:"CreationDate desc",
-        IgnoreDates:false,
-        IsDetailReport:false,
-        DateFrom:'"'+dateFrom+'"',
-        DateTo:'"'+dateTo+'"',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
-    };
+         if(ignoreDate == true){
+           options = {
+              OrderBy:"CreationDate desc",
+              IgnoreDates:true,
+              IsDetailReport:false,
+              LimitCount:'"'+limitcount+'"',
+              LimitFrom:'"'+limitfrom+'"'
+          };
+        }else{
+          options = {
+             OrderBy:"CreationDate desc",
+             IgnoreDates:false,
+             IsDetailReport:false,
+             DateFrom:'"'+dateFrom+'"',
+             DateTo:'"'+dateTo+'"',
+             LimitCount:'"'+limitcount+'"',
+             LimitFrom:'"'+limitfrom+'"'
+         };
+        }
    }
-
   return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
@@ -1641,7 +1666,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   getAllSerialNumber() {
       let options = '';
       options = {
-          
+
       };
       return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
   }
