@@ -10843,8 +10843,31 @@ Template.new_salesorder.events({
         } else {
 
         }
+    },
+    'click .btnSnLotmodal': function(event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let selectedProductName = $('.lineProductName').val();
+        let productService = new ProductService();
+        if (selectedProductName == '') {
+            $('.fullScreenSpin').css('display', 'none');
+            swal('You have to select Product.', '', 'info');
+            event.preventDefault();
+            return false;
+        } else {
+            productService.getProductStatus(selectedProductName).then(function(data) {
+                $('.fullScreenSpin').css('display', 'none');
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    swal('', selectedProductName + 'has none of the allocations -Batch/Bin/Serial Number tacking - turned on', '', 'info');
+                    event.preventDefault();
+                    return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    $('#lotNumberModal').modal('show');
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    $('#serialNumberModal').modal('show');
+                }
+            });
+        }
     }
-
 });
 
 Template.registerHelper('equals', function(a, b) {

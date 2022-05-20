@@ -556,7 +556,7 @@
                                                     <td><input class="lineFinalQty colFinalQty highlightInput" type="text" value="{{item.finalqty}}"></td>
                                                     <td><input class="lineAdjustQty colAdjustQty highlightInput" type="text" value="{{item.adjustqty}}"></td>
                                                     {{#if isBatchSerialNoTracking 'true'}}
-                                                        <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                                        <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                                     {{/if}}
                                                     <td><span class="table-remove btnRemove"><button type="button" class="btn btnDeleteProduct btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                                 </tr>
@@ -710,8 +710,11 @@
     </div>
 
     <!-- Start Serial/lot numbers Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
         {{> serialnumberpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+        {{> lotnumberpop}}
     </div>
     <!-- End Modal -->
 
