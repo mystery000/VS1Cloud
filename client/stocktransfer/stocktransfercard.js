@@ -400,7 +400,6 @@ Template.stocktransfercard.onRendered(function() {
                                   }else{
                                     initialTransferData = data.fields.Lines[i].fields.TransferQty || 0;
                                   }
-
                                     lineItemObj = {
                                         lineID: Random.id(),
                                         id: data.fields.Lines[i].fields.ID || '',
@@ -601,7 +600,6 @@ Template.stocktransfercard.onRendered(function() {
                                   }else{
                                     initialTransferData = useData[d].fields.Lines.fields.TransferQty || 0;
                                   }
-
                                     lineItemObj = {
                                         lineID: Random.id(),
                                         id: useData[d].fields.Lines.fields.ID || '',
@@ -943,7 +941,6 @@ Template.stocktransfercard.onRendered(function() {
                               }else{
                                 initialTransferData = data.fields.Lines[i].fields.TransferQty || 0;
                               }
-
                                 lineItemObj = {
                                     lineID: Random.id(),
                                     id: data.fields.Lines[i].fields.ID || '',
@@ -4261,7 +4258,8 @@ Template.stocktransfercard.events({
     },
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let selectedProductName = $('.lineProductName').val();
+        var target=event.target;
+        let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
         let productService = new ProductService();
         if (selectedProductName == '') {
             $('.fullScreenSpin').css('display', 'none');
@@ -4272,7 +4270,7 @@ Template.stocktransfercard.events({
             productService.getProductStatus(selectedProductName).then(function(data) {
                 $('.fullScreenSpin').css('display', 'none');
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', selectedProductName + 'has none of the allocations -Batch/Bin/Serial Number tacking - turned on', '', 'info');
+                    swal('', selectedProductName + 'has none of the allocations -Batch/Bin/Serial Number tacking - turned on', 'info');
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
