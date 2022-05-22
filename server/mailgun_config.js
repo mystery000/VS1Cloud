@@ -64,7 +64,6 @@ Meteor.methods({
     try {
       Email.send({
         to: details.to,
-        // to: 'silvertiger0321@gmail.com',
         from: details.from,
         cc: details.cc,
         subject: details.subject,
@@ -99,7 +98,6 @@ Meteor.methods({
     try {
       Email.send({
         to: details.EmployeeEmail,
-        // to: 'silvertiger0321@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
         subject: 'Report Email',
@@ -143,13 +141,14 @@ Meteor.methods({
     } 
   },
   calculateNextDate: function(details) {
+    console.log(details);
     let startDate;
     if (details.NextDueDate) startDate = new Date(details.NextDueDate);
     else {
       if (details.StartDate) startDate = new Date(details.StartDate);
       else startDate = new Date();
     }
-    startDate = startDate.getTime();
+    startDate = startDate.getTime() + (details.Offset - startDate.getTimezoneOffset()) * 60 * 1000;
     if (details.Frequency === "M") {
       let months = '0,1,2,3,4,5,6,7,8,9,10,11';
       const monthDate = details.MonthDays;
