@@ -61,9 +61,9 @@ Template.purchasesreport.onRendered(() => {
         // Set date to picker
         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         // Hide (close) the picker
-        $(this).datepicker('hide');
-        // Change ttrigger the on change function
-        $(this).trigger('change');
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
        }
     });
 
@@ -513,6 +513,7 @@ Template.purchasesreport.events({
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -529,7 +530,7 @@ Template.purchasesreport.events({
             templateObject.getPurchasesReports(formatDateFrom, formatDateTo, false);
             templateObject.dateAsAt.set(formatDate);
         }
-
+        },500);
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
@@ -538,6 +539,7 @@ Template.purchasesreport.events({
         $('#dateTo').attr('readonly', false);
         templateObject.records.set('');
         templateObject.grandrecords.set('');
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -555,7 +557,7 @@ Template.purchasesreport.events({
             templateObject.dateAsAt.set(formatDate);
         }
 
-
+        },500);
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

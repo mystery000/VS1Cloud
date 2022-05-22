@@ -164,9 +164,11 @@
                     <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button"
                             style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New
                         Appointment</button>
+                    {{#if includeCreateInvoice}}
                     <button id="btnInvoice" name="btnInvoice" class="btn btn-primary" type="button"
                             style="margin: 16px;"><i class="fa fa-refresh" style="padding-right: 5px;"></i>Create
                         Invoice</button>
+                    {{/if}}
                 </div>
 
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">

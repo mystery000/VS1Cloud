@@ -67,9 +67,9 @@ Template.appointmentlist.onRendered(function () {
         // Set date to picker
         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         // Hide (close) the picker
-        $(this).datepicker('hide');
-        // Change ttrigger the on change function
-        $(this).trigger('change');
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
        }
     });
 
@@ -1608,6 +1608,7 @@ Template.appointmentlist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1622,13 +1623,14 @@ Template.appointmentlist.events({
         } else {
             templateObject.getAllFilterAppointmentListData(formatDateFrom, formatDateTo, false);
         }
-
+      },500);
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1643,7 +1645,7 @@ Template.appointmentlist.events({
         } else {
             templateObject.getAllFilterAppointmentListData(formatDateFrom, formatDateTo, false);
         }
-
+      },500);
     },
     'click #today': function () {
         let templateObject = Template.instance();
@@ -2402,6 +2404,14 @@ Template.appointmentlist.helpers({
     },
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblappointmentlist' });
+    },
+    includeCreateInvoice: () => {
+      let isSales = Session.get('CloudSalesModule')||false;
+      let checkCreateInvoice = false;
+      if(isSales){
+        checkCreateInvoice = true;
+      }
+        return checkCreateInvoice;
     }
 
 });

@@ -1011,7 +1011,7 @@
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                                             {{#if isBatchSerialNoTracking 'true'}}
-                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                             {{/if}}
                                             <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
                                             <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
@@ -1653,9 +1653,13 @@
             {{> customfieldformpop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
             {{> serialnumberpop}}
         </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+            {{> lotnumberpop}}
+        </div>
+
         <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
                 <div class="modal-content">

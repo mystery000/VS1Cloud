@@ -20,6 +20,33 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+
+  getNewGroupListVS1() {
+    let options = '';
+    options = {
+           ListType: "Detail",
+           //select: "[Active]=true"
+          };
+    // if(limitcount == 'All'){
+    //    options = {
+    //      ListType: "Detail",
+    //      select: "[Active]=true"
+    //     };
+    // }else{
+    //   options = {
+       
+    //      ListType: "Detail",
+    //      select: "[Active]=true",
+    //      LimitCount:'"'+limitcount+'"',
+    //      LimitFrom:'"'+limitfrom+'"'
+    //  };
+    // }
+    return this.getList(this.ERPObjects.TVs1TabGroups, options);
+  }
+
+
+
+
   // getAllCurrencies()
   // {
   //   return this.getList('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json');
@@ -280,6 +307,16 @@ export class SideBarService extends BaseService {
         select: '[ProductName] f7like "'+dataSearchName+'" OR [BARCODE] f7like "'+dataSearchName+'" and [ProductType]!="INV"'
        };
     return this.getList(this.ERPObjects.TProductVS1, options);
+  }
+
+  getGroupTypeByName(dataSearchName) {
+
+     let options = '';
+       options = {
+        ListType: "Detail",
+       // select: '[ProductName] f7like "'+dataSearchName+'" OR [BARCODE] f7like "'+dataSearchName+'" and [ProductType]!="INV"'
+       };
+     return this.getList(this.ERPObjects.TVs1TabGroups, options);
   }
 
   getSelectedProducts(employeeID) {
@@ -1963,7 +2000,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-    today = dd+'/'+mm+'/'+ yyyy;
+    today = dd+'/'+mm+'/'+ yyyy;   
     let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
     let options = {
       PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
@@ -2575,19 +2612,13 @@ getCalender(limitcount, limitfrom) {
 }
 
 getSuperannuation(limitcount, limitfrom) {
-  let options = '';
-  if(limitcount == 'All'){
+    let options = '';
+
     options = {
       ListType: "Detail",
-      select: "[Allclasses]=false"
+      select: '[Allclasses]=true'
+      
      };
-  }
-  else{
-    options = {
-      ListType: "Detail",
-      select: "[Allclasses]=false"
-     };
-  }
 
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }
