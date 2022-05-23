@@ -328,6 +328,9 @@ Template.allChartLists.onRendered(function () {
               "width",
               tvs1chart.fields.ChartWidth + '%'
             );
+            $(`[key='${itemName}'] .ui-resizable`).css(
+              "width", "100%"
+            );
           }
 
           // This is the ChartHeight saved in the preferences
