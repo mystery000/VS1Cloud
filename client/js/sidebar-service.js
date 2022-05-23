@@ -520,14 +520,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployee, options);
   }
 
-  getLeadByName(dataSearchName) {
-
+  getLeadByNameOrID(dataSearchName) {
     let options = '';
     options = {
      ListType: "Detail",
-     select: '[EnteredByEmployee] f7like "'+dataSearchName+'"'
+     select: '[EnteredByEmployee] f7like "'+dataSearchName+'" OR [ID] f7like "'+dataSearchName+'"'
     };
-    return this.getList(this.ERPObjects.TLeads, options);
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
 
