@@ -34,7 +34,7 @@ export class SideBarService extends BaseService {
     //     };
     // }else{
     //   options = {
-       
+
     //      ListType: "Detail",
     //      select: "[Active]=true",
     //      LimitCount:'"'+limitcount+'"',
@@ -520,14 +520,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployee, options);
   }
 
-  getLeadByName(dataSearchName) {
-
+  getLeadByNameOrID(dataSearchName) {
     let options = '';
     options = {
      ListType: "Detail",
-     select: '[EnteredByEmployee] f7like "'+dataSearchName+'"'
+     select: '[EnteredByEmployee] f7like "'+dataSearchName+'" OR [ID] f7like "'+dataSearchName+'"'
     };
-    return this.getList(this.ERPObjects.TLeads, options);
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
 
@@ -1513,29 +1512,54 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
   getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
 
-    let options = '';
-    if(ignoreDate == true){
-      options = {
-         OrderBy:"CreationDate desc",
-         IgnoreDates:true,
-         IsDetailReport:false,
-         LimitCount:'"'+limitcount+'"',
-         LimitFrom:'"'+limitfrom+'"'
-     };
-   }else{
-     options = {
-        OrderBy:"CreationDate desc",
-        IgnoreDates:false,
-        IsDetailReport:false,
-        DateFrom:'"'+dateFrom+'"',
-        DateTo:'"'+dateTo+'"',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
-    };
-   }
-
-  return this.getList(this.ERPObjects.TAppointmentList, options);
+   let options = '';
+   let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly')|| false;
+   let loggedEmpID = Session.get('mySessionEmployeeLoggedID')||0;
+   if (seeOwnAppointments == true) {//Check Access Level
+         if(ignoreDate == true){
+           options = {
+              OrderBy:"CreationDate desc",
+              IgnoreDates:true,
+              IsDetailReport:false,
+              LimitCount:'"'+limitcount+'"',
+              LimitFrom:'"'+limitfrom+'"',
+              Search:'TrainerID = '+loggedEmpID+'',
+          };
+        }else{
+          options = {
+             OrderBy:"CreationDate desc",
+             IgnoreDates:false,
+             IsDetailReport:false,
+             DateFrom:'"'+dateFrom+'"',
+             DateTo:'"'+dateTo+'"',
+             LimitCount:'"'+limitcount+'"',
+             LimitFrom:'"'+limitfrom+'"',
+             Search:'TrainerID = '+loggedEmpID+'',
+         };
+        }
+  }else{
+        if(ignoreDate == true){
+          options = {
+             OrderBy:"CreationDate desc",
+             IgnoreDates:true,
+             IsDetailReport:false,
+             LimitCount:'"'+limitcount+'"',
+             LimitFrom:'"'+limitfrom+'"'
+         };
+       }else{
+         options = {
+            OrderBy:"CreationDate desc",
+            IgnoreDates:false,
+            IsDetailReport:false,
+            DateFrom:'"'+dateFrom+'"',
+            DateTo:'"'+dateTo+'"',
+            LimitCount:'"'+limitcount+'"',
+            LimitFrom:'"'+limitfrom+'"'
+        };
+       }
   }
+ return this.getList(this.ERPObjects.TAppointmentList, options);
+ }
 
   getTJournalEntryListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
 
@@ -1641,7 +1665,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   getAllSerialNumber() {
       let options = '';
       options = {
-          
+
       };
       return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
   }
@@ -2000,7 +2024,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-    today = dd+'/'+mm+'/'+ yyyy;   
+    today = dd+'/'+mm+'/'+ yyyy;
     let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
     let options = {
       PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
@@ -2617,7 +2641,7 @@ getSuperannuation(limitcount, limitfrom) {
     options = {
       ListType: "Detail",
       select: '[Allclasses]=true'
-      
+
      };
 
    return this.getList(this.ERPObjects.TSuperannuation, options);
