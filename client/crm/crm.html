@@ -478,6 +478,10 @@
       display: none;
     }
 
+    .taskModalActionFlagDropdown:after {
+      display: none;
+    }
+
     .subtaskCol {
       padding-left: 24px !important;
       padding-right: 24px !important;
@@ -571,11 +575,21 @@
     }
 
     #taskmodalDescription {
-      padding: 0 30px 15px 30px;
+      padding: 10px 15px;
       margin-top: -10px;
       margin-bottom: 10px;
       height: 10vh;
       overflow-y: auto;
+      /* border: solid 1px solid #dddfeb; */
+      border-radius: 6px;
+    }
+
+    .colProjectStatusActive {
+      color: #00a3d3;
+    }
+
+    .colProjectStatusDeleted {
+      color: #e74a3b
     }
   </style>
 
