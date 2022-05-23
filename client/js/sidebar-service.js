@@ -524,7 +524,7 @@ export class SideBarService extends BaseService {
     let options = '';
     options = {
      ListType: "Detail",
-     select: '[EnteredByEmployee] f7like "'+dataSearchName+'" OR [ID] f7like "'+dataSearchName+'"'
+     select: '[ClientName] f7like "'+dataSearchName+'" OR [ID] f7like "'+dataSearchName+'"'
     };
     return this.getList(this.ERPObjects.TProspect, options);
   }
@@ -928,16 +928,20 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
   getAllLeads(limitcount, limitfrom) {
     let options = '';
-    if(limitcount == 'All'){
-       options = {
-        ListType: "Detail",
-       };
-    }else{
-      options = {
-          ListType: "Detail",
-      };
+    if(limitcount === 'All'){
+        options = {
+            ListType: "Detail",
+            select: '[Active]=true'
+        };
+    } else {
+        options = {
+            ListType: "Detail",
+            select: '[Active]=true',
+            LimitCount:'"'+limitcount+'"',
+            LimitFrom:'"'+limitfrom+'"'
+        };
     }
-    return this.getList(this.ERPObjects.TLeads, options);
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
   getCheckLeadData(limitcount, limitfrom) {
