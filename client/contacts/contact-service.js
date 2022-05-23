@@ -230,6 +230,14 @@ export class ContactService extends BaseService {
       return this.POST(this.ERPObjects.TJobEx, data);
   }
 
+  saveProspect(data) {
+      return this.POST(this.ERPObjects.TProspect, data);
+  }
+
+  saveProspectEx(data) {
+      return this.POST(this.ERPObjects.TProspectEx, data);
+  }
+
   saveSupplier(data) {
       return this.POST(this.ERPObjects.TSupplier, data);
   }
