@@ -192,6 +192,22 @@
 "discount":0
 },
 {
+"TYPE":2,
+"Region":"United States of America",
+"LicenseLevel":1,
+"LicenseOrder":1,
+"LicenseLevelDescprion":"Simple Start",
+"ModuleId":36,
+"ModuleName":"CRM",
+"moduledescription":"Improve your sales productivity. With full access to customer history, you can manage customers with ease",
+"IsExtra":false,
+"REquiredLevel":"",
+"Discountfrom":"1899-12-30 00:00:00",
+"Discountto":"1899-12-30 00:00:00",
+"Price":0,
+"discount":0
+},
+{
 "TYPE":3,
 "Region":"United States of America",
 "LicenseLevel":1,

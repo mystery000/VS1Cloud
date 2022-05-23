@@ -19,30 +19,10 @@ Template.leadlist.onRendered(function() {
     let templateObject = Template.instance();
     let contactService = new ContactService();
     let splashArrayLeadList = [];
+    const tableHeaderList = [];
     if(FlowRouter.current().queryParams.success){
        // $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    // Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblLeadlist', function(error, result){
-    //     if(error){
-
-    //     }else{
-    //         if(result){
-    //             for (let i = 0; i < result.customFields.length; i++) {
-    //                 let customcolumn = result.customFields;
-    //                 let columData = customcolumn[i].label;
-    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-    //                 let hiddenColumn = customcolumn[i].hidden;
-    //                 let columnClass = columHeaderUpdate.split('.')[1];
-    //                 let columnWidth = customcolumn[i].width;
-    //                 // let columnindex = customcolumn[i].index + 1;
-    //                 $("th."+columnClass+"").html(columData);
-    //                 $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-    //             }
-    //         }
-
-    //     }
-    // });
 
     templateObject.getLeads = function () {
         // use API TProspectEx instead of TLeads
@@ -71,43 +51,24 @@ Template.leadlist.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         // console.log(data);
-        for (let i = 0; i < data.tleads.length; i++) {
-            const marketingContactContacts = data.tleads[i].fields.MarketingContacts.fields.MarketingContactContacts[0];
+        for (let i = 0; i < data.tprospect.length; i++) {
+            const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
+            const city = contactContacts?contactContacts.fields.ContactCity:'';
             const dataList = {
-                id: data.tleads[i].fields.ID || '',
-                employeeName: data.tleads[i].fields.EnteredByEmployee || '',
-                firstName: data.tleads[i].fields.MarketingContacts.fields.FirstName || '',
-                lastName: data.tleads[i].fields.MarketingContacts.fields.LastName || '',
-                phone: data.tleads[i].fields.MarketingContacts.fields.Phone || '',
-                mobile: data.tleads[i].fields.MarketingContacts.fields.Mobile || '',
-                email: data.tleads[i].fields.MarketingContacts.fields.Email || '',
-                department: data.tleads[i].fields.MarketingContacts.fields.Company || '',
-                address: data.tleads[i].fields.MarketingContacts.fields.Street || '',
-                surburb: data.tleads[i].fields.MarketingContacts.fields.Suburb || '',
-                // country: data.tleads[i].fields.MarketingContacts.fields.Country || '',
-                city: marketingContactContacts.fields.ContactCity || ''
+                id: data.tprospect[i].fields.ID || '',
+                employeeName: data.tprospect[i].fields.ClientName || '',
+                firstName: data.tprospect[i].fields.FirstName || '',
+                lastName: data.tprospect[i].fields.LastName || '',
+                phone: data.tprospect[i].fields.Phone || '',
+                mobile: data.tprospect[i].fields.Mobile || '',
+                email: data.tprospect[i].fields.Email || '',
+                department: data.tprospect[i].fields.CompanyName || '',
+                address: data.tprospect[i].fields.Street || '',
+                surburb: data.tprospect[i].fields.Suburb || '',
+                // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
+                city: city
             };
-            // const dataListAllowance = [
-            //     data.tleads[i].fields.ID || '',
-            //     data.tleads[i].fields.EnteredByEmployee || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.FirstName || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.LastName || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Phone || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Mobile || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Email || '',
-            //     data.tleads[i].fields.Email || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Street || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Country || '',
-            //     data.tleads[i].fields.KeyStringFieldName || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Street2 || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Street3 || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Postcode || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.AltPhone || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.Suburb || '',
-            //     data.tleads[i].fields.MarketingContacts.fields.MarketingContactContacts.fields.ContactCity || '',
-            //     // '<td contenteditable="false" class="colDeletelead"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            // ];
-            if(data.tleads[i].fields.EnteredByEmployee.replace(/\s/g, '') !== ''){
+            if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
                 splashArrayLeadList.push(dataList);
             }
         }
@@ -254,24 +215,25 @@ Template.leadlist.events({
         if (dataSearchName.replace(/\s/g, '') !== '') {
             sideBarService.getLeadByNameOrID(dataSearchName).then(function (data) {
                 $(".btnRefreshLeads").removeClass('btnSearchAlert');
-                if (data.tleads.length > 0) {
-                    for (let i=0; i< data.tleads.length; i++) {
-                        const marketingContactContacts = data.tleads[i].fields.MarketingContacts.fields.MarketingContactContacts[0];
+                if (data.tprospect.length > 0) {
+                    for (let i=0; i< data.tprospect.length; i++) {
+                        const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
+                        const city = contactContacts?contactContacts.fields.ContactCity:'';
                         const dataList = {
-                            id: data.tleads[i].fields.ID || '',
-                            employeeName: data.tleads[i].fields.EnteredByEmployee || '',
-                            firstName: data.tleads[i].fields.MarketingContacts.fields.FirstName || '',
-                            lastName: data.tleads[i].fields.MarketingContacts.fields.LastName || '',
-                            phone: data.tleads[i].fields.MarketingContacts.fields.Phone || '',
-                            mobile: data.tleads[i].fields.MarketingContacts.fields.Mobile || '',
-                            email: data.tleads[i].fields.MarketingContacts.fields.Email || '',
-                            department: data.tleads[i].fields.MarketingContacts.fields.Company || '',
-                            address: data.tleads[i].fields.MarketingContacts.fields.Street || '',
-                            surburb: data.tleads[i].fields.MarketingContacts.fields.Suburb || '',
-                            // country: data.tleads[i].fields.MarketingContacts.fields.Country || '',
-                            city: marketingContactContacts.fields.ContactCity || ''
+                            id: data.tprospect[i].fields.ID || '',
+                            employeeName: data.tprospect[i].fields.ClientName || '',
+                            firstName: data.tprospect[i].fields.FirstName || '',
+                            lastName: data.tprospect[i].fields.LastName || '',
+                            phone: data.tprospect[i].fields.Phone || '',
+                            mobile: data.tprospect[i].fields.Mobile || '',
+                            email: data.tprospect[i].fields.Email || '',
+                            department: data.tprospect[i].fields.CompanyName || '',
+                            address: data.tprospect[i].fields.Street || '',
+                            surburb: data.tprospect[i].fields.Suburb || '',
+                            // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
+                            city: city
                         };
-                        if(data.tleads[i].fields.EnteredByEmployee.replace(/\s/g, '') !== ''){
+                        if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
                             dataTableList.push(dataList);
                         }
                     }
@@ -297,7 +259,7 @@ Template.leadlist.events({
                                 '<td contenteditable="false" class="colCity">' + item[x].city + '</td>' +
                                 '</tr>');
                         }
-                        $('.dataTables_info').html('Showing 1 to ' + data.tleads.length + ' of ' + data.tleads.length + ' entries');
+                        $('.dataTables_info').html('Showing 1 to ' + data.tprospect.length + ' of ' + data.tprospect.length + ' entries');
 
                     }
                 } else {
@@ -568,7 +530,7 @@ Template.leadlist.events({
 
                         for (let i = 0; i < results.data.length -1; i++) {
                             objDetails = {
-                                type: "TLeads",
+                                type: "TProspect",
                                 fields:
                                 {
                                     EmployeeName: results.data[i+1][0],
@@ -585,7 +547,7 @@ Template.leadlist.events({
                             };
                             if(results.data[i+1][1]){
                                 if(results.data[i+1][1] !== "") {
-                                    contactService.saveEmployee(objDetails).then(function (data) {
+                                    contactService.saveProspect(objDetails).then(function (data) {
                                         ///$('.fullScreenSpin').css('display','none');
                                         //Meteor._reload.reload();
                                     }).catch(function (err) {

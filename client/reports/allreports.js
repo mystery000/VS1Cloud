@@ -13,6 +13,8 @@ Template.allreports.onCreated(function(){
    templateObject.isProductSalesReport.set(false);
    templateObject.isSalesReport = new ReactiveVar();
    templateObject.isSalesReport.set(false);
+   templateObject.isForeignExchangeHistoryList = new ReactiveVar();
+   templateObject.isForeignExchangeHistoryList.set(false);
    templateObject.isSalesSummaryReport = new ReactiveVar();
    templateObject.isSalesSummaryReport.set(false);
    templateObject.isGeneralLedger = new ReactiveVar();
@@ -21,10 +23,16 @@ Template.allreports.onCreated(function(){
    templateObject.isTaxSummaryReport.set(false);
    templateObject.isTrialBalance = new ReactiveVar();
    templateObject.isTrialBalance.set(false);
+   templateObject.isPayrollLeaveAccrued = new ReactiveVar();
+   templateObject.isPayrollLeaveAccrued.set(false);
+   templateObject.isSerialNumberReport = new ReactiveVar();
+   templateObject.isSerialNumberReport.set(false);
    templateObject.is1099Transaction = new ReactiveVar();
    templateObject.is1099Transaction.set(false);
    templateObject.isAccountsLists = new ReactiveVar();
    templateObject.isAccountsLists.set(false);
+   templateObject.isBinLocations = new ReactiveVar();
+   templateObject.isBinLocations.set(false);
    templateObject.isTransactionJournal = new ReactiveVar();
    templateObject.isTransactionJournal.set(false);
    templateObject.isUnpaidBills = new ReactiveVar();
@@ -76,12 +84,16 @@ Template.allreports.onRendered(() => {
   let isAgedReceivablesSummary = Session.get('cloudAgedReceivablesSummary');
   let isProductSalesReport = Session.get('cloudProductSalesReport');
   let isSalesReport = Session.get('cloudSalesReport');
+  let isForeignExchangeHistoryList = Session.get('cloudForeignExchangeHistoryList');
   let isSalesSummaryReport = Session.get('cloudSalesSummaryReport');
   let isGeneralLedger = Session.get('cloudGeneralLedger');
   let isTaxSummaryReport = Session.get('cloudTaxSummaryReport');
   let isTrialBalance = Session.get('cloudTrialBalance');
+  let isPayrollLeaveAccrued = Session.get('cloudPayrollLeaveAccrued');
+  let isSerialNumberReport = Session.get('cloudSerialNumberReport');
   let is1099Transaction = Session.get('cloud1099Transaction');
   let isAccountsLists = Session.get('cloudAccountList');
+  let isBinLocations = Session.get('cloudBinLocations');
   let isTransactionJournal = Session.get('cloudTransactionJournal');
   let isUnpaidBills = Session.get('cloudBillsUnpaid');
   let isUnpaidPO = Session.get('cloudPurchaseOrderUnpaid');
@@ -122,6 +134,9 @@ Template.allreports.onRendered(() => {
     if(isSalesReport == true){
     templateObject.isSalesReport.set(true);
     }
+    if(isForeignExchangeHistoryList == true){
+    templateObject.isForeignExchangeHistoryList.set(true);
+    }
     if(isSalesSummaryReport == true){
     templateObject.isSalesSummaryReport.set(true);
     }
@@ -134,11 +149,20 @@ Template.allreports.onRendered(() => {
     if(isTrialBalance == true){
     templateObject.isTrialBalance.set(true);
     }
+    if(isPayrollLeaveAccrued == true){
+    templateObject.isPayrollLeaveAccrued.set(true);
+    }
+    if(isSerialNumberReport == true){
+    templateObject.isSerialNumberReport.set(true);
+    }
     if(is1099Transaction == true){
     templateObject.is1099Transaction.set(true);
     }
     if(isAccountsLists == true){
     templateObject.isAccountsLists.set(true);
+    }
+    if(isBinLocations == true){
+    templateObject.isBinLocations.set(true);
     }
     if(isTransactionJournal == true){
     templateObject.isTransactionJournal.set(true);
@@ -277,6 +301,16 @@ Template.allreports.events({
             templateObject.isSalesReport.set(false);
         }
     },
+    'click .chkForeignExchangeHistoryList': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudForeignExchangeHistoryList', true);
+            templateObject.isForeignExchangeHistoryList.set(true);
+        } else {
+            Session.setPersistent('cloudForeignExchangeHistoryList', false);
+            templateObject.isForeignExchangeHistoryList.set(false);
+        }
+    },
     'click .chkSalesSummaryReport': function (event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')){
@@ -317,6 +351,16 @@ Template.allreports.events({
             templateObject.isTrialBalance.set(false);
         }
     },
+    'click .chkSerialNumberReport': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudSerialNumberReport', true);
+            templateObject.isSerialNumberReport.set(true);
+        } else {
+            Session.setPersistent('cloudSerialNumberReport', false);
+            templateObject.isSerialNumberReport.set(false);
+        }
+    },
     'click .chk1099Transaction': function (event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')){
@@ -335,6 +379,16 @@ Template.allreports.events({
         } else {
             Session.setPersistent('cloudAccountList', false);
             templateObject.isAccountsLists.set(false);
+        }
+    },
+    'click .chkBinLocationsList': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudBinLocations', true);
+            templateObject.isBinLocations.set(true);
+        } else {
+            Session.setPersistent('cloudBinLocations', false);
+            templateObject.isBinLocations.set(false);
         }
     },
     'click .chkTransactionJournal': function (event) {
@@ -477,6 +531,16 @@ Template.allreports.events({
             templateObject.isChequeList.set(false);
         }
     },
+    'click .chkPayrollLeaveAccrued': function (event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')){
+            Session.setPersistent('cloudPayrollLeaveAccrued', true);
+            templateObject.isPayrollLeaveAccrued.set(true);
+        } else {
+            Session.setPersistent('cloudPayrollLeaveAccrued', false);
+            templateObject.isPayrollLeaveAccrued.set(false);
+        }
+    },
     'click .chkStockAdjustmentList': function (event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')){
@@ -605,6 +669,9 @@ Template.allreports.helpers({
   isAccountsLists: function() {
         return Template.instance().isAccountsLists.get();
   },
+  isBinLocations: function() {
+        return Template.instance().isBinLocations.get();
+  },
   isTransactionJournal: function() {
         return Template.instance().isTransactionJournal.get();
   },
@@ -641,6 +708,9 @@ Template.allreports.helpers({
   isInvoicesUnpaid: function() {
         return Template.instance().isInvoicesUnpaid.get();
   },
+  isPayrollLeaveAccrued: function() {
+        return Template.instance().isPayrollLeaveAccrued.get();
+  },
   isTimeSheetDetails: function() {
         return Template.instance().isTimeSheetDetails.get();
   },
@@ -668,6 +738,9 @@ Template.allreports.helpers({
   isSalesReport: function() {
         return Template.instance().isSalesReport.get();
   },
+  isForeignExchangeHistoryList: function() {
+        return Template.instance().isForeignExchangeHistoryList.get();
+  },
   isSalesSummaryReport: function() {
         return Template.instance().isSalesSummaryReport.get();
   },
@@ -679,6 +752,9 @@ Template.allreports.helpers({
   },
   isTrialBalance: function() {
         return Template.instance().isTrialBalance.get();
+  },
+  isSerialNumberReport: function() {
+        return Template.instance().isSerialNumberReport.get();
   },
   is1099Transaction: function() {
         return Template.instance().is1099Transaction.get();
@@ -705,12 +781,16 @@ Template.allreports.helpers({
       let isAgedReceivablesSummary =  Template.instance().isAgedReceivablesSummary.get();
       let isProductSalesReport =  Template.instance().isProductSalesReport.get();
       let isSalesReport =  Template.instance().isSalesReport.get();
+      let isForeignExchangeHistoryList =  Template.instance().isForeignExchangeHistoryList.get();
       let isSalesSummaryReport =  Template.instance().isSalesSummaryReport.get();
       let isGeneralLedger =  Template.instance().isGeneralLedger.get();
       let isTaxSummaryReport =  Template.instance().isTaxSummaryReport.get();
       let isTrialBalance =  Template.instance().isTrialBalance.get();
+      let isPayrollLeaveAccrued =  Template.instance().isPayrollLeaveAccrued.get();
+      let isSerialNumberReport =  Template.instance().isSerialNumberReport.get();
       let is1099Transaction =  Template.instance().is1099Transaction.get();
       let isAccountsLists =  Template.instance().isAccountsLists.get();
+      let isBinLocations =  Template.instance().isBinLocations.get();
       let isTransactionJournal =  Template.instance().isTransactionJournal.get();
       let isUnpaidBills =  Template.instance().isUnpaidBills.get();
       let isUnpaidPO =  Template.instance().isUnpaidPO.get();
@@ -734,7 +814,7 @@ Template.allreports.helpers({
       let isPrintStatement =  Template.instance().isPrintStatement.get();
       let isShowFavorite = false;
 
-      if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal){
+      if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isForeignExchangeHistoryList || isBinLocations){
         isShowFavorite = true;
       }
       return isShowFavorite;

@@ -57,7 +57,7 @@ Template.customerscard.onRendered(function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
-    var countryService = new CountryService();
+    const countryService = new CountryService();
     let paymentService = new PaymentsService();
     const records = [];
     let countries = [];
