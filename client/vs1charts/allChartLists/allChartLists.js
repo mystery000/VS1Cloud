@@ -69,7 +69,7 @@ async function saveCharts() {
   const dashboardApis = new DashboardApi(); // Load all dashboard APIS
   ChartHandler.buildPositions();
 
-  const charts = $(".chart-visibility");
+  const charts = $(".chart-visibility.editCharts");
   // console.log(charts);
   /**
    * @property {Tvs1ChartDashboardPreference[]}
@@ -149,9 +149,15 @@ Template.allChartLists.onRendered(function () {
 
     // $(".on-editor-change-mode").addClass("showelement");
     // $(".on-editor-change-mode").removeClass("hideelement");
+    $('.sortable-chart-widget-js').removeClass("col-md-8 col-md-6 col-md-4");
+    $('.sortable-chart-widget-js').addClass("editCharts");
+    $('.sortable-chart-widget-js').each(function(){
+      let className = $(this).data('default-class');
+      $(this).addClass(className);
+    });
 
     $(".card").addClass("dimmedChart");
-    $(".py-2").removeClass("dimmedChart");
+    $(".py-2").removeClass("dimmedChart");    
   };
   templateObject.checkChartToDisplay = async () => {
     let defaultChartList = [];
@@ -275,13 +281,7 @@ Template.allChartLists.onRendered(function () {
         //console.log(itemName + " " + tvs1chart.fields.Active);
 
         //if (itemList.includes(itemName) == true) {
-        // If the item name exist
-        if( tvs1chart.fields.ChartWidth ){
-          $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
-            "width",
-            tvs1chart.fields.ChartWidth + '%'
-          );
-        }
+        
 
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
         $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
@@ -290,14 +290,6 @@ Template.allChartLists.onRendered(function () {
         // if ($(`[key='${itemName}'] .ui-resizable`).width() < 150) {
         //   $(`[key='${itemName}'] .ui-resizable`).css("width", "500px");
         // }
-
-        // This is the ChartHeight saved in the preferences
-        if( tvs1chart.fields.ChartHeight ){
-          $(`[key='${itemName}'] .ui-resizable`).css(
-            "height",
-            tvs1chart.fields.ChartHeight + 'vh'
-          );
-        }
 
         // This the default size if ever it zero
         // if ($(`[key='${itemName}'] .ui-resizable`).height() < 150) {
@@ -330,9 +322,27 @@ Template.allChartLists.onRendered(function () {
             "false"
           );
 
+          // If the item name exist
+          if( tvs1chart.fields.ChartWidth ){
+            $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
+              "width",
+              tvs1chart.fields.ChartWidth + '%'
+            );
+          }
+
+          // This is the ChartHeight saved in the preferences
+          if( tvs1chart.fields.ChartHeight ){
+            $(`[key='${itemName}'] .ui-resizable`).css(
+              "height",
+              tvs1chart.fields.ChartHeight + 'vh'
+            );
+          }
+
           $(`[key='${itemName}']`).removeClass("hideelement");
           //$(`[key='${itemName}']`).attr("is-hidden", false);
         } else {
+          let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
+          $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
           $(`[key='${itemName}']`).addClass("hideelement");
           $(`[key='${itemName}'] .on-editor-change-mode`).text("Show");
           // $(`[key='${itemName}']`).attr("is-hidden", true);
@@ -451,6 +461,7 @@ Template.allChartLists.events({
     const templateObject = Template.instance();
     await templateObject.hideChartElements();
     await templateObject.checkChartToDisplay();
+    $('.sortable-chart-widget-js').removeClass("editCharts");
     $(".fullScreenSpin").css("display", "none");
     //templateObject.deactivateDraggable();
   },
