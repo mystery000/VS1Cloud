@@ -211,6 +211,7 @@ Template.crmoverview.events({
   // open new task modal
   "click .btnNewTask": function (e) {
     $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
 
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
@@ -229,6 +230,7 @@ Template.crmoverview.events({
       let type = e.target.dataset.ttype;
       let catg = e.target.dataset.catg;
       let templateObject = Template.instance();
+      $("#txtCrmSubTaskID").val(id);
 
       $(".fullScreenSpin").css("display", "inline-block");
       // get selected task detail via api

@@ -1110,6 +1110,7 @@ Template.alltaskdatatable.events({
   "click .btnSaveAddTask": function (e) {
     let task_name = $("#add_task_name").val();
     let task_description = $("#add_task_description").val();
+    let subTaskID = $("#txtCrmSubTaskID").val();
     let templateObject = Template.instance();
 
     let due_date = $(".crmEditDatepicker").val();
@@ -1136,17 +1137,31 @@ Template.alltaskdatatable.events({
       ? $("#editProjectID").val()
       : projectID;
 
-    var objDetails = {
-      type: "Tprojecttasks",
-      fields: {
-        TaskName: task_name,
-        TaskDescription: task_description,
-        Completed: false,
-        ProjectID: projectID,
-        due_date: due_date,
-        priority: priority,
-      },
-    };
+    if (subTaskID) {
+      var objDetails = {
+        type: "Tprojecttask_subtasks",
+        fields: {
+          TaskID: subTaskID,
+          SubTaskName: task_name,
+          SubTaskDescription: task_description,
+          ProjectID: projectID,
+          SubTaskDate: due_date,
+          priority: priority,
+        },
+      };
+    } else {
+      var objDetails = {
+        type: "Tprojecttasks",
+        fields: {
+          TaskName: task_name,
+          TaskDescription: task_description,
+          Completed: false,
+          ProjectID: projectID,
+          due_date: due_date,
+          priority: priority,
+        },
+      };
+    }
 
     crmService
       .saveNewTask(objDetails)
