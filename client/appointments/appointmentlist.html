@@ -324,7 +324,15 @@
                                     <td contenteditable="false" style="background-color: {{item.color}} !important; color:#fff" class="colStatus">{{item.finished}}</td>
                                     <td contenteditable="false" class="colConfirm d-flex justify-content-xl-center align-items-end">
                                         {{#if equals item.msRef "Yes"}}
-                                        <i class="fa fa-check-circle text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                            {{#if equals item.otherTxt "Yes"}}
+                                                <i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                            {{else}}
+                                                {{#if equals item.otherTxt "No"}}
+                                                    <i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>
+                                                {{else}}
+                                                    <i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>
+                                                {{/if}}
+                                            {{/if}}
                                         {{/if}}
                                     </td>
                                     <td contenteditable="false" class="colNotes hiddenColumn">{{item.notes}}</td>
