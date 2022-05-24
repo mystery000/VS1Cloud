@@ -1670,3 +1670,21 @@ authenticatedRoutes.route('/binlocationslist', {
         });
     }
 });
+
+authenticatedRoutes.route('/timesheetsummary', {
+    name: 'timesheetsummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'timesheetsummary'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollhistoryreport', {
+    name: 'payrollhistoryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollhistoryreport'
+        });
+    }
+});
