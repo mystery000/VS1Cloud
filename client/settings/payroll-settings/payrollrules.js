@@ -1711,25 +1711,32 @@ Template.payrollrules.onRendered(function() {
                       data: splashArrayCalenderList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [
-                              
+                        {
+                          className: "colCalenderID hiddenColumn",
+                          "targets": [0]
+                        },
                         {
                             className: "colPayCalendarName",
-                            "targets": [0]
-                        },  {
-                            className: "colPayPeriod",
                             "targets": [1]
-                        }, {
-                            className: "colNextPayPeriod",
+                        },  
+                        {
+                            className: "colPayPeriod",
                             "targets": [2]
-                        }, {
-                            className: "colNextPaymentDate",
+                        }, 
+                        {
+                            className: "colNextPayPeriod",
                             "targets": [3]
-                        },  {
-                            className: "colDelete",
+                        }, 
+                        {
+                            className: "colNextPaymentDate",
+                            "targets": [4]
+                        },  
+                        {
+                            className: "colDeleteCalenders",
                             "orderable": false,
                             "targets": -1
                         }
-                      ],
+                    ],
                       select: true,
                       destroy: true,
                       colReorder: true,
@@ -1901,7 +1908,7 @@ Template.payrollrules.onRendered(function() {
                             "orderable": false,
                             "targets": -1
                         }
-                      ],
+                    ],
                       select: true,
                       destroy: true,
                       colReorder: true,
@@ -8827,7 +8834,7 @@ Template.payrollrules.onRendered(function() {
     templateObject.getReimbursement();
 
     templateObject.getSuperannuationData = function(){
-        getVS1Data('TSuperannuation1').then(function(dataObject) {
+        getVS1Data('TSuperannuation').then(function(dataObject) {
             if (dataObject.length == 0) {
                  sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TSuperannuation', JSON.stringify(data));
@@ -8836,18 +8843,19 @@ Template.payrollrules.onRendered(function() {
                   for (let i = 0; i < data.tsuperannuation.length; i++) {
                     
                     var dataListAllowance = [
-                        data.tsuperannuation[i].fields.ID || '',
-                        data.tsuperannuation[i].fields.Superfund || '',
-                        data.tsuperannuation[i].fields.Supertypeid || '',
-                        data.tsuperannuation[i].fields.Employeeid || '',
-                        data.tsuperannuation[i].fields.ABN || '',,
-                        data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                        data.tsuperannuation[i].fields.BSB || '',
-                        data.tsuperannuation[i].fields.AccountNumber || '',
-                        data.tsuperannuation[i].fields.AccountName || '',
-                        '',
-                        '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                     ];
+                                               data.tsuperannuation[i].fields.ID || '',
+                                                data.tsuperannuation[i].fields.Superfund || '',
+                                                data.tsuperannuation[i].fields.Supertypeid || '',
+                                                data.tsuperannuation[i].fields.Employeeid || '',
+                                                data.tsuperannuation[i].fields.ABN || '',,
+                                                data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                                data.tsuperannuation[i].fields.BSB || '',
+                                                data.tsuperannuation[i].fields.AccountNumber || '',
+                                                data.tsuperannuation[i].fields.AccountName || '',
+                                                '',
+                                                '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                             ];
+                    
     
                       splashArraySuperannuationList.push(dataListAllowance);
                   }
@@ -9045,12 +9053,12 @@ Template.payrollrules.onRendered(function() {
                 var dataListAllowance = [
                     data.tsuperannuation[i].fields.ID || '',
                     data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.KeyStringFieldName || '',
+                    data.tsuperannuation[i].fields.Area || '',
                     data.tsuperannuation[i].fields.Employeeid || '',
                     data.tsuperannuation[i].fields.ABN || '',
                     data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
                     data.tsuperannuation[i].fields.BSB || '',
-                    data.tsuperannuation[i].fields.AccountNumber || '',
+                    data.tsuperannuation[i].fields.Accountno || '',
                     data.tsuperannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                  ];
@@ -9059,7 +9067,7 @@ Template.payrollrules.onRendered(function() {
               }
         
     
-    
+             console.log
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -9152,12 +9160,12 @@ Template.payrollrules.onRendered(function() {
                                         var dataListAllowance = [
                                             data.tsuperannuation[i].fields.ID || '',
                                             data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.KeyStringFieldName || '',
+                                            data.tsuperannuation[i].fields.Area || '',
                                             data.tsuperannuation[i].fields.Employeeid || '',
                                             data.tsuperannuation[i].fields.ABN || '',
                                             data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
                                             data.tsuperannuation[i].fields.BSB || '',
-                                            data.tsuperannuation[i].fields.AccountNumber || '',
+                                            data.tsuperannuation[i].fields.Accountno || '',
                                             data.tsuperannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                          ];
@@ -9236,6 +9244,7 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
+            console.log(err);
           sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TSuperannuation', JSON.stringify(data));
               let lineItems = [];
@@ -9247,12 +9256,12 @@ Template.payrollrules.onRendered(function() {
                 var dataListAllowance = [
                     data.tsuperannuation[i].fields.ID || '',
                     data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.KeyStringFieldName || '',
+                    data.tsuperannuation[i].fields.Area || '',
                     data.tsuperannuation[i].fields.Employeeid || '',
                     data.tsuperannuation[i].fields.ABN || '',
                     data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
                     data.tsuperannuation[i].fields.BSB || '',
-                    data.tsuperannuation[i].fields.AccountNumber || '',
+                    data.tsuperannuation[i].fields.Accountno || '',
                     data.tsuperannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                  ];
@@ -9352,12 +9361,12 @@ Template.payrollrules.onRendered(function() {
                                         var dataListAllowance = [
                                             data.tsuperannuation[i].fields.ID || '',
                                             data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.KeyStringFieldName || '',
+                                            data.tsuperannuation[i].fields.area || '',
                                             data.tsuperannuation[i].fields.Employeeid || '',
                                             data.tsuperannuation[i].fields.ABN || '',
                                             data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
                                             data.tsuperannuation[i].fields.BSB || '',
-                                            data.tsuperannuation[i].fields.AccountNumber || '',
+                                            data.tsuperannuation[i].fields.Accountno || '',
                                             data.tsuperannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                          ];
@@ -18288,328 +18297,81 @@ Template.payrollrules.onRendered(function() {
     });
 
     $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountAllowance';
+        let selectLineID = $('#selectLineID').val();
         var table = $(this);
           let accountname = table.find(".productName").text();
           let accountID = table.find(".colAccountID").text()||0;
           $('#accountListModal').modal('toggle');
 
           if(selectLineID == 'edtExpenseAccountAllowance'){
-          $('#edtExpenseAccountAllowance').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
+            $('#edtExpenseAccountAllowance').val(accountname);
+            $('#edtExpenseAccountID').val(accountID);
+          }
+          else if(selectLineID == 'edtDeductionAccount'){
             $('#edtDeductionAccount').val(accountname);
             $('#edtDeductionAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountDirectorsFees';
-        var table = $(this);
-        let accountname = table.find(".productName").text();
-        let accountID = table.find(".colAccountID").text()||0;
-        $('#accountListModal').modal('toggle');
-
-        if(selectLineID == 'edtExpenseAccountDirectorsFees'){
-          $('#edtExpenseAccountDirectorsFees').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-        }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
-        }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-        
-    });
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountTermnination';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountTermnination'){
-          $('#edtExpenseAccountTermnination').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
-            
+          else if(selectLineID == 'edtExpenseAccountTermnination'){
+                  $('#edtExpenseAccountTermnination').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccount'){
-          $('#edtExpenseAccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountDirectorsFees'){
+                   $('#edtExpenseAccountDirectorsFees').val(accountname);
+                   $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountOvertime';
-     
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountOvertime'){
-          $('#edtExpenseAccountOvertime').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccount'){
+                  $('#edtExpenseAccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountLumpSumE';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountLumpSumE'){
-          $('#edtExpenseAccountLumpSumE').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountOvertime'){
+                  $('#edtExpenseAccountOvertime').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountBonusesCommissions';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountBonusesCommissions'){
-          $('#edtExpenseAccountBonusesCommissions').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountLumpSumE'){
+                  $('#edtExpenseAccountLumpSumE').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountLumpSumW';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountLumpSumW'){
-          $('#edtExpenseAccountLumpSumW').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountBonusesCommissions'){
+                  $('#edtExpenseAccountBonusesCommissions').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editbankaccount'){
-          $('#editbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountLumpSumW'){
+                  $('#edtExpenseAccountLumpSumW').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editpaygbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editpaygbankaccount'){
-          $('#editpaygbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editbankaccount'){
+                  $('#editbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtReimbursementAccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtReimbursementAccount'){
-          $('#edtReimbursementAccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editpaygbankaccount'){
+                  $('#editpaygbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editwagesexpbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editwagesexpbankaccount'){
-          $('#editwagesexpbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtReimbursementAccount'){
+                  $('#edtReimbursementAccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editwagespaybankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editwagespaybankaccount'){
-          $('#editwagespaybankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editwagesexpbankaccount'){
+                  $('#editwagesexpbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editsuperliabbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editsuperliabbankaccount'){
-          $('#editsuperliabbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editwagespaybankaccount'){
+                  $('#editwagespaybankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editsuperexpbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editsuperexpbankaccount'){
-          $('#editsuperexpbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editsuperliabbankaccount'){
+                  $('#editsuperliabbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
+          else if (selectLineID == 'editsuperexpbankaccount'){
+                  $('#editsuperexpbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
+          }
+          else
+          {
+
+          }
+         
 
         $('#tblAccount_filter .form-control-sm').val('');
         setTimeout(function () {
@@ -20368,11 +20130,11 @@ Template.payrollrules.events({
                                     ID: parseInt(id),
                                     Superfund:fundName,
                                     Employeeid:parseInt(employeNumber),
-                                    KeyStringFieldName:fundType, 
+                                    area:fundType, 
                                     Supertypeid:fundtypeid,
                                     ABN:abn,
                                     AccountName:edtaccountname,
-                                    AccountNumber:edtaccountnumber,
+                                    Accountno:edtaccountnumber,
                                     ElectronicsServiceAddressAlias:edtelectronicsalias,
                                     BSB:edtbsb,
                                     Clientid:Session.get('mySessionEmployeeLoggedID'),
@@ -20483,20 +20245,20 @@ Template.payrollrules.events({
                         objDetails = {
                           type: "TSuperannuation",
                           fields: {
-                              ID: parseInt(supperannuationId),
-                              Superfund:fundName,
-                              Employeeid:parseInt(employeNumber),
-                              KeyStringFieldName:fundType, 
-                              Supertypeid:fundtypeid,
-                              ABN:abn,
-                              AccountName:edtaccountname,
-                              AccountNumber:edtaccountnumber,
-                              ElectronicsServiceAddressAlias:edtelectronicsalias,
-                              BSB:edtbsb,
-                              Clientid:Session.get('mySessionEmployeeLoggedID'),
-                              Amount:1,
-                              DepartmentName:defaultDept,
-                              Allclasses:true,
+                                    ID: parseInt(supperannuationId),
+                                    Superfund:fundName,
+                                    Employeeid:parseInt(employeNumber),
+                                    area:fundType, 
+                                    Supertypeid:fundtypeid,
+                                    ABN:abn,
+                                    AccountName:edtaccountname,
+                                    Accountno:edtaccountnumber,
+                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                    BSB:edtbsb,
+                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Amount:1,
+                                    DepartmentName:defaultDept,
+                                    Allclasses:true,
                           }
                       };
          
@@ -20556,19 +20318,19 @@ Template.payrollrules.events({
                                type: "TSuperannuation",
                                fields: {
                                  
-                                   Superfund:fundName,
-                                   Employeeid:parseInt(employeNumber),
-                                   KeyStringFieldName:fundType, 
-                                   Supertypeid:fundtypeid,
-                                   ABN:abn,
-                                   AccountName:edtaccountname,
-                                   AccountNumber:edtaccountnumber,
-                                   ElectronicsServiceAddressAlias:edtelectronicsalias,
-                                   BSB:edtbsb,
-                                   Clientid:Session.get('mySessionEmployeeLoggedID'),
-                                   Amount:1,
-                                   DepartmentName:defaultDept,
-                                   Allclasses:true,
+                                Superfund:fundName,
+                                Employeeid:parseInt(employeNumber),
+                                area:fundType, 
+                                Supertypeid:fundtypeid,
+                                ABN:abn,
+                                AccountName:edtaccountname,
+                                Accountno:edtaccountnumber,
+                                ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                BSB:edtbsb,
+                                Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                Amount:1,
+                                DepartmentName:defaultDept,
+                                Allclasses:true,
                                }
                            };
                         
@@ -20636,20 +20398,20 @@ Template.payrollrules.events({
                     objDetails = {
                       type: "TSuperannuation",
                       fields: {
-                          ID: parseInt(supperannuationId),
-                          Superfund:fundName,
-                          Employeeid:parseInt(employeNumber),
-                          KeyStringFieldName:fundType, 
-                          Supertypeid:fundtypeid,
-                          ABN:abn,
-                          AccountName:edtaccountname,
-                          AccountNumber:edtaccountnumber,
-                          ElectronicsServiceAddressAlias:edtelectronicsalias,
-                          BSB:edtbsb,
-                          Clientid:Session.get('mySessionEmployeeLoggedID'),
-                          Amount:1,
-                          DepartmentName:defaultDept,
-                          Allclasses:true,
+                                  ID: parseInt(supperannuationId),
+                                   Superfund:fundName,
+                                    Employeeid:parseInt(employeNumber),
+                                    area:fundType, 
+                                    Supertypeid:fundtypeid,
+                                    ABN:abn,
+                                    AccountName:edtaccountname,
+                                    Accountno:edtaccountnumber,
+                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                    BSB:edtbsb,
+                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Amount:1,
+                                    DepartmentName:defaultDept,
+                                    Allclasses:true,
                       }
                   };
      
@@ -20709,19 +20471,19 @@ Template.payrollrules.events({
                            type: "TSuperannuation",
                            fields: {
                              
-                               Superfund:fundName,
-                               Employeeid:parseInt(employeNumber),
-                               KeyStringFieldName:fundType, 
-                               Supertypeid:fundtypeid,
-                               ABN:abn,
-                               AccountName:edtaccountname,
-                               AccountNumber:edtaccountnumber,
-                               ElectronicsServiceAddressAlias:edtelectronicsalias,
-                               BSB:edtbsb,
-                               Clientid:Session.get('mySessionEmployeeLoggedID'),
-                               Amount:1,
-                               DepartmentName:defaultDept,
-                               Allclasses:true,
+                            Superfund:fundName,
+                            Employeeid:parseInt(employeNumber),
+                            area:fundType, 
+                            Supertypeid:fundtypeid,
+                            ABN:abn,
+                            AccountName:edtaccountname,
+                            Accountno:edtaccountnumber,
+                            ElectronicsServiceAddressAlias:edtelectronicsalias,
+                            BSB:edtbsb,
+                            Clientid:Session.get('mySessionEmployeeLoggedID'),
+                            Amount:1,
+                            DepartmentName:defaultDept,
+                            Allclasses:true,
                            }
                        };
                     

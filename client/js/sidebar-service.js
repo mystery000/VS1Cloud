@@ -2642,11 +2642,21 @@ getCalender(limitcount, limitfrom) {
 getSuperannuation(limitcount, limitfrom) {
     let options = '';
 
-    options = {
-      ListType: "Detail",
-      select: '[Allclasses]=true'
-
+    if(limitcount == 'All'){
+      options = {
+       ListType: "Detail",
+       select: '[Allclasses]=true'
+      };
+   }else{
+     options = {
+      // orderby:'"ClientID desc"',
+        ListType: "Detail",
+        select: '[Allclasses]=true'
+ 
      };
+   }
+
+   
 
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }
