@@ -2653,6 +2653,7 @@ Template.new_invoice.onRendered(() => {
                                         lineItems.push(lineItemObj);
                                     }
                                 } else {
+                                
                                     let AmountGbp = data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(undefined, {
                                         minimumFractionDigits: 2
                                     }) || 0;
@@ -4396,6 +4397,7 @@ Template.new_invoice.onRendered(() => {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
+                                            
                                             let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
                                                 minimumFractionDigits: 2
                                             });
@@ -12511,8 +12513,10 @@ Template.new_invoice.onRendered(() => {
         },
         'click .btnSnLotmodal': function(event) {
             $('.fullScreenSpin').css('display', 'inline-block');
-            var target=event.target;
+            var target = event.target;
             let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+            let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
+            localStorage.setItem('productItem', selectedunit);
             let productService = new ProductService();
             if (selectedProductName == '') {
                 $('.fullScreenSpin').css('display', 'none');
@@ -12523,7 +12527,7 @@ Template.new_invoice.onRendered(() => {
                 productService.getProductStatus(selectedProductName).then(function(data) {
                     $('.fullScreenSpin').css('display', 'none');
                     if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        swal('', selectedProductName + 'has none of the allocations -Batch/Bin/Serial Number tacking - turned on', 'info');
+                        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
                         event.preventDefault();
                         return false;
                     } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {

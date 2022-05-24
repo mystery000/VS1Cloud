@@ -23,4 +23,13 @@ var times = 0;
 Template.serialnumberpop.onCreated(() => {});
 Template.serialnumberpop.onRendered(() => {});
 Template.serialnumberpop.helpers({});
-Template.serialnumberpop.events({});
+Template.serialnumberpop.events({
+    'keyup .lineSerialnumbers': function(event) {
+        $('.serialNo').text('1');
+    },
+    'click .btnSNSave': function(event) {
+        let startSerialnum = Number($('.lineSerialnumbers').text());
+        let selectedunit = localStorage.getItem('productItem');
+        console.log("Serial Numbers:", startSerialnum, "No:", Number(selectedunit));
+    }
+});
