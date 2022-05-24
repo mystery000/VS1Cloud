@@ -38,13 +38,12 @@ export class ContactService extends BaseService {
       return this.getList(this.ERPObjects.TEmployee, options);
   }
 
-
   getAllEmployeesPriority() {
     let options = {
         PropertyList: "ID,CustFld5",
     };
     return this.getList(this.ERPObjects.TEmployee, options);
-}
+  }
 
   getAllCustomersData() {
       let options = {
@@ -82,6 +81,13 @@ export class ContactService extends BaseService {
           select: '[CustFld5]="'+priorityData+'" and [Active]=true',
       };
       return this.getList(this.ERPObjects.TEmployee, options);
+  }
+
+  getCheckLeadsData(leadName) {
+      let options = {
+          select: '[ClientName]="'+leadName+'" and [Active]=true',
+      };
+      return this.getList(this.ERPObjects.TProspect, options);
   }
 
   getCheckSuppliersData(supplierName) {
@@ -162,6 +168,10 @@ export class ContactService extends BaseService {
 
   getOneEmployeeDataEx(id) {
     return this.getOneById(this.ERPObjects.TEmployeeEx, id);
+  }
+
+  getOneLeadDataEx(id) {
+      return this.getOneById(this.ERPObjects.TProspectEx, id);
   }
 
   getOneSupplierData(id) {

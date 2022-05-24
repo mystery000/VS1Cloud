@@ -697,7 +697,7 @@ Template.customerscard.onRendered(function () {
     };
     function setPreferredPaymentList(data) {
         for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-            preferredPayments.push(data.tpaymentmethodvs1[i].PaymentMethodName)
+            preferredPayments.push(data.tpaymentmethodvs1[i].fields.PaymentMethodName)
         }
         preferredPayments = _.sortBy(preferredPayments);
         templateObject.preferredPaymentList.set(preferredPayments);
@@ -1128,7 +1128,6 @@ Template.customerscard.onRendered(function () {
     };
     templateObject.getCustomersList();
     function setAllCustomerSideDataVS1(data) {
-      console.log(data);
         let lineItems = [];
         let lineItemObj = {};
         for (let i = 0; i < data.tcustomervs1.length; i++) {
@@ -2111,10 +2110,7 @@ Template.customerscard.events({
         // let sltTaxCodeNameJob =  $('#sltJobTaxCode').val();
         let uploadedItemsJob = templateObject.uploadedFilesJob.get();
         let uploadedItemsJobNoPOP = templateObject.uploadedFilesJobNoPOP.get();
-
-
         let sltTaxCodeNameJob = "";
-
         let isChecked = $(".chkJobTaxExempt").is(":checked");
         if (isChecked) {
             sltTaxCodeNameJob = "NT";
@@ -2122,16 +2118,13 @@ Template.customerscard.events({
             sltTaxCodeNameJob = $('#sltJobTaxCode').val();
         }
 
-
         let notesJob = $('#txaJobNotes').val();
         let customerTypeJob = $('#sltJobCustomerType').val();
-        var objDetails = '';
-        var url = FlowRouter.current().path;
-        var getemp_id = url.split('?jobid=');
-        var currentEmployeeJob = getemp_id[getemp_id.length - 1];
-        var objDetails = '';
+        const url = FlowRouter.current().path;
+        const getemp_id = url.split('?jobid=');
+        const currentEmployeeJob = getemp_id[getemp_id.length - 1];
+        let objDetails = '';
         if (getemp_id[1]) {
-
             objDetails = {
                 type: "TJobEx",
                 fields: {
