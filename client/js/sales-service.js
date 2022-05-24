@@ -2,7 +2,7 @@ import {BaseService} from '../js/base-service.js';
 export class SalesBoardService extends BaseService {
     getQuoteList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
             select: "[deleted]=false and [SalesStatus]='Draft'"
         };
         return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -10,7 +10,7 @@ export class SalesBoardService extends BaseService {
 
     getQuoteInvoiceList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
             select: "[deleted]=false and [SalesStatus]='Invoiced'"
         };
         return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -18,7 +18,7 @@ export class SalesBoardService extends BaseService {
 
     getQuoteAcceptedList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
             select: "[deleted]=false and [SalesStatus]='Accepted'"
         };
         return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -26,7 +26,7 @@ export class SalesBoardService extends BaseService {
 
     getQuoteSentList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
             select: "[deleted]=false and [SalesStatus]='Sent'"
         };
         return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -34,7 +34,7 @@ export class SalesBoardService extends BaseService {
 
     getQuoteDeclinedList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,Reference,SalesStatus,ARNotes",
             select: "[deleted]=false and [SalesStatus]='Declined'"
         };
         return this.getList(this.ERPObjects.TQuoteEx, options);
@@ -53,7 +53,7 @@ export class SalesBoardService extends BaseService {
 
     getInvSaleCustomer() {
       let options = {
-          PropertyList: "PropertyList==ID,TotalAmountInc,printflag,converted,SalesStatus,DueDate,CustomerName,SaleDate,CustPONumber,TotalPaid,TotalBalance,deleted,IsPaid",
+          PropertyList: "ID,TotalAmountInc,printflag,converted,SalesStatus,DueDate,CustomerName,SaleDate,CustPONumber,TotalPaid,TotalBalance,deleted,IsPaid",
           select: "[deleted]=false"
       };
         return this.getList(this.ERPObjects.TInvoiceEx, options);
@@ -275,7 +275,7 @@ export class SalesBoardService extends BaseService {
 
     getSalesOrderList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
             select: "[deleted]=false and [SalesStatus]='Draft'"
         };
         return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -283,7 +283,7 @@ export class SalesBoardService extends BaseService {
 
     getSalesOrderInvoiceList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
             select: "[deleted]=false and [SalesStatus]='Invoiced'"
         };
         return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -293,7 +293,7 @@ export class SalesBoardService extends BaseService {
 
     getSalesOrderAcceptedList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
             select: "[deleted]=false and [SalesStatus]='Accepted'"
         };
         return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -301,7 +301,7 @@ export class SalesBoardService extends BaseService {
 
     getSalesOrderSentList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
             select: "[deleted]=false and [SalesStatus]='Sent'"
         };
         return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -309,7 +309,7 @@ export class SalesBoardService extends BaseService {
 
     getSalesOrderDeclinedList() {
         let options = {
-            PropertyList: "PropertyList==ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
+            PropertyList: "ID,GlobalRef,CustomerName,ClientName,ClientPrintName,DocNumber,SaleClassName,EmployeeName,SaleDate,TotalAmountInc,CustPONumber,SalesStatus",
             select: "[deleted]=false and [SalesStatus]='Declined'"
         };
         return this.getList(this.ERPObjects.TSalesOrderEx, options);
@@ -531,7 +531,7 @@ export class SalesBoardService extends BaseService {
 
   getInvSaleByCustomer() {
     let options = {
-        PropertyList: "PropertyList==ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
+        PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
         select: "[deleted]=false"
     };
       return this.getList(this.ERPObjects.TInvoiceEx, options);
@@ -539,7 +539,7 @@ export class SalesBoardService extends BaseService {
 
   getPurchaseBySupplier() {
     let options = {
-        PropertyList: "PropertyList==ID,DueDate,ClientName,OrderDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc",
+        PropertyList: "ID,DueDate,ClientName,OrderDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc",
         select: "[deleted]=false"
     };
       return this.getList(this.ERPObjects.TPurchaseOrderEx, options);

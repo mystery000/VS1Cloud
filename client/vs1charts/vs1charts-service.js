@@ -419,7 +419,7 @@ return this.getList(this.ERPObjects.TContractorPaymentSummary, options);
 
 getInvSaleByEmployee() {
   let options = {
-      PropertyList: "PropertyList==ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
+      PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
       select: "[deleted]=false",
       LimitCount:'"'+initialDataLoad+'"'
   };
