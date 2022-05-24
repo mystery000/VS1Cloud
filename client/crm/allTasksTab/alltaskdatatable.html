@@ -63,27 +63,36 @@
                           </div>
                         </td>
                         <td contenteditable="false" class="openEditTaskModal colDate" data-id="{{item.fields.ID}}"
-                          data-catg="All Tasks">
+                          data-catg="{{getProjectName item.fields.ProjectName}}">
                           {{getTodoDate item.fields.due_date
-                          'DD/MM/YYYY'}}</td>
+                          'DD/MM/YYYY'}}
+                        </td>
                         <td contenteditable="false" class="openEditTaskModal colTaskName" data-id="{{item.fields.ID}}"
-                          data-catg="All Tasks">
-                          {{item.fields.TaskName}}</td>
+                          data-catg="{{getProjectName item.fields.ProjectName}}">
+                          {{item.fields.TaskName}}
+                        </td>
                         <td contenteditable="false" class="openEditTaskModal colTaskDesc" data-id="{{item.fields.ID}}"
-                          data-catg="All Tasks">
+                          data-catg="{{getProjectName item.fields.ProjectName}}">
                           {{getDescription
                           item.fields.TaskDescription}}
                         </td>
                         <td contenteditable="false" class="openEditTaskModal colTaskLabels" data-id="{{item.fields.ID}}"
-                          data-catg="All Tasks">
+                          data-catg="{{getProjectName item.fields.ProjectName}}">
                           {{#if item.fields.TaskLabel}}
                           {{#if item.fields.TaskLabel.fields}}
-                          <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                                style="margin-right: 5px;"></i>{{item.fields.TaskLabel.fields.TaskLabelName}}</a></span>
+                          <span class="taskTag"><a class="taganchor" href="">
+                              <i class="fas fa-tag" style="margin-right: 5px;"></i>
+                              {{item.fields.TaskLabel.fields.TaskLabelName}}
+                            </a>
+                          </span>
                           {{else}}
                           {{#each lbl in item.fields.TaskLabel}}
-                          <span class="taskTag"><a class="taganchor" href=""><i class="fas fa-tag"
-                                style="margin-right: 5px;"></i>{{lbl.fields.TaskLabelName}}</a></span>
+                          <span class="taskTag">
+                            <a class="taganchor" href="">
+                              <i class="fas fa-tag" style="margin-right: 5px;"></i>
+                              {{lbl.fields.TaskLabelName}}
+                            </a>
+                          </span>
                           {{/each}}
                           {{/if}}
                           {{/if}}
@@ -91,8 +100,9 @@
                         <td contenteditable="false" class="colTaskActions">
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-primary openEditTaskModal" data-id="{{item.fields.ID}}"
-                              data-catg="All Tasks" title="Edit Task"><i class="far fa-edit" style="width: 16px;"
-                                data-id="{{item.fields.ID}}" data-catg="All Tasks"></i></button>
+                              data-catg="{{getProjectName item.fields.ProjectName}}" title="Edit Task"><i
+                                class="far fa-edit" style="width: 16px;" data-id="{{item.fields.ID}}"
+                                data-catg="{{getProjectName item.fields.ProjectName}}"></i></button>
                           </div>
 
                           <div class="dropdown btnTaskTableAction">
@@ -104,32 +114,37 @@
                                 <i class="fas fa-calendar-day text-success no-modal"
                                   style="margin-right: 8px;"></i>Today
                                 <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-                                  {{getTodayDate 'ddd'}}</div>
+                                  {{getTodayDate 'ddd'}}
+                                </div>
                               </a>
                               <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
                                 data-id="{{item.fields.ID}}">
-                                <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+                                <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>
+                                Tomorrow
                                 <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-                                  {{getTomorrowDay}}</div>
+                                  {{getTomorrowDay}}
+                                </div>
                               </a>
                               <a class="dropdown-item no-modal setScheduleWeekend" href="#"
                                 data-id="{{item.fields.ID}}">
-                                <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This
-                                Weekend
+                                <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>
+                                This Weekend
                                 <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-                                  Sat</div>
+                                  Sat
+                                </div>
                               </a>
                               <a class="dropdown-item no-modal setScheduleNexweek" href="#"
                                 data-id="{{item.fields.ID}}">
-                                <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next
-                                Week
+                                <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>
+                                Next Week
                                 <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
                                   {{getNextMonday}}
                                 </div>
                               </a>
                               <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="{{item.fields.ID}}">
                                 <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
-                                No Date</a>
+                                No Date
+                              </a>
                               <div class="dropdown-divider no-modal"></div>
                               <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
                                 title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
@@ -146,20 +161,22 @@
 
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-warning openEditTaskModal" data-id="{{item.fields.ID}}"
-                              data-ttype="comment" data-catg="All Tasks" title="Add a Comment"><i
-                                class="far fa-comment-alt" data-id="{{item.fields.ID}}" data-ttype="comment"
-                                data-catg="All Tasks"></i></button>
+                              data-ttype="comment" data-catg="{{getProjectName item.fields.ProjectName}}"
+                              title="Add a Comment"><i class="far fa-comment-alt" data-id="{{item.fields.ID}}"
+                                data-ttype="comment"
+                                data-catg="{{getProjectName item.fields.ProjectName}}"></i></button>
                           </div>
 
                           <div class="dropdown btnTaskTableAction">
                             <button type="button" class="btn btn-secondary" data-toggle="dropdown"
                               data-placement="bottom" title="More Options"><i class="fas fa-ellipsis-h"></i></button>
                             <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
-                              <a class="dropdown-item no-modal openEditTaskModal" data-id="{{item.fields.ID}}"
-                                data-catg="All Tasks">
+                              <a class="dropdown-item openEditTaskModal" data-id="{{item.fields.ID}}"
+                                data-catg="{{getProjectName item.fields.ProjectName}}">
                                 <i class="far fa-edit" style="margin-right: 8px;" data-id="{{item.fields.ID}}"
-                                  data-catg="All Tasks"></i>Edit
-                                Task</a>
+                                  data-catg="{{getProjectName item.fields.ProjectName}}"></i>
+                                Edit Task
+                              </a>
 
                               <div class="dropdown-divider"></div>
 
@@ -208,22 +225,30 @@
                               <div class="dropdown-divider"></div>
 
                               <a class="dropdown-item no-modal" data-id="{{item.fields.ID}}">
-                                <i class="fa fa-clock-o" style="margin-right: 8px;"></i>Reminders</a>
+                                <i class="fa fa-clock-o" style="margin-right: 8px;"></i>
+                                Reminders
+                              </a>
 
                               <div class="dropdown-divider"></div>
 
-                              <a class="dropdown-item no-modal" data-id="{{item.fields.ID}}">
-                                <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"></i>Move to Project</a>
+                              <a class="dropdown-item no-modal movetoproject" data-id="{{item.fields.ID}}"
+                                data-projectid="{{item.fields.ProjectID}}" data-toggle="modal">
+                                <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"
+                                  data-id="{{item.fields.ID}}" data-projectid="{{item.fields.ProjectID}}"></i>
+                                Move to Project
+                              </a>
                               <a class="dropdown-item duplicate-task no-modal" data-id="{{item.fields.ID}}">
                                 <i class="fa fa-plus-square-o" style="margin-right: 8px;"
-                                  data-id="{{item.fields.ID}}"></i>Duplicate</a>
+                                  data-id="{{item.fields.ID}}"></i>
+                                Duplicate
+                              </a>
 
                               <div class="dropdown-divider"></div>
 
                               <a class="dropdown-item delete-task no-modal" data-id="{{item.fields.ID}}">
-                                <i class="fas fa-trash-alt" style="margin-right: 8px;"
-                                  data-id="{{item.fields.ID}}"></i>Delete
-                                Task</a>
+                                <i class="fas fa-trash-alt" style="margin-right: 8px;" data-id="{{item.fields.ID}}"></i>
+                                Delete Task
+                              </a>
                             </div>
                           </div>
 
@@ -247,6 +272,7 @@
     </div>
   </div>
 
+  {{> moveToProjectModal}}
   {{> taskDetailModal}}
   {{> newProjectModal}}
   {{> newTaskModal}}

@@ -170,6 +170,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isBinLocations}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/binlocationslist">Bin Locations List</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkBinLocationsList" type="checkbox" id="formCheck-BinLocationsListFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-BinLocationsListFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isChequeList}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -180,6 +194,20 @@
                                                         <div class="custom-control custom-checkbox">
                                                             <input class="custom-control-input favCheckBox chkChequeList" type="checkbox" id="formCheck-ChequeListFave" checked>
                                                             <label style="cursor: pointer;" class="custom-control-label" for="formCheck-ChequeListFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isForeignExchangeHistoryList}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/fxhistorylist">Foreign Exchange History List</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkForeignExchangeHistoryList" type="checkbox" id="formCheck-ForeignExchangeHistoryListFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-ForeignExchangeHistoryListFave"></label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -264,6 +292,34 @@
                                                         <div class="custom-control custom-checkbox">
                                                             <input class="custom-control-input favCheckBox chkPaymentMethodsList" type="checkbox" id="formCheck-PaymentMethodsListFave" checked>
                                                             <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PaymentMethodsListFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPayrollLeaveAccrued}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/payrollleaveaccruedreport">Payroll Leave Accrued</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPayrollLeaveAccrued" type="checkbox" id="formCheck-PayrollLeaveAccruedFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PayrollLeaveAccruedFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPayrollHistoryReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/payrollhistoryreport">Payroll History Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPayrollHistoryReport" type="checkbox" id="formCheck-PayrollHistoryReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PayrollHistoryReportFave"></label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -450,6 +506,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isSerialNumberReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/serialnumberreport">Serial Number Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkSerialNumberReport" type="checkbox" id="formCheck-SerialNumberReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SerialNumberReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isStockAdjustmentList}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -488,6 +558,20 @@
                                                         <div class="custom-control custom-checkbox">
                                                             <input class="custom-control-input favCheckBox chkTimeSheet" type="checkbox" id="formCheck-TimeSheetFave" checked>
                                                             <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TimeSheetFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isTimeSheetSummary}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/timesheetsummary">Time Sheet Summary</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkTimeSheetSummary" type="checkbox" id="formCheck-TimeSheetSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TimeSheetSummaryFave"></label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -920,11 +1004,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Foreign Exchange History List *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/fxhistorylist">Foreign Exchange History List</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkForeignExchangeHistoryList" type="checkbox" id="formCheck-ForeignExchangeHistoryList" disabled>
+                                                    <input class="custom-control-input favCheckBox chkForeignExchangeHistoryList" type="checkbox" id="formCheck-ForeignExchangeHistoryList">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-ForeignExchangeHistoryList"></label>
                                                 </div>
                                             </div>
@@ -1033,11 +1117,11 @@
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
                                     </div>
                                     <div class="card-body" style="overflow-x: auto;">
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Bin Locations List *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/binlocationslist">Bin Locations List</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkBinLocationsList" type="checkbox" id="formCheck-BinLocationsList" disabled>
+                                                    <input class="custom-control-input favCheckBox chkBinLocationsList" type="checkbox" id="formCheck-BinLocationsList">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-BinLocationsList"></label>
                                                 </div>
                                             </div>
@@ -1054,11 +1138,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Serial Number Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/serialnumberreport">Serial Number Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkSerialNumberReport" type="checkbox" id="formCheck-SerialNumberReport" disabled>
+                                                    <input class="custom-control-input favCheckBox chkSerialNumberReport" type="checkbox" id="formCheck-SerialNumberReport">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SerialNumberReport"></label>
                                                 </div>
                                             </div>
@@ -1313,11 +1397,11 @@
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
                                     </div>
                                     <div class="card-body" style="overflow-x: auto;">
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Payroll History Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/payrollhistoryreport">Payroll History Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPayrollHistoryReport" type="checkbox" id="formCheck-PayrollHistoryReport" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPayrollHistoryReport" type="checkbox" id="formCheck-PayrollHistoryReport">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PayrollHistoryReport"></label>
                                                 </div>
                                             </div>
@@ -1334,11 +1418,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Payroll Leave Accrued *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/payrollleaveaccruedreport">Payroll Leave Accrued</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPayrollLeaveAccrued" type="checkbox" id="formCheck-PayrollLeaveAccrued" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPayrollLeaveAccrued" type="checkbox" id="formCheck-PayrollLeaveAccrued">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PayrollLeaveAccrued"></label>
                                                 </div>
                                             </div>
@@ -1397,11 +1481,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Time Sheet Summary *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/timesheetsummary">Time Sheet Summary</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkTimeSheetSummary" type="checkbox" id="formCheck-TimeSheetSummary" disabled>
+                                                    <input class="custom-control-input favCheckBox chkTimeSheetSummary" type="checkbox" id="formCheck-TimeSheetSummary">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-TimeSheetSummary"></label>
                                                 </div>
                                             </div>
@@ -1661,7 +1745,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/salesorderslist?converted=true">Sales Orders Converted *</a></div>
+                                            <div class="col flex-grow-1"><a href="/salesorderslist?converted=true">Sales Orders - Converted</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSalesOrderConverted" type="checkbox" id="formCheck-SalesOrderConverted">
@@ -1682,7 +1766,7 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/salesorderslist?converted=false">Sales Orders Unconverted</a></div>
+                                            <div class="col flex-grow-1"><a href="/salesorderslist?converted=false">Sales Orders - Unconverted</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSalesOrderUnconverted" type="checkbox" id="formCheck-SalesOrderUnconverted">

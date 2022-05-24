@@ -219,6 +219,22 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
+
+      db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPaidLeave', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TUnpaidLeave', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TReimbursement', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TSuperType', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayrollorganization', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayRatetype', { keyPath: "EmployeeEmail" });
+      //Earnings
+      db.createObjectStore('TOrdinaryTimeEarnings', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('Tovertimeearnings', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TLumpSumE', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TEarningsBonusesCommissions', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TLumpSumW', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TDirectorsFees', { keyPath: "EmployeeEmail" });
     }
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
@@ -461,7 +477,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 27);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 28);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };

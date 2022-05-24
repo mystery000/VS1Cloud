@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content" style="min-height: 90vh; padding: 20px;">
         <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
-          <div style="display: grid;">
+          <div style="display: grid; width: 100%;">
             <span class="taskLocation"><a class="taganchor" href="" id="taskDetailModalCategoryLabel"><i
                   class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>All Tasks</a></span>
             <div style="display: inline-flex;">
@@ -16,7 +16,8 @@
                 <label class="custom-control-label chkBox pointer chk_complete" for="chkComplete_taskEdit"
                   data-dismiss="modal" data-id="edit"></label>
               </div>
-              <h5 class="modal-title" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
+              <h5 class="modal-title displayTaskNameDescription" style="padding-top: 5px;" id="taskmodalNameLabel"></h5>
+              <input type="text" class="editTaskNameDescription editTaskDetailName" />
             </div>
           </div>
 
@@ -29,7 +30,8 @@
           <div class="row">
 
             <div class="col-12">
-              <div id="taskmodalDescription"></div>
+              <div id="taskmodalDescription" class="displayTaskNameDescription"></div>
+              <textarea class="editTaskNameDescription editTaskDetailDescription"></textarea>
             </div>
             <div class="col-12" style="display: flex;">
               <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus" style="margin-right: 5px;"></i><span
@@ -44,21 +46,21 @@
                 <i class="fas fa-list-ul taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" title="Select a project..."></i>
                 <div class="dropdown-menu dropdown-menu-right goProjectWrapper" aria-labelledby="dropdownMenuButton"
-                  style="width: 200px;">
+                  style="width: 275px;">
                 </div>
               </div>
               <!-- <i class="fas fa-tag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Add label(s)..."></i> -->
               <div class="dropdown">
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false" title="Add label(s)..."></i>
-                <div class="dropdown-menu dropdown-menu-right addTaskLabelWrapper" aria-labelledby="dropdownMenuButton"
-                  style="width: 200px;">
+                <div class="dropdown-menu dropdown-menu-right detailTaskLabelWrapper" id="detailTaskLabelWrapper"
+                  aria-labelledby="dropdownMenuButton" style="width: 200px;">
                 </div>
               </div>
               <!-- <i class="far fa-flag taskModalAction" data-toggle="tooltip" data-placement="bottom" title="Set the priority..."></i> -->
               <div class="dropdown">
-                <i class="far fa-flag taskModalAction taskModalActionDropdown dropdown-toggle" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
+                <i class="far fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                   style="width: 200px;">
                   <a class="dropdown-item task_modal_priority_3 taskDropSecondFlag" title="Priority 1" data-priority="3"
@@ -75,32 +77,41 @@
                     </div>
                   </a>
                   <a class="dropdown-item task_modal_priority_2 taskDropSecondFlag" title="Priority 2" data-priority="2"
-                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 2
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;" data-priority="2"
+                      data-id="edit"></i>Priority 2
+                    <div style="width: 20%; float: right;" data-priority="2" data-id="edit">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                        data-priority="2" data-id="edit">
                         <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority2" value="2"
-                          data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority2"></label>
+                          data-priority="2" data-id="edit">
+                        <label class="custom-control-label chkBox pointer" for="chkPriority2" data-priority="2"
+                          data-id="edit"></label>
                       </div>
                     </div>
                   </a>
                   <a class="dropdown-item task_modal_priority_1 taskDropSecondFlag" title="Priority 3" data-priority="1"
-                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 3
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;" data-priority="1"
+                      data-id="edit"></i>Priority 3
+                    <div style="width: 20%; float: right;" data-priority="1" data-id="edit">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                        data-priority="1" data-id="edit">
                         <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority1" value="1"
-                          data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority1"></label>
+                          data-priority="1" data-id="edit">
+                        <label class="custom-control-label chkBox pointer" for="chkPriority1" data-priority="1"
+                          data-id="edit"></label>
                       </div>
                     </div>
                   </a>
                   <a class="dropdown-item task_modal_priority_0 taskDropSecondFlag" title="Priority 4" data-priority="0"
-                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;"></i>Priority 4
-                    <div style="width: 20%; float: right;">
-                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;">
+                    data-id="edit"><i class="fas fa-tag" style="margin-right: 8px;" data-priority="0"
+                      data-id="edit"></i>Priority 4
+                    <div style="width: 20%; float: right;" data-priority="0" data-id="edit">
+                      <div class="custom-control custom-checkbox chkBox pointer" style="width: 15px; float: right;"
+                        data-priority="0" data-id="edit">
                         <input class="custom-control-input chkBox pointer" type="checkbox" id="chkPriority0" value="0"
-                          data-id="edit">
-                        <label class="custom-control-label chkBox pointer" for="chkPriority0"></label>
+                          data-priority="0" data-id="edit">
+                        <label class="custom-control-label chkBox pointer" for="chkPriority0" data-priority="0"
+                          data-id="edit"></label>
                       </div>
                     </div>
                   </a>
@@ -114,18 +125,22 @@
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="More Options"></i>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
                   style="width: 275px;">
-                  <a class="dropdown-item" href="#"><i class="far fa-edit" style="margin-right: 8px;"></i>Rename
-                    Task</a>
-                  <a class="dropdown-item" href="#"><i class="far fa-comment-alt" style="margin-right: 8px;"></i>Add
-                    Comments Via Email</a>
-                  <a class="dropdown-item" href="#"><i class="fas fa-link" style="margin-right: 8px;"></i>Copy Link
-                    to Task</a>
-                  <a class="dropdown-item" href="#"><i class="far fa-check-circle" style="margin-right: 8px;"></i>Hide
-                    Complete Sub-Tasks</a>
+                  <a class="dropdown-item rename-task">
+                    <i class="far fa-edit" style="margin-right: 8px;"></i>
+                    Rename Task</a>
+                  <a class="dropdown-item">
+                    <i class="far fa-comment-alt" style="margin-right: 8px;"></i>
+                    Add Comments Via Email</a>
+                  <a class="dropdown-item">
+                    <i class="fas fa-link" style="margin-right: 8px;"></i>
+                    Copy Link to Task</a>
+                  <a class="dropdown-item">
+                    <i class="far fa-check-circle" style="margin-right: 8px;"></i>
+                    Hide Complete Sub-Tasks</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item delete-task" data-id="edit" data-dismiss="modal"><i class="far fa-trash-alt"
-                      style="margin-right: 8px;" data-id="edit"></i>Delete
-                    Task</a>
+                  <a class="dropdown-item delete-task" data-id="edit" data-dismiss="modal">
+                    <i class="far fa-trash-alt" style="margin-right: 8px;" data-id="edit"></i>
+                    Delete Task</a>
                 </div>
               </div>
             </div>
@@ -216,7 +231,8 @@
                               style="background-color: rgba(0,0,0,0);" type="button" id="" data-toggle="dropdown"
                               aria-haspopup="true" aria-expanded="false">
                               <span class="dropdownFilter"><i class="fas fa-inbox text-primary"
-                                  style="margin-right: 5px;"></i>All Tasks</span>
+                                  style="margin-right: 5px;"></i><span class="detailTaskModalProjectName">All
+                                  Tasks</span></span>
                             </button>
                             <div class="dropdown-menu goProjectWrapper" aria-labelledby="dropdownMenuButton"
                               style="width: 275px;">
@@ -228,12 +244,12 @@
                             <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle"
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                               title="Add label(s)..."></i>
-                            <div class="dropdown-menu dropdown-menu-right addTaskLabelWrapper"
-                              aria-labelledby="dropdownMenuButton" style="width: 200px;">
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
+                              style="width: 200px;">
                             </div>
                           </div>
                           <div class="dropdown">
-                            <i class="far fa-flag taskModalAction taskModalActionDropdown dropdown-toggle"
+                            <i class="far fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle"
                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                               title="Set the priority..."></i>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton"
@@ -316,6 +332,7 @@
                             autocomplete="off"></textarea>
                           <input type="hidden" id="txtCrmTaskID" value="" />
                           <input type="hidden" id="txtCrmProjectID" value="" />
+                          <input type="hidden" id="txtCrmSubTaskID" value="" />
                         </div>
                         <button type="button" class="btn btn-primary btnCrmAddComment">Comment</button>
                       </div>
@@ -337,7 +354,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" data-dismiss="modal" type="button"><i class="fa fa-save"
+          <button class="btn btn-success btnSaveEditTask" data-dismiss="modal" type="button"><i class="fa fa-save"
               style="margin-right: 5px;"></i>Save</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close"
               style="margin-right: 5px;"></i>Close</button>
@@ -351,8 +368,27 @@
     }
 
     .task-comment-row {
-      height: 35vh;
+      height: 27vh;
       overflow-y: auto;
+    }
+
+    .editTaskNameDescription {
+      display: none;
+    }
+
+    .editTaskDetailName {
+      width: 100%;
+      border-radius: 5px;
+      padding: 0 10px;
+      margin-left: 5px;
+    }
+
+    .editTaskDetailDescription {
+      width: 100%;
+      height: 10vh;
+      border-color: #e3e3e3;
+      padding: 5px 15px;
+      border-radius: 5px;
     }
   </style>
 </template>

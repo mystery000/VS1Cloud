@@ -140,15 +140,43 @@
             }
 
             #item-value->* {
-                font-size: 18px;
+                font-size: 16px !important;
                 border-top: 0px;
                 padding-top: 16px;
                 border-bottom: 1px solid #e3e6f0 !important;
+                border-top: 1px solid #e3e6f0 !important;
+                border-top: unset;
+            }
+            
+            .customProfitLossTable .table-sm td, .customProfitLossTable .table-sm th {
+                padding: 7px 15px !important;
+                border-bottom: 1px solid #e3e6f0 !important;
+                border-top: 1px solid #e3e6f0 !important;
+                font-size: 16px !important;
+            }
+            .pnlTable td {
                 border-top: unset;
             }
 
-            .pnlTable td {
-                border-top: unset;
+            .customCheckBox {
+                display: inline-flex;
+                width: 100%;
+                padding: 5px 10px;
+                border-top: 1px solid rgba(0,0,0,0.1);
+                align-items: center;
+                margin: 0px !important;
+            }
+            .customCheckBox label {
+                margin: 0px;
+                display: inline-flex;
+                width: 100%;
+                align-items: center;
+            }
+            .customCheckBox label input {
+                margin-right: 6px
+            }
+            .customCheckBox:first-child {
+                border: none !important;
             }
         </style>
         <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
@@ -162,8 +190,8 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-5" style="padding-top: 32px;">
-                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Update</button>
-                                <div class="dropdown btnNav periodSelector float-left" style="margin: 16px;">
+                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Update</button>
+                                <div class="dropdown btnNav periodSelector float-left" style="margin: 8px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
@@ -181,7 +209,7 @@
                                             data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
                                     </div>
                                 </div>
-                                <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 16px;">
+                                <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 8px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">
@@ -236,6 +264,15 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="dropdown periodSelector float-left" style="margin: 8px;">
+                                    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" title="Select Date Range"><i class="fas fa-filter"></i> Department</button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <p class="dropdown-item customCheckBox"  role="presentation" href="javascript:void(0);"><label><input type="checkbox" name="departmentName"> Department 1</label></p>
+                                        <p class="dropdown-item customCheckBox"  role="presentation" href="javascript:void(0);"><label><input type="checkbox" name="departmentName"> Department 2</label></p>
+                                        <p class="dropdown-item customCheckBox"  role="presentation" href="javascript:void(0);"><label><input type="checkbox" name="departmentName"> Department 3</label></p>
+                                        <p class="dropdown-item customCheckBox"  role="presentation" href="javascript:void(0);"><label><input type="checkbox" name="departmentName"> Department 4</label></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 col-md-2">
                                 <style>
@@ -246,18 +283,18 @@
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
                             </div>
                             <div class="col-12 col-md-5">
-                                <div class="form-group float-right" style="margin: 16px;">
+                                <div class="form-group float-right" style="margin: 8px;">
                                     <label>To</label>
-                                    <div class="input-group date" style="width: 160px;">
+                                    <div class="input-group date" style="width: 145px;">
                                         <input type="text" class="form-control" id="dateTo" name="dateTo">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group float-right" style="margin: 16px;">
+                                <div class="form-group float-right" style="margin: 8px;">
                                     <label>From</label>
-                                    <div class="input-group date" style="width: 160px;">
+                                    <div class="input-group date" style="width: 145px;">
                                         <input type="text" class="form-control" id="dateFrom" name="dateFrom">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
@@ -271,7 +308,7 @@
                                     }
                                 </style>
                                 <div class="form-group float-right"
-                                    style="margin: 16px; display: inline-flex; margin-top: 48px;">
+                                    style="margin: 16px; display: inline-flex; margin-top: 40px;">
                                     <input type="text" class="form-control" id="selectedDateRange"
                                         aria-describedby="basic-addon2"
                                         style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;"
@@ -405,11 +442,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <button class="btn btn-primary btnPrintReport float-right" type="button"
-                                    style="margin: 16px;"><i class="fa fa-print"
+                                    style="margin: 8px;"><i class="fa fa-print"
                                         style="margin-right: 5px;"></i>Print</button>
                                 <button class="btn btn-primary float-left btnExportReportProfit float-right"
-                                    type="button" style="margin: 16px;"><i class="fas fa-file-export"
+                                    type="button" style="margin: 8px;"><i class="fas fa-file-export"
                                         style="margin-right: 5px;"></i>Export</button>
+                                
                             </div>
                         </div>
                         <div class="printReport">
@@ -423,40 +461,40 @@
                                 </div>
                             </div>
                             <div class="row no-gutters p-1">
-                                <div class="table-responsive p-2">
+                                <div class="table-responsive customProfitLossTable p-2">
                                     <table class="table table-hover table-sm pnlTable dragTable" id="tableExport"
                                         name="tableExport" style="display: none;">
 
                                         <thead class="tblAvoid">
                                             <tr class="table-active tblAvoid">
+                                                <th style="width: 300px; min-width: 250px;"></th>
                                                 <th style="width: 300px;"></th>
-                                                <th style="width: 300px;"></th>
-                                                <th style="width: 300px;" class="text-right">Feb 2022</th>
-                                                <th style="width: 300px;" class="text-right">Jan 2022</th>
-                                                <th style="width: 178px;" class="text-right">Dec 2021</th>
-                                                <th style="width: 178px;" class="text-right">Nov 2021</th>
-                                                <th style="width: 178px;" class="text-right">Oct 2021</th>
-                                                <th style="width: 178px;" class="text-right">Sep 2021</th>
-                                                <th style="width: 178px;" class="text-right">Aug 2021</th>
-                                                <th style="width: 178px;" class="text-right">Jul 2021</th>
-                                                <th style="width: 178px;" class="text-right">Jun 2021</th>
-                                                <th style="width: 178px;" class="text-right">May 2021</th>
-                                                <th style="width: 178px;" class="text-right">Apr 2021</th>
-                                                <th style="width: 178px;" class="text-right">Mar 2021</th>
-                                                <th style="width: 178px;" class="text-right">Feb 2021</th>
-                                                <th style="width: 178px;" class="text-right">Jan 2021</th>
-                                                <th style="width: 178px;" class="text-right">Dec 2020</th>
-                                                <th style="width: 178px;" class="text-right tglTotal">Total</th>
-                                                <th style="width: 178px;" class="text-right tglYTD">Year to date</th>
+                                                <th style="width: 300px; min-width: 100px;" class="text-right">Feb 2022</th>
+                                                <th style="width: 300px; min-width: 100px;" class="text-right">Jan 2022</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Dec 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Nov 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Oct 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Sep 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Aug 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Jul 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Jun 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">May 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Apr 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Mar 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Feb 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Jan 2021</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right">Dec 2020</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right tglTotal">Total</th>
+                                                <th style="width: 178px; min-width: 100px;" class="text-right tglYTD">Year to date</th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {{#if records}}
                                             {{#each item in records}}
-                                            <tr id="item-value-{{item.name}}">
+                                            <tr class="tableInnerRow" id="item-value-{{item.name}}">
                                                 {{#if equals item.accounttype ""}}
-                                                <td style="padding-left: 15px;" class="fgr fgrblue"><span
+                                                <td style="padding-left: 50px !important;" class="fgr fgrblue"><span
                                                         class="tglAccCodes" style="display:none;">200 -
                                                     </span>{{item.accountname}}</td>
                                                 <td></td>
