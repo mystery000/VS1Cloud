@@ -218,6 +218,9 @@ Template.crmoverview.events({
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
 
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
     $("#newTaskModal").modal("toggle");
   },
 
@@ -268,18 +271,24 @@ Template.crmoverview.events({
             );
 
             let taskmodalLabels = "";
+            $(".chkDetailLabel").prop("checked", false);
             if (selected_record.TaskLabel) {
               if (selected_record.TaskLabel.fields != undefined) {
                 taskmodalLabels =
                   '<a class="taganchor" href="">' +
                   selected_record.TaskLabel.fields.TaskLabelName +
                   "</a>";
+                $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+                  "checked",
+                  true
+                );
               } else {
                 selected_record.TaskLabel.forEach((lbl) => {
                   taskmodalLabels +=
                     '<a class="taganchor" href="">' +
                     lbl.fields.TaskLabelName +
                     "</a>, ";
+                  $("#detail_label_" + lbl.fields.ID).prop("checked", true);
                 });
                 taskmodalLabels = taskmodalLabels.slice(0, -2);
               }
@@ -711,6 +720,15 @@ Template.crmoverview.events({
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf").click();
     $(".fullScreenSpin").css("display", "none");
+  },
+
+  "click .btnMailchimp": function (e) {
+    swal(
+      "You are not set up yet, do you wish to create an account with Mail Chimp?",
+      "",
+      "warning"
+    );
+    return;
   },
 });
 
