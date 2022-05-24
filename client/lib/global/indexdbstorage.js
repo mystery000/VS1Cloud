@@ -227,6 +227,7 @@ openDb = function (dbName) {
       db.createObjectStore('TReimbursement', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TSuperType', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TPayrollorganization', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayRatetype', { keyPath: "EmployeeEmail" });
       //Earnings
       db.createObjectStore('TOrdinaryTimeEarnings', { keyPath: "EmployeeEmail" });
       db.createObjectStore('Tovertimeearnings', { keyPath: "EmployeeEmail" });
