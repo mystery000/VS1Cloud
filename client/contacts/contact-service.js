@@ -372,7 +372,7 @@ export class ContactService extends BaseService {
 
     getEmpUserDetail(EmployeeId) {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeName,LogonName",
+              PropertyList: "ID,EmployeeName,LogonName",
               Select: "[EmployeeId]='"+EmployeeId+"'"
           };
         return this.getList(this.ERPObjects.TUser, options);
@@ -533,7 +533,7 @@ export class ContactService extends BaseService {
 
      getEmpUserCount() {
        let options = {
-               PropertyList: "PropertyList==ID,EmployeeName,LogonName",
+               PropertyList: "ID,EmployeeName,LogonName",
            };
          return this.getList(this.ERPObjects.TUser, options);
      }
