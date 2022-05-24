@@ -171,8 +171,10 @@
 
                   <div class="dropdown-divider"></div>
 
-                  <a class="dropdown-item no-modal" data-id="{{item.fields.ID}}">
-                    <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"></i>Move to Project</a>
+                  <a class="dropdown-item no-modal movetoproject" data-id="{{item.fields.ID}}"
+                    data-projectid="{{item.fields.ProjectID}}">
+                    <i class="fa fa-arrow-circle-right" style="margin-right: 8px;" data-id="{{item.fields.ID}}"
+                      data-projectid="{{item.fields.ProjectID}}"></i>Move to Project</a>
                   <a class="dropdown-item duplicate-task no-modal" data-id="{{item.fields.ID}}">
                     <i class="fa fa-plus-square-o" style="margin-right: 8px;"
                       data-id="{{item.fields.ID}}"></i>Duplicate</a>

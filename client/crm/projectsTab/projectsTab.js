@@ -350,29 +350,6 @@ Template.projectsTab.events({
     }
   },
 
-  // open edit modal
-  "click .edit-project": function (e) {
-    // let id = e.target.dataset.id;
-    // let id = $('#editProjectID').val();
-    // crmService.getTProjectDetail(id).then(function (data) {
-    //   if (data.fields) {
-    //     let projectName = data.fields.ProjectName;
-    //     let ProjectColour = data.fields.ProjectColour;
-    //     let AddToFavourite = data.fields.AddToFavourite;
-    //     // missing color, favorite fields
-    //     $('#editProjectID').val(id);
-    //     $('#editCrmProjectName').val(projectName);
-    //     $('#editCrmProjectColor').val(ProjectColour);
-    //     if (AddToFavourite == true) {
-    //       $("#swteditCrmProjectFavorite").prop("checked", true);
-    //     } else {
-    //       $("#swteditCrmProjectFavorite").prop("checked", false);
-    //     }
-    //   }
-    // }).catch(function (err) {
-    // });
-  },
-
   // submit edit project
   "click .btnEditCrmProject": function (e) {
     let id = $("#editProjectID").val();
@@ -382,14 +359,6 @@ Template.projectsTab.events({
     // let swtNewCrmProjectFavorite = $("#swteditCrmProjectFavorite").prop(
     //   "checked"
     // );
-
-    // // tempcode
-    // let projecttasks = e.target.dataset.projecttasks;
-    // let projecttasks_count = '';
-    // if (projecttasks != null && projecttasks != undefined && projecttasks != "undefined") {
-    //   projecttasks_count = projecttasks.lentgh;
-    // }
-    // // tempcode
 
     if (id === "" || id === null) {
       swal("Project is not selected correctly", "", "warning");
