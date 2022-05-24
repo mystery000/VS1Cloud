@@ -1634,3 +1634,39 @@ authenticatedRoutes.route('/setup', {
         });
     }
 });
+
+authenticatedRoutes.route('/serialnumberreport', {
+    name: 'serialnumberreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serialnumberreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollleaveaccruedreport', {
+    name: 'payrollleaveaccruedreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleaveaccruedreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/fxhistorylist', {
+    name: 'fxhistorylist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'fxhistorylist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/binlocationslist', {
+    name: 'binlocationslist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'binlocationslist'
+        });
+    }
+});

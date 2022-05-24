@@ -6899,12 +6899,6 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
-    'click #sidenavshipping': function(event) {
-        event.preventDefault();
-        FlowRouter.go('/vs1shipping');
-        let templateObject = Template.instance();
-        templateObject.getSetSideNavFocus();
-    },
     'click #sidenavstockadjust': function(event) {
         event.preventDefault();
         FlowRouter.go('/stockadjustmentoverview');
@@ -6951,36 +6945,37 @@ Template.newsidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavcustomers': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/customerlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavemployees': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/employeelist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavjobs': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/joblist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click #sidenavcontactleads': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/leadlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click #sidenavsuppliers': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/supplierlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewcustomers': function(event) {
-
-        if (FlowRouter.current().path == "/customerscard") {
+        if (FlowRouter.current().path === "/customerscard") {
             window.open('/customerscard', '_self');
         } else {
             event.preventDefault();
@@ -6990,8 +6985,7 @@ Template.newsidenav.events({
         }
     },
     'click #sidenavnewemployees': function(event) {
-
-        if (FlowRouter.current().path == "/employeescard") {
+        if (FlowRouter.current().path === "/employeescard") {
             window.open('/employeescard', '_self');
         } else {
             event.preventDefault();
@@ -6999,12 +6993,19 @@ Template.newsidenav.events({
             let templateObject = Template.instance();
             templateObject.getSetSideNavFocus();
         }
-
+    },
+    'click #sidenavnewleads': function(event) {
+        if (FlowRouter.current().path === "/leadscard") {
+            window.open('/leadscard', '_self');
+        } else {
+            event.preventDefault();
+            FlowRouter.go('/leadscard');
+            let templateObject = Template.instance();
+            templateObject.getSetSideNavFocus();
+        }
     },
     'click #sidenavnewsuppliers': function(event) {
-
-
-        if (FlowRouter.current().path == "/supplierscard") {
+        if (FlowRouter.current().path === "/supplierscard") {
             window.open('/supplierscard', '_self');
         } else {
             event.preventDefault();
