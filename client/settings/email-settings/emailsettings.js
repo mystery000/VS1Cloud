@@ -825,6 +825,7 @@ Template.emailsettings.onRendered(function () {
                                     ISEmpty: isEmpty
                                 }));
 
+                                objDetail.fields.Offset = new Date().getTimezoneOffset();
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
                                         if (error) return reject(error);
@@ -838,6 +839,14 @@ Template.emailsettings.onRendered(function () {
                                 const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
                                 oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
                                 if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
+                                
+                                try {
+                                    // Save email settings
+                                    await taxRateService.saveScheduleSettings(objDetail);
+                                } catch(e) {
+                                    console.log(e);
+                                }
+                                objDetail.fields.Offset = new Date().getTimezoneOffset();
     
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
@@ -846,13 +855,6 @@ Template.emailsettings.onRendered(function () {
                                     });
                                 });
                                 objDetail.fields.NextDueDate = nextDueDate;
-                                
-                                try {
-                                    // Save email settings
-                                    await taxRateService.saveScheduleSettings(objDetail);
-                                } catch(e) {
-                                    console.log(e);
-                                }
 
                                 //TODO: Set basedon type here
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({

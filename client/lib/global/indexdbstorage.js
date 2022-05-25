@@ -9,11 +9,11 @@ openDb1 = function (dbName) {
 
     dbReq.onupgradeneeded = function (event) {
       let db = event.target.result;
-    }
+    };
 
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
-}
+};
 
 openDb2 = function () {
   return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ openDb2 = function () {
       db.createObjectStore("TDatabases", { keyPath: "EmployeeEmail" });
     }
   });
-}
+};
 
 openDb = function (dbName) {
   return new Promise((resolve, reject) => {
@@ -219,10 +219,26 @@ openDb = function (dbName) {
       db.createObjectStore("TPayNotes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TOpeningBalances", { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCurrencyFrequencySettings', { keyPath: "EmployeeEmail" });
-    }
+
+      db.createObjectStore('TPayrollCalendars', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayrollHolidays', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPaidLeave', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TUnpaidLeave', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TReimbursement', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TSuperType', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayrollorganization', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TPayRatetype', { keyPath: "EmployeeEmail" });
+      //Earnings
+      db.createObjectStore('TOrdinaryTimeEarnings', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('Tovertimeearnings', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TLumpSumE', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TEarningsBonusesCommissions', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TLumpSumW', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TDirectorsFees', { keyPath: "EmployeeEmail" });
+    };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
-}
+};
 
 
 
@@ -244,14 +260,14 @@ storeExists = function (objectStore,Email) {
       resolve(exists);
     }
     };
-})
+});
 return promise;
-}
+};
 
 addLoginData = async function (loginData) {
   const db = await openDb(loginData.ProcessLog.Databasename);
   const db1 = await openDb2();
-  let transaction1 = await db1.transaction(["TDatabases"], "readwrite")
+  let transaction1 = await db1.transaction(["TDatabases"], "readwrite");
   let transaction = await db.transaction(["vscloudlogininfo"], "readwrite");
   localStorage.setItem("vs1Db", loginData.ProcessLog.Databasename);
 
@@ -266,12 +282,12 @@ addLoginData = async function (loginData) {
   let loginInfo = {
     EmployeeEmail: loginData.ProcessLog.VS1UserName||loginData.ProcessLog.VS1AdminUserName,
     data: loginData
-  }
+  };
 
   let dbInfo = {
     EmployeeEmail: loginData.ProcessLog.VS1UserName||loginData.ProcessLog.VS1AdminUserName,
     data: loginData.ProcessLog.Databasename
-  }
+  };
 
   let dbObjectStore = transaction1.objectStore("TDatabases");
   let objectStore = transaction.objectStore("vscloudlogininfo");
@@ -280,7 +296,7 @@ addLoginData = async function (loginData) {
   objectStore.put(loginInfo);
 
 
-}
+};
 
 addVS1Data = async function (objectName, vs1Data) {
   const db = await openDb(localStorage.getItem("vs1Db"));
@@ -320,11 +336,11 @@ addVS1Data = async function (objectName, vs1Data) {
     EmployeeEmail: localStorage.getItem("vs1EmployeeName"),
     data: vs1Data,
     timestamp: currenctUpdateDate
-  }
+  };
 
   let objectStore = transaction.objectStore(objectName);
   objectStore.put(loginInfo);
-}
+};
 
 queryLoginDataObject = function (objectStore, VS1AdminUserName) {
   var promise =  new Promise((resolve, reject) => {
@@ -352,7 +368,7 @@ queryLoginDataObject = function (objectStore, VS1AdminUserName) {
     };
   });
   return promise;
-}
+};
 
 
 getLoginData = async function (email) {
@@ -436,32 +452,32 @@ deleteStoreExists = function (objectStore,Email) {
       resolve(exists);
     }
     };
-})
+});
 return promise;
-}
+};
 
 deleteStoreDatabase = async function (databaseName) {
     var req = window.indexedDB.databases().then((r) => {
             for (var i = 0; i < r.length; i++) {
                 window.indexedDB.deleteDatabase(r[i].name);
-            };
+            }
         }).then(() => {
 
         });
   return await req;
-}
+};
 
 getStoreToDelete = async function (email) {
   const db = await openDb2('TDatabase');
   const transaction = await db.transaction(["TDatabases"], "readwrite");
   const objectStore = await transaction.objectStore('TDatabases');
   return await deleteStoreExists(objectStore,email);
-}
+};
 
 openDbCheckVersion = async function () {
   var promiseversion =  new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open('TDatabaseVersion', 27);
+    let dbReqVersion = indexedDB.open('TDatabaseVersion', 28);
     dbReqVersion.onsuccess = function () {
      resolve(versionExists);
     };
@@ -481,6 +497,6 @@ openDbCheckVersion = async function () {
        }
       //dbReqVersion.createObjectStore("TDatabaseVersion", { keyPath: "EmployeeEmail" });
     }
-  })
+  });
 return promiseversion;
-}
+};

@@ -19,7 +19,7 @@ Template.backuprestore.onRendered(function(){
   var erpGet = erpDb();
   let objDetails = {
       name: "VS1_BackupList",
-      databasename:erpGet.ERPDatabase,
+      databasename:erpGet.ERPDatabase.toLowerCase(),
       AllDBBackups:true
   };
   var myString = '"jsonin"'+':'+JSON.stringify(objDetails);
@@ -54,15 +54,22 @@ Template.backuprestore.onRendered(function(){
          var dateFormat = new Date(getDataDate+':'+geDateTime);
 
          let getFormatValue = moment(dateFormat).format("ddd MMM D, YYYY, HH:mm:ss");
-         //dateFormat.getDate() + " " + (dateFormat.getMonth() + 1) + "," + dateFormat.getFullYear();
 
+         let segDatabaseNameData = data[i].FileName.split('_Backup');
+         let segDatabaseName = segDatabaseNameData[0]||'';
+         //dateFormat.getDate() + " " + (dateFormat.getMonth() + 1) + "," + dateFormat.getFullYear();
 
            let recordObj = {
                filename: data[i].FileName || ' ',
                formateedname:getFormatValue||'',
                sortdatename:dateFormat||''
            };
-           restoreList.push(recordObj);
+
+           if(segDatabaseName.toLowerCase().includes(erpGet.ERPDatabase.toLowerCase())){
+             restoreList.push(recordObj);
+           }
+
+           //restoreList.push(recordObj);
 
        }
        templateObject.restorerecords.set(restoreList);
@@ -188,7 +195,7 @@ Template.backuprestore.events({
      if(myArrResponse.ProcessLog.Error){
        swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
      }else{
-       let dataSuccess = myArrResponse.ProcessLog.ResponseStatus;
+       let dataSuccess = myArrResponse.ProcessLog.ResponseStatus||'';
        swal({
        title: dataSuccess,
        text: '',
@@ -287,7 +294,10 @@ Template.backuprestore.events({
      if(myArrResponse.ProcessLog.Error){
        swal('Oooops...', myArrResponse.ProcessLog.Error, 'error');
      }else{
-       let dataSuccess = myArrResponse.ProcessLog.ResponseStatus;
+       let dataSuccess = myArrResponse.ProcessLog.ResponseStatus||'';
+       if(myArrResponse.ProcessLog.ResponseStatus == "Backing up Database in Progress.  This Process can take upto 2 hours.  "){
+          dataSuccess = 'Backing up Database in Progress.  This Process can take up to 2 hours.  ';
+       };
        swal({
        title: dataSuccess,
        text: '',
