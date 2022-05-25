@@ -69,6 +69,8 @@ Template.serialnumberlist.onRendered(function() {
                 let dataList = {
                     productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                     department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
+                    salsedes: data.tserialnumberlistcurrentreport[i].PartsDescription,
+                    barcode: data.tserialnumberlistcurrentreport[i].Barcode,
                     serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                     status: data.tserialnumberlistcurrentreport[i].AllocType,
                     date: sdatet,
@@ -347,6 +349,8 @@ Template.serialnumberlist.onRendered(function() {
                     let dataList = {
                         productname: data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown',
                         department: data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown',
+                        salsedes: data.tserialnumberlistcurrentreport[i].PartsDescription,
+                        barcode: data.tserialnumberlistcurrentreport[i].Barcode,
                         serialnumber: data.tserialnumberlistcurrentreport[i].SerialNumber,
                         status: data.tserialnumberlistcurrentreport[i].AllocType,
                         date: sdatet,

@@ -249,6 +249,6 @@ ERPObjects = function () {
         Tprojecttask_TaskLabel: "Tprojecttask_TaskLabel",
         TCurrencyRateHistory:"TCurrencyRateHistory",
         TRepairDetails:"TRepairDetails"
-    }
+    };
     return objects;
-}
+};

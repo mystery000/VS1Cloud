@@ -512,7 +512,7 @@ export class TaxRateService extends BaseService {
 
     getEmployees() {
         let options = {
-            PropertyList: "PropertyList==ID,EmployeeName",
+            PropertyList: "ID,EmployeeName",
             Select: "[Active]=true"
         };
         return this.getList(this.ERPObjects.TEmployee, options);
@@ -544,7 +544,7 @@ export class TaxRateService extends BaseService {
 
     getAllBackUpList() {
         let options = {
-            // PropertyList: "PropertyList==ID,EmployeeName",
+            // PropertyList: "ID,EmployeeName",
             // Select: "[Active]=true"
         };
         return this.getList('VS1_Cloud_Task/Method?Name="VS1_BackupList"');

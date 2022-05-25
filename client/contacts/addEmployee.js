@@ -163,7 +163,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -236,7 +235,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -305,7 +303,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -511,7 +508,6 @@ Template.employeescard.onRendered(function () {
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         select: true,
                         destroy: true,
-                        colReorder: true,
                         colReorder: {
                                 fixedColumnsRight: 1
                             },
@@ -600,7 +596,6 @@ Template.employeescard.onRendered(function () {
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         select: true,
                         destroy: true,
-                        colReorder: true,
                         colReorder: {
                                 fixedColumnsRight: 1
                             },

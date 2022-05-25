@@ -94,7 +94,7 @@ export class PayrollService extends BaseService {
 
     getEmployees() {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeName",
+              PropertyList: "ID,EmployeeName",
               Select: "[Active]=true"
           };
         return this.getList(this.ERPObjects.TEmployee, options);

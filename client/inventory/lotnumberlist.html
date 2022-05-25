@@ -44,11 +44,13 @@
                     <table id="tblLotNumberList" style="width:100%;" class="dataTable table table-striped table-bordered tblStockTransferList">
                         <thead>
                             <tr class="dnd-moved">
-                                <th class="th text-start colProductName"  style="width:20%;">Product Name</th>
-                                <th class="th text-start colDepartment"  style="width:15%;">Department</th>
+                                <th class="th text-start colProductName"  style="width:10%;">Product Name</th>
+                                <th class="th text-start colDepartment"  style="width:10%;">Department</th>
+                                <th class="th text-start colDescription"  style="width:10%;">Sales Description</th>
+                                <th class="th text-start colBarcode"  style="width:10%;">Barcode</th>
                                 <th class="th text-start colSerialNumber" style="width:15%;">Lot Number</th>
                                 <th class="th text-start colStatus" style="width:15%;">Status</th>
-                                <th class="th text-start colDate" style="width:20%;">Date</th>
+                                <th class="th text-start colDate" style="width:15%;">Date</th>
                                 <th class="th text-start colExpiryDate" style="width:15%">Expiry Date</th>
                             </tr>
                         </thead>
@@ -58,6 +60,8 @@
                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                 <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
                                 <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                <td contenteditable="false" class="colDepartment text-start">{{item.salsedes}}</td>
+                                <td contenteditable="false" class="colDepartment text-start">{{item.barcode}}</td>
                                 <td contenteditable="false" class="colSerialNumber text-start" >{{item.lotnumber}}</td>
                                 <td contenteditable="false" class="colStatus {{ item.cssclass}} text-start">{{item.status}}</td>
                                 <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
@@ -114,11 +118,13 @@
                                 <table class="table table-sm">
                                     <thead class="text-secondary" style="color: rgb(251,251,251);">
                                         <tr>
-                                            <th class="th text-start colProductName"  style="width:25%;">Product Name</th>
-                                            <th class="th text-start colDepartment"  style="width:20%;">Department</th>
-                                            <th class="th text-start colSerialNumber" style="width:20%;">Lot Number</th>
+                                            <th class="th text-start colProductName"  style="width:10%;">Product Name</th>
+                                            <th class="th text-start colDepartment"  style="width:10%;">Department</th>
+                                            <th class="th text-start colDescription"  style="width:10%;">Sales Description</th>
+                                            <th class="th text-start colBarcode"  style="width:10%;">Barcode</th>
+                                            <th class="th text-start colSerialNumber" style="width:15%;">Lot Number</th>
                                             <th class="th text-start colStatus" style="width:15%;">Status</th>
-                                            <th class="th text-start colDate" style="width:20%;">Date</th>
+                                            <th class="th text-start colDate" style="width:15%;">Date</th>
                                             <th class="th text-start colExpiryDate" style="width:15%">Expiry Date</th>
                                         </tr>
                                     </thead>
@@ -127,6 +133,8 @@
                                         <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                             <td contenteditable="false" class="colProductName text-start">{{item.productname}}</td>
                                             <td contenteditable="false" class="colDepartment text-start">{{item.department}}</td>
+                                            <td contenteditable="false" class="colDepartment text-start">{{item.salsedes}}</td>
+                                            <td contenteditable="false" class="colDepartment text-start">{{item.barcode}}</td>
                                             <td contenteditable="false" class="colSerialNumber text-start" >{{item.lotnumber}}</td>
                                             <td contenteditable="false" class="colStatus {{ item.cssclass }} text-start">{{item.status}}</td>
                                             <td contenteditable="false" class="colDate text-start">{{item.date}}</td>
