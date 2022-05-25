@@ -15,6 +15,12 @@ Template.allreports.onCreated(function() {
     templateObject.isProductSalesReport.set(false);
     templateObject.isSalesReport = new ReactiveVar();
     templateObject.isSalesReport.set(false);
+    templateObject.isStockValue = new ReactiveVar();
+    templateObject.isStockValue.set(false);
+    templateObject.isStockQuantity = new ReactiveVar();
+    templateObject.isStockQuantity.set(false);
+    templateObject.isStockMovementReport = new ReactiveVar();
+    templateObject.isStockMovementReport.set(false);
     templateObject.isPayrollHistoryReport = new ReactiveVar();
     templateObject.isPayrollHistoryReport.set(false);
     templateObject.isForeignExchangeHistoryList = new ReactiveVar();
@@ -90,6 +96,9 @@ Template.allreports.onRendered(() => {
     let isAgedReceivablesSummary = Session.get('cloudAgedReceivablesSummary');
     let isProductSalesReport = Session.get('cloudProductSalesReport');
     let isSalesReport = Session.get('cloudSalesReport');
+    let isStockValue = Session.get('cloudStockValue');
+    let isStockQuantity = Session.get('cloudStockQuantity');
+    let isStockMovementReport = Session.get('cloudStockMovementReport');
     let isPayrollHistoryReport = Session.get('cloudPayrollHistoryReport');
     let isForeignExchangeHistoryList = Session.get('cloudForeignExchangeHistoryList');
     let isSalesSummaryReport = Session.get('cloudSalesSummaryReport');
@@ -141,6 +150,15 @@ Template.allreports.onRendered(() => {
     }
     if (isSalesReport == true) {
         templateObject.isSalesReport.set(true);
+    }
+    if (isStockValue == true) {
+        templateObject.isStockValue.set(true);
+    }
+    if (isStockQuantity == true) {
+        templateObject.isStockQuantity.set(true);
+    }
+    if (isStockMovementReport == true) {
+        templateObject.isStockMovementReport.set(true);
     }
     if (isPayrollHistoryReport == true) {
         templateObject.isPayrollHistoryReport.set(true);
@@ -313,6 +331,36 @@ Template.allreports.events({
         } else {
             Session.setPersistent('cloudSalesReport', false);
             templateObject.isSalesReport.set(false);
+        }
+    },
+    'click .chkStockValue': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockValue', true);
+            templateObject.isStockValue.set(true);
+        } else {
+            Session.setPersistent('cloudStockValue', false);
+            templateObject.isStockValue.set(false);
+        }
+    },
+    'click .chkStockQuantity': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockQuantity', true);
+            templateObject.isStockQuantity.set(true);
+        } else {
+            Session.setPersistent('cloudStockQuantity', false);
+            templateObject.isStockQuantity.set(false);
+        }
+    },
+    'click .chkStockMovementReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockMovementReport', true);
+            templateObject.isStockMovementReport.set(true);
+        } else {
+            Session.setPersistent('cloudStockMovementReport', false);
+            templateObject.isStockMovementReport.set(false);
         }
     },
     'click .chkPayrollHistoryReport': function(event) {
@@ -772,6 +820,15 @@ Template.allreports.helpers({
     isSalesReport: function() {
         return Template.instance().isSalesReport.get();
     },
+    isStockValue: function() {
+        return Template.instance().isStockValue.get();
+    },
+    isStockQuantity: function() {
+        return Template.instance().isStockQuantity.get();
+    },
+    isStockMovementReport: function() {
+        return Template.instance().isStockMovementReport.get();
+    },
     isPayrollHistoryReport: function() {
         return Template.instance().isPayrollHistoryReport.get();
     },
@@ -821,6 +878,9 @@ Template.allreports.helpers({
         let isAgedReceivablesSummary = Template.instance().isAgedReceivablesSummary.get();
         let isProductSalesReport = Template.instance().isProductSalesReport.get();
         let isSalesReport = Template.instance().isSalesReport.get();
+        let isStockValue = Template.instance().isStockValue.get();
+        let isStockQuantity = Template.instance().isStockQuantity.get();
+        let isStockMovementReport = Template.instance().isStockMovementReport.get();
         let isPayrollHistoryReport = Template.instance().isPayrollHistoryReport.get();
         let isForeignExchangeHistoryList = Template.instance().isForeignExchangeHistoryList.get();
         let isSalesSummaryReport = Template.instance().isSalesSummaryReport.get();
@@ -856,7 +916,7 @@ Template.allreports.helpers({
         let isPrintStatement = Template.instance().isPrintStatement.get();
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isForeignExchangeHistoryList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport) {
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isForeignExchangeHistoryList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity) {
             isShowFavorite = true;
         }
         return isShowFavorite;
