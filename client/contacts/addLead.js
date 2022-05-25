@@ -3,6 +3,7 @@ import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import {CountryService} from '../js/country-service';
 import {PaymentsService} from '../payments/payments-service';
+import {CRMService} from '../crm/crm-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
@@ -19,11 +20,8 @@ Template.leadscard.onCreated(function () {
     templateObject.records = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
     templateObject.leadrecords = new ReactiveVar([]);
-    templateObject.recentTrasactions = new ReactiveVar([]);
-    templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.datatablerecordsjob = new ReactiveVar([]);
-    templateObject.tableheaderrecordsjob = new ReactiveVar([]);
+    templateObject.crmRecords = new ReactiveVar([]);
+    templateObject.crmTableheaderRecords = new ReactiveVar([]);
     templateObject.isSameAddress = new ReactiveVar();
     templateObject.isSameAddress.set(false);
     /* Attachments */
@@ -40,6 +38,7 @@ Template.leadscard.onRendered(function () {
     const contactService = new ContactService();
     const countryService = new CountryService();
     const paymentService = new PaymentsService();
+    const crmService = new CRMService();
     let countries = [];
     let currentId = FlowRouter.current().queryParams;
     let leadID = '';
@@ -147,6 +146,7 @@ Template.leadscard.onRendered(function () {
             if (dataObject.length === 0) {
                 contactService.getOneLeadDataEx(leadID).then(function (data) {
                     setOneLeadDataEx(data);
+                    $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -156,26 +156,29 @@ Template.leadscard.onRendered(function () {
                     if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
                         added = true;
                         setOneLeadDataEx(useData[i]);
+                        $('.fullScreenSpin').css('display', 'none');
                         setTimeout(function () {
-                            var rowCount = $('.results tbody tr').length;
+                            const rowCount = $('.results tbody tr').length;
                             $('.counter').text(rowCount + ' items');
                         }, 500);
                     }
                 }
                 if (!added) {
-                    contactService.getOneCustomerDataEx(leadID).then(function (data) {
+                    contactService.getOneLeadDataEx(leadID).then(function (data) {
                         setOneLeadDataEx(data);
+                        $('.fullScreenSpin').css('display', 'none');
                     });
                 }
             }
         }).catch(function (err) {
-            contactService.getOneCustomerDataEx(leadID).then(function (data) {
+            contactService.getOneLeadDataEx(leadID).then(function (data) {
                 $('.fullScreenSpin').css('display', 'none');
                 setOneLeadDataEx(data);
             });
         });
     };
     function setOneLeadDataEx(data) {
+        // console.log(data);
         let lineItemObj = {
             id: data.fields.ID || '',
             lid: 'Edit Lead',
@@ -224,6 +227,7 @@ Template.leadscard.onRendered(function () {
         templateObject.getOverviewARData(data.fields.ClientName);
         templateObject.records.set(lineItemObj);
 
+        templateObject.getAllCrm(data.fields.ClientName);
         /* START attachment */
         templateObject.attachmentCount.set(0);
         if (data.fields.Attachments) {
@@ -295,6 +299,172 @@ Template.leadscard.onRendered(function () {
             $('.leadTab').addClass('active');
             $('.leadTab').trigger('click');
         }
+    }
+    templateObject.getAllCrm = function (leadName) {
+        crmService.getAllTaskList().then(function (dataObject) {
+            if (dataObject.tprojecttasks.length === 0) {
+                sideBarService.getTProjectTasks().then(function (data) {
+                    setCrmProjectTasks(data, leadName);
+                }).catch(function (err) {
+                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                    $('.fullScreenSpin').css('display', 'none');
+                    // Meteor._reload.reload();
+                });
+            } else {
+                setCrmProjectTasks(dataObject, leadName);
+            }
+        }).catch(function (err) {
+            sideBarService.getTProjectTasks('').then(function (data) {
+                setCrmProjectTasks(data, leadName);
+            }).catch(function (err) {
+                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+                $('.fullScreenSpin').css('display', 'none');
+                // Meteor._reload.reload();
+            });
+        });
+    };
+    function setCrmProjectTasks(data, leadName) {
+        let lineItems = [];
+        let lineItemObj = {};
+        let dataTableList = [];
+        let tableHeaderList = [];
+        // console.log(data);
+        for (let i = 0; i < data.tprojecttasks.length; i++) {
+            let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+            let taskLabelName = '';
+            if (taskLabel !== null) {
+                if (taskLabel.length === undefined || taskLabel.length === 0) {
+                    taskLabelName = taskLabel.fields.TaskLabelName;
+                } else {
+                    taskLabelName = taskLabel[0].fields.TaskLabelName;
+                }
+            }
+            const dataList = {
+                id: data.tprojecttasks[i].fields.ID || 0,
+                date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                taskName: data.tprojecttasks[i].fields.TaskName || '',
+                projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                description: data.tprojecttasks[i].fields.TaskDescription || '',
+                labels: taskLabelName
+            };
+            // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
+                dataTableList.push(dataList);
+            // }
+        }
+
+        templateObject.crmRecords.set(dataTableList);
+
+        if (templateObject.crmRecords.get()) {
+            setTimeout(function () {
+                MakeNegative();
+                $("#dtAsOf").datepicker({
+                    showOn: 'button',
+                    buttonText: 'Show Date',
+                    buttonImageOnly: true,
+                    buttonImage: '/img/imgCal2.png',
+                    dateFormat: 'dd/mm/yy',
+                    showOtherMonths: true,
+                    selectOtherMonths: true,
+                    changeMonth: true,
+                    changeYear: true,
+                    yearRange: "-90:+10",
+                });
+            }, 100);
+        }
+        // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+        // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function () {
+            //$.fn.dataTable.moment('DD/MM/YY');
+            $('#tblCrmList').DataTable({
+                // dom: 'lBfrtip',
+                columnDefs: [
+                    { type: 'date', targets: 0 }
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Leads CRM List - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Leads CRM',
+                        filename: "Leads CRM List - " + moment().format(),
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    }],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function () {
+                    $('#tblCrmList').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.crmRecords.get();
+                templateObject.crmRecords.set(draftRecord);
+            }).on('column-reorder', function () {
+
+            });
+
+            $('.fullScreenSpin').css('display', 'none');
+        }, 0);
+
+        const columns = $('#tblCrmList th');
+        let sWidth = "";
+        let columVisible = false;
+        $.each(columns, function (i, v) {
+            if (v.hidden === false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || '',
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.crmTableheaderRecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
+    function MakeNegative() {
+        $('td').each(function () {
+            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+        });
     }
 
     if (currentId.id === "undefined") {
@@ -372,67 +542,10 @@ Template.leadscard.events({
             window.open('/agedreceivables','_self');
         }
     },
-    'click #customerShipping-1': function (event) {
-        if ($(event.target).is(':checked')) {
-            $('.customerShipping-2').css('display', 'none');
-
-        } else {
-            $('.customerShipping-2').css('display', 'block');
-        }
-    },
     'click .btnBack': function (event) {
         // event.preventDefault();
         history.back(1);
       //  FlowRouter.go('/leadlist');
-    },
-    'click .btnSaveDept': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
-
-        //let headerDept = $('#sltDepartment').val();
-        let custType = $('#edtClientTypeName').val();
-        let typeDesc = $('#txaDescription').val() || '';
-        if (custType === '') {
-            swal('Client Type name cannot be blank!', '', 'warning');
-            $('.fullScreenSpin').css('display', 'none');
-            e.preventDefault();
-        } else {
-            let objDetails = {
-                type: "TClientType",
-                fields: {
-                    TypeName: custType,
-                    TypeDescription: typeDesc,
-                }
-            };
-            contactService.saveClientTypeData(objDetails).then(function (objDetails) {
-                sideBarService.getClientTypeData().then(function(dataReload) {
-                    addVS1Data('TClientType', JSON.stringify(dataReload)).then(function (datareturn) {
-                        Meteor._reload.reload();
-                    }).catch(function (err) {
-                        Meteor._reload.reload();
-                    });
-                }).catch(function (err) {
-                    Meteor._reload.reload();
-                });
-                // Meteor._reload.reload();
-            }).catch(function (err) {
-
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        }
     },
     'click #chkSameAsShipping': function (event) {
         /*if($(event.target).is(':checked')){
@@ -763,15 +876,11 @@ Template.leadscard.events({
             }
         });
     },
-    'click .btnOpenSettingsCustomer': function (event) {
+    'click .btnOpenSettingsCrm': function (event) {
         let templateObject = Template.instance();
-        const columns = $('#tblTransactionlist th');
-
+        const columns = $('#tblCrmList th');
         const tableHeaderList = [];
-        let sTible = "";
         let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
         let columVisible = false;
         let sClass = "";
         $.each(columns, function (i, v) {
@@ -791,131 +900,45 @@ Template.leadscard.events({
             };
             tableHeaderList.push(datatablerecordObj);
         });
-        templateObject.tableheaderrecords.set(tableHeaderList);
+        templateObject.crmTableheaderRecords.set(tableHeaderList);
     },
     'click #exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletocsv').click();
+        jQuery('#tblCrmList_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirm': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblTransactionlist_wrapper .dt-buttons .btntabletopdf').click();
-        $('.fullScreenSpin').css('display', 'none');
-    },
-    'click #exportbtnJob': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display', 'none');
-    },
-    'click .printConfirmJob': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblJoblist_wrapper .dt-buttons .btntabletopdf').click();
+        jQuery('#tblCrmList_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .btnRefresh': function () {
         Meteor._reload.reload();
     },
-    'click .btnRefreshTransaction': function () {
+    'click .btnRefreshCrm': function () {
         let currentId = FlowRouter.current().queryParams;
         $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getTTransactionListReport().then(function (data) {
-            addVS1Data('TTransactionListReport', JSON.stringify(data)).then(function (datareturn) {
-                if (!isNaN(currentId.jobid)) {
-                    window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=active', '_self');
-                }
+        sideBarService.getTProjectTasks().then(function (data) {
+            addVS1Data('Tprojecttasks', JSON.stringify(data)).then(function (datareturn) {
                 if (!isNaN(currentId.id)) {
-                    window.open('/leadscard?id=' + currentId.id +'&transTab=active', '_self');
+                    window.open('/leadscard?id=' + currentId.id +'&crmTab=active', '_self');
                 }
             }).catch(function (err) {
-                if (!isNaN(currentId.jobid)) {
-                    window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=active', '_self');
-                }
                 if (!isNaN(currentId.id)) {
-                    window.open('/leadscard?id=' + currentId.id +'&transTab=active', '_self');
+                    window.open('/leadscard?id=' + currentId.id +'&crmTab=active', '_self');
                 }
             });
         }).catch(function (err) {
-            if (!isNaN(currentId.jobid)) {
-                window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=active', '_self');
-            }
             if (!isNaN(currentId.id)) {
-                window.open('/leadscard?id=' + currentId.id +'&transTab=active', '_self');
+                window.open('/leadscard?id=' + currentId.id +'&crmTab=active', '_self');
             }
         });
-    },
-    'click .btnRefreshJobDetails': function () {
-        let currentId = FlowRouter.current().queryParams;
-        $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getAllJobssDataVS1(initialBaseDataLoad,0).then(function (data) {
-            addVS1Data('TJobVS1', JSON.stringify(data)).then(function (datareturn) {
-                if (!isNaN(currentId.jobid)) {
-                    window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=job', '_self');
-                }
-
-                if (!isNaN(currentId.id)) {
-                    window.open('/leadscard?id=' + currentId.id +'&transTab=job', '_self');
-                }
-
-            }).catch(function (err) {
-                if (!isNaN(currentId.jobid)) {
-                    window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=job', '_self');
-                }
-
-                if (!isNaN(currentId.id)) {
-                    window.open('/leadscard?id=' + currentId.id +'&transTab=job', '_self');
-                }
-            });
-        }).catch(function (err) {
-            if (!isNaN(currentId.jobid)) {
-                window.open('/leadscard?jobid=' + currentId.jobid +'&transTab=job', '_self');
-            }
-
-            if (!isNaN(currentId.id)) {
-                window.open('/leadscard?id=' + currentId.id +'&transTab=job', '_self');
-            }
-        });
-    },
-    'click #formCheck-2': function () {
-        if ($(event.target).is(':checked')) {
-            $('#autoUpdate').css('display', 'none');
-        } else {
-            $('#autoUpdate').css('display', 'block');
-        }
-    },
-    'click #formCheckJob-2': function () {
-        if ($(event.target).is(':checked')) {
-            $('#autoUpdateJob').css('display', 'none');
-        } else {
-            $('#autoUpdateJob').css('display', 'block');
-        }
     },
     'click #activeChk': function () {
         if ($(event.target).is(':checked')) {
             $('#customerInfo').css('color', '#00A3D3');
         } else {
             $('#customerInfo').css('color', '#b7b9cc !important');
-        }
-    },
-    'keydown #custOpeningBalance, keydown #edtJobNumber, keydown #edtCustomerCardDiscount': function (event) {
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-            // Allow: Ctrl+A, Command+A
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-            // Allow: home, end, left, right, down, up
-            (event.keyCode >= 35 && event.keyCode <= 40)) {
-            // let it happen, don't do anything
-            return;
-        }
-        if (event.shiftKey === true) {
-            event.preventDefault();
-        }
-        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-            (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode === 8 || event.keyCode === 9 ||
-            event.keyCode === 37 || event.keyCode === 39 ||
-            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189) {
-        } else {
-            event.preventDefault();
         }
     },
     'click .new_attachment_btn': function (event) {
@@ -1178,22 +1201,21 @@ Template.leadscard.events({
             btnHide.style.display = "none";
         }
     },
-    'click .btnDeleteCustomer': function (event) {
+    'click .btnDeleteLead': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
         let contactService2 = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
-            let currentCustomer = parseInt(currentId.id);
+            let currentLead = parseInt(currentId.id);
             objDetails = {
                 type: "TProspectEx",
                 fields: {
-                    ID: currentCustomer,
+                    ID: currentLead,
                     Active: false
                 }
             };
-            contactService2.saveCustomerEx(objDetails).then(function (objDetails) {
+            contactService2.saveProspectEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/leadlist?success=true');
             }).catch(function (err) {
                 swal({
@@ -1213,7 +1235,7 @@ Template.leadscard.events({
         } else {
             FlowRouter.go('/leadlist?success=true');
         }
-        $('#deleteCustomerModal').modal('toggle');
+        $('#deleteLeadModal').modal('toggle');
     }
 });
 
@@ -1235,22 +1257,19 @@ Template.leadscard.helpers({
             return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
         });
     },
-    datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function (a, b) {
-            if (a.saledate === 'NA') {
+    crmRecords: () => {
+        return Template.instance().crmRecords.get().sort(function (a, b) {
+            if (a.id === 'NA') {
                 return 1;
             }
-            else if (b.saledate === 'NA') {
+            else if (b.id === 'NA') {
                 return -1;
             }
-            return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
+            return (a.id > b.id) ? 1 : -1;
         });
     },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
-    salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: Session.get('mycloudLogonID'), PrefName: 'tblSalesOverview' });
+    crmTableheaderRecords: () => {
+        return Template.instance().crmTableheaderRecords.get();
     },
     currentdate: () => {
         var currentDate = new Date();

@@ -1818,6 +1818,23 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }
       return this.getList(this.ERPObjects.TTransactionListReport, options);
   }
+    getTProjectTasks(msTimeStamp){
+        let options = '';
+        if(msTimeStamp){
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }else{
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }
+        return this.getList(this.ERPObjects.Tprojecttasks, options);
+    }
 
   getAllAppointmentList(limitcount, limitfrom){
     let options = '';

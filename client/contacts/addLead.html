@@ -788,13 +788,12 @@
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
                                                 <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
                                                 <div>
-                                                    <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteCustomerModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
+                                                    <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteLeadModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
                                                     <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
-
                                             </div>
 
-                                            <div class="modal fade" role="dialog" tabindex="-1" id="deleteCustomerModal">
+                                            <div class="modal fade" role="dialog" tabindex="-1" id="deleteLeadModal">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
@@ -805,9 +804,9 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <p>Please confirm that you want to delete this Customer.</p>
-                                                            <button class="btn btn-danger float-right btnDeleteCustomer" id="btnDeleteCustomer" type="button">
-                                                                <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete Customer
+                                                            <p>Please confirm that you want to delete this Lead.</p>
+                                                            <button class="btn btn-danger float-right btnDeleteLead" id="btnDeleteLead" type="button">
+                                                                <i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete Lead
                                                             </button>
                                                         </div>
                                                     </div>
@@ -820,7 +819,7 @@
                                         <div class="row d-xl-flex flex-row justify-content-xl-center">
                                             <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
                                                 <div class="btn-group float-left" style="margin: 16px; margin-bottom: 0;">
-                                                    <button class="btn btn-primary btnRefreshTransaction" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o"
+                                                    <button class="btn btn-primary btnRefreshCrm" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o"
                                                             style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
                                                 </div>
                                             </div>
@@ -834,7 +833,8 @@
                                         <div class="row rowB" style="margin: 16px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
                                                 <div class="d-xl-flex justify-content-xl-end">
-                                                    <div><a class="btn btnOpenSettingsCustomer" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                                                    <div>
+                                                        <a class="btn btnOpenSettingsCrm" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                                                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                                                 <div class="modal-content">
@@ -851,10 +851,9 @@
                                                                                     padding: 2px;
                                                                                     border-radius: .35rem;
                                                                                 }
-
-                                                                                /* .custom-control-label{
-                                                                                                position: absolute;
-                                                                                                } */
+                                                                                .custom-control-label{
+                                                                                    position: absolute;
+                                                                                }
                                                                                 .rngRange {
                                                                                     position: relative;
                                                                                     display: flex;
@@ -864,15 +863,11 @@
                                                                                     background-color: rgb(255, 255, 255);
                                                                                     background-clip: padding-box;
                                                                                     border: 1px solid rgb(133, 135, 150);
-                                                                                    border-radius: .3rem;
-                                                                                    border-style: solid;
-                                                                                    border-width: 1px;
                                                                                     padding: 2px;
                                                                                     border-radius: .35rem;
                                                                                     color: rgb(128, 128, 128);
                                                                                     height: inherit !important;
                                                                                 }
-
                                                                                 @media only screen and (max-width: 480px) {
                                                                                     .modal.show .modal-dialog {
                                                                                         float: inherit !important;
@@ -881,16 +876,12 @@
 
                                                                                     }
                                                                                 }
-
-                                                                                #page-top.active {
-                                                                                    padding-right: 0 !important;
-                                                                                }
                                                                             </style>
-                                                                            {{#if tableheaderrecords}}
+                                                                            {{#if crmTableheaderRecords}}
                                                                                 <form class="d-xl-flex align-items-xl-center">
                                                                                     <div class="flex-grow-1">
 
-                                                                                        {{#each item in tableheaderrecords}}
+                                                                                        {{#each item in crmTableheaderRecords}}
                                                                                             {{#if equals item.sTitle "id"}}
                                                                                             {{else}}
 
@@ -943,74 +934,48 @@
                                                         th {
                                                             background-color: #ededed;
                                                         }
-
                                                         .table-striped tbody tr:nth-of-type(odd) {
                                                             background-color: white !important;
                                                         }
-
                                                         .table-striped tbody tr:nth-of-type(even) {
                                                             background-color: #0000000d !important;
                                                         }
-
                                                         .JColResizer>tbody>tr>td,
                                                         .JColResizer>tbody>tr>th {
                                                             padding: .75rem !important;
                                                         }
-
                                                         .hiddenColumn {
                                                             display: none;
                                                         }
-
                                                         .showColumn {
                                                             display: table-cell;
                                                             padding: .75rem;
                                                             vertical-align: top;
                                                         }
-
                                                         input[type=number]::-webkit-inner-spin-button,
                                                         input[type=number]::-webkit-outer-spin-button {
                                                             opacity: 1;
                                                         }
                                                     </style>
-
                                                     <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
                                                         <thead>
                                                             <tr class="dnd-moved">
-                                                                <th class="th colSortDate hiddenColumn">id</th>
-                                                                <th class="th colSaleDate" style="width:80px;">Sale Date</th>
-                                                                <th class="th colSalesNo" style="width:80px;">Sales No.</th>
-                                                                <th class="th colCustomer" style="width:200px;">Customer</th>
-                                                                <th class="th colAmountEx" style="width:80px;">Amount(Ex)</th>
-                                                                <!-- <th class="th colTax" style="width:80px;">Tax</th> -->
-                                                                <th class="th colAmount" style="width:80px;">Amount</th>
-                                                                <th class="th colPaid" style="width:80px;">Paid</th>
-                                                                <th class="th colBalanceOutstanding" style="width:80px;">Balance Outstanding</th>
-                                                                <th class="th colType">Type</th>
-                                                                <th class="th colSaleCustField1 hiddenColumn">Custom Field 1</th>
-                                                                <th class="th colSaleCustField2 hiddenColumn">Custom Field 2</th>
-                                                                <th class="th colEmployee hiddenColumn">Employee</th>
-                                                                <th class="th colComments">Comments</th>
-
+                                                                <th class="th colTaskId hiddenColumn"></th>
+                                                                <th class="th colDate" style="width:100px;">Date</th>
+                                                                <th class="th colTaskName" style="width:150px;">Task</th>
+                                                                <th class="th colTaskDesc" style="width:300px;">Description</th>
+                                                                <th class="th colTaskLabels" style="width:200px;">Labels</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{#if datatablerecords}}
-                                                                {{#each item in datatablerecords}}
-                                                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                                                        <td contenteditable="false" class="colSaleDate"><span style="display:none;">{{item.sortdate}}</span>{{item.saledate}}</td>
-                                                                        <td contenteditable="false" class="colSalesNo">{{item.transid}}</td>
-                                                                        <td contenteditable="false" class="colCustomer">{{item.customername}}</td>
-                                                                        <td contenteditable="false" class="colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                                                        <!-- <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td> -->
-                                                                        <td contenteditable="false" class="colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
-                                                                        <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                                                        <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                                                        <td contenteditable="false" class="colType">{{item.type}}</td>
-                                                                        <td contenteditable="false" class="colSaleCustField1 hiddenColumn">{{item.custfield1}}</td>
-                                                                        <td contenteditable="false" class="colSaleCustField2 hiddenColumn">{{item.custfield2}}</td>
-                                                                        <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
-                                                                        <td contenteditable="false" class="colComments">{{item.comments}}</td>
+                                                            {{#if crmRecords}}
+                                                                {{#each item in crmRecords}}
+                                                                    <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}">
+                                                                        <td contenteditable="false" class="colTaskId hiddenColumn" >{{item.id}}</td>
+                                                                        <td contenteditable="false" class="colDate">{{item.date}}</td>
+                                                                        <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
+                                                                        <td contenteditable="false" class="colTaskDesc" style="white-space:pre-wrap;">{{item.description}}</td>
+                                                                        <td contenteditable="false" class="colTaskLabels">{{item.labels}}</td>
                                                                     </tr>
                                                                 {{/each}}
                                                             {{/if}}
@@ -1036,7 +1001,7 @@
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h4 class="title-header">Customer</h4>
+                    <h4 class="title-header">Lead</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
@@ -1050,35 +1015,6 @@
         </div>
     </div>
 
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
-        {{> paymentmethodpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newPaymentMethodModal">
-        {{> newpaymentmethodpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
-        {{> termlistpop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
-        {{> newtermspop}}
-    </div>
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="clienttypeListModal">
-        {{> clienttypepopup}}
-    </div>
-
-    {{> clienttypemodal}}
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
-        {{> taxratelistpop}}
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
-        {{> newtaxratepop}}
-    </div>
     <!-- End Help Video Modal -->
     <script>
         modalDraggable();
