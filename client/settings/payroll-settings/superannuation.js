@@ -13,6 +13,7 @@ Template.superannuationSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
+  templateObject.currentDrpDownID = new ReactiveVar(); 
   // templateObject.Accounts = new ReactiveVar([]);   
 });
 
@@ -643,5 +644,38 @@ Template.superannuationSettings.onRendered(function() {
 };
 
 templateObject.getSuperannuationData();
+
+$('.superannuationDropDown').editableSelect();
+$('.superannuationDropDown').editableSelect()
+    .on('click.editable-select', function (e, li) {
+        let $search = $(this);
+        let dropDownID = $search.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
+        let offset = $search.offset();
+        let currencyDataName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#superannuationSettingsModal').modal('show');
+        } else {
+            if (currencyDataName.replace(/\s/g, '') != '') {
+                // console.log('step 2')
+            }
+            $('#superannuationSettingsModal').modal('show');
+        }
+    });
+
+//On Click Superannuation List
+$(document).on("click", "#tblSuperannuation tbody tr", function (e) {
+    var table = $(this);
+    let name = table.find(".colSuperannuationName").text()||'';
+    let ID = table.find(".colSuperannuationID").text()||'';            
+    let account = table.find(".colaccountname").text()||'';
+    let searchFilterID = templateObject.currentDrpDownID.get()
+    $('#' + searchFilterID).val(name);
+    $('#' + searchFilterID + 'ID').val(ID);
+    if( searchFilterID == 'superannuationFund'){
+        $('#expenseSuperannuationAccount').val(account)
+    }
+    $('#superannuationSettingsModal').modal('toggle');
+});
 
 })
