@@ -13,6 +13,7 @@ Template.reimbursementSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
+  templateObject.currentDrpDownID = new ReactiveVar();
   // templateObject.Accounts = new ReactiveVar([]);   
 });
 
