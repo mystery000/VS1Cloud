@@ -248,6 +248,11 @@ Template.crmoverview.events({
             $("#txtCrmProjectID").val(selected_record.ProjectID);
             $("#txtCommentsDescription").val("");
 
+            $(".editTaskDetailName").val(selected_record.TaskName);
+            $(".editTaskDetailDescription").val(
+              selected_record.TaskDescription
+            );
+
             $("#taskDetailModalCategoryLabel").html(
               `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`
             );

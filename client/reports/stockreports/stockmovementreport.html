@@ -1,10 +1,10 @@
-<template name="serialnumberreport">
+<template name="stockmovementreport">
     <div style="margin-top: -24px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Serial Number Report <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
+            <h2 style="margin: 16px;">Stock Movement Report <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o " style="font-size: 20px;"></i></a></h2>
         </header>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -28,7 +28,7 @@
             <div class="modal-dialog" role="document" style="max-width: 670px!important;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="title-header">Serial Number Report</h4>
+                        <h4 class="title-header">Stock Movement Report</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
@@ -56,7 +56,7 @@
             <div class="col-12 col-md-10">
                 <div class="card shadow" style="margin: 16px;">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
-                        <p class="text-primary m-0 font-weight-bold">Serial Number Report</p>
+                        <p class="text-primary m-0 font-weight-bold">Stock Movement Report</p>
                     </div>
                     <div class="card-body">
                         <div class="row no-gutters justify-content-between">
@@ -147,7 +147,7 @@
                         <div class="printReport">
                             <div class="row">
                                 <div class="col">
-                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Serial Number Report</p>
+                                    <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">Stock Movement Report</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
                                     <p class="text-center" style="margin-bottom: 8px;">As of {{dateAsAt}}</p>
                                 </div>
@@ -163,77 +163,177 @@
                                         border-bottom: 2px #858999 solid;
                                     }
 
-                                    .tdSold {
-                                        color: #1cc88a !important;
+                                    .departmentHeader {
+                                        border-top: 2px #858999 solid;
                                     }
-                                    .tdInStock {
-                                        color: #f6c23e !important;
-                                    }
-                                    .tdAvailable {
-                                        color: #36b9cc !important;
+
+                                    .text-right {
+                                        text-align: right !important;
                                     }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
-                                                <th>Product Name</th>
-                                                <th>Product Desc</th>
-                                                <th>Department</th>
-                                                <th>Last Transaction Date</th>
-                                                <th>Serial Number</th>
-                                                <th>BOM Serial Number</th>
-                                                <th>UOM</th>
-                                                <th>Status</th>
+                                                <th>Product</th>
+                                                <th>Trans Type</th>
+                                                <th>Trans No</th>
+                                                <th>Opening Qty</th>
+                                                <th>Current Qty</th>
+                                                <th>Running Qty</th>
+                                                <th>Unit Cost</th>
+                                                <th>Total Cost</th>
+                                                <th>Unit Cost (Ex)</th>
+                                                <th>Total Cost (Ex)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>A27 Widget Cleaner</td>
-                                                <td></td>
-                                                <td>Default</td>
-                                                <td>23/05/2022</td>
-                                                <td>787979798</td>
-                                                <td>PSN-155-787979798</td>
-                                                <td>Units</td>
-                                                <td class="tdInStock">In-Stock</td>
+                                                <td style="font-weight: 800;">400 Tile Lightbeam</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td class="text-right" style="font-weight: 800;">$ 50.00</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
                                             </tr>
                                             <tr>
-                                                <td>A27 Widget Cleaner</td>
                                                 <td></td>
-                                                <td>Default</td>
-                                                <td>23/05/2022</td>
-                                                <td>787979799</td>
-                                                <td>PSN-155-787979799</td>
-                                                <td>Units</td>
-                                                <td class="tdSold">Sold</td>
+                                                <td>Stock Adjustment</td>
+                                                <td>178</td>
+                                                <td>0.00</td>
+                                                <td>8.00</td>
+                                                <td>8.00</td>
+                                                <td class="text-right text-success">$ 50.00</td>
+                                                <td class="text-right text-success">$ 400.00</td>
+                                                <td class="text-right text-success">$ 72.71</td>
+                                                <td class="text-right text-success">$ 581.68</td>
                                             </tr>
                                             <tr>
-                                                <td>A27 Widget Cleaner</td>
                                                 <td></td>
-                                                <td>Default</td>
-                                                <td>23/05/2022</td>
-                                                <td>7879797800</td>
-                                                <td>PSN-155-787979800</td>
-                                                <td>Units</td>
-                                                <td class="tdAvailable">Available</td>
+                                                <td>Stock Adjustment</td>
+                                                <td>181</td>
+                                                <td>0.00</td>
+                                                <td>2.00</td>
+                                                <td>10.00</td>
+                                                <td class="text-right text-success">$ 50.00</td>
+                                                <td class="text-right text-success">$ 100.00</td>
+                                                <td class="text-right text-success">$ 69.87</td>
+                                                <td class="text-right text-success">$ 139.74</td>
                                             </tr>
                                             <tr>
-                                                <td>A27 Widget Cleaner</td>
+                                                <td style="font-weight: 800;">ABC Parts</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td class="text-right" style="font-weight: 800;">$ 40.00</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                            </tr>
+                                            <tr>
                                                 <td></td>
-                                                <td>Default</td>
-                                                <td>23/05/2022</td>
-                                                <td>7879797801</td>
-                                                <td>PSN-155-787979801</td>
-                                                <td>Units</td>
-                                                <td class="tdInStock">In-Stock</td>
+                                                <td>Stock Transfer</td>
+                                                <td>6</td>
+                                                <td>0.00</td>
+                                                <td>10.00</td>
+                                                <td>10.00</td>
+                                                <td class="text-right text-success">$ 40.00</td>
+                                                <td class="text-right text-success">$ 400.00</td>
+                                                <td class="text-right text-success">$ 45.45</td>
+                                                <td class="text-right text-success">$ 454.55</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 800;">ABC Parts</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td style="font-weight: 800;">10.00</td>
+                                                <td class="text-right" style="font-weight: 800;">$ 40.00</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Stock Transfer</td>
+                                                <td>6</td>
+                                                <td>0.00</td>
+                                                <td>10.00</td>
+                                                <td>10.00</td>
+                                                <td class="text-right text-success">$ 40.00</td>
+                                                <td class="text-right text-success">$ 400.00</td>
+                                                <td class="text-right text-success">$ 45.45</td>
+                                                <td class="text-right text-success">$ 454.55</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 800;">Barcode</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;">-6.00</td>
+                                                <td style="font-weight: 800;">-6.00</td>
+                                                <td class="text-right" style="font-weight: 800;">$ 9.30</td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                                <td style="font-weight: 800;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Cash Sale</td>
+                                                <td>444</td>
+                                                <td>0.00</td>
+                                                <td>-1.00</td>
+                                                <td>-6.00</td>
+                                                <td class="text-right text-success">$ 9.30</td>
+                                                <td class="text-right text-danger">-$ 9.30</td>
+                                                <td class="text-right text-success">$ 9.09</td>
+                                                <td class="text-right text-danger">-$ 9.09</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Cash Sale</td>
+                                                <td>444</td>
+                                                <td>0.00</td>
+                                                <td>-1.00</td>
+                                                <td>-6.00</td>
+                                                <td class="text-right text-success">$ 9.30</td>
+                                                <td class="text-right text-danger">-$ 9.30</td>
+                                                <td class="text-right text-success">$ 9.09</td>
+                                                <td class="text-right text-danger">-$ 9.09</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Cash Sale</td>
+                                                <td>444</td>
+                                                <td>0.00</td>
+                                                <td>-1.00</td>
+                                                <td>-6.00</td>
+                                                <td class="text-right text-success">$ 9.30</td>
+                                                <td class="text-right text-danger">-$ 9.30</td>
+                                                <td class="text-right text-success">$ 9.09</td>
+                                                <td class="text-right text-danger">-$ 9.09</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>Cash Sale</td>
+                                                <td>444</td>
+                                                <td>0.00</td>
+                                                <td>-3.00</td>
+                                                <td>-6.00</td>
+                                                <td class="text-right text-success">$ 9.30</td>
+                                                <td class="text-right text-danger">-$ 27.90</td>
+                                                <td class="text-right text-success">$ 9.09</td>
+                                                <td class="text-right text-danger">-$ 27.27</td>
                                             </tr>
                                             <!-- {{#if records}}
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
