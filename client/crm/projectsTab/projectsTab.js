@@ -23,15 +23,19 @@ Template.projectsTab.onRendered(function () {
       .getTProjectList()
       .then(function (data) {
         if (data.tprojectlist && data.tprojectlist.length > 0) {
+          let tprojectlist = data.tprojectlist;
           let all_projects = data.tprojectlist;
-          all_projects = all_projects.filter(
+
+          tprojectlist = tprojectlist.filter(
             (proj) => proj.fields.Active == true && proj.fields.ID != 11
           );
+          all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+          templateObject.all_projects.set(all_projects);
 
           let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
           style="margin-right: 8px;"></i>All Tasks</a>`;
           let ProjectName = "";
-          all_projects.forEach((proj) => {
+          tprojectlist.forEach((proj) => {
             ProjectName =
               proj.fields.ProjectName.length > 26
                 ? proj.fields.ProjectName.substring(0, 26) + "..."
@@ -51,7 +55,6 @@ Template.projectsTab.onRendered(function () {
             (project) => project.fields.AddToFavourite == true
           );
 
-          templateObject.all_projects.set(all_projects);
           templateObject.active_projects.set(active_projects);
           templateObject.deleted_projects.set(deleted_projects);
           templateObject.favorite_projects.set(favorite_projects);
