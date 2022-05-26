@@ -86,6 +86,20 @@
                 </div>
                 <!-- END  -->
 
+                <div class="modal fade" role="dialog" tabindex="-1" id="myModalTemplate">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body" style="padding: 0px;">
+                                 {{ > templatesettings}}
+                            </div>                        
+                        </div>
+                    </div>
+
+                </div>
+
                 <!-- Start Attachemt -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -373,8 +387,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
                             </div>
+
                         </div>
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 mb-3">
@@ -1113,7 +1129,7 @@
                 </style>
 
                 <div class="row align-items-end" style="margin: 16px;">
-                    <div class="col-12 col-lg-8 col-xl-10" style="rpadding-right: 24px;">
+                    <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px;">
                         <div class="row">
                             <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 36px; margin-left: 16px;">+ Add New Entry</button>
                         </div>
@@ -1129,23 +1145,41 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-center desktopButtons">
-                            <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                            </button>
+                        <div class="row">
+                              <div class="col-12 col-md-4">
+                                <div class="row justify-content-center desktopButtons">
 
-                            <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                            </button>
+                                    <button class="btn btn-primary btnchousetemplate btnFooter" data-toggle="modal" data-target="#" type="button" >
+                                        <i class="fa fa-file" style="padding-right: 8px;"></i> Choose Template
+                                    </button>
+                             
+                                </div>
 
-                            <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 16px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                            </a>
+                              </div>
+                              <div class="col-12 col-md-8">
+                                <div class="row justify-content-center desktopButtons">
 
-                            <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                            </button>
+                                  
+                                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                                    </button>
+        
+                                    <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-print" style="padding-right: 8px;"></i>Print
+                                    </button>
+        
+                                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 16px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
+                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                    </a>
+        
+                                    <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+                                    </button>
+                                </div>
+
+                              </div>
                         </div>
+                       
                     </div>
                     <!-- <div class="col-12 col-md-6 col-lg-4 col-xl-5">
                         <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 120px;">+ Add New Entry</button>

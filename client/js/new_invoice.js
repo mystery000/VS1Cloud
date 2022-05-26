@@ -4397,7 +4397,6 @@ Template.new_invoice.onRendered(() => {
 
                                     if (useData[d].fields.Lines.length) {
                                         for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                            
                                             let AmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toLocaleString(undefined, {
                                                 minimumFractionDigits: 2
                                             });
@@ -4430,6 +4429,7 @@ Template.new_invoice.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                                                pqaseriallotdata:useData[d].fields.Lines[i].fields.PQA||''
 
                                             };
                                             var dataListTable = [
@@ -4469,6 +4469,7 @@ Template.new_invoice.onRendered(() => {
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
                                             DiscountPercent: useData[d].fields.Lines.fields.DiscountPercent || 0,
+                                            pqaseriallotdata:useData[d].fields.Lines.fields.PQA||''
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -12513,30 +12514,60 @@ Template.new_invoice.onRendered(() => {
         },
         'click .btnSnLotmodal': function(event) {
             $('.fullScreenSpin').css('display', 'inline-block');
+            let templateObject = Template.instance();
+            let invoiceData = templateObject.invoicerecord.get();
+            let InvoiceLine = invoiceData.LineItems;
             var target = event.target;
             let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+            invoiceData.LineItems.forEach(element => {
+                if (element.item == selectedProductName) {
+                    let productService = new ProductService();
+                    productService.getProductStatus(selectedProductName).then(function(data) {
+                        $('.fullScreenSpin').css('display', 'none');
+                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                            swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                            event.preventDefault();
+                            return false;
+                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                            $('#lotNumberModal').modal('show');
+                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                            $('#serialNumberModal').modal('show');
+                            if (element.pqaseriallotdata == "null") {
+                                console.log("Data: NAN");
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQASN == "null") {
+                                    console.log("Data: NAN");
+                                } else {
+                                    if (element.pqaseriallotdata.fields.PQASN.length == 0) {
+                                        console.log("Data: NAN");
+                                    } else {
+                                        let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
+                                            console.log("Data: NAN");
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist').html(shtml);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+            localStorage.setItem('productname', selectedProductName);
             let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
             localStorage.setItem('productItem', selectedunit);
-            let productService = new ProductService();
-            if (selectedProductName == '') {
-                $('.fullScreenSpin').css('display', 'none');
-                swal('You have to select Product.', '', 'info');
-                event.preventDefault();
-                return false;
-            } else {
-                productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
-                        event.preventDefault();
-                        return false;
-                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        $('#lotNumberModal').modal('show');
-                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        $('#serialNumberModal').modal('show');
-                    }
-                });
-            }
         }
     });
 

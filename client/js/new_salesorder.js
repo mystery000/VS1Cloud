@@ -10858,7 +10858,7 @@ Template.new_salesorder.events({
             productService.getProductStatus(selectedProductName).then(function(data) {
                 $('.fullScreenSpin').css('display', 'none');
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
+                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
                     event.preventDefault();
                     return false;
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {

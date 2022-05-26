@@ -485,6 +485,46 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
+
+    // if project task modal is opened,
+    // initialize projecttask table
+    let id = $("#editProjectID").val();
+    if (id) {
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
+
+            // set task list
+            let active_projecttasks = [];
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
+              }
+
+              active_projecttasks = projecttasks.filter(
+                (item) =>
+                  item.fields.Active == true && item.fields.Completed == false
+              );
+            }
+            templateObject.projecttasks.set(projecttasks);
+            templateObject.active_projecttasks.set(active_projecttasks);
+
+            templateObject.initProjectTasksTable();
+          } else {
+            return;
+          }
+        })
+        .catch(function (err) {
+          swal(err, "", "error");
+          return;
+        });
+    }
   };
 
   templateObject.getInitialAllTaskList = function () {
@@ -1135,7 +1175,7 @@ Template.alltaskdatatable.onRendered(function () {
       td2 = item.fields.Description;
       td3 = projectStatus;
       td4 = taskCount;
-      taskRows.push([td0, td1, td2, td3, td4]);
+      taskRows.push([td0, td1, td2, td3, td4, item.fields.ID]);
     });
     return taskRows;
   };
@@ -1159,10 +1199,47 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
+          className: "colDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskLabels openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
       ],
       colReorder: {
@@ -1273,6 +1350,8 @@ Template.alltaskdatatable.events({
         // recalculate count here
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
+        // $("#newProjectTasksModal").modal("hide");
+
         $(".fullScreenSpin").css("display", "none");
       });
     }
@@ -1308,6 +1387,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
             $(".fullScreenSpin").css("display", "none");
             $("#taskDetailModal").modal("hide");
+            // $("#newProjectTasksModal").modal("hide");
           });
         } else if (result.dismiss === "cancel") {
         } else {
@@ -1386,7 +1466,7 @@ Template.alltaskdatatable.events({
         : projectName;
 
     $("#addProjectID").val(projectid);
-    // $(".addTaskModalProjectName").html(projectName);
+    $(".addTaskModalProjectName").html(projectName);
     $("#taskDetailModalCategoryLabel").html(
       `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${projectName}`
     );
@@ -1600,7 +1680,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
           }, 500);
           $("#newTaskModal").modal("hide");
-          $("#newProjectTasksModal").modal("hide");
+          // $("#newProjectTasksModal").modal("hide");
         }
 
         $(".fullScreenSpin").css("display", "none");
@@ -2146,8 +2226,10 @@ Template.alltaskdatatable.events({
           crmService
             .updateProject(objDetails)
             .then(function (data) {
-              $(".projectRow" + id).remove();
-              // templateObject.getTProjectList();
+              // $(".projectRow" + id).remove();
+              templateObject.getTProjectList();
+              $("#editProjectID").val("");
+
               $("#editCrmProject").modal("hide");
               $("#newProjectTasksModal").modal("hide");
               $(".fullScreenSpin").css("display", "none");
@@ -2286,10 +2368,6 @@ Template.alltaskdatatable.events({
     $("#editProjectID").val(id);
     let templateObject = Template.instance();
 
-    // tempcode
-    id = 3;
-    // tempcode
-
     if (id) {
       $(".fullScreenSpin").css("display", "inline-block");
       let active_projecttasks = [];
@@ -2346,6 +2424,12 @@ Template.alltaskdatatable.events({
 
   // open new task modal
   "click .addTaskOnProject": function (e) {
+    // $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
+
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
     $("#newTaskModal").modal("toggle");
 
     let projectName = $(".editCrmProjectName").html()
