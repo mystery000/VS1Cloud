@@ -5,6 +5,9 @@ import 'jquery-ui-dist/jquery-ui.css';
 import {AccessLevelService} from './accesslevel-service';
 import {EmployeeProfileService} from './profile-service';
 import '../lib/global/indexdbstorage.js';
+import { SMSService } from '../js/sms-settings-service';
+
+let smsService = new SMSService();
 
 Template.vs1login.onCreated(() => {
     Template.instance().subscribe('RegisterUser');
@@ -1236,6 +1239,50 @@ Template.vs1login.onRendered(function () {
                                                                             getSideBarData(employeeUserID, employeeUserLogon, ERPIPAdderess, erpdbname);
 
                                                                             document.getElementById("error_log").style.display = 'none';
+
+                                                                            // Add get sms messaging log when login here
+                                                                            const smsSettings = {
+                                                                                twilioAccountId: "",
+                                                                                twilioAccountToken: "",
+                                                                                twilioTelephoneNumber: "",
+                                                                            }
+                                                                            smsService.getSMSSettings().then((result) => {
+                                                                                if (result.terppreference.length > 0) {
+                                                                                    for (let i = 0; i < result.terppreference.length; i++) {
+                                                                                        switch(result.terppreference[i].PrefName) {
+                                                                                            case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                                                                            case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                                                                            case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                console.log(smsSettings);
+                                                                                $.ajax(
+                                                                                    {
+                                                                                        method: 'GET',
+                                                                                        url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
+                                                                                        dataType: 'json',
+                                                                                        contentType: 'application/x-www-form-urlencoded', // !
+                                                                                        beforeSend: function(xhr) {
+                                                                                            xhr.setRequestHeader("Authorization",
+                                                                                                "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
+                                                                                            );
+                                                                                        },
+                                                                                        success: function(data) {
+                                                                                            // TODO: Add indexdb function to save sms messaging logs
+                                                                                            console.log('SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                                                                            if (!data.sms_messages) {
+                                                                                                addVS1Data('TVS1SMSLogs', data).then((res) => {
+                                                                                                    console.log(res);
+                                                                                                }).then(error => console.log(error));
+                                                                                            }
+                                                                                        },
+                                                                                        error: function(e) {
+                                                                                            reject(e.message);
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                            });
 
                                                                         } else {
 
