@@ -1273,6 +1273,8 @@ Template.alltaskdatatable.events({
         // recalculate count here
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
+        $("#newProjectTasksModal").modal("hide");
+
         $(".fullScreenSpin").css("display", "none");
       });
     }
@@ -1308,6 +1310,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
             $(".fullScreenSpin").css("display", "none");
             $("#taskDetailModal").modal("hide");
+            $("#newProjectTasksModal").modal("hide");
           });
         } else if (result.dismiss === "cancel") {
         } else {
@@ -1386,7 +1389,7 @@ Template.alltaskdatatable.events({
         : projectName;
 
     $("#addProjectID").val(projectid);
-    // $(".addTaskModalProjectName").html(projectName);
+    $(".addTaskModalProjectName").html(projectName);
     $("#taskDetailModalCategoryLabel").html(
       `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${projectName}`
     );
