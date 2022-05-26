@@ -19,6 +19,7 @@ Template.earningRateSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
+  templateObject.currentDrpDownID = new ReactiveVar(); 
   // templateObject.Accounts = new ReactiveVar([]);   
 });
 
@@ -3014,6 +3015,85 @@ Template.earningRateSettings.onRendered(function() {
 
 
   });
+
+    $('.earningLineDropDown').editableSelect();
+    $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {     
+        let $search = $(this);
+        let offset = $search.offset();
+        let dropDownID = $search.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
+        let currencyDataName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#earningRateSettingsModal').modal('show');
+            console.log('step 1')
+        } else {
+            // if (currencyDataName.replace(/\s/g, '') != '') {
+                console.log('step 2')
+            // }
+            $('#earningRateSettingsModal').modal('show');
+        }
+    });
+    
+    $('.superannuationDropDown').editableSelect();
+    $('.superannuationDropDown').editableSelect()
+        .on('click.editable-select', function (e, li) {
+            let $search = $(this);
+            let dropDownID = $search.attr('id')
+            templateObject.currentDrpDownID.set(dropDownID);
+            let offset = $search.offset();
+            let currencyDataName = e.target.value || '';
+            if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                $('#superannuationSettingsModal').modal('show');
+            } else {
+                if (currencyDataName.replace(/\s/g, '') != '') {
+                    // console.log('step 2')
+                }
+            }
+        });
+
+    
+    //On Click Superannuation List
+    $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colSuperannuationName").text()||'';
+        let ID = table.find(".colSuperannuationID").text()||'';            
+        let account = table.find(".colaccountname").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        if( searchFilterID == 'superannuationFund'){
+            $('#expenseSuperannuationAccount').val(account)
+        }
+        $('#superannuationSettingsModal').modal('toggle');
+    });
+    //On Click Superannuation List
+    $(document).on("click", "#tblReimbursements tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colReimbursementName").text()||'';
+        let ID = table.find(".colReimbursementID").text()||'';
+        let account = table.find(".colReimbursementAccount").text()||'';            
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        if( searchFilterID == 'reimbursementTypeSelect'){
+            $('#controlExpenseAccount').val(account)
+        }
+        $('#reimbursementSettingsModal').modal('toggle');
+    });
+
+    $(document).on("click", "#tblEarnings tbody tr", function (e) {
+        var table = $(this);
+        let earningsName = table.find(".colEarningsNames").text()||'';
+        let earningsID = table.find(".colEarningsID").text()||'';
+        let account = table.find(".colEarningsAccounts").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()            
+        $('#' + searchFilterID).val(earningsName);
+        $('#' + searchFilterID + 'ID').val(earningsID);
+        if( searchFilterID == 'earningRateSelect'){
+            $('#expenseAccount').val(account)
+        }
+        $('#earningRateSettingsModal').modal('toggle');
+    });
 
    $('#edtExpenseAccountAllowance').editableSelect().on('click.editable-select', function (e, li) {
     var $earch = $(this);
@@ -10972,6 +11052,36 @@ $(document).on("click", ".saveDirectorFee", function(e) {
       }
 });
 
+$('.reimbursementDropDown').editableSelect();
+$('.reimbursementDropDown').editableSelect()
+    .on('click.editable-select', function (e, li) {
+        let $search = $(this);
+        let dropDownID = $search.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
+        let offset = $search.offset();
+        let currencyDataName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#reimbursementSettingsModal').modal('show');
+        } else {
+            if (currencyDataName.replace(/\s/g, '') != '') {
+                // console.log('step 2')
+            }
+            $('#reimbursementSettingsModal').modal('show');
+        }
+    });
+    $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colSuperannuationName").text()||'';
+        let ID = table.find(".colSuperannuationID").text()||'';            
+        let account = table.find(".colaccountname").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        if( searchFilterID == 'superannuationFund'){
+            $('#expenseSuperannuationAccount').val(account)
+        }
+        $('#superannuationSettingsModal').modal('toggle');
+    });
 });
 
 Template.payrollrules.events({

@@ -309,7 +309,7 @@
                                     <li class="nav-item" style="cursor: pointer;"><a class="nav-link jobTab" role="tab" data-toggle="tab" data-target="#tab-3">Job Details</a></li>
                                     {{/if}}
                                     <li class="nav-item" style="cursor: pointer;"><a class="nav-link transactionTab" role="tab" data-toggle="tab" data-target="#tab-1">Transaction List</a></li>
-                                    <li class="nav-item" style="cursor: pointer;"><a class="nav-link leadTab" role="tab" data-toggle="tab" data-target="#tab-lead">CRM</a></li>
+                                    <li class="nav-item" style="cursor: pointer;"><a class="nav-link crmTab" role="tab" data-toggle="tab" data-target="#tab-crm">CRM</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <style>
@@ -870,7 +870,6 @@
                                     {{else}}
                                     <!-- end job -->
                                     <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-
                                         <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                             <div class="col">
                                                 <div class="row">
@@ -958,23 +957,12 @@
                                                             .preferredPaymentMethodSelect {
                                                                 width: 215px !important;
                                                             }
-
-                                                            .termsSelect {
-                                                                width: 215px !important;
-                                                            }
-
-                                                            .customerTypeSelect {
-                                                                width: 215px !important;
-                                                            }
-
                                                             .taxCodeSelect {
                                                                 width: 215px !important;
                                                             }
-
                                                             .attachementsImage1 {
                                                                 width: 200px !important;
                                                             }
-
                                                             .breakPhone {
                                                                 display: block !important;
                                                             }
@@ -1182,7 +1170,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-8" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters" style="margin: 12px;">
                                                                 <div class="col">
@@ -1371,7 +1358,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <!-- View File Attachemt -->
                                                         <div id="files_view" class="modal fade" role="dialog">
                                                             <div class="modal-dialog">
@@ -1399,7 +1385,6 @@
                                                             </div>
                                                         </div>
                                                         <!-- End View File attachment -->
-
                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters" style="margin: 12px;">
                                                                 <div class="col d-xl-flex align-items-xl-center">
@@ -1465,12 +1450,19 @@
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
                                                 <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
                                                 <div>
+                                                    <button class="btn btn-info btnCustomerTask" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Task</button>
+                                                    <button class="btn btn-info btnCustomerEmail" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Email</button>
+                                                    <button class="btn btn-info btnCustomerAppointment" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Appointment</button>
+                                                    <button class="btn btn-info btnCustomerQuote" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Quote</button>
+                                                    <button class="btn btn-info btnCustomerSalesOrder" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Sales Order</button>
+                                                    <button class="btn btn-info btnCustomerInvoice" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Invoice</button>
+                                                    <button class="btn btn-info btnCustomerRefund" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Refund</button>
+                                                </div>
+                                                <div>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteCustomerModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
                                                     <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
-
                                             </div>
-
                                             <div class="modal fade" role="dialog" tabindex="-1" id="deleteCustomerModal">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -1491,7 +1483,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="tab-pane border rounded-0 tab-3" role="tabpanel" id="tab-3" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
 
@@ -1535,10 +1526,9 @@
                                                                                                 padding: 2px;
                                                                                                 border-radius: .35rem;
                                                                                             }
-
-                                                                                            /* .custom-control-label{
-                                                                                                        position: absolute;
-                                                                                                        } */
+                                                                                            .custom-control-label{
+                                                                                                position: absolute;
+                                                                                            }
                                                                                             .rngRange {
                                                                                                 position: relative;
                                                                                                 display: flex;
@@ -1548,15 +1538,11 @@
                                                                                                 background-color: rgb(255, 255, 255);
                                                                                                 background-clip: padding-box;
                                                                                                 border: 1px solid rgb(133, 135, 150);
-                                                                                                border-radius: .3rem;
-                                                                                                border-style: solid;
-                                                                                                border-width: 1px;
                                                                                                 padding: 2px;
                                                                                                 border-radius: .35rem;
                                                                                                 color: rgb(128, 128, 128);
                                                                                                 height: inherit !important;
                                                                                             }
-
                                                                                             @media only screen and (max-width: 480px) {
                                                                                                 .modal.show .modal-dialog {
                                                                                                     float: inherit !important;
@@ -1564,10 +1550,6 @@
                                                                                                     top: auto !important;
 
                                                                                                 }
-                                                                                            }
-
-                                                                                            #page-top.active {
-                                                                                                padding-right: 0px !important;
                                                                                             }
                                                                                         </style>
                                                                                         {{#each itemjob in tableheaderrecordsjob}}
@@ -1699,8 +1681,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         <!-- New Job Pop Up Start Here  -->
                                         <div class="modal fade" role="dialog" tabindex="-1" id="addNewJobModal">
                                             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
@@ -2264,7 +2244,6 @@
 
                                         </div>
                                         <!-- New Job Pop Up Ends Here  -->
-
                                     </div>
                                     {{/if}}
                                     <div class="tab-pane border rounded-0 tab-1" role="tabpanel" id="tab-1" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -2276,16 +2255,17 @@
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
+                                                <button class="btn btn-primary float-right printConfirmTransaction" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
+                                                <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtnTransaction" name="exportbtn"><i class="fas fa-file-export"
                                                         style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
                                         <div class="row rowB" style="margin: 16px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
                                                 <div class="d-xl-flex justify-content-xl-end">
-                                                    <div><a class="btn btnOpenSettingsCustomer" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                                                    <div>
+                                                        <a class="btn btnOpenSettingsTransaction" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                                                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                                                 <div class="modal-content">
@@ -2302,10 +2282,9 @@
                                                                                     padding: 2px;
                                                                                     border-radius: .35rem;
                                                                                 }
-
-                                                                                /* .custom-control-label{
-                                                                                                position: absolute;
-                                                                                                } */
+                                                                                .custom-control-label{
+                                                                                    position: absolute;
+                                                                                }
                                                                                 .rngRange {
                                                                                     position: relative;
                                                                                     display: flex;
@@ -2331,10 +2310,6 @@
                                                                                         top: auto !important;
 
                                                                                     }
-                                                                                }
-
-                                                                                #page-top.active {
-                                                                                    padding-right: 0px !important;
                                                                                 }
                                                                             </style>
                                                                             {{#if tableheaderrecords}}
@@ -2394,7 +2369,6 @@
                                                         th {
                                                             background-color: #ededed;
                                                         }
-
                                                         .table-striped tbody tr:nth-of-type(odd) {
                                                             background-color: white !important;
                                                         }
@@ -2402,22 +2376,13 @@
                                                         .table-striped tbody tr:nth-of-type(even) {
                                                             background-color: #0000000d !important;
                                                         }
-
                                                         .JColResizer>tbody>tr>td,
                                                         .JColResizer>tbody>tr>th {
                                                             padding: .75rem !important;
                                                         }
-
                                                         .hiddenColumn {
                                                             display: none;
                                                         }
-
-                                                        .showColumn {
-                                                            display: table-cell;
-                                                            padding: .75rem;
-                                                            vertical-align: top;
-                                                        }
-
                                                         input[type=number]::-webkit-inner-spin-button,
                                                         input[type=number]::-webkit-outer-spin-button {
                                                             opacity: 1;
@@ -2470,30 +2435,25 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- </div>
-
-                    </div> -->
                                     </div>
-                                    <div class="tab-pane border rounded-0 tab-lead" role="tabpanel" id="tab-lead" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+                                    <div class="tab-pane border rounded-0 tab-crm" role="tabpanel" id="tab-crm" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                         <div class="row d-xl-flex flex-row justify-content-xl-center">
                                             <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
                                                 <div class="btn-group float-left" style="margin: 16px; margin-bottom: 0;">
-                                                    <button class="btn btn-primary btnRefreshTransaction" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o"
-                                                            style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
+                                                    <button class="btn btn-primary btnRefreshCrm" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"><i class="la la-lightbulb-o" style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
                                                 </div>
                                             </div>
                                             <div class="col">
-                                                <button class="btn btn-primary float-right printConfirm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
-                                                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
-                                                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                                                <button class="btn btn-primary float-right printConfirmCrm" type="button" style="margin:16px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                                                <button class="btn btn-primary export float-right" type="button" style="margin: 16px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtnCrm" name="exportbtnCrm"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                                             </div>
                                         </div>
                                         <div class="row rowB" style="margin: 16px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
                                                 <div class="d-xl-flex justify-content-xl-end">
-                                                    <div><a class="btn btnOpenSettingsCustomer" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
-                                                        <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                                    <div>
+                                                        <a class="btn btnOpenSettingsCrm" role="button" data-toggle="modal" href="#myModalCrm"><i class="icon ion-android-more-horizontal"></i></a>
+                                                        <div class="modal fade" role="dialog" tabindex="-1" id="myModalCrm">
                                                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -2509,10 +2469,9 @@
                                                                                     padding: 2px;
                                                                                     border-radius: .35rem;
                                                                                 }
-
-                                                                                /* .custom-control-label{
-                                                                                                position: absolute;
-                                                                                                } */
+                                                                                .custom-control-label{
+                                                                                    position: absolute;
+                                                                                }
                                                                                 .rngRange {
                                                                                     position: relative;
                                                                                     display: flex;
@@ -2522,15 +2481,11 @@
                                                                                     background-color: rgb(255, 255, 255);
                                                                                     background-clip: padding-box;
                                                                                     border: 1px solid rgb(133, 135, 150);
-                                                                                    border-radius: .3rem;
-                                                                                    border-style: solid;
-                                                                                    border-width: 1px;
                                                                                     padding: 2px;
                                                                                     border-radius: .35rem;
                                                                                     color: rgb(128, 128, 128);
                                                                                     height: inherit !important;
                                                                                 }
-
                                                                                 @media only screen and (max-width: 480px) {
                                                                                     .modal.show .modal-dialog {
                                                                                         float: inherit !important;
@@ -2539,23 +2494,19 @@
 
                                                                                     }
                                                                                 }
-
-                                                                                #page-top.active {
-                                                                                    padding-right: 0px !important;
-                                                                                }
                                                                             </style>
-                                                                            {{#if tableheaderrecords}}
+                                                                            {{#if crmTableheaderRecords}}
                                                                                 <form class="d-xl-flex align-items-xl-center">
                                                                                     <div class="flex-grow-1">
 
-                                                                                        {{#each item in tableheaderrecords}}
+                                                                                        {{#each item in crmTableheaderRecords}}
                                                                                             {{#if equals item.sTitle "id"}}
                                                                                             {{else}}
 
                                                                                                 <div id="{{item.sIndex}}" class="columnSettings">
                                                                                                     <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                                                         <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}"
-                                                                                                            checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                                                                               checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
                                                                                                         <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
                                                                                                         <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
                                                                                                     </div>
@@ -2601,77 +2552,51 @@
                                                         th {
                                                             background-color: #ededed;
                                                         }
-
                                                         .table-striped tbody tr:nth-of-type(odd) {
                                                             background-color: white !important;
                                                         }
-
                                                         .table-striped tbody tr:nth-of-type(even) {
                                                             background-color: #0000000d !important;
                                                         }
-
                                                         .JColResizer>tbody>tr>td,
                                                         .JColResizer>tbody>tr>th {
                                                             padding: .75rem !important;
                                                         }
-
                                                         .hiddenColumn {
                                                             display: none;
                                                         }
-
                                                         .showColumn {
                                                             display: table-cell;
                                                             padding: .75rem;
                                                             vertical-align: top;
                                                         }
-
                                                         input[type=number]::-webkit-inner-spin-button,
                                                         input[type=number]::-webkit-outer-spin-button {
                                                             opacity: 1;
                                                         }
                                                     </style>
-
-                                                    <table id="tblCrmlist" style="width:100%" class="dataTable table table-striped table-bordered tblCrmlist">
+                                                    <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
                                                         <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colSortDate hiddenColumn">id</th>
-                                                                <th class="th colSaleDate" style="width:80px;">Sale Date</th>
-                                                                <th class="th colSalesNo" style="width:80px;">Sales No.</th>
-                                                                <th class="th colCustomer" style="width:200px;">Customer</th>
-                                                                <th class="th colAmountEx" style="width:80px;">Amount(Ex)</th>
-                                                                <!-- <th class="th colTax" style="width:80px;">Tax</th> -->
-                                                                <th class="th colAmount" style="width:80px;">Amount</th>
-                                                                <th class="th colPaid" style="width:80px;">Paid</th>
-                                                                <th class="th colBalanceOutstanding" style="width:80px;">Balance Outstanding</th>
-                                                                <th class="th colType">Type</th>
-                                                                <th class="th colSaleCustField1 hiddenColumn">Custom Field 1</th>
-                                                                <th class="th colSaleCustField2 hiddenColumn">Custom Field 2</th>
-                                                                <th class="th colEmployee hiddenColumn">Employee</th>
-                                                                <th class="th colComments">Comments</th>
-
-                                                            </tr>
+                                                        <tr class="dnd-moved">
+                                                            <th class="th colTaskId hiddenColumn"></th>
+                                                            <th class="th colDate" style="width:100px;">Date</th>
+                                                            <th class="th colTaskName" style="width:150px;">Task</th>
+                                                            <th class="th colTaskDesc" style="width:300px;">Description</th>
+                                                            <th class="th colTaskLabels" style="width:200px;">Labels</th>
+                                                        </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {{#if datatablerecords}}
-                                                                {{#each item in datatablerecords}}
-                                                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                                                        <td contenteditable="false" class="colSaleDate"><span style="display:none;">{{item.sortdate}}</span>{{item.saledate}}</td>
-                                                                        <td contenteditable="false" class="colSalesNo">{{item.transid}}</td>
-                                                                        <td contenteditable="false" class="colCustomer">{{item.customername}}</td>
-                                                                        <td contenteditable="false" class="colAmountEx" style="text-align: right!important;">{{item.totalamountex}}</td>
-                                                                        <!-- <td contenteditable="false" class="colTax" style="text-align: right!important;">{{item.totaltax}}</td> -->
-                                                                        <td contenteditable="false" class="colAmount" style="text-align: right!important;">{{item.totalamount}}</td>
-                                                                        <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td>
-                                                                        <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                                                        <td contenteditable="false" class="colType">{{item.type}}</td>
-                                                                        <td contenteditable="false" class="colSaleCustField1 hiddenColumn">{{item.custfield1}}</td>
-                                                                        <td contenteditable="false" class="colSaleCustField2 hiddenColumn">{{item.custfield2}}</td>
-                                                                        <td contenteditable="false" class="colEmployee hiddenColumn">{{item.employee}}</td>
-                                                                        <td contenteditable="false" class="colComments">{{item.comments}}</td>
-                                                                    </tr>
-                                                                {{/each}}
-                                                            {{/if}}
+                                                        {{#if crmRecords}}
+                                                            {{#each item in crmRecords}}
+                                                                <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}">
+                                                                    <td contenteditable="false" class="colTaskId hiddenColumn" >{{item.id}}</td>
+                                                                    <td contenteditable="false" class="colDate">{{item.date}}</td>
+                                                                    <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
+                                                                    <td contenteditable="false" class="colTaskDesc" style="white-space:pre-wrap;">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colTaskLabels">{{item.labels}}</td>
+                                                                </tr>
+                                                            {{/each}}
+                                                        {{/if}}
                                                         </tbody>
                                                     </table>
                                                 </div>

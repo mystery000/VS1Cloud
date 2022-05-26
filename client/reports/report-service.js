@@ -122,14 +122,14 @@ export class ReportService extends BaseService {
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
-        PeriodType: '"' + periodType + '"',
+        // PeriodType: '"' + periodType + '"',
       };
     } else {
       options = {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        PeriodType: '"' + periodType + '"',
+        // PeriodType: '"' + periodType + '"',
       };
     }
 

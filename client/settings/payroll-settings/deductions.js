@@ -13,6 +13,7 @@ Template.deductionSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
+  templateObject.currentDrpDownID = new ReactiveVar(); 
   // templateObject.Accounts = new ReactiveVar([]);   
 });
 
@@ -689,5 +690,38 @@ Template.deductionSettings.onRendered(function() {
     });
     };
     templateObject.getAllDeductions();
+
+    $('.deductionLineDropDown').editableSelect();
+    $('.deductionLineDropDown').editableSelect()
+        .on('click.editable-select', function (e, li) {
+            let $search = $(this);
+            let offset = $search.offset();
+            let dropDownID = $search.attr('id')
+            templateObject.currentDrpDownID.set(dropDownID);
+            let currencyDataName = e.target.value || '';
+            if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+                $('#deductionSettingsModal').modal('show');
+            } else {
+                if (currencyDataName.replace(/\s/g, '') != '') {
+                    // console.log('step 2')
+                }
+                $('#deductionSettingsModal').modal('show');
+            }
+        });
+    
+    //On Click Deduction List
+    $(document).on("click", "#tblDeductions tbody tr", function (e) {
+        var table = $(this);
+        let deductionName = table.find(".colDeductionsNames").text()||'';
+        let deductionID = table.find(".colDeductionsID").text()||'';
+        let account = table.find(".colDeductionsAccounts").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(deductionName);
+        $('#' + searchFilterID + 'ID').val(deductionID);
+        if( searchFilterID == 'deductionTypeSelect'){
+            $('#controlAccountDeduction').val(account)
+        }
+        $('#deductionSettingsModal').modal('toggle');
+    });
 
 })
