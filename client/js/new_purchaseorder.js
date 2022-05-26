@@ -443,6 +443,7 @@ Template.purchaseordercard.onRendered(() => {
                             let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
                           if(data.fields.Lines != null){
                             if (data.fields.Lines.length) {
+                                console.log("Test:", data.fields.Lines );
                                 for (let i = 0; i < data.fields.Lines.length; i++) {
                                     let AmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
                                     let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
@@ -478,6 +479,7 @@ Template.purchaseordercard.onRendered(() => {
                                     lineItems.push(lineItemObj);
                                 }
                             } else {
+                                console.log("Test:", data.fields.Lines );
                                 let AmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmountInc);
                                 let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmount);
                                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
@@ -680,7 +682,6 @@ Template.purchaseordercard.onRendered(() => {
                                 let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalPaid);
                                 if (useData[d].fields.Lines.length) {
                                     for (let i = 0; i < useData[d].fields.Lines.length; i++) {
-                                        console.log(useData[d].fields.Lines[i]);
                                         let AmountGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount);
                                         let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.TotalLineAmount);
                                         let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
@@ -709,6 +710,7 @@ Template.purchaseordercard.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
+                                            pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
 
                                         };
 
@@ -8669,28 +8671,89 @@ Template.purchaseordercard.events({
     },
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        var target=event.target;
+        let templateObject = Template.instance();
+        let invoiceData = templateObject.invoicerecord.get();
+        let InvoiceLine = invoiceData.LineItems;
+        var target = event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
-        let productService = new ProductService();
-        if (selectedProductName == '') {
-            $('.fullScreenSpin').css('display', 'none');
-            swal('You have to select Product.', '', 'info');
-            event.preventDefault();
-            return false;
-        } else {
-            productService.getProductStatus(selectedProductName).then(function(data) {
-                $('.fullScreenSpin').css('display', 'none');
-                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
-                    event.preventDefault();
-                    return false;
-                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                    $('#lotNumberModal').modal('show');
-                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                    $('#serialNumberModal').modal('show');
-                }
-            });
-        }
+        invoiceData.LineItems.forEach(element => {
+            if (element.item == selectedProductName) {
+                let productService = new ProductService();
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        $('#lotNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                            console.log("Data: NAN");
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQABatch == "null") {
+                                console.log("Data: NAN");
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQABatch.length == 0) {
+                                    console.log("Data: NAN");
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td colspan="5">Allocate Batches</td><td rowspan="2">CUSTFLD</td></tr>
+                                    <tr><td>Batch No</td><td>Expiry Date</td><td>Qty</td><td>BO Qty</td><td>Length</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQABatch.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo == "null") {
+                                            console.log("Data: NAN");
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchNo}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BatchExpiryDate}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.UOMQty}</td><td>${element.pqaseriallotdata.fields.PQABatch[k].fields.BOUOMQty}</td><td></td><td></td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist').html(shtml);
+                                }
+                            }
+                        }
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        $('#serialNumberModal').modal('show');
+                        if (element.pqaseriallotdata == "null") {
+                            console.log("Data: NAN");
+                        } else {
+                            if (element.pqaseriallotdata.fields.PQASN == "null") {
+                                console.log("Data: NAN");
+                            } else {
+                                if (element.pqaseriallotdata.fields.PQASN.length == 0) {
+                                    console.log("Data: NAN");
+                                } else {
+                                    let shtml = '';
+                                    let i = 0;
+                                    shtml += `
+                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
+                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
+                                    `;
+                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
+                                        if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
+                                            console.log("Data: NAN");
+                                        } else {
+                                            i++;
+                                            shtml += `
+                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>
+                                            `;
+                                        }
+                                    }
+                                    $('#tblSeriallist').html(shtml);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        localStorage.setItem('productname', selectedProductName);
+        let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
+        localStorage.setItem('productItem', selectedunit);
     }
 
 });
