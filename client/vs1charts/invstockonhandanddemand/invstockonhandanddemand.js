@@ -216,16 +216,16 @@ Template.invstockonhandanddemand.onRendered(()=>{
           }, 1000)
        });
       }else{
-        
+
         let dataobj = JSON.parse(dataObject[0].data);
         let useData = dataobj.tproductstocknsaleperiodreport[0];
-        let month_1 = useData.TypeDesc_1.replace('-', ' ')||'';
-        let month_2 = useData.TypeDesc_2.replace('-', ' ')||'';
-        let month_3 = useData.TypeDesc_3.replace('-', ' ')||'';
-        let month_4 = useData.TypeDesc_4.replace('-', ' ')||'';
-        let month_5 = useData.TypeDesc_5.replace('-', ' ')||'';
-        let month_6 = useData.TypeDesc_6.replace('-', ' ')||'';
-        let month_7 = useData.TypeDesc_7.replace('-', ' ')||'';
+        let month_1 = useData.TypeDesc_1||'';
+        let month_2 = useData.TypeDesc_2||'';
+        let month_3 = useData.TypeDesc_3||'';
+        let month_4 = useData.TypeDesc_4||'';
+        let month_5 = useData.TypeDesc_5||'';
+        let month_6 = useData.TypeDesc_6||'';
+        let month_7 = useData.TypeDesc_7||'';
         let month_8 = useData.TypeDesc_8||'';
         let month_9 = useData.TypeDesc_9||'';
         let month_10 = useData.TypeDesc_10||'';
@@ -330,7 +330,6 @@ Template.invstockonhandanddemand.onRendered(()=>{
         }, 1000)
       }
     }).catch(function (err) {
-
       vs1chartService.getProductStocknSaleReportData(prevMonth11Date, fromDate).then((data) => {
           addVS1Data('TProductStocknSalePeriodReport',JSON.stringify(data));
           let month_1 = data.tproductstocknsaleperiodreport[0].TypeDesc_1||'';
