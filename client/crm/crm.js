@@ -224,6 +224,14 @@ Template.crmoverview.events({
     $("#newTaskModal").modal("toggle");
   },
 
+  "click .detail_label": function (e) {
+    e.stopPropagation();
+  },
+
+  "click .add_label": function (e) {
+    e.stopPropagation();
+  },
+
   // open task detail modal
   "click .openEditTaskModal": function (e) {
     if (!e.target.classList.contains("no-modal")) {
@@ -231,7 +239,7 @@ Template.crmoverview.events({
 
       let id = e.target.dataset.id;
       let type = e.target.dataset.ttype;
-      let catg = e.target.dataset.catg;
+      // let catg = e.target.dataset.catg;
       let templateObject = Template.instance();
       $("#txtCrmSubTaskID").val(id);
 
@@ -248,9 +256,57 @@ Template.crmoverview.events({
             $("#txtCrmProjectID").val(selected_record.ProjectID);
             $("#txtCommentsDescription").val("");
 
-            $("#taskDetailModalCategoryLabel").html(
-              `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`
+            $(".editTaskDetailName").val(selected_record.TaskName);
+            $(".editTaskDetailDescription").val(
+              selected_record.TaskDescription
             );
+
+            // $("#taskDetailModalCategoryLabel").html(
+            //   `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`
+            // );
+
+            let catg = "";
+            let today = moment().format("YYYY-MM-DD");
+            if (selected_record.due_date) {
+              if (selected_record.due_date.substring(0, 10) == today) {
+                catg =
+                  `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
+                  "Today";
+                $(".taskDueDate").css("color", "#0013d3");
+              } else if (selected_record.due_date.substring(0, 10) > today) {
+                catg =
+                  `<i class="fas fa-calendar-alt text-primary" style="margin-right: 5px;"></i>` +
+                  "Upcoming";
+                $(".taskDueDate").css("color", "#1cc88a");
+              } else if (selected_record.due_date.substring(0, 10) < today) {
+                catg =
+                  `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
+                  "All Tasks";
+                $(".taskDueDate").css("color", "#e74a3b");
+              } else {
+                catg =
+                  `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
+                  "All Tasks";
+              }
+            } else {
+              catg =
+                `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
+                "All Tasks";
+            }
+
+            // if (
+            //   selected_record.ProjectName == "" ||
+            //   selected_record.ProjectName == "Default"
+            // ) {
+            //   catg = "All Tasks";
+            // }
+            // catg = selected_record.ProjectName;
+            $(".taskLocation").html(
+              `<a class="taganchor">
+                ${catg}
+              </a>`
+            );
+
             $("#taskmodalNameLabel").html(selected_record.TaskName);
             $(".activityAdded").html(
               "Added on " +
@@ -275,7 +331,7 @@ Template.crmoverview.events({
             if (selected_record.TaskLabel) {
               if (selected_record.TaskLabel.fields != undefined) {
                 taskmodalLabels =
-                  '<a class="taganchor" href="">' +
+                  `<a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
                   selected_record.TaskLabel.fields.TaskLabelName +
                   "</a>";
                 $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
@@ -285,7 +341,7 @@ Template.crmoverview.events({
               } else {
                 selected_record.TaskLabel.forEach((lbl) => {
                   taskmodalLabels +=
-                    '<a class="taganchor" href="">' +
+                    `<a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
                     lbl.fields.TaskLabelName +
                     "</a>, ";
                   $("#detail_label_" + lbl.fields.ID).prop("checked", true);
@@ -335,7 +391,7 @@ Template.crmoverview.events({
                 </div>
                 <div class="row justify-content-between">
                   <div class="dueDateTags" style="display: inline-flex;">
-                    <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus"
+                    <span class="taskDueDate"><i class="far fa-calendar-plus"
                         style="margin-right: 5px;"></i>${sub_due_date}</span>
                     <span class="taskTag"><a class="taganchor" href=""></a></span>
                   </div>
@@ -724,7 +780,7 @@ Template.crmoverview.events({
 
   "click .btnMailchimp": function (e) {
     swal(
-      "You are not set up yet, do you wish to create an account with Mail Chimp?",
+      "You are not set up yet, do you wish to create an account with Mail Chimp",
       "",
       "warning"
     );

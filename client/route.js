@@ -1688,3 +1688,30 @@ authenticatedRoutes.route('/payrollhistoryreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/stockvaluereport', {
+    name: 'stockvaluereport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockvaluereport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockmovementreport', {
+    name: 'stockmovementreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockmovementreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockquantitybylocation', {
+    name: 'stockquantitybylocation',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockquantitybylocation'
+        });
+    }
+});
