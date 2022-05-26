@@ -410,6 +410,8 @@ Template.accessleveldup.onRendered(function(){
                         formClassHidden = 'hiddenRow';
                     }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
                         formClassHidden = 'hiddenRow';
+                    }else if((n.skingroup === "CRM") && (n.description === "CRM")){
+                        formClassHidden = 'hiddenRow';
                     }else if((n.skingroup === "Employee") && (n.description === "Settings")){
                         formClassHidden = 'hiddenRow';
                     }else if((n.skingroup === "General") && (n.description === "Settings")){
@@ -501,6 +503,8 @@ Template.accessleveldup.onRendered(function(){
                       if((n.skingroup === "Accounts") && (n.description === "Accounts")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
+                          formClassHidden = 'hiddenRow';
+                      }else if((n.skingroup === "CRM") && (n.description === "CRM")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Employee") && (n.description === "Settings")){
                           formClassHidden = 'hiddenRow';
@@ -1031,6 +1035,8 @@ Template.accessleveldup.onRendered(function(){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
                           formClassHidden = 'hiddenRow';
+                      }else if((n.skingroup === "CRM") && (n.description === "CRM")){
+                          formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Employee") && (n.description === "Settings")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "General") && (n.description === "Settings")){
@@ -1555,6 +1561,8 @@ Template.accessleveldup.onRendered(function(){
                     if((n.skingroup === "Accounts") && (n.description === "Accounts")){
                         formClassHidden = 'hiddenRow';
                     }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
+                        formClassHidden = 'hiddenRow';
+                    }else if((n.skingroup === "CRM") && (n.description === "CRM")){
                         formClassHidden = 'hiddenRow';
                     }else if((n.skingroup === "Employee") && (n.description === "Settings")){
                         formClassHidden = 'hiddenRow';
@@ -2085,6 +2093,8 @@ Template.accessleveldup.onRendered(function(){
                       if((n.skingroup === "Accounts") && (n.description === "Accounts")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Appointments") && (n.description === "Appointments")){
+                          formClassHidden = 'hiddenRow';
+                      }else if((n.skingroup === "CRM") && (n.description === "CRM")){
                           formClassHidden = 'hiddenRow';
                       }else if((n.skingroup === "Employee") && (n.description === "Settings")){
                           formClassHidden = 'hiddenRow';
