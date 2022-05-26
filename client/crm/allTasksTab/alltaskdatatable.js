@@ -1135,7 +1135,7 @@ Template.alltaskdatatable.onRendered(function () {
       td2 = item.fields.Description;
       td3 = projectStatus;
       td4 = taskCount;
-      taskRows.push([td0, td1, td2, td3, td4]);
+      taskRows.push([td0, td1, td2, td3, td4, item.fields.ID]);
     });
     return taskRows;
   };
@@ -1159,10 +1159,47 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
+          className: "colDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskLabels openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
       ],
       colReorder: {
@@ -2345,6 +2382,12 @@ Template.alltaskdatatable.events({
 
   // open new task modal
   "click .addTaskOnProject": function (e) {
+    // $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
+
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
     $("#newTaskModal").modal("toggle");
 
     let projectName = $(".editCrmProjectName").html()
