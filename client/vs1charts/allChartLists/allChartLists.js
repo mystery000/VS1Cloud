@@ -183,6 +183,8 @@ Template.allChartLists.onRendered(function () {
     }
 
     if( chartList.length > 0 ){
+      // Hide all charts
+      $('.sortable-chart-widget-js').addClass("hideelement");
       // console.log(allChartResponse);
       // console.log('chartlist', chartList);
       // the goal here is to get the right names so it can be used for preferences
@@ -222,7 +224,7 @@ Template.allChartLists.onRendered(function () {
             if( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
               $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
             }
-          } else {
+          } else {            
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
               "Show"
             );
@@ -357,18 +359,10 @@ Template.allChartLists.onRendered(function () {
         //}
         //}
         }, 500);
-      });
-      // Handle sorting
-      let $chartWrappper = $(".connectedChartSortable");
-      $chartWrappper
-        .find(".sortable-chart-widget-js")
-        .sort(function (a, b) {
-          return +a.getAttribute("position") - +b.getAttribute("position");
-        })
-        .appendTo($chartWrappper);
+      });     
 
       displayedCharts = document.querySelectorAll(
-        ".chart-visibility:not(.hideelement)"
+        ".sortable-chart-widget-js:not(.hideelement)"
       );
       if (displayedCharts.length == 0) {
         // show only the first one
@@ -378,10 +372,20 @@ Template.allChartLists.onRendered(function () {
           $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
           $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
           $(`[key='${item}']`).removeClass("hideelement");
-          $(`[key='${item}']`).addClass("chart-visibility");
-          ChartHandler.buildPositions();
+          $(`[key='${item}']`).addClass("chart-visibility");          
         }
       }
+      await ChartHandler.buildPositions();
+      // Handle sorting
+      setTimeout(() => {
+        let $chartWrappper = $(".connectedChartSortable");
+        $chartWrappper
+          .find(".sortable-chart-widget-js")
+          .sort(function (a, b) {
+            return +a.getAttribute("position") - +b.getAttribute("position");
+          })
+          .appendTo($chartWrappper);
+      }, 500)
     } 
   };
   templateObject.deactivateDraggable = () => {
