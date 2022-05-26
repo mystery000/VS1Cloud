@@ -177,6 +177,42 @@ Template.leadscard.onRendered(function () {
             });
         });
     };
+    templateObject.getLeadDataByName = function () {
+        getVS1Data('TProspectEx').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                    setOneLeadDataEx(data.tprospect[0]);
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tprospect;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ClientName) === parseInt(leadID)) {
+                        added = true;
+                        setOneLeadDataEx(useData[i]);
+                        $('.fullScreenSpin').css('display', 'none');
+                        setTimeout(function () {
+                            const rowCount = $('.results tbody tr').length;
+                            $('.counter').text(rowCount + ' items');
+                        }, 500);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                        setOneLeadDataEx(data.tprospect[0]);
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setOneLeadDataEx(data.tprospect[0]);
+            });
+        });
+    };
     function setOneLeadDataEx(data) {
         // console.log(data);
         let lineItemObj = {
@@ -300,6 +336,27 @@ Template.leadscard.onRendered(function () {
             $('.leadTab').trigger('click');
         }
     }
+
+    function MakeNegative() {
+        $('td').each(function () {
+            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+        });
+    }
+
+    if (currentId.id === "undefined") {
+        setInitialForEmptyCurrentID();
+    } else {
+        if (!isNaN(currentId.id)) {
+            leadID = currentId.id;
+            templateObject.getLeadData();
+        } else if((currentId.name)){
+            leadID = currentId.name.replace(/%20/g, " ");
+            templateObject.getLeadDataByName();
+        } else {
+            setInitialForEmptyCurrentID();
+        }
+    }
+
     templateObject.getAllCrm = function (leadName) {
         crmService.getAllTaskList().then(function (dataObject) {
             if (dataObject.tprojecttasks.length === 0) {
@@ -349,7 +406,7 @@ Template.leadscard.onRendered(function () {
                 labels: taskLabelName
             };
             // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-                dataTableList.push(dataList);
+            dataTableList.push(dataList);
             // }
         }
 
@@ -459,26 +516,6 @@ Template.leadscard.onRendered(function () {
         });
         templateObject.crmTableheaderRecords.set(tableHeaderList);
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    }
-
-    function MakeNegative() {
-        $('td').each(function () {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-    }
-
-    if (currentId.id === "undefined") {
-        setInitialForEmptyCurrentID();
-    } else {
-        if (!isNaN(currentId.id)) {
-            leadID = currentId.id;
-            templateObject.getLeadData();
-        } else if((currentId.name)){
-            leadID = currentId.name.replace(/%20/g, " ");
-            templateObject.getLeadData();
-        } else {
-            setInitialForEmptyCurrentID();
-        }
     }
 
     templateObject.getLeadsList = function () {
@@ -882,7 +919,6 @@ Template.leadscard.events({
         const tableHeaderList = [];
         let sWidth = "";
         let columVisible = false;
-        let sClass = "";
         $.each(columns, function (i, v) {
             if (v.hidden === false) {
                 columVisible = true;
@@ -1084,7 +1120,6 @@ Template.leadscard.events({
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();
-
         if (checkPrefDetails) {
             CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
                 if (err) {
@@ -1203,7 +1238,7 @@ Template.leadscard.events({
     },
     'click .btnDeleteLead': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService2 = new ContactService();
+        let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
@@ -1215,7 +1250,7 @@ Template.leadscard.events({
                     Active: false
                 }
             };
-            contactService2.saveProspectEx(objDetails).then(function (objDetails) {
+            contactService.saveProspectEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/leadlist?success=true');
             }).catch(function (err) {
                 swal({
@@ -1236,6 +1271,114 @@ Template.leadscard.events({
             FlowRouter.go('/leadlist?success=true');
         }
         $('#deleteLeadModal').modal('toggle');
+    },
+    'click .btnQuote': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: 'true'
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(function (data) {
+                let customerID = data.fields.ID;
+                FlowRouter.go('/quotecard?id=' + customerID);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
+    },
+    'click .btnSalesOrder': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: 'true'
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(function (data) {
+                let customerID = data.fields.ID;
+                FlowRouter.go('/salesordercard?id=' + customerID);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
+    },
+    'click .btnInvoice': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: 'true'
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(function (data) {
+                let customerID = data.fields.ID;
+                FlowRouter.go('/invoicecard?id=' + customerID);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
     }
 });
 
@@ -1346,8 +1489,6 @@ function getCheckPrefDetails() {
             const clientUsername = getcurrentCloudDetails.cloudUsername;
             const clientEmail = getcurrentCloudDetails.cloudEmail;
             checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'leadscard'});
-            console.log('checkPrefDetails');
-            console.log(checkPrefDetails);
         }
     }
     return checkPrefDetails;

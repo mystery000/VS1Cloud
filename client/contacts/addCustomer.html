@@ -870,7 +870,6 @@
                                     {{else}}
                                     <!-- end job -->
                                     <div class="tab-pane active border rounded-0 tab-2" role="tabpanel" id="tab-2" style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-
                                         <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                             <div class="col">
                                                 <div class="row">
@@ -958,23 +957,12 @@
                                                             .preferredPaymentMethodSelect {
                                                                 width: 215px !important;
                                                             }
-
-                                                            .termsSelect {
-                                                                width: 215px !important;
-                                                            }
-
-                                                            .customerTypeSelect {
-                                                                width: 215px !important;
-                                                            }
-
                                                             .taxCodeSelect {
                                                                 width: 215px !important;
                                                             }
-
                                                             .attachementsImage1 {
                                                                 width: 200px !important;
                                                             }
-
                                                             .breakPhone {
                                                                 display: block !important;
                                                             }
@@ -1182,7 +1170,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-8" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters" style="margin: 12px;">
                                                                 <div class="col">
@@ -1371,7 +1358,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <!-- View File Attachemt -->
                                                         <div id="files_view" class="modal fade" role="dialog">
                                                             <div class="modal-dialog">
@@ -1399,7 +1385,6 @@
                                                             </div>
                                                         </div>
                                                         <!-- End View File attachment -->
-
                                                         <div class="tab-pane border rounded-0" role="tabpanel" id="tab-9" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                             <div class="row no-gutters" style="margin: 12px;">
                                                                 <div class="col d-xl-flex align-items-xl-center">
@@ -1465,12 +1450,19 @@
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
                                                 <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
                                                 <div>
+                                                    <button class="btn btn-info btnCustomerTask" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Task</button>
+                                                    <button class="btn btn-info btnCustomerEmail" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Email</button>
+                                                    <button class="btn btn-info btnCustomerAppointment" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Appointment</button>
+                                                    <button class="btn btn-info btnCustomerQuote" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Quote</button>
+                                                    <button class="btn btn-info btnCustomerSalesOrder" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Sales Order</button>
+                                                    <button class="btn btn-info btnCustomerInvoice" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Invoice</button>
+                                                    <button class="btn btn-info btnCustomerRefund" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Refund</button>
+                                                </div>
+                                                <div>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteCustomerModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
                                                     <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
-
                                             </div>
-
                                             <div class="modal fade" role="dialog" tabindex="-1" id="deleteCustomerModal">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -1491,7 +1483,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="tab-pane border rounded-0 tab-3" role="tabpanel" id="tab-3" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
 
@@ -2273,7 +2264,8 @@
                                         <div class="row rowB" style="margin: 16px; margin-top: 0">
                                             <div class="card-body rounded" style="padding: 0;">
                                                 <div class="d-xl-flex justify-content-xl-end">
-                                                    <div><a class="btn btnOpenSettingsTransaction" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                                                    <div>
+                                                        <a class="btn btnOpenSettingsTransaction" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                                                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                                                 <div class="modal-content">
