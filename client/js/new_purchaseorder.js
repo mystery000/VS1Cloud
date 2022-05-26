@@ -443,7 +443,6 @@ Template.purchaseordercard.onRendered(() => {
                             let totalPaidAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalPaid);
                           if(data.fields.Lines != null){
                             if (data.fields.Lines.length) {
-                                console.log("Test:", data.fields.Lines );
                                 for (let i = 0; i < data.fields.Lines.length; i++) {
                                     let AmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
                                     let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.TotalLineAmount);
@@ -479,7 +478,6 @@ Template.purchaseordercard.onRendered(() => {
                                     lineItems.push(lineItemObj);
                                 }
                             } else {
-                                console.log("Test:", data.fields.Lines );
                                 let AmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmountInc);
                                 let currencyAmountGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.TotalLineAmount);
                                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
@@ -8672,11 +8670,10 @@ Template.purchaseordercard.events({
     'click .btnSnLotmodal': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
-        let invoiceData = templateObject.invoicerecord.get();
-        let InvoiceLine = invoiceData.LineItems;
+        let PurchaseData = templateObject.purchaseorderrecord.get();
         var target = event.target;
         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
-        invoiceData.LineItems.forEach(element => {
+        PurchaseData.LineItems.forEach(element => {
             if (element.item == selectedProductName) {
                 let productService = new ProductService();
                 productService.getProductStatus(selectedProductName).then(function(data) {
