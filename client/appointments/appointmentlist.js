@@ -117,27 +117,65 @@ Template.appointmentlist.onRendered(async function () {
 
     // Get SMS settings
     templateObject.getSMSSettings = function() {
-        return new Promise((resolve, reject) => {
-            const smsSettings = {
-                twilioAccountId: "",
-                twilioAccountToken: "",
-                twilioTelephoneNumber: "",
-            }
-            smsService.getSMSSettings().then((result) => {
-                if (result.terppreference.length > 0) {
-                    for (let i = 0; i < result.terppreference.length; i++) {
-                        switch(result.terppreference[i].PrefName) {
-                            case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
-                            case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
-                            case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
-                        }
-                    }
+            return new Promise((resolve, reject) => {
+                const smsSettings = {
+                    twilioAccountId: "",
+                    twilioAccountToken: "",
+                    twilioTelephoneNumber: "",
                 }
-                templateObject.smsSettings.set(smsSettings);
-                resolve(true);
+
+                getVS1Data('TERPPreference').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                      smsService.getSMSSettings().then((result) => {
+                          if (result.terppreference.length > 0) {
+                              for (let i = 0; i < result.terppreference.length; i++) {
+                                  switch(result.terppreference[i].PrefName) {
+                                      case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                      case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                      case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                                  }
+                              }
+                          }
+                          templateObject.smsSettings.set(smsSettings);
+                          resolve(true);
+                      });
+                    } else {
+                      let result = JSON.parse(dataObject[0].data);
+                      if (result.terppreference.length > 0) {
+                          for (let i = 0; i < result.terppreference.length; i++) {
+                            if(result.terppreference[i].PrefName == "VS1SMSID" || result.terppreference[i].PrefName =="VS1SMSToken"
+                            || result.terppreference[i].PrefName =="VS1SMSPhone" || result.terppreference[i].PrefName == "VS1SAVESMSMSG"
+                             || result.terppreference[i].PrefName == "VS1STARTSMSMSG" || result.terppreference[i].PrefName =="VS1STOPSMSMSG"){
+
+                               switch(result.terppreference[i].PrefName) {
+                                   case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                   case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                   case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                               }
+                            }
+                          }
+                      }
+                      templateObject.smsSettings.set(smsSettings);
+                      resolve(true);
+                    }
+                }).catch(function (err) {
+                  smsService.getSMSSettings().then((result) => {
+                      if (result.terppreference.length > 0) {
+                          for (let i = 0; i < result.terppreference.length; i++) {
+                              switch(result.terppreference[i].PrefName) {
+                                  case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                  case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                  case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                              }
+                          }
+                      }
+                      templateObject.smsSettings.set(smsSettings);
+                      resolve(true);
+                  });
+                });
+
             });
-        });
-    }
+        }
 
     templateObject.getAllProductData = function () {
         productList = [];
@@ -1745,7 +1783,15 @@ Template.appointmentlist.events({
 
         });
 
+        sideBarService.getGlobalSettings().then(function (dataPrefrences) {
+        addVS1Data('TERPPreference', JSON.stringify(dataPrefrences)).then(function (datareturn) {
 
+        }).catch(function (err) {
+
+        });
+    }).catch(function (err) {
+
+    });
     },
     'change #dateTo': function() {
         let templateObject = Template.instance();
