@@ -485,6 +485,46 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
+
+    // if project task modal is opened,
+    // initialize projecttask table
+    let id = $("#editProjectID").val();
+    if (id) {
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
+
+            // set task list
+            let active_projecttasks = [];
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
+              }
+
+              active_projecttasks = projecttasks.filter(
+                (item) =>
+                  item.fields.Active == true && item.fields.Completed == false
+              );
+            }
+            templateObject.projecttasks.set(projecttasks);
+            templateObject.active_projecttasks.set(active_projecttasks);
+
+            templateObject.initProjectTasksTable();
+          } else {
+            return;
+          }
+        })
+        .catch(function (err) {
+          swal(err, "", "error");
+          return;
+        });
+    }
   };
 
   templateObject.getInitialAllTaskList = function () {
@@ -1310,7 +1350,7 @@ Template.alltaskdatatable.events({
         // recalculate count here
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
-        $("#newProjectTasksModal").modal("hide");
+        // $("#newProjectTasksModal").modal("hide");
 
         $(".fullScreenSpin").css("display", "none");
       });
@@ -1347,7 +1387,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
             $(".fullScreenSpin").css("display", "none");
             $("#taskDetailModal").modal("hide");
-            $("#newProjectTasksModal").modal("hide");
+            // $("#newProjectTasksModal").modal("hide");
           });
         } else if (result.dismiss === "cancel") {
         } else {
@@ -1640,7 +1680,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
           }, 500);
           $("#newTaskModal").modal("hide");
-          $("#newProjectTasksModal").modal("hide");
+          // $("#newProjectTasksModal").modal("hide");
         }
 
         $(".fullScreenSpin").css("display", "none");
@@ -2186,8 +2226,10 @@ Template.alltaskdatatable.events({
           crmService
             .updateProject(objDetails)
             .then(function (data) {
-              $(".projectRow" + id).remove();
-              // templateObject.getTProjectList();
+              // $(".projectRow" + id).remove();
+              templateObject.getTProjectList();
+              $("#editProjectID").val("");
+
               $("#editCrmProject").modal("hide");
               $("#newProjectTasksModal").modal("hide");
               $(".fullScreenSpin").css("display", "none");

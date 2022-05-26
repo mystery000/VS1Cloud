@@ -237,12 +237,12 @@ Template.crmoverview.events({
   // open task detail modal
   "click .openEditTaskModal": function (e) {
     if (!e.target.classList.contains("no-modal")) {
-      $("#editProjectID").val("");
+      // $("#editProjectID").val("");
 
       let id = e.target.dataset.id;
       let type = e.target.dataset.ttype;
       // let catg = e.target.dataset.catg;
-      let templateObject = Template.instance();
+      // let templateObject = Template.instance();
       $("#txtCrmSubTaskID").val(id);
 
       $(".fullScreenSpin").css("display", "inline-block");
