@@ -5,12 +5,12 @@ import { UtilityService } from "../../utility-service";
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 
-Template.payrollhistoryreport.onCreated(() => {
+Template.stockvaluereport.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.dateAsAt = new ReactiveVar();
 });
 
-Template.payrollhistoryreport.onRendered(() => {
+Template.stockvaluereport.onRendered(() => {
 
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
@@ -41,11 +41,11 @@ Template.payrollhistoryreport.onRendered(() => {
 
 });
 
-Template.payrollhistoryreport.events({
+Template.stockvaluereport.events({
 
 });
 
-Template.payrollhistoryreport.helpers({
+Template.stockvaluereport.helpers({
     dateAsAt: () =>{
         return Template.instance().dateAsAt.get() || '-';
     },

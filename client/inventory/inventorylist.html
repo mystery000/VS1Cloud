@@ -69,6 +69,18 @@
                     margin: 16px 0px !important;
                 }
             }
+            .negativeVolume {
+                color: #e74a3b !important;
+                font-weight: 700 !important;
+            }
+            .positiveVolume {
+                color: #1cc88a !important;
+                font-weight: 700 !important;
+            }
+            .neutralVolume {
+                color: #f6c23e !important;
+                font-weight: 700 !important;
+            }
         </style>
 
         <div class="row">
@@ -601,8 +613,11 @@
                             <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
                             <th class="th colProductName" style="width:200px;">Product Name</th>
                             <th class="th colSalesDescription">Sales Description</th>
-                            <th class="th colBarcode">Barcode</th>
-                            <th class="th colDepartment" style="width:150px;">Department</th>
+                            <th class="th colAvailable" style="width:70px;">Available</th>
+                            <th class="th colOnSO" style="width:60px;">On SO</th>
+                            <th class="th colOnBO" style="width:60px;">On BO</th>
+                            <th class="th colInStock" style="width:65px;">In Stock</th>
+                            <th class="th colOnOrder" style="width:72px;">On Order</th>
                             <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
                                 <i class="fas fa-random"></i>
                             </th>
@@ -611,7 +626,12 @@
                                 <i class="fas fa-random"></i>
                             </th>
                             <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-                            <th class="th colQuantity" style="width:70px;">In Stock</th>
+
+                            <!-- {{#if equals isSNTrackchecked true}} -->
+                                <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                            <!-- {{/if}} -->
+                            <th class="th colBarcode">Barcode</th>
+                            <th class="th colDepartment" style="width:100px;">Department</th>
 
                             <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
                             <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>

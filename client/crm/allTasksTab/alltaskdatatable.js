@@ -3,20 +3,43 @@ let crmService = new CRMService();
 
 Template.alltaskdatatable.onCreated(function () {
   let templateObject = Template.instance();
-  templateObject.alllabels = new ReactiveVar([]);
-  templateObject.tprojectlist = new ReactiveVar([]);
+  // templateObject.tprojectlist = new ReactiveVar([]);
   templateObject.allRecords = new ReactiveVar([]);
   templateObject.allWithCompletedRecords = new ReactiveVar([]);
   templateObject.todayRecords = new ReactiveVar([]);
   templateObject.upcomingRecords = new ReactiveVar([]);
+
+  templateObject.allRecordsArray = new ReactiveVar([]);
+  templateObject.todayRecordsArray = new ReactiveVar([]);
+  templateObject.upcomingRecordsArray = new ReactiveVar([]);
+
   templateObject.overdueRecords = new ReactiveVar([]);
   templateObject.selected_id = new ReactiveVar(0);
+  templateObject.task_id = new ReactiveVar(0);
+  templateObject.project_id = new ReactiveVar(0);
   templateObject.selected_ttodo = new ReactiveVar("");
   templateObject.due_date = new ReactiveVar(null);
 
+  templateObject.view_all_task_completed = new ReactiveVar("NO");
+  templateObject.view_today_task_completed = new ReactiveVar("NO");
+  templateObject.view_uncoming_task_completed = new ReactiveVar("NO");
+  templateObject.view_project_completed = new ReactiveVar("NO");
+
+  // projects tab
+  templateObject.tprojectlist = new ReactiveVar([]);
+  templateObject.all_projects = new ReactiveVar([]);
   templateObject.active_projects = new ReactiveVar([]);
   templateObject.deleted_projects = new ReactiveVar([]);
   templateObject.favorite_projects = new ReactiveVar([]);
+  templateObject.projecttasks = new ReactiveVar([]);
+  templateObject.active_projecttasks = new ReactiveVar([]);
+  templateObject.view_projecttasks_completed = new ReactiveVar("NO");
+  // projects tab
+
+  // labels tab
+  templateObject.alllabels = new ReactiveVar([]);
+  templateObject.allfilters = new ReactiveVar([]);
+  // labels tab
 });
 
 Template.alltaskdatatable.onRendered(function () {
@@ -81,16 +104,62 @@ Template.alltaskdatatable.onRendered(function () {
     });
   };
 
+  // initialize 3 tasks datatable
   templateObject.initTable = function () {
+    let splashArrayTaskList = templateObject.makeTaskTableRows(
+      templateObject.allRecords.get()
+    );
+    let view_all_task_completed = templateObject.view_all_task_completed.get();
+    let btnFilterName =
+      view_all_task_completed == "NO" ? "View Completed" : "Hide Completed";
+
     $("#tblAllTaskDatatable").DataTable({
+      data: splashArrayTaskList,
       columnDefs: [
         {
           orderable: false,
           targets: 0,
+          className: "colDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskLabels openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
       ],
       colReorder: {
@@ -156,20 +225,67 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchAllTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>View Completed</span></button>"
+          "<button class='btn btn-primary btnSearchAllTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+            btnFilterName +
+            "</span></button>"
         ).insertAfter("#tblAllTaskDatatable_filter");
       },
     });
 
+    let todayTaskArray = templateObject.makeTaskTableRows(
+      templateObject.todayRecords.get()
+    );
+    let view_today_task_completed =
+      templateObject.view_today_task_completed.get();
+    btnFilterName =
+      view_today_task_completed == "NO" ? "View Completed" : "Hide Completed";
     $("#tblTodayTaskDatatable").DataTable({
+      data: todayTaskArray,
       columnDefs: [
         {
           orderable: false,
           targets: 0,
+          className: "colDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskLabels openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
       ],
       colReorder: {
@@ -235,20 +351,69 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchTodayTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>View Completed</span></button>"
+          "<button class='btn btn-primary btnSearchTodayTask' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
+            btnFilterName +
+            "</span></button>"
         ).insertAfter("#tblTodayTaskDatatable_filter");
       },
     });
 
+    let upcomingTaskArray = templateObject.makeTaskTableRows(
+      templateObject.upcomingRecords.get()
+    );
+    let view_uncoming_task_completed =
+      templateObject.view_uncoming_task_completed.get();
+    btnFilterName =
+      view_uncoming_task_completed == "NO"
+        ? "View Completed"
+        : "Hide Completed";
     $("#tblUpcomingTaskDatatable").DataTable({
+      data: upcomingTaskArray,
       columnDefs: [
         {
           orderable: false,
           targets: 0,
+          className: "colDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskLabels openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
       ],
       colReorder: {
@@ -314,15 +479,16 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchUpcoming' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>View Completed</span></button>"
+          "<button class='btn btn-primary btnSearchUpcoming' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
+            btnFilterName +
+            "</span></button>"
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
   };
 
-  templateObject.getAllTaskList = function () {
+  templateObject.getInitialAllTaskList = function () {
     $(".fullScreenSpin").css("display", "inline-block");
-
     crmService
       .getAllTaskList()
       .then(function (data) {
@@ -335,13 +501,6 @@ Template.alltaskdatatable.onRendered(function () {
           all_records = all_records.filter(
             (item) => item.fields.Completed == false
           );
-
-          // console.log('all_records=>', all_records)
-
-          // tempcode until fields are added in backend
-          // let all_records = data.tprojecttasks.sort(function (a, b) {
-          //   return (a.Recno < b.Recno) ? 1 : -1;
-          // });
 
           let today_records = all_records.filter(
             (item) => item.fields.due_date.substring(0, 10) == today
@@ -364,44 +523,12 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.upcomingRecords.set(upcoming_records);
           templateObject.overdueRecords.set(overdue_records);
 
-          // tempcode
-          // let col1 = '';
-          // let col2 = '';
-          // let col3 = '';
-          // let col4 = '';
-          // let col5 = '';
-          // let col6 = '';
-          // var allTableDataList = [];
-          // let record = []
-
-          // allRecords.forEach(item => {
-          //   col1 = `<div
-          //     class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${item.fields.priority}"
-          //     style="width:15px;margin-right: -6px;">
-          //     <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
-          //       id="formCheck-${item.fields.ID}">
-          //     <label class="custom-control-label chkBox pointer chk_complete" data-id="${item.fields.ID}"
-          //       for="formCheck-${item.fields.ID}"></label>
-          //     </div>`;
-          //     col2=``;
-          //     col3=``;
-          //     col4=``;
-          //     col5=``;
-          //     col6=``;
-          //   record = [col1, col2, col3, col4, col5, col6];
-          //   allTableDataList.push(record);
-
-          // });
-
-          // // taskDataTable.ajax.reload();
-          // taskDataTable.clear();
-          // taskDataTable.rows.add(allTableDataList);
-          // taskDataTable.draw(false);
-          // tempcode
-
           setTimeout(() => {
             templateObject.initDatepicker();
           }, 500);
+          setTimeout(() => {
+            templateObject.initTable();
+          }, 1000);
 
           $(".fullScreenSpin").css("display", "none");
         } else {
@@ -416,6 +543,242 @@ Template.alltaskdatatable.onRendered(function () {
       });
   };
 
+  templateObject.getAllTaskList = function () {
+    crmService
+      .getAllTaskList()
+      .then(function (data) {
+        if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+          let today = moment().format("YYYY-MM-DD");
+          let all_records = data.tprojecttasks;
+          // all_records = all_records.filter(item => item.fields.ProjectID == 11);
+          templateObject.allWithCompletedRecords.set(all_records);
+
+          all_records = all_records.filter(
+            (item) => item.fields.Completed == false
+          );
+
+          let today_records = all_records.filter(
+            (item) => item.fields.due_date.substring(0, 10) == today
+          );
+          let upcoming_records = all_records.filter(
+            (item) => item.fields.due_date.substring(0, 10) > today
+          );
+          let overdue_records = all_records.filter(
+            (item) =>
+              !item.fields.due_date ||
+              item.fields.due_date.substring(0, 10) < today
+          );
+
+          $(".crm_all_count").text(all_records.length);
+          $(".crm_today_count").text(today_records.length);
+          $(".crm_upcoming_count").text(upcoming_records.length);
+
+          templateObject.allRecords.set(all_records);
+          templateObject.todayRecords.set(today_records);
+          templateObject.upcomingRecords.set(upcoming_records);
+          templateObject.overdueRecords.set(overdue_records);
+
+          setTimeout(() => {
+            templateObject.initDatepicker();
+            templateObject.initTable();
+          }, 500);
+        } else {
+          $(".crm_all_count").text(0);
+          $(".crm_today_count").text(0);
+          $(".crm_upcoming_count").text(0);
+        }
+      })
+      .catch(function (err) {});
+  };
+
+  templateObject.getInitialAllTaskList();
+
+  templateObject.makeTaskTableRows = function (task_array) {
+    let taskRows = new Array();
+    let td0 = (td1 = td2 = td3 = td4 = td5 = "");
+    let projectName = "";
+
+    let todayDate = moment().format("ddd");
+    let tomorrowDay = moment().add(1, "day").format("ddd");
+    let nextMonday = moment(moment())
+      .day(1 + 7)
+      .format("ddd MMM D");
+
+    task_array.forEach((item) => {
+      td0 = `
+        <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${item.fields.priority}"
+          style="width:15px;margin-right: -6px;">
+          <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+            id="formCheck-${item.fields.ID}">
+          <label class="custom-control-label chkBox pointer chk_complete" data-id="${item.fields.ID}"
+            for="formCheck-${item.fields.ID}"></label>
+        </div>`;
+
+      if (item.fields.due_date == "" || item.fields.due_date == null) {
+        td1 = "";
+      } else {
+        td1 = moment(item.fields.due_date).format("DD/MM/YYYY");
+      }
+
+      td2 = item.fields.TaskName;
+      td3 =
+        item.fields.TaskDescription.length < 80
+          ? item.fields.TaskDescription
+          : item.fields.TaskDescription.substring(0, 79) + "...";
+
+      if (item.fields.TaskLabel) {
+        if (item.fields.TaskLabel.fields) {
+          td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+          style="margin-right: 5px;" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+        } else {
+          item.fields.TaskLabel.forEach((lbl) => {
+            td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+            style="margin-right: 5px;" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+          });
+        }
+      } else {
+        td4 = "";
+      }
+
+      if (
+        item.fields.ProjectName == "" ||
+        item.fields.ProjectName == "Default"
+      ) {
+        projectName = "All Tasks";
+      }
+      projectName = item.fields.ProjectName;
+
+      td5 = `
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-primary openEditTaskModal" data-id="${item.fields.ID}"
+            data-catg="${projectName}" title="Edit Task"><i
+              class="far fa-edit" style="width: 16px;" data-id="${item.fields.ID}"
+              data-catg="${projectName}"></i></button>
+        </div>
+
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-success" data-toggle="dropdown"><i
+              class="far fa-calendar" title="Reschedule Task"></i></button>
+          <div class="dropdown-menu dropdown-menu-right reschedule-dropdown-menu  no-modal"
+            aria-labelledby="dropdownMenuButton" style="width: 275px;">
+            <a class="dropdown-item no-modal setScheduleToday" href="#" data-id="${item.fields.ID}">
+              <i class="fas fa-calendar-day text-success no-modal"
+                style="margin-right: 8px;"></i>Today
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${todayDate}</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleTomorrow" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${tomorrowDay}</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleWeekend" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                Sat</div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleNexweek" href="#"
+              data-id="${item.fields.ID}">
+              <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
+              <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
+                ${nextMonday}
+              </div>
+            </a>
+            <a class="dropdown-item no-modal setScheduleNodate" href="#" data-id="${item.fields.ID}">
+              <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
+              No Date</a>
+            <div class="dropdown-divider no-modal"></div>
+            <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
+              title="Date format: DD/MM/YYYY" style="margin: 6px 20px; margin-top: 14px;">
+              <div class="input-group date no-modal" style="cursor: pointer;">
+                <input type="text" id="${item.fields.ID}" class="form-control crmDatepicker no-modal"
+                  autocomplete="off">
+                <div class="input-group-addon no-modal">
+                  <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer;"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-warning openEditTaskModal" data-id="${item.fields.ID}"
+            data-ttype="comment" data-catg="${projectName}"
+            title="Add a Comment"><i class="far fa-comment-alt" data-id="${item.fields.ID}"
+              data-ttype="comment"
+              data-catg="${projectName}"></i></button>
+        </div>
+
+        <div class="dropdown btnTaskTableAction">
+          <button type="button" class="btn btn-secondary" data-toggle="dropdown"
+            data-placement="bottom" title="More Options"><i class="fas fa-ellipsis-h"></i></button>
+          <div class="dropdown-menu dropdown-menu-right crmtaskdrop" id="">
+            <a class="dropdown-item openEditTaskModal" data-id="${item.fields.ID}"
+              data-catg="${projectName}">
+              <i class="far fa-edit" style="margin-right: 8px;" data-id="${item.fields.ID}"
+                data-catg="${projectName}"></i>Edit
+              Task</a>
+
+            <div class="dropdown-divider"></div>
+
+            <div class="dropdown-item-wrap no-modal"> 
+              <div class="no-modal">
+                <div class="no-modal">
+                  <span class="no-modal">Priority</span>
+                </div>
+                <div class="no-modal" style="display: inline-flex;">
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_3" style="padding-left: 8px;" data-toggle="tooltip"
+                    data-placement="bottom" title="Priority 1" data-priority="3"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_2"
+                    data-toggle="tooltip" data-placement="bottom" title="Priority 2" data-priority="2"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="fas fa-flag no-modal taskDropSecondFlag task_modal_priority_1"
+                    data-toggle="tooltip" data-placement="bottom" title="Priority 3" data-priority="1"
+                    data-id="${item.fields.ID}"></i>
+                  <i class="far fa-flag no-modal taskDropSecondFlag task_modal_priority_0" data-toggle="tooltip"
+                    data-placement="bottom" title="Priority 4" data-priority="0"
+                    data-id="${item.fields.ID}"></i>
+                </div> 
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div> 
+
+            <a class="dropdown-item no-modal movetoproject" data-id="${item.fields.ID}"
+              data-projectid="${item.fields.ProjectID}">
+              <i class="fa fa-arrow-circle-right" style="margin-right: 8px;"
+                data-id="${item.fields.ID}" data-projectid="${item.fields.ProjectID}"></i>Move to
+              Project</a>
+            <a class="dropdown-item duplicate-task no-modal" data-id="${item.fields.ID}">
+              <i class="fa fa-plus-square-o" style="margin-right: 8px;"
+                data-id="${item.fields.ID}"></i>Duplicate</a>
+
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item delete-task no-modal" data-id="${item.fields.ID}">
+              <i class="fas fa-trash-alt" style="margin-right: 8px;"
+                data-id="${item.fields.ID}"></i>Delete
+              Task</a>
+          </div>
+        </div>`;
+      taskRows.push([
+        td0,
+        td1,
+        td2,
+        td3,
+        td4,
+        td5,
+        item.fields.ID,
+        item.fields.priority,
+      ]);
+    });
+    return taskRows;
+  };
+
+  // labels tab --------------
   templateObject.getAllLabels = function () {
     crmService
       .getAllLabels()
@@ -428,25 +791,40 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.alllabels.set(alllabels);
 
           let label_dropdowns = "";
+          let detail_label_dropdowns = "";
+          let labelName = "";
           alllabels.forEach((lbl) => {
-            label_dropdowns += `<a class="dropdown-item" href="#"><i class="fas fa-tag text-primary" style="margin-right: 8px;"></i>${lbl.fields.TaskLabelName}
-            <div style="width: 20%; float: right;">
-              <div class="custom-control custom-checkbox chkBox pointer"
-                style="width: 15px; float: right;">
-                <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
-                  id="label_${lbl.fields.ID}" value="">
-                <label class="custom-control-label chkBox pointer" for="label_${lbl.fields.ID}"></label>
+            labelName =
+              lbl.fields.TaskLabelName.length < 20
+                ? lbl.fields.TaskLabelName
+                : lbl.fields.TaskLabelName.substring(0, 19) + "...";
+
+            label_dropdowns += `<a class="dropdown-item add_label" data-id="${lbl.fields.ID}">
+            <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+              <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
+                <div class="custom-control custom-checkbox chkBox pointer"
+                  style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
+                  <input class="custom-control-input chkBox chkAddLabel pointer" type="checkbox"
+                    id="add_label_${lbl.fields.ID}" name="${lbl.fields.ID}" value="" data-id="${lbl.fields.ID}">
+                  <label class="custom-control-label chkBox pointer" for="add_label_${lbl.fields.ID}" data-id="${lbl.fields.ID}"></label>
+                </div>
               </div>
-            </div>
-          </a>`;
+            </a>`;
+            detail_label_dropdowns += `<a class="dropdown-item detail_label" data-id="${lbl.fields.ID}">
+            <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+              <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
+                <div class="custom-control custom-checkbox chkBox pointer"
+                  style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
+                  <input class="custom-control-input chkBox chkDetailLabel pointer" type="checkbox"
+                    id="detail_label_${lbl.fields.ID}" name="${lbl.fields.ID}" value="" data-id="${lbl.fields.ID}">
+                  <label class="custom-control-label chkBox pointer" for="detail_label_${lbl.fields.ID}" data-id="${lbl.fields.ID}"></label>
+                </div>
+              </div>
+            </a>`;
           });
           $("#addTaskLabelWrapper").html(label_dropdowns);
-          $(".addTaskLabelWrapper").html(label_dropdowns);
-
-          // setTimeout(() => {
-          //   console.log('templateObject.alllabels', templateObject.alllabels.get())
-          //   templateObject.initLabelsTable();
-          // }, 2000);
+          $(".detailTaskLabelWrapper").html(detail_label_dropdowns);
+          templateObject.initLabelsTable();
         } else {
           templateObject.alllabels.set([]);
         }
@@ -454,29 +832,139 @@ Template.alltaskdatatable.onRendered(function () {
       .catch(function (err) {});
   };
 
+  templateObject.initLabelsTable = function () {
+    let labelArray = templateObject.makeLabelTableRows(
+      templateObject.alllabels.get()
+    );
+
+    $("#tblLabels").DataTable({
+      data: labelArray,
+      columnDefs: [
+        {
+          targets: 0,
+          className: "colLabelCreatedDate",
+        },
+        {
+          targets: 1,
+          className: "colLabel",
+        },
+        {
+          orderable: false,
+          targets: 2,
+          className: "colLabelActions",
+        },
+      ],
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [
+        {
+          extend: "excelHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "Label List" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+            format: {
+              body: function (data, row, column) {
+                if (data.includes("</span>")) {
+                  var res = data.split("</span>");
+                  data = res[1];
+                }
+
+                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+              },
+            },
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Label List",
+          filename: "Label List" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+            stripHtml: false,
+          },
+        },
+      ],
+      select: true,
+      destroy: true,
+      colReorder: true,
+      pageLength: initialDatatableLoad,
+      lengthMenu: [
+        [initialDatatableLoad, -1],
+        [initialDatatableLoad, "All"],
+      ],
+      info: true,
+      responsive: true,
+      order: [[1, "desc"]],
+      action: function () {
+        $("#tblLabels").DataTable().ajax.reload();
+      },
+      fnInitComplete: function () {
+        $(
+          "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
+        ).insertAfter("#tblLabels_filter");
+        $(
+          "<button class='btn btn-primary btnRefreshLabels' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+        ).insertAfter("#tblLabels_filter");
+      },
+    });
+  };
+
+  templateObject.getAllLabels();
+
+  templateObject.makeLabelTableRows = function (task_array) {
+    let taskRows = new Array();
+    let td0 = (td1 = td2 = "");
+
+    task_array.forEach((item) => {
+      td0 = moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
+      td1 = item.fields.TaskLabelName;
+      td2 = `
+        <div class="dropdown btnLabelActions" title="Edit Label">
+            <button type="button" class="btn btn-primary btnEditLabel" data-id="${item.fields.ID}"><i
+                class="far fa-edit" style="width: 16px;" data-id="${item.fields.ID}"></i></button>
+          </div>
+          <div class="dropdown btnLabelActions" title="Delete Label">
+            <button type="button" class="btn btn-danger btnDeleteLabel" data-id="${item.fields.ID}"><i
+                class="far fa-trash-alt" style="width: 16px;" data-id="${item.fields.ID}"></i>
+            </button>
+        </div>`;
+      taskRows.push([td0, td1, td2]);
+    });
+    return taskRows;
+  };
+  // labels tab ----------------- //
+
+  // projects tab -------------------
   templateObject.getTProjectList = function () {
     crmService
       .getTProjectList()
       .then(function (data) {
         if (data.tprojectlist && data.tprojectlist.length > 0) {
+          let tprojectlist = data.tprojectlist;
           let all_projects = data.tprojectlist;
-          all_projects = all_projects.filter(
+
+          tprojectlist = tprojectlist.filter(
             (proj) => proj.fields.Active == true && proj.fields.ID != 11
           );
+          all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+          templateObject.all_projects.set(all_projects);
 
           let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
           style="margin-right: 8px;"></i>All Tasks</a>`;
-
           let ProjectName = "";
-          all_projects.forEach((proj) => {
+          tprojectlist.forEach((proj) => {
             ProjectName =
               proj.fields.ProjectName.length > 26
                 ? proj.fields.ProjectName.substring(0, 26) + "..."
                 : proj.fields.ProjectName;
-
             add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
           });
-
           $("#goProjectWrapper").html(add_projectlist);
           $(".goProjectWrapper").html(add_projectlist);
 
@@ -490,7 +978,6 @@ Template.alltaskdatatable.onRendered(function () {
             (project) => project.fields.AddToFavourite == true
           );
 
-          templateObject.all_projects.set(all_projects);
           templateObject.active_projects.set(active_projects);
           templateObject.deleted_projects.set(deleted_projects);
           templateObject.favorite_projects.set(favorite_projects);
@@ -498,7 +985,7 @@ Template.alltaskdatatable.onRendered(function () {
           $(".crm_project_count").html(active_projects.length);
 
           setTimeout(() => {
-            // templateObject.initProjectsTable();
+            templateObject.initProjectsTable();
           }, 100);
         } else {
           templateObject.tprojectlist.set([]);
@@ -508,26 +995,245 @@ Template.alltaskdatatable.onRendered(function () {
       .catch(function (err) {});
   };
 
-  templateObject.getAllTaskList();
-  // templateObject.getAllLabels();
-  // templateObject.getTProjectList();
+  templateObject.initProjectsTable = function () {
+    let projectArray = templateObject.makeProjectTableRows(
+      templateObject.active_projects.get()
+    );
+    let view_project_completed = templateObject.view_project_completed.get();
+    btnFilterName =
+      view_project_completed == "NO" ? "View All" : "Hide Deleted";
 
-  setTimeout(() => {
-    templateObject.initTable();
-  }, 9000);
+    $("#tblNewProjectsDatatable").DataTable({
+      data: projectArray,
+      columnDefs: [
+        {
+          orderable: false,
+          targets: 0,
+          className: "colPrjectDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[5]);
+            $(td).attr("data-id", rowData[5]);
+          },
+        },
+        {
+          targets: 1,
+          className: "colProjectName",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[5]);
+          },
+        },
+        {
+          targets: 2,
+          className: "colProjectDesc",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[5]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colProjectStatus",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[5]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colProjectDesc",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[5]);
+          },
+        },
+      ],
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [
+        {
+          extend: "excelHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "Project List" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+            format: {
+              body: function (data, row, column) {
+                if (data.includes("</span>")) {
+                  var res = data.split("</span>");
+                  data = res[1];
+                }
+
+                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+              },
+            },
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Project List",
+          filename: "Project List" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+            stripHtml: false,
+          },
+        },
+      ],
+      select: true,
+      destroy: true,
+      colReorder: true,
+      pageLength: initialDatatableLoad,
+      lengthMenu: [
+        [initialDatatableLoad, -1],
+        [initialDatatableLoad, "All"],
+      ],
+      info: true,
+      responsive: true,
+      order: [[0, "desc"]],
+      action: function () {
+        $("#tblProjectsDatatable").DataTable().ajax.reload();
+      },
+      fnInitComplete: function () {
+        $(
+          "<button class='btn btn-primary btnSearchProjectTable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
+            btnFilterName +
+            "</span></button>"
+        ).insertAfter("#tblNewProjectsDatatable_filter");
+      },
+    });
+  };
+
+  templateObject.getTProjectList();
+
+  templateObject.makeProjectTableRows = function (task_array) {
+    let taskRows = new Array();
+    let td0 = (td1 = td2 = td3 = td4 = "");
+    let projectStatus = "";
+    let taskCount = "";
+
+    task_array.forEach((item) => {
+      if (item.fields.Active) {
+        projectStatus = "Active";
+      } else {
+        projectStatus = "Deleted";
+      }
+      if (item.fields.projecttasks == null) {
+        taskCount = "";
+      } else if (Array.isArray(item.fields.projecttasks) == true) {
+        taskCount = item.fields.projecttasks.filter(
+          (tk) => tk.fields.Active == true && tk.fields.Completed == false
+        ).length;
+      } else {
+        taskCount = item.fields.projecttasks.fields.Active == true ? 1 : 0;
+      }
+
+      td0 =
+        `<span style="display: none;">{{item.fields.ProjectStatedon}}</span>` +
+        moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
+      td1 = item.fields.ProjectName;
+      td2 = item.fields.Description;
+      td3 = projectStatus;
+      td4 = taskCount;
+      taskRows.push([td0, td1, td2, td3, td4]);
+    });
+    return taskRows;
+  };
+
+  templateObject.initProjectTasksTable = function () {
+    let splashArrayTaskList = templateObject.makeTaskTableRows(
+      templateObject.active_projecttasks.get()
+    );
+
+    let view_projecttasks_completed =
+      templateObject.view_projecttasks_completed.get();
+    btnFilterName =
+      view_projecttasks_completed == "NO"
+        ? "Show Completed Tasks"
+        : "Hide Completed Tasks";
+    $(".lblShowCompletedTaskOnProject").html(btnFilterName);
+
+    $("#tblProjectTasks").DataTable({
+      data: splashArrayTaskList,
+      columnDefs: [
+        {
+          orderable: false,
+          targets: 0,
+        },
+        {
+          orderable: false,
+          targets: 5,
+        },
+      ],
+      colReorder: {
+        fixedColumnsLeft: 0,
+      },
+      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+      buttons: [
+        {
+          extend: "excelHtml5",
+          text: "",
+          download: "open",
+          className: "btntabletocsv hiddenColumn",
+          filename: "Project List" + moment().format(),
+          orientation: "portrait",
+          exportOptions: {
+            columns: ":visible",
+            format: {
+              body: function (data, row, column) {
+                if (data.includes("</span>")) {
+                  var res = data.split("</span>");
+                  data = res[1];
+                }
+
+                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+              },
+            },
+          },
+        },
+        {
+          extend: "print",
+          download: "open",
+          className: "btntabletopdf hiddenColumn",
+          text: "",
+          title: "Project List",
+          filename: "Project List" + moment().format(),
+          exportOptions: {
+            columns: ":visible",
+            stripHtml: false,
+          },
+        },
+      ],
+      select: true,
+      destroy: true,
+      colReorder: true,
+      pageLength: initialDatatableLoad,
+      lengthMenu: [
+        [initialDatatableLoad, -1],
+        [initialDatatableLoad, "All"],
+      ],
+      info: true,
+      responsive: true,
+      order: [
+        [4, "desc"],
+        [1, "desc"],
+      ],
+      action: function () {
+        $("#tblProjectTasks").DataTable().ajax.reload();
+      },
+      fnInitComplete: function () {
+        $(
+          "<button class='btn btn-primary btnRefreshProjectTasks' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+        ).insertAfter("#tblProjectTasks_filter");
+      },
+    });
+  };
+  // projects tab ------------------- //
 });
 
 Template.alltaskdatatable.events({
   "click .btnAddSubTask": function (event) {
     $("#newTaskModal").modal("toggle");
-
-    // let addTaskModal = '<div id="addTaskModal" class="row addTaskModal no-modal">' + $('#addTaskModal').html() + '</div>';
-    // $('#addTaskModal').remove();
-    // $('#newTaskRowWrapper').html(addTaskModal)
-
-    // $(".newTaskRow").css("display", "inline-flex");
-    // $(".addTaskModal").css("display", "inline-flex");
-    // $(".btnAddSubTask").css("display", "none");
   },
 
   "click .btnCancelAddTask": function (event) {
@@ -536,15 +1242,14 @@ Template.alltaskdatatable.events({
     $(".addTaskModal").css("display", "none");
   },
 
-  // 'click #tblAllTaskDatatable td.colOpenTask': function (event) {
-  //   $('#taskDetailModal').modal('toggle');
-  // },
-  // 'click .btnEditTask': function (event) {
-  //   $('#taskDetailModal').modal('toggle');
-  // },
-  // "click .btnCommentTask": function (event) {
-  //   $("#taskDetailModal").modal("toggle");
-  // },
+  // show edit name & description fields
+  "click .rename-task": function (e) {
+    $(".displayTaskNameDescription").css("display", "none");
+    $(".editTaskNameDescription").css("display", "inline-block");
+
+    $(".editTaskDetailName").val($("#taskmodalNameLabel").html());
+    $(".editTaskDetailDescription").val($("#taskmodalDescription").html());
+  },
 
   // complete task
   "click .chk_complete": function (e) {
@@ -567,6 +1272,7 @@ Template.alltaskdatatable.events({
         $(".chkComplete").prop("checked", false);
         // recalculate count here
         templateObject.getAllTaskList();
+        templateObject.getTProjectList();
         $(".fullScreenSpin").css("display", "none");
       });
     }
@@ -584,13 +1290,28 @@ Template.alltaskdatatable.events({
       },
     };
 
+    let templateObject = Template.instance();
     if (id) {
-      $(".fullScreenSpin").css("display", "inline-block");
-      let templateObject = Template.instance();
-      crmService.saveNewTask(objDetails).then(function (objDetails) {
-        // recalculate count here
-        templateObject.getAllTaskList();
-        $(".fullScreenSpin").css("display", "none");
+      swal({
+        title: "Delete Task",
+        text: "Are you sure want to delete this task?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.value) {
+          $(".fullScreenSpin").css("display", "inline-block");
+          crmService.saveNewTask(objDetails).then(function (objDetails) {
+            // recalculate count here
+            templateObject.getAllTaskList();
+            templateObject.getTProjectList();
+            $(".fullScreenSpin").css("display", "none");
+            $("#taskDetailModal").modal("hide");
+          });
+        } else if (result.dismiss === "cancel") {
+        } else {
+        }
       });
     }
   },
@@ -628,6 +1349,7 @@ Template.alltaskdatatable.events({
               .then(function (data) {
                 // recalculate count here
                 templateObject.getAllTaskList();
+                templateObject.getTProjectList();
                 $(".fullScreenSpin").css("display", "none");
               })
               .catch(function (err) {
@@ -648,303 +1370,46 @@ Template.alltaskdatatable.events({
     }
   },
 
-  // open edit modal
-  // "click .ttodo-edit": function (e) {
-  //   $(".btnAddSubTask").css("display", "block");
-  //   $(".newTaskRow").css("display", "none");
-  //   $(".addTaskModal").css("display", "none");
-
-  //   let id = e.target.dataset.id;
-  //   let templateObject = Template.instance();
-  //   let selected_id = templateObject.selected_id.get();
-  //   let selected_ttodo = templateObject.selected_ttodo.get();
-
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   // get selected task detail via api
-  //   crmService
-  //     .getTaskDetail(id)
-  //     .then(function (data) {
-  //       $(".fullScreenSpin").css("display", "none");
-  //       if (data.fields.ID == id) {
-  //         let selected_record = data.fields;
-
-  //         let title = selected_record.TaskName;
-  //         let description = selected_record.TaskDescription;
-  //         let labels = selected_record.TaskLabel;
-  //         let due_date = selected_record.due_date;
-
-  //         let edit_projectlist = `<a class="dropdown-item no-modal"  data-projectid="11"><i class="fas fa-inbox text-primary no-modal"
-  //         style="margin-right: 8px;"></i>All Tasks</a>`;
-  //         templateObject.tprojectlist.get().forEach((proj) => {
-  //           edit_projectlist += `<a class="dropdown-item setProjectIDEdit no-modal" data-projectid="${proj.fields.ID}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: purple;"></i>${proj.fields.ProjectName}</a>`;
-  //         });
-
-  //         if (labels == "" || labels == null) {
-  //           labels = "";
-  //         } else if (labels.type == undefined) {
-  //           let label_string = "";
-  //           labels.forEach((label) => {
-  //             label_string += label.fields.TaskLabelName + ", ";
-  //           });
-  //           labels = label_string.slice(0, -2);
-  //         } else {
-  //           labels = labels.fields.TaskLabelName;
-  //         }
-
-  //         let alllabels = templateObject.alllabels.get();
-  //         let label_dropdowns = "";
-  //         alllabels.forEach((lbl) => {
-  //           label_dropdowns += `<a class="dropdown-item" href="#"><i class="fas fa-tag text-primary" style="margin-right: 8px;"></i>${lbl.fields.TaskLabelName}
-  //           <div style="width: 20%; float: right;">
-  //             <div class="custom-control custom-checkbox chkBox pointer"
-  //               style="width: 15px; float: right;">
-  //               <input class="custom-control-input chkBox chkLabel pointer" type="checkbox"
-  //                 id="label_${lbl.fields.ID}" value="">
-  //               <label class="custom-control-label chkBox pointer" for="label_${lbl.fields.ID}"></label>
-  //             </div>
-  //           </div>
-  //         </a>`;
-  //         });
-
-  //         // priority = 0 : Priority 4
-  //         // priority = 1 : Priority 3
-  //         // priority = 2 : Priority 2
-  //         // priority = 3 : Priority 1
-  //         let checked0 = selected_record.priority == 0 ? "checked" : "";
-  //         let checked1 = selected_record.priority == 1 ? "checked" : "";
-  //         let checked2 = selected_record.priority == 2 ? "checked" : "";
-  //         let checked3 = selected_record.priority == 3 ? "checked" : "";
-
-  //         let getTodayDate = moment().format("ddd");
-  //         let getTomorrowDay = moment().add(1, "day").format("ddd");
-  //         let startDate = moment();
-  //         let getNextMonday = moment(startDate)
-  //           .day(1 + 7)
-  //           .format("ddd MMM D");
-
-  //         var edit_modal = `<div class="row editTaskRow no-modal">
-  //           <div class="col-12">
-  //             <div class="form-group">
-  //               <input class="form-control no-modal" type="text" id="edit_task_name" name="" autocomplete="off" value="${title}">
-  //             </div>
-  //           </div>
-  //           <div class="col-12">
-  //             <div class="form-group">
-  //               <textarea class="form-control no-modal" rows="3" id="edit_task_description" name="" autocomplete="off">${description}</textarea>
-  //             </div>
-  //           </div>
-  //           <div class="col-6" style="display: inline-flex;">
-  //             <div class="dropdown taskDropdownSchedule">
-  //               <button class="btn btn-primary dropdown-toggle btnSchedule" type="button" id=""
-  //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-  //                 <i class="far fa-calendar-minus" style="margin-right: 8px;"></i>Schedule
-  //               </button>
-  //               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
-  //                 <a class="dropdown-item no-modal setScheduleTodayAdd">
-  //                   <i class="fas fa-calendar-day text-success no-modal" style="margin-right: 8px;"></i>Today
-  //                   <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-  //                     ${getTodayDate}</div>
-  //                 </a>
-  //                 <a class="dropdown-item no-modal setScheduleTomorrowAdd">
-  //                   <i class="fas fa-sun text-warning no-modal" style="margin-right: 8px;"></i>Tomorrow
-  //                   <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-  //                     ${getTomorrowDay}</div>
-  //                 </a>
-  //                 <a class="dropdown-item no-modal setScheduleWeekendAdd">
-  //                   <i class="fas fa-couch text-primary no-modal" style="margin-right: 8px;"></i>This Weekend
-  //                   <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">Sat</div>
-  //                 </a>
-  //                 <a class="dropdown-item no-modal setScheduleNexweekAdd">
-  //                   <i class="fas fa-calendar-alt text-danger no-modal" style="margin-right: 8px;"></i>Next Week
-  //                   <div class="float-right no-modal" style="width: 40%; text-align: end; color: #858796;">
-  //                     ${getNextMonday}
-  //                   </div>
-  //                 </a>
-  //                 <a class="dropdown-item no-modal setScheduleNodateAdd">
-  //                   <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px;"></i>
-  //                   No Date</a>
-  //                 <div class="dropdown-divider no-modal"></div>
-  //                 <div class="form-group" data-toggle="tooltip" data-placement="bottom"
-  //                   title="Date format: YYYY-MM-DD" style="margin: 6px 20px; margin-top: 14px;">
-  //                   <div class="input-group date" style="cursor: pointer;">
-  //                     <input type="text" class="form-control crmEditDatepicker" autocomplete="off" value="${due_date}">
-  //                     <div class="input-group-addon">
-  //                       <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-  //                     </div>
-  //                   </div>
-  //                 </div>
-  //               </div>
-  //             </div>
-
-  //             <div class="dropdown taskDropdownFilter">
-  //               <button class="btn btn-primary dropdown-toggle btnSchedule"
-  //                 style="background-color: rgba(0,0,0,0);" type="button" id="" data-toggle="dropdown"
-  //                 aria-haspopup="true" aria-expanded="false">
-  //                 <span class="dropdownFilter"><i class="fas fa-inbox text-primary"
-  //                     style="margin-right: 5px;"></i>All Tasks</span>
-  //               </button>
-  //               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 275px;">
-  //                 ${edit_projectlist}
-  //               </div>
-  //             </div>
-  //           </div>
-  //           <div class="col-6" style="display: inline-flex; justify-content: end;">
-  //             <div class="dropdown">
-  //               <i class="fas fa-tag taskModalAction taskModalActionFlagDropdown dropdown-toggle task_priority_${selected_record.priority}"
-  //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-  //                 title="Add label(s)..."></i>
-  //               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" style="width: 200px;">
-  //                 ${label_dropdowns}
-  //               </div>
-  //             </div>
-  //             <div class="dropdown no-modal">
-  //               <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle no-modal task_priority_${selected_record.priority}"
-  //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-  //                 title="Set the priority..."></i>
-  //               <div class="dropdown-menu dropdown-menu-right no-modal" aria-labelledby="dropdownMenuButton"
-  //                 style="width: 200px;">
-  //                 <a class="dropdown-item text-danger no-modal" for="chkPriority3${id}"><i class="fas fa-tag no-modal"
-  //                     style="margin-right: 8px;"></i>Priority 1
-  //                   <div style="width: 20%; float: right;" class="no-modal">
-  //                     <div class="custom-control custom-checkbox chkBox pointer no-modal"
-  //                       style="width: 15px; float: right;">
-  //                       <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
-  //                         id="chkPriority3${id}" data-id="${id}" value="3" ${checked3}>
-  //                       <label class="custom-control-label chkBox pointer no-modal" for="chkPriority3${id}"></label>
-  //                     </div>
-  //                   </div>
-  //                 </a>
-  //                 <a class="dropdown-item text-warning no-modal"><i class="fas fa-tag no-modal"
-  //                     style="margin-right: 8px;"></i>Priority 2
-  //                   <div style="width: 20%; float: right;" class="no-modal">
-  //                     <div class="custom-control custom-checkbox chkBox pointer no-modal"
-  //                       style="width: 15px; float: right;">
-  //                       <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
-  //                         id="chkPriority2${id}" data-id="${id}" value="2" ${checked2}>
-  //                       <label class="custom-control-label chkBox pointer no-modal" for="chkPriority2${id}"></label>
-  //                     </div>
-  //                   </div>
-  //                 </a>
-  //                 <a class="dropdown-item text-primary no-modal"><i class="fas fa-tag no-modal"
-  //                     style="margin-right: 8px;"></i>Priority 3
-  //                   <div style="width: 20%; float: right;" class="no-modal">
-  //                     <div class="custom-control custom-checkbox chkBox pointer no-modal"
-  //                       style="width: 15px; float: right;">
-  //                       <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
-  //                         id="chkPriority1${id}" data-id="${id}" value="1" ${checked1}>
-  //                       <label class="custom-control-label chkBox pointer no-modal" for="chkPriority1${id}"></label>
-  //                     </div>
-  //                   </div>
-  //                 </a>
-  //                 <a class="dropdown-item text-secondary no-modal"><i class="fas fa-tag no-modal"
-  //                     style="margin-right: 8px;"></i>Priority 4
-  //                   <div style="width: 20%; float: right;" class="no-modal">
-  //                     <div class="custom-control custom-checkbox chkBox pointer no-modal"
-  //                       style="width: 15px; float: right;">
-  //                       <input class="custom-control-input chkBox chkPriority pointer no-modal" type="checkbox"
-  //                         id="chkPriority0${id}" data-id="${id}" value="0" ${checked0}>
-  //                       <label class="custom-control-label chkBox pointer no-modal" for="chkPriority0${id}"></label>
-  //                     </div>
-  //                   </div>
-  //                 </a>
-  //               </div>
-  //             </div>
-  //             <i class="far fa-bell taskModalAction" data-toggle="tooltip" data-placement="bottom"
-  //               title="Add reminder(s)..."></i>
-  //           </div>
-  //           <input type="hidden" id="editProjectID" value="11" />
-  //           <div class="col-12" style="margin-top: 12px;">
-  //             <button class="btn btn-success btnSaveEdit no-modal" type="button" style=""><i class="fa fa-save no-modal"
-  //                 style="margin-right: 5px;"></i>Save</button>
-  //             <button class="btn btn-secondary btnCancelEdit no-modal" type="button" style="margin-left: 8px;"><i
-  //                 class="fa fa-close no-modal" style="margin-right: 5px;"></i>Cancel</button>
-  //           </div>
-  //         </div>`;
-
-  //         if (selected_id !== id) {
-  //           // recover old record
-  //           if (selected_id != 0 && selected_ttodo != null) {
-  //             $("#ttodo_" + selected_id).html(selected_ttodo);
-  //             $("#ttodo_" + selected_id).addClass("mainTaskCol");
-  //           }
-  //           // set new record
-  //           templateObject.selected_ttodo.set($("#ttodo_" + id).html());
-  //           templateObject.selected_id.set(id);
-  //           $("#ttodo_" + id).removeClass("mainTaskCol");
-  //           $("#ttodo_" + id).html(edit_modal);
-
-  //           setTimeout(() => {
-  //             $(".crmEditDatepicker").datepicker({
-  //               showOn: "button",
-  //               buttonText: "Show Date",
-  //               buttonImageOnly: true,
-  //               buttonImage: "/img/imgCal2.png",
-  //               constrainInput: false,
-  //               dateFormat: "yy/mm/dd",
-  //               showOtherMonths: true,
-  //               selectOtherMonths: true,
-  //               changeMonth: true,
-  //               changeYear: true,
-  //               yearRange: "-90:+10",
-  //             });
-  //             // let currentDate = new Date();
-  //             let begunDate = due_date
-  //               ? moment(due_date).format("YYYY-MM-DD")
-  //               : null;
-  //             $(".crmEditDatepicker").val(begunDate);
-  //           }, 500);
-  //         }
-  //       } else {
-  //         $("#ttodo_" + selected_id).addClass("mainTaskCol");
-  //         templateObject.selected_id.set(0);
-  //         templateObject.selected_ttodo.set(null);
-
-  //         swal("Cannot edit this task", "", "warning");
-  //         return;
-  //       }
-  //     })
-  //     .catch(function (err) {
-  //       $(".fullScreenSpin").css("display", "none");
-  //       $("#ttodo_" + selected_id).addClass("mainTaskCol");
-  //       templateObject.selected_id.set(0);
-  //       templateObject.selected_ttodo.set(null);
-
-  //       swal(err, "", "error");
-  //       return;
-  //     });
-  // },
-
   // set projectID in edit
   "click .setProjectIDEdit": function (e) {
     let projectID = e.target.dataset.projectid;
     $("#editProjectID").val(projectID);
   },
 
-  // set priority in edit
-  // "click .chkPriority": function (e) {
-  //   let id = e.target.dataset.id;
-  //   let value = e.target.value;
-  //   if (id == "edit") {
-  //     id = "";
-  //   }
-  //   $("#chkPriority0" + id).prop("checked", false);
-  //   $("#chkPriority1" + id).prop("checked", false);
-  //   $("#chkPriority2" + id).prop("checked", false);
-  //   $("#chkPriority3" + id).prop("checked", false);
-  //   $("#chkPriority" + value + id).prop("checked", true);
-  // },
-
   // set projectID in add
   "click .setProjectIDAdd": function (e) {
-    let projectID = e.target.dataset.projectid;
+    let projectid = e.target.dataset.projectid;
     let projectName = e.target.dataset.projectname;
     projectName =
       projectName.length > 26
         ? projectName.substring(0, 26) + "..."
         : projectName;
 
-    $("#addProjectID").val(projectID);
-    $(".addTaskModalProjectName").html(projectName);
+    $("#addProjectID").val(projectid);
+    // $(".addTaskModalProjectName").html(projectName);
+    $("#taskDetailModalCategoryLabel").html(
+      `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${projectName}`
+    );
+
+    let templateObject = Template.instance();
+    let taskid = $("#txtCrmTaskID").val();
+
+    if (taskid && projectid) {
+      var objDetails = {
+        type: "Tprojecttasks",
+        fields: {
+          ID: taskid,
+          ProjectID: projectid,
+        },
+      };
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      crmService.saveNewTask(objDetails).then(function (data) {
+        templateObject.getAllTaskList();
+
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
   },
 
   // set priority in add
@@ -965,148 +1430,73 @@ Template.alltaskdatatable.events({
     $(".taskModalActionFlagDropdown").addClass("task_modal_priority_" + value);
   },
 
-  // cancel edit
-  "click .btnCancelEdit": function (e) {
-    let selected_id = Template.instance().selected_id.get();
-    let selected_ttodo = Template.instance().selected_ttodo.get();
-
-    $("#ttodo_" + selected_id).addClass("mainTaskCol");
-    $("#ttodo_" + selected_id).html(selected_ttodo);
-
-    Template.instance().selected_id.set(0);
-    Template.instance().selected_ttodo.set(null);
-  },
-
-  // submit edit
-  "click .btnSaveEdit": function (e) {
-    let templateObject = Template.instance();
-    let selected_id = templateObject.selected_id.get();
-    let selected_ttodo = templateObject.selected_ttodo.get();
-
-    let due_date = $(".crmEditDatepicker").val();
-    due_date = due_date ? moment(due_date).format("YYYY-MM-DD hh:mm:ss") : "";
-
-    let priority = 0;
-    priority = $("#chkPriorityAdd1" + selected_id).prop("checked")
-      ? 1
-      : $("#chkPriorityAdd2" + selected_id).prop("checked")
-      ? 2
-      : $("#chkPriorityAdd3" + selected_id).prop("checked")
-      ? 3
-      : 0;
-
-    // handle save process here
-    let edit_task_name = $("#edit_task_name").val();
-    let edit_task_description = $("#edit_task_description").val();
-
-    let projectID = $("#editProjectID").val() ? $("#editProjectID").val() : 11;
-
-    if (edit_task_name === "") {
-      swal("Task name is not entered!", "", "warning");
-      return;
-    }
-    $(".fullScreenSpin").css("display", "inline-block");
-
-    var objDetails = {
-      type: "Tprojecttasks",
-      fields: {
-        ID: selected_id,
-        ProjectID: projectID,
-        TaskName: edit_task_name,
-        TaskDescription: edit_task_description,
-        due_date: due_date,
-        priority: priority,
-      },
-    };
-
-    crmService
-      .saveNewTask(objDetails)
-      .then(function (objDetails) {
-        if (objDetails.fields.ID) {
-          let id = objDetails.fields.ID;
-          $("#ttodo_" + id).addClass("mainTaskCol");
-          $("#ttodo_" + id).html(selected_ttodo);
-
-          $("#edit_task_name").val(edit_task_name);
-          $("#edit_task_description").val(edit_task_description);
-
-          edit_task_description =
-            edit_task_description.length < 80
-              ? edit_task_description
-              : edit_task_description.substring(0, 79) + "...";
-          $("#ttodo_" + id + " .taskName").html(edit_task_name);
-          $("#ttodo_" + id + " .taskDescription").html(edit_task_description);
-
-          let duedate =
-            due_date == "" ? due_date : moment(due_date).format("YYYY-MM-DD");
-          let duedateClass = "taskUpcoming";
-          if (duedate == "") {
-            duedate = "";
-            duedateClass = "taskNodate";
-          } else if (moment().format("YYYY-MM-DD") == duedate) {
-            duedate = "Today";
-            duedateClass = "taskToday";
-          } else if (moment().add(1, "day").format("YYYY-MM-DD") == duedate) {
-            duedate = "Tomorrow";
-            duedateClass = "taskTomorrow";
-          } else if (moment().format("YYYY-MM-DD") > duedate) {
-            duedateClass = "taskOverdue";
-          } else {
-            duedate = moment(due_date).format("D MMM");
-          }
-
-          let dueDateInner =
-            '<i class="far fa-calendar-plus no-modal" style="margin-right: 5px;"></i>' +
-            duedate;
-          $("#ttodo_" + id + " .taskDueDate").html(dueDateInner);
-          $("#ttodo_" + id + " .taskDueDate img").addClass("no-modal");
-          $("#ttodo_" + id + " .taskDueDate").removeClass("taskOverdue");
-          $("#ttodo_" + id + " .taskDueDate").removeClass("taskToday");
-          $("#ttodo_" + id + " .taskDueDate").removeClass("taskTomorrow");
-          $("#ttodo_" + id + " .taskDueDate").removeClass("taskUpcoming");
-          $("#ttodo_" + id + " .taskDueDate").removeClass("taskNodate");
-          $("#ttodo_" + id + " .taskDueDate").addClass(duedateClass);
-
-          $("#ttodo_" + id + " .custom-checkbox").removeClass(
-            "task_priority_0"
-          );
-          $("#ttodo_" + id + " .custom-checkbox").removeClass(
-            "task_priority_1"
-          );
-          $("#ttodo_" + id + " .custom-checkbox").removeClass(
-            "task_priority_2"
-          );
-          $("#ttodo_" + id + " .custom-checkbox").removeClass(
-            "task_priority_3"
-          );
-          $("#ttodo_" + id + " .custom-checkbox").addClass(
-            "task_priority_" + priority
-          );
-
-          templateObject.getAllTaskList();
-        }
-
-        $(".fullScreenSpin").css("display", "none");
-      })
-      .catch(function (err) {
-        swal({
-          title: "Oooops...",
-          text: err,
-          type: "error",
-          showCancelButton: false,
-          confirmButtonText: "Try Again",
-        }).then((result) => {
-          $("#ttodo_" + selected_id).addClass("mainTaskCol");
-          $("#ttodo_" + selected_id).html(selected_ttodo);
-        });
-        $(".fullScreenSpin").css("display", "none");
+  // update task rename task
+  "click .btnSaveEditTask": function (e) {
+    let taskID = $("#txtCrmTaskID").val();
+    if (taskID) {
+      let selected_lbls = [];
+      let unselected_lbls = [];
+      $("#detailTaskLabelWrapper input:checked").each(function () {
+        selected_lbls.push($(this).attr("name"));
+      });
+      $("#detailTaskLabelWrapper input:unchecked").each(function () {
+        unselected_lbls.push($(this).attr("name"));
       });
 
-    templateObject.selected_id.set(0);
-    templateObject.selected_ttodo.set(null);
+      let editTaskDetailName = $(".editTaskDetailName").val();
+      let editTaskDetailDescription = $(".editTaskDetailDescription").val();
+      if (editTaskDetailName == "") {
+        swal("Please endter the task name", "", "warning");
+        return;
+      }
+
+      let templateObject = Template.instance();
+      var objDetails = {
+        type: "Tprojecttasks",
+        fields: {
+          ID: taskID,
+          TaskName: editTaskDetailName,
+          TaskDescription: editTaskDetailDescription,
+        },
+      };
+      $(".fullScreenSpin").css("display", "inline-block");
+      crmService.saveNewTask(objDetails).then(function (data) {
+        // $(".displayTaskNameDescription").css("display", "inline-block");
+        // $(".editTaskNameDescription").css("display", "none");
+        $(".fullScreenSpin").css("display", "none");
+
+        setTimeout(() => {
+          templateObject.getAllTaskList();
+        }, 1000);
+      });
+
+      // tempcode until api is updated
+      selected_lbls.forEach((lbl) => {
+        crmService
+          .updateLabel({
+            type: "Tprojecttask_TaskLabel",
+            fields: {
+              ID: lbl,
+              TaskID: taskID,
+            },
+          })
+          .then(function (data) {});
+      });
+      // unselected_lbls.forEach((lbl) => {
+      //   crmService
+      //     .updateLabel({
+      //       type: "Tprojecttask_TaskLabel",
+      //       fields: {
+      //         ID: lbl,
+      //         TaskID: 1,
+      //       },
+      //     })
+      //     .then(function (data) {});
+      // });
+    }
   },
 
-  // submit save new task
+  // submit save new task add task
   "click .btnSaveAddTask": function (e) {
     let task_name = $("#add_task_name").val();
     let task_description = $("#add_task_description").val();
@@ -1137,6 +1527,14 @@ Template.alltaskdatatable.events({
       ? $("#editProjectID").val()
       : projectID;
 
+    let selected_lbls = [];
+    $("#addTaskLabelWrapper input:checked").each(function () {
+      selected_lbls.push($(this).attr("name"));
+    });
+
+    // tempcode
+    // subtask api is not completed
+    // label api is not completed
     if (subTaskID) {
       var objDetails = {
         type: "Tprojecttask_subtasks",
@@ -1165,8 +1563,14 @@ Template.alltaskdatatable.events({
 
     crmService
       .saveNewTask(objDetails)
-      .then(function (objDetails) {
-        if (objDetails.fields.ID) {
+      .then(function (res) {
+        if (res.fields.ID) {
+          if (
+            moment(due_date).format("YYYY-MM-DD") ==
+            moment().format("YYYY-MM-DD")
+          ) {
+          }
+
           $(".btnAddSubTask").css("display", "block");
           $(".newTaskRow").css("display", "none");
           $(".addTaskModal").css("display", "none");
@@ -1176,8 +1580,25 @@ Template.alltaskdatatable.events({
           $("#chkPriorityAdd2").prop("checked", false);
           $("#chkPriorityAdd3").prop("checked", false);
 
+          // add labels to New task
+          // tempcode until api is updated
+          selected_lbls.forEach((lbl) => {
+            crmService
+              .updateLabel({
+                type: "Tprojecttask_TaskLabel",
+                fields: {
+                  ID: lbl,
+                  TaskID: res.fields.ID,
+                },
+              })
+              .then(function (data) {});
+          });
+
           //////////////////////////////
-          templateObject.getAllTaskList();
+          setTimeout(() => {
+            templateObject.getAllTaskList();
+            templateObject.getTProjectList();
+          }, 500);
           $("#newTaskModal").modal("hide");
           $("#newProjectTasksModal").modal("hide");
         }
@@ -1393,15 +1814,6 @@ Template.alltaskdatatable.events({
     }
   },
 
-  ////////////////////////
-  // "click .btnEditTask": function (event) {
-  //   $("#taskDetailModal").modal("toggle");
-  // },
-
-  // "click .btnCommentTask": function (event) {
-  //   $("#taskDetailModal").modal("toggle");
-  // },
-
   "click .sectionOpened": function (event) {
     $(".sectionOpened").css("display", "none");
     $(".sectionClosed").css("display", "inline-flex");
@@ -1426,21 +1838,22 @@ Template.alltaskdatatable.events({
   "click .btnViewAllCompleted": function (e) {
     let templateObject = Template.instance();
     let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+    let view_all_task_completed = templateObject.view_all_task_completed.get();
 
-    let lblViewCompleted = $("#lblViewAllCompleted").html().trim();
-    if (lblViewCompleted == "View Completed") {
+    if (view_all_task_completed == "NO") {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == true
       );
-      $("#lblViewAllCompleted").html("View Task");
+      templateObject.view_all_task_completed.set("YES");
     } else {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == false
       );
-      $("#lblViewAllCompleted").html("View Completed");
+      templateObject.view_all_task_completed.set("NO");
     }
 
     templateObject.allRecords.set(allCompletedRecords);
+    templateObject.initTable();
   },
 
   // view today completed task
@@ -1449,25 +1862,28 @@ Template.alltaskdatatable.events({
 
     let templateObject = Template.instance();
     let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+    let view_today_task_completed =
+      templateObject.view_today_task_completed.get();
+
     let today = moment().format("YYYY-MM-DD");
     allCompletedRecords = allCompletedRecords.filter(
       (item) => item.fields.due_date.substring(0, 10) == today
     );
 
-    let lblViewCompleted = $("#lblViewTodayCompleted").html().trim();
-    if (lblViewCompleted == "View Completed") {
+    if (view_today_task_completed == "NO") {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == true
       );
-      $("#lblViewTodayCompleted").html("View Task");
+      templateObject.view_today_task_completed.set("YES");
     } else {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == false
       );
-      $("#lblViewTodayCompleted").html("View Completed");
+      templateObject.view_today_task_completed.set("NO");
     }
 
     templateObject.todayRecords.set(allCompletedRecords);
+    templateObject.initTable();
   },
 
   // view upcoming completed task
@@ -1476,26 +1892,28 @@ Template.alltaskdatatable.events({
 
     let templateObject = Template.instance();
     let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+    let view_uncoming_task_completed =
+      templateObject.view_uncoming_task_completed.get();
 
     let today = moment().format("YYYY-MM-DD");
     allCompletedRecords = allCompletedRecords.filter(
       (item) => item.fields.due_date.substring(0, 10) > today
     );
 
-    let lblViewCompleted = $("#lblViewUpcomingCompleted").html().trim();
-    if (lblViewCompleted == "View Completed") {
+    if (view_uncoming_task_completed == "NO") {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == true
       );
-      $("#lblViewUpcomingCompleted").html("View Task");
+      templateObject.view_uncoming_task_completed.set("YES");
     } else {
       allCompletedRecords = allCompletedRecords.filter(
         (item) => item.fields.Completed == false
       );
-      $("#lblViewUpcomingCompleted").html("View Completed");
+      templateObject.view_uncoming_task_completed.set("NO");
     }
 
     templateObject.upcomingRecords.set(allCompletedRecords);
+    templateObject.initTable();
   },
 
   // submit save new project
@@ -1554,6 +1972,534 @@ Template.alltaskdatatable.events({
         $(".fullScreenSpin").css("display", "none");
       });
   },
+
+  "click .movetoproject": function (e) {
+    let taskid = e.target.dataset.id;
+    let projectid = e.target.dataset.projectid;
+    // $("#txtCrmTaskID").val(taskid);
+    // $("#txtCrmProjectID").val(projectid);
+    let templateObject = Template.instance();
+    templateObject.task_id.set(taskid);
+    templateObject.project_id.set(projectid);
+
+    $(".fullScreenSpin").css("display", "inline-block");
+    crmService.getTProjectList().then(function (data) {
+      if (data.tprojectlist && data.tprojectlist.length > 0) {
+        let all_projects = data.tprojectlist;
+        all_projects = all_projects.filter(
+          (proj) => proj.fields.Active == true && proj.fields.ID != 11
+        );
+
+        let checked = projectid == "11" ? "checked" : "";
+
+        let tbodyMovetoProjectTable = `
+        <tr class="trMovetoproject" data-id="11">
+          <td style="width:30px;" data-id="11">
+            <div class="custom-control custom-checkbox chkBox pointer chkMovetoproject"
+              style="width:15px;margin-right: -6px;" data-id="11">
+              <input class="custom-control-input chkBox pointer chkMovetoproject" type="checkbox"
+                id="chkMovetoproject-11" ${checked} data-id="11">
+              <label class="custom-control-label chkBox pointer" data-id="11"
+                for="chkMovetoproject-11"></label>
+            </div>
+          </td>
+          <td style="width:auto" data-id="11">All Tasks</td>
+        </tr>`;
+
+        let ProjectName = "";
+        all_projects.forEach((proj) => {
+          if (projectid == proj.fields.ID) {
+            checked = "checked";
+          } else {
+            checked = "";
+          }
+          ProjectName =
+            proj.fields.ProjectName.length > 40
+              ? proj.fields.ProjectName.substring(0, 40) + "..."
+              : proj.fields.ProjectName;
+
+          tbodyMovetoProjectTable += `
+          <tr class="trMovetoproject" data-id="${proj.fields.ID}">
+            <td data-id="${proj.fields.ID}">
+              <div class="custom-control custom-checkbox chkBox pointer chkMovetoproject"
+                style="width:15px;margin-right: -6px;" data-id="${proj.fields.ID}">
+                <input class="custom-control-input chkBox pointer chkMovetoproject" type="checkbox"
+                  id="chkMovetoproject-${proj.fields.ID}" ${checked} data-id="${proj.fields.ID}">
+                <label class="custom-control-label chkBox pointer" data-id="${proj.fields.ID}"
+                  for="chkMovetoproject-${proj.fields.ID}"></label>
+              </div>
+            </td>
+            <td data-id="${proj.fields.ID}">${ProjectName}</td>
+          </tr>`;
+        });
+        $("#tbodyMovetoProjectTable").html(tbodyMovetoProjectTable);
+        $(".fullScreenSpin").css("display", "none");
+      }
+    });
+
+    $("#movetoprojectsmodal").modal();
+  },
+
+  "click .trMovetoproject": function (e) {
+    let projectid = e.target.dataset.id;
+    $(".chkMovetoproject").prop("checked", false);
+    $("#chkMovetoproject-" + projectid).prop("checked", true);
+    let templateObject = Template.instance();
+    templateObject.project_id.set(projectid);
+  },
+
+  // submit move to project
+  "click .btnMovetoproject": function (e) {
+    let templateObject = Template.instance();
+    let taskid = templateObject.task_id.get();
+    let projectid = templateObject.project_id.get();
+
+    if (taskid && projectid) {
+      var objDetails = {
+        type: "Tprojecttasks",
+        fields: {
+          ID: taskid,
+          ProjectID: projectid,
+        },
+      };
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      crmService.saveNewTask(objDetails).then(function (data) {
+        templateObject.getAllTaskList();
+        templateObject.getTProjectList();
+
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
+  },
+
+  "click .filterByLabel": function (e) {
+    let labelid = e.target.dataset.id;
+    let templateObject = Template.instance();
+    let allCompletedRecords = templateObject.allWithCompletedRecords.get();
+
+    if (labelid) {
+      $("#taskDetailModal").modal("hide");
+
+      allCompletedRecords = allCompletedRecords.filter(
+        (item) => item.fields.TaskLabel != null
+      );
+
+      let filterRecord1 = allCompletedRecords.filter(
+        (item) =>
+          Array.isArray(item.fields.TaskLabel) == false &&
+          item.fields.TaskLabel.fields.ID == labelid
+      );
+
+      let filterRecord2 = allCompletedRecords.filter(
+        (item) => Array.isArray(item.fields.TaskLabel) == true
+      );
+      filterRecord2 = filterRecord2.filter((item) => {
+        lbls = item.fields.TaskLabel;
+        return lbls.filter((lbl) => lbl.fields.ID == 14).length > 0;
+      });
+
+      let filterRecord = filterRecord1.concat(filterRecord2);
+
+      $("#allTasks-tab").click();
+      templateObject.allRecords.set(filterRecord);
+      templateObject.initTable();
+    }
+  },
+
+  // projects tab ------------
+  "click .projectName": function (e) {
+    let id = e.target.dataset.id;
+    if (id) {
+      FlowRouter.go("/projects?id=" + id);
+      Meteor._reload.reload();
+    }
+  },
+
+  "click .menuFilterslabels": function (e) {
+    FlowRouter.go("/filterslabels");
+  },
+
+  // delete project
+  "click .delete-project": function (e) {
+    let id = $("#editProjectID").val();
+    // let id = e.target.dataset.id;
+    if (id) {
+      let templateObject = Template.instance();
+      swal({
+        title: "Delete Project",
+        text: "Are you sure want to delete this project?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.value) {
+          $(".fullScreenSpin").css("display", "inline-block");
+          var objDetails = {
+            type: "Tprojectlist",
+            fields: {
+              ID: id,
+              Active: false,
+            },
+          };
+          crmService
+            .updateProject(objDetails)
+            .then(function (data) {
+              $(".projectRow" + id).remove();
+              // templateObject.getTProjectList();
+              $("#editCrmProject").modal("hide");
+              $("#newProjectTasksModal").modal("hide");
+              $(".fullScreenSpin").css("display", "none");
+            })
+            .catch(function (err) {
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {});
+              $("#editCrmProject").modal("hide");
+              $("#newProjectTasksModal").modal("hide");
+              $(".fullScreenSpin").css("display", "none");
+            });
+        } else if (result.dismiss === "cancel") {
+        } else {
+        }
+      });
+    }
+  },
+
+  // submit edit project
+  "click .btnEditCrmProject": function (e) {
+    let id = $("#editProjectID").val();
+    let projectName = $("#editCrmProjectName").val();
+    let projectColor = $("#editCrmProjectColor").val();
+    let projectDescription = $("#editCrmProjectDescription").val();
+    // let swtNewCrmProjectFavorite = $("#swteditCrmProjectFavorite").prop(
+    //   "checked"
+    // );
+
+    if (id === "" || id === null) {
+      swal("Project is not selected correctly", "", "warning");
+      return;
+    }
+
+    if (projectName === "" || projectName === null) {
+      swal("Project name is not entered!", "", "warning");
+      return;
+    }
+
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    var objDetails = {
+      type: "Tprojectlist",
+      fields: {
+        ID: id,
+        Active: true,
+        ProjectName: projectName,
+        ProjectColour: projectColor,
+        Description: projectDescription,
+        // AddToFavourite: swtNewCrmProjectFavorite,
+      },
+    };
+    let templateObject = Template.instance();
+
+    crmService
+      .updateProject(objDetails)
+      .then(function (data) {
+        templateObject.getTProjectList();
+
+        $(".fullScreenSpin").css("display", "none");
+        $("#editCrmProject").modal("hide");
+        $("#newProjectTasksModal").modal("hide");
+        // Meteor._reload.reload();
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {});
+        $(".fullScreenSpin").css("display", "none");
+        $("#editCrmProject").modal("hide");
+        $("#newProjectTasksModal").modal("hide");
+      });
+  },
+
+  // submit duplicate project
+  "click .duplicate-project": function (e) {
+    let projectName = "Copy of " + e.target.dataset.name;
+    let projectColor = e.target.dataset.color;
+    let projecttasks = e.target.dataset.projecttasks;
+    let projecttasks_count = "";
+    if (
+      projecttasks != null &&
+      projecttasks != undefined &&
+      projecttasks != "undefined"
+    ) {
+      projecttasks_count = projecttasks.lentgh;
+    }
+
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    var objDetails = {
+      type: "Tprojectlist",
+      fields: {
+        Active: true,
+        ProjectName: projectName,
+        ProjectColour: projectColor,
+      },
+    };
+    projectColor = projectColor == 0 ? "gray" : projectColor;
+    let templateObject = Template.instance();
+
+    crmService
+      .updateProject(objDetails)
+      .then(function (data) {
+        templateObject.getTProjectList();
+
+        $("#editCrmProject").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
+        // Meteor._reload.reload();
+      })
+      .catch(function (err) {
+        swal({
+          title: "Oooops...",
+          text: err,
+          type: "error",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        }).then((result) => {});
+        $("#editCrmProject").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
+      });
+  },
+
+  // open task-project modal in projects table
+  "click #tblNewProjectsDatatable tbody tr": function (e) {
+    $("#newProjectTasksModal").modal("toggle");
+    let id = e.target.dataset.id;
+    $("#editProjectID").val(id);
+    let templateObject = Template.instance();
+
+    // tempcode
+    id = 3;
+    // tempcode
+
+    if (id) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      let active_projecttasks = [];
+      templateObject.view_projecttasks_completed.set("NO");
+
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
+
+            let projectName = data.fields.ProjectName;
+            let ProjectColour = data.fields.ProjectColour;
+            let ProjectDescription = data.fields.Description;
+
+            $("#editProjectID").val(id);
+            $("#editCrmProjectName").val(projectName);
+            $(".editCrmProjectName").html(projectName);
+            $("#editCrmProjectColor").val(ProjectColour);
+            $("#editCrmProjectDescription").val(ProjectDescription);
+
+            // set task list
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
+              }
+
+              active_projecttasks = projecttasks.filter(
+                (item) =>
+                  item.fields.Active == true && item.fields.Completed == false
+              );
+            }
+            templateObject.projecttasks.set(projecttasks);
+            templateObject.active_projecttasks.set(active_projecttasks);
+
+            // $("#tblProjectTasksBody").html(tr);
+            templateObject.initProjectTasksTable();
+          } else {
+            swal("Cannot edit this project", "", "warning");
+            return;
+          }
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          swal(err, "", "error");
+          return;
+        });
+    }
+  },
+
+  // open new task modal
+  "click .addTaskOnProject": function (e) {
+    $("#newTaskModal").modal("toggle");
+
+    let projectName = $(".editCrmProjectName").html()
+      ? $(".editCrmProjectName").html().length > 26
+        ? $(".editCrmProjectName").html().substring(0, 26) + "..."
+        : $(".editCrmProjectName").html()
+      : "All Task";
+    $(".addTaskModalProjectName").html(projectName);
+
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
+  },
+
+  // view all project including delete
+  "click .btnViewProjectCompleted": function (e) {
+    let templateObject = Template.instance();
+    let all_projects = templateObject.all_projects.get();
+    let view_project_completed = templateObject.view_project_completed.get();
+
+    if (view_project_completed == "NO") {
+      templateObject.view_project_completed.set("YES");
+    } else {
+      all_projects = all_projects.filter(
+        (project) => project.fields.Active == true
+      );
+      templateObject.view_project_completed.set("NO");
+    }
+
+    templateObject.active_projects.set(all_projects);
+    templateObject.initProjectsTable();
+  },
+
+  // show completed tasks on project task modal
+  "click .showCompletedTaskOnProject": function (e) {
+    let templateObject = Template.instance();
+    let allCompletedRecords = templateObject.projecttasks.get();
+    let view_projecttasks_completed =
+      templateObject.view_projecttasks_completed.get();
+
+    // show completed task
+    if (view_projecttasks_completed == "NO") {
+      allCompletedRecords = allCompletedRecords.filter(
+        (item) => item.fields.Active == true && item.fields.Completed == true
+      );
+      templateObject.view_projecttasks_completed.set("YES");
+    } else {
+      allCompletedRecords = allCompletedRecords.filter(
+        (item) => item.fields.Active == true && item.fields.Completed == false
+      );
+      templateObject.view_projecttasks_completed.set("NO");
+    }
+
+    templateObject.active_projecttasks.set(allCompletedRecords);
+    templateObject.initProjectTasksTable();
+  },
+  // projects tab--------------- //
+
+  // labels tab ---------------
+  "click .btnEditLabel": function (e) {
+    let id = e.target.dataset.id;
+    if (id) {
+      $("#editLabelID").val(id);
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      let templateObject = Template.instance();
+      crmService.getOneLabel(id).then(function (obj) {
+        $("#editLabelName").val(obj.fields.TaskLabelName);
+        // $('#editLabelColor').val();
+
+        $("#editLabelModal").modal("toggle");
+
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
+  },
+
+  "click .btnAddNewLabel": function (e) {
+    let labelName = $("#newLabelName").val();
+    let labelColor = $("#newLabelColor").val();
+
+    if (labelName == "") {
+      swal("Please put the Label Name", "", "warning");
+      return;
+    }
+
+    var objDetails = {
+      type: "Tprojecttask_TaskLabel",
+      fields: {
+        TaskLabelName: labelName,
+        TaskID: 1, // tempcode. it should be removed after api is updated
+      },
+    };
+
+    $(".fullScreenSpin").css("display", "inline-block");
+    let templateObject = Template.instance();
+    crmService.updateLabel(objDetails).then(function (objDetails) {
+      templateObject.getAllLabels();
+      $("#newLabelModal").modal("hide");
+      $(".fullScreenSpin").css("display", "none");
+    });
+  },
+
+  "click .btnSaveEditLabel": function (e) {
+    let id = $("#editLabelID").val();
+    let labelName = $("#editLabelName").val();
+    let labelColor = $("#editLabelColor").val();
+
+    if (labelName == "") {
+      swal("Please put the Label Name", "", "warning");
+      return;
+    }
+
+    if (id) {
+      var objDetails = {
+        type: "Tprojecttask_TaskLabel",
+        fields: {
+          ID: id,
+          TaskLabelName: labelName,
+        },
+      };
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      let templateObject = Template.instance();
+      crmService.updateLabel(objDetails).then(function (objDetails) {
+        templateObject.getAllLabels();
+        $("#editLabelModal").modal("hide");
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
+  },
+
+  "click .btnDeleteLabel": function (e) {
+    let id = e.target.dataset.id;
+
+    if (id) {
+      var objDetails = {
+        type: "Tprojecttask_TaskLabel",
+        fields: {
+          ID: id,
+          Active: false,
+        },
+      };
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      let templateObject = Template.instance();
+      crmService.updateLabel(objDetails).then(function (objDetails) {
+        templateObject.getAllLabels();
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
+  },
+  // labels tab ---------------
 });
 
 Template.alltaskdatatable.helpers({
@@ -1663,4 +2609,43 @@ Template.alltaskdatatable.helpers({
   favorite_projects: () => {
     return Template.instance().favorite_projects.get();
   },
+
+  // projects tab ------------------
+  active_projects: () => {
+    return Template.instance().active_projects.get();
+  },
+
+  deleted_projects: () => {
+    return Template.instance().deleted_projects.get();
+  },
+
+  favorite_projects: () => {
+    return Template.instance().favorite_projects.get();
+  },
+
+  getProjectColor: (color) => {
+    if (color == 0) {
+      return "gray";
+    }
+    return color;
+  },
+
+  getProjectCount: (tasks) => {
+    if (tasks == null) {
+      return "";
+    } else if (Array.isArray(tasks) == true) {
+      return tasks.length;
+    } else {
+      return 1;
+    }
+  },
+
+  getProjectStatus: (status) => {
+    if (status) {
+      return "Active";
+    } else {
+      return "Deleted";
+    }
+  },
+  // projects tab ------------------
 });

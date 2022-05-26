@@ -7,7 +7,7 @@ export class EmployeeService extends BaseService {
 
     getEmpUserDetail(EmployeeId) {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeName,LogonName",
+              PropertyList: "ID,EmployeeName,LogonName",
               Select: "[EmployeeId]='"+EmployeeId+"'"
           };
         return this.getList(this.ERPObjects.TUser, options);
@@ -23,7 +23,7 @@ export class EmployeeService extends BaseService {
 
     getAllEmployeeList() {
       let options = {
-        
+
         PropertyList: "ID,EmployeeNo,EmployeeName,FirstName,LastName,Phone,Mobile,Email,Street,Country,DefaultClassName,CustFld1,CustFld2,CustFld3,CustFld4",
         select: "[Active]=true",
       };

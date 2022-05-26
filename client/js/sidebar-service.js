@@ -1818,6 +1818,23 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }
       return this.getList(this.ERPObjects.TTransactionListReport, options);
   }
+    getTProjectTasks(msTimeStamp){
+        let options = '';
+        if(msTimeStamp){
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }else{
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }
+        return this.getList(this.ERPObjects.Tprojecttasks, options);
+    }
 
   getAllAppointmentList(limitcount, limitfrom){
     let options = '';
@@ -2642,11 +2659,21 @@ getCalender(limitcount, limitfrom) {
 getSuperannuation(limitcount, limitfrom) {
     let options = '';
 
-    options = {
-      ListType: "Detail",
-      select: '[Allclasses]=true'
-
+    if(limitcount == 'All'){
+      options = {
+       ListType: "Detail",
+       select: '[Allclasses]=true'
+      };
+   }else{
+     options = {
+      // orderby:'"ClientID desc"',
+        ListType: "Detail",
+        select: '[Allclasses]=true'
+ 
      };
+   }
+
+   
 
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }

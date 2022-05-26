@@ -1,12 +1,10 @@
 import {ContactService} from "./contact-service";
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-let utilityService = new UtilityService();
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -17,7 +15,6 @@ Template.leadlist.onCreated(function(){
 Template.leadlist.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    let contactService = new ContactService();
     let splashArrayLeadList = [];
     const tableHeaderList = [];
     if(FlowRouter.current().queryParams.success){
@@ -52,8 +49,8 @@ Template.leadlist.onRendered(function() {
         let lineItemObj = {};
         // console.log(data);
         for (let i = 0; i < data.tprospect.length; i++) {
-            const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
-            const city = contactContacts?contactContacts.fields.ContactCity:'';
+            // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
+            // const city = contactContacts?contactContacts.fields.ContactCity:'';
             const dataList = {
                 id: data.tprospect[i].fields.ID || '',
                 employeeName: data.tprospect[i].fields.ClientName || '',
@@ -66,7 +63,7 @@ Template.leadlist.onRendered(function() {
                 address: data.tprospect[i].fields.Street || '',
                 surburb: data.tprospect[i].fields.Suburb || '',
                 // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
-                city: city
+                city: data.tprospect[i].fields.Street2 || '',
             };
             if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
                 splashArrayLeadList.push(dataList);
@@ -217,8 +214,8 @@ Template.leadlist.events({
                 $(".btnRefreshLeads").removeClass('btnSearchAlert');
                 if (data.tprospect.length > 0) {
                     for (let i=0; i< data.tprospect.length; i++) {
-                        const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
-                        const city = contactContacts?contactContacts.fields.ContactCity:'';
+                        // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;
+                        // const city = contactContacts?contactContacts.fields.ContactCity:'';
                         const dataList = {
                             id: data.tprospect[i].fields.ID || '',
                             employeeName: data.tprospect[i].fields.ClientName || '',
@@ -231,7 +228,7 @@ Template.leadlist.events({
                             address: data.tprospect[i].fields.Street || '',
                             surburb: data.tprospect[i].fields.Suburb || '',
                             // country: data.tprospect[i].fields.MarketingContacts.fields.Country || '',
-                            city: city
+                            city: data.tprospect[i].fields.Street2 || '',
                         };
                         if(data.tprospect[i].fields.ClientName.replace(/\s/g, '') !== ''){
                             dataTableList.push(dataList);

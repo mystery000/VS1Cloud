@@ -1670,3 +1670,48 @@ authenticatedRoutes.route('/binlocationslist', {
         });
     }
 });
+
+authenticatedRoutes.route('/timesheetsummary', {
+    name: 'timesheetsummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'timesheetsummary'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollhistoryreport', {
+    name: 'payrollhistoryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollhistoryreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockvaluereport', {
+    name: 'stockvaluereport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockvaluereport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockmovementreport', {
+    name: 'stockmovementreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockmovementreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockquantitybylocation', {
+    name: 'stockquantitybylocation',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockquantitybylocation'
+        });
+    }
+});

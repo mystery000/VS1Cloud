@@ -16,19 +16,20 @@
                     <input type="hidden" id="" name="">
                     <div class="row">
                         <div class="col-12">
-                            <table class="table">
+                            <table id="tblSnList" class="table">
                                 <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
                                 <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
-                                <tr><td></td><td></td><td></td></tr>
+                                <tr><td></td><td class="serialNo"></td><td contenteditable="true" class="lineSerialnumbers"></td></tr>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-primary btnPrint" type="button"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                    <button class="btn btn-danger btnDelete" type="button"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                    <button class="btn btn-success btnSNSave" type="button"><i class="fa fa-save" style="margin-right: 3px;"></i>Save</button>
+                    <button class="btn btn-success btnAutoFill" type="button">Auto Fill</button>
+                    <button class="btn btn-primary btnPrint" type="button"><i class="fa fa-print" style="padding-right: 3px;"></i>Print</button>
+                    <button class="btn btn-danger btnDelete" type="button"><i class="fas fa-trash-alt" style="margin-right: 3px;"></i>Delete</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 3px;"></i>Close</button>
                 </div>
             </form>
         </div>

@@ -6312,7 +6312,7 @@ Template.appointments.onRendered(function () {
                     );
                 },
                 success: function(data) {
-                    resolve({ success: true });
+                    resolve({ success: true, sid: data.sid });
                 },
                 error: function(error) {
                     resolve({ success: false, message: error.responseJSON.message });
@@ -8343,6 +8343,7 @@ Template.appointments.events({
                                                         showCancelButton: false,
                                                         confirmButtonText: 'Ok'
                                                     });
+                                                    localStorage.setItem('smsId', sendSMSRes.sid);
                                                     $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                                     $('#frmAppointment').trigger('submit');
@@ -8422,6 +8423,7 @@ Template.appointments.events({
                                                     }
                                                 });
                                             } else {
+                                                localStorage.setItem('smsId', sendSMSRes.sid);
                                                 swal({
                                                     title: 'SMS was sent successfully',
                                                     text: "SMS was sent successfully",
@@ -8565,6 +8567,7 @@ Template.appointments.events({
                                             }
                                         });
                                     } else {
+                                        localStorage.setItem('smsId', sendSMSRes.sid);
                                         swal({
                                             title: 'SMS was sent successfully',
                                             text: "SMS was sent successfully",
@@ -8660,6 +8663,7 @@ Template.appointments.events({
                             }
                         });
                     } else {
+                        localStorage.setItem('smsId', sendSMSRes.sid);
                         swal({
                             title: 'SMS was sent successfully',
                             text: "SMS was sent successfully",
@@ -8701,6 +8705,7 @@ Template.appointments.events({
                         }
                     });
                 } else {
+                    localStorage.setItem('smsId', sendSMSRes.sid);
                     swal({
                         title: 'SMS was sent successfully',
                         text: "SMS was sent successfully",
@@ -8935,6 +8940,7 @@ Template.appointments.events({
                     }
                 });
             } else {
+                localStorage.setItem('smsId', sendSMSRes.sid);
                 $('#saveAppointmentModal').modal('hide');
                 swal({
                     title: 'SMS was sent successfully',
@@ -9025,6 +9031,7 @@ Template.appointments.events({
                                         }
                                     });
                                 } else {
+                                    localStorage.setItem('smsId', sendSMSRes.sid);
                                     swal({
                                         title: 'SMS was sent successfully',
                                         text: "SMS was sent successfully",
@@ -9797,10 +9804,7 @@ Template.appointments.events({
 
         let objectData = "";
 
-        const customerPhone = $('#mobile').val();
-        const smsCustomer = $('#chkSMSCustomer').is(':checked');
-        const smsUser = $('#chkSMSUser').is(':checked');
-        const confirmStatus = ((smsCustomer || smsUser) && customerPhone) ? "Yes" : "No";
+        const messageSid = localStorage.getItem('smsId');
         if (id == '0') {
             objectData = {
                 type: "TAppointmentEx",
@@ -9822,7 +9826,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    MsRef: confirmStatus
+                    ServiceDesc: messageSid,
+                    MSRef: !!messageSid ? "Yes" : "No"
                 }
             };
         } else {
@@ -9848,7 +9853,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    MsRef: confirmStatus
+                    ServiceDesc: messageSid,
+                    MSRef: !!messageSid ? "Yes" : "No"
                 }
             };
         }

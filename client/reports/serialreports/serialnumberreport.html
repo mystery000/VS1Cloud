@@ -93,6 +93,7 @@
                                 <style>
                                     #uploadedImage {
                                         margin: 0 auto !important;
+                                        display: block;
                                     }
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
@@ -161,20 +162,26 @@
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
                                     }
+
+                                    .tdSold {
+                                        color: #1cc88a !important;
+                                    }
+                                    .tdInStock {
+                                        color: #f6c23e !important;
+                                    }
+                                    .tdAvailable {
+                                        color: #36b9cc !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
                                                 <th>Product Name</th>
+                                                <th>Product Desc</th>
                                                 <th>Department</th>
                                                 <th>Last Transaction Date</th>
                                                 <th>Serial Number</th>
-                                                <th>Lot Number</th>
-                                                <th>Truck Load Number</th>
-                                                <th>Expiry Date</th>
-                                                <th>Bin Location</th>
-                                                <th>Bin Number</th>
                                                 <th>BOM Serial Number</th>
                                                 <th>UOM</th>
                                                 <th>Status</th>
@@ -183,59 +190,43 @@
                                         <tbody>
                                             <tr>
                                                 <td>A27 Widget Cleaner</td>
+                                                <td></td>
                                                 <td>Default</td>
                                                 <td>23/05/2022</td>
                                                 <td>787979798</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <td>PSN-155-787979798</td>
                                                 <td>Units</td>
-                                                <td>In-Stock</td>
+                                                <td class="tdInStock">In-Stock</td>
                                             </tr>
                                             <tr>
                                                 <td>A27 Widget Cleaner</td>
+                                                <td></td>
                                                 <td>Default</td>
                                                 <td>23/05/2022</td>
                                                 <td>787979799</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <td>PSN-155-787979799</td>
                                                 <td>Units</td>
-                                                <td>In-Stock</td>
+                                                <td class="tdSold">Sold</td>
                                             </tr>
                                             <tr>
                                                 <td>A27 Widget Cleaner</td>
+                                                <td></td>
                                                 <td>Default</td>
                                                 <td>23/05/2022</td>
                                                 <td>7879797800</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <td>PSN-155-787979800</td>
                                                 <td>Units</td>
-                                                <td>In-Stock</td>
+                                                <td class="tdAvailable">Available</td>
                                             </tr>
                                             <tr>
                                                 <td>A27 Widget Cleaner</td>
+                                                <td></td>
                                                 <td>Default</td>
                                                 <td>23/05/2022</td>
                                                 <td>7879797801</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
                                                 <td>PSN-155-787979801</td>
                                                 <td>Units</td>
-                                                <td>In-Stock</td>
+                                                <td class="tdInStock">In-Stock</td>
                                             </tr>
                                             <!-- {{#if records}}
                                                 <tr>
