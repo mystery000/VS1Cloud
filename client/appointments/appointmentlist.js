@@ -448,10 +448,11 @@ Template.appointmentlist.onRendered(async function () {
                           finished: appStatus || '',
                           notes: data.tappointmentlist[i].Notes || '',
                           color: color,
-                          msRef: data.tappointmentlist[i].MSRef || ''
+                          custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                          custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
 
-                      if (data.tappointmentlist[i].MSRef === "Yes" && data.tappointmentlist[i].CUSTFLD1 === "" && data.tappointmentlist[i].Active == true) {
+                      if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
@@ -463,7 +464,7 @@ Template.appointmentlist.onRendered(async function () {
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
                                 for (let j = 0; j < sentSMSs.length; j++) {
-                                    if (data.tappointmentlist[i].ServiceDesc === sentSMSs[j].sid) {
+                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
                                         currentSentSMSDate = sentSMSs[j].date_sent;
                                         nextSentSMSDate = j-1 >= 0 ? sentSMSs[j-1].date_sent : null;
                                         break;
@@ -479,7 +480,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "Yes"
+                                                        CUSTFLD11: "Yes"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -488,14 +489,14 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "Yes";
+                                                dataList.custFld11 = "Yes";
                                                 break;
                                             } else if (replyText.includes('NO')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "No"
+                                                        CUSTFLD11: "No"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -504,7 +505,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "No";
+                                                dataList.custFld11 = "No";
                                                 break;
                                             }
                                         }
@@ -757,6 +758,7 @@ Template.appointmentlist.onRendered(async function () {
               });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                console.log(data);
                 let useData = data.tappointmentlist;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -820,11 +822,11 @@ Template.appointmentlist.onRendered(async function () {
                         notes: data.tappointmentlist[i].Notes || '',
                         color: color,
                         msRef: data.tappointmentlist[i].MSRef || '',
-                        serviceDesc: data.tappointmentlist[i].ServiceDesc || '',
-                        custFld1: data.tappointmentlist[i].CUSTFLD1 || '',
+                        custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                        custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                     };
 
-                    if (data.tappointmentlist[i].MSRef === "Yes" && data.tappointmentlist[i].CUSTFLD1 === "" && data.tappointmentlist[i].Active == true) {
+                    if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
@@ -836,7 +838,7 @@ Template.appointmentlist.onRendered(async function () {
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
                                 for (let j = 0; j < sentSMSs.length; j++) {
-                                    if (data.tappointmentlist[i].ServiceDesc === sentSMSs[j].sid) {
+                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
                                         currentSentSMSDate = sentSMSs[j].date_sent;
                                         nextSentSMSDate = j-1 >= 0 ? sentSMSs[j-1].date_sent : null;
                                         break;
@@ -852,7 +854,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "Yes"
+                                                        CUSTFLD11: "Yes"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -861,14 +863,14 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "Yes";
+                                                dataList.custFld11 = "Yes";
                                                 break;
                                             } else if (replyText.includes('NO')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "No"
+                                                        CUSTFLD11: "No"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -877,7 +879,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "No";
+                                                dataList.custFld11 = "No";
                                                 break;
                                             }
                                         }

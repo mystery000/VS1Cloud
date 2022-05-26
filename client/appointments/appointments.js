@@ -9805,6 +9805,7 @@ Template.appointments.events({
         let objectData = "";
 
         const messageSid = localStorage.getItem('smsId');
+        console.log(messageSid);
         if (id == '0') {
             objectData = {
                 type: "TAppointmentEx",
@@ -9826,8 +9827,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid,
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         } else {
@@ -9853,8 +9854,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid,
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         }
