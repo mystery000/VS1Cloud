@@ -2289,10 +2289,6 @@ Template.alltaskdatatable.events({
     $("#editProjectID").val(id);
     let templateObject = Template.instance();
 
-    // tempcode
-    id = 3;
-    // tempcode
-
     if (id) {
       $(".fullScreenSpin").css("display", "inline-block");
       let active_projecttasks = [];
