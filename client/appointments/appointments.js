@@ -9805,7 +9805,6 @@ Template.appointments.events({
         let objectData = "";
 
         const messageSid = localStorage.getItem('smsId');
-        console.log(messageSid);
         if (id == '0') {
             objectData = {
                 type: "TAppointmentEx",

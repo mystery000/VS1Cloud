@@ -457,9 +457,9 @@ Template.appointmentlist.onRendered(async function () {
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile);
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile);
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
@@ -758,7 +758,6 @@ Template.appointmentlist.onRendered(async function () {
               });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tappointmentlist;
                 let lineItems = [];
                 let lineItemObj = {};
@@ -831,9 +830,9 @@ Template.appointmentlist.onRendered(async function () {
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile);
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile);
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
