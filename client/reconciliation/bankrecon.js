@@ -27,22 +27,22 @@ Template.bankrecon.onRendered(function() {
         let paymentType = $(this).closest('tr').find(".colPaymentType").text();
         let selectDepositID = $(this).closest('tr').find(".colDepositID").text();
 
-        if (paymentType === "Customer Payment") {
+        if (paymentType == "Customer Payment") {
             if (selectDepositID) {
                 FlowRouter.go('/paymentcard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Cheque Deposit" || paymentType === "Cheque") {
+        if (paymentType == "Cheque Deposit" || paymentType == "Cheque") {
             if (selectDepositID) {
                 FlowRouter.go('/chequecard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Deposit Entry") {
+        if (paymentType == "Deposit Entry") {
             if (selectDepositID) {
                 FlowRouter.go('/depositcard?id=' + selectDepositID);
             }
         }
-        if (paymentType === "Journal Entry") {
+        if (paymentType == "Journal Entry") {
             if (selectDepositID) {
                 FlowRouter.go('/journalentrycard?id=' + selectDepositID);
             }
@@ -53,22 +53,22 @@ Template.bankrecon.onRendered(function() {
         let paymentType = $(this).closest('tr').find(".colPaymentType").text();
         let selectWithdrawalID = $(this).closest('tr').find(".colWithdrawlID").text();
 
-        if (paymentType === "Supplier Payment") {
+        if (paymentType == "Supplier Payment") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/supplierpaymentcard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Cheque") {
+        if (paymentType == "Cheque") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/chequecard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Journal Entry") {
+        if (paymentType == "Journal Entry") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/journalentrycard?id=' + selectWithdrawalID);
             }
         }
-        if (paymentType === "Split Deposit") {
+        if (paymentType == "Split Deposit") {
             if (selectWithdrawalID) {
                 FlowRouter.go('/depositcard?id=' + selectWithdrawalID);
             }
@@ -493,7 +493,6 @@ Template.bankrecon.onRendered(function() {
         //templateObject.getOpenBalance();
     }
     function setOneReconData(data) {
-        console.log(data);
         let recondep = [];
         let reconwith = [];
         let openingBalance = data.fields.OpenBalance || 0;
@@ -520,7 +519,7 @@ Template.bankrecon.onRendered(function() {
         $('.differenceCalc').text(Currency + "0.00" || 0);
         // $('.depositAmount').val(utilityService.modifynegativeCurrencyFormat(depositAmount) || 0);
         // $('.withdrawalAmount').val(utilityService.modifynegativeCurrencyFormat(withdrawalAmount) || 0);
-        if (data.fields.OnHold === false) {
+        if (data.fields.OnHold == false) {
             $('#bankAccountName').attr('disabled', 'disabled');
             $('#bankAccountName').attr('readonly', true);
             $('.openingbalance').attr('readonly', true);
@@ -542,12 +541,12 @@ Template.bankrecon.onRendered(function() {
                     if (data.fields.DepositLines.hasOwnProperty(i)) {
                         let depositamount = utilityService.modifynegativeCurrencyFormat(data.fields.DepositLines[i].fields.Amount) || 0.00;
                         let reconepID = data.fields.DepositLines[i].fields.ID;
-                        if (data.fields.DepositLines[i].fields.Notes === 'Customer Payment') {
+                        if (data.fields.DepositLines[i].fields.Notes == 'Customer Payment') {
                             reconepID = data.fields.DepositLines[i].fields.PaymentID;
                         }
                         let reconciledepositObj = {
-                            sortdate: data.fields.DepositLines[i].fields.DepositDate !== '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
-                            recondepdate: data.fields.DepositLines[i].fields.DepositDate !== '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
+                            sortdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("YYYY-MM-DD") : data.fields.DepositLines[i].fields.DepositDate,
+                            recondepdate: data.fields.DepositLines[i].fields.DepositDate != '' ? moment(data.fields.DepositLines[i].fields.DepositDate).format("DD/MM/YYYY") : data.fields.DepositLines[i].fields.DepositDate,
                             recondepname: data.fields.DepositLines[i].fields.Payee || ' ',
                             recondeppaymenttype: data.fields.DepositLines[i].fields.Notes || ' ',
                             recondepamount: depositamount || 0.00,
@@ -566,7 +565,7 @@ Template.bankrecon.onRendered(function() {
                 }
                 $('.depositAmount').text(utilityService.modifynegativeCurrencyFormat(selectedTransAmountdep) || Currency + "0.00");
                 if (templateObject.reconVS1dep.get()) {
-                    if (data.fields.OnHold === false) {
+                    if (data.fields.OnHold == false) {
                         setTimeout(function() {
                             $('#tblVS1Dep').DataTable({
                                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -624,7 +623,7 @@ Template.bankrecon.onRendered(function() {
 
                     }
                 }
-                if (data.fields.OnHold === false) {
+                if (data.fields.OnHold == false) {
                     setTimeout(function() {
                         $('.tblVS1Dep tr').each(function() {
                             var $tblrow = $(this);
@@ -706,12 +705,12 @@ Template.bankrecon.onRendered(function() {
                     if (data.fields.WithdrawalLines.hasOwnProperty(j)) {
                         let withdrawalamount = utilityService.modifynegativeCurrencyFormat(data.fields.WithdrawalLines[j].fields.Amount) || 0.00;
                         let reconepWidID = data.fields.WithdrawalLines[j].fields.ID;
-                        if (data.fields.WithdrawalLines[j].fields.Notes === 'Customer Payment') {
+                        if (data.fields.WithdrawalLines[j].fields.Notes == 'Customer Payment') {
                             reconepWidID = data.fields.WithdrawalLines[j].fields.PaymentID;
                         }
                         let reconcilewithdrawalObj = {
-                            sortdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
-                            reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate !== '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                            sortdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("YYYY-MM-DD") : data.fields.WithdrawalLines[j].fields.DepositDate,
+                            reconwithdate: data.fields.WithdrawalLines[j].fields.DepositDate != '' ? moment(data.fields.WithdrawalLines[j].fields.DepositDate).format("DD/MM/YYYY") : data.fields.WithdrawalLines[j].fields.DepositDate,
                             reconwithname: data.fields.WithdrawalLines[j].fields.ClientName || ' ',
                             reconwithpaymenttype: data.fields.WithdrawalLines[j].fields.Notes || ' ',
                             reconwithamount: withdrawalamount || 0.00,
@@ -859,7 +858,7 @@ Template.bankrecon.onRendered(function() {
             }
         }
         //$('#hideSelectionToggle').css('pointer-events', 'none');
-        if (data.fields.OnHold === true) {
+        if (data.fields.OnHold == true) {
             Session.setPersistent('bankaccountid', data.fields.AccountID);
             Session.setPersistent('bankaccountname', data.fields.AccountName);
             templateObject.getAccountNames();
