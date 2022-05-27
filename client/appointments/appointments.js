@@ -6361,7 +6361,7 @@ Template.appointments.onRendered(function () {
             }
         }
     }
-    templateObject.checkSMSSettings();
+    //templateObject.checkSMSSettings();
 });
 
 Template.appointments.events({
@@ -9703,7 +9703,7 @@ Template.appointments.events({
             $('.modal-backdrop').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: 'Oooops...',
+                title: 'Oops...',
                 text: "You dont have access to create new Appointment",
                 type: 'error',
                 showCancelButton: false,
@@ -9824,7 +9824,7 @@ Template.appointments.events({
 
         let objectData = "";
 
-        const messageSid = localStorage.getItem('smsId');
+        const messageSid = localStorage.getItem('smsId')||'';
         if (id == '0') {
             objectData = {
                 type: "TAppointmentEx",
@@ -9846,7 +9846,7 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    CUSTFLD12: messageSid,
+                    CUSTFLD12: messageSid||'',
                     CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
@@ -9873,7 +9873,7 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    CUSTFLD12: messageSid,
+                    CUSTFLD12: messageSid||'',
                     CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
