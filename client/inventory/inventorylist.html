@@ -50,8 +50,9 @@
             </style>
         </header>
         <!-- All charts list -->
+        {{#if isStockonHandDemandChart}}
         {{> allChartLists  tabGroupID="5" chartGroup="Inventory" }}
-
+        {{/if}}
         <style>
             @media screen and (max-width: 450px) {
                 .btnNav {
@@ -86,7 +87,9 @@
         <div class="row">
             <div class="col-6 col-md-7">
                 <button class="btn btnNav btn-primary btnRefresh float-left" type="button" style="margin: 16px; margin-left: 0"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                {{#if isNewProduct}}
                 <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Product</a>
+                {{/if}}
                 {{#if includeStockAdjustment}}
                     <button class="btn btnNav btn-primary btnStockAdjustment" id="btnStockAdjustment" type="button" style="margin: 16px;"><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
                 {{/if}}
@@ -108,8 +111,12 @@
             <div class="col-6 col-md-5">
                 <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 16px;"><i class="fas fa-print" style="padding-right: 5px;"></i>Print</button>
+                {{#if isImportProduct}}
                 <button class="btn btnNav btn-primary float-right" type="button" style="margin: 16px;" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                {{/if}}
+                {{#if isExportProduct}}
                 <button class="btn btnNav btn-primary float-right exportinv_csv" type="button" style="margin: 16px;" id="exportinv_csv" name="exportinv_csv"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                {{/if}}
                 <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 16px;"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
