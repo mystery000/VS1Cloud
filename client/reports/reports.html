@@ -282,6 +282,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isLotReport}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/lotnumberlist">Lot Numbers Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkLotReport" type="checkbox" id="formCheck-LotReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-LotReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isPaymentMethodsList}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -1005,27 +1019,6 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Batch Report *</a></div>
-                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkBatchReport" type="checkbox" id="formCheck-BatchReport" disabled>
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-BatchReport"></label>
-                                                </div>
-                                            </div>
-                                            {{#if isBatchReport}}
-                                                <script>
-                                                    $('.chkBatchReport').prop("checked", true);
-                                                </script>
-                                            {{else}}
-                                                <script>
-                                                    $('.chkBatchReport').prop("checked", false);
-                                                </script>
-                                            {{/if}}
-                                        </div>
-                                        <div class="row">
-                                            <hr style="width: 100%;margin: 4px;">
-                                        </div>
-                                        <div class="row reportComingSoon">
                                             <div class="col flex-grow-1"><a href="#">Department Transactional Reports *</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
@@ -1181,7 +1174,29 @@
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row">
-                                            <div class="col flex-grow-1"><a href="/serialnumberreport">Serial Number Report</a></div>
+                                            <div class="col flex-grow-1"><a href="/lotnumberlist">Lot Numbers Report</a></div>
+                                            <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkLotReport" type="checkbox" id="formCheck-LotReport">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-LotReport"></label>
+                                                </div>
+                                            </div>
+                                            {{#if isLotReport}}
+                                                <script>
+                                                    $('.chkLotReport').prop("checked", true);
+                                                </script>
+                                            {{else}}
+                                                <script>
+                                                    $('.chkLotReport').prop("checked", false);
+                                                </script>
+                                            {{/if}}
+                                        </div>
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <!-- <div class="col flex-grow-1"><a href="/serialnumberreport">Serial Number Report</a></div> -->
+                                            <div class="col flex-grow-1"><a href="/serialnumberlist">Serial Number Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
                                                     <input class="custom-control-input favCheckBox chkSerialNumberReport" type="checkbox" id="formCheck-SerialNumberReport">
