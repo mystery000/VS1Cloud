@@ -172,8 +172,8 @@ Template.taxsummaryreport.onRendered(()=>{
     // '','',
       '',
       '',
-      '',
-      '',
+      // '',
+      // '',
       utilityService.modifynegativeCurrencyFormat(nettotal),
 
       // taxratetotal.toFixed(2) + '%' || 0,
@@ -345,8 +345,8 @@ Template.taxsummaryreport.onRendered(()=>{
   // '','',
     '',
     '',
-    '',
-    '',
+    // '',
+    // '',
     utilityService.modifynegativeCurrencyFormat(nettotal),
 
     // taxratetotal.toFixed(2) + '%' || 0,
