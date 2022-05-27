@@ -9826,8 +9826,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid,
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         } else {
@@ -9853,8 +9853,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid,
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         }

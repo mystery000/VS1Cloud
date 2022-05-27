@@ -117,27 +117,65 @@ Template.appointmentlist.onRendered(async function () {
 
     // Get SMS settings
     templateObject.getSMSSettings = function() {
-        return new Promise((resolve, reject) => {
-            const smsSettings = {
-                twilioAccountId: "",
-                twilioAccountToken: "",
-                twilioTelephoneNumber: "",
-            }
-            smsService.getSMSSettings().then((result) => {
-                if (result.terppreference.length > 0) {
-                    for (let i = 0; i < result.terppreference.length; i++) {
-                        switch(result.terppreference[i].PrefName) {
-                            case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
-                            case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
-                            case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
-                        }
-                    }
+            return new Promise((resolve, reject) => {
+                const smsSettings = {
+                    twilioAccountId: "",
+                    twilioAccountToken: "",
+                    twilioTelephoneNumber: "",
                 }
-                templateObject.smsSettings.set(smsSettings);
-                resolve(true);
+
+                getVS1Data('TERPPreference').then(function (dataObject) {
+                    if (dataObject.length == 0) {
+                      smsService.getSMSSettings().then((result) => {
+                          if (result.terppreference.length > 0) {
+                              for (let i = 0; i < result.terppreference.length; i++) {
+                                  switch(result.terppreference[i].PrefName) {
+                                      case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                      case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                      case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                                  }
+                              }
+                          }
+                          templateObject.smsSettings.set(smsSettings);
+                          resolve(true);
+                      });
+                    } else {
+                      let result = JSON.parse(dataObject[0].data);
+                      if (result.terppreference.length > 0) {
+                          for (let i = 0; i < result.terppreference.length; i++) {
+                            if(result.terppreference[i].PrefName == "VS1SMSID" || result.terppreference[i].PrefName =="VS1SMSToken"
+                            || result.terppreference[i].PrefName =="VS1SMSPhone" || result.terppreference[i].PrefName == "VS1SAVESMSMSG"
+                             || result.terppreference[i].PrefName == "VS1STARTSMSMSG" || result.terppreference[i].PrefName =="VS1STOPSMSMSG"){
+
+                               switch(result.terppreference[i].PrefName) {
+                                   case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                   case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                   case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                               }
+                            }
+                          }
+                      }
+                      templateObject.smsSettings.set(smsSettings);
+                      resolve(true);
+                    }
+                }).catch(function (err) {
+                  smsService.getSMSSettings().then((result) => {
+                      if (result.terppreference.length > 0) {
+                          for (let i = 0; i < result.terppreference.length; i++) {
+                              switch(result.terppreference[i].PrefName) {
+                                  case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                  case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                  case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                              }
+                          }
+                      }
+                      templateObject.smsSettings.set(smsSettings);
+                      resolve(true);
+                  });
+                });
+
             });
-        });
-    }
+        }
 
     templateObject.getAllProductData = function () {
         productList = [];
@@ -448,22 +486,23 @@ Template.appointmentlist.onRendered(async function () {
                           finished: appStatus || '',
                           notes: data.tappointmentlist[i].Notes || '',
                           color: color,
-                          msRef: data.tappointmentlist[i].MSRef || ''
+                          custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                          custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
 
-                      if (data.tappointmentlist[i].MSRef === "Yes" && data.tappointmentlist[i].CUSTFLD1 === "" && data.tappointmentlist[i].Active == true) {
+                      if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile);
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile);
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
                                 for (let j = 0; j < sentSMSs.length; j++) {
-                                    if (data.tappointmentlist[i].ServiceDesc === sentSMSs[j].sid) {
+                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
                                         currentSentSMSDate = sentSMSs[j].date_sent;
                                         nextSentSMSDate = j-1 >= 0 ? sentSMSs[j-1].date_sent : null;
                                         break;
@@ -479,7 +518,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "Yes"
+                                                        CUSTFLD11: "Yes"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -488,14 +527,14 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "Yes";
+                                                dataList.custFld11 = "Yes";
                                                 break;
                                             } else if (replyText.includes('NO')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "No"
+                                                        CUSTFLD11: "No"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -504,7 +543,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "No";
+                                                dataList.custFld11 = "No";
                                                 break;
                                             }
                                         }
@@ -820,23 +859,23 @@ Template.appointmentlist.onRendered(async function () {
                         notes: data.tappointmentlist[i].Notes || '',
                         color: color,
                         msRef: data.tappointmentlist[i].MSRef || '',
-                        serviceDesc: data.tappointmentlist[i].ServiceDesc || '',
-                        custFld1: data.tappointmentlist[i].CUSTFLD1 || '',
+                        custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                        custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                     };
 
-                    if (data.tappointmentlist[i].MSRef === "Yes" && data.tappointmentlist[i].CUSTFLD1 === "" && data.tappointmentlist[i].Active == true) {
+                    if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile);
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile);
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
                                 for (let j = 0; j < sentSMSs.length; j++) {
-                                    if (data.tappointmentlist[i].ServiceDesc === sentSMSs[j].sid) {
+                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
                                         currentSentSMSDate = sentSMSs[j].date_sent;
                                         nextSentSMSDate = j-1 >= 0 ? sentSMSs[j-1].date_sent : null;
                                         break;
@@ -852,7 +891,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "Yes"
+                                                        CUSTFLD11: "Yes"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -861,14 +900,14 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "Yes";
+                                                dataList.custFld11 = "Yes";
                                                 break;
                                             } else if (replyText.includes('NO')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
                                                         Id: data.tappointmentlist[i].AppointID,
-                                                        CUSTFLD1: "No"
+                                                        CUSTFLD11: "No"
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
@@ -877,7 +916,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 }).catch(e => {
                                                     console.log(e);
                                                 });
-                                                dataList.custFld1 = "No";
+                                                dataList.custFld11 = "No";
                                                 break;
                                             }
                                         }
@@ -1744,7 +1783,15 @@ Template.appointmentlist.events({
 
         });
 
+        sideBarService.getGlobalSettings().then(function (dataPrefrences) {
+        addVS1Data('TERPPreference', JSON.stringify(dataPrefrences)).then(function (datareturn) {
 
+        }).catch(function (err) {
+
+        });
+    }).catch(function (err) {
+
+    });
     },
     'change #dateTo': function() {
         let templateObject = Template.instance();

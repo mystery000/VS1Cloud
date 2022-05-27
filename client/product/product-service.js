@@ -363,4 +363,11 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TProductVS1, options);
     }
+
+    getProductInfo(productName) {
+        let options = {
+            select: "[Lines][TInvoiceLine][ProductName]='" + productName + "'",
+        }
+        return this.getList(this.ERPObjects.TInvoiceEx, options);
+    }
 }

@@ -448,7 +448,7 @@
                     </ul>
                 </li>
             {{/if}}
-
+            {{#if includeCRM}}
             <li class="crmLi" id="sidenavcrm">
                 <a href="#crmSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader crmLiHeader"><i class="fas fa-tasks faHeader"></i> CRM</a>
                 <ul class="collapse list-unstyled" id="crmSubmenu">
@@ -460,7 +460,7 @@
                     </li>
                 </ul>
             </li>
-
+            {{/if}}
             {{#if includeDashboard}}
                 <li class="dashboardLi" id="sidenavdashbaord">
                     <a class="liHeader sidenavdashbaord"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard</a>
@@ -477,23 +477,11 @@
                 <li class="inventoryLi" id="sidenavinventory">
                     <a href="#inventorySubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader inventoryLiHeader"><i class="fas fa-box-open faHeader"></i> Inventory</a>
                     <ul class="collapse list-unstyled" id="inventorySubmenu">
-                        <!-- <li>
-                            <a class="sidenavinventory">
-                                <div class="row">
-                                    <div class="col">
-                                        <i class="fas fa-boxes"></i> Inventory
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <i class="fas fa-boxes" style="visibility: hidden;"></i> Overview
-                                    </div>
-                                </div>
-                            </a>
-                        </li> -->
+                        {{#if isProductList}}
                         <li>
                             <a id="sidenaveproductlist" name="sidenaveproductlist"><i class="fa fa-product-hunt"></i> Product List</a>
                         </li>
+                        {{/if}}
                         {{#if equals isSNTrackChecked true}}
                         <li>
                             <a id="sidenaveserialnumberlist" name="sidenaveserialnumberlist"><i class="fa fa-list-alt"></i> Serial Number List</a>
@@ -534,9 +522,11 @@
                             </a>
                         </li>
                         {{/if}}
+                        {{#if isNewProduct}}
                         <li>
                             <a id="sidenavnewinventory" name="sidenavnewinventory"><i class="fas fa-plus"></i> New Product</a>
                         </li>
+                        {{/if}}
                         {{#if includeStockAdjustment}}
                         <li>
                             <a id="sidenavnewstockadjust" name="sidenavnewstockadjust">
@@ -554,6 +544,7 @@
                         </li>
                         {{/if}}
                         {{#if includeStockTransfer}}
+                        {{#if isNewStockTransfer}}
                         <li>
                             <a id="sidenavnewstocktransfer" name="sidenavnewstocktransfer">
                                 <div class="row">
@@ -568,6 +559,7 @@
                                 </div>
                             </a>
                         </li>
+                        {{/if}}
                         {{/if}}
                     </ul>
                 </li>
