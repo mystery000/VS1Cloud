@@ -6326,11 +6326,13 @@ Template.appointments.onRendered(function () {
     templateObject.checkSMSSettings = function() {
         const accessLevel = Session.get('CloudApptSMS');
         console.log(typeof accessLevel)
-        if (accessLevel === false) {
+        if (!accessLevel) {
             $('#chkSMSCustomer').prop('checked', false);
             $('#chkSMSUser').prop('checked', false);
-            $('.chkSMSCustomer-container').css('display', 'none');
-            $('.chkSMSUser-container').css('display', 'none');
+            $('.chkSMSCustomer-container').addClass('d-none');
+            $('.chkSMSCustomer-container').removeClass('d-xl-flex');
+            $('.chkSMSUser-container').addClass('d-none');
+            $('.chkSMSUser-container').removeClass('d-xl-flex');
         } else {
             const smsSettings = templateObject.defaultSMSSettings.get();
             const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
@@ -8736,8 +8738,11 @@ Template.appointments.events({
         }
     },
     'click #btnStartAppointment': function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
+        console.log(smsCustomer, smsUser);
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
@@ -8797,6 +8802,8 @@ Template.appointments.events({
         }
     },
     'click #btnStopAppointment': function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
@@ -8855,6 +8862,8 @@ Template.appointments.events({
         }
     },
     'click #btnSaveAppointment': async function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
