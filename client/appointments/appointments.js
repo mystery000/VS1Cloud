@@ -6268,6 +6268,7 @@ Template.appointments.onRendered(function () {
         twilioAccountId: "",
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
+        twilioMessagingServiceSid: "MG82f3964f5f79004b1d7f4bac37b0663b",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6297,7 +6298,8 @@ Template.appointments.onRendered(function () {
             var data = {
                 To: phoneNumber,
                 From: smsSettings.twilioTelephoneNumber,
-                Body: message
+                Body: message,
+                MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
             };
             $.ajax(
                 {
@@ -6322,33 +6324,42 @@ Template.appointments.onRendered(function () {
     }
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
     templateObject.checkSMSSettings = function() {
-        const smsSettings = templateObject.defaultSMSSettings.get();
-        const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
-        const chkSMSUser = $('#chkSMSUser').prop('checked');
-        if ((!smsSettings || smsSettings.twilioAccountId === "" ||
-            smsSettings.twilioAccountToken === "" ||
-            smsSettings.twilioTelephoneNumber === "") &&
-            (chkSMSCustomer || chkSMSUser)) {
-            swal({
-                title: 'No SMS Settings',
-                text: "SMS messages won't be sent to Customer or User",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'Go to SMS Settings'
-            }).then((result) => {
-                if (result.value) {
-                    $('#chkSMSCustomer').prop('checked', false);
-                    $('#chkSMSUser').prop('checked', false);
-                } else if (result.dismiss === 'cancel') {
-                    window.open('/smssettings', '_self');
-                } else {
-                    window.open('/smssettings', '_self');
-                }
-            });
+        const accessLevel = Session.get('CloudApptSMS');
+        console.log(typeof accessLevel)
+        if (accessLevel === false) {
+            $('#chkSMSCustomer').prop('checked', false);
+            $('#chkSMSUser').prop('checked', false);
+            $('.chkSMSCustomer-container').css('display', 'none');
+            $('.chkSMSUser-container').css('display', 'none');
+        } else {
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
+            const chkSMSUser = $('#chkSMSUser').prop('checked');
+            if ((!smsSettings || smsSettings.twilioAccountId === "" ||
+                smsSettings.twilioAccountToken === "" ||
+                smsSettings.twilioTelephoneNumber === "") &&
+                (chkSMSCustomer || chkSMSUser)) {
+                swal({
+                    title: 'No SMS Settings',
+                    text: "SMS messages won't be sent to Customer or User",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continue',
+                    cancelButtonText: 'Go to SMS Settings'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#chkSMSCustomer').prop('checked', false);
+                        $('#chkSMSUser').prop('checked', false);
+                    } else if (result.dismiss === 'cancel') {
+                        window.open('/smssettings', '_self');
+                    } else {
+                        window.open('/smssettings', '_self');
+                    }
+                });
+            }
         }
     }
-    // templateObject.checkSMSSettings();
+    templateObject.checkSMSSettings();
 });
 
 Template.appointments.events({
