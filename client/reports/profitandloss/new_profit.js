@@ -11,6 +11,7 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 
+
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -588,29 +589,19 @@ templateObject.getProfitLossLayout = async function() {
 
   const profitLossLayoutEndResponse =  await profitLossLayoutEndpoint.fetch();  
   if (profitLossLayoutEndResponse.ok == true) {
-    const profitLossLayouts = {
-      'Income': [],
-      'CostofSales': [],
-      'Expense': [],
-    }
+    const profitLossLayouts = {}
     let jsonResponse = await profitLossLayoutEndResponse.json();
     let profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
-    profitLossLists.forEach(function(item){
-      let groupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-      if( profitLossLayouts[groupName] !== undefined ){
-        profitLossLayouts[groupName].push(item);
-      }
-      // let group2Name = item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-      // if( group2Name ){
-      //   console.log( 'group2Name', group2Name, item.fields.ID )
+    // profitLossLists.forEach(function(item){
+      // let AccountLevel0Group =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+      // let AccountLevel1Group =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+      // let AccountLevel2Group =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
+      // if( item.fields.IsRoot == true ){
+      //   profitLossLayouts[AccountLevel0Group] = 
       // }
-      // let group3Name = item.fields.AccountLevel2GroupName.replace(/\s/g, '')
-      // if( group3Name ){
-      //   console.log( 'group3Name', group3Name, item.fields.ID )
-      // }
-    });
-    // console.log('profitLossLayouts', profitLossLists)
-    templateObject.profitlosslayoutrecords.set( profitLossLayouts );
+    // });
+    console.log('profitLossLayouts', profitLossLists)
+    templateObject.profitlosslayoutrecords.set( profitLossLists );
     setTimeout(function () {
       let currentIndex;
       $(".sortableAccountParent").sortable({
@@ -1714,6 +1705,64 @@ Template.newprofitandloss.helpers({
   profitlosslayoutrecords(){
     return Template.instance().profitlosslayoutrecords.get();
   },
+  parentsProfitlossLayoutRecords(){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.IsRoot == true ){
+        return item;
+      }
+    });
+    return parentsProfitlossLayouts;
+  },
+  accountsProfitlossLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID ){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  secPLGroupLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName != ''){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  plarrayify(val) {
+      return val ? (Array.isArray(val) ? val : [val]) : [];
+  },
+  firstPLGroupLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName == ''){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  totalPLGroupLayoutRecords(){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.IsRoot == false && item.fields.Parent == 0 && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel0GroupName == '' && item.fields.AccountLevel2GroupName == '' ){
+        return item;
+      }
+    });
+    return parentsProfitlossLayouts;
+  },
   records: () => {
     return Template.instance().records.get();
     //   .sort(function(a, b){
@@ -1726,6 +1775,18 @@ Template.newprofitandloss.helpers({
     // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
     // });
+  },
+  checkForSecGroup( profitLoss ){
+    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName == '' ){
+      return true
+    }
+    return false
+  },
+  checkForThGroup( profitLoss ){
+    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName != '' ){
+      return true
+    }
+    return false
   },
   recordslayout: () => {
     return Template.instance().recordslayout.get();

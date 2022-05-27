@@ -178,34 +178,75 @@
             .customCheckBox:first-child {
                 border: none !important;
             }
-            .sortableAccount {
+            .customSortableDiv {
                 display: inline-block;
                 width: 100%;
             }
-            .sortableAccount h2 {
+            .customSortableDiv h1 {
                 display: inline-block;
                 width: 100%;
                 margin: 0 !important;
-                font-size: 17px;
+                font-size: 18px;
                 color: #494949;
                 font-weight: 700;
                 background: whitesmoke;
-                padding: 5px 10px;
+                padding: 7px 10px;
                 border: 1px solid rgba(0,0,0,0.1);
                 cursor: move;
             }
-            .sortableAccount h3 {
+            .customSortableDiv h2 {
                 display: inline-block;
                 width: calc(100% - 30px);
-                margin: 0 0 0 30px;
+                margin: 0 !important;
+                margin-left: 30px !important;
+                font-size: 18px;
+                color: #494949;
+                font-weight: 700;
+                background: whitesmoke;
+                padding: 7px 10px;
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+            .customSortableDiv h3 {
+                display: inline-block;
+                width: calc(100% - 30px);
+                margin: 0 !important;
+                margin-left: 30px !important;
                 font-size: 16px;
+                color: #494949;
+                font-weight: 700;
+                background: whitesmoke;
+                padding: 7px 10px;
+                border: 1px solid rgba(0,0,0,0.1);
+            }
+            .customSortableDiv p {
+                display: inline-block;
+                margin: 0 0 0 30px;
+                font-size: 15px;
                 color: #494949;
                 font-weight: 400;
                 background: whitesmoke;
-                padding: 5px 10px;
+                padding: 7px 10px;
                 border: 1px solid rgba(0,0,0,0.1);
                 cursor: move;
             }
+            
+            .customSortableDiv p.g0 {
+                width: calc(100% - 30px);
+                margin-left: 30px !important;
+            }
+            .customSortableDiv p.g1 {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+            .customSortableDiv p.g2 {
+                width: calc(100% - 90px);
+                margin-left: 90px !important;
+            }
+            .disableCursor{
+                pointer-events: none;
+                cursor: not-allowed !important;
+            }
+
         </style>
         <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
             style="width: 100%;">
@@ -1737,22 +1778,23 @@
                                         </div>
                                     </div> -->
                                     {{#if profitlosslayoutrecords}}
-                                        <div class="sortableAccount" >
-                                            <h2>Income</h2>
-                                            {{#each item in profitlosslayoutrecords.Income}}                                                
-                                                <h3 class="draggable">{{ item.fields.AccountName }}</h3>
+                                        <div class="customSortableDiv" >
+                                            {{#each parentitem in parentsProfitlossLayoutRecords}}
+                                                <div class="sortableAccount">
+                                                    <h1 class="draggable" position="{{ parentitem.fields.Position }}" >{{ parentitem.fields.AccountName }}</h1>
+                                                    {{#each acPLItem in plarrayify (accountsProfitlossLayoutRecords parentitem.fields.ID) }}
+                                                        <p position="{{ acPLItem.fields.Position }}" class="g0 draggable" >{{ acPLItem.fields.AccountName }}</p>
+                                                    {{/each}}
+                                                    {{#each secPLItem in plarrayify (secPLGroupLayoutRecords parentitem.fields.ID) }}
+                                                        <h3 class="disableCursor" position="{{ secPLItem.fields.Position }}">{{ secPLItem.fields.AccountName }}</h3>
+                                                    {{/each}}
+                                                    {{#each firstPLItem in plarrayify (firstPLGroupLayoutRecords parentitem.fields.ID) }}
+                                                        <h2 class="disableCursor" position="{{ firstPLItem.fields.Position }}">{{ firstPLItem.fields.AccountName }}</h2>
+                                                    {{/each}}
+                                                </div>
                                             {{/each}}
-                                        </div>
-                                        <div class="sortableAccount" >
-                                            <h2>Cost of Sales</h2>
-                                            {{#each item in profitlosslayoutrecords.CostofSales}}                                                
-                                                <h3 class="draggable">{{ item.fields.AccountName }}</h3>
-                                            {{/each}}
-                                        </div>
-                                        <div class="sortableAccount" >
-                                            <h2>Expense</h2>
-                                            {{#each item in profitlosslayoutrecords.Expense}}                                                
-                                                <h3 class="draggable">{{ item.fields.AccountName }}</h3>
+                                            {{#each ttlPLItem in totalPLGroupLayoutRecords }}
+                                                <h1 position="{{ ttlPLItem.fields.Position }}" class="disableCursor" >{{ ttlPLItem.fields.AccountName }}</h1>
                                             {{/each}}
                                         </div>
                                     {{/if}}
