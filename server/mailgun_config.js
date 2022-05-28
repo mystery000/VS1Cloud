@@ -9,7 +9,7 @@ Meteor.startup(function(){
       var minutesToAdd=2;
       var currentDate = new Date();
       var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
-      
+
       // FutureTasks.insert({
       //   to: 'silvertiger0321@gmail.com',
       //   from: 'noreply@vs1cloud.com',
@@ -138,7 +138,7 @@ Meteor.methods({
       // If email scheduling is inactive, remove corresponding FutureTask and SyncedCron job
       FutureTasks.remove(details.EmployeeId + "_" + details.FormID);
       SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
-    } 
+    }
   },
   calculateNextDate: function(details) {
     console.log(details);
@@ -292,7 +292,7 @@ Meteor.methods({
       },
       {
           id: 77,
-          name: "Sakes Orders",
+          name: "Sales Orders",
           url: 'allreports'
       },
       {

@@ -2098,5 +2098,14 @@ Template.header.helpers({
             }
             return (a.transDate.toUpperCase() > b.transDate.toUpperCase()) ? 1 : -1;
         });
+    },
+    isCloudAdminUser: function() {
+      var adminUserDetails = localStorage.getItem('VS1AdminUserName')||'';
+      var loggedUserDetails = localStorage.getItem('mySession')||'';
+      let isAdminUser = false;
+      if(adminUserDetails.toLowerCase() == loggedUserDetails.toLowerCase()){
+        isAdminUser = true;
+      }
+        return isAdminUser;
     }
 });
