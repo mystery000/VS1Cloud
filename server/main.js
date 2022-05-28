@@ -359,6 +359,19 @@ Meteor.startup(() => {
                 }
             }
         },
+        'sendSMS': async (authSid, authToken, from, to, body) => {
+            const smsClient = require('twilio')(authSid, authToken);
+            try {
+                const message = await smsClient.messages.create({
+                    from,
+                    body,
+                    to,
+                });
+                return { success: true, sid: message.sid };
+            } catch (error) {
+                return {success: false, message: error.message};
+            }
+        }
     });
 
 });
