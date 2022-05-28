@@ -7464,6 +7464,12 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click .sidenavleads': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/leadlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click .inventoryLiHeader': function(event) {
         event.preventDefault();
         FlowRouter.go('/inventorylist');

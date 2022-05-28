@@ -95,7 +95,7 @@ Template.emailsettings.onCreated(function () {
             },
             {
                 id: 77,
-                name: "Sakes Orders"
+                name: "Sales Orders"
             },
             {
                 id: 68,
@@ -734,7 +734,7 @@ Template.emailsettings.onRendered(function () {
                             const startdate = frequencyEl.attr('data-startdate');
                             const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
                             const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-        
+
                             const frequencyName = frequencyEl.text();
                             let objDetail = {
                                 type: "TReportSchedules",
@@ -753,7 +753,7 @@ Template.emailsettings.onRendered(function () {
                                     NextDueDate: '',
                                 }
                             };
-    
+
                             if (frequencyName === "Monthly") {
                                 const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
                                 const ofMonths = frequencyEl.attr('data-ofMonths');
@@ -839,7 +839,7 @@ Template.emailsettings.onRendered(function () {
                                 const oldSetting = oldSettings.filter((setting) => setting.fields.FormID == parseInt(formID) && setting.fields.EmployeeId == parseInt(recipientId));
                                 oldSettings = oldSettings.filter((setting) => setting.fields.FormID != parseInt(formID) || setting.fields.EmployeeId != recipientId);
                                 if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
-                                
+
                                 try {
                                     // Save email settings
                                     await taxRateService.saveScheduleSettings(objDetail);
@@ -847,7 +847,7 @@ Template.emailsettings.onRendered(function () {
                                     console.log(e);
                                 }
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
-    
+
                                 const nextDueDate = await new Promise((resolve, reject) => {
                                     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
                                         if (error) return reject(error);
@@ -862,7 +862,7 @@ Template.emailsettings.onRendered(function () {
                                     BasedOnType: basedOnType,
                                     ISEmpty: isEmpty
                                 }));
-        
+
                                 // Add synced cron job here
                                 objDetail.fields.FormName = formName;
                                 objDetail.fields.EmployeeEmail = recipients[index];
@@ -874,9 +874,9 @@ Template.emailsettings.onRendered(function () {
                     }
                 });
                 savedSchedules = await Promise.all(promise);
-                
+
                 let promise1 = oldSettings.map(async setting => {
-                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54 
+                    if ((isEssential && (setting.fields.BeginFromOption == "S" || setting.fields.FormID == 54
                         || setting.fields.FormID == 177 || setting.fields.FormID == 129)) || (!isEssential
                         && setting.fields.BeginFromOption != "S" && setting.fields.FormID != 54
                         && setting.fields.FormID != 177 && setting.fields.FormID != 129)) {
@@ -921,7 +921,7 @@ Template.emailsettings.onRendered(function () {
                     const startdate = frequencyEl.attr('data-startdate');
                     const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
                     const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
-    
+
                     const frequencyName = frequencyEl.text();
                     let objDetail = {
                         type: "TReportSchedules",
@@ -940,7 +940,7 @@ Template.emailsettings.onRendered(function () {
                             NextDueDate: '',
                         }
                     };
-            
+
                     if (frequencyName === "Monthly") {
                         const monthDate = frequencyEl.attr('data-monthdate') ? parseInt(frequencyEl.attr('data-monthdate').replace('day', '')) : 0;
                         const ofMonths = frequencyEl.attr('data-ofMonths');
@@ -975,7 +975,7 @@ Template.emailsettings.onRendered(function () {
                     let promises = groupedReports.map(async (groupedReport) => {
                         objDetail.fields.FormID = parseInt($(groupedReport).closest('tr').attr('id').replace('groupedReports-', ''));
                         objDetail.fields.ISEmpty = true;
-    
+
                         const oldSetting = oldSettings.filter((setting) => {
                             return setting.fields.FormID == $(groupedReport).closest('tr').attr('id').replace('groupedReports-', '') && setting.fields.EmployeeId == parseInt(recipientId)
                         });
@@ -984,12 +984,12 @@ Template.emailsettings.onRendered(function () {
                         });
                         if (oldSetting.length && oldSetting[0].fields.ID) objDetail.fields.ID = oldSetting[0].fields.ID; // Confirm if this setting is inserted or updated
                         else delete objDetail.fields.ID;
-    
+
                         // const sendName = sendEl.text();
-            
+
                         //TODO: Add employee email field
                         // objDetail.fields.EmployeeEmail = recipients[i];
-            
+
                         // Get next due date for email scheduling
                         // const nextDueDate = await new Promise((resolve, reject) => {
                         //     Meteor.call('calculateNextDate', objDetail.fields, (error, result) => {
@@ -997,10 +997,10 @@ Template.emailsettings.onRendered(function () {
                         //         resolve(result);
                         //     });
                         // });
-            
+
                         // objDetail.fields.NextDueDate = nextDueDate;
                         objDetail.fields.BeginFromOption = "S";
-    
+
                         // Save email settings
                         await taxRateService.saveScheduleSettings(objDetail);
                     });
@@ -1084,7 +1084,7 @@ Template.emailsettings.events({
         // let employeeID = Session.get('mySessionEmployeeLoggedID');
         let formId = parseInt($("#formid").val());
         let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
-        
+
         if (radioFrequency == "frequencyMonthly") {
             const monthDate = $("#sltDay").val().replace('day', '');
             const ofMonths = '';
@@ -1172,7 +1172,7 @@ Template.emailsettings.events({
             }).then(() => {
                 window.open('/emailsettings','_self');
             });
-        else 
+        else
             swal({
                 title: 'Oooops...',
                 text: 'Something went wrong! Please try again later.',

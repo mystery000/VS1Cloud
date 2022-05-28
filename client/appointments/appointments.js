@@ -6299,7 +6299,7 @@ Template.appointments.onRendered(function () {
                 Body: message,
                 MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
                 To: phoneNumber,
-                // From: smsSettings.twilioTelephoneNumber,
+                From: smsSettings.twilioTelephoneNumber,
             };
             $.ajax(
                 {
