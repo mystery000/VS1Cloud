@@ -214,6 +214,7 @@ Template.crmoverview.events({
     $("#txtCrmSubTaskID").val("");
 
     $(".addTaskModalProjectName").html("All Tasks");
+    $(".lblAddTaskSchedule").html("Schedule");
 
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
