@@ -6291,35 +6291,44 @@ Template.appointments.onRendered(function () {
 
     });
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
             const message = $(`#${type}AppointmentSMSMessage`).val();
-            var data = {
-                Body: message,
-                MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
-                To: phoneNumber,
-                From: smsSettings.twilioTelephoneNumber,
-            };
-            $.ajax(
-                {
-                    method: 'POST',
-                    url: endpoint,
-                    data: data,
-                    dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded', // !
-                    beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization",
-                        "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
-                    );
-                },
-                success: function(data) {
-                    resolve({ success: true, sid: data.sid });
-                },
-                error: function(error) {
-                    resolve({ success: false, message: error.responseJSON.message });
-                }
+            const sendSMSResult = await new Promise((res, rej) => {
+                Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
+                    if (error) rej(error);
+                    res(result);
+                })
             });
+            resolve(sendSMSResult);
+            // var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
+            // const message = $(`#${type}AppointmentSMSMessage`).val();
+            // var data = {
+            //     Body: message,
+            //     MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
+            //     To: phoneNumber,
+            //     From: smsSettings.twilioTelephoneNumber,
+            // };
+            // $.ajax(
+            //     {
+            //         method: 'POST',
+            //         url: endpoint,
+            //         data: data,
+            //         dataType: 'json',
+            //         contentType: 'application/x-www-form-urlencoded', // !
+            //         beforeSend: function(xhr) {
+            //             xhr.setRequestHeader("Authorization",
+            //                 "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken)
+            //             );
+            //         },
+            //         success: function(data) {
+            //             resolve({ success: true, sid: data.sid });
+            //         },
+            //         error: function(error) {
+            //             resolve({ success: false, message: error.responseJSON.message });
+            //         }
+            //     }
+            // );
         })
     }
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page

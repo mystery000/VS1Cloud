@@ -69,6 +69,7 @@
     "square-connect": "^4.20200923.4",
     "stripe": "^8.215.0",
     "table2csv": "^1.0.0",
+    "twilio": "^3.77.1",
     "underscore": "^1.9.1",
     "xlsx": "^0.16.2",
     "yodlee": "^1.0.5",
