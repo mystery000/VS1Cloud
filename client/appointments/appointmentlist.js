@@ -514,7 +514,7 @@ Template.appointmentlist.onRendered(async function () {
                                         const receiveSMSDate = moment(receiveSMSs[j].date_sent);
                                         if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
                                             const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
-                                            if (replyText.includes('YES')) {
+                                            if (replyText.includes('yes')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
@@ -530,7 +530,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 });
                                                 dataList.custFld11 = "Yes";
                                                 break;
-                                            } else if (replyText.includes('NO')) {
+                                            } else if (replyText.includes('no')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
@@ -887,7 +887,7 @@ Template.appointmentlist.onRendered(async function () {
                                         const receiveSMSDate = moment(receiveSMSs[j].date_sent);
                                         if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
                                             const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
-                                            if (replyText.includes('YES')) {
+                                            if (replyText.includes('yes')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
@@ -903,7 +903,7 @@ Template.appointmentlist.onRendered(async function () {
                                                 });
                                                 dataList.custFld11 = "Yes";
                                                 break;
-                                            } else if (replyText.includes('NO')) {
+                                            } else if (replyText.includes('no')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
                                                     fields: {
