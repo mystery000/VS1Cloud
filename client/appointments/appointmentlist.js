@@ -21,7 +21,6 @@ Template.appointmentlist.onCreated(function () {
     templateObject.selectedAppointment = new ReactiveVar([]);
     templateObject.selectedAppointmentID = new ReactiveVar();
     templateObject.smsSettings = new ReactiveVar();
-    templateObject.accessLevelSMS = new ReactiveVar(false);
 });
 
 Template.appointmentlist.onRendered(async function () {
@@ -37,9 +36,6 @@ Template.appointmentlist.onRendered(async function () {
     const dataTableList = [];
     const tableHeaderList = [];
     const clientList = [];
-
-    // Initialize access level for sms settings
-    templateObject.accessLevelSMS.set(Session.get('CloudApptSMS'));
 
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
@@ -422,11 +418,8 @@ Template.appointmentlist.onRendered(async function () {
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        const accessLevel = Session.get('CloudApptSMS');
-        if (accessLevel) {
-            await templateObject.getSMSSettings();
-            const recentSMSLogs = await templateObject.smsMessagingLogs();
-        }
+        await templateObject.getSMSSettings();
+        const recentSMSLogs = await templateObject.smsMessagingLogs();
 
         getVS1Data('TAppointmentList').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -498,7 +491,7 @@ Template.appointmentlist.onRendered(async function () {
                           custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
 
-                      if (accessLevel && data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                      if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
@@ -520,7 +513,7 @@ Template.appointmentlist.onRendered(async function () {
                                     for (let j = 0; j < receiveSMSs.length; j++) {
                                         const receiveSMSDate = moment(receiveSMSs[j].date_sent);
                                         if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
-                                            const replyText = receiveSMSs[j].body;
+                                            const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
                                             if (replyText.includes('YES')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
@@ -871,7 +864,7 @@ Template.appointmentlist.onRendered(async function () {
                         custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                     };
 
-                    if (accessLevel && data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                    if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
@@ -893,7 +886,7 @@ Template.appointmentlist.onRendered(async function () {
                                     for (let j = 0; j < receiveSMSs.length; j++) {
                                         const receiveSMSDate = moment(receiveSMSs[j].date_sent);
                                         if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
-                                            const replyText = receiveSMSs[j].body;
+                                            const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
                                             if (replyText.includes('YES')) {
                                                 appointmentService.saveAppointment({
                                                     type: "TAppointmentEx",
