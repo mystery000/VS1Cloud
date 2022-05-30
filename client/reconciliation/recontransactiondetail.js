@@ -1,13 +1,9 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
-import {AccountService} from "../accounts/account-service";
-import {UtilityService} from "../utility-service";
+import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import { Random } from 'meteor/random';
 import '../lib/global/indexdbstorage.js';
 import {ProductService} from "../product/product-service";
-import {SalesBoardService} from "../js/sales-service";
-import {jsPDF} from "jspdf";
 import {ReconService} from "./recon-service";
 
 let sideBarService = new SideBarService();
@@ -15,7 +11,7 @@ let utilityService = new UtilityService();
 let reconService = new ReconService();
 
 let selectLineID = null;
-let DepositID = null;
+let YodleeID = null;
 let PaymentID = null;
 let DateIn = null;
 let DepOrWith = null;
@@ -40,7 +36,7 @@ Template.recontransactiondetail.onRendered(function() {
     const splashArrayTaxRateList = [];
     let clientList = [];
 
-    DepositID = (Session.get("reconDepositID") !== undefined && parseInt(Session.get("reconDepositID")) > 0)?Session.get("reconDepositID"):null;
+    YodleeID = (Session.get("reconYodleeID") !== undefined && parseInt(Session.get("reconYodleeID")) > 0)?Session.get("reconYodleeID"):null;
     PaymentID = (Session.get("reconPaymentID") !== undefined && parseInt(Session.get("reconPaymentID")) > 0)?Session.get("reconPaymentID"):null;
     BankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
     BankAccountID = (Session.get("bankaccountid") !== undefined && parseInt(Session.get("bankaccountid")) > 0)?Session.get("bankaccountid"):null;
@@ -52,7 +48,7 @@ Template.recontransactiondetail.onRendered(function() {
     DateIn = (Session.get("reconDateIn") !== undefined && Session.get("reconDateIn") !== '')?Session.get("reconDateIn"):'';
     DepOrWith = (Session.get("reconSOR") !== undefined && Session.get("reconSOR") !== '')?Session.get("reconSOR"):null;
 
-    // let DepositID = (FlowRouter.current().queryParams.ID !== undefined && parseInt(FlowRouter.current().queryParams.ID) > 0)?FlowRouter.current().queryParams.ID:null;
+    // let YodleeID = (FlowRouter.current().queryParams.ID !== undefined && parseInt(FlowRouter.current().queryParams.ID) > 0)?FlowRouter.current().queryParams.ID:null;
     // let who = (FlowRouter.current().queryParams.who !== undefined && FlowRouter.current().queryParams.who !== '')?FlowRouter.current().queryParams.who:null;
     // let what = (FlowRouter.current().queryParams.what !== undefined && FlowRouter.current().queryParams.what !== '')?FlowRouter.current().queryParams.what:null;
     // let why = (FlowRouter.current().queryParams.why !== undefined && FlowRouter.current().queryParams.why !== '')?FlowRouter.current().queryParams.why:null;
@@ -61,7 +57,7 @@ Template.recontransactiondetail.onRendered(function() {
     // let dateIn = (FlowRouter.current().queryParams.dateIn !== undefined && FlowRouter.current().queryParams.dateIn !== '')?FlowRouter.current().queryParams.dateIn:'';
 
     function setFirstlineByParam () {
-        if (DepositID !== null) {
+        if (YodleeID !== null) {
             let clientDetail = templateObject.clientrecords.get().filter(customer => {
                 return customer.customername === what;
             });
@@ -124,7 +120,6 @@ Template.recontransactiondetail.onRendered(function() {
             });
         });
     };
-
     function setClientList (data) {
         for (let i in data) {
             if (data.hasOwnProperty(i)) {
@@ -178,7 +173,6 @@ Template.recontransactiondetail.onRendered(function() {
                 });
             });
     };
-
     function setTaxCodeModal(data) {
         let useData = data.ttaxcodevs1;
         // let records = [];
@@ -289,7 +283,6 @@ Template.recontransactiondetail.onRendered(function() {
         }
         setCalculated();
     });
-
     $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
         const trow = $(this);
         if (selectLineID) {
@@ -299,7 +292,6 @@ Template.recontransactiondetail.onRendered(function() {
         }
         setCalculated();
     });
-
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
         let trow = $(this);
         if (selectLineID) {
@@ -309,7 +301,6 @@ Template.recontransactiondetail.onRendered(function() {
         }
         setCalculated();
     });
-
 
     $("#DateIn").datepicker({
         showOn: 'button',
@@ -324,27 +315,22 @@ Template.recontransactiondetail.onRendered(function() {
         yearRange: "-90:+10",
     });
 
-
     function setCalculated() {
         let taxcodeList = templateObject.taxraterecords.get();
         let customerList = templateObject.clientrecords.get();
         setCalculated2(taxcodeList, customerList)
     }
-
 });
 
 
 Template.recontransactiondetail.events({
 
     'click .lineProductName, keydown .lineProductName': function (event) {
-
         selectLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
         const offset = $each.offset();
-
         $("#selectProductID").val('');
         const productDataName = $(event.target).val() || '';
-
         if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
             openProductListModal();
         } else {
@@ -422,7 +408,6 @@ Template.recontransactiondetail.events({
             }
         }
     },
-
     'click .lineAccountName, keydown .lineAccountName': function (event) {
         selectLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -460,7 +445,6 @@ Template.recontransactiondetail.events({
             }
         }
     },
-
     'click .lineTaxRate, keydown .lineTaxRate': function (event) {
         selectLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -488,7 +472,6 @@ Template.recontransactiondetail.events({
             }
         }
     },
-
     'keydown .lineQty, keydown .lineUnitPrice': function (event) {
         selectLineID = $(event.target).closest('tr').attr('id');
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
@@ -496,11 +479,9 @@ Template.recontransactiondetail.events({
             (event.keyCode >= 35 && event.keyCode <= 40)) {
             return;
         }
-
         if (event.shiftKey === true) {
             event.preventDefault();
         }
-
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
             event.keyCode === 8 || event.keyCode === 9 ||
@@ -567,9 +548,7 @@ Template.recontransactiondetail.events({
         } else {
             return false;
         }
-
         $('.fullScreenSpin').css('display', 'inline-block');
-
         let lineItems = [];
         let lineItemsObj = {};
         $('#tblrecontransactiondetail > tbody > tr').each(function () {
@@ -596,7 +575,7 @@ Template.recontransactiondetail.events({
                     ClientName: lineAccountName || '',
                     DepositDate: formatWithDate + " 00:00:00" || '',
                     Deposited: true,
-                    DepositLineID: parseInt(DepositID) || 0,
+                    DepositLineID: parseInt(YodleeID) || 0,
                     Notes: lineProductDesc || '',
                     Payee: lineAccountName || '',
                     PaymentID: parseInt(PaymentID) || 0,
@@ -611,10 +590,10 @@ Template.recontransactiondetail.events({
         // Pulling initial variables BEGIN
         let deptname = "Default"; //Set to Default as it isn't used for recons
         let employeename = Session.get('mySessionEmployee');
-        var notes = ''; //pending addition of notes field
-        var openbalance = 0;
+        const notes = ''; //pending addition of notes field
+        const openbalance = 0;
         let closebalance = 0;
-        var statementno = '';
+        const statementno = '';
         let recondate = DateIn;
         // Pulling initial variables END
 
@@ -623,7 +602,7 @@ Template.recontransactiondetail.events({
             objDetails = {
                 type: "TReconciliation",
                 fields: {
-                    // ID: parseInt(DepositID) || 0,
+                    // ID: parseInt(YodleeID) || 0,
                     AccountName: BankAccountName || '',
                     CloseBalance: closebalance,
                     Deleted: false,
@@ -637,7 +616,6 @@ Template.recontransactiondetail.events({
                     ReconciliationDate: recondate,
                     StatementNo: statementno || '0',
                     WithdrawalLines: ''
-
                 }
             };
 
@@ -645,7 +623,7 @@ Template.recontransactiondetail.events({
             objDetails = {
                 type: "TReconciliation",
                 fields: {
-                    // ID: parseInt(DepositID) || 0,
+                    // ID: parseInt(YodleeID) || 0,
                     AccountName: BankAccountName || '',
                     CloseBalance: closebalance,
                     Deleted: false,
@@ -659,11 +637,9 @@ Template.recontransactiondetail.events({
                     ReconciliationDate: recondate,
                     StatementNo: statementno || '0',
                     WithdrawalLines: lineItems || ''
-
                 }
             };
         }
-
         reconService.saveReconciliation(objDetails).then(function(data) {
             FlowRouter.go('/newbankrecon');
         }).catch(function(err) {
@@ -679,7 +655,6 @@ Template.recontransactiondetail.events({
             });
             $('.fullScreenSpin').css('display', 'none');
         });
-
     },
 
 });
@@ -702,7 +677,6 @@ Template.recontransactiondetail.helpers({
                     : -1;
             });
     },
-
 });
 
 function openProductListModal() {

@@ -519,7 +519,7 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getLeadsList = function () {
-        getVS1Data('TProspectEx').then(function (dataObject) {
+        getVS1Data('TProspectVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
                 contactService.getAllLeads().then(function (data) {
                     setAllLeads(data);

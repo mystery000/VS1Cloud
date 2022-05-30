@@ -6268,7 +6268,7 @@ Template.appointments.onRendered(function () {
         twilioAccountId: "",
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
-        twilioMessagingServiceSid: "MG82f3964f5f79004b1d7f4bac37b0663b",
+        twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6291,41 +6291,49 @@ Template.appointments.onRendered(function () {
 
     });
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
             const message = $(`#${type}AppointmentSMSMessage`).val();
-            var data = {
-                To: phoneNumber,
-                From: smsSettings.twilioTelephoneNumber,
-                Body: message,
-                MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
-            };
-            $.ajax(
-                {
-                    method: 'POST',
-                    url: endpoint,
-                    data: data,
-                    dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded', // !
-                    beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization",
-                        "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
-                    );
-                },
-                success: function(data) {
-                    resolve({ success: true, sid: data.sid });
-                },
-                error: function(error) {
-                    resolve({ success: false, message: error.responseJSON.message });
-                }
+            const sendSMSResult = await new Promise((res, rej) => {
+                Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
+                    if (error) rej(error);
+                    res(result);
+                })
             });
+            resolve(sendSMSResult);
+            // var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
+            // const message = $(`#${type}AppointmentSMSMessage`).val();
+            // var data = {
+            //     Body: message,
+            //     MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
+            //     To: phoneNumber,
+            //     From: smsSettings.twilioTelephoneNumber,
+            // };
+            // $.ajax(
+            //     {
+            //         method: 'POST',
+            //         url: endpoint,
+            //         data: data,
+            //         dataType: 'json',
+            //         contentType: 'application/x-www-form-urlencoded', // !
+            //         beforeSend: function(xhr) {
+            //             xhr.setRequestHeader("Authorization",
+            //                 "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken)
+            //             );
+            //         },
+            //         success: function(data) {
+            //             resolve({ success: true, sid: data.sid });
+            //         },
+            //         error: function(error) {
+            //             resolve({ success: false, message: error.responseJSON.message });
+            //         }
+            //     }
+            // );
         })
     }
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
     templateObject.checkSMSSettings = function() {
         const accessLevel = Session.get('CloudApptSMS');
-        console.log(typeof accessLevel)
         if (!accessLevel) {
             $('#chkSMSCustomer').prop('checked', false);
             $('#chkSMSUser').prop('checked', false);
