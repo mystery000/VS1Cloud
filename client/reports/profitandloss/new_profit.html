@@ -872,21 +872,14 @@
                 </div>
                 <div class="modal-body">
                     {{#each item in deptrecords}}
-                        {{#if equals item.department "Head Office"}}
-                            <div class="custom-control custom-switch" style="margin: 8px;">
-                                <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" checked="" value="{{item.department}}"><label class="custom-control-label"
-                                    for="formCheck-{{item.id}}">{{item.department}}</label>
-                            </div>
-                        {{else}}
-                            <div class="custom-control custom-switch" style="margin: 8px;">
-                                <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}"><label class="custom-control-label"
-                                    for="formCheck-{{item.id}}">{{item.department}}</label>
-                            </div>
-                        {{/if}}
+                        <div class="custom-control custom-switch" style="margin: 8px;">
+                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.id}}">
+                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                        </div>
                     {{/each}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btnSaveSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
 
                 </div>
@@ -1785,16 +1778,10 @@
                                                     {{#each acPLItem in plarrayify (accountsProfitlossLayoutRecords parentitem.fields.ID) }}
                                                         <p position="{{ acPLItem.fields.Position }}" class="g0 draggable" >{{ acPLItem.fields.AccountName }}</p>
                                                     {{/each}}
-                                                    {{#each secPLItem in plarrayify (secPLGroupLayoutRecords parentitem.fields.ID) }}
-                                                        <h3 class="disableCursor" position="{{ secPLItem.fields.Position }}">{{ secPLItem.fields.AccountName }}</h3>
-                                                    {{/each}}
-                                                    {{#each firstPLItem in plarrayify (firstPLGroupLayoutRecords parentitem.fields.ID) }}
-                                                        <h2 class="disableCursor" position="{{ firstPLItem.fields.Position }}">{{ firstPLItem.fields.AccountName }}</h2>
-                                                    {{/each}}
                                                 </div>
                                             {{/each}}
                                             {{#each ttlPLItem in totalPLGroupLayoutRecords }}
-                                                <h1 position="{{ ttlPLItem.fields.Position }}" class="disableCursor" >{{ ttlPLItem.fields.AccountName }}</h1>
+                                                <h2 position="{{ ttlPLItem.fields.Position }}" class="disableCursor" >{{ ttlPLItem.fields.AccountName }}</h2>
                                             {{/each}}
                                         </div>
                                     {{/if}}

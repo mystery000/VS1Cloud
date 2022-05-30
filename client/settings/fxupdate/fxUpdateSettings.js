@@ -74,7 +74,7 @@ Template.fixUpdates.onRendered(function() {
         },
         {
             "id": "77",
-            "name": "Sakes Orders"
+            "name": "Sales Orders"
         },
         {
             "id": "54",
@@ -691,7 +691,7 @@ Template.fixUpdates.onRendered(function() {
         $('#'+selectDataID).val(listData);
         //$('#'+selectLineID+" .lineAccountName").val('');
     });
-    
+
 });
 
 Template.fixUpdates.events({
@@ -863,7 +863,7 @@ Template.fixUpdates.events({
         // });
 
         $('.fullScreenSpin').css('display', 'none');
-   
+
     },
     'click .btnCancelFrequency': (e) => {
         FxEditorSetting.cancel();
@@ -911,7 +911,7 @@ Template.fixUpdates.events({
         //     ];
 
         //     if(_frequencies.includes(result[0].frequency) == true) {
-               
+
         //        console.log(result[0].startTime);
 
         //         if (result[0].frequency == "Monthly") {
@@ -925,15 +925,15 @@ Template.fixUpdates.events({
         //             $('#edtWeeklyStartTime').val(result[0].startTime);
         //             $('#edtWeeklyStartDate').val(startDateVal);
         //             templateObject.getDayName(result[0].weekDay);
-                     
+
         //         } else if (result[0].frequency == "Daily") {
         //             $('#dailyEveryXDays').val(result[0].every);
         //             $('#edtDailyStartTime').val(result[0].startTime);
         //             $('#edtDailyStartDate').val(startDateVal);
-                 
+
         //         }
         //         $(event.currentTarget).text(result[0].frequency);
-               
+
         //     }
 
 
@@ -968,7 +968,7 @@ Template.fixUpdates.events({
             //     ofMonths: []
             // });
             // console.log(fxUpdateObject);
-            
+
         } else if (event.target.id == "frequencyWeekly") {
             document.getElementById("weeklySettings").style.display = "block";
             document.getElementById("monthlySettings").style.display = "none";
@@ -1055,7 +1055,7 @@ Template.fixUpdates.events({
     // },
     'click .edtBasedOn': (e) => {
         const lineId = $(e.currentTarget).parent(".dnd-moved").attr('id');
-       
+
         // We just open the dialog
         $("#basedOnModal").attr('cell-id', lineId);
         $("#basedOnModal").modal('toggle');
@@ -1087,35 +1087,35 @@ Template.fixUpdates.events({
         console.log(cell);
 
         if (radioFrequency == "basedOnPrint") {
-        
+
                 cell.html("On Print");
                 $("#basedOnModal").modal('toggle');
 
         } else if (radioFrequency == "basedOnSave") {
-        
+
                 cell.html("On Save");
                 $("#basedOnModal").modal('toggle');
-         
+
         } else if (radioFrequency == "basedOnTransactionDate") {
-         
+
                 cell.html("On Transaction Date");
                 $("#basedOnModal").modal('toggle');
-       
+
         } else if (radioFrequency == "basedOnDueDate") {
-      
+
                 cell.html("On Due Date");
                 $("#basedOnModal").modal('toggle');
-           
+
         } else if (radioFrequency == "basedOnDate") {
-           
+
                 cell.html("On Date");
                 $("#basedOnModal").modal('toggle');
-           
+
         } else if (radioFrequency == "basedOnOutstanding") {
-           
+
                 cell.html("If Outstanding");
                 $("#basedOnModal").modal('toggle');
-       
+
         } else {
             $("#basedOnModal").modal('toggle');
         }
