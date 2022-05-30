@@ -18,6 +18,8 @@ var template_list = [
   "Refunds",
   "Sales Orders",
   "Supplier Payments",
+  "Statements",
+  "Delivery Docket",
 ];
 var modal_data = [];
 
@@ -845,6 +847,129 @@ Template.templatesettings.onRendered(function () {
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
+    function showStatements(template_title)
+    {
+        object_invoce = [];
+        var array_data = [];
+            array_data.push([
+              "30/03/2022",
+              "Statements",
+              "298",
+              "$900.00",
+              "$900.00",
+              "$0.00",
+            ]);
+
+        let item_statement = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "5678905",
+          o_phone: "25151944",
+          title: template_title + " 287",
+          date: "11/04/2022",
+          invoicenumber: "",
+          refnumber: "67886",
+          pqnumber: "",
+          duedate: "",
+          paylink: "",
+          supplier_type: "Customer",
+          supplier_name : "Brand New Company",
+          supplier_addr : "",
+          fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+          subtotal : "",
+          gst : "",
+          total : "",
+          paid_amount : "",
+          bal_due : "",
+          bsb : "",
+          account : "",
+          swift : "",
+          data: array_data,
+          applied : ""
+        };
+
+        object_invoce.push(item_statement);
+
+        $("#templatePreviewModal .field_payment").hide();
+        $("#templatePreviewModal .field_amount").hide();
+
+
+        updateTemplate(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+
+    }
+
+    function showDeliveryDocket(template_title)
+    {
+
+      object_invoce = [];
+      var array_data = [];
+      array_data.push([
+        "Fanta Grape Can",
+        "Fanta Grape Can SODA",
+        "1",
+        "$0.00",
+        "$0.00",
+        "$0.00",
+      ]);
+  
+      array_data.push([
+          "Fanta Grape Can",
+          "Fanta Grape Can SODA",
+          "1",
+          "$0.00",
+          "$0.00",
+          "$0.00",
+        ]);
+  
+  
+      let item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title + "733",
+        date: "12/04/2022",
+        invoicenumber: "12/04/2022",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "14/04/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name : "<p>Car Wash Express</p>",
+        supplier_addr : "",
+        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+        subtotal : "$10.00",
+        gst : "$0.00",
+        total : "$10.00",
+        paid_amount : "$0.00",
+        bal_due : "$10.00",
+        bsb : "4654-454",
+        account : "16161616",
+        swift : "WPOCA5s",
+        data: array_data,
+        applied : ""
+      };
+  
+      object_invoce.push(item_invoices);
+  
+      $("#templatePreviewModal .field_payment").show();
+      $("#templatePreviewModal .field_amount").show();
+  
+      updateTemplate(object_invoce);
+
+      saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+    }
+
 
   templateObject.generateInvoiceData = function (template_title) {
     object_invoce = [];
@@ -892,6 +1017,14 @@ Template.templatesettings.onRendered(function () {
 
       case "Supplier Payments":
         showSuppliers(template_title)
+        break;
+      
+      case "Statements": 
+        showStatements(template_title);
+        break;
+      
+      case "Delivery Docket":
+        showDeliveryDocket(template_title);
         break;
     }
 

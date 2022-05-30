@@ -213,6 +213,9 @@ Template.crmoverview.events({
     $("#editProjectID").val("");
     $("#txtCrmSubTaskID").val("");
 
+    $(".addTaskModalProjectName").html("All Tasks");
+    $(".lblAddTaskSchedule").html("Schedule");
+
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
@@ -235,12 +238,12 @@ Template.crmoverview.events({
   // open task detail modal
   "click .openEditTaskModal": function (e) {
     if (!e.target.classList.contains("no-modal")) {
-      $("#editProjectID").val("");
+      // $("#editProjectID").val("");
 
       let id = e.target.dataset.id;
       let type = e.target.dataset.ttype;
       // let catg = e.target.dataset.catg;
-      let templateObject = Template.instance();
+      // let templateObject = Template.instance();
       $("#txtCrmSubTaskID").val(id);
 
       $(".fullScreenSpin").css("display", "inline-block");
@@ -261,46 +264,41 @@ Template.crmoverview.events({
               selected_record.TaskDescription
             );
 
-            // $("#taskDetailModalCategoryLabel").html(
-            //   `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`
-            // );
-
             let catg = "";
             let today = moment().format("YYYY-MM-DD");
             if (selected_record.due_date) {
               if (selected_record.due_date.substring(0, 10) == today) {
                 catg =
                   `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
-                  "Today";
-                $(".taskDueDate").css("color", "#0013d3");
+                  "<span class='text-primary'>Today</span>";
+                $(".taskDueDate").css("color", "#00a3d3");
               } else if (selected_record.due_date.substring(0, 10) > today) {
                 catg =
-                  `<i class="fas fa-calendar-alt text-primary" style="margin-right: 5px;"></i>` +
-                  "Upcoming";
+                  `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
+                  "<span class='text-danger'>Upcoming</span>";
                 $(".taskDueDate").css("color", "#1cc88a");
               } else if (selected_record.due_date.substring(0, 10) < today) {
+                // catg =
+                //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
+                //   "<span class='text-warning'>Overdue</span>";
+                // $(".taskDueDate").css("color", "#e74a3b");
                 catg =
-                  `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
-                  "All Tasks";
-                $(".taskDueDate").css("color", "#e74a3b");
+                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                  "<span class='text-success'>All Tasks</span>";
+                $(".taskDueDate").css("color", "#1cc88a");
               } else {
                 catg =
-                  `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
-                  "All Tasks";
+                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                  "<span class='text-success'>All Tasks</span>";
+                $(".taskDueDate").css("color", "#1cc88a");
               }
             } else {
               catg =
-                `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>` +
-                "All Tasks";
+                `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                "<span class='text-success'>All Tasks</span>";
+              $(".taskDueDate").css("color", "#1cc88a");
             }
 
-            // if (
-            //   selected_record.ProjectName == "" ||
-            //   selected_record.ProjectName == "Default"
-            // ) {
-            //   catg = "All Tasks";
-            // }
-            // catg = selected_record.ProjectName;
             $(".taskLocation").html(
               `<a class="taganchor">
                 ${catg}

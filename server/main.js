@@ -84,9 +84,9 @@ Meteor.startup(() => {
         clientId: 'KESAGIh3yF3Z220TwoYeMDJKgsRXSSk4',
         secret: 'TqDOhdMCOYHJq1se'
     }).then(function(accessToken) {
-        console.log(accessToken);
+        // console.log(accessToken);
     }).catch(function(error) {
-        console.log(accessToken);
+        // console.log(accessToken);
     });
 
     callYodleeApi = function (loginName, clientID, secretKey, cb) {
@@ -116,6 +116,25 @@ Meteor.startup(() => {
         const options = {
             'method': 'GET',
             'url': 'https://sandbox.api.yodlee.com/ysl/transactions?fromDate='+fromDate,
+            'headers': {
+                'Api-Version': '1.1',
+                'Authorization': 'Bearer '+token,
+                'Content-Type': 'application/vnd.yodlee+json'
+            }
+        };
+        request(options,  function (error, response) {
+            if (error) {
+                cb(error, null);
+            } else {
+                cb(null, response.body);
+            }
+        });
+    };
+
+    callYodleeAccount = function (token, accountId, cb) {
+        const options = {
+            'method': 'GET',
+            'url': 'https://sandbox.api.yodlee.com/ysl/accounts?accountId='+accountId,
             'headers': {
                 'Api-Version': '1.1',
                 'Authorization': 'Bearer '+token,
@@ -168,6 +187,11 @@ Meteor.startup(() => {
             let getResponse =  "";
             this.unblock();
             return Meteor.wrapAsync(callYodleeTransaction)(token, fromDate);
+        },
+        'getYodleeAccountData':  function(token, accountId) {
+            let getResponse =  "";
+            this.unblock();
+            return Meteor.wrapAsync(callYodleeAccount)(token, accountId);
         },
         'getOcrResultFromVerifi': function(imageData, fileName) {
             this.unblock();
@@ -359,6 +383,19 @@ Meteor.startup(() => {
                 }
             }
         },
+        'sendSMS': async (authSid, authToken, from, to, body) => {
+            const smsClient = require('twilio')(authSid, authToken);
+            try {
+                const message = await smsClient.messages.create({
+                    from,
+                    body,
+                    to,
+                });
+                return { success: true, sid: message.sid };
+            } catch (error) {
+                return {success: false, message: error.message};
+            }
+        }
     });
 
 });

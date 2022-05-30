@@ -101,17 +101,24 @@ export class ReportService extends BaseService {
     return this.getList(this.ERPObjects.TAccount, options);
   }
 
-  getProfitandLoss(dateFrom, dateTo, ignoreDate) {
+  getProfitandLoss(dateFrom, dateTo, ignoreDate, departments) {
     let options = "";
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
       };
-    } else {
+    } else if( departments != "" ) {
       options = {
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
+        SelectedDepartments: '"' + departments + '"',
+      };
+    }else{
+      options = {
+        IgnoreDates: false,
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"'
       };
     }
     return this.getList(this.ERPObjects.ProfitLossReport, options);

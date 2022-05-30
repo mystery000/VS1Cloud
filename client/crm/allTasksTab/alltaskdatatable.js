@@ -89,19 +89,6 @@ Template.alltaskdatatable.onRendered(function () {
         templateObject.updateTaskSchedule(task_id, dateText);
       },
     });
-    $(".crmEditDatepicker").datepicker({
-      showOn: "button",
-      buttonText: "Show Date",
-      buttonImageOnly: true,
-      buttonImage: "/img/imgCal2.png",
-      constrainInput: false,
-      dateFormat: "yy/mm/dd",
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "-90:+10",
-    });
   };
 
   // initialize 3 tasks datatable
@@ -119,37 +106,39 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
-          className: "colDate",
+          className: "colCompleteTask",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
           },
+          width: "18px",
         },
         {
           targets: 1,
+          className: "colDate openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+          width: "120px",
+        },
+        {
+          targets: 2,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 2,
+          targets: 3,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 3,
-          className: "colTaskLabels openEditTaskModal",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[6]);
-          },
-        },
-        {
           targets: 4,
-          className: "colTaskActions",
+          className: "colTaskLabels",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
@@ -157,9 +146,11 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 5,
+          className: "colTaskActions",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
+          width: "150px",
         },
       ],
       colReorder: {
@@ -175,7 +166,13 @@ Template.alltaskdatatable.onRendered(function () {
           filename: "Task List" + moment().format(),
           orientation: "portrait",
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             format: {
               body: function (data, row, column) {
                 if (data.includes("</span>")) {
@@ -196,7 +193,13 @@ Template.alltaskdatatable.onRendered(function () {
           title: "Task List",
           filename: "Task List" + moment().format(),
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             stripHtml: false,
           },
         },
@@ -245,37 +248,39 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
-          className: "colDate",
+          className: "colCompleteTask",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
           },
+          width: "18px",
         },
         {
           targets: 1,
+          className: "colDate openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+          width: "120px",
+        },
+        {
+          targets: 2,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 2,
+          targets: 3,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 3,
-          className: "colTaskLabels openEditTaskModal",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[6]);
-          },
-        },
-        {
           targets: 4,
-          className: "colTaskActions",
+          className: "colTaskLabels",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
@@ -283,9 +288,11 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 5,
+          className: "colTaskActions",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
+          width: "150px",
         },
       ],
       colReorder: {
@@ -301,7 +308,13 @@ Template.alltaskdatatable.onRendered(function () {
           filename: "Task List" + moment().format(),
           orientation: "portrait",
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             format: {
               body: function (data, row, column) {
                 if (data.includes("</span>")) {
@@ -322,7 +335,13 @@ Template.alltaskdatatable.onRendered(function () {
           title: "Task List",
           filename: "Task List" + moment().format(),
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             stripHtml: false,
           },
         },
@@ -373,37 +392,39 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
-          className: "colDate",
+          className: "colCompleteTask",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
           },
+          width: "18px",
         },
         {
           targets: 1,
+          className: "colDate openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+          width: "120px",
+        },
+        {
+          targets: 2,
           className: "colTaskName openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 2,
+          targets: 3,
           className: "colTaskDesc openEditTaskModal",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
         },
         {
-          targets: 3,
-          className: "colTaskLabels openEditTaskModal",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[6]);
-          },
-        },
-        {
           targets: 4,
-          className: "colTaskActions",
+          className: "colTaskLabels",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
@@ -411,9 +432,11 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 5,
+          className: "colTaskActions",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[6]);
           },
+          width: "150px",
         },
       ],
       colReorder: {
@@ -429,7 +452,13 @@ Template.alltaskdatatable.onRendered(function () {
           filename: "Task List" + moment().format(),
           orientation: "portrait",
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             format: {
               body: function (data, row, column) {
                 if (data.includes("</span>")) {
@@ -450,7 +479,13 @@ Template.alltaskdatatable.onRendered(function () {
           title: "Task List",
           filename: "Task List" + moment().format(),
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             stripHtml: false,
           },
         },
@@ -485,6 +520,50 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
+
+    // if project task modal is opened,
+    // initialize projecttask table
+    let id = $("#editProjectID").val();
+    if (id) {
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
+
+            // set task list
+            let active_projecttasks = [];
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
+              }
+
+              active_projecttasks = projecttasks.filter(
+                (item) =>
+                  item.fields.Active == true && item.fields.Completed == false
+              );
+            }
+            templateObject.projecttasks.set(projecttasks);
+            templateObject.active_projecttasks.set(active_projecttasks);
+
+            templateObject.initProjectTasksTable();
+          } else {
+            return;
+          }
+        })
+        .catch(function (err) {
+          swal(err, "", "error");
+          return;
+        });
+    }
+
+    setTimeout(() => {
+      templateObject.initDatepicker();
+    }, 500);
   };
 
   templateObject.getInitialAllTaskList = function () {
@@ -523,9 +602,6 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.upcomingRecords.set(upcoming_records);
           templateObject.overdueRecords.set(overdue_records);
 
-          setTimeout(() => {
-            templateObject.initDatepicker();
-          }, 500);
           setTimeout(() => {
             templateObject.initTable();
           }, 1000);
@@ -579,7 +655,6 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.overdueRecords.set(overdue_records);
 
           setTimeout(() => {
-            templateObject.initDatepicker();
             templateObject.initTable();
           }, 500);
         } else {
@@ -864,7 +939,13 @@ Template.alltaskdatatable.onRendered(function () {
           filename: "Label List" + moment().format(),
           orientation: "portrait",
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 2) {
+                return false;
+              }
+              return true;
+            },
             format: {
               body: function (data, row, column) {
                 if (data.includes("</span>")) {
@@ -885,7 +966,13 @@ Template.alltaskdatatable.onRendered(function () {
           title: "Label List",
           filename: "Label List" + moment().format(),
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 2) {
+                return false;
+              }
+              return true;
+            },
             stripHtml: false,
           },
         },
@@ -1041,6 +1128,10 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colProjectDesc",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[5]);
+            if (!rowData[6]) {
+              $(td).addClass("task_priority_3");
+              $(td).css("color", "white");
+            }
           },
         },
       ],
@@ -1135,7 +1226,15 @@ Template.alltaskdatatable.onRendered(function () {
       td2 = item.fields.Description;
       td3 = projectStatus;
       td4 = taskCount;
-      taskRows.push([td0, td1, td2, td3, td4]);
+      taskRows.push([
+        td0,
+        td1,
+        td2,
+        td3,
+        td4,
+        item.fields.ID,
+        item.fields.Active,
+      ]);
     });
     return taskRows;
   };
@@ -1159,10 +1258,51 @@ Template.alltaskdatatable.onRendered(function () {
         {
           orderable: false,
           targets: 0,
+          className: "colCompleteTask",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[6]);
+            $(td).attr("data-id", rowData[6]);
+            $(td).addClass("task_priority_" + rowData[7]);
+          },
+          width: "18px",
+        },
+        {
+          targets: 1,
+          className: "colDate openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+          width: "120px",
+        },
+        {
+          targets: 2,
+          className: "colTaskName openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 3,
+          className: "colTaskDesc openEditTaskModal",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+        },
+        {
+          targets: 4,
+          className: "colTaskLabels",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
         },
         {
           orderable: false,
           targets: 5,
+          className: "colTaskActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[6]);
+          },
+          width: "150px",
         },
       ],
       colReorder: {
@@ -1178,7 +1318,13 @@ Template.alltaskdatatable.onRendered(function () {
           filename: "Project List" + moment().format(),
           orientation: "portrait",
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             format: {
               body: function (data, row, column) {
                 if (data.includes("</span>")) {
@@ -1199,7 +1345,13 @@ Template.alltaskdatatable.onRendered(function () {
           title: "Project List",
           filename: "Project List" + moment().format(),
           exportOptions: {
-            columns: ":visible",
+            // columns: ":visible",
+            columns: function (idx, data, node) {
+              if (idx == 0 || idx == 5) {
+                return false;
+              }
+              return true;
+            },
             stripHtml: false,
           },
         },
@@ -1229,6 +1381,25 @@ Template.alltaskdatatable.onRendered(function () {
     });
   };
   // projects tab ------------------- //
+
+  setTimeout(() => {
+    $(".crmEditDatepicker").datepicker({
+      showOn: "button",
+      buttonText: "Show Date",
+      buttonImageOnly: true,
+      buttonImage: "/img/imgCal2.png",
+      constrainInput: false,
+      dateFormat: "yy/mm/dd",
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "-90:+10",
+      onSelect: function (dateText, inst) {
+        $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+      },
+    });
+  }, 1000);
 });
 
 Template.alltaskdatatable.events({
@@ -1273,6 +1444,8 @@ Template.alltaskdatatable.events({
         // recalculate count here
         templateObject.getAllTaskList();
         templateObject.getTProjectList();
+        // $("#newProjectTasksModal").modal("hide");
+
         $(".fullScreenSpin").css("display", "none");
       });
     }
@@ -1308,6 +1481,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
             $(".fullScreenSpin").css("display", "none");
             $("#taskDetailModal").modal("hide");
+            // $("#newProjectTasksModal").modal("hide");
           });
         } else if (result.dismiss === "cancel") {
         } else {
@@ -1386,7 +1560,7 @@ Template.alltaskdatatable.events({
         : projectName;
 
     $("#addProjectID").val(projectid);
-    // $(".addTaskModalProjectName").html(projectName);
+    $(".addTaskModalProjectName").html(projectName);
     $("#taskDetailModalCategoryLabel").html(
       `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${projectName}`
     );
@@ -1600,7 +1774,7 @@ Template.alltaskdatatable.events({
             templateObject.getTProjectList();
           }, 500);
           $("#newTaskModal").modal("hide");
-          $("#newProjectTasksModal").modal("hide");
+          // $("#newProjectTasksModal").modal("hide");
         }
 
         $(".fullScreenSpin").css("display", "none");
@@ -1744,18 +1918,21 @@ Template.alltaskdatatable.events({
   "click .setScheduleTodayAdd": function (e) {
     let due_date = moment().format("YYYY-MM-DD hh:mm:ss");
     $(".crmEditDatepicker").val(due_date);
+    $(".lblAddTaskSchedule").html("Today");
   },
 
   // set due_date
   "click .setScheduleTomorrowAdd": function (e) {
     let due_date = moment().add(1, "day").format("YYYY-MM-DD hh:mm:ss");
     $(".crmEditDatepicker").val(due_date);
+    $(".lblAddTaskSchedule").html("Tomorrow");
   },
 
   // set due_date
   "click .setScheduleWeekendAdd": function (e) {
     let due_date = moment().endOf("week").format("YYYY-MM-DD hh:mm:ss");
     $(".crmEditDatepicker").val(due_date);
+    $(".lblAddTaskSchedule").html(moment(due_date).format("YYYY-MM-DD"));
   },
 
   // set due_date
@@ -1766,11 +1943,13 @@ Template.alltaskdatatable.events({
       .format("YYYY-MM-DD hh:mm:ss");
 
     $(".crmEditDatepicker").val(due_date);
+    $(".lblAddTaskSchedule").html(moment(due_date).format("YYYY-MM-DD"));
   },
 
   // set due_date
   "click .setScheduleNodateAdd": function (e) {
     $(".crmEditDatepicker").val(null);
+    $(".lblAddTaskSchedule").html("No Date");
   },
 
   // update priority
@@ -2146,8 +2325,10 @@ Template.alltaskdatatable.events({
           crmService
             .updateProject(objDetails)
             .then(function (data) {
-              $(".projectRow" + id).remove();
-              // templateObject.getTProjectList();
+              // $(".projectRow" + id).remove();
+              templateObject.getTProjectList();
+              $("#editProjectID").val("");
+
               $("#editCrmProject").modal("hide");
               $("#newProjectTasksModal").modal("hide");
               $(".fullScreenSpin").css("display", "none");
@@ -2286,10 +2467,6 @@ Template.alltaskdatatable.events({
     $("#editProjectID").val(id);
     let templateObject = Template.instance();
 
-    // tempcode
-    id = 3;
-    // tempcode
-
     if (id) {
       $(".fullScreenSpin").css("display", "inline-block");
       let active_projecttasks = [];
@@ -2346,6 +2523,13 @@ Template.alltaskdatatable.events({
 
   // open new task modal
   "click .addTaskOnProject": function (e) {
+    // $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
+    $(".lblAddTaskSchedule").html("Schedule");
+
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
     $("#newTaskModal").modal("toggle");
 
     let projectName = $(".editCrmProjectName").html()
@@ -2446,6 +2630,9 @@ Template.alltaskdatatable.events({
     crmService.updateLabel(objDetails).then(function (objDetails) {
       templateObject.getAllLabels();
       $("#newLabelModal").modal("hide");
+
+      $("#newLabelName").val("");
+      $("#newLabelColor").val("#000000");
       $(".fullScreenSpin").css("display", "none");
     });
   },

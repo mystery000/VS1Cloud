@@ -34,4 +34,20 @@ export class YodleeService {
             });
         });
     }
+
+    getAccountData(token, accountId) {
+        return new Promise(function (resolve, reject) {
+            Meteor.call("getYodleeAccountData", token, accountId, function (error, results) {
+                if (error) {
+                    reject(error);
+                } else {
+                    if (results) {
+                        resolve(JSON.parse(results));
+                    } else {
+                        reject(results);
+                    }
+                }
+            });
+        });
+    }
 }

@@ -6268,6 +6268,7 @@ Template.appointments.onRendered(function () {
         twilioAccountId: "",
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
+        twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6290,65 +6291,85 @@ Template.appointments.onRendered(function () {
 
     });
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
             const message = $(`#${type}AppointmentSMSMessage`).val();
-            var data = {
-                To: phoneNumber,
-                From: smsSettings.twilioTelephoneNumber,
-                Body: message
-            };
-            $.ajax(
-                {
-                    method: 'POST',
-                    url: endpoint,
-                    data: data,
-                    dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded', // !
-                    beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization",
-                        "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
-                    );
-                },
-                success: function(data) {
-                    resolve({ success: true, sid: data.sid });
-                },
-                error: function(error) {
-                    resolve({ success: false, message: error.responseJSON.message });
-                }
+            const sendSMSResult = await new Promise((res, rej) => {
+                Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
+                    if (error) rej(error);
+                    res(result);
+                })
             });
+            resolve(sendSMSResult);
+            // var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
+            // const message = $(`#${type}AppointmentSMSMessage`).val();
+            // var data = {
+            //     Body: message,
+            //     MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
+            //     To: phoneNumber,
+            //     From: smsSettings.twilioTelephoneNumber,
+            // };
+            // $.ajax(
+            //     {
+            //         method: 'POST',
+            //         url: endpoint,
+            //         data: data,
+            //         dataType: 'json',
+            //         contentType: 'application/x-www-form-urlencoded', // !
+            //         beforeSend: function(xhr) {
+            //             xhr.setRequestHeader("Authorization",
+            //                 "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken)
+            //             );
+            //         },
+            //         success: function(data) {
+            //             resolve({ success: true, sid: data.sid });
+            //         },
+            //         error: function(error) {
+            //             resolve({ success: false, message: error.responseJSON.message });
+            //         }
+            //     }
+            // );
         })
     }
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
     templateObject.checkSMSSettings = function() {
-        const smsSettings = templateObject.defaultSMSSettings.get();
-        const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
-        const chkSMSUser = $('#chkSMSUser').prop('checked');
-        if ((!smsSettings || smsSettings.twilioAccountId === "" ||
-            smsSettings.twilioAccountToken === "" ||
-            smsSettings.twilioTelephoneNumber === "") &&
-            (chkSMSCustomer || chkSMSUser)) {
-            swal({
-                title: 'No SMS Settings',
-                text: "SMS messages won't be sent to Customer or User",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'Go to SMS Settings'
-            }).then((result) => {
-                if (result.value) {
-                    $('#chkSMSCustomer').prop('checked', false);
-                    $('#chkSMSUser').prop('checked', false);
-                } else if (result.dismiss === 'cancel') {
-                    window.open('/smssettings', '_self');
-                } else {
-                    window.open('/smssettings', '_self');
-                }
-            });
+        const accessLevel = Session.get('CloudApptSMS');
+        if (!accessLevel) {
+            $('#chkSMSCustomer').prop('checked', false);
+            $('#chkSMSUser').prop('checked', false);
+            $('.chkSMSCustomer-container').addClass('d-none');
+            $('.chkSMSCustomer-container').removeClass('d-xl-flex');
+            $('.chkSMSUser-container').addClass('d-none');
+            $('.chkSMSUser-container').removeClass('d-xl-flex');
+        } else {
+            const smsSettings = templateObject.defaultSMSSettings.get();
+            const chkSMSCustomer = $('#chkSMSCustomer').prop('checked');
+            const chkSMSUser = $('#chkSMSUser').prop('checked');
+            if ((!smsSettings || smsSettings.twilioAccountId === "" ||
+                smsSettings.twilioAccountToken === "" ||
+                smsSettings.twilioTelephoneNumber === "") &&
+                (chkSMSCustomer || chkSMSUser)) {
+                swal({
+                    title: 'No SMS Settings',
+                    text: "SMS messages won't be sent to Customer or User",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continue',
+                    cancelButtonText: 'Go to SMS Settings'
+                }).then((result) => {
+                    if (result.value) {
+                        $('#chkSMSCustomer').prop('checked', false);
+                        $('#chkSMSUser').prop('checked', false);
+                    } else if (result.dismiss === 'cancel') {
+                        window.open('/smssettings', '_self');
+                    } else {
+                        window.open('/smssettings', '_self');
+                    }
+                });
+            }
         }
     }
-    // templateObject.checkSMSSettings();
+    //templateObject.checkSMSSettings();
 });
 
 Template.appointments.events({
@@ -8725,8 +8746,11 @@ Template.appointments.events({
         }
     },
     'click #btnStartAppointment': function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
+        console.log(smsCustomer, smsUser);
         const customerPhone = $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
@@ -8786,6 +8810,8 @@ Template.appointments.events({
         }
     },
     'click #btnStopAppointment': function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
@@ -8844,6 +8870,8 @@ Template.appointments.events({
         }
     },
     'click #btnSaveAppointment': async function() {
+        const templateObject = Template.instance();
+        templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
         const customerPhone = $('#mobile').val();
@@ -9683,7 +9711,7 @@ Template.appointments.events({
             $('.modal-backdrop').css('display', 'none');
             $('.fullScreenSpin').css('display', 'none');
             swal({
-                title: 'Oooops...',
+                title: 'Oops...',
                 text: "You dont have access to create new Appointment",
                 type: 'error',
                 showCancelButton: false,
@@ -9804,7 +9832,7 @@ Template.appointments.events({
 
         let objectData = "";
 
-        const messageSid = localStorage.getItem('smsId');
+        const messageSid = localStorage.getItem('smsId')||'';
         if (id == '0') {
             objectData = {
                 type: "TAppointmentEx",
@@ -9826,8 +9854,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid||'',
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         } else {
@@ -9853,8 +9881,8 @@ Template.appointments.events({
                     ProductDesc: selectedProduct,
                     Attachments: uploadedItems,
                     Status: status,
-                    ServiceDesc: messageSid,
-                    MSRef: !!messageSid ? "Yes" : "No"
+                    CUSTFLD12: messageSid||'',
+                    CUSTFLD13: !!messageSid ? "Yes" : "No"
                 }
             };
         }

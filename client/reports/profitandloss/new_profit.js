@@ -2,21 +2,62 @@ import { ReportService } from "../report-service";
 import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import layoutEditor from "./layoutEditor";
+import { ProductService } from "../../product/product-service";
+import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
+import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
+import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 let utilityService = new UtilityService();
 let reportService = new ReportService();
 const templateObject = Template.instance();
+const productService = new ProductService();
+
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+  templateObject.reportOptions = new ReactiveVar();
   templateObject.recordslayout = new ReactiveVar([]);
+  templateObject.profitlosslayoutrecords = new ReactiveVar([]);
 });
 
 Template.newprofitandloss.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
+  const deptrecords = [];
+
+  templateObject.setReportOptions = async function( compPeriod = 0, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+      // New Code Start here
+    let fromYear = moment(formatDateFrom).format('YYYY');
+    let toYear = moment(formatDateTo).format('YYYY');
+    let dateRange = [];
+    if( toYear === fromYear ){
+      dateRange.push( moment(formatDateFrom).format('DD MMM') + '-' + moment(formatDateTo).format('DD MMM') + ' '+ toYear );
+    }else{
+      dateRange.push( moment(formatDateFrom).format('DD MMM YYYY') + '-' + moment(formatDateTo).format('DD MMM YYYY') );
+    }
+
+    let defaultOptions = templateObject.reportOptions.get()
+    if( defaultOptions ){
+      defaultOptions.fromDate = formatDateFrom;
+      defaultOptions.toDate = formatDateTo;
+      defaultOptions.threcords = dateRange;
+    }else{
+      defaultOptions = {
+        compPeriod: compPeriod,
+        fromDate: formatDateFrom,
+        toDate: formatDateTo,
+        threcords: dateRange,
+        departments: [],
+        showDecimal: true,
+        showtotal: false
+      }
+    }
+    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.getProfitandLossReports();
+  }
+
   let utilityService = new UtilityService();
   let salesOrderTable;
   var splashArray = new Array();
@@ -60,8 +101,19 @@ Template.newprofitandloss.onRendered(function () {
     yearRange: "-90:+10",
   });
   // end of date picker
-  $("#dateFrom").val(fromDate);
-  $("#dateTo").val(begunDate);
+  // $("#dateFrom").val(fromDate);
+  // $("#dateTo").val(begunDate);
+  // let formatDateFrom = new Date();
+  // let formatDateTo = new Date();
+  // let fromYear = moment(formatDateFrom).format('YYYY');
+  // let toYear = moment(formatDateTo).format('YYYY');
+  // let dateRange = [];
+  // if( toYear === fromYear ){
+  //   dateRange.push( moment(formatDateFrom).format('DD MMM') + '-' + moment(formatDateTo).format('DD MMM') + ' '+ toYear );
+  // }else{
+  //   dateRange.push( moment(formatDateFrom).format('DD MMM YYYY') + '-' + moment(formatDateTo).format('DD MMM YYYY') );
+  // }
+  // templateObject.threcords.set( dateRange );
 
   // get 'this month' to appear in date range selector dropdown
   //    const monSml = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sepr","Oct","Nov","Dec"];
@@ -175,439 +227,189 @@ Template.newprofitandloss.onRendered(function () {
     last_fiscal_year_start + " - " + last_fiscal_year_end
   );
   //display current financial year to current date;
+  let yeartodate = moment().month("january").startOf("month").format("D" + " " + "MMM" + " " + "YYYY");
   $("#dispCurrFiscYearToDate").append(
-    current_fiscal_year_start + " - " + monthCurr
+    yeartodate + " - " + monthCurr
   );
   // get 'financial year' to appear end
 
-  templateObject.getProfitandLossReports = function (
-    dateFrom,
-    dateTo,
-    ignoreDate
-  ) {
-    if (!localStorage.getItem("VS1ProfitandLoss_ReportCompare1")) {
-      reportService
-        .getProfitandLossCompare(dateFrom, dateTo, false, "4 Month")
-        .then(function (data) {
-          let records = [];
-          var groupsprofitloss = {};
-          if (data.tprofitandlossperiodcomparereport) {
-            localStorage.setItem(
-              "VS1ProfitandLoss_ReportCompare",
-              JSON.stringify(data) || ""
-            );
-            let totalNetAssets = 0;
-            let GrandTotalLiability = 0;
-            let GrandTotalAsset = 0;
-            let incArr = [];
-            let cogsArr = [];
-            let expArr = [];
-            let accountData = data.tprofitandlossperiodcomparereport;
-            let accountType = "";
-
-            var dataList = "";
-            for (let i = 0; i < accountData.length; i++) {
-              if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-                accountType = "";
-              } else {
-                accountType = accountData[i]["AccountTypeDesc"];
-              }
-
-              let totalAmountEx =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["TotalAmount"]
-                ) || 0.0;
-              let amount_1 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_1"]
-                ) || 0.0;
-              let amount_2 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_2"]
-                ) || 0.0;
-              let amount_3 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_3"]
-                ) || 0.0;
-              let amount_4 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_4"]
-                ) || 0.0;
-              let amount_5 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_5"]
-                ) || 0.0;
-              let amount_6 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_6"]
-                ) || 0.0;
-              let amount_7 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_7"]
-                ) || 0.0;
-              let amount_8 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_8"]
-                ) || 0.0;
-              let amount_9 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_9"]
-                ) || 0.0;
-              let amount_10 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_10"]
-                ) || 0.0;
-              let amount_11 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_11"]
-                ) || 0.0;
-              let amount_12 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_12"]
-                ) || 0.0;
-              let amount_13 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_13"]
-                ) || 0.0;
-              let amount_14 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_14"]
-                ) || 0.0;
-              let amount_15 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_15"]
-                ) || 0.0;
-              let amount_16 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_16"]
-                ) || 0.0;
-              let amount_17 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_17"]
-                ) || 0.0;
-              let amount_18 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_18"]
-                ) || 0.0;
-              let amount_19 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_19"]
-                ) || 0.0;
-              let amount_20 =
-                utilityService.modifynegativeCurrencyFormat(
-                  accountData[i]["Amount_20"]
-                ) || 5.5;
-              /*
-                        let dec2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let nov2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let oct2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let sept2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let aug2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let jul2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let jun2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        let may2021Amt = utilityService.modifynegativeCurrencyFormat(accountData[i]['TotalAmount']) || 0.00;
-                        */
-
-              if (
-                accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
-                accountType != ""
-              ) {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder:
-                    accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: "",
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                  amount_1: "",
-                  amount_2: "",
-                  amount_3: "",
-                  amount_4: "",
-                  amount_5: "",
-                  amount_6: "",
-                  amount_7: "",
-                  amount_8: "",
-                  amount_9: "",
-                  amount_10: "",
-                  amount_11: "",
-                  amount_12: "",
-                  amount_13: "",
-                  amount_14: "",
-                  amount_15: "",
-                  amount_16: "",
-                  amount_17: "",
-                  amount_18: "",
-                  amount_19: "",
-                  amount_20: "",
-                  // totaltax: totalTax || 0.00
-                };
-              } else {
-                dataList = {
-                  id: accountData[i]["AccountID"] || "",
-                  accounttype: accountType || "",
-                  accounttypeshort: accountData[i]["AccountType"] || "",
-                  accountname: accountData[i]["AccountName"] || "",
-                  accountheaderorder:
-                    accountData[i]["AccountHeaderOrder"] || "",
-                  accountno: accountData[i]["AccountNo"] || "",
-                  totalamountex: totalAmountEx || 0.0,
-                  name: $.trim(accountData[i]["AccountName"])
-                    .split(" ")
-                    .join("_"),
-                  amount_1: amount_1 || "",
-                  amount_2: amount_2 || "",
-                  amount_3: amount_3 || "",
-                  amount_4: amount_4 || "",
-                  amount_5: amount_5 || "",
-                  amount_6: amount_6 || "",
-                  amount_7: amount_7 || "",
-                  amount_8: amount_8 || "",
-                  amount_9: amount_9 || "",
-                  amount_10: amount_10 || "",
-                  amount_11: amount_11 || "",
-                  amount_12: amount_12 || "",
-                  amount_13: amount_13 || "",
-                  amount_14: amount_14 || "",
-                  amount_15: amount_15 || "",
-                  amount_16: amount_16 || "",
-                  amount_17: amount_17 || "",
-                  amount_18: amount_18 || "",
-                  amount_19: amount_19 || "",
-                  amount_20: amount_20 || "",
-                  // totaltax: totalTax || 0.00
-                };
-              }
-
-              let accTypeArr = [accountType];
-              let remBlanks = accTypeArr.filter(function (y) {
-                return y != null && y != 0 && y.length > 0;
-              });
-
-              if (
-                accountData[i]["AccountType"].replace(/\s/g, "") == "" &&
-                accountType == ""
-              ) {
-              } else {
-                records.push(dataList);
-                let dataToDisplay = accountData[i]["AccountType"] || "";
-
-                const _accountType = accountData[i]["AccountType"];
-
-                const _accountTypes = {
-                  AP: "Accounts Payable",
-                  AR: "Accounts Receivable",
-                  EQUITY: "Capital / Equity",
-                  BANK: "Cheque or Saving",
-                  COGS: "Cost of Goods Sold",
-                  CCARD: "Credit Card Account",
-                  EXP: "Expense",
-                  FIXASSET: "Fixed Asset",
-                  INC: "Income",
-                  LTLIAB: "Long Term Liability",
-                  OASSET: "Other Current Asset",
-                  OCLIAB: "Other Current Liability",
-                  EXEXP: "Other Expense",
-                  EXINC: "Other Income",
-                  NI: "Net Income",
-                };
-
-                dataToDisplay = _accountTypes[_accountType];
-
-                //if(accountType != ''){
-                var groupName = dataToDisplay || accountType || "";
-                if (!groupsprofitloss[groupName]) {
-                  groupsprofitloss[groupName] = [];
-                }
-
-                groupsprofitloss[groupName].push(dataList);
-                //}
-              }
+  templateObject.getProfitandLossReports = async function () {
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    // Compare period    
+    if ( options.compPeriod ) {
+      try {
+        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, true, "1 Month")
+        let records = [];
+        if (data.tprofitandlossperiodcomparereport) {
+          let accountData = data.tprofitandlossperiodcomparereport;
+          let accountType = "";
+          var dataList = "";
+          for (let i = 0; i < accountData.length; i++) {
+            if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
+              accountType = "";
+            } else {
+              accountType = accountData[i]["AccountTypeDesc"];
             }
 
-            templateObject.recordslayout.set(groupsprofitloss);
-
-            if (templateObject.recordslayout.get()) {
-            //   console.log(groupsprofitloss);
-            //   layoutEditor.setupTree();
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmount"] ) || 0.0;
+            let totalRoundAmount = Number(accountData[i]["TotalAmount"]) || 0;
+            if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+              dataList = {
+                id: accountData[i]["AccountID"] || "",
+                accounttype: accountType || "",
+                accounttypeshort: accountData[i]["AccountType"] || "",
+                accountname: accountData[i]["AccountName"] || "",
+                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                accountno: accountData[i]["AccountNo"] || "",
+                totalamountex: "",
+                totalroundamountex: "",
+                name: $.trim(accountData[i]["AccountName"])
+                  .split(" ")
+                  .join("_"),
+              };
+            } else {
+              dataList = {
+                id: accountData[i]["AccountID"] || "",
+                accounttype: accountType || "",
+                accounttypeshort: accountData[i]["AccountType"] || "",
+                accountname: accountData[i]["AccountName"] || "",
+                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                accountno: accountData[i]["AccountNo"] || "",
+                totalamountex: totalAmountEx || 0.0,
+                totalroundamountex: totalRoundAmount,
+                name: $.trim(accountData[i]["AccountName"])
+                  .split(" ")
+                  .join("_"), 
+                // totaltax: totalTax || 0.00
+              };
             }
 
-            templateObject.records.set(records);
-            if (templateObject.records.get()) {
-              setTimeout(function () {
-                $("td a").each(function () {
-                  if (
-                    $(this)
-                      .text()
-                      .indexOf("-" + Currency) >= 0
-                  ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $("td").each(function () {
-                  if (
-                    $(this)
-                      .text()
-                      .indexOf("-" + Currency) >= 0
-                  ) {
-                    $(this).addClass("text-danger");
-                    $(this).removeClass("fgrblue");
-                  }
-                });
-                $(".fullScreenSpin").css("display", "none");
-              }, 100);
-
-              setTimeout(function () {
-                let currentIndex;
-                $(".sortableAccountParent").sortable({
-                  revert: true,
-                  cancel: ".undraggableDate,.accdate,.edtInfo",
-                });
-                $(".sortableAccount").sortable({
-                  revert: true,
-                  handle: ".avoid",
-                  start: (event, ui) => {
-                    currentIndex = ui.helper.index();
-                    console.log(currentIndex);
-                  },
-                });
-                $(".draggable").draggable({
-                  connectToSortable: ".sortableAccount",
-                  helper: "none",
-                  revert: "true",
-                });
-              }, 1000);
-            }
-          }
-        })
-        .catch(function (err) {
-          //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
-        });
-    } else {
-      let data = JSON.parse(
-        localStorage.getItem("VS1ProfitandLoss_ReportCompare")
-      );
-      let records = [];
-      if (data.tprofitandlossperiodcomparereport) {
-        let totalNetAssets = 0;
-        let GrandTotalLiability = 0;
-        let GrandTotalAsset = 0;
-        let incArr = [];
-        let cogsArr = [];
-        let expArr = [];
-        let accountData = data.profitandlossreport;
-        let accountType = "";
-
-        for (let i = 0; i < accountData.length; i++) {
-          if (accountData[i]["AccountTypeDesc"].replace(/\s/g, "") == "") {
-            accountType = "";
-          } else {
-            accountType = accountData[i]["AccountTypeDesc"];
-          }
-          let totalAmountEx =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let jan2022Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let dec2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let nov2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let oct2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let sept2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let aug2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let jul2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let jun2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          let may2021Amt =
-            utilityService.modifynegativeCurrencyFormat(
-              accountData[i]["TotalAmount"]
-            ) || 0.0;
-          var dataList = {
-            id: accountData[i]["AccountID"] || "",
-            accounttype: accountType || "",
-            accountname: accountData[i]["AccountName"] || "",
-            accountno: accountData[i]["AccountNo"] || "",
-            totalamountex: totalAmountEx || 0.0,
-            name: $.trim(accountData[i]["AccountName"]).split(" ").join("_"),
-            jan2022: jan2022Amt,
-            dec2021: dec2021Amt,
-            nov2021: nov2021Amt,
-            oct2021: oct2021Amt,
-            sept2021: sept2021Amt,
-            aug2021: aug2021Amt,
-            jul2021: jul2021Amt,
-            jun2021: jun2021Amt,
-            may2021: may2021Amt,
-            // totaltax: totalTax || 0.00
-          };
-          if (
-            accountType == "" &&
-            accountData[i]["AccountName"].replace(/\s/g, "") == ""
-          ) {
-          } else {
-            // if(accountType.toLowerCase().indexOf("total") >= 0){
-            //
-            // }
-            if (accountData[i]["TotalAmount"] != 0) {
+            if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+            } else {
               records.push(dataList);
             }
           }
+          
+          // Set Table Data
+          // console.log('records', records)
+          templateObject.records.set(records);
+          if (templateObject.records.get()) {
+            setTimeout(function () {
+              $("td a").each(function () {
+                if (
+                  $(this)
+                    .text()
+                    .indexOf("-" + Currency) >= 0
+                ) {
+                  $(this).addClass("text-danger");
+                  $(this).removeClass("fgrblue");
+                }
+              });
+              $("td").each(function () {
+                if (
+                  $(this)
+                    .text()
+                    .indexOf("-" + Currency) >= 0
+                ) {
+                  $(this).addClass("text-danger");
+                  $(this).removeClass("fgrblue");
+                }
+              });
+              $(".fullScreenSpin").css("display", "none");
+            }, 100);
+          }
         }
+      }catch(err) {
+        $(".fullScreenSpin").css("display", "none");
+      }
+    }else{
+      try {
+        let departments = ( options.departments.length )? options.departments.toString(): '';        
+        let data = await reportService.getProfitandLoss(dateFrom, dateTo, false, departments)
+        let records = [];        
+        if (data.profitandlossreport) {
+          let accountData = data.profitandlossreport;
+          let accountType = "";
+          var dataList = "";
+          for (let i = 0; i < accountData.length; i++) {
+            if (accountData[i]["Account Type"].replace(/\s/g, "") == "") {
+              accountType = "";
+            } else {
+              accountType = accountData[i]["Account Type"];
+            }
 
-        templateObject.records.set(records);
-        if (templateObject.records.get()) {
-          setTimeout(function () {
-            $("td a").each(function () {
-              if (
-                $(this)
-                  .text()
-                  .indexOf("-" + Currency) >= 0
-              ) {
-                $(this).addClass("text-danger");
-                $(this).removeClass("fgrblue");
-              }
-            });
-            $("td").each(function () {
-              if (
-                $(this)
-                  .text()
-                  .indexOf("-" + Currency) >= 0
-              ) {
-                $(this).addClass("text-danger");
-                $(this).removeClass("fgrblue");
-              }
-            });
-            $(".fullScreenSpin").css("display", "none");
-          }, 100);
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
+            let totalRoundAmount = Number(accountData[i]["TotalAmountEx"]) || 0;
+            if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+              dataList = {
+                id: accountData[i]["AccountID"] || "",
+                accounttype: accountType || "",
+                accounttypeshort: accountData[i]["AccountType"] || "",
+                accountname: accountData[i]["AccountName"] || "",
+                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                accountno: accountData[i]["AccountNo"] || "",
+                totalamountex: "",
+                totalroundamountex: "",
+                name: $.trim(accountData[i]["AccountName"])
+                  .split(" ")
+                  .join("_"),
+              };
+            } else {
+              dataList = {
+                id: accountData[i]["AccountID"] || "",
+                accounttype: accountType || "",
+                accounttypeshort: accountData[i]["AccountType"] || "",
+                accountname: accountData[i]["AccountName"] || "",
+                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                accountno: accountData[i]["AccountNo"] || "",
+                totalamountex: totalAmountEx || 0.0,
+                totalroundamountex: totalRoundAmount,
+                name: $.trim(accountData[i]["AccountName"])
+                  .split(" ")
+                  .join("_"), 
+                // totaltax: totalTax || 0.00
+              };
+            }
+
+            if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+            } else {
+              records.push(dataList);
+            }
+          }
+          
+          // Set Table Data
+          // console.log('records', records)
+          templateObject.records.set(records);
+          if (templateObject.records.get()) {
+            setTimeout(function () {
+              $("td a").each(function () {
+                if (
+                  $(this)
+                    .text()
+                    .indexOf("-" + Currency) >= 0
+                ) {
+                  $(this).addClass("text-danger");
+                  $(this).removeClass("fgrblue");
+                }
+              });
+              $("td").each(function () {
+                if (
+                  $(this)
+                    .text()
+                    .indexOf("-" + Currency) >= 0
+                ) {
+                  $(this).addClass("text-danger");
+                  $(this).removeClass("fgrblue");
+                }
+              });
+              $(".fullScreenSpin").css("display", "none");
+            }, 500);
+          }
         }
+      }catch(error) {
+        $(".fullScreenSpin").css("display", "none");
       }
     }
   };
@@ -615,15 +417,9 @@ Template.newprofitandloss.onRendered(function () {
   if (url.indexOf("?dateFrom") > 0) {
     localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
     url = new URL(window.location.href);
-    $("#dateFrom").val(
-      moment(url.searchParams.get("dateFrom")).format("DD/MM/YYYY")
-    );
-    $("#dateTo").val(
-      moment(url.searchParams.get("dateTo")).format("DD/MM/YYYY")
-    );
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
-    templateObject.getProfitandLossReports(getDateFrom, getLoadDate, false);
+    templateObject.setReportOptions(0, getDateFrom, getLoadDate);  
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -633,30 +429,112 @@ Template.newprofitandloss.onRendered(function () {
       currentDate2.getMonth() +
       "-" +
       currentDate2.getDate();
-    templateObject.getProfitandLossReports(getDateFrom, getLoadDate, false);
+      templateObject.setReportOptions(0, getDateFrom, getLoadDate);
   }
 
-  templateObject.getDepartments = function () {
-    reportService.getDepartment().then(function (data) {
-      for (let i in data.tdeptclass) {
-        let deptrecordObj = {
-          id: data.tdeptclass[i].Id || " ",
-          department: data.tdeptclass[i].DeptClassName || " ",
-        };
+templateObject.getDepartments = function() {
+    getVS1Data("TDeptClass")
+        .then(function(dataObject) {
+            if (dataObject.length == 0) {
+                productService.getDepartment().then(function(data) {
+                    //let deptArr = [];
+                    for (let i in data.tdeptclass) {
+                        let deptrecordObj = {
+                            id: data.tdeptclass[i].Id || " ",
+                            department: data.tdeptclass[i].DeptClassName || " ",
+                        };
+                        deptrecords.push(deptrecordObj);
+                        templateObject.deptrecords.set(deptrecords);
+                    }
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tdeptclass;
+                for (let i in useData) {
+                    let deptrecordObj = {
+                        id: useData[i].Id || " ",
+                        department: useData[i].DeptClassName || " ",
+                    };
+                    //deptArr.push(data.tdeptclass[i].DeptClassName);
+                    deptrecords.push(deptrecordObj);
+                    templateObject.deptrecords.set(deptrecords);
+                }
+            }
+        })
+        .catch(function(err) {
+            productService.getDepartment().then(function(data) {
+                //let deptArr = [];
+                for (let i in data.tdeptclass) {
+                    let deptrecordObj = {
+                        id: data.tdeptclass[i].Id || " ",
+                        department: data.tdeptclass[i].DeptClassName || " ",
+                    };
+                    //deptArr.push(data.tdeptclass[i].DeptClassName);
+                    deptrecords.push(deptrecordObj);
+                    templateObject.deptrecords.set(deptrecords);
+                }
+            });
+        });
+};
+// templateObject.getAllProductData();
+templateObject.getDepartments();
 
-        deptrecords.push(deptrecordObj);
-        templateObject.deptrecords.set(deptrecords);
-      }
-    });
-  };
+templateObject.getProfitLossLayout = async function() {
+  const profitLossLayoutApi = new ProfitLossLayoutApi();
+
+  const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
+      profitLossLayoutApi.collectionNames.TProfitLossLayout
+  );
+
+  profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");  
+
+  const profitLossLayoutEndResponse =  await profitLossLayoutEndpoint.fetch();  
+  if (profitLossLayoutEndResponse.ok == true) {
+    const profitLossLayouts = {}
+    let jsonResponse = await profitLossLayoutEndResponse.json();
+    let profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
+    // profitLossLists.forEach(function(item){
+      // let AccountLevel0Group =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+      // let AccountLevel1Group =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+      // let AccountLevel2Group =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
+      // if( item.fields.IsRoot == true ){
+      //   profitLossLayouts[AccountLevel0Group] = 
+      // }
+    // });
+    // console.log('profitLossLayouts', profitLossLists)
+    templateObject.profitlosslayoutrecords.set( profitLossLists );
+    setTimeout(function () {
+      let currentIndex;
+      $(".sortableAccountParent").sortable({
+        revert: true,
+        cancel: ".undraggableDate,.accdate,.edtInfo",
+      });
+      $(".sortableAccount").sortable({
+        revert: true,
+        handle: ".avoid",
+        start: (event, ui) => {
+          currentIndex = ui.helper.index();
+          console.log(currentIndex);
+        },
+      });
+      $(".draggable").draggable({
+        connectToSortable: ".sortableAccount",
+        helper: "none",
+        revert: "true",
+      });
+    }, 1000);    
+  }
+};
+templateObject.getProfitLossLayout();
+
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
 
   //Dragable items in edit layout screen
   //This works now: break at your own peril
-  setTimeout(function () {
-    new layoutEditor(document.querySelector("#nplEditLayoutScreen"));
-  }, 1000);
+  // setTimeout(function () {
+  //   new layoutEditor(document.querySelector("#nplEditLayoutScreen"));
+  // }, 1000);
   /*
   setTimeout(function(){
 
@@ -718,7 +596,6 @@ Template.newprofitandloss.events({
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
     $("#selectedDateRange").show();
-
     if (dateRangeID == "thisMonth") {
       document.getElementById("selectedDateRange").value = "This Month";
     } else if (dateRangeID == "thisQuarter") {
@@ -768,98 +645,14 @@ Template.newprofitandloss.events({
       "_self"
     );
   },
-  "change #dateTo": function () {
+  "change .edtReportDates": function () {
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    templateObject.records.set("");
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-    let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
-    let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
-
-    //templateObject.getProfitandLossReports(formatDateFrom,formatDateTo,false);
-    var formatDate =
-      dateTo.getDate() +
-      "/" +
-      (dateTo.getMonth() + 1) +
-      "/" +
-      dateTo.getFullYear();
-    //templateObject.dateAsAt.set(formatDate);
-    localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    if (
-      $("#dateFrom").val().replace(/\s/g, "") == "" &&
-      $("#dateFrom").val().replace(/\s/g, "") == ""
-    ) {
-      templateObject.getProfitandLossReports("", "", true);
-      templateObject.dateAsAt.set("Current Date");
-    } else {
-      templateObject.getProfitandLossReports(
-        formatDateFrom,
-        formatDateTo,
-        false
-      );
-      templateObject.dateAsAt.set(formatDate);
-    }
+    templateObject.setReportOptions(0, dateFrom, dateTo );
   },
-  "change #dateFrom": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    templateObject.records.set("");
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-    let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
-    let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
-
-    //templateObject.getProfitandLossReports(formatDateFrom,formatDateTo,false);
-    var formatDate =
-      dateTo.getDate() +
-      "/" +
-      (dateTo.getMonth() + 1) +
-      "/" +
-      dateTo.getFullYear();
-    //templateObject.dateAsAt.set(formatDate);
-    localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    if (
-      $("#dateFrom").val().replace(/\s/g, "") == "" &&
-      $("#dateFrom").val().replace(/\s/g, "") == ""
-    ) {
-      templateObject.getProfitandLossReports("", "", true);
-      templateObject.dateAsAt.set("Current Date");
-    } else {
-      templateObject.getProfitandLossReports(
-        formatDateFrom,
-        formatDateTo,
-        false
-      );
-      templateObject.dateAsAt.set(formatDate);
-    }
-  },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
@@ -917,136 +710,114 @@ Template.newprofitandloss.events({
     //
     // });
   },
-  "click #lastMonth": function () {
-    let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
 
-    var prevMonthLastDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      0
-    );
-    var prevMonthFirstDate = new Date(
-      currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
-      (currentDate.getMonth() - 1 + 12) % 12,
-      1
-    );
-
-    var formatDateComponent = function (dateComponent) {
-      return (dateComponent < 10 ? "0" : "") + dateComponent;
-    };
-
-    var formatDate = function (date) {
-      return (
-        formatDateComponent(date.getDate()) +
-        "/" +
-        formatDateComponent(date.getMonth() + 1) +
-        "/" +
-        date.getFullYear()
-      );
-    };
-
-    var formatDateERP = function (date) {
-      return (
-        date.getFullYear() +
-        "-" +
-        formatDateComponent(date.getMonth() + 1) +
-        "-" +
-        formatDateComponent(date.getDate())
-      );
-    };
-
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
-
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.getProfitandLossReports(getDateFrom, getLoadDate, false);
+   // Current Month
+  "click #thisMonth": function(){
+      $(".fullScreenSpin").css("display", "block");
+      let templateObject = Template.instance();
+      let fromDate = moment().startOf('month').format('YYYY-MM-DD');
+      let endDate   = moment().endOf('month').format('YYYY-MM-DD');
+      templateObject.setReportOptions(0, fromDate, endDate );
   },
-  //        'click #thisMonth': function () {
-  //        let templateObject = Template.instance();
-  //        $('.fullScreenSpin').css('display', 'inline-block');
-  //        localStorage.setItem('VS1ProfitandLoss_ReportCompare', '');
-  //        $('#dateFrom').attr('readonly', false);
-  //        $('#dateTo').attr('readonly', false);
-  //        var currentDate = new Date();
-  //        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-  //
-  //        let fromDateMonth = (currentDate.getMonth() + 1);
-  //        let fromDateDay = currentDate.getDate();
-  //        if ((currentDate.getMonth() + 1) < 10) {
-  //            fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  //        }
-  //        if (currentDate.getDate() < 10) {
-  //            fromDateDay = "0" + currentDate.getDate();
-  //        }
-  //
-  //        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
-  //        templateObject.dateAsAt.set(begunDate);
-  //        $("#dateFrom").val(fromDate);
-  //        $("#dateTo").val(begunDate);
-  //
-  //        var currentDate2 = new Date();
-  //        var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-  //        let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
-  //        templateObject.getProfitandLossReports(getDateFrom, getLoadDate, false);
-  //
-  //    },
-  "click #lastQuarter": function () {
+
+  "click #thisQuarter": function(){
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    let fromDate = moment().startOf("Q").format('YYYY-MM-DD');
+    let endDate = moment().endOf("Q").format('YYYY-MM-DD');
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
 
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4 ? m - 4 : m;
+  "click #thisFinYear": function(){
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = null;
+    let endDate = null;    
+    if (moment().quarter() == 4) {
+      fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
+      endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
+    }else{
+      fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
+      endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
     }
-
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment()
-      .subtract({
-        months: quarterAdjustment,
-      })
-      .endOf("month");
-    var lastQuarterStartDate = lastQuarterEndDate
-      .clone()
-      .subtract({
-        months: 2,
-      })
-      .startOf("month");
-
-    var lastQuarterStartDateFormat =
-      moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat =
-      moment(lastQuarterEndDate).format("DD/MM/YYYY");
-
-    templateObject.dateAsAt.set(lastQuarterStartDateFormat);
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
-
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
-
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.getProfitandLossReports(getDateFrom, getLoadDate, false);
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
+
+  "click #lastMonth": function(){
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD')
+    let endDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD')
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+  
+  "click #lastQuarter": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+
+  "click #lastFinYear": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = null;
+    let endDate = null;    
+    if (moment().quarter() == 4) {
+      fromDate = moment().subtract(1, "year").month("July").startOf("month").format("YYYY-MM-DD");
+      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
+    } else {
+      fromDate = moment().subtract(2, "year").month("July").startOf("month").format("YYYY-MM-DD");
+      endDate = moment().subtract(1, "year").month("June").endOf("month").format("YYYY-MM-DD");
+    }
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+
+  "click #monthToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("M").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+
+  "click #quarterToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+
+  "click #finYearToDate": function () {
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate );
+  },
+
+  "click .btnDepartmentSelect": async function(){
+    let departments = []
+    let templateObject = Template.instance();
+    $('.chkDepartment').each(function(){
+      if( $(this).is(":checked") ){
+        let dpt = $(this).val();
+        departments.push(dpt)
+      }
+    });
+    let defaultOptions = await templateObject.reportOptions.get();
+    if( defaultOptions ){
+      defaultOptions.compPeriod = 0;
+      defaultOptions.departments = departments;
+    }
+    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.getProfitandLossReports();
+  },
+
   "click #last12Months": function () {
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     localStorage.setItem("VS1ProfitandLoss_ReportCompare", "");
@@ -1771,9 +1542,28 @@ Template.newprofitandloss.events({
   "click .btnDelSelected": function (event) {
     $(".currSelectedItem:nth-child(n)").remove();
   },
-  "click .chkTotal": function (event) {
-    $(".tglTotal").toggle();
+  "click .chkTotal": async function (event) {
+    let templateObject = Template.instance();
+    let options = await templateObject.reportOptions.get();
+    if( $('.chkTotal').is(':checked') ){
+      options.showtotal = true;
+    }else{
+      options.showtotal = false;
+    }
+    templateObject.reportOptions.set( options );
   },
+  "click .chkDecimals": async function (event) {
+    let templateObject = Template.instance();
+    let options = await templateObject.reportOptions.get();
+    if( $('.chkDecimals').is(':checked') ){
+      options.showDecimal = true;
+    }else{
+      options.showDecimal = false;
+    }
+    console.log('options', options)
+    templateObject.reportOptions.set( options );
+  },
+  
   "click .chkYTDate": function (event) {
     $(".tglYTD").toggle();
   },
@@ -1825,6 +1615,73 @@ Template.newprofitandloss.helpers({
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
+  reportOptions:() => {    
+    return Template.instance().reportOptions.get();
+  },
+  formatDate( currentDate ){
+    return moment(currentDate).format("DD/MM/YYYY");
+  },
+  profitlosslayoutrecords(){
+    return Template.instance().profitlosslayoutrecords.get();
+  },
+  parentsProfitlossLayoutRecords(){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.IsRoot == true ){
+        return item;
+      }
+    });
+    return parentsProfitlossLayouts;
+  },
+  accountsProfitlossLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID && item.fields.IsAccount == true ){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  secPLGroupLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName != '' && item.fields.IsAccount == true){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  plarrayify(val) {
+      return val ? (Array.isArray(val) ? val : [val]) : [];
+  },
+  firstPLGroupLayoutRecords( parentID ){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName == '' && item.fields.IsAccount == true){
+        return item;
+      }
+    });
+    return accountsProfitlossLayouts;
+  },
+  totalPLGroupLayoutRecords(){
+    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
+      profitLossLayoutInfo
+    ).filter((item) => {
+      if( item.fields.IsRoot == false && item.fields.Parent == 0 && item.fields.IsAccount == false ){
+        return item;
+      }
+    });
+    return parentsProfitlossLayouts;
+  },
   records: () => {
     return Template.instance().records.get();
     //   .sort(function(a, b){
@@ -1837,6 +1694,18 @@ Template.newprofitandloss.helpers({
     // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
     // });
+  },
+  checkForSecGroup( profitLoss ){
+    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName == '' ){
+      return true
+    }
+    return false
+  },
+  checkForThGroup( profitLoss ){
+    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName != '' ){
+      return true
+    }
+    return false
   },
   recordslayout: () => {
     return Template.instance().recordslayout.get();

@@ -11,6 +11,7 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { Session } from 'meteor/session';
 import f from "jspdf";
+import { template } from "lodash";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -2212,11 +2213,11 @@ Template.payrollrules.onRendered(function() {
             }else{
     
               let data = JSON.parse(dataObject[0].data);    
-             
+            
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
-              for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+              for (let i = 0; i < data.tpayrollholidays.length; i++) {
                     
                 var dataListAllowance = [
                     data.tpayrollholidays[i].fields.ID || '',
@@ -2230,10 +2231,9 @@ Template.payrollrules.onRendered(function() {
             }
         
     
-    
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
+            //   setTimeout(function () {
+            //       MakeNegative();
+            //   }, 100);
               setTimeout(function () {
                   $('#TPayrollHolidays').DataTable({
     
@@ -2297,7 +2297,7 @@ Template.payrollrules.onRendered(function() {
     
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
                     
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
@@ -2396,8 +2396,8 @@ Template.payrollrules.onRendered(function() {
                     data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',    
                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                 ];
-                splashArrayHolidayList.push(dataListAllowance);
-             }
+                 splashArrayHolidayList.push(dataListAllowance);
+              }
 
 
         
@@ -2468,7 +2468,7 @@ Template.payrollrules.onRendered(function() {
     
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
                                     
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
@@ -7755,6 +7755,8 @@ Template.payrollrules.onRendered(function() {
     };
 
     templateObject.getLeaveTypeData();
+
+
    
     templateObject.getunpaidleavedata = function(){
               getVS1Data('TUnpaidLeave').then(function(dataObject) {
@@ -8841,21 +8843,19 @@ Template.payrollrules.onRendered(function() {
                   let lineItems = [];
                   let lineItemObj = {};
                   for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                     var dataListAllowance = [
-                                               data.tsuperannuation[i].fields.ID || '',
-                                                data.tsuperannuation[i].fields.Superfund || '',
-                                                data.tsuperannuation[i].fields.Supertypeid || '',
-                                                data.tsuperannuation[i].fields.Employeeid || '',
-                                                data.tsuperannuation[i].fields.ABN || '',,
-                                                data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
-                                                data.tsuperannuation[i].fields.BSB || '',
-                                                data.tsuperannuation[i].fields.AccountNumber || '',
-                                                data.tsuperannuation[i].fields.AccountName || '',
-                                                '',
-                                                '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                             ];
-                    
+                        data.tsuperannuation[i].fields.ID || '',
+                        data.tsuperannuation[i].fields.Superfund || '',
+                        data.tsuperannuation[i].fields.Area || '',
+                        data.tsuperannuation[i].fields.Employeeid || '',
+                        data.tsuperannuation[i].fields.ABN || '',
+                        data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                        data.tsuperannuation[i].fields.BSB || '',
+                        data.tsuperannuation[i].fields.Accountno || '',
+                        data.tsuperannuation[i].fields.AccountName || '',
+                        '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                     ];
     
                       splashArraySuperannuationList.push(dataListAllowance);
                   }
@@ -8951,18 +8951,17 @@ Template.payrollrules.onRendered(function() {
                                       sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                         for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                                             var dataListAllowance = [
                                                 data.tsuperannuation[i].fields.ID || '',
                                                 data.tsuperannuation[i].fields.Superfund || '',
-                                                data.tsuperannuation[i].fields.Supertypeid || '',
+                                                data.tsuperannuation[i].fields.Area || '',
                                                 data.tsuperannuation[i].fields.Employeeid || '',
-                                                data.tsuperannuation[i].fields.ABN || '',,
+                                                data.tsuperannuation[i].fields.ABN || '',
                                                 data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
                                                 data.tsuperannuation[i].fields.BSB || '',
-                                                data.tsuperannuation[i].fields.AccountNumber || '',
+                                                data.tsuperannuation[i].fields.Accountno || '',
                                                 data.tsuperannuation[i].fields.AccountName || '',
-                                                '',
                                                 '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                              ];
                             
@@ -9044,7 +9043,7 @@ Template.payrollrules.onRendered(function() {
             }else{
     
               let data = JSON.parse(dataObject[0].data);
-              console.log(data);
+          
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
@@ -9067,7 +9066,7 @@ Template.payrollrules.onRendered(function() {
               }
         
     
-             console.log
+          
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -9244,8 +9243,8 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
-            console.log(err);
-          sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
+             
+              sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TSuperannuation', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
@@ -9361,7 +9360,7 @@ Template.payrollrules.onRendered(function() {
                                         var dataListAllowance = [
                                             data.tsuperannuation[i].fields.ID || '',
                                             data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.area || '',
+                                            data.tsuperannuation[i].fields.Area || '',
                                             data.tsuperannuation[i].fields.Employeeid || '',
                                             data.tsuperannuation[i].fields.ABN || '',
                                             data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
@@ -9451,70 +9450,161 @@ Template.payrollrules.onRendered(function() {
     };
 
     templateObject.getSuperannuationData();
-   
-    function getPayrollOrgainzation()
+
+
+    template.getPayrollOrgainzations = function()
     {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getPayrollinformation().then((dataListRet) => {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            for (let event in dataListRet) {
-                let dataCopy = dataListRet[event];
-                for (let data in dataCopy) {
-                    let mainData = dataCopy[data];
-          
-                     $('#editbankaccount').val(mainData.fields.bankaccount);
-                     $('#editpaygbankaccount').val(mainData.fields.paygaacount);
-                     $('#editwagesexpbankaccount').val(mainData.fields.Wagesexpenseaccount);
-                     $('#editwagespaybankaccount').val(mainData.fields.wagespayablesaccount);
-                     $('#editsuperliabbankaccount').val(mainData.fields.Superlibaccount);
-                     $('#editsuperexpbankaccount').val(mainData.fields.Supperexpaccount);
-                     $('#employegroup').val('');
-                     $('#timesheetcat').val('');
-                     $('#payrollsettingor').val(mainData.fields.ID);
-                     
-                     if(mainData.fields.showannualsalary == true)
-                     {
-                         $('#swtShowAnnualSalary').attr("checked","checked");
-                     }
-                     else{
-                        $('#swtShowAnnualSalary').removeAttr('checked');
-                     }
 
-                     if(mainData.fields.showemployeebases == true)
-                     {
-                         $('#swtShowEmploymentBasis').attr("checked","checked");
-                     }
-                     else{
-                        $('#swtShowEmploymentBasis').removeAttr('checked');
-                     }
-
-                     $('#uploadedImage').attr('src', mainData.fields.attachment);
-                     $('#uploadedImage').attr('width','100%');
-                     $('#uploadedImage').attr('height','100%');
-                     $('#removeLogo').show();
-                     $('#changeLogo').show();
+        getVS1Data('TPayrollOrganization').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                 sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TPayrollOrganization', JSON.stringify(data));
+                   
+                  console.log(data);
+                  for (let i = 0; i < data.tpayrollorganization.length; i++) {
+               
+                    $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                    $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                    $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                    $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                    $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                    $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                    $('#employegroup').val('');
+                    $('#timesheetcat').val('');
+                    $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                    
+                    if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                    {
+                        $('#swtShowAnnualSalary').attr("checked","checked");
+                    }
+                    else{
+                       $('#swtShowAnnualSalary').removeAttr('checked');
+                    }
+    
+                    if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                    {
+                        $('#swtShowEmploymentBasis').attr("checked","checked");
+                    }
+                    else{
+                       $('#swtShowEmploymentBasis').removeAttr('checked');
+                    }
+    
+                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    $('#uploadedImage').attr('width','100%');
+                    $('#uploadedImage').attr('height','100%');
+                    $('#removeLogo').show();
+                    $('#changeLogo').show();
+                  
+                  }
+    
+   
+                  $('.fullScreenSpin').css('display', 'none');
+              }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+              });
+            }else{
+              
+              sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+              
+              let useData = data;
+              console.log(data);
+              for (let i = 0; i < data.tpayrollorganization.length; i++) {
+               
+                $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                $('#employegroup').val('');
+                $('#timesheetcat').val('');
+                $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
                 
-        
+                if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                {
+                    $('#swtShowAnnualSalary').attr("checked","checked");
                 }
-                
-            }
-           
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
-          });
+                else{
+                   $('#swtShowAnnualSalary').removeAttr('checked');
+                }
 
-        //   let imageData= (localStorage.getItem("Image"));
-        //   if(imageData)
-        //   {
-        //       $('#uploadedImage').attr('src', imageData);
-        //      $('#uploadedImage').attr('width','100%');
-        //      $('#uploadedImage').attr('height','100%');
-        //       $('#removeLogo').show();
-        //       $('#changeLogo').show();
-        //   }
-         
+                if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                {
+                    $('#swtShowEmploymentBasis').attr("checked","checked");
+                }
+                else{
+                   $('#swtShowEmploymentBasis').removeAttr('checked');
+                }
+
+                $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                $('#uploadedImage').attr('width','100%');
+                $('#uploadedImage').attr('height','100%');
+                $('#removeLogo').show();
+                $('#changeLogo').show();
+              
+              }
+              });
+        
+
+              $('.fullScreenSpin').css('display', 'none');
+    
+            }
+        }).catch(function(err) {
+             
+              sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+              addVS1Data('TPayrollOrganization', JSON.stringify(data));
+              let lineItems = [];
+              let lineItemObj = {};
+
+            
+              for (let i = 0; i < data.tpayrollorganization.length; i++) {
+               
+                $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                $('#employegroup').val('');
+                $('#timesheetcat').val('');
+                $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                
+                if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                {
+                    $('#swtShowAnnualSalary').attr("checked","checked");
+                }
+                else{
+                   $('#swtShowAnnualSalary').removeAttr('checked');
+                }
+
+                if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                {
+                    $('#swtShowEmploymentBasis').attr("checked","checked");
+                }
+                else{
+                   $('#swtShowEmploymentBasis').removeAttr('checked');
+                }
+
+                $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                $('#uploadedImage').attr('width','100%');
+                $('#uploadedImage').attr('height','100%');
+                $('#removeLogo').show();
+                $('#changeLogo').show();
+              
+              }
+    
+              $('.fullScreenSpin').css('display', 'none');
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+          });
+        });
+
+
+
     }
-    getPayrollOrgainzation();
+
+    template.getPayrollOrgainzations();
+   
 
     $('#tblAlowances tbody').on( 'click', 'td:not(.colDeleteAllowances)', function () {
      
@@ -20063,6 +20153,8 @@ Template.payrollrules.events({
             };
 
             taxRateService.savePayOrganization(objDetails).then(function (objDetails){
+
+                
                 
                 swal({
                     title: 'Success',
@@ -20074,9 +20166,23 @@ Template.payrollrules.events({
                 }).then((result) => {
                 if (result.value) {
                
-                 
+                    sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (dataReload) {
+                        addVS1Data("TPayrollOrganization", JSON.stringify(dataReload)).then(function (datareturn) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                            window.open('/payrollrules','_self');
+                        }).catch(function (err) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                            window.open('/payrollrules','_self');
+                        });
+                      }).catch(function (err) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                           window.open('/payrollrules','_self');
+                      });
                     
-                  Meteor._reload.reload();
+                
                              
                 }else if (result.dismiss === 'cancel') {
                 
