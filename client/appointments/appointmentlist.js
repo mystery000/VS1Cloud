@@ -112,7 +112,7 @@ Template.appointmentlist.onRendered(async function () {
     templateObject.resetData = function (dataVal) {
       setTimeout(function () {
           window.open('/appointmentlist?page=last','_self');
-      }, 100);
+      }, 500);
 
     }
 
@@ -523,7 +523,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -539,7 +539,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -730,6 +730,8 @@ Template.appointmentlist.onRendered(async function () {
                                  $('.fullScreenSpin').css('display','none');
                                });
                               }
+
+
                              });
 
                               setTimeout(function () {
@@ -896,7 +898,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -912,7 +914,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -1043,6 +1045,8 @@ Template.appointmentlist.onRendered(async function () {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+
                              if(checkurlIgnoreDate == 'true'){
                                sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TAppointmentList').then(function (dataObjectold) {
@@ -1059,8 +1063,7 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                        addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                         templateObject.resetData(objCombineData);
-                                       $('.fullScreenSpin').css('display','none');
+
                                        }).catch(function (err) {
                                        $('.fullScreenSpin').css('display','none');
                                        });
@@ -1089,8 +1092,8 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                      addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
+                                     //   templateObject.resetData(objCombineData);
+                                     // $('.fullScreenSpin').css('display','none');
                                      }).catch(function (err) {
                                      $('.fullScreenSpin').css('display','none');
                                      });
@@ -1104,6 +1107,30 @@ Template.appointmentlist.onRendered(async function () {
                                $('.fullScreenSpin').css('display','none');
                              });
                             }
+                            sideBarService.getAllAppointmentList(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnewApp) {
+                                getVS1Data("TAppointment").then(function (dataObjectoldApp) {
+                                    if (dataObjectoldApp.length == 0) {
+                                    } else {
+                                      let dataOldApp = JSON.parse(dataObjectoldApp[0].data);
+
+                                      var thirdaryDataApp = $.merge($.merge([],dataObjectnewApp.tappointmentex),dataOldApp.tappointmentex);
+                                      let objCombineDataApp = {
+                                        tappointmentex: thirdaryDataApp,
+                                      };
+                                      addVS1Data("TAppointment",JSON.stringify(objCombineDataApp)).then(function (datareturnApp) {
+                                        templateObject.resetData(objCombineDataApp);
+                                        $('.fullScreenSpin').css('display','none');
+                                        }).catch(function (err) {
+                                          $('.fullScreenSpin').css('display','none');
+                                        });
+                                    }
+                                  }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                  });
+                              }).catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+
                            });
 
                             setTimeout(function () {
