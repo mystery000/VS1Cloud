@@ -11,7 +11,6 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 
-
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -490,39 +489,83 @@ templateObject.getProfitLossLayout = async function() {
 
   const profitLossLayoutEndResponse =  await profitLossLayoutEndpoint.fetch();  
   if (profitLossLayoutEndResponse.ok == true) {
-    const profitLossLayouts = {}
+    let profitLossLayouts = [];
     let jsonResponse = await profitLossLayoutEndResponse.json();
-    let profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
-    // profitLossLists.forEach(function(item){
-      // let AccountLevel0Group =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-      // let AccountLevel1Group =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-      // let AccountLevel2Group =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
-      // if( item.fields.IsRoot == true ){
-      //   profitLossLayouts[AccountLevel0Group] = 
-      // }
-    // });
-    // console.log('profitLossLayouts', profitLossLists)
-    templateObject.profitlosslayoutrecords.set( profitLossLists );
+    const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
+    
+    profitLossLayouts = profitLossLists.filter((item) => {
+      let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+      let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+      let AccountName =  item.fields.AccountName.replace(/\s/g, '')
+      if( level0GroupName == AccountName || AccountName == level1GroupName ){
+        return item;
+      }
+    });
+    let newprofitLossLayouts = [];
+    profitLossLayouts.forEach(function(item){
+        let level1Childs = []
+        let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+        let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+        let level2GroupName =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
+        let AccountName =  item.fields.AccountName.replace(/\s/g, '')
+        profitLossLists.filter((subitem) => {
+          let sublevel0GroupName =  subitem.fields.AccountLevel0GroupName.replace(/\s/g, '')
+          let sublevel1GroupName =  subitem.fields.AccountLevel1GroupName.replace(/\s/g, '')
+          let sublevel2GroupName =  subitem.fields.AccountLevel2GroupName.replace(/\s/g, '')
+          let subAccountName =  subitem.fields.AccountName.replace(/\s/g, '')
+          if( level0GroupName == sublevel0GroupName && level1GroupName == sublevel1GroupName && level2GroupName == sublevel2GroupName && AccountName != subAccountName){
+            level1Childs.push(subitem)
+          }
+        });
+        newprofitLossLayouts.push({
+          parent: item,
+          childs: level1Childs
+        }) 
+    });
+    console.log('profitLossLayouts', newprofitLossLayouts)
+    templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
     setTimeout(function () {
-      let currentIndex;
-      $(".sortableAccountParent").sortable({
-        revert: true,
-        cancel: ".undraggableDate,.accdate,.edtInfo",
-      });
+      // let currentIndex;
+      // $(".sortableAccountParent").sortable({
+      //   revert: true,
+      //   cancel: ".undraggableDate,.accdate,.edtInfo",
+      // });
+      // $(".sortableAccount").sortable({
+      //   revert: true,
+      //   handle: ".avoid",
+      //   start: (event, ui) => {
+      //     currentIndex = ui.helper.index();
+      //     console.log(currentIndex);
+      //   },
+      // });
+      // $(".draggable").draggable({
+      //   connectToSortable: ".sortableAccount",
+      //   helper: "none",
+      //   revert: "true",
+      // });
       $(".sortableAccount").sortable({
-        revert: true,
-        handle: ".avoid",
-        start: (event, ui) => {
-          currentIndex = ui.helper.index();
-          console.log(currentIndex);
-        },
+        containment: "parent",
+        items: "> div",
+        handle: ".handel",
+        tolerance: "pointer",
+        cursor: "move",
+        opacity: 0.7,
+        revert: 300,
+        delay: 150,
+        dropOnEmpty: true,
+        placeholder: "movable-placeholder",
+        start: function(e, ui) {
+            ui.placeholder.height(ui.helper.outerHeight());
+        }
       });
-      $(".draggable").draggable({
-        connectToSortable: ".sortableAccount",
-        helper: "none",
-        revert: "true",
+      $(".group-items").sortable({
+          containment: "document",
+          items: ".group-item",
+          placeholder: "item-placeholder",
+          connectWith: '.group-items'
       });
     }, 1000);    
+    
   }
 };
 templateObject.getProfitLossLayout();
@@ -800,6 +843,7 @@ Template.newprofitandloss.events({
 
   "click .btnDepartmentSelect": async function(){
     let departments = []
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $('.chkDepartment').each(function(){
       if( $(this).is(":checked") ){
@@ -814,6 +858,7 @@ Template.newprofitandloss.events({
     }
     await templateObject.reportOptions.set( defaultOptions );
     await templateObject.getProfitandLossReports();
+    $('#myModalDepartment').modal('hide');
   },
 
   "click #last12Months": function () {
@@ -1635,12 +1680,14 @@ Template.newprofitandloss.helpers({
     });
     return parentsProfitlossLayouts;
   },
-  accountsProfitlossLayoutRecords( parentID ){
+  parentAccountPLRecords( account ){
     let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
+    let accountName =  account.replace(/\s/g, '')
+    let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
     let accountsProfitlossLayouts = ProfitLossLayout.fromList(
       profitLossLayoutInfo
     ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.IsAccount == true ){
+      if( level0GroupName == accountName && item.fields.IsAccount == true && item.fields.AccountLevel1GroupName == ""){
         return item;
       }
     });

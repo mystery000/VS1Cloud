@@ -1772,17 +1772,39 @@
                                     </div> -->
                                     {{#if profitlosslayoutrecords}}
                                         <div class="customSortableDiv" >
-                                            {{#each parentitem in parentsProfitlossLayoutRecords}}
-                                                <div class="sortableAccount">
-                                                    <h1 class="draggable" position="{{ parentitem.fields.Position }}" >{{ parentitem.fields.AccountName }}</h1>
-                                                    {{#each acPLItem in plarrayify (accountsProfitlossLayoutRecords parentitem.fields.ID) }}
-                                                        <p position="{{ acPLItem.fields.Position }}" class="g0 draggable" >{{ acPLItem.fields.AccountName }}</p>
-                                                    {{/each}}
-                                                </div>
-                                            {{/each}}
-                                            {{#each ttlPLItem in totalPLGroupLayoutRecords }}
-                                                <h2 position="{{ ttlPLItem.fields.Position }}" class="disableCursor" >{{ ttlPLItem.fields.AccountName }}</h2>
-                                            {{/each}}
+                                            <div class="sortableAccount">
+                                                {{#each item in profitlosslayoutrecords }}
+                                                    {{#if item.parent.fields.IsRoot}}
+                                                        <div class="group-caption">
+                                                            <h1 class="handel draggable" >{{ item.parent.fields.AccountName }}</h1>
+                                                            <div class="group-items">
+                                                                {{#each acItem in item.childs }}
+                                                                    <p class="group-item g0">{{ acItem.fields.AccountName }}</p>
+                                                                {{/each}}
+                                                            </div>
+                                                        </div>
+                                                    {{else}} 
+                                                        {{#each acItem in item.childs }}
+                                                            <div class="group-caption">
+                                                                {{#if acItem.fields.IsAccount}}
+                                                                    <div class="group-items">
+                                                                        <p class="group-item g0 draggable">{{ acItem.fields.AccountName }}</p>
+                                                                    </div>
+                                                                {{else}} 
+                                                                    <h3 class="handel disableCursor" >{{ acItem.fields.AccountName }}</h3>
+                                                                {{/if}}
+                                                            </div>
+                                                        {{/each}}
+                                                        <div class="group-caption">
+                                                            <h2 class="handel disableCursor" >{{ item.parent.fields.AccountName }}</h2>
+                                                        </div>
+                                                    {{/if}}
+                                                {{/each}}
+
+                                                
+                                                        
+
+                                            </div>
                                         </div>
                                     {{/if}}
                                     {{#if recordslayout}}
@@ -1795,8 +1817,7 @@
                                         {{#if containsequals item.accounttype "Total"}}
                                         <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
                                             <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                            <label class="col-11 dragAcc"
-                                                style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
+                                            <label class="col-11 dragAcc" style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
                                             <!-- <label class="col-3 dragVal" style="">0.00</label> -->
                                         </div>
                                         {{else if containsequals item.accounttype "Gross Profit"}}
