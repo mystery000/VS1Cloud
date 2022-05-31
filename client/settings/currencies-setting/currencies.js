@@ -1223,8 +1223,8 @@ Template.currenciesSettings.events({
     $("#edtSellRate").val(1);
   },
   "change #sedtCountry": async (e) => {
-    $(".fullScreenSpin").css("display", "block");
-    console.log("changed");
+    $(".fullScreenSpin").css("display", "inline-block");
+   
     let taxRateService = new TaxRateService();
     let selectCountry = $("#sedtCountry").val();
     $("#edtCurrencyID").val("");
@@ -1235,13 +1235,13 @@ Template.currenciesSettings.events({
     $("#edtCurrencyDesc").val("");
     $("#edtBuyRate").val("");
     $("#edtSellRate").val("");
-    console.log("changed 2");
+  
     if (selectCountry != "") {
       const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
 
       if (data) {
         for (let i = 0; i < data.tcurrency.length; i++) {
-          console.log("looping");
+       
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
             var country = data.tcurrency[i].Country || "";
