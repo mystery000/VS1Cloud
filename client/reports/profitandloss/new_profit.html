@@ -140,19 +140,22 @@
             }
 
             #item-value->* {
-                font-size: 16px !important;
                 border-top: 0px;
                 padding-top: 16px;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
                 border-top: unset;
             }
-            
+            .customProfitLossTable .table-sm td.fgrSubtotal,
+            .customProfitLossTable .table-sm td.fgrtotal {
+                font-weight: 800 !important;
+                color: #858796;
+            }
             .customProfitLossTable .table-sm td, .customProfitLossTable .table-sm th {
                 padding: 7px 15px !important;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
-                font-size: 16px !important;
+                color: #858796;
             }
             .pnlTable td {
                 border-top: unset;
@@ -555,7 +558,7 @@
                                             {{#each item in records}}
                                             <tr class="tableInnerRow" id="item-value-{{item.name}}">
                                                 {{#if equals item.accounttype ""}}
-                                                    <td style="padding-left: 50px !important;" class="fgr fgrblue"><span
+                                                    <td style="padding-left: 60px !important;" class="fgr fgrblue"><span
                                                             class="tglAccCodes" style="display:none;">200 -
                                                         </span>{{item.accountname}}</td>
                                                     <td></td>
