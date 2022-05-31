@@ -8269,6 +8269,7 @@ Template.appointments.events({
         const templateObject = Template.instance();
         var appointmentData = templateObject.appointmentrecords.get();
         let appointmentService = new AppointmentService();
+        let notes = $('#txtNotes').val() || ' ';
         let id = $('#updateID').val();
         var result = appointmentData.filter(apmt => {
             return apmt.id == id
@@ -8322,7 +8323,8 @@ Template.appointments.events({
                         type: "TAppointmentEx",
                         fields: {
                             Id: parseInt(result[0].id),
-                            Othertxt: ""
+                            Othertxt: "",
+                            Notes: notes
                         }
                     };
                     if (toUpdateID != "") {
@@ -9547,6 +9549,30 @@ Template.appointments.events({
                 else if (results.dismiss === 'cancel') {}
             });
         }
+    },
+    'click #btnDeleteDisbale span': function (event) {
+            swal({
+                title: 'Oops...',
+                text: "You don't have access to delete appointment",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then((results) => {
+                if (results.value) {}
+                else if (results.dismiss === 'cancel') {}
+            });
+    },
+    'click #btnOptionsDisable span': function (event) {
+            swal({
+                title: 'Oops...',
+                text: "You don't have access to appointment options",
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'OK'
+            }).then((results) => {
+                if (results.value) {}
+                else if (results.dismiss === 'cancel') {}
+            });
     },
     'click .btnPauseJob': function (event) {
 

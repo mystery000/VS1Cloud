@@ -159,13 +159,18 @@
                  style="padding: 0px 20px; background-color: #ededed;">
 
                 <div class="col float-left flex-grow-1 mb-4">
-                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i
-                                                                                                      class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button"
-                            style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New
-                        Appointment</button>
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <!-- {{#if createnewappointment}} -->
+                      <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Appointment</button>
+                    <!-- {{else}}
+                      <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button" style="margin: 16px;"  disabled><i class="icon ion-plus" style="padding-right: 5px;"></i>New Appointment</button>
+                    {{/if}} -->
                     {{#if includeCreateInvoice}}
                     <button id="btnInvoice" name="btnInvoice" class="btn btn-primary" type="button"
+                            style="margin: 16px;"><i class="fa fa-refresh" style="padding-right: 5px;"></i>Create
+                        Invoice</button>
+                    {{else}}
+                    <button id="btnInvoiceDisabled" name="btnInvoiceDisabled" class="btn btn-primary" type="button"
                             style="margin: 16px;"><i class="fa fa-refresh" style="padding-right: 5px;"></i>Create
                         Invoice</button>
                     {{/if}}
