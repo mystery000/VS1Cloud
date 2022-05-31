@@ -1715,3 +1715,21 @@ authenticatedRoutes.route('/stockquantitybylocation', {
         });
     }
 });
+
+authenticatedRoutes.route('/customerdetailsreport', {
+    name: 'customerdetailsreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customerdetailsreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/customersummaryreport', {
+    name: 'customersummaryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customersummaryreport'
+        });
+    }
+});
