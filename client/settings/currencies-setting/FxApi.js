@@ -59,12 +59,7 @@ export default class FxApi {
 
     if (response.status >= 200 && response.status <= 302) {
       let data = await response.json();
-
-      console.log();
-
       const rate = data.from[0].mid;
-
-      console.log(rate);
       return rate;
     }
   }
@@ -85,14 +80,10 @@ export default class FxApi {
 
     if (response.status >= 200 && response.status <= 302) {
       let data = await response.json();
-      console.log(data);
 
       const rate = data.from[0].inverse;
 
-      console.log(rate);
-
-      console.log(data);
-      return data;
+      return rate;
     }
   }
 }
