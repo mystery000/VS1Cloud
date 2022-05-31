@@ -239,10 +239,11 @@ Template.newprofitandloss.onRendered(function () {
     // Compare period    
     if ( options.compPeriod ) {
       try {
-        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, true, "1 Month")
+        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, false, "2 Month")
         let records = [];
         if (data.tprofitandlossperiodcomparereport) {
           let accountData = data.tprofitandlossperiodcomparereport;
+          console.log('accountData', dateFrom, dateTo, accountData)
           let accountType = "";
           var dataList = "";
           for (let i = 0; i < accountData.length; i++) {
@@ -522,7 +523,7 @@ templateObject.getProfitLossLayout = async function() {
           childs: level1Childs
         }) 
     });
-    console.log('profitLossLayouts', newprofitLossLayouts)
+    // console.log('profitLossLayouts', newprofitLossLayouts)
     templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
     setTimeout(function () {
       // let currentIndex;
@@ -1668,66 +1669,6 @@ Template.newprofitandloss.helpers({
   },
   profitlosslayoutrecords(){
     return Template.instance().profitlosslayoutrecords.get();
-  },
-  parentsProfitlossLayoutRecords(){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.IsRoot == true ){
-        return item;
-      }
-    });
-    return parentsProfitlossLayouts;
-  },
-  parentAccountPLRecords( account ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountName =  account.replace(/\s/g, '')
-    let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( level0GroupName == accountName && item.fields.IsAccount == true && item.fields.AccountLevel1GroupName == ""){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  secPLGroupLayoutRecords( parentID ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName != '' && item.fields.IsAccount == true){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  plarrayify(val) {
-      return val ? (Array.isArray(val) ? val : [val]) : [];
-  },
-  firstPLGroupLayoutRecords( parentID ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName == '' && item.fields.IsAccount == true){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  totalPLGroupLayoutRecords(){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.IsRoot == false && item.fields.Parent == 0 && item.fields.IsAccount == false ){
-        return item;
-      }
-    });
-    return parentsProfitlossLayouts;
   },
   records: () => {
     return Template.instance().records.get();

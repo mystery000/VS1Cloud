@@ -2756,5 +2756,23 @@ getTvs1charts() {
    return this.getList(this.ERPObjects.Tvs1charts, options);
 }
 
+getEarnings(limitcount, limitfrom)
+{
+  let options = '';
+  if(limitcount == 'All'){
+     options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+      };
+  }else{
+    options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+   }  ;
+  }
+  return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+
+}
+
 
 }
