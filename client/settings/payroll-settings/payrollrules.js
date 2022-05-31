@@ -2034,27 +2034,28 @@ Template.payrollrules.onRendered(function() {
     };
     templateObject.getCalenders();
     
-    templateObject.getHolidayData = function() {
-        
+    templateObject.getHolidayData = function(){
+
         getVS1Data('TPayrollHolidays').then(function(dataObject) {
+       
             if (dataObject.length == 0) {
-                 sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+              sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+                  
                   addVS1Data('TPayrollHolidays', JSON.stringify(data));
                   let lineItems = [];
                   let lineItemObj = {};
-                
-                  for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+                  for (let i = 0; i < data.tpayrollholidays.length; i++) {
                     
-                      var dataListAllowance = [
-                          data.Tpayrollholidays[i].fields.ID || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysDate || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
-                          '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                      ];
-    
-                      splashArrayHolidayList.push(dataListAllowance);
-                  }
+                            var dataListAllowance = [
+                                data.tpayrollholidays[i].fields.ID || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
+                                '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                            ];
+            
+                        splashArrayHolidayList.push(dataListAllowance);
+                    }
     
             
     
@@ -2068,28 +2069,28 @@ Template.payrollrules.onRendered(function() {
                           data: splashArrayHolidayList,
                           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                           columnDefs: [                              
-                            
-                               {
-                                 className: "colHolidayID hiddenColumn",
-                                 "targets": [0]
-                                },
-                                {
-                                  className: "colHolidayName",
-                                  "targets": [1]
-                                },  
-                                {
-                                  className: "colHolidayDate",
-                                  "targets": [2]
-                                },  
-                                {
-                                   className: "colHolidaygroup hiddenColumn",
-                                   "targets": [3]
-                                },                                                 
-                               {
-                                  className: "colHolidayDelete",
-                                  "orderable": false,
-                                  "targets": -1
-                               }
+                        
+                            {
+                              className: "colHolidayID hiddenColumn",
+                              "targets": [0]
+                            },
+                            {
+                               className: "colHolidayName",
+                               "targets": [1]
+                            },  
+                            {
+                               className: "colHolidayDate",
+                               "targets": [2]
+                            },  
+                            {
+                                className: "colHolidaygroup hiddenColumn",
+                                "targets": [3]
+                            },                                                  
+                            {
+                               className: "colHolidayDelete",
+                               "orderable": false,
+                               "targets": -1
+                            }
                           ],
                           select: true,
                           destroy: true,
@@ -2119,35 +2120,35 @@ Template.payrollrules.onRendered(function() {
                               $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                   .on('click', function () {
                                       $('.fullScreenSpin').css('display', 'inline-block');
-                                      var splashArrayHolidayListDupp = new Array();
+                                      var splashArrayHolidayList = new Array();
                                       let dataLenght = oSettings._iDisplayLength;
                                       let customerSearch = $('#tblHolidays_filter input').val();
     
                                       sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                        for (let i = 0; i < data.Tpayrollholidays.length; i++) {
-                    
-                                            var dataListAllowance = [
-                                                data.Tpayrollholidays[i].fields.ID || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysDate || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
-                                                '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                            ];
+                                        for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                
+                                                var dataListAllowance = [
+                                                    data.tpayrollholidays[i].fields.ID || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
+                                                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                ];
                           
                                             splashArrayHolidayList.push(dataListAllowance);
                                         }
     
-                                      let uniqueChars = [...new Set(splashArrayHolidayList)];
-                                      var datatable = $('#tblHolidays').DataTable();
-                                      datatable.clear();
-                                      datatable.rows.add(uniqueChars);
-                                      datatable.draw(false);
-                                      setTimeout(function () {
-                                            $("#tblHolidays").dataTable().fnPageChange('last');
-                                      }, 400);
+                                                  let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                                  var datatable = $('#tblHolidays').DataTable();
+                                                  datatable.clear();
+                                                  datatable.rows.add(uniqueChars);
+                                                  datatable.draw(false);
+                                                  setTimeout(function () {
+                                                    $("#tblHolidays").dataTable().fnPageChange('last');
+                                                  }, 400);
     
-                                      $('.fullScreenSpin').css('display', 'none');
+                                                  $('.fullScreenSpin').css('display', 'none');
     
     
                                       }).catch(function (err) {
@@ -2160,8 +2161,9 @@ Template.payrollrules.onRendered(function() {
                               }, 100);
                           },
                           "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                              $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+                            
+                            $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+                            $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
                           }
     
@@ -2212,35 +2214,37 @@ Template.payrollrules.onRendered(function() {
               });
             }else{
     
-              let data = JSON.parse(dataObject[0].data);    
-            
+              let data = JSON.parse(dataObject[0].data);
+    
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
               for (let i = 0; i < data.tpayrollholidays.length; i++) {
-                    
+                
                 var dataListAllowance = [
                     data.tpayrollholidays[i].fields.ID || '',
                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',   
+                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                 ];
 
                 splashArrayHolidayList.push(dataListAllowance);
             }
+    
         
     
-            //   setTimeout(function () {
-            //       MakeNegative();
-            //   }, 100);
+    
               setTimeout(function () {
-                  $('#TPayrollHolidays').DataTable({
+                  MakeNegative();
+              }, 100);
+              setTimeout(function () {
+                  $('#tblHolidays').DataTable({
     
                       data: splashArrayHolidayList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [                              
-                            
+                        
                         {
                           className: "colHolidayID hiddenColumn",
                           "targets": [0]
@@ -2252,11 +2256,11 @@ Template.payrollrules.onRendered(function() {
                         {
                            className: "colHolidayDate",
                            "targets": [2]
-                        }, 
+                        },  
                         {
                             className: "colHolidaygroup hiddenColumn",
                             "targets": [3]
-                        },                                                   
+                        },                                                  
                         {
                            className: "colHolidayDelete",
                            "orderable": false,
@@ -2291,25 +2295,26 @@ Template.payrollrules.onRendered(function() {
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
                                   $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayHolidayListDupp = new Array();
+                                  var splashArrayHolidayListPop = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblHolidays_filter input').val();
     
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                     for (let i = 0; i < data.tpayrollholidays.length; i++) {
-                    
+                
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
                                             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',   
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                                             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
-                        
+                      
                                         splashArrayHolidayList.push(dataListAllowance);
-                                       }
-                                              let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                    }
+    
+                                              let uniqueChars = [...new Set(splashArrayCalenderList)];
                                               var datatable = $('#tblHolidays').DataTable();
                                               datatable.clear();
                                               datatable.rows.add(uniqueChars);
@@ -2331,8 +2336,9 @@ Template.payrollrules.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                        $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+                          
+                    $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+                    $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
                       }
     
@@ -2380,28 +2386,24 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
-
-    
           sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TPayrollHolidays', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
-             
               for (let i = 0; i < data.tpayrollholidays.length; i++) {
-               
+                
                 var dataListAllowance = [
                     data.tpayrollholidays[i].fields.ID || '',
                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',    
+                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                 ];
-                 splashArrayHolidayList.push(dataListAllowance);
-              }
-
-
-        
-              
+    
+                splashArrayHolidayList.push(dataListAllowance);
+            }
+      
+    
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -2411,7 +2413,7 @@ Template.payrollrules.onRendered(function() {
                       data: splashArrayHolidayList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [                              
-                            
+                        
                         {
                           className: "colHolidayID hiddenColumn",
                           "targets": [0]
@@ -2469,19 +2471,19 @@ Template.payrollrules.onRendered(function() {
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                     for (let i = 0; i < data.tpayrollholidays.length; i++) {
-                                    
+                
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
                                             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',  
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',    
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                                             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
-                        
+                      
                                         splashArrayHolidayList.push(dataListAllowance);
                                     }
     
-                                         let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                         let uniqueChars = [...new Set(splashArrayCalenderList)];
                                          var datatable = $('#tblHolidays').DataTable();
                                               datatable.clear();
                                               datatable.rows.add(uniqueChars);
@@ -2503,7 +2505,6 @@ Template.payrollrules.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                
                         $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
                         $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
@@ -2519,7 +2520,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
-                    splashArrayHolidayList = [];
+                    splashArrayCalenderList = [];
                     if (dataLenght == -1) {
                       $('.fullScreenSpin').css('display', 'none');
     
@@ -2555,8 +2556,9 @@ Template.payrollrules.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
           });
         });
-        
-     };
+
+    };
+
     templateObject.getHolidayData();
 
     templateObject.getOrderdinaryEarning = function(){
@@ -9454,13 +9456,14 @@ Template.payrollrules.onRendered(function() {
 
     template.getPayrollOrgainzations = function()
     {
-
+        $('.fullScreenSpin').css('display', 'block');
         getVS1Data('TPayrollOrganization').then(function(dataObject) {
+            $('.fullScreenSpin').css('display', 'block');
             if (dataObject.length == 0) {
                  sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
                   addVS1Data('TPayrollOrganization', JSON.stringify(data));
                    
-                  console.log(data);
+               
                   for (let i = 0; i < data.tpayrollorganization.length; i++) {
                
                     $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
@@ -9503,12 +9506,12 @@ Template.payrollrules.onRendered(function() {
                 $('.fullScreenSpin').css('display', 'none');
               });
             }else{
+                $('.fullScreenSpin').css('display', 'block');
+                sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
               
-              sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
-              
-              let useData = data;
-              console.log(data);
-              for (let i = 0; i < data.tpayrollorganization.length; i++) {
+                let useData = data;
+           
+                for (let i = 0; i < data.tpayrollorganization.length; i++) {
                
                 $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
                 $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
@@ -9550,53 +9553,54 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
-             
-              sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TPayrollOrganization', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
+                $('.fullScreenSpin').css('display', 'block');
+                sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TPayrollOrganization', JSON.stringify(data));
+                let lineItems = [];
+                let lineItemObj = {};
 
-            
-              for (let i = 0; i < data.tpayrollorganization.length; i++) {
+                $('.fullScreenSpin').css('display', 'block');
                
-                $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
-                $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
-                $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
-                $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
-                $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
-                $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
-                $('#employegroup').val('');
-                $('#timesheetcat').val('');
-                $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                for (let i = 0; i < data.tpayrollorganization.length; i++) {
                 
-                if(data.tpayrollorganization[i].fields.showannualsalary == true)
-                {
-                    $('#swtShowAnnualSalary').attr("checked","checked");
-                }
-                else{
-                   $('#swtShowAnnualSalary').removeAttr('checked');
-                }
+                    $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                    $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                    $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                    $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                    $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                    $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                    $('#employegroup').val('');
+                    $('#timesheetcat').val('');
+                    $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                    
+                    if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                    {
+                        $('#swtShowAnnualSalary').attr("checked","checked");
+                    }
+                    else{
+                    $('#swtShowAnnualSalary').removeAttr('checked');
+                    }
 
-                if(data.tpayrollorganization[i].fields.showemployeebases == true)
-                {
-                    $('#swtShowEmploymentBasis').attr("checked","checked");
-                }
-                else{
-                   $('#swtShowEmploymentBasis').removeAttr('checked');
-                }
+                    if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                    {
+                        $('#swtShowEmploymentBasis').attr("checked","checked");
+                    }
+                    else{
+                    $('#swtShowEmploymentBasis').removeAttr('checked');
+                    }
 
-                $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
-                $('#uploadedImage').attr('width','100%');
-                $('#uploadedImage').attr('height','100%');
-                $('#removeLogo').show();
-                $('#changeLogo').show();
-              
-              }
+                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    $('#uploadedImage').attr('width','100%');
+                    $('#uploadedImage').attr('height','100%');
+                    $('#removeLogo').show();
+                    $('#changeLogo').show();
+                
+                }
     
-              $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-          });
+                $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
         });
 
 
@@ -17737,7 +17741,7 @@ Template.payrollrules.onRendered(function() {
 
     $(document).on("click", "#tblratetypelist tbody tr", function(e) {
 
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeOvertime';
+        let selectLineID = $('#selectRateLineID').val();
        
         var table = $(this);
         let description = table.find(".thDescription").text();
@@ -17751,153 +17755,68 @@ Template.payrollrules.onRendered(function() {
            $('#add-rateype-title').text('Edit Rate Type Details');
 
           }
+          else if(selectLineID == 'edtRateType'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateType').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
 
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
+          else if(selectLineID == 'edtRateTypeTermnination'){                            
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeTermnination').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+           else if(selectLineID == 'edtRateTypeLumpSumE'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeLumpSumE').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+          else  if(selectLineID == 'edtRateTypeBonusesCommissions'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeBonusesCommissions').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+           else if(selectLineID == 'edtRateTypeLumpSumW'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeLumpSumW').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+          else if(selectLineID == 'edtRateTypeDirectorsFees'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeDirectorsFees').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+           else
+           {
+
+           }
+ 
+
+          $('#tblratetypelist_filter .form-control-sm').val('');
+             setTimeout(function () {
+                    $('.btnRefreshRateType').trigger('click');
+                    $('.fullScreenSpin').css('display', 'none');
+           }, 1000);
     });
 
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
 
-        let selectLineID = $('#selectRateLineID').val()||'edtRateType';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
 
-          if(selectLineID == 'edtRateType'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateType').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeTermnination';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeTermnination'){                            
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeTermnination').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeLumpSumE';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeLumpSumE'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeLumpSumE').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeBonusesCommissions';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeBonusesCommissions'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeBonusesCommissions').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeLumpSumW';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeLumpSumW'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeLumpSumW').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeDirectorsFees';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeDirectorsFees'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeDirectorsFees').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
 
     $(document).on("click", "#tblgrouplist tbody tr", function(e) {
 
@@ -24840,15 +24759,15 @@ Template.payrollrules.events({
 
     'keyup #tblPayCalendars_filter input': function (event) {
         if($(event.target).val() != ''){
-          $(".btnRefreshCalender").addClass('btnSearchAlert');
+          $(".btnRefreshcalender").addClass('btnSearchAlert');
         }else{
-          $(".btnRefreshCalender").removeClass('btnSearchAlert');
+          $(".btnRefreshcalender").removeClass('btnSearchAlert');
         }
         if (event.keyCode == 13) {
            $(".btnRefreshCalender").trigger("click");
         }
     },
-    'click .btnRefreshCalender':function(event){
+    'click .btnRefreshcalender':function(event){
       
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
@@ -24860,7 +24779,7 @@ Template.payrollrules.events({
         let dataSearchName = $('#tblPayCalendars_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getNewCalenderByNameOrPayPeriod(dataSearchName).then(function (data) {
-                $(".btnRefreshCalender").removeClass('btnSearchAlert');
+                $(".btnRefreshcalender").removeClass('btnSearchAlert');
                 let lineItems = [];
                 let lineItemObj = {};
                 if (data.tpayrollcalendars.length > 0) {
@@ -24953,14 +24872,14 @@ Template.payrollrules.events({
             $(".btnRefreshHoliday").removeClass('btnSearchAlert');
             let lineItems = [];
             let lineItemObj = {};
-            if (data.Tpayrollholidays.length > 0) {
-                for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+            if (data.tpayrollholidays.length > 0) {
+                for (let i = 0; i < data.tpayrollholidays.length; i++) {
                 
                     var dataTableList = {
-                        id:data.Tpayrollholidays[i].fields.ID || '',
-                        name:data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                        group:data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName  || '',
-                        date: moment(data.Tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+                        id:data.tpayrollholidays[i].fields.ID || '',
+                        name:data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                        group:data.tpayrollholidays[i].fields.PayrollHolidaysGroupName  || '',
+                        date: moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
                         deletedata:'<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                     };
   
@@ -25139,15 +25058,17 @@ Template.payrollrules.events({
     if (dataSearchName.replace(/\s/g, '') != '') {
         sideBarService.getAllowanceByName(dataSearchName).then(function (data) {
             $(".btnRefreshAllowance").removeClass('btnSearchAlert');
+         
             let lineItems = [];
             let lineItemObj = {};
             if (data.tallowance.length > 0) {
                 for (let i = 0; i < data.tallowance.length; i++) {
                     let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
+                  
                     var dataTableList = {
                         id:data.tallowance[i].fields.ID || 0,
                         description:data.tallowance[i].fields.Description || '-',
-                        type:tallowance[i].fields.AllowanceType || '',
+                        type:data.tallowance[i].fields.AllowanceType || '',
                         displayname:data.tallowance[i].fields.DisplayIn || '',
                         amount:allowanceAmount || 0.00,
                         accountname:data.tallowance[i].fields.Accountname || '',
@@ -25155,15 +25076,18 @@ Template.payrollrules.events({
                         axempt:data.tallowance[i].fields.Payrolltaxexempt || false,
                         superince:data.tallowance[i].fields.Superinc || false,
                         workcover:data.tallowance[i].fields.Workcoverexempt || false,
-                        deletedata:'<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                        deletedata:'<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>',
                     };
-    
+                    console.log(dataTableList);
                     splashArrayInvoiceList.push(dataTableList);
                 }
                 templateObject.datatablerecords.set(splashArrayInvoiceList);
     
                 let item = templateObject.datatablerecords.get();
                 $('.fullScreenSpin').css('display', 'none');
+
+                console.log(splashArrayInvoiceList);
+
                 if (splashArrayInvoiceList) {
                     var datatable = $('#tblAlowances').DataTable();
                     $("#tblAlowances > tbody").empty();
