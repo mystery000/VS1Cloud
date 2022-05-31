@@ -20,8 +20,8 @@ Template.earningRateSettings.onCreated(function() {
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
   templateObject.imageFileData=new ReactiveVar();
-  templateObject.currentDrpDownID = new ReactiveVar(); 
-  // templateObject.Accounts = new ReactiveVar([]);   
+  templateObject.currentDrpDownID = new ReactiveVar();
+  // templateObject.Accounts = new ReactiveVar([]);
 });
 
 Template.earningRateSettings.onRendered(function() {
@@ -45,7 +45,7 @@ Template.earningRateSettings.onRendered(function() {
             console.log('data', data)
             let lineItems = [];
             let lineItemObj = {};
-            for (let i = 0; i < data.tearnings.length; i++) {                
+            for (let i = 0; i < data.tearnings.length; i++) {
                 let dataList = [
                     data.tearnings[i].fields.ID || '',
                     data.tearnings[i].fields.EarningsName || '',
@@ -55,7 +55,7 @@ Template.earningRateSettings.onRendered(function() {
                     data.tearnings[i].fields.ExpenseAccount || '',
                     data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
                     data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || '',                
+                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || '',
                 ];
                 dataTableList.push(dataList);
                 templateObject.datatablerecords.set(dataTableList);
@@ -244,7 +244,7 @@ Template.earningRateSettings.onRendered(function() {
           let lineItems = [];
           let lineItemObj = {};
           for (let i = 0; i < data.tordinarytimeearnings.length; i++) {
-            
+
             var dataListAllowance = [
                 data.tordinarytimeearnings[i].fields.ID || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -257,14 +257,14 @@ Template.earningRateSettings.onRendered(function() {
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-             
+
                '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                ];
 
               splashArrayEarningList.push(dataListAllowance);
           }
 
-    
+
 
 
           setTimeout(function () {
@@ -275,8 +275,8 @@ Template.earningRateSettings.onRendered(function() {
 
                   data: splashArrayEarningList,
                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [                              
-                    
+                  columnDefs: [
+
                     {
                        className: "colEarningsID hiddenColumn",
                        "targets": [0]
@@ -284,43 +284,43 @@ Template.earningRateSettings.onRendered(function() {
                      {
                         className: "colEarningsNames",
                         "targets": [1]
-                     },  
+                     },
                      {
                         className: "colEarningsType",
                         "targets": [2]
-                     },      
+                     },
                      {
                       className: "colEarningsDisplayName",
                       "targets": [3]
-                     }, 
+                     },
                      {
                         className: "colEarningsratetype",
                         "targets": [4]
-                      },  
+                      },
                      {
                       className: "colEarningsAmount",
                       "targets": [5]
-                     },  
+                     },
                      {
                       className: "colEarningsAccounts",
                       "targets": [6]
-                     },  
+                     },
                      {
                       className: "colEarningsAccountsID hiddenColumn",
                       "targets": [7]
-                     },   
+                     },
                      {
                       className: "colEarningsPAYG hiddenColumn"  ,
                       "targets": [8]
-                     },  
+                     },
                      {
                       className: "colEarningsSuperannuation hiddenColumn",
                       "targets": [9]
-                     },  
+                     },
                      {
                       className: "colEarningsReportableasW1 hiddenColumn",
                       "targets": [10]
-                     },                   
+                     },
                      {
                         className: "colDeleteEarnings",
                         "orderable": false,
@@ -362,7 +362,7 @@ Template.earningRateSettings.onRendered(function() {
                               sideBarService.getOrdinarytimeEarning(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                 for (let i = 0; i < data.tordinarytimeearnings.length; i++) {
-            
+
                                     var dataListAllowance = [
                                         data.tordinarytimeearnings[i].fields.ID || '',
                                         data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -375,12 +375,12 @@ Template.earningRateSettings.onRendered(function() {
                                         data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
                                         data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
                                         data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-                                     
+
                                        '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                     ];
                                     splashArrayEarningList.push(dataListAllowance);
                                 }
-                  
+
 
                                           let uniqueChars = [...new Set(splashArrayEarningList)];
                                           var datatable = $('#tblEarnings').DataTable();
@@ -462,7 +462,7 @@ Template.earningRateSettings.onRendered(function() {
       let lineItems = [];
       let lineItemObj = {};
       for (let i = 0; i < data.Tordinarytimeearnings.length; i++) {
-           
+
         var dataListAllowance = [
             data.tordinarytimeearnings[i].fields.ID || '',
             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -475,7 +475,7 @@ Template.earningRateSettings.onRendered(function() {
             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-         
+
            '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
         ];
 
@@ -492,8 +492,8 @@ Template.earningRateSettings.onRendered(function() {
 
               data: splashArrayEarningList,
               "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              columnDefs: [                              
-                    
+              columnDefs: [
+
                 {
                    className: "colEarningsID hiddenColumn",
                    "targets": [0]
@@ -501,43 +501,43 @@ Template.earningRateSettings.onRendered(function() {
                  {
                     className: "colEarningsNames",
                     "targets": [1]
-                 },  
+                 },
                  {
                     className: "colEarningsType",
                     "targets": [2]
-                 },      
+                 },
                  {
                   className: "colEarningsDisplayName",
                   "targets": [3]
-                 }, 
+                 },
                  {
                     className: "colEarningsratetype",
                     "targets": [4]
-                  },  
+                  },
                  {
                   className: "colEarningsAmount",
                   "targets": [5]
-                 },  
+                 },
                  {
                   className: "colEarningsAccounts",
                   "targets": [6]
-                 },  
+                 },
                  {
                   className: "colEarningsAccountsID hiddenColumn",
                   "targets": [7]
-                 },   
+                 },
                  {
                   className: "colEarningsPAYG hiddenColumn"  ,
                   "targets": [8]
-                 },  
+                 },
                  {
                   className: "colEarningsSuperannuation hiddenColumn",
                   "targets": [9]
-                 },  
+                 },
                  {
                   className: "colEarningsReportableasW1 hiddenColumn",
                   "targets": [10]
-                 },                   
+                 },
                  {
                     className: "colDeleteEarnings",
                     "orderable": false,
@@ -579,7 +579,7 @@ Template.earningRateSettings.onRendered(function() {
                           sideBarService.getOrdinarytimeEarning(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                             for (let i = 0; i < data.tordinarytimeearnings.length; i++) {
-            
+
                                 var dataListAllowance = [
                                     data.tordinarytimeearnings[i].fields.ID || '',
                                     data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -592,10 +592,10 @@ Template.earningRateSettings.onRendered(function() {
                                     data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
                                     data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
                                     data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-                                 
+
                                    '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                 ];
-              
+
                                 splashArrayEarningList.push(dataListAllowance);
                             }
 
@@ -671,14 +671,14 @@ Template.earningRateSettings.onRendered(function() {
     }
     }).catch(function(err) {
 
-     
+
        sideBarService.getOrdinarytimeEarning(initialBaseDataLoad, 0).then(function (data) {
          addVS1Data('TOrdinaryTimeEarnings', JSON.stringify(data));
            let lineItems = [];
            let lineItemObj = {};
-          
+
           for (let i = 0; i < data.tordinarytimeearnings.length; i++) {
-                 
+
             var dataListAllowance = [
                 data.tordinarytimeearnings[i].fields.ID || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -691,29 +691,29 @@ Template.earningRateSettings.onRendered(function() {
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
                 data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-             
+
                '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
             ];
-                 
-             
+
+
                   splashArrayEarningList.push(dataListAllowance);
                }
 
-        
-  
-          
+
+
+
 
             setTimeout(function () {
                 MakeNegative();
             }, 100);
             setTimeout(function () {
-                
+
                 $('#tblEarnings').DataTable({
-    
+
                     data: splashArrayEarningList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    columnDefs: [                              
-                    
+                    columnDefs: [
+
                         {
                            className: "colEarningsID hiddenColumn",
                            "targets": [0]
@@ -721,43 +721,43 @@ Template.earningRateSettings.onRendered(function() {
                          {
                             className: "colEarningsNames",
                             "targets": [1]
-                         },  
+                         },
                          {
                             className: "colEarningsType",
                             "targets": [2]
-                         },      
+                         },
                          {
                           className: "colEarningsDisplayName",
                           "targets": [3]
-                         }, 
+                         },
                          {
                             className: "colEarningsratetype",
                             "targets": [4]
-                          },  
+                          },
                          {
                           className: "colEarningsAmount",
                           "targets": [5]
-                         },  
+                         },
                          {
                           className: "colEarningsAccounts",
                           "targets": [6]
-                         },  
+                         },
                          {
                           className: "colEarningsAccountsID hiddenColumn",
                           "targets": [7]
-                         },   
+                         },
                          {
                           className: "colEarningsPAYG hiddenColumn"  ,
                           "targets": [8]
-                         },  
+                         },
                          {
                           className: "colEarningsSuperannuation hiddenColumn",
                           "targets": [9]
-                         },  
+                         },
                          {
                           className: "colEarningsReportableasW1 hiddenColumn",
                           "targets": [10]
-                         },                   
+                         },
                          {
                             className: "colDeleteEarnings",
                             "orderable": false,
@@ -780,26 +780,26 @@ Template.earningRateSettings.onRendered(function() {
                         $('#tblEarnings_ellipsis').addClass('disabled');
                         if (oSettings._iDisplayLength == -1) {
                             if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                             }
                         } else {
-    
+
                         }
                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                             $('.paginate_button.page-item.next').addClass('disabled');
                         }
-    
+
                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
                             .on('click', function () {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 var splashArrayReisumentDupp = new Array();
                                 let dataLenght = oSettings._iDisplayLength;
                                 let customerSearch = $('#tblEarnings_filter input').val();
-    
+
                                 sideBarService.getOrdinarytimeEarning(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-    
+
                                     for (let i = 0; i < data.tordinarytimeearnings.length; i++) {
-                    
+
                                         var dataListAllowance = [
                                             data.tordinarytimeearnings[i].fields.ID || '',
                                             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsName || '',
@@ -812,13 +812,13 @@ Template.earningRateSettings.onRendered(function() {
                                             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExpenseAccount || '',
                                             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsExemptSuperannuationGuaranteeCont || '',
                                             data.tordinarytimeearnings[i].fields.OrdinaryTimeEarningsReportableW1onActivityStatement || '',
-                                         
+
                                            '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
-                    
+
                                         splashArrayEarningList.push(dataListAllowance);
                                     }
-    
+
                                         let uniqueChars = [...new Set(splashArrayEarningList)];
                                         var datatable = $('#tblEarnings').DataTable();
                                             datatable.clear();
@@ -827,14 +827,14 @@ Template.earningRateSettings.onRendered(function() {
                                             setTimeout(function () {
                                                 $("#tblEarnings").dataTable().fnPageChange('last');
                                             }, 400);
-    
+
                                             $('.fullScreenSpin').css('display', 'none');
-    
-    
+
+
                                 }).catch(function (err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-    
+
                             });
                         setTimeout(function () {
                             MakeNegative();
@@ -843,29 +843,29 @@ Template.earningRateSettings.onRendered(function() {
                     "fnInitComplete": function () {
                         $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
                         $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
-    
+
                     }
-    
+
                 }).on('page', function () {
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
-    
+
                 }).on('column-reorder', function () {
-    
+
                 }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
                     splashArrayEarningList = [];
                     if (dataLenght == -1) {
                     $('.fullScreenSpin').css('display', 'none');
-    
+
                     } else {
                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
                             sideBarService.getOrdinarytimeEarning(dataLenght, 0).then(function (dataNonBo) {
-    
+
                                 addVS1Data('TOrdinaryTimeEarnings', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                     templateObject.resetData(dataNonBo);
                                     $('.fullScreenSpin').css('display', 'none');
@@ -881,12 +881,12 @@ Template.earningRateSettings.onRendered(function() {
                         MakeNegative();
                     }, 100);
                 });
-    
-    
+
+
             }, 0);
-    
+
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
-    
+
             $('.fullScreenSpin').css('display', 'none');
             }).catch(function (err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -897,7 +897,7 @@ Template.earningRateSettings.onRendered(function() {
 
     // Standard drop down
     $('.earningLineDropDown').editableSelect();
-    $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {     
+    $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {
         let $search = $(this);
         let offset = $search.offset();
         let dropDownID = $search.attr('id')
@@ -918,7 +918,7 @@ Template.earningRateSettings.onRendered(function() {
 
 
 Template.earningRateSettings.events({
-    'click .saveEarningRates': function (event) {
+    'click .saveEarningRates': async function (event) {
         let EarningsName = $('#edtEarningsName').val();
         let EarningsType = $('#edtEarningsType').val();
         let EarningsDisplayName = $('#edtDisplayName').val();
@@ -1003,4 +1003,4 @@ Template.earningRateSettings.helpers({
     }
 });
 
-// 
+//
