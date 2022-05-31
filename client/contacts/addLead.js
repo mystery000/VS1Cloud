@@ -1283,12 +1283,12 @@ Template.leadscard.events({
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
             contactService.saveProspectEx(objDetails).then(function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/quotecard?id=' + customerID);
+                FlowRouter.go('/quotecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
@@ -1319,12 +1319,12 @@ Template.leadscard.events({
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
             contactService.saveProspectEx(objDetails).then(function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/salesordercard?id=' + customerID);
+                FlowRouter.go('/salesordercard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
@@ -1355,12 +1355,12 @@ Template.leadscard.events({
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
             contactService.saveProspectEx(objDetails).then(function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/invoicecard?id=' + customerID);
+                FlowRouter.go('/invoicecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',

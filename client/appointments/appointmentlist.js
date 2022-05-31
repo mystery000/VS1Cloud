@@ -12,6 +12,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 let utilityService = new UtilityService();
+let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 Template.appointmentlist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -1595,7 +1596,22 @@ Template.appointmentlist.onRendered(async function () {
 
 Template.appointmentlist.events({
     'click #btnAppointment': function (event) {
-        FlowRouter.go('/appointments');
+      if (createAppointment == false) {
+                swal({
+                    title: 'Oops...',
+                    text: "You don't have access to create a new Appointment",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {}
+                    else if (result.dismiss === 'cancel') {}
+                });
+                return false;
+    }else{
+      FlowRouter.go('/appointments');
+    };
+
     },
     'change #hideConverted': function () {
         let templateObject = Template.instance();
@@ -2587,6 +2603,18 @@ Template.appointmentlist.events({
             // });
         }
 
+    },
+    'click #btnInvoiceDisabled': function () {
+      swal({
+          title: 'Oops...',
+          text: "You don't have access to create Invoice",
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+      }).then((result) => {
+          if (result.value) {}
+          else if (result.dismiss === 'cancel') {}
+      });
     }
 
 });
@@ -2630,6 +2658,9 @@ Template.appointmentlist.helpers({
         checkCreateInvoice = true;
       }
         return checkCreateInvoice;
+    },
+    createnewappointment: () => {
+        return Session.get('CloudAppointmentCreateAppointment') || false;
     }
 
 });

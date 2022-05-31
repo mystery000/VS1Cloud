@@ -198,6 +198,34 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isCustomerDetails}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/customerdetailsreport">Customer Details Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkCustomerDetails" type="checkbox" id="formCheck-CustomerDetailsFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CustomerDetailsFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isCustomerSummary}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/customersummaryreport">Customer Summary Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkCustomerSummary" type="checkbox" id="formCheck-CustomerSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CustomerSummaryFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isForeignExchangeHistoryList}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -905,11 +933,11 @@
                                         <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
                                     </div>
                                     <div class="card-body" style="overflow-x: auto;">
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Customer Details Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/customerdetailsreport">Customer Details Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkCustomerDetails" type="checkbox" id="formCheck-CustomerDetails" disabled>
+                                                    <input class="custom-control-input favCheckBox chkCustomerDetails" type="checkbox" id="formCheck-CustomerDetails">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CustomerDetails"></label>
                                                 </div>
                                             </div>
@@ -926,21 +954,21 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Customer Summary Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/customersummaryreport">Customer Summary Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkRepairsListSummary" type="checkbox" id="formCheck-RepairsListSummary" disabled>
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-RepairsListSummary"></label>
+                                                    <input class="custom-control-input favCheckBox chkCustomerSummary" type="checkbox" id="formCheck-CustomerSummary">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-CustomerSummary"></label>
                                                 </div>
                                             </div>
-                                            {{#if isRepairsListSummary}}
+                                            {{#if isCustomerSummary}}
                                                 <script>
-                                                    $('.chkRepairsListSummary').prop("checked", true);
+                                                    $('.chkCustomerSummary').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('.chkRepairsListSummary').prop("checked", false);
+                                                    $('.chkCustomerSummary').prop("checked", false);
                                                 </script>
                                             {{/if}}
                                         </div>

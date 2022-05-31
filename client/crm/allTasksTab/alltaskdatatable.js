@@ -175,14 +175,26 @@ Template.alltaskdatatable.onRendered(function () {
             },
             format: {
               body: function (data, row, column) {
+                let col_lbl = "";
+                let lbl = "";
                 if (data.includes("</span>")) {
                   var res = data.split("</span>");
-                  data = res[1];
+                  res.forEach((element) => {
+                    lbl = element.split("</i>");
+                    if (lbl[1] != undefined) {
+                      col_lbl += lbl[1].replace("</a>", "") + ", ";
+                    }
+                  });
+                } else {
+                  col_lbl = data;
                 }
 
-                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+                return column === 1
+                  ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
+                  : col_lbl.slice(0, -1);
               },
             },
+            stripHtml: false,
           },
         },
         {
@@ -317,12 +329,23 @@ Template.alltaskdatatable.onRendered(function () {
             },
             format: {
               body: function (data, row, column) {
+                let col_lbl = "";
+                let lbl = "";
                 if (data.includes("</span>")) {
                   var res = data.split("</span>");
-                  data = res[1];
+                  res.forEach((element) => {
+                    lbl = element.split("</i>");
+                    if (lbl[1] != undefined) {
+                      col_lbl += lbl[1].replace("</a>", "") + ", ";
+                    }
+                  });
+                } else {
+                  col_lbl = data;
                 }
 
-                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+                return column === 1
+                  ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
+                  : col_lbl.slice(0, -1);
               },
             },
           },
@@ -461,12 +484,23 @@ Template.alltaskdatatable.onRendered(function () {
             },
             format: {
               body: function (data, row, column) {
+                let col_lbl = "";
+                let lbl = "";
                 if (data.includes("</span>")) {
                   var res = data.split("</span>");
-                  data = res[1];
+                  res.forEach((element) => {
+                    lbl = element.split("</i>");
+                    if (lbl[1] != undefined) {
+                      col_lbl += lbl[1].replace("</a>", "") + ", ";
+                    }
+                  });
+                } else {
+                  col_lbl = data;
                 }
 
-                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
+                return column === 1
+                  ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
+                  : col_lbl.slice(0, -1);
               },
             },
           },
@@ -672,6 +706,7 @@ Template.alltaskdatatable.onRendered(function () {
     let taskRows = new Array();
     let td0 = (td1 = td2 = td3 = td4 = td5 = "");
     let projectName = "";
+    let labelsForExcel = "";
 
     let todayDate = moment().format("ddd");
     let tomorrowDay = moment().add(1, "day").format("ddd");
@@ -705,10 +740,12 @@ Template.alltaskdatatable.onRendered(function () {
         if (item.fields.TaskLabel.fields) {
           td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
           style="margin-right: 5px;" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+          labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
         } else {
           item.fields.TaskLabel.forEach((lbl) => {
             td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
             style="margin-right: 5px;" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+            labelsForExcel += lbl.fields.TaskLabelName + " ";
           });
         }
       } else {
@@ -848,6 +885,7 @@ Template.alltaskdatatable.onRendered(function () {
         td5,
         item.fields.ID,
         item.fields.priority,
+        labelsForExcel,
       ]);
     });
     return taskRows;
@@ -945,16 +983,6 @@ Template.alltaskdatatable.onRendered(function () {
                 return false;
               }
               return true;
-            },
-            format: {
-              body: function (data, row, column) {
-                if (data.includes("</span>")) {
-                  var res = data.split("</span>");
-                  data = res[1];
-                }
-
-                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
-              },
             },
           },
         },
@@ -1148,6 +1176,9 @@ Template.alltaskdatatable.onRendered(function () {
             columns: ":visible",
             format: {
               body: function (data, row, column) {
+                if (Number.isInteger(data)) {
+                  data = data.toString();
+                }
                 if (data.includes("</span>")) {
                   var res = data.split("</span>");
                   data = res[1];
@@ -1324,16 +1355,6 @@ Template.alltaskdatatable.onRendered(function () {
                 return false;
               }
               return true;
-            },
-            format: {
-              body: function (data, row, column) {
-                if (data.includes("</span>")) {
-                  var res = data.split("</span>");
-                  data = res[1];
-                }
-
-                return column === 1 ? data.replace(/<.*?>/gi, "") : data;
-              },
             },
           },
         },

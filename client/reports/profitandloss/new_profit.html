@@ -140,19 +140,22 @@
             }
 
             #item-value->* {
-                font-size: 16px !important;
                 border-top: 0px;
                 padding-top: 16px;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
                 border-top: unset;
             }
-            
+            .customProfitLossTable .table-sm td.fgrSubtotal,
+            .customProfitLossTable .table-sm td.fgrtotal {
+                font-weight: 800 !important;
+                color: #858796;
+            }
             .customProfitLossTable .table-sm td, .customProfitLossTable .table-sm th {
                 padding: 7px 15px !important;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
-                font-size: 16px !important;
+                color: #858796;
             }
             .pnlTable td {
                 border-top: unset;
@@ -222,7 +225,7 @@
                 display: inline-block;
                 margin: 0 0 0 30px;
                 font-size: 15px;
-                color: #494949;
+                color: #00a3d3 !important;
                 font-weight: 400;
                 background: whitesmoke;
                 padding: 7px 10px;
@@ -246,7 +249,25 @@
                 pointer-events: none;
                 cursor: not-allowed !important;
             }
-
+            .item-placeholder {
+                background: #ccc;
+                float:  left;
+                border-style: dashed;
+                border-width: 1px;
+                border-color: rgba(0,0,0,0.3);
+                min-height: 38px;
+                width: calc(100% - 30px);
+                margin-left: 30px;
+            }
+            .movable-placeholder {
+                background: #e8e8e8;
+                width: 100%;
+                float:  left;
+                border-style: dashed;
+                border-width: 1px;
+                border-color: rgba(0,0,0,0.3);
+                min-height: 38px;
+            }
         </style>
         <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
             style="width: 100%;">
@@ -537,7 +558,7 @@
                                             {{#each item in records}}
                                             <tr class="tableInnerRow" id="item-value-{{item.name}}">
                                                 {{#if equals item.accounttype ""}}
-                                                    <td style="padding-left: 50px !important;" class="fgr fgrblue"><span
+                                                    <td style="padding-left: 60px !important;" class="fgr fgrblue"><span
                                                             class="tglAccCodes" style="display:none;">200 -
                                                         </span>{{item.accountname}}</td>
                                                     <td></td>
