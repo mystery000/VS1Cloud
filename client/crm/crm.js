@@ -11,6 +11,7 @@ const _tabGroup = 9;
 Template.crmoverview.onCreated(function () {
   let templateObject = Template.instance();
   templateObject.crmtaskmitem = new ReactiveVar("all");
+  templateObject.currentTabID = new ReactiveVar("allTasks-tab");
 });
 
 Template.crmoverview.onRendered(function () {
@@ -18,6 +19,7 @@ Template.crmoverview.onRendered(function () {
   let currentId = FlowRouter.current().queryParams.id;
   currentId = currentId ? currentId : "all";
   templateObject.crmtaskmitem.set(currentId);
+  templateObject.currentTabID.set("allTasks-tab");
 
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
@@ -766,14 +768,72 @@ Template.crmoverview.events({
 
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblAllTaskDatatable_wrapper .dt-buttons .btntabletocsv").click();
+    let currentTabID = Template.instance().currentTabID.get();
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        jQuery(
+          "#tblTodayTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "upcomingTab-tab":
+        jQuery(
+          "#tblUpcomingTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "projectsTab-tab":
+        jQuery(
+          "#tblNewProjectsDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "filterLabelsTab-tab":
+        jQuery("#tblLabels_wrapper .dt-buttons .btntabletocsv").click();
+        break;
+      default:
+        jQuery(
+          "#tblAllTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+    }
+
     $(".fullScreenSpin").css("display", "none");
   },
 
   "click .printConfirm": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+
     $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf").click();
+    switch (currentTabID) {
+      case "todayTab-tab":
+        jQuery(
+          "#tblTodayTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "upcomingTab-tab":
+        jQuery(
+          "#tblUpcomingTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "projectsTab-tab":
+        jQuery(
+          "#tblNewProjectsDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "filterLabelsTab-tab":
+        jQuery("#tblLabels_wrapper .dt-buttons .btntabletopdf").click();
+        break;
+      default:
+        jQuery(
+          "#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+    }
+
     $(".fullScreenSpin").css("display", "none");
+  },
+
+  "click #myAllTablesTab": function (e) {
+    Template.instance().currentTabID.set(e.target.id);
   },
 
   "click .btnMailchimp": function (e) {
