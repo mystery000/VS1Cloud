@@ -235,6 +235,10 @@ openDb = function (dbName) {
       db.createObjectStore('TEarningsBonusesCommissions', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TLumpSumW', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TDirectorsFees', { keyPath: "EmployeeEmail" });
+
+      db.createObjectStore('TCRMProjectList', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TCRMTaskList', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TCRMLabelList', { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });
