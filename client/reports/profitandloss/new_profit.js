@@ -1697,10 +1697,10 @@ Template.newprofitandloss.events({
       let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
       if( Position != undefined ){
         // update lists with custom fields only
-        // item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
-        // item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
-        // item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
-        // item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
+        item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
+        item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
+        item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
+        item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
       }
       // fieldsList.push(item);
       /**
