@@ -92,6 +92,7 @@ Template.recontransactiondetail.onRendered(function() {
             basedataArr.push(basedataObj);
             let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
             templateObject.baselinedata.set(thirdaryData);
+            $('#labelWho').text(DepOrWith==='spent'?'To':'From');
             $('#FromWho').val(Who);
             let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
             $('#DateIn').val(dateIn_val);
