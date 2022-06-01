@@ -899,7 +899,6 @@ Template.leadscard.events({
 
                         }
                     });
-
                 }
             }
         }
@@ -1306,7 +1305,7 @@ Template.leadscard.events({
                 let customerID = data.fields.ID;
                 await templateObject.saveCustomerDetails();
                 $('.fullScreenSpin').css('display','none');
-                FlowRouter.go('/quotecard?custname=' + customerName);
+                FlowRouter.go('/quotecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
