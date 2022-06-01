@@ -6185,7 +6185,7 @@ Template.new_invoice.onRendered(() => {
 
         $(document).ready(function () {
             $('#edtCustomerName').editableSelect();
-            $('#sltCurrency').editableSelect();
+            //$('#sltCurrency').editableSelect();
             $('#sltTerms').editableSelect();
             $('#sltDept').editableSelect();
             $('#sltStatus').editableSelect();
@@ -6595,17 +6595,17 @@ Template.new_invoice.onRendered(() => {
             }
         });
 
-        $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-            $('#sltCurrency').val($(this).find(".colCode").text());
-            $('#exchange_rate').val($(this).find(".colBuyRate").text());
-            $('#currencyModal').modal('toggle');
+        // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
+        //     $('#sltCurrency').val($(this).find(".colCode").text());
+        //     $('#exchange_rate').val($(this).find(".colBuyRate").text());
+        //     $('#currencyModal').modal('toggle');
 
-            $('#tblCurrencyPopList_filter .form-control-sm').val('');
-            setTimeout(function () {
-                $('.btnRefreshCurrency').trigger('click');
-                $('.fullScreenSpin').css('display', 'none');
-            }, 1000);
-        });
+        //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
+        //     setTimeout(function () {
+        //         $('.btnRefreshCurrency').trigger('click');
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     }, 1000);
+        // });
 
         $(document).on("click", "#departmentList tbody tr", function (e) {
             $('#sltDept').val($(this).find(".colDeptName").text());
@@ -7139,111 +7139,111 @@ Template.new_invoice.onRendered(() => {
             }
         });
 
-        $('#sltCurrency').editableSelect()
-        .on('click.editable-select', function (e, li) {
+        // $('#sltCurrency').editableSelect()
+        // .on('click.editable-select', function (e, li) {
             
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var currencyDataName = e.target.value || '';
+        //     var $earch = $(this);
+        //     var offset = $earch.offset();
+        //     var currencyDataName = e.target.value || '';
 
-            $('#edtCurrencyID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#currencyModal').modal('toggle');
-            } else {
-                if (currencyDataName.replace(/\s/g, '') != '') {
-                    $('#add-currency-title').text('Edit Currency');
-                    $('#sedtCountry').prop('readonly', true);
-                    getVS1Data('TCurrency').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getCurrencies().then(function (data) {
+        //     $('#edtCurrencyID').val('');
+        //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        //         $('#currencyModal').modal('toggle');
+        //     } else {
+        //         if (currencyDataName.replace(/\s/g, '') != '') {
+        //             $('#add-currency-title').text('Edit Currency');
+        //             $('#sedtCountry').prop('readonly', true);
+        //             getVS1Data('TCurrency').then(function (dataObject) {
+        //                 if (dataObject.length == 0) {
+        //                     $('.fullScreenSpin').css('display', 'inline-block');
+        //                     sideBarService.getCurrencies().then(function (data) {
                              
-                                for (let i in data.tcurrency) {
-                                    if (data.tcurrency[i].Code === currencyDataName) {
-                                        $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                        setTimeout(function () {
-                                            $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                        }, 200);
-                                        //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                        $('#currencyCode').val(currencyDataName);
-                                        $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                        $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                        $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                        $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                        $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                        $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newCurrencyModal').modal('toggle');
-                                    $('#sedtCountry').attr('readonly', true);
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
+        //                         for (let i in data.tcurrency) {
+        //                             if (data.tcurrency[i].Code === currencyDataName) {
+        //                                 $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                                 setTimeout(function () {
+        //                                     $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                                 }, 200);
+        //                                 //$('#sedtCountry').val(data.tcurrency[i].Country);
+        //                                 $('#currencyCode').val(currencyDataName);
+        //                                 $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                                 $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                                 $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                                 $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                                 $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                                 $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                             }
+        //                         }
+        //                         setTimeout(function () {
+        //                             $('.fullScreenSpin').css('display', 'none');
+        //                             $('#newCurrencyModal').modal('toggle');
+        //                             $('#sedtCountry').attr('readonly', true);
+        //                         }, 200);
+        //                     });
+        //                 } else {
+        //                     let data = JSON.parse(dataObject[0].data);
                           
                         
-                            let useData = data.tcurrency;
-                            for (let i = 0; i < data.tcurrency.length; i++) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                    $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                }
-                            }
-                            setTimeout(function () {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                            }, 200);
-                        }
+        //                     let useData = data.tcurrency;
+        //                     for (let i = 0; i < data.tcurrency.length; i++) {
+        //                         if (data.tcurrency[i].Code === currencyDataName) {
+        //                             $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                             $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                             $('#currencyCode').val(currencyDataName);
+        //                             $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                             $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                             $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                             $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                             $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                             $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                         }
+        //                     }
+        //                     setTimeout(function () {
+        //                         $('.fullScreenSpin').css('display', 'none');
+        //                         $('#newCurrencyModal').modal('toggle');
+        //                     }, 200);
+        //                 }
 
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getCurrencies().then(function (data) {
-                            for (let i in data.tcurrency) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                    setTimeout(function () {
-                                        $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                    }, 200);
-                                    //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                }
-                            }
-                            setTimeout(function () {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                                $('#sedtCountry').attr('readonly', true);
-                            }, 200);
-                        });
-                    });
+        //             }).catch(function (err) {
+        //                 $('.fullScreenSpin').css('display', 'inline-block');
+        //                 sideBarService.getCurrencies().then(function (data) {
+        //                     for (let i in data.tcurrency) {
+        //                         if (data.tcurrency[i].Code === currencyDataName) {
+        //                             $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                             setTimeout(function () {
+        //                                 $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                             }, 200);
+        //                             //$('#sedtCountry').val(data.tcurrency[i].Country);
+        //                             $('#currencyCode').val(currencyDataName);
+        //                             $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                             $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                             $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                             $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                             $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                             $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                         }
+        //                     }
+        //                     setTimeout(function () {
+        //                         $('.fullScreenSpin').css('display', 'none');
+        //                         $('#newCurrencyModal').modal('toggle');
+        //                         $('#sedtCountry').attr('readonly', true);
+        //                     }, 200);
+        //                 });
+        //             });
 
-                } else {
-                    $('#currencyModal').modal();
-                    setTimeout(function () {
-                        $('#tblCurrencyPopList_filter .form-control-sm').focus();
-                        $('#tblCurrencyPopList_filter .form-control-sm').val('');
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblCurrencyPopList').DataTable();
-                        datatable.draw();
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
+        //         } else {
+        //             $('#currencyModal').modal();
+        //             setTimeout(function () {
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').focus();
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').val('');
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+        //                 var datatable = $('#tblCurrencyPopList').DataTable();
+        //                 datatable.draw();
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+        //             }, 500);
+        //         }
+        //     }
+        // });
 
     
 
@@ -12514,60 +12514,30 @@ Template.new_invoice.onRendered(() => {
         },
         'click .btnSnLotmodal': function(event) {
             $('.fullScreenSpin').css('display', 'inline-block');
-            let templateObject = Template.instance();
-            let invoiceData = templateObject.invoicerecord.get();
-            let InvoiceLine = invoiceData.LineItems;
             var target = event.target;
             let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
-            invoiceData.LineItems.forEach(element => {
-                if (element.item == selectedProductName) {
-                    let productService = new ProductService();
-                    productService.getProductStatus(selectedProductName).then(function(data) {
-                        $('.fullScreenSpin').css('display', 'none');
-                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                            swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
-                            event.preventDefault();
-                            return false;
-                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                            $('#lotNumberModal').modal('show');
-                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                            $('#serialNumberModal').modal('show');
-                            if (element.pqaseriallotdata == "null") {
-                                console.log("Data: NAN");
-                            } else {
-                                if (element.pqaseriallotdata.fields.PQASN == "null") {
-                                    console.log("Data: NAN");
-                                } else {
-                                    if (element.pqaseriallotdata.fields.PQASN.length == 0) {
-                                        console.log("Data: NAN");
-                                    } else {
-                                        let shtml = '';
-                                    let i = 0;
-                                    shtml += `
-                                    <tr><td rowspan="2"></td><td colspan="2" class="text-center">Allocate Serial Numbers</td></tr>
-                                    <tr><td class="text-start">#</td><td class="text-start">Serial number</td></tr>
-                                    `;
-                                    for (let k = 0; k < element.pqaseriallotdata.fields.PQASN.length; k++) {
-                                        if (element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber == "null") {
-                                            console.log("Data: NAN");
-                                        } else {
-                                            i++;
-                                            shtml += `
-                                            <tr><td></td><td class="lineNo">${i}</td><td contenteditable="true" class="lineSerialnumbers">${Number(element.pqaseriallotdata.fields.PQASN[k].fields.SerialNumber)}</td></tr>
-                                            `;
-                                        }
-                                    }
-                                    $('#tblSeriallist').html(shtml);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-            localStorage.setItem('productname', selectedProductName);
             let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
             localStorage.setItem('productItem', selectedunit);
+            let productService = new ProductService();
+            if (selectedProductName == '') {
+                $('.fullScreenSpin').css('display', 'none');
+                swal('You have to select Product.', '', 'info');
+                event.preventDefault();
+                return false;
+            } else {
+                productService.getProductStatus(selectedProductName).then(function(data) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
+                        event.preventDefault();
+                        return false;
+                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                        $('#lotNumberModal').modal('show');
+                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                        $('#serialNumberModal').modal('show');
+                    }
+                });
+            }
         }
     });
 

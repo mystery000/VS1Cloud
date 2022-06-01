@@ -1,0 +1,32 @@
+<template name="CurrencyWidget">
+    <style>
+        .currency-module {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            border: 1px solid rgb(215, 215, 215);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            /* max-width: 200px; */
+        }
+
+        .currency-module>div {
+            width: 100%;
+
+        }
+    </style>
+
+
+    <div class="currency-module currency-js" type="{{rate}}">
+        <div>
+            {{> currencydropdown}}
+        </div>
+        <div>
+            {{> CurrencyRate }}
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
+        {{> currencypop}}
+    </div>
+</template>
