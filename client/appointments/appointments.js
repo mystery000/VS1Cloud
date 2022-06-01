@@ -51,6 +51,8 @@ Template.appointments.onCreated(function () {
 
     templateObject.allnoninvproducts = new ReactiveVar([]);
 
+    templateObject.textnote = new ReactiveVar();
+
     //templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.checkRefresh.set(false);
@@ -6558,10 +6560,8 @@ Template.appointments.events({
         let calOptions = templateObject.globalSettings.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || '';
         $('#frmAppointment')[0].reset();
-        console.log('here');
         let element = $(event.target);
         if (element.is("p") || element.is(".card-body")) {
-          console.log('here 1');
             var id = parseInt($(event.target).closest('.card').attr('id'));
             var appointmentData = templateObject.appointmentrecords.get();
             var result = appointmentData.filter(apmt => {
@@ -6578,7 +6578,6 @@ Template.appointments.events({
 
             let hoursFormatted = templateObject.timeFormat(hours) || '';
             let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || '';
-            console.log(result);
             if (result[0].isPaused == "Paused") {
                 $(".paused").show();
                 $("#btnHold").prop("disabled", true);
@@ -6665,7 +6664,6 @@ Template.appointments.events({
             $('#event-modal').modal();
           }
         } else {
-          console.log('here 2');
             let bookingDate = new Date();
             let startTime = ("0" + bookingDate.getHours()).slice(-2) + ":" + ("0" + bookingDate.getMinutes()).slice(-2);
             let defaultDuration = parseInt(calOptions.DefaultApptDuration) || 2;
@@ -9311,6 +9309,56 @@ Template.appointments.events({
                     });
                 }
 
+        //});
+
+    },
+    'mouseenter #txtNotes': function (event) {
+      let getValue = $('#txtNotes').val() || ' ';
+      let templateObject = Template.instance();
+      templateObject.textnote.set(getValue);
+    },
+    'mouseleave #txtNotes': function (event) {
+        let appointmentService = new AppointmentService();
+        let templateObject = Template.instance();
+        let getValue = templateObject.textnote.get()||' ';
+        let notes = $('#txtNotes').val() || ' ';
+        let id = document.getElementById('updateID').value || '0';
+        if (createAppointment == false) {
+        if(getValue != notes){
+        if (Session.get('CloudAppointmentNotes') == true) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                if (id == '0' || id == null) {
+                    // $('#event-modal').modal('hide');
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                  let objectData = {
+                        type: "TAppointmentEx",
+                        fields: {
+                            Id: parseInt(id),
+                            Notes: notes,
+                        }
+                    };
+
+                    appointmentService.saveAppointment(objectData).then(function (data) {
+                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataList) {
+                            addVS1Data('TAppointment', JSON.stringify(dataList)).then(function (datareturn) {
+                                // setTimeout(function () {
+                                     $('.fullScreenSpin').css('display', 'none');
+                                // }, 500);
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            })
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        })
+
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                }
+          }
+        };
+        }
         //});
 
     },
