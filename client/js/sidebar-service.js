@@ -931,12 +931,12 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     if(limitcount === 'All'){
         options = {
             ListType: "Detail",
-            select: '[Active]=true'
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true'
         };
     } else {
         options = {
             ListType: "Detail",
-            select: '[Active]=true',
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true',
             LimitCount:'"'+limitcount+'"',
             LimitFrom:'"'+limitfrom+'"'
         };

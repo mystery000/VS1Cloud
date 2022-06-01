@@ -420,7 +420,9 @@ Template.appointmentlist.onRendered(async function () {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         await templateObject.getSMSSettings();
-        const recentSMSLogs = await templateObject.smsMessagingLogs();
+        const recentSMSLogs = await templateObject.smsMessagingLogs()||'';
+        console.log(recentSMSLogs);
+        const accessLevel = Session.get('CloudApptSMS');
 
         getVS1Data('TAppointmentList').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -491,15 +493,15 @@ Template.appointmentlist.onRendered(async function () {
                           custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                           custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
-
+                      if (!accessLevel) {
                       if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
@@ -554,7 +556,7 @@ Template.appointmentlist.onRendered(async function () {
                             }
                         }
                     }
-
+                  }
                     dataTableList.push(dataList);
                   }
 
@@ -866,15 +868,15 @@ Template.appointmentlist.onRendered(async function () {
                         custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                         custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                     };
-
+                    if (!accessLevel) {
                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
@@ -929,7 +931,7 @@ Template.appointmentlist.onRendered(async function () {
                             }
                         }
                     }
-
+                  }
                     dataTableList.push(dataList);
 
                 }
@@ -1575,7 +1577,7 @@ Template.appointmentlist.onRendered(async function () {
                     method: 'GET',
                     url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
                     dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded', // !
+                    contentType: 'application/json', // !
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("Authorization",
                             "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
@@ -1585,7 +1587,8 @@ Template.appointmentlist.onRendered(async function () {
                         resolve(data);
                     },
                     error: function(e) {
-                        reject(e.message);
+                      resolve('');
+                        //reject(e.message);
                     }
                 }
             )

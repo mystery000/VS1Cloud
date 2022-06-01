@@ -852,9 +852,8 @@ Template.newbankrecon.onRendered(function() {
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
                 let taxRate = $('#ctaxRateID_'+item.YodleeLineID).val();
                 let who = $('#who_'+item.YodleeLineID).val();
+                who = (who !== '')?who:item.YodleeDescription;
                 let what = $('#whatID_'+item.YodleeLineID).val();
-                what = (what !== '')?what:item.YodleeDescription;
-                console.log(what);
                 let why = $('#why_'+item.YodleeLineID).val();
                 let amount = item.YodleeAmount;
                 let dateIn = item.SortDate;

@@ -51,6 +51,8 @@ Template.appointments.onCreated(function () {
 
     templateObject.allnoninvproducts = new ReactiveVar([]);
 
+    templateObject.textnote = new ReactiveVar();
+
     //templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
     templateObject.checkRefresh.set(false);
@@ -6566,6 +6568,7 @@ Template.appointments.events({
                 return apmt.id == id
             });
             let hours = 0;
+            if (result.length > 0) {
             if (result[0].aStartTime != '' && result[0].aEndTime != '') {
                 var startTime = moment(result[0].startDate.split(' ')[0] + ' ' + result[0].aStartTime);
                 var endTime = moment(result[0].endDate.split(' ')[0] + ' ' + result[0].aEndTime);
@@ -6575,7 +6578,6 @@ Template.appointments.events({
 
             let hoursFormatted = templateObject.timeFormat(hours) || '';
             let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || '';
-
             if (result[0].isPaused == "Paused") {
                 $(".paused").show();
                 $("#btnHold").prop("disabled", true);
@@ -6583,25 +6585,42 @@ Template.appointments.events({
                 $(".paused").hide();
                 $("#btnHold").prop("disabled", false);
             }
-            $(".paused").hide();
-            $("#btnHold").prop("disabled", false);
-            $("#btnStartAppointment").prop("disabled", false)
-            $("#btnStopAppointment").prop("disabled", false);
-            $("#startTime").prop("disabled", false);
-            $("#endTime").prop("disabled", false);
-            $("#tActualStartTime").prop("disabled", false);
-            $("#tActualEndTime").prop("disabled", false);
-            $("#txtActualHoursSpent").prop("disabled", false);
-            if (result[0].aEndTime != "") {
+
+            if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
                 $("#btnHold").prop("disabled", true);
-                $("#btnStartAppointment").prop("disabled", true);
-                $("#btnStopAppointment").prop("disabled", true);
-                $("#startTime").prop("disabled", true)
-                $("#endTime").prop("disabled", true);
-                $("#tActualStartTime").prop("disabled", true);
-                $("#tActualEndTime").prop("disabled", true);
-                $("#txtActualHoursSpent").prop("disabled", true);
             }
+
+            if (result[0].aEndTime != "") {
+                     $("#btnHold").prop("disabled", true);
+                     $("#btnStartAppointment").prop("disabled", true);
+                     $("#btnStopAppointment").prop("disabled", true);
+                     $("#startTime").prop("disabled", true);
+                     $("#endTime").prop("disabled", true);
+                     $("#tActualStartTime").prop("disabled", true);
+                     $("#tActualEndTime").prop("disabled", true);
+                     $("#txtActualHoursSpent").prop("disabled", true);
+                 }
+                 if (result[0].aEndTime != "") {
+                     $("#btnHold").prop("disabled", true);
+                     $("#btnStartAppointment").prop("disabled", true);
+                     $("#btnStopAppointment").prop("disabled", true);
+                     $("#startTime").prop("disabled", true);
+                     $("#endTime").prop("disabled", true);
+                     $("#tActualStartTime").prop("disabled", true);
+                     $("#tActualEndTime").prop("disabled", true);
+                     $("#txtActualHoursSpent").prop("disabled", true);
+                 }
+
+            // $(".paused").hide();
+            // $("#btnHold").prop("disabled", false);
+            // $("#btnStartAppointment").prop("disabled", false)
+            // $("#btnStopAppointment").prop("disabled", false);
+            // $("#startTime").prop("disabled", false);
+            // $("#endTime").prop("disabled", false);
+            // $("#tActualStartTime").prop("disabled", false);
+            // $("#tActualEndTime").prop("disabled", false);
+            // $("#txtActualHoursSpent").prop("disabled", false);
+
             var resultEmpData = getAllEmployeeData.filter(empDataObj => {
             	return empDataObj.employeeName == result[0].employeename
             });
@@ -6643,6 +6662,7 @@ Template.appointments.events({
             document.getElementById("txtActualHoursSpent").value = hoursFormatted || '';
 
             $('#event-modal').modal();
+          }
         } else {
             let bookingDate = new Date();
             let startTime = ("0" + bookingDate.getHours()).slice(-2) + ":" + ("0" + bookingDate.getMinutes()).slice(-2);
@@ -9289,6 +9309,56 @@ Template.appointments.events({
                     });
                 }
 
+        //});
+
+    },
+    'mouseenter #txtNotes': function (event) {
+      let getValue = $('#txtNotes').val() || ' ';
+      let templateObject = Template.instance();
+      templateObject.textnote.set(getValue);
+    },
+    'mouseleave #txtNotes': function (event) {
+        let appointmentService = new AppointmentService();
+        let templateObject = Template.instance();
+        let getValue = templateObject.textnote.get()||' ';
+        let notes = $('#txtNotes').val() || ' ';
+        let id = document.getElementById('updateID').value || '0';
+        if (createAppointment == false) {
+        if(getValue != notes){
+        if (Session.get('CloudAppointmentNotes') == true) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                if (id == '0' || id == null) {
+                    // $('#event-modal').modal('hide');
+                    $('.fullScreenSpin').css('display', 'none');
+                } else {
+                  let objectData = {
+                        type: "TAppointmentEx",
+                        fields: {
+                            Id: parseInt(id),
+                            Notes: notes,
+                        }
+                    };
+
+                    appointmentService.saveAppointment(objectData).then(function (data) {
+                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataList) {
+                            addVS1Data('TAppointment', JSON.stringify(dataList)).then(function (datareturn) {
+                                // setTimeout(function () {
+                                     $('.fullScreenSpin').css('display', 'none');
+                                // }, 500);
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            })
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        })
+
+                    }).catch(function (err) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                }
+          }
+        };
+        }
         //});
 
     },
