@@ -287,11 +287,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-md-12 col-lg-12">
-                                                {{#if isCurrencyEnable}}
-                                                    {{> currencydropdown}}
-                                                {{else}}
-
-                                                {{/if}}
+                                                
                                                 <div class="form-group" style="width: 90%; display: none;"><label>Due Date</label>
                                                     <div class="input-group date" style="width: 150px;cursor: pointer;">
                                                         <input type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{purchaseorderrecord.duedate}}">
@@ -302,6 +298,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                           
+
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -324,6 +323,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-2 col-xl-2">
+                                {{> CurrencyWidget rate="buy"}}
                             </div>
                         </div>
                     </div>

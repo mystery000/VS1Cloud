@@ -1,4 +1,4 @@
-import { TaxRateService } from "../settings-service";
+import { TaxRateService } from "../../settings/settings-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";

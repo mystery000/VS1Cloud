@@ -6184,7 +6184,7 @@ Template.new_invoice.onRendered(() => {
 
         $(document).ready(function () {
             $('#edtCustomerName').editableSelect();
-            $('#sltCurrency').editableSelect();
+            //$('#sltCurrency').editableSelect();
             $('#sltTerms').editableSelect();
             $('#sltDept').editableSelect();
             $('#sltStatus').editableSelect();
@@ -6594,17 +6594,17 @@ Template.new_invoice.onRendered(() => {
             }
         });
 
-        $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-            $('#sltCurrency').val($(this).find(".colCode").text());
-            $('#exchange_rate').val($(this).find(".colBuyRate").text());
-            $('#currencyModal').modal('toggle');
+        // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
+        //     $('#sltCurrency').val($(this).find(".colCode").text());
+        //     $('#exchange_rate').val($(this).find(".colBuyRate").text());
+        //     $('#currencyModal').modal('toggle');
 
-            $('#tblCurrencyPopList_filter .form-control-sm').val('');
-            setTimeout(function () {
-                $('.btnRefreshCurrency').trigger('click');
-                $('.fullScreenSpin').css('display', 'none');
-            }, 1000);
-        });
+        //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
+        //     setTimeout(function () {
+        //         $('.btnRefreshCurrency').trigger('click');
+        //         $('.fullScreenSpin').css('display', 'none');
+        //     }, 1000);
+        // });
 
         $(document).on("click", "#departmentList tbody tr", function (e) {
             $('#sltDept').val($(this).find(".colDeptName").text());
@@ -7138,111 +7138,111 @@ Template.new_invoice.onRendered(() => {
             }
         });
 
-        $('#sltCurrency').editableSelect()
-        .on('click.editable-select', function (e, li) {
+        // $('#sltCurrency').editableSelect()
+        // .on('click.editable-select', function (e, li) {
             
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var currencyDataName = e.target.value || '';
+        //     var $earch = $(this);
+        //     var offset = $earch.offset();
+        //     var currencyDataName = e.target.value || '';
 
-            $('#edtCurrencyID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#currencyModal').modal('toggle');
-            } else {
-                if (currencyDataName.replace(/\s/g, '') != '') {
-                    $('#add-currency-title').text('Edit Currency');
-                    $('#sedtCountry').prop('readonly', true);
-                    getVS1Data('TCurrency').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getCurrencies().then(function (data) {
+        //     $('#edtCurrencyID').val('');
+        //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        //         $('#currencyModal').modal('toggle');
+        //     } else {
+        //         if (currencyDataName.replace(/\s/g, '') != '') {
+        //             $('#add-currency-title').text('Edit Currency');
+        //             $('#sedtCountry').prop('readonly', true);
+        //             getVS1Data('TCurrency').then(function (dataObject) {
+        //                 if (dataObject.length == 0) {
+        //                     $('.fullScreenSpin').css('display', 'inline-block');
+        //                     sideBarService.getCurrencies().then(function (data) {
                              
-                                for (let i in data.tcurrency) {
-                                    if (data.tcurrency[i].Code === currencyDataName) {
-                                        $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                        setTimeout(function () {
-                                            $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                        }, 200);
-                                        //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                        $('#currencyCode').val(currencyDataName);
-                                        $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                        $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                        $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                        $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                        $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                        $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newCurrencyModal').modal('toggle');
-                                    $('#sedtCountry').attr('readonly', true);
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
+        //                         for (let i in data.tcurrency) {
+        //                             if (data.tcurrency[i].Code === currencyDataName) {
+        //                                 $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                                 setTimeout(function () {
+        //                                     $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                                 }, 200);
+        //                                 //$('#sedtCountry').val(data.tcurrency[i].Country);
+        //                                 $('#currencyCode').val(currencyDataName);
+        //                                 $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                                 $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                                 $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                                 $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                                 $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                                 $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                             }
+        //                         }
+        //                         setTimeout(function () {
+        //                             $('.fullScreenSpin').css('display', 'none');
+        //                             $('#newCurrencyModal').modal('toggle');
+        //                             $('#sedtCountry').attr('readonly', true);
+        //                         }, 200);
+        //                     });
+        //                 } else {
+        //                     let data = JSON.parse(dataObject[0].data);
                           
                         
-                            let useData = data.tcurrency;
-                            for (let i = 0; i < data.tcurrency.length; i++) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                    $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                }
-                            }
-                            setTimeout(function () {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                            }, 200);
-                        }
+        //                     let useData = data.tcurrency;
+        //                     for (let i = 0; i < data.tcurrency.length; i++) {
+        //                         if (data.tcurrency[i].Code === currencyDataName) {
+        //                             $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                             $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                             $('#currencyCode').val(currencyDataName);
+        //                             $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                             $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                             $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                             $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                             $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                             $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                         }
+        //                     }
+        //                     setTimeout(function () {
+        //                         $('.fullScreenSpin').css('display', 'none');
+        //                         $('#newCurrencyModal').modal('toggle');
+        //                     }, 200);
+        //                 }
 
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getCurrencies().then(function (data) {
-                            for (let i in data.tcurrency) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
-                                    setTimeout(function () {
-                                        $('#sedtCountry').val(data.tcurrency[i].fields.Country);
-                                    }, 200);
-                                    //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
-                                    $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
-                                }
-                            }
-                            setTimeout(function () {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                                $('#sedtCountry').attr('readonly', true);
-                            }, 200);
-                        });
-                    });
+        //             }).catch(function (err) {
+        //                 $('.fullScreenSpin').css('display', 'inline-block');
+        //                 sideBarService.getCurrencies().then(function (data) {
+        //                     for (let i in data.tcurrency) {
+        //                         if (data.tcurrency[i].Code === currencyDataName) {
+        //                             $('#edtCurrencyID').val(data.tcurrency[i].fields.Id);
+        //                             setTimeout(function () {
+        //                                 $('#sedtCountry').val(data.tcurrency[i].fields.Country);
+        //                             }, 200);
+        //                             //$('#sedtCountry').val(data.tcurrency[i].Country);
+        //                             $('#currencyCode').val(currencyDataName);
+        //                             $('#currencySymbol').val(data.tcurrency[i].fields.CurrencySymbol);
+        //                             $('#edtCurrencyName').val(data.tcurrency[i].fields.Currency);
+        //                             $('#edtCurrencyDesc').val(data.tcurrency[i].fields.CurrencyDesc);
+        //                             $('#edtBuyRate').val(data.tcurrency[i].fields.BuyRate);
+        //                             $('#edtSellRate').val(data.tcurrency[i].fields.SellRate);
+        //                             $('#exchange_rate').val(data.tcurrency[i].fields.BuyRate);
+        //                         }
+        //                     }
+        //                     setTimeout(function () {
+        //                         $('.fullScreenSpin').css('display', 'none');
+        //                         $('#newCurrencyModal').modal('toggle');
+        //                         $('#sedtCountry').attr('readonly', true);
+        //                     }, 200);
+        //                 });
+        //             });
 
-                } else {
-                    $('#currencyModal').modal();
-                    setTimeout(function () {
-                        $('#tblCurrencyPopList_filter .form-control-sm').focus();
-                        $('#tblCurrencyPopList_filter .form-control-sm').val('');
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblCurrencyPopList').DataTable();
-                        datatable.draw();
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
+        //         } else {
+        //             $('#currencyModal').modal();
+        //             setTimeout(function () {
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').focus();
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').val('');
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+        //                 var datatable = $('#tblCurrencyPopList').DataTable();
+        //                 datatable.draw();
+        //                 $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+        //             }, 500);
+        //         }
+        //     }
+        // });
 
     
 
@@ -8459,4086 +8459,4086 @@ Template.new_invoice.onRendered(() => {
         }
     });
 
-    Template.new_invoice.events({
-        'click .btnRefreshCustomField': function (event) {
-          $('.fullScreenSpin').css('display', 'inline-block');
-          let templateObject = Template.instance();
-          sideBarService.getAllCustomFields().then(function (data) {
-            addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
-                Meteor._reload.reload();
-            }).catch(function (err) {
-                Meteor._reload.reload();
-            });
-                templateObject.getSalesCustomFieldsList();
-              $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-              $('.fullScreenSpin').css('display', 'none');
-          });
-        },
-
-
-        'click #edtSaleCustField1': function(event) {
-            clickedInput = "one";
-            $('#clickedControl').val(clickedInput);
-        },
-        'click #edtSaleCustField2': function(event) {
-            clickedInput = "two";
-            $('#clickedControl').val(clickedInput);
-        },
-        'click #edtSaleCustField3': function(event) {
-            clickedInput = "three";
-            $('#clickedControl').val(clickedInput);
-        },
-        'click .btnAddNewCustField': function(event) {
-          let templateObject = Template.instance();
-            let isDropDown = true;
-            let statusvalID = $("#selectCustFieldID").val()||'';
-            $("#statusId1").val(statusvalID);
-            $('#isdropDown').val(isDropDown);
-            $('#newCustomFieldPop').modal('toggle');
-            $('#customFieldList').modal('toggle');
-            let custfieldarr = templateObject.custfields.get();
-            if(custfieldarr[0].id == statusvalID){
-              if(Array.isArray(custfieldarr[0].dropdown)) {
-                  // $('.btnAddNewTextBox').nextAll().remove();
-                  //$('.customText').val(custfieldarr[0].dropdown[0].fields.Text);
-                  for(let x = 0; x < custfieldarr[0].dropdown.length; x++) {
-                      $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-                                          '<div class="col-10">'+
-                                              '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown[x].fields.ID+'" value="'+ custfieldarr[0].dropdown[x].fields.Text+'" autocomplete="off">'+
-                                          '</div>'+
-                                          '<div class="col-2">'+
-                                              '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-                                          '</div>'+
-                                      '</div>');
-                  }
-
-              } else if(Object.keys(custfieldarr[0].dropdown).length > 0) {
-                  // $('.btnAddNewTextBox').nextAll().remove();
-                   $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-                                          '<div class="col-10">'+
-                                              '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown.fields.ID+'" value="'+ custfieldarr[0].dropdown.fields.Text+'" autocomplete="off">'+
-                                          '</div>'+
-                                          '<div class="col-2">'+
-                                              '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-                                          '</div>'+
-                                      '</div>');
-
-              }
-            }
-
-        },
-        'click #edtCustomerName': function (event) {
-            $('#edtCustomerName').select();
-            $('#edtCustomerName').editableSelect();
-        },
-        'change #sltStatus': function () {
-            let status = $('#sltStatus').find(":selected").val();
-            if (status == "newstatus") {
-                $('#statusModal').modal();
-            }
-        },
-        'blur .lineProductDesc': function (event) {
-            var targetID = $(event.target).closest('tr').attr('id');
-            $('#' + targetID + " #lineProductDesc").text($('#' + targetID + " .lineProductDesc").text());
-        },
-        'click .payNow': function () {
-            let templateObject = Template.instance();
-            let stripe_id = templateObject.accountID.get() || '';
-            let stripe_fee_method = templateObject.stripe_fee_method.get();
-            if (stripe_id != "") {
-                var url = FlowRouter.current().path;
-                var id_available = url.includes("?id=");
-                if (id_available == true) {
-                    if ($('.edtCustomerEmail').val() != "") {
-                        let quoteData = templateObject.invoicerecord.get();
-                        let lineItems = [];
-                        let total = $('#totalBalanceDue').html() || 0;
-                        let tax = $('#subtotal_tax').html() || 0;
-                        let customer = $('#edtCustomerName').val();
-                        let company = Session.get('vs1companyName');
-                        let name = $('#firstname').val();
-                        let surname = $('#lastname').val();
-                        $('#tblInvoiceLine > tbody > tr').each(function () {
-                            var lineID = this.id;
-                            let tdproduct = $('#' + lineID + " .lineProductName").val();
-                            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                            let tdQty = $('#' + lineID + " .lineQty").val();
-                            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                            let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
-                            lineItemObj = {
-                                description: tddescription || '',
-                                quantity: tdQty || 0,
-                                unitPrice: tdunitprice.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) || 0
-                            }
-
-                            lineItems.push(lineItemObj);
-                        });
-                        var erpGet = erpDb();
-                        let vs1User = localStorage.getItem('mySession');
-                        let customerEmail = $('#edtCustomerEmail').val();
-                        let currencyname = (CountryAbbr).toLowerCase();
-                        let stringQuery = "?";
-                        let dept = $('#sltDept').val();
-                        var customerID = $('#edtCustomerEmail').attr('customerid');
-                        for (let l = 0; l < lineItems.length; l++) {
-                            stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-                        }
-                        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
-                        window.open(stripeGlobalURL + stringQuery, '_self');
-                    } else {
-                        swal({
-                            title: 'Customer Email Required',
-                            text: 'Please enter customer email',
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.value) {}
-                            else if (result.dismiss === 'cancel') {}
-                        });
-                    }
-                } else {
-                    let templateObject = Template.instance();
-                    let lineItems = [];
-                    let imageData = (localStorage.getItem("Image"));
-                    let customername = $('#edtCustomerName');
-                    let name = $('#edtCustomerEmail').attr('customerfirstname');
-                    let surname = $('#edtCustomerEmail').attr('customerlastname');
-                    let salesService = new SalesBoardService();
-                    let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
-                    if (termname === '') {
-                        swal('Terms has not been selected!', '', 'warning');
-                        event.preventDefault();
-                        return false;
-                    }
-                    if (customername.val() === '') {
-                        swal('Customer has not been selected!', '', 'warning');
-                        e.preventDefault();
-                    } else {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        var splashLineArray = new Array();
-                        let lineItemsForm = [];
-                        let lineItems = [];
-                        let lineItemObjForm = {};
-                        var erpGet = erpDb();
-                        var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-
-                        var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
-                        let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
-                        let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
-                        let checkBackOrder = templateObject.includeBOnShippedQty.get();
-                        $('#tblInvoiceLine > tbody > tr').each(function () {
-                            var lineID = this.id;
-                            let tdproduct = $('#' + lineID + " .lineProductName").val();
-                            let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                            let tdQty = $('#' + lineID + " .lineQty").val();
-
-                            let tdOrderd = $('#' + lineID + " .lineOrdered").val();
-
-                            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                            let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
-                            lineItemObj = {
-                                description: tddescription || '',
-                                quantity: tdQty || 0,
-                                unitPrice: tdunitprice.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2
-                                }) || 0
-                            }
-
-                            lineItems.push(lineItemObj);
-
-                            if (tdproduct != "") {
-
-                                if (checkBackOrder == true) {
-                                    lineItemObjForm = {
-                                        type: "TInvoiceLine",
-                                        fields: {
-                                            ProductName: tdproduct || '',
-                                            ProductDescription: tddescription || '',
-                                            UOMQtySold: parseFloat(tdOrderd) || 0,
-                                            UOMQtyShipped: parseFloat(tdQty) || 0,
-                                            LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                            Headershipdate: saleDate,
-                                            LineTaxCode: tdtaxCode || '',
-                                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                        }
-                                    };
-                                } else {
-                                    lineItemObjForm = {
-                                        type: "TInvoiceLine",
-                                        fields: {
-                                            ProductName: tdproduct || '',
-                                            ProductDescription: tddescription || '',
-                                            UOMQtySold: parseFloat(tdQty) || 0,
-                                            UOMQtyShipped: parseFloat(tdQty) || 0,
-                                            LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                            Headershipdate: saleDate,
-                                            LineTaxCode: tdtaxCode || '',
-                                            DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                        }
-                                    };
-                                }
-
-                                lineItemsForm.push(lineItemObjForm);
-                                splashLineArray.push(lineItemObjForm);
-                            }
-                        });
-                        let getchkcustomField1 = true;
-                        let getchkcustomField2 = true;
-                        let getcustomField1 = $('.customField1Text').html();
-                        let getcustomField2 = $('.customField2Text').html();
-                        if ($('#formCheck-one').is(':checked')) {
-                            getchkcustomField1 = false;
-                        }
-                        if ($('#formCheck-two').is(':checked')) {
-                            getchkcustomField2 = false;
-                        }
-
-                        let customer = $('#edtCustomerName').val();
-                        let customerEmail = $('#edtCustomerEmail').val();
-                        let billingAddress = $('#txabillingAddress').val();
-
-                        let poNumber = $('#ponumber').val();
-                        let reference = $('#edtRef').val();
-
-                        let departement = $('#sltDept').val();
-                        let shippingAddress = $('#txaShipingInfo').val();
-                        let comments = $('#txaComment').val();
-                        let pickingInfrmation = $('#txapickmemo').val();
-                        let total = $('#totalBalanceDue').html() || 0;
-                        let tax = $('#subtotal_tax').html() || 0;
-                        let saleCustField1 = $('#edtSaleCustField1').val()||'';
-                        let saleCustField2 = $('#edtSaleCustField2').val()||'';
-                        let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                        var url = FlowRouter.current().path;
-                        var getso_id = url.split('?id=');
-                        var currentInvoice = getso_id[getso_id.length - 1];
-                        let uploadedItems = templateObject.uploadedFiles.get();
-                        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                        var objDetails = '';
-                        if (getso_id[1]) {
-                            currentInvoice = parseInt(currentInvoice);
-                            objDetails = {
-                                type: "TInvoiceEx",
-                                fields: {
-                                    ID: currentInvoice,
-                                    CustomerName: customer,
-                                    ForeignExchangeCode: currencyCode,
-                                    Lines: splashLineArray,
-                                    InvoiceToDesc: billingAddress,
-                                    SaleDate: saleDate,
-                                    CustPONumber: poNumber,
-                                    ReferenceNo: reference,
-                                    TermsName: termname,
-                                    SaleClassName: departement,
-                                    ShipToDesc: shippingAddress,
-                                    Comments: comments,
-                                    SaleCustField1: saleCustField1,
-                                    SaleCustField2: saleCustField2,
-                                    SaleCustField3: saleCustField3,
-                                    PickMemo: pickingInfrmation,
-                                    Attachments: uploadedItems,
-                                    SalesStatus: $('#sltStatus').val()
-                                }
-                            };
-                        } else {
-                            objDetails = {
-                                type: "TInvoiceEx",
-                                fields: {
-                                    CustomerName: customer,
-                                    ForeignExchangeCode: currencyCode,
-                                    Lines: splashLineArray,
-                                    InvoiceToDesc: billingAddress,
-                                    SaleDate: saleDate,
-                                    CustPONumber: poNumber,
-                                    ReferenceNo: reference,
-                                    TermsName: termname,
-                                    SaleClassName: departement,
-                                    ShipToDesc: shippingAddress,
-                                    Comments: comments,
-                                    SaleCustField1: saleCustField1,
-                                    SaleCustField2: saleCustField2,
-                                    SaleCustField3: saleCustField3,
-                                    PickMemo: pickingInfrmation,
-                                    Attachments: uploadedItems,
-                                    SalesStatus: $('#sltStatus').val()
-                                }
-                            };
-                        }
-                        salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
-                            let company = Session.get('vs1companyName');
-                            let vs1User = localStorage.getItem('mySession');
-                            let customerEmail = $('#edtCustomerEmail').val() || '';
-                            let currencyname = (CountryAbbr).toLowerCase();
-                            let stringQuery = "?";
-                            var customerID = $('#edtCustomerEmail').attr('customerid');
-                            for (let l = 0; l < lineItems.length; l++) {
-                                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-                            }
-                            stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.fields.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
-                            let url = stripeGlobalURL + stringQuery;
-                            $('#html-2-pdfwrapper').css('display', 'block');
-                            $('.pdfCustomerName').html($('#edtCustomerName').val());
-                            $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-
-                            function generatePdfForMail(invoiceId) {
-                                let file = "Invoice-" + invoiceId + ".pdf"
-                                    return new Promise((resolve, reject) => {
-                                    $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-                                    let templateObject = Template.instance();
-                                    let completeTabRecord;
-                                    let doc = new jsPDF('p', 'pt', 'a4');
-                                    var source = document.getElementById('html-2-pdfwrapper');
-                                    var opt = {
-                                        margin: 0,
-                                        filename: file,
-                                        image: {
-                                            type: 'jpeg',
-                                            quality: 0.98
-                                        },
-                                        html2canvas: {
-                                            scale: 2
-                                        },
-                                        jsPDF: {
-                                            unit: 'in',
-                                            format: 'a4',
-                                            orientation: 'portrait'
-                                        }
-                                    }
-                                    resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
-                                    // doc.addHTML(source, function () {
-                                    //     doc.setFontSize(10);
-                                    //     doc.setTextColor(255, 255, 255);
-                                    //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
-                                    //     resolve(doc.output('blob'));
-                                    //     $('#html-2-pdfwrapper').css('display', 'none');
-                                    // });
-                                });
-                            }
-                            async function addAttachment() {
-                                let attachment = [];
-                                let templateObject = Template.instance();
-
-                                let invoiceId = objDetails.fields.ID;
-                                let encodedPdf = await generatePdfForMail(invoiceId);
-                                let pdfObject = "";
-                                let base64data = encodedPdf.split(',')[1];
-                                pdfObject = {
-                                    filename: 'invoice-' + invoiceId + '.pdf',
-                                    content: base64data,
-                                    encoding: 'base64'
-                                };
-                                attachment.push(pdfObject);
-                                let erpInvoiceId = objDetails.fields.ID;
-
-                                let mailFromName = Session.get('vs1companyName');
-                                let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                                let customerEmailName = $('#edtCustomerName').val();
-                                let checkEmailData = $('#edtCustomerEmail').val();
-                                let grandtotal = $('#grandTotal').html();
-                                let amountDueEmail = $('#totalBalanceDue').html();
-                                let emailDueDate = $("#dtDueDate").val();
-                                let customerBillingAddress = $('#txabillingAddress').val();
-                                let customerTerms = $('#sltTerms').val();
-
-                                let customerSubtotal = $('#subtotal_total').html();
-                                let customerTax = $('#subtotal_tax').html();
-                                let customerNett = $('#subtotal_nett').html();
-                                let customerTotal = $('#grandTotal').html();
-
-                                let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                                let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
-                                    "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
-                                    "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
-
-                                var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                                    '        <tr>' +
-                                    '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                                    '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                                    '                    <table class="main">' +
-                                    '                        <tr>' +
-                                    '                            <td class="wrapper">' +
-                                    '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                                    '                                    <tr>' +
-                                    '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                                    '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr style="height: 16px;"></tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td>' +
-                                    '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr style="height: 48px;"></tr>' +
-                                    '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                                    '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                                    '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
-                                    '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-                                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                    '                                                <tbody>' +
-                                    '                                                    <tr>' +
-                                    '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                    '                                                                <tbody>' +
-                                    '                                                                    <tr>' +
-                                    '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                                    '                                                                    </tr>' +
-                                    '                                                                </tbody>' +
-                                    '                                                            </table>' +
-                                    '                                                        </td>' +
-                                    '                                                    </tr>' +
-                                    '                                                </tbody>' +
-                                    '                                            </table>' +
-                                    '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                    '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-                                    '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                                    '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                                    '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr style="background-color: #ededed;">' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                                    '                                                <div style="width: 50%; float: left;">' +
-                                    '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                                    '                                                </div>' +
-                                    '                                                <div style="width: 50%; float: right;">' +
-                                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-                                    '                                                </div>' +
-                                    '                                            </div>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr style="background-color: #ededed;">' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                                    '                                                <div style="width: 50%; float: left;">' +
-                                    '                                                    <p style="font-size: 18px;">Terms</p>' +
-                                    '                                                </div>' +
-                                    '                                                <div style="width: 50%; float: right;">' +
-                                    '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
-                                    '                                                </div>' +
-                                    '                                            </div>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                    '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                                    '                                                <div style="width: 50%; float: left;">' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                                    '                                                </div>' +
-                                    '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-                                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-                                    '                                                </div>' +
-                                    '                                            </div>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                    '                                                <tbody>' +
-                                    '                                                    <tr>' +
-                                    '                                                        <td align="center">' +
-                                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                    '                                                                <tbody>' +
-                                    '                                                                    <tr>' +
-                                    '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                                    '                                                                    </tr>' +
-                                    '                                                                </tbody>' +
-                                    '                                                            </table>' +
-                                    '                                                        </td>' +
-                                    '                                                    </tr>' +
-                                    '                                                </tbody>' +
-                                    '                                            </table>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                    '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                    <tr>' +
-                                    '                                        <td>' +
-                                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                    '                                                <tbody>' +
-                                    '                                                    <tr>' +
-                                    '                                                        <td align="center">' +
-                                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                    '                                                                <tbody>' +
-                                    '                                                                    <tr>' +
-                                    '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                                    '                                                                    </tr>' +
-                                    '                                                                </tbody>' +
-                                    '                                                            </table>' +
-                                    '                                                        </td>' +
-                                    '                                                    </tr>' +
-                                    '                                                </tbody>' +
-                                    '                                            </table>' +
-                                    '                                        </td>' +
-                                    '                                    </tr>' +
-                                    '                                </table>' +
-                                    '                            </td>' +
-                                    '                        </tr>' +
-                                    '                    </table>' +
-                                    '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                                    '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                                    '                            <tr>' +
-                                    '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                                    '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-                                    '                                    <br>' +
-                                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                                    '                                </td>' +
-                                    '                            </tr>' +
-                                    '                        </table>' +
-                                    '                    </div>' +
-                                    '                </div>' +
-                                    '            </td>' +
-                                    '        </tr>' +
-                                    '    </table>';
-
-                                if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                                    Meteor.call('sendEmail', {
-                                        from: "" + mailFromName + " <" + mailFrom + ">",
-                                        to: checkEmailData,
-                                        subject: mailSubject,
-                                        text: '',
-                                        html: htmlmailBody,
-                                        attachments: attachment
-                                    }, function (error, result) {
-                                        if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
-
-                                        } else {}
-                                    });
-
-                                    Meteor.call('sendEmail', {
-                                        from: "" + mailFromName + " <" + mailFrom + ">",
-                                        to: mailFrom,
-                                        subject: mailSubject,
-                                        text: '',
-                                        html: htmlmailBody,
-                                        attachments: attachment
-                                    }, function (error, result) {
-                                        if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
-                                        } else {
-                                            $('#html-2-pdfwrapper').css('display', 'none');
-                                            swal({
-                                                title: 'SUCCESS',
-                                                text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                                type: 'success',
-                                                showCancelButton: false,
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.value) {
-                                                    window.open(url, '_self');
-                                                } else if (result.dismiss === 'cancel') {}
-                                            });
-
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        }
-                                    });
-
-                                } else if (($('.chkEmailCopy').is(':checked'))) {
-                                    Meteor.call('sendEmail', {
-                                        from: "" + mailFromName + " <" + mailFrom + ">",
-                                        to: checkEmailData,
-                                        subject: mailSubject,
-                                        text: '',
-                                        html: htmlmailBody,
-                                        attachments: attachment
-                                    }, function (error, result) {
-                                        if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
-
-                                        } else {
-                                            $('#html-2-pdfwrapper').css('display', 'none');
-                                            swal({
-                                                title: 'SUCCESS',
-                                                text: "Email Sent To Customer: " + checkEmailData + " ",
-                                                type: 'success',
-                                                showCancelButton: false,
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.value) {
-                                                    window.open(url, '_self');
-                                                } else if (result.dismiss === 'cancel') {}
-                                            });
-
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        }
-                                    });
-
-                                } else if (($('.chkEmailRep').is(':checked'))) {
-                                    Meteor.call('sendEmail', {
-                                        from: "" + mailFromName + " <" + mailFrom + ">",
-                                        to: mailFrom,
-                                        subject: mailSubject,
-                                        text: '',
-                                        html: htmlmailBody,
-                                        attachments: attachment
-                                    }, function (error, result) {
-                                        if (error && error.error === "error") {
-                                            FlowRouter.go('/invoicelist?success=true');
-                                        } else {
-                                            $('#html-2-pdfwrapper').css('display', 'none');
-                                            swal({
-                                                title: 'SUCCESS',
-                                                text: "Email Sent To User: " + mailFrom + " ",
-                                                type: 'success',
-                                                showCancelButton: false,
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                if (result.value) {
-                                                    window.open(url, '_self');
-                                                } else if (result.dismiss === 'cancel') {}
-                                            });
-
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        }
-                                    });
-
-                                } else {
-                                    window.open(url, '_self');
-                                };
-
-                            }
-                            addAttachment();
-                        }).catch(function (err) {
-                            $('#html-2-pdfwrapper').css('display', 'none');
-                            swal({
-                                title: 'Oooops...',
-                                text: err,
-                                type: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                                else if (result.dismiss === 'cancel') {}
-                            });
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    }
-                }
-            } else {
-                swal({
-                    title: 'WARNING',
-                    text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
-                    type: 'warning',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {
-                        window.open('paymentmethodSettings', '_self');
-                    } else if (result.dismiss === 'cancel') {}
-                });
-            }
-        },
-        'blur .lineQty': function (event) {
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let utilityService = new UtilityService();
-            let $tblrows = $("#tblInvoiceLine tbody tr");
-            let $printrows = $(".invoice_print tbody tr");
-            let isBOnShippedQty = templateObject.includeBOnShippedQty.get();
-            var targetID = $(event.target).closest('tr').attr('id');
-            if (isBOnShippedQty == true) {
-                let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
-                let qtyBO = $('#' + targetID + " .lineBo").val();
-                let qtyShipped = $('#' + targetID + " .lineQty").val();
-                let boValue = '';
-
-                if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
-                    qtyOrdered = 0;
-                }
-                if (parseInt(qtyOrdered) < parseInt(qtyShipped)) {
-                    $('#' + targetID + " .lineQty").val(qtyOrdered);
-                    $('#' + targetID + " .lineBo").val(0);
-                } else if (parseInt(qtyShipped) <= parseInt(qtyOrdered)) {
-                    boValue = parseInt(qtyOrdered) - parseInt(qtyShipped);
-                    $('#' + targetID + " .lineBo").val(boValue);
-                }
-            }
-            //if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            $('#' + targetID + " #lineQty").text($('#' + targetID + " .lineQty").val());
-            //  }
-
-            let lineAmount = 0;
-            let subGrandTotal = 0;
-            let taxGrandTotal = 0;
-            let subDiscountTotal = 0; // New Discount
-            let taxGrandTotalPrint = 0;
-
-            let subGrandTotalNet = 0;
-            let taxGrandTotalNet = 0;
-            $tblrows.each(function (index) {
-                var $tblrow = $(this);
-                var qty = $tblrow.find(".lineQty").val() || 0;
-                var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                var taxrateamount = 0;
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                        }
-                    }
-                }
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                let lineTotalAmount = subTotal + taxTotal;
-
-                let lineDiscountTotal = lineDiscountPerc / 100;
-
-                var discountTotal = lineTotalAmount * lineDiscountTotal;
-                var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                if (!isNaN(discountTotal)) {
-                    subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                    document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                }
-                $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                if (!isNaN(subTotal)) {
-                  $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                  $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                    subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                    subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                }
-
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                    document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                    document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                }
-            });
-
-            //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            $printrows.each(function (index) {
-                var $printrows = $(this);
-                var qty = $printrows.find("#lineQty").text() || 0;
-                var price = $printrows.find("#lineUnitPrice").text() || "0";
-                var taxrateamount = 0;
-                var taxcode = $printrows.find("#lineTaxCode").text();
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxcode) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                        }
-                    }
-                }
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-                if (!isNaN(subTotal)) {
-                    $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                    subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                }
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                    //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-                }
-            });
-            //  }
-
-        },
-        'blur .lineOrdered': function (event) {
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let utilityService = new UtilityService();
-            let $tblrows = $("#tblInvoiceLine tbody tr");
-            let isBOnShippedQty = templateObject.includeBOnShippedQty.get();
-            var targetID = $(event.target).closest('tr').attr('id');
-            if (isBOnShippedQty == true) {
-                let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
-                let qtyBO = $('#' + targetID + " .lineBo").val();
-                let qtyShipped = $('#' + targetID + " .lineQty").val();
-                let boValue = '';
-
-                if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
-                    qtyOrdered = 0;
-                }
-                if (parseInt(qtyOrdered) < parseInt(qtyShipped)) {
-                    $('#' + targetID + " .lineQty").val(qtyOrdered);
-                    $('#' + targetID + " .lineBo").val(0);
-                } else if (parseInt(qtyShipped) <= parseInt(qtyOrdered)) {
-                    boValue = parseInt(qtyOrdered) - parseInt(qtyShipped);
-                    $('#' + targetID + " .lineBo").val(boValue);
-                }
-            }
-
-            let lineAmount = 0;
-            let subGrandTotal = 0;
-            let taxGrandTotal = 0;
-            let subDiscountTotal = 0; // New Discount
-
-            let subGrandTotalNet = 0;
-            let taxGrandTotalNet = 0;
-            $tblrows.each(function (index) {
-                var $tblrow = $(this);
-                var qty = $tblrow.find(".lineQty").val() || 0;
-                var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                var taxrateamount = 0;
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                        }
-                    }
-                }
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                let lineTotalAmount = subTotal + taxTotal;
-
-                let lineDiscountTotal = lineDiscountPerc / 100;
-
-                var discountTotal = lineTotalAmount * lineDiscountTotal;
-                var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                if (!isNaN(discountTotal)) {
-                    subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                    document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                }
-                $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                if (!isNaN(subTotal)) {
-                  $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                  $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                    subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                    subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                }
-
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                    document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                    document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                }
-            });
-
-        },
-        'change .colUnitPriceExChange': function (event) {
-
-            let utilityService = new UtilityService();
-            let inputUnitPrice = 0;
-            if (!isNaN($(event.target).val())) {
-                inputUnitPrice = parseFloat($(event.target).val()) || 0;
-                $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-            } else {
-                inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
-
-                $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-
-            }
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let $tblrows = $("#tblInvoiceLine tbody tr");
-            let $printrows = $(".invoice_print tbody tr");
-            var targetID = $(event.target).closest('tr').attr('id'); // table row ID
-            let lineAmount = 0;
-            let subGrandTotal = 0;
-            let taxGrandTotal = 0;
-            let subDiscountTotal = 0; // New Discount
-            let taxGrandTotalPrint = 0;
-
-            //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());
-            //  }
-
-            let subGrandTotalNet = 0;
-            let taxGrandTotalNet = 0;
-            $tblrows.each(function (index) {
-                var $tblrow = $(this);
-                var qty = $tblrow.find(".lineQty").val() || 0;
-                var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                var taxrateamount = 0;
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100||0;
-                        }
-                    }
-                }
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                let lineTotalAmount = subTotal + taxTotal;
-
-                let lineDiscountTotal = lineDiscountPerc / 100;
-
-                var discountTotal = lineTotalAmount * lineDiscountTotal;
-                var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                if (!isNaN(discountTotal)) {
-                    subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                    document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                }
-                $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                if (!isNaN(subTotal)) {
-                  $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                  $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                    subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                    subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                }
-
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                    document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                    document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                }
-            });
-
-            //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            $printrows.each(function (index) {
-                var $printrows = $(this);
-                var qty = $printrows.find("#lineQty").text() || 0;
-                var price = $printrows.find("#lineUnitPrice").text() || "0";
-                var taxrateamount = 0;
-                var taxRate = $printrows.find("#lineTaxCode").text();
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                        }
-                    }
-                }
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-                if (!isNaN(subTotal)) {
-                    $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                    subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                }
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                    //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                    //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-                }
-            });
-            //}
-        },
-        'change .colUnitPriceIncChange': function (event) {
-
-            let utilityService = new UtilityService();
-            let inputUnitPrice = 0;
-            if (!isNaN($(event.target).val())) {
-                inputUnitPrice = parseFloat($(event.target).val()) || 0;
-                $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-            } else {
-                inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
-
-                $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-
-            }
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let $tblrows = $("#tblInvoiceLine tbody tr");
-            let $printrows = $(".invoice_print tbody tr");
-            var targetID = $(event.target).closest('tr').attr('id'); // table row ID
-            let lineAmount = 0;
-            let subGrandTotal = 0;
-            let taxGrandTotal = 0;
-            let subDiscountTotal = 0; // New Discount
-            let taxGrandTotalPrint = 0;
-
-            let subGrandTotalNet = 0;
-            let taxGrandTotalNet = 0;
-            $tblrows.each(function (index) {
-                var $tblrow = $(this);
-                var qty = $tblrow.find(".lineQty").val() || 0;
-                var price = $tblrow.find(".colUnitPriceIncChange").val() || 0;
-                var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                var taxrateamount = 0;
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "");
-                        }
-                    }
-                }
-
-                let taxRateAmountCalc = (parseFloat(taxrateamount) + 100)/100;
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) / (taxRateAmountCalc) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) - parseFloat(subTotal) ||0;
-
-                var subTotalExQty = (parseFloat(price.replace(/[^0-9.-]+/g, "")) / (taxRateAmountCalc)) || 0;
-                var taxTotalExQty = parseFloat(price.replace(/[^0-9.-]+/g, "")) - parseFloat(subTotalExQty) ||0;
-
-                var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                let lineTotalAmount = subTotal + taxTotal;
-
-                let lineDiscountTotal = lineDiscountPerc / 100;
-
-                var discountTotal = lineTotalAmount * lineDiscountTotal;
-                var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                if (!isNaN(discountTotal)) {
-                    subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                    document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                }
-                $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                let lineUnitPriceIncVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                let lineUnitPriceExVal = lineUnitPriceIncVal - taxTotalExQty||0;
-                $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                if (!isNaN(subTotal)) {
-                  $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                  $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                    subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                    subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                    taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                }
-
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                    document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                    document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                }
-            });
-
-            $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());
-
-            //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            $printrows.each(function (index) {
-                var $printrows = $(this);
-                var qty = $printrows.find("#lineQty").text() || 0;
-                var price = $printrows.find("#lineUnitPrice").text() || "0";
-                var taxrateamount = 0;
-                var taxRate = $printrows.find("#lineTaxCode").text();
-                if (taxcodeList) {
-                    for (var i = 0; i < taxcodeList.length; i++) {
-                        if (taxcodeList[i].codename == taxRate) {
-                            taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                        }
-                    }
-                }
-
-                var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-                if (!isNaN(subTotal)) {
-                    $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                    subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                    document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-                }
-
-                if (!isNaN(taxTotal)) {
-                    taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                    document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                }
-                if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                    let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                    document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                    // document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                    //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                    document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-                }
-            });
-            //}
-        },
-        'click .th.colAmountEx': function(event) {
-            $('.colAmountEx').addClass('hiddenColumn');
-            $('.colAmountEx').removeClass('showColumn');
-
-            $('.colAmountInc').addClass('showColumn');
-            $('.colAmountInc').removeClass('hiddenColumn');
-        },
-        'click .th.colAmountInc': function(event) {
-            $('.colAmountInc').addClass('hiddenColumn');
-            $('.colAmountInc').removeClass('showColumn');
-
-            $('.colAmountEx').addClass('showColumn');
-            $('.colAmountEx').removeClass('hiddenColumn');
-        },
-        'click .th.colUnitPriceEx': function(event) {
-            $('.colUnitPriceEx').addClass('hiddenColumn');
-            $('.colUnitPriceEx').removeClass('showColumn');
-
-            $('.colUnitPriceInc').addClass('showColumn');
-            $('.colUnitPriceInc').removeClass('hiddenColumn');
-        },
-        'click .th.colUnitPriceInc': function(event) {
-            $('.colUnitPriceInc').addClass('hiddenColumn');
-            $('.colUnitPriceInc').removeClass('showColumn');
-
-            $('.colUnitPriceEx').addClass('showColumn');
-            $('.colUnitPriceEx').removeClass('hiddenColumn');
-        },
-        'click #btnCustomFileds': function (event) {
-            var x = document.getElementById("divCustomFields");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        },
-        'click .lineProductName, keydown .lineProductName': function (event) {
-            var $earch = $(event.currentTarget);
-            var offset = $earch.offset();
-
-            let customername = $('#edtCustomerName').val();
-            const templateObject = Template.instance();
-            $("#selectProductID").val('');
-            if (customername === '') {
-                swal('Customer has not been selected!', '', 'warning');
-                event.preventDefault();
-            } else {
-
-                var productDataName = $(event.target).val() || '';
-                if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-                    $('#productListModal').modal('toggle');
-                    var targetID = $(event.target).closest('tr').attr('id');
-                    $('#selectLineID').val(targetID);
-                    setTimeout(function () {
-                        $('#tblInventory_filter .form-control-sm').focus();
-                        $('#tblInventory_filter .form-control-sm').val('');
-                        $('#tblInventory_filter .form-control-sm').trigger("input");
-
-                        var datatable = $('#tblInventory').DataTable();
-                        datatable.draw();
-                        $('#tblInventory_filter .form-control-sm').trigger("input");
-
-                    }, 500);
-                } else {
-                    // var productDataID = $(event.target).attr('prodid').replace(/\s/g, '') || '';
-                    if (productDataName.replace(/\s/g, '') != '') {
-                        //FlowRouter.go('/productview?prodname=' + $(event.target).text());
-                        let lineExtaSellItems = [];
-                        let lineExtaSellObj = {};
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        getVS1Data('TProductVS1').then(function (dataObject) {
-                            if (dataObject.length == 0) {
-                                sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    let lineItems = [];
-                                    let lineItemObj = {};
-                                    let currencySymbol = Currency;
-                                    let totalquantity = 0;
-                                    let productname = data.tproduct[0].fields.ProductName || '';
-                                    let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                    let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                    let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                    let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                    let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                    let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                    let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                    let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                    let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                    let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                    let active = data.tproduct[0].fields.Active;
-                                    let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                    let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                    let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                    let barcode = data.tproduct[0].fields.BARCODE || '';
-                                    $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                    $('#add-product-title').text('Edit Product');
-                                    $('#edtproductname').val(productname);
-                                    $('#edtsellqty1price').val(sellqty1price);
-                                    $('#txasalesdescription').val(salesdescription);
-                                    $('#sltsalesacount').val(incomeaccount);
-                                    $('#slttaxcodesales').val(taxcodesales);
-                                    $('#edtbarcode').val(barcode);
-                                    $('#txapurchasedescription').val(purchasedescription);
-                                    $('#sltcogsaccount').val(cogsaccount);
-                                    $('#slttaxcodepurchase').val(taxcodepurchase);
-                                    $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                    setTimeout(function () {
-                                        $('#newProductModal').modal('show');
-                                    }, 500);
-                                }).catch(function (err) {
-
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            } else {
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tproductvs1;
-                                var added = false;
-
-                                for (let i = 0; i < data.tproductvs1.length; i++) {
-                                    if (data.tproductvs1[i].fields.ProductName === productDataName) {
-                                        added = true;
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        let lineItems = [];
-                                        let lineItemObj = {};
-                                        let currencySymbol = Currency;
-                                        let totalquantity = 0;
-
-                                        let productname = data.tproductvs1[i].fields.ProductName || '';
-                                        let productcode = data.tproductvs1[i].fields.PRODUCTCODE || '';
-                                        let productprintName = data.tproductvs1[i].fields.ProductPrintName || '';
-                                        let assetaccount = data.tproductvs1[i].fields.AssetAccount || '';
-                                        let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
-                                        let cogsaccount = data.tproductvs1[i].fields.CogsAccount || '';
-                                        let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || '';
-                                        let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || '';
-                                        let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
-                                        let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || '';
-                                        let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || '';
-                                        let salesdescription = data.tproductvs1[i].fields.SalesDescription || '';
-                                        let active = data.tproductvs1[i].fields.Active;
-                                        let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || '';
-                                        let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
-                                        let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
-                                        let barcode = data.tproductvs1[i].fields.BARCODE || '';
-                                        $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
-                                        $('#add-product-title').text('Edit Product');
-                                        $('#edtproductname').val(productname);
-                                        $('#edtsellqty1price').val(sellqty1price);
-                                        $('#txasalesdescription').val(salesdescription);
-                                        $('#sltsalesacount').val(incomeaccount);
-                                        $('#slttaxcodesales').val(taxcodesales);
-                                        $('#edtbarcode').val(barcode);
-                                        $('#txapurchasedescription').val(purchasedescription);
-                                        $('#sltcogsaccount').val(cogsaccount);
-                                        $('#slttaxcodepurchase').val(taxcodepurchase);
-                                        $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                        setTimeout(function () {
-                                            $('#newProductModal').modal('show');
-                                        }, 500);
-                                    }
-                                }
-                                if (!added) {
-                                    sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        let lineItems = [];
-                                        let lineItemObj = {};
-                                        let currencySymbol = Currency;
-                                        let totalquantity = 0;
-                                        let productname = data.tproduct[0].fields.ProductName || '';
-                                        let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                        let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                        let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                        let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                        let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                        let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                        let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                        let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                        let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                        let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                        let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                        let active = data.tproduct[0].fields.Active;
-                                        let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                        let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                        let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                        let barcode = data.tproduct[0].fields.BARCODE || '';
-                                        $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                        $('#add-product-title').text('Edit Product');
-                                        $('#edtproductname').val(productname);
-                                        $('#edtsellqty1price').val(sellqty1price);
-                                        $('#txasalesdescription').val(salesdescription);
-                                        $('#sltsalesacount').val(incomeaccount);
-                                        $('#slttaxcodesales').val(taxcodesales);
-                                        $('#edtbarcode').val(barcode);
-                                        $('#txapurchasedescription').val(purchasedescription);
-                                        $('#sltcogsaccount').val(cogsaccount);
-                                        $('#slttaxcodepurchase').val(taxcodepurchase);
-                                        $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                        setTimeout(function () {
-                                            $('#newProductModal').modal('show');
-                                        }, 500);
-                                    }).catch(function (err) {
-
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }
-                            }
-                        }).catch(function (err) {
-
-                            sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                let lineItemObj = {};
-                                let currencySymbol = Currency;
-                                let totalquantity = 0;
-                                let productname = data.tproduct[0].fields.ProductName || '';
-                                let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
-                                let productprintName = data.tproduct[0].fields.ProductPrintName || '';
-                                let assetaccount = data.tproduct[0].fields.AssetAccount || '';
-                                let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
-                                let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
-                                let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
-                                let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
-                                let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
-                                let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
-                                let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
-                                let salesdescription = data.tproduct[0].fields.SalesDescription || '';
-                                let active = data.tproduct[0].fields.Active;
-                                let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
-                                let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
-                                let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
-                                let barcode = data.tproduct[0].fields.BARCODE || '';
-                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
-                                $('#add-product-title').text('Edit Product');
-                                $('#edtproductname').val(productname);
-                                $('#edtsellqty1price').val(sellqty1price);
-                                $('#txasalesdescription').val(salesdescription);
-                                $('#sltsalesacount').val(incomeaccount);
-                                $('#slttaxcodesales').val(taxcodesales);
-                                $('#edtbarcode').val(barcode);
-                                $('#txapurchasedescription').val(purchasedescription);
-                                $('#sltcogsaccount').val(cogsaccount);
-                                $('#slttaxcodepurchase').val(taxcodepurchase);
-                                $('#edtbuyqty1cost').val(buyqty1cost);
-
-                                setTimeout(function () {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
-                            }).catch(function (err) {
-
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-
-                        });
-
-                        setTimeout(function () {
-                            var begin_day_value = $('#event_begin_day').attr('value');
-                            $("#dtDateTo").datepicker({
-                                showOn: 'button',
-                                buttonText: 'Show Date',
-                                buttonImageOnly: true,
-                                buttonImage: '/img/imgCal2.png',
-                                constrainInput: false,
-                                dateFormat: 'd/mm/yy',
-                                showOtherMonths: true,
-                                selectOtherMonths: true,
-                                changeMonth: true,
-                                changeYear: true,
-                                yearRange: "-90:+10",
-                            }).keyup(function (e) {
-                                if (e.keyCode == 8 || e.keyCode == 46) {
-                                    $("#dtDateTo,#dtDateFrom").val('');
-                                }
-                            });
-
-                            $("#dtDateFrom").datepicker({
-                                showOn: 'button',
-                                buttonText: 'Show Date',
-                                altField: "#dtDateFrom",
-                                buttonImageOnly: true,
-                                buttonImage: '/img/imgCal2.png',
-                                constrainInput: false,
-                                dateFormat: 'd/mm/yy',
-                                showOtherMonths: true,
-                                selectOtherMonths: true,
-                                changeMonth: true,
-                                changeYear: true,
-                                yearRange: "-90:+10",
-                            }).keyup(function (e) {
-                                if (e.keyCode == 8 || e.keyCode == 46) {
-                                    $("#dtDateTo,#dtDateFrom").val('');
-                                }
-                            });
-
-                            $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
-
-                        }, 1000);
-                        //}
-
-
-                        templateObject.getProductClassQtyData = function () {
-                            productService.getOneProductClassQtyData(currentProductID).then(function (data) {
-                                $('.fullScreenSpin').css('display', 'none');
-                                let qtylineItems = [];
-                                let qtylineItemObj = {};
-                                let currencySymbol = Currency;
-                                let totaldeptquantity = 0;
-
-                                for (let j in data.tproductclassquantity) {
-                                    qtylineItemObj = {
-                                        department: data.tproductclassquantity[j].DepartmentName || '',
-                                        quantity: data.tproductclassquantity[j].InStockQty || 0,
-                                    }
-                                    totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-                                    qtylineItems.push(qtylineItemObj);
-                                }
-                                // $('#edttotalqtyinstock').val(totaldeptquantity);
-                                templateObject.productqtyrecords.set(qtylineItems);
-                                templateObject.totaldeptquantity.set(totaldeptquantity);
-
-                            }).catch(function (err) {
-
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-
-                        }
-
-                        //templateObject.getProductClassQtyData();
-                        //templateObject.getProductData();
-                    } else {
-                        $('#productListModal').modal('toggle');
-                        var targetID = $(event.target).closest('tr').attr('id');
-                        $('#selectLineID').val(targetID);
-                        setTimeout(function () {
-                            $('#tblInventory_filter .form-control-sm').focus();
-                            $('#tblInventory_filter .form-control-sm').val('');
-                            $('#tblInventory_filter .form-control-sm').trigger("input");
-
-                            var datatable = $('#tblInventory').DataTable();
-                            datatable.draw();
-                            $('#tblInventory_filter .form-control-sm').trigger("input");
-
-                        }, 500);
-                    }
-
-                }
-            }
-        },
-        'click .lineTaxRate': function (event) {
-            $('#tblInvoiceLine tbody tr .lineTaxRate').attr("data-toggle", "modal");
-            $('#tblInvoiceLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
-            var targetID = $(event.target).closest('tr').attr('id');
-            $('#selectLineID').val(targetID);
-        },
-        'click .lineSerialNo, keydown .lineSerialNo': function(event) {
-            var $earch = $(event.currentTarget);
-            var offset = $earch.offset();
-            if (event.pageX > offset.left + $earch.width() - 10) {
-                $('#serialNumberModal').modal('toggle');
-            } else {
-                $('#serialNumberModal').modal('toggle');
-            }
-        },
-        'click .lineLotNo, keydown .lineLotNo': function(event) {
-            var $earch = $(event.currentTarget);
-            var offset = $earch.offset();
-            if (event.pageX > offset.left + $earch.width() - 10) {
-                $('#lotNumberModal').modal('toggle');
-            } else {
-                $('#lotNumberModal').modal('toggle');
-            }
-        },
-
-        'click .lineTaxCode, keydown .lineTaxCode': function(event) {
-           var $earch = $(event.currentTarget);
-           var offset = $earch.offset();
-           $('#edtTaxID').val('');
-           $('.taxcodepopheader').text('New Tax Rate');
-           $('#edtTaxID').val('');
-           $('#edtTaxNamePop').val('');
-           $('#edtTaxRatePop').val('');
-           $('#edtTaxDescPop').val('');
-           $('#edtTaxNamePop').attr('readonly', false);
-           let purchaseService = new PurchaseBoardService();
-           var taxRateDataName = $(event.target).val() || '';
-           if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-               $('#taxRateListModal').modal('toggle');
-               var targetID = $(event.target).closest('tr').attr('id');
-               $('#selectLineID').val(targetID);
-               setTimeout(function() {
-                   $('#tblTaxRate_filter .form-control-sm').focus();
-                   $('#tblTaxRate_filter .form-control-sm').val('');
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
-
-                   var datatable = $('#tblTaxRate').DataTable();
-                   datatable.draw();
-                   $('#tblTaxRate_filter .form-control-sm').trigger("input");
-
-               }, 500);
-           } else {
-               if (taxRateDataName.replace(/\s/g, '') != '') {
-
-                   getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-                     if(dataObject.length == 0){
-                       purchaseService.getTaxCodesVS1().then(function (data) {
-                         let lineItems = [];
-                         let lineItemObj = {};
-                         for(let i=0; i<data.ttaxcodevs1.length; i++){
-                           if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                             $('#edtTaxNamePop').attr('readonly', true);
-                           let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                           var taxRateID = data.ttaxcodevs1[i].Id || '';
-                            var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                            var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                            $('#edtTaxID').val(taxRateID);
-                            $('#edtTaxNamePop').val(taxRateName);
-                            $('#edtTaxRatePop').val(taxRate);
-                            $('#edtTaxDescPop').val(taxRateDesc);
-                            setTimeout(function() {
-                            $('#newTaxRateModal').modal('toggle');
-                            }, 100);
-                          }
-                         }
-
-                       }).catch(function (err) {
-                           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                           $('.fullScreenSpin').css('display','none');
-                           // Meteor._reload.reload();
-                       });
-                     }else{
-                       let data = JSON.parse(dataObject[0].data);
-                       let useData = data.ttaxcodevs1;
-                       let lineItems = [];
-                       let lineItemObj = {};
-                       $('.taxcodepopheader').text('Edit Tax Rate');
-                       for(let i=0; i<useData.length; i++){
-
-                         if ((useData[i].CodeName) === taxRateDataName) {
-                           $('#edtTaxNamePop').attr('readonly', true);
-                         let taxRate = (useData[i].Rate * 100).toFixed(2);
-                         var taxRateID = useData[i].Id || '';
-                          var taxRateName = useData[i].CodeName ||'';
-                          var taxRateDesc = useData[i].Description || '';
-                          $('#edtTaxID').val(taxRateID);
-                          $('#edtTaxNamePop').val(taxRateName);
-                          $('#edtTaxRatePop').val(taxRate);
-                          $('#edtTaxDescPop').val(taxRateDesc);
-                          //setTimeout(function() {
-                          $('#newTaxRateModal').modal('toggle');
-                          //}, 500);
-                        }
-                       }
-                     }
-                   }).catch(function (err) {
-                     purchaseService.getTaxCodesVS1().then(function (data) {
-                       let lineItems = [];
-                       let lineItemObj = {};
-                       for(let i=0; i<data.ttaxcodevs1.length; i++){
-                         if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
-                           $('#edtTaxNamePop').attr('readonly', true);
-                         let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                         var taxRateID = data.ttaxcodevs1[i].Id || '';
-                          var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
-                          var taxRateDesc = data.ttaxcodevs1[i].Description || '';
-                          $('#edtTaxID').val(taxRateID);
-                          $('#edtTaxNamePop').val(taxRateName);
-                          $('#edtTaxRatePop').val(taxRate);
-                          $('#edtTaxDescPop').val(taxRateDesc);
-                          setTimeout(function() {
-                          $('#newTaxRateModal').modal('toggle');
-                          }, 100);
-
-                        }
-                       }
-
-                     }).catch(function (err) {
-                         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                         $('.fullScreenSpin').css('display','none');
-                         // Meteor._reload.reload();
-                     });
-                   });
-
-               } else {
-                   $('#taxRateListModal').modal('toggle');
-                   var targetID = $(event.target).closest('tr').attr('id');
-                   $('#selectLineID').val(targetID);
-                   setTimeout(function() {
-                       $('#tblTaxRate_filter .form-control-sm').focus();
-                       $('#tblTaxRate_filter .form-control-sm').val('');
-                       $('#tblTaxRate_filter .form-control-sm').trigger("input");
-
-                       var datatable = $('#tblTaxRate').DataTable();
-                       datatable.draw();
-                       $('#tblTaxRate_filter .form-control-sm').trigger("input");
-
-                   }, 500);
-               }
-
-           }
-
-        },
-        'click .printConfirm': function (event) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            $('#html-2-pdfwrapper').css('display', 'block');
-            if ($('.edtCustomerEmail').val() != "") {
-                $('.pdfCustomerName').html($('#edtCustomerName').val());
-                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
-                var ponumber = $('#ponumber').val() || '.';
-                $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;
-                exportSalesToPdf();
-            } else {
-                swal({
-                    title: 'Customer Email Required',
-                    text: 'Please enter customer email',
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {}
-                    else if (result.dismiss === 'cancel') {}
-                });
-            }
-        },
-        'keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered': function (event) {
-            if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-                (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-                (event.keyCode >= 35 && event.keyCode <= 40)) {
-                return;
-            }
-
-            if (event.shiftKey == true) {
-                event.preventDefault();
-            }
-
-            if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-                (event.keyCode >= 96 && event.keyCode <= 105) ||
-                event.keyCode == 8 || event.keyCode == 9 ||
-                event.keyCode == 37 || event.keyCode == 39 ||
-                event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {}
-            else {
-                event.preventDefault();
-            }
-        },
-        'click .btnRemove': function (event) {
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let utilityService = new UtilityService();
-            var clicktimes = 0;
-            var targetID = $(event.target).closest('tr').attr('id');
-            $('#selectDeleteLineID').val(targetID);
-
-            times++;
-            if (times == 1) {
-                $('#deleteLineModal').modal('toggle');
-            } else {
-                if ($('#tblInvoiceLine tbody>tr').length > 1) {
-                    this.click;
-                    $(event.target).closest('tr').remove();
-                    $(".invoice_print #" + targetID).remove();
-                    event.preventDefault();
-                    let $tblrows = $("#tblInvoiceLine tbody tr");
-                    let $printrows = $(".invoice_print tbody tr");
-                    let lineAmount = 0;
-                    let subGrandTotal = 0;
-                    let taxGrandTotal = 0;
-                    let subDiscountTotal = 0; // New Discount
-                    let taxGrandTotalPrint = 0;
-
-                    let subGrandTotalNet = 0;
-                    let taxGrandTotalNet = 0;
-                    $tblrows.each(function (index) {
-                        var $tblrow = $(this);
-                        var qty = $tblrow.find(".lineQty").val() || 0;
-                        var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                        var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                        var taxrateamount = 0;
-                        if (taxcodeList) {
-                            for (var i = 0; i < taxcodeList.length; i++) {
-                                if (taxcodeList[i].codename == taxRate) {
-                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                                }
-                            }
-                        }
-
-                        var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                        var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                        var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                        let lineTotalAmount = subTotal + taxTotal;
-
-                        let lineDiscountTotal = lineDiscountPerc / 100;
-
-                        var discountTotal = lineTotalAmount * lineDiscountTotal;
-                        var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                        var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                        var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                        var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                        if (!isNaN(discountTotal)) {
-                            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                            document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                        }
-                        $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                        let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                        let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                        let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                        $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                        $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                        if (!isNaN(subTotal)) {
-                            $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                            $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                            document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                        }
-
-                        if (!isNaN(taxTotal)) {
-                            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                        }
-
-                        if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                            let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                            let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                            document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                            document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                        }
-                    });
-
-                    //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                    $printrows.each(function (index) {
-                        var $printrows = $(this);
-                        var qty = $printrows.find("#lineQty").text() || 0;
-                        var price = $printrows.find("#lineUnitPrice").text() || "0";
-                        var taxrateamount = 0;
-                        var taxRate = $printrows.find("#lineTaxCode").text();
-                        if (taxcodeList) {
-                            for (var i = 0; i < taxcodeList.length; i++) {
-                                if (taxcodeList[i].codename == taxRate) {
-                                    taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                                }
-                            }
-                        }
-                        var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                        var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                        $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-                        if (!isNaN(subTotal)) {
-                            $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                            document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-                        }
-
-                        if (!isNaN(taxTotal)) {
-                            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                            document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                        }
-                        if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                            let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                            document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                            //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                            //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                            document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-                        }
-                    });
-                    //}
-                    return false;
-
-                } else {
-                    $('#deleteLineModal').modal('toggle');
-                }
-
-            }
-        },
-        'click .btnDeleteInvoice': function (event) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            let templateObject = Template.instance();
-            let salesService = new SalesBoardService();
-            var url = FlowRouter.current().path;
-            var getso_id = url.split('?id=');
-            var currentInvoice = getso_id[getso_id.length - 1];
-            var objDetails = '';
-            if (getso_id[1]) {
-                currentInvoice = parseInt(currentInvoice);
-                var objDetails = {
-                    type: "TInvoiceEx",
-                    fields: {
-                        ID: currentInvoice,
-                        Deleted: true,
-                        Lines: null
-                    }
-                };
-
-                salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
-                    FlowRouter.go('/invoicelist?success=true');
-                }).catch(function (err) {
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                        else if (result.dismiss === 'cancel') {}
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            } else {
-                FlowRouter.go('/invoicelist?success=true');
-            }
-            $('#deleteLineModal').modal('toggle');
-        },
-        'click .btnDeleteLine': function (event) {
-            let templateObject = Template.instance();
-            let taxcodeList = templateObject.taxraterecords.get();
-            let utilityService = new UtilityService();
-            let selectLineID = $('#selectDeleteLineID').val();
-            if ($('#tblInvoiceLine tbody>tr').length > 1) {
-                this.click;
-
-                $('#' + selectLineID).closest('tr').remove();
-                $('#deleteLineModal').modal('toggle');
-                let $tblrows = $("#tblInvoiceLine tbody tr");
-                let $printrows = $(".invoice_print tbody tr");
-                $(".invoice_print #" + selectLineID).remove();
-                let lineAmount = 0;
-                let subGrandTotal = 0;
-                let taxGrandTotal = 0;
-                let subDiscountTotal = 0; // New Discount
-                let taxGrandTotalPrint = 0;
-
-                let subGrandTotalNet = 0;
-                let taxGrandTotalNet = 0;
-                $tblrows.each(function (index) {
-                    var $tblrow = $(this);
-                    var qty = $tblrow.find(".lineQty").val() || 0;
-                    var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-                    var taxRate = $tblrow.find(".lineTaxCode").val();
-
-                    var taxrateamount = 0;
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                            }
-                        }
-                    }
-
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
-                    let lineTotalAmount = subTotal + taxTotal;
-
-                    let lineDiscountTotal = lineDiscountPerc / 100;
-
-                    var discountTotal = lineTotalAmount * lineDiscountTotal;
-                    var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-                    var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-                    var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-                    var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-                    if (!isNaN(discountTotal)) {
-                        subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-                        document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-                    }
-                    $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
-
-                    let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
-                    let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
-                    let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
-                    $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
-                    $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
-                    if (!isNaN(subTotal)) {
-                      $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                      $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
-                        subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-                        subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-                    }
-
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-                        taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-                    }
-
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
-                        document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-                        document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-                    }
-                });
-
-                $printrows.each(function (index) {
-                    var $printrows = $(this);
-                    var qty = $printrows.find("#lineQty").text() || 0;
-                    var price = $printrows.find("#lineUnitPrice").text() || "0";
-                    var taxrateamount = 0;
-                    var taxRate = $printrows.find("#lineTaxCode").text();
-                    if (taxcodeList) {
-                        for (var i = 0; i < taxcodeList.length; i++) {
-                            if (taxcodeList[i].codename == taxRate) {
-                                taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-                            }
-                        }
-                    }
-                    var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-                    var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-                    $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-                    if (!isNaN(subTotal)) {
-                        $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-                        subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-                        document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-                    }
-
-                    if (!isNaN(taxTotal)) {
-                        taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-                        document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-                    }
-                    if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-                        let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-                        document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-                        // document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
-                        //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-                        document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-                    }
-                });
-                //return false;
-            } else {
-                this.click;
-                $('#' + selectLineID + " .lineProductName").val('');
-                $('#' + selectLineID + " .lineProductDesc").text('');
-                $('#' + selectLineID + " .lineOrdered").val('');
-                $('#' + selectLineID + " .lineQty").val('');
-                $('#' + selectLineID + " .lineBo").val('');
-                $('#' + selectLineID + " .lineUnitPrice").val('');
-                $('#' + selectLineID + " .lineCostPrice").val('');
-                $('#' + selectLineID + " .lineSalesLinesCustField1").text('');
-                $('#' + selectLineID + " .lineTaxRate").text('');
-                $('#' + selectLineID + " .lineTaxCode").val('');
-                $('#' + selectLineID + " .lineAmt").text('');
-                $('#' + selectLineID + " .lineTaxAmount").text('');
-                $('#' + selectLineID + " .lineDiscount").text('');
-
-                document.getElementById("subtotal_tax").innerHTML = Currency + '0.00';
-                document.getElementById("subtotal_total").innerHTML = Currency + '0.00';
-                document.getElementById("grandTotal").innerHTML = Currency + '0.00';
-                document.getElementById("balanceDue").innerHTML = Currency + '0.00';
-                document.getElementById("totalBalanceDue").innerHTML = Currency + '0.00';
-                $('#deleteLineModal').modal('toggle');
-            }
-
-            // $('#deleteLineModal').modal('toggle');
-        },
-        // 'click .btnSaveSettings': function (event) {
-        //     let custfield1 = $('.customField1').val() || 'Custom Field 1';
-        //     let custfield2 = $('.customField2').val() || 'Custom Field 2';
-        //     let custfield3 = $('.customField3').val() || 'Custom Field 3';
-
-        //     localStorage.setItem('custfield1',custfield1);
-        //     localStorage.setItem('custfield2',custfield2);
-        //     localStorage.setItem('custfield3',custfield3);
-        //     $('#myModal4').modal('toggle');
-        // },
-        'click .btnSave': function (event) {
-            let templateObject = Template.instance();
-            let stripe_id = templateObject.accountID.get();
-            let stripe_fee_method = templateObject.stripe_fee_method.get();
-            let lineItems = [];
-            let imageData = (localStorage.getItem("Image"));
-            let customername = $('#edtCustomerName');
-            let name = $('#edtCustomerEmail').attr('customerfirstname');
-            let surname = $('#edtCustomerEmail').attr('customerlastname');
-            let salesService = new SalesBoardService();
-            let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
-            if (termname === '') {
-                swal('Terms has not been selected!', '', 'warning');
-                event.preventDefault();
-                return false;
-            }
-            if (customername.val() === '') {
-                swal('Customer has not been selected!', '', 'warning');
-                event.preventDefault();
-            } else {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                var splashLineArray = new Array();
-                let lineItemsForm = [];
-                let lineItems = [];
-                let lineItemObjForm = {};
-                var erpGet = erpDb();
-                var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-
-                var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
-                let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
-                let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
-
-                let checkBackOrder = templateObject.includeBOnShippedQty.get();
-                $('#tblInvoiceLine > tbody > tr').each(function () {
-                    var lineID = this.id;
-                    let tdproduct = $('#' + lineID + " .lineProductName").val();
-                    let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                    let tdQty = $('#' + lineID + " .lineQty").val();
-
-                    let tdOrderd = $('#' + lineID + " .lineOrdered").val();
-
-                    let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                    let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                    let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
-                    lineItemObj = {
-                        description: tddescription || '',
-                        quantity: tdQty || 0,
-                        unitPrice: tdunitprice.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        }) || 0
-                    }
-
-                    lineItems.push(lineItemObj);
-
-                    if (tdproduct != "") {
-
-                        if (checkBackOrder == true) {
-                            lineItemObjForm = {
-                                type: "TInvoiceLine",
-                                fields: {
-                                    ProductName: tdproduct || '',
-                                    ProductDescription: tddescription || '',
-                                    UOMQtySold: parseFloat(tdOrderd) || 0,
-                                    UOMQtyShipped: parseFloat(tdQty) || 0,
-                                    LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                    Headershipdate: saleDate,
-                                    LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                }
-                            };
-                        } else {
-                            lineItemObjForm = {
-                                type: "TInvoiceLine",
-                                fields: {
-                                    ProductName: tdproduct || '',
-                                    ProductDescription: tddescription || '',
-                                    UOMQtySold: parseFloat(tdQty) || 0,
-                                    UOMQtyShipped: parseFloat(tdQty) || 0,
-                                    LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                    Headershipdate: saleDate,
-                                    LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                }
-                            };
-                        }
-
-                        lineItemsForm.push(lineItemObjForm);
-                        splashLineArray.push(lineItemObjForm);
-                    }
-                });
-                let getchkcustomField1 = true;
-                let getchkcustomField2 = true;
-                let getcustomField1 = $('.customField1Text').html()||'';
-                let getcustomField2 = $('.customField2Text').html()||'';
-                if ($('#formCheck-one').is(':checked')) {
-                    getchkcustomField1 = false;
-                }
-                if ($('#formCheck-two').is(':checked')) {
-                    getchkcustomField2 = false;
-                }
-
-                let customer = $('#edtCustomerName').val();
-                let customerEmail = $('#edtCustomerEmail').val();
-                let billingAddress = $('#txabillingAddress').val();
-
-                let poNumber = $('#ponumber').val();
-                let reference = $('#edtRef').val();
-
-                let departement = $('#sltDept').val();
-                let shippingAddress = $('#txaShipingInfo').val();
-                let comments = $('#txaComment').val();
-                let pickingInfrmation = $('#txapickmemo').val();
-                let total = $('#totalBalanceDue').html() || 0;
-                let tax = $('#subtotal_tax').html() || 0;
-                let saleCustField1 = $('#edtSaleCustField1').val()||'';
-                let saleCustField2 = $('#edtSaleCustField2').val()||'';
-                let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                var url = FlowRouter.current().path;
-                var getso_id = url.split('?id=');
-                var currentInvoice = getso_id[getso_id.length - 1];
-                let uploadedItems = templateObject.uploadedFiles.get();
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                var objDetails = '';
-                if (getso_id[1]) {
-                    currentInvoice = parseInt(currentInvoice);
-                    objDetails = {
-                        type: "TInvoiceEx",
-                        fields: {
-                            ID: currentInvoice,
-                            CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
-                            Lines: splashLineArray,
-                            InvoiceToDesc: billingAddress,
-                            SaleDate: saleDate,
-                            CustPONumber: poNumber,
-                            ReferenceNo: reference,
-                            TermsName: termname,
-                            SaleClassName: departement,
-                            ShipToDesc: shippingAddress,
-                            Comments: comments,
-                            SaleCustField1: saleCustField1,
-                            SaleCustField2: saleCustField2,
-                            SaleCustField3: saleCustField3,
-                            PickMemo: pickingInfrmation,
-                            Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
-                        }
-                    };
-                } else {
-                    objDetails = {
-                        type: "TInvoiceEx",
-                        fields: {
-                            CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
-                            Lines: splashLineArray,
-                            InvoiceToDesc: billingAddress,
-                            SaleDate: saleDate,
-                            CustPONumber: poNumber,
-                            ReferenceNo: reference,
-                            TermsName: termname,
-                            SaleClassName: departement,
-                            ShipToDesc: shippingAddress,
-                            Comments: comments,
-                            SaleCustField1: saleCustField1,
-                            SaleCustField2: saleCustField2,
-                            SaleCustField3: saleCustField3,
-                            PickMemo: pickingInfrmation,
-                            Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
-                        }
-                    };
-                }
-
-                salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
-                    let company = Session.get('vs1companyName');
-                    let vs1User = localStorage.getItem('mySession');
-                    let customerEmail = $('#edtCustomerEmail').val() || '';
-                    let currencyname = (CountryAbbr).toLowerCase();
-                    let stringQuery = "?";
-                    var customerID = $('#edtCustomerEmail').attr('customerid');
-                    for (let l = 0; l < lineItems.length; l++) {
-                        stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-                    }
-                    stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.fields.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
-                    $('#html-2-pdfwrapper').css('display', 'block');
-                    $('.pdfCustomerName').html($('#edtCustomerName').val());
-                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                    var ponumber = $('#ponumber').val() || '.';
-                    $('.po').text(ponumber);
-
-                    function generatePdfForMail(invoiceId) {
-                        let file = "Invoice-" + invoiceId + ".pdf"
-                            return new Promise((resolve, reject) => {
-                            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-                            let templateObject = Template.instance();
-                            let completeTabRecord;
-                            let doc = new jsPDF('p', 'pt', 'a4');
-                            var source = document.getElementById('html-2-pdfwrapper');
-                            var opt = {
-                                margin: 0,
-                                filename: file,
-                                image: {
-                                    type: 'jpeg',
-                                    quality: 0.98
-                                },
-                                html2canvas: {
-                                    scale: 2
-                                },
-                                jsPDF: {
-                                    unit: 'in',
-                                    format: 'a4',
-                                    orientation: 'portrait'
-                                }
-                            }
-                            resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
-                            // doc.addHTML(source, function () {
-                            //     doc.setFontSize(10);
-                            //     doc.setTextColor(255, 255, 255);
-                            //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
-                            //     resolve(doc.output('blob'));
-                            //     $('#html-2-pdfwrapper').css('display', 'none');
-                            // });
-                        });
-                    }
-                    async function addAttachment() {
-                        let attachment = [];
-                        let templateObject = Template.instance();
-
-                        let invoiceId = objDetails.fields.ID;
-                        let encodedPdf = await generatePdfForMail(invoiceId);
-
-                        // var base64data = reader.result;
-                        let base64data = encodedPdf.split(',')[1];
-                        pdfObject = {
-                            filename: 'invoice-' + invoiceId + '.pdf',
-                            content: base64data,
-                            encoding: 'base64'
-                        };
-                        attachment.push(pdfObject);
-                        let erpInvoiceId = objDetails.fields.ID;
-
-                        let mailFromName = Session.get('vs1companyName');
-                        let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                        let customerEmailName = $('#edtCustomerName').val();
-                        let checkEmailData = $('#edtCustomerEmail').val();
-                        let grandtotal = $('#grandTotal').html();
-                        let amountDueEmail = $('#totalBalanceDue').html();
-                        let emailDueDate = $("#dtDueDate").val();
-                        let customerBillingAddress = $('#txabillingAddress').val();
-                        let customerTerms = $('#sltTerms').val();
-
-                        let customerSubtotal = $('#subtotal_total').html();
-                        let customerTax = $('#subtotal_tax').html();
-                        let customerNett = $('#subtotal_nett').html();
-                        let customerTotal = $('#grandTotal').html();
-                        let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                        let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
-                            "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
-                            "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
-
-                        var htmlmailBody = '    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                            '        <tr>' +
-                            '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                            '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                            '                    <table class="main">' +
-                            '                        <tr>' +
-                            '                            <td class="wrapper">' +
-                            '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                            '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="height: 16px;"></tr>' +
-                            '                                    <tr>' +
-                            '                                        <td>' +
-                            '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="height: 48px;"></tr>' +
-                            '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                            '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                            '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
-                            '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-                            '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                            '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                            '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="background-color: #ededed;">' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                            '                                                <div style="width: 50%; float: left;">' +
-                            '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                            '                                                </div>' +
-                            '                                                <div style="width: 50%; float: right;">' +
-                            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                            '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-                            '                                                </div>' +
-                            '                                            </div>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr style="background-color: #ededed;">' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                            '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                            '                                                <div style="width: 50%; float: left;">' +
-                            '                                                    <p style="font-size: 18px;">Terms</p>' +
-                            '                                                </div>' +
-                            '                                                <div style="width: 50%; float: right;">' +
-                            '                                                    <p style="font-size: 18px;">' + customerTerms + '</p>' +
-                            '                                                </div>' +
-                            '                                            </div>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                            '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                            '                                                <div style="width: 50%; float: left;">' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                            '                                                </div>' +
-                            '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-                            '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-                            '                                                </div>' +
-                            '                                            </div>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                            '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                            '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                            '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                    <tr>' +
-                            '                                        <td>' +
-                            '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                            '                                                <tbody>' +
-                            '                                                    <tr>' +
-                            '                                                        <td align="center">' +
-                            '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                            '                                                                <tbody>' +
-                            '                                                                    <tr>' +
-                            '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                            '                                                                    </tr>' +
-                            '                                                                </tbody>' +
-                            '                                                            </table>' +
-                            '                                                        </td>' +
-                            '                                                    </tr>' +
-                            '                                                </tbody>' +
-                            '                                            </table>' +
-                            '                                        </td>' +
-                            '                                    </tr>' +
-                            '                                </table>' +
-                            '                            </td>' +
-                            '                        </tr>' +
-                            '                    </table>' +
-                            '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                            '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                            '                            <tr>' +
-                            '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                            '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-                            '                                    <br>' +
-                            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                            '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                            '                                </td>' +
-                            '                            </tr>' +
-                            '                        </table>' +
-                            '                    </div>' +
-                            '                </div>' +
-                            '            </td>' +
-                            '        </tr>' +
-                            '    </table>';
-
-                        if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: checkEmailData,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function (error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/invoicelist?success=true');
-
-                                } else {}
-                            });
-
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: mailFrom,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function (error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/invoicelist?success=true');
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {}
-                                        else if (result.dismiss === 'cancel') {}
-                                    });
-
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }
-                            });
-
-                        } else if (($('.chkEmailCopy').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: checkEmailData,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function (error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/invoicelist?success=true');
-
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To Customer: " + checkEmailData + " ",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            FlowRouter.go('/invoicelist?success=true');
-                                        } else if (result.dismiss === 'cancel') {}
-                                    });
-
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }
-                            });
-
-                        } else if (($('.chkEmailRep').is(':checked'))) {
-                            Meteor.call('sendEmail', {
-                                from: "" + mailFromName + " <" + mailFrom + ">",
-                                to: mailFrom,
-                                subject: mailSubject,
-                                text: '',
-                                html: htmlmailBody,
-                                attachments: attachment
-                            }, function (error, result) {
-                                if (error && error.error === "error") {
-                                    FlowRouter.go('/invoicelist?success=true');
-                                } else {
-                                    $('#html-2-pdfwrapper').css('display', 'none');
-                                    swal({
-                                        title: 'SUCCESS',
-                                        text: "Email Sent To User: " + mailFrom + " ",
-                                        type: 'success',
-                                        showCancelButton: false,
-                                        confirmButtonText: 'OK'
-                                    }).then((result) => {
-                                        if (result.value) {
-                                            FlowRouter.go('/invoicelist?success=true');
-                                        } else if (result.dismiss === 'cancel') {}
-                                    });
-
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }
-                            });
-
-                        } else {
-                            FlowRouter.go('/invoicelist?success=true');
-                        };
-
-                    }
-                    addAttachment();
-                    if (customerID !== " ") {
-                        let customerEmailData = {
-                            type: "TCustomer",
-                            fields: {
-                                ID: customerID,
-                                Email: customerEmail
-                            }
-                        }
-
-                    };
-                    var getcurrentCloudDetails = CloudUser.findOne({
-                        _id: Session.get('mycloudLogonID'),
-                        clouddatabaseID: Session.get('mycloudLogonDBID')
-                    });
-                    if (getcurrentCloudDetails) {
-                        if (getcurrentCloudDetails._id.length > 0) {
-                            var clientID = getcurrentCloudDetails._id;
-                            var clientUsername = getcurrentCloudDetails.cloudUsername;
-                            var clientEmail = getcurrentCloudDetails.cloudEmail;
-                            var checkPrefDetails = CloudPreference.findOne({
-                                userid: clientID,
-                                PrefName: 'new_invoice'
-                            });
-                            if (checkPrefDetails) {
-                                CloudPreference.update({
-                                    _id: checkPrefDetails._id
-                                }, {
-                                    $set: {
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'salesform',
-                                        PrefName: 'new_invoice',
-                                        published: true,
-                                        customFields: [{
-                                                index: '1',
-                                                label: getcustomField1,
-                                                hidden: getchkcustomField1
-                                            }, {
-                                                index: '2',
-                                                label: getcustomField2,
-                                                hidden: getchkcustomField2
-                                            }
-                                        ],
-                                        updatedAt: new Date()
-                                    }
-                                }, function (err, idTag) {
-                                    if (err) {}
-                                    else {}
-                                });
-                            } else {
-                                CloudPreference.insert({
-                                    userid: clientID,
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'salesform',
-                                    PrefName: 'new_invoice',
-                                    published: true,
-                                    customFields: [{
-                                            index: '1',
-                                            label: getcustomField1,
-                                            hidden: getchkcustomField1
-                                        }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }
-                                    ],
-                                    createdAt: new Date()
-                                }, function (err, idTag) {
-                                    if (err) {}
-                                    else {}
-                                });
-                            }
-                        }
-                    } else {};
-
-                }).catch(function (err) {
-                    $('#html-2-pdfwrapper').css('display', 'none');
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                        else if (result.dismiss === 'cancel') {}
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-
-            }
-
-        },
-        'click .chkProductName': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colProductName').css('display', 'table-cell');
-                $('.colProductName').css('padding', '.75rem');
-                $('.colProductName').css('vertical-align', 'top');
-            } else {
-                $('.colProductName').css('display', 'none');
-            }
-        },
-        'click .chkDescription': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colDescription').css('display', 'table-cell');
-                $('.colDescription').css('padding', '.75rem');
-                $('.colDescription').css('vertical-align', 'top');
-            } else {
-                $('.colDescription').css('display', 'none');
-            }
-        },
-        'click .chkQty': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colQty').css('display', 'table-cell');
-                $('.colQty').css('padding', '.75rem');
-                $('.colQty').css('vertical-align', 'top');
-            } else {
-                $('.colQty').css('display', 'none');
-            }
-        },
-        'click .chkUnitPrice': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colUnitPrice').css('display', 'table-cell');
-                $('.colUnitPrice').css('padding', '.75rem');
-                $('.colUnitPrice').css('vertical-align', 'top');
-            } else {
-                $('.colUnitPrice').css('display', 'none');
-            }
-        },
-        'click .chkCostPrice': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colCostPrice').css('display', 'table-cell');
-                $('.colCostPrice').css('padding', '.75rem');
-                $('.colCostPrice').css('vertical-align', 'top');
-            } else {
-                $('.colCostPrice').css('display', 'none');
-            }
-        },
-        'click .chkSalesLinesCustField1': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colSalesLinesCustField1').css('display', 'table-cell');
-                $('.colSalesLinesCustField1').css('padding', '.75rem');
-                $('.colSalesLinesCustField1').css('vertical-align', 'top');
-            } else {
-                $('.colSalesLinesCustField1').css('display', 'none');
-            }
-        },
-        'click .chkTaxRate': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colTaxRate').css('display', 'table-cell');
-                $('.colTaxRate').css('padding', '.75rem');
-                $('.colTaxRate').css('vertical-align', 'top');
-            } else {
-                $('.colTaxRate').css('display', 'none');
-            }
-        },
-        'click .chkAmount': function (event) {
-            if ($(event.target).is(':checked')) {
-                $('.colAmount').css('display', 'table-cell');
-                $('.colAmount').css('padding', '.75rem');
-                $('.colAmount').css('vertical-align', 'top');
-            } else {
-                $('.colAmount').css('display', 'none');
-            }
-        },
-        'change .rngRangeProductName': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthProductName").html(range + '%');
-            $('.colProductName').css('width', range + '%');
-
-        },
-        'change .rngRangeDescription': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthDescription").html(range + '%');
-            $('.colDescription').css('width', range + '%');
-
-        },
-        'change .rngRangeQty': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthQty").html(range + '%');
-            $('.colQty').css('width', range + '%');
-
-        },
-        'change .rngRangeUnitPrice': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthUnitPrice").html(range + '%');
-            $('.colUnitPrice').css('width', range + '%');
-
-        },
-        'change .rngRangeTaxRate': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthTaxRate").html(range + '%');
-            $('.colTaxRate').css('width', range + '%');
-
-        },
-        'change .rngRangeAmount': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthAmount").html(range + '%');
-            $('.colAmount').css('width', range + '%');
-
-        },
-        'change .rngRangeCostPrice': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthCostPrice").html(range + '%');
-            $('.colCostPrice').css('width', range + '%');
-
-        },
-        'change .rngRangeSalesLinesCustField1': function (event) {
-
-            let range = $(event.target).val();
-            $(".spWidthSalesLinesCustField1").html(range + '%');
-            $('.colSalesLinesCustField1').css('width', range + '%');
-
-        },
-        'blur .divcolumn': function (event) {
-            let columData = $(event.target).html();
-            let columHeaderUpdate = $(event.target).attr("valueupdate");
-            $("" + columHeaderUpdate + "").html(columData);
-
-        },
-        'click .btnSaveGridSettings': function (event) {
-            let lineItems = [];
-            $('.columnSettings').each(function (index) {
-                var $tblrow = $(this);
-                var colTitle = $tblrow.find(".divcolumn").text() || '';
-                var colWidth = $tblrow.find(".custom-range").val() || 0;
-                var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-                var colHidden = false;
-                if ($tblrow.find(".custom-control-input").is(':checked')) {
-                    colHidden = false;
-                } else {
-                    colHidden = true;
-                }
-                let lineItemObj = {
-                    index: index,
-                    label: colTitle,
-                    hidden: colHidden,
-                    width: colWidth,
-                    thclass: colthClass
-                }
-
-                lineItems.push(lineItemObj);
-            });
-
-            var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
-            });
-            if (getcurrentCloudDetails) {
-                if (getcurrentCloudDetails._id.length > 0) {
-                    var clientID = getcurrentCloudDetails._id;
-                    var clientUsername = getcurrentCloudDetails.cloudUsername;
-                    var clientEmail = getcurrentCloudDetails.cloudEmail;
-                    var checkPrefDetails = CloudPreference.findOne({
-                        userid: clientID,
-                        PrefName: 'tblInvoiceLine'
-                    });
-                    if (checkPrefDetails) {
-                        CloudPreference.update({
-                            _id: checkPrefDetails._id
-                        }, {
-                            $set: {
-                                userid: clientID,
-                                username: clientUsername,
-                                useremail: clientEmail,
-                                PrefGroup: 'salesform',
-                                PrefName: 'tblInvoiceLine',
-                                published: true,
-                                customFields: lineItems,
-                                updatedAt: new Date()
-                            }
-                        }, function (err, idTag) {
-                            if (err) {
-                                $('#myModal2').modal('toggle');
-                            } else {
-                                $('#myModal2').modal('toggle');
-
-                            }
-                        });
-
-                    } else {
-                        CloudPreference.insert({
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblInvoiceLine',
-                            published: true,
-                            customFields: lineItems,
-                            createdAt: new Date()
-                        }, function (err, idTag) {
-                            if (err) {
-                                $('#myModal2').modal('toggle');
-                            } else {
-                                $('#myModal2').modal('toggle');
-
-                            }
-                        });
-
-                    }
-                }
-            }
-            $('#myModal2').modal('toggle');
-        },
-        'click .btnResetGridSettings': function (event) {
-            var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
-            });
-            if (getcurrentCloudDetails) {
-                if (getcurrentCloudDetails._id.length > 0) {
-                    var clientID = getcurrentCloudDetails._id;
-                    var clientUsername = getcurrentCloudDetails.cloudUsername;
-                    var clientEmail = getcurrentCloudDetails.cloudEmail;
-                    var checkPrefDetails = CloudPreference.findOne({
-                        userid: clientID,
-                        PrefName: 'tblInvoiceLine'
-                    });
-                    if (checkPrefDetails) {
-                        CloudPreference.remove({
-                            _id: checkPrefDetails._id
-                        }, function (err, idTag) {
-                            if (err) {}
-                            else {
-                                Meteor._reload.reload();
-                            }
-                        });
-
-                    }
-                }
-            }
-        },
-        'click .btnResetSettings': function (event) {
-            var getcurrentCloudDetails = CloudUser.findOne({
-                _id: Session.get('mycloudLogonID'),
-                clouddatabaseID: Session.get('mycloudLogonDBID')
-            });
-            if (getcurrentCloudDetails) {
-                if (getcurrentCloudDetails._id.length > 0) {
-                    var clientID = getcurrentCloudDetails._id;
-                    var clientUsername = getcurrentCloudDetails.cloudUsername;
-                    var clientEmail = getcurrentCloudDetails.cloudEmail;
-                    var checkPrefDetails = CloudPreference.findOne({
-                        userid: clientID,
-                        PrefName: 'new_invoice'
-                    });
-                    if (checkPrefDetails) {
-                        CloudPreference.remove({
-                            _id: checkPrefDetails._id
-                        }, function (err, idTag) {
-                            if (err) {}
-                            else {
-                                Meteor._reload.reload();
-                            }
-                        });
-
-                    }
-                }
-            }
-        },
-        'click .new_attachment_btn': function (event) {
-            $('#attachment-upload').trigger('click');
-
-        },
-        'change #attachment-upload': function (e) {
-            let templateObj = Template.instance();
-            let saveToTAttachment = false;
-            let lineIDForAttachment = false;
-            let uploadedFilesArray = templateObj.uploadedFiles.get();
-            let myFiles = $('#attachment-upload')[0].files;
-            let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-            templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-            templateObj.attachmentCount.set(uploadData.totalAttachments);
-        },
-        'click .img_new_attachment_btn': function (event) {
-            $('#img-attachment-upload').trigger('click');
-
-        },
-        'change #img-attachment-upload': function (e) {
-            let templateObj = Template.instance();
-            let saveToTAttachment = false;
-            let lineIDForAttachment = false;
-            let uploadedFilesArray = templateObj.uploadedFiles.get();
-
-            let myFiles = $('#img-attachment-upload')[0].files;
-            let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
-            templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
-            templateObj.attachmentCount.set(uploadData.totalAttachments);
-        },
-        'click .remove-attachment': function (event, ui) {
-            let tempObj = Template.instance();
-            let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
-            if (tempObj.$("#confirm-action-" + attachmentID).length) {
-                tempObj.$("#confirm-action-" + attachmentID).remove();
-            } else {
-                let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">' +
-                    'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
-                tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
-            }
-            tempObj.$("#new-attachment2-tooltip").show();
-
-        },
-        'click .file-name': function (event) {
-            let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
-            let templateObj = Template.instance();
-            let uploadedFiles = templateObj.uploadedFiles.get();
-            $('#myModalAttachment').modal('hide');
-            let previewFile = {};
-            let input = uploadedFiles[attachmentID].fields.Description;
-            previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
-            previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
-            let type = uploadedFiles[attachmentID].fields.Description;
-            if (type === 'application/pdf') {
-                previewFile.class = 'pdf-class';
-            } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                previewFile.class = 'docx-class';
-            } else if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                previewFile.class = 'excel-class';
-            } else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
-                previewFile.class = 'ppt-class';
-            } else if (type === 'application/vnd.oasis.opendocument.formula' || type === 'text/csv' || type === 'text/plain' || type === 'text/rtf') {
-                previewFile.class = 'txt-class';
-            } else if (type === 'application/zip' || type === 'application/rar' || type === 'application/x-zip-compressed' || type === 'application/x-zip,application/x-7z-compressed') {
-                previewFile.class = 'zip-class';
-            } else {
-                previewFile.class = 'default-class';
-            }
-
-            if (type.split('/')[0] === 'image') {
-                previewFile.image = true
-            } else {
-                previewFile.image = false
-            }
-            templateObj.uploadedFile.set(previewFile);
-
-            $('#files_view').modal('show');
-
-            return;
-        },
-        'click .confirm-delete-attachment': function (event, ui) {
-            let tempObj = Template.instance();
-            tempObj.$("#new-attachment2-tooltip").show();
-            let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
-            let uploadedArray = tempObj.uploadedFiles.get();
-            let attachmentCount = tempObj.attachmentCount.get();
-            $('#attachment-upload').val('');
-            uploadedArray.splice(attachmentID, 1);
-            tempObj.uploadedFiles.set(uploadedArray);
-            attachmentCount--;
-            if (attachmentCount === 0) {
-                let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
-                $('#file-display').html(elementToAdd);
-            }
-            tempObj.attachmentCount.set(attachmentCount);
-            if (uploadedArray.length > 0) {
-                let utilityService = new UtilityService();
-                utilityService.showUploadedAttachment(uploadedArray);
-            } else {
-                $(".attchment-tooltip").show();
-            }
-        },
-        'click #btn_Attachment': function () {
-            let templateInstance = Template.instance();
-            let uploadedFileArray = templateInstance.uploadedFiles.get();
-            if (uploadedFileArray.length > 0) {
-                let utilityService = new UtilityService();
-                utilityService.showUploadedAttachment(uploadedFileArray);
-            } else {
-                $(".attchment-tooltip").show();
-            }
-        },
-        'click #btnPayment': function () {
-
-            var currenturl = FlowRouter.current().path;
-            var getcurrent_id = currenturl.split('?id=');
-            var currentId = getcurrent_id[getcurrent_id.length - 1];
-            let templateObject = Template.instance();
-            let customername = $('#edtCustomerName');
-            let salesService = new SalesBoardService();
-            let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
-            if (termname === '') {
-                swal('Terms has not been selected!', '', 'warning');
-                event.preventDefault();
-                return false;
-            }
-            if (customername.val() === '') {
-                swal('Customer has not been selected!', '', 'warning');
-                e.preventDefault();
-            } else {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                var splashLineArray = new Array();
-                let lineItemsForm = [];
-                let lineItems = [];
-                let lineItemObjForm = {};
-                var erpGet = erpDb();
-                var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-
-                var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
-                let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
-                let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
-
-                let checkBackOrder = templateObject.includeBOnShippedQty.get();
-                $('#tblInvoiceLine > tbody > tr').each(function () {
-                    var lineID = this.id;
-                    let tdproduct = $('#' + lineID + " .lineProductName").val();
-                    let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                    let tdQty = $('#' + lineID + " .lineQty").val();
-
-                    let tdOrderd = $('#' + lineID + " .lineOrdered").val();
-
-                    let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                    let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                    let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
-                    lineItemObj = {
-                        description: tddescription || '',
-                        quantity: tdQty || 0,
-                        unitPrice: tdunitprice.toLocaleString(undefined, {
-                            minimumFractionDigits: 2
-                        }) || 0
-                    }
-
-                    lineItems.push(lineItemObj);
-
-                    if (tdproduct != "") {
-
-                        if (checkBackOrder == true) {
-                            lineItemObjForm = {
-                                type: "TInvoiceLine",
-                                fields: {
-                                    ProductName: tdproduct || '',
-                                    ProductDescription: tddescription || '',
-                                    UOMQtySold: parseFloat(tdOrderd) || 0,
-                                    UOMQtyShipped: parseFloat(tdQty) || 0,
-                                    LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                    Headershipdate: saleDate,
-                                    LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                }
-                            };
-                        } else {
-                            lineItemObjForm = {
-                                type: "TInvoiceLine",
-                                fields: {
-                                    ProductName: tdproduct || '',
-                                    ProductDescription: tddescription || '',
-                                    UOMQtySold: parseFloat(tdQty) || 0,
-                                    UOMQtyShipped: parseFloat(tdQty) || 0,
-                                    LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                    Headershipdate: saleDate,
-                                    LineTaxCode: tdtaxCode || '',
-                                    DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                }
-                            };
-                        }
-
-                        lineItemsForm.push(lineItemObjForm);
-                        splashLineArray.push(lineItemObjForm);
-                    }
-                });
-
-                let getchkcustomField1 = true;
-                let getchkcustomField2 = true;
-                let getcustomField1 = $('.customField1Text').html();
-                let getcustomField2 = $('.customField2Text').html();
-                if ($('#formCheck-one').is(':checked')) {
-                    getchkcustomField1 = false;
-                }
-                if ($('#formCheck-two').is(':checked')) {
-                    getchkcustomField2 = false;
-                }
-
-                let customer = $('#edtCustomerName').val();
-                let customerEmail = $('#edtCustomerEmail').val();
-                let billingAddress = $('#txabillingAddress').val();
-
-                let poNumber = $('#ponumber').val();
-                let reference = $('#edtRef').val();
-
-                let departement = $('#sltDept').val();
-                let shippingAddress = $('#txaShipingInfo').val();
-                let comments = $('#txaComment').val();
-                let pickingInfrmation = $('#txapickmemo').val();
-
-                let saleCustField1 = $('#edtSaleCustField1').val()||'';
-                let saleCustField2 = $('#edtSaleCustField2').val()||'';
-                let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                var url = FlowRouter.current().path;
-                var getso_id = url.split('?id=');
-                var currentInvoice = getso_id[getso_id.length - 1];
-                let uploadedItems = templateObject.uploadedFiles.get();
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                var objDetails = '';
-                if (getso_id[1]) {
-                    currentInvoice = parseInt(currentInvoice);
-                    objDetails = {
-                        type: "TInvoiceEx",
-                        fields: {
-                            ID: currentInvoice,
-                            CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
-                            Lines: splashLineArray,
-                            InvoiceToDesc: billingAddress,
-                            SaleDate: saleDate,
-                            CustPONumber: poNumber,
-                            ReferenceNo: reference,
-                            TermsName: termname,
-                            SaleClassName: departement,
-                            ShipToDesc: shippingAddress,
-                            Comments: comments,
-                            SaleCustField1: saleCustField1,
-                            SaleCustField2: saleCustField2,
-                            SaleCustField3: saleCustField3,
-                            PickMemo: pickingInfrmation,
-                            Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
-                        }
-                    };
-                } else {
-                    objDetails = {
-                        type: "TInvoiceEx",
-                        fields: {
-                            CustomerName: customer,
-                            ForeignExchangeCode: currencyCode,
-                            Lines: splashLineArray,
-                            InvoiceToDesc: billingAddress,
-                            SaleDate: saleDate,
-                            CustPONumber: poNumber,
-                            ReferenceNo: reference,
-                            TermsName: termname,
-                            SaleClassName: departement,
-                            ShipToDesc: shippingAddress,
-                            Comments: comments,
-                            SaleCustField1: saleCustField1,
-                            SaleCustField2: saleCustField2,
-                            SaleCustField3: saleCustField3,
-                            PickMemo: pickingInfrmation,
-                            Attachments: uploadedItems,
-                            SalesStatus: $('#sltStatus').val()
-                        }
-                    };
-                }
-                salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
-                    var customerID = $('#edtCustomerEmail').attr('customerid');
-                    $('#html-2-pdfwrapper').css('display', 'block');
-                    $('.pdfCustomerName').html($('#edtCustomerName').val());
-                    $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
-                    async function addAttachment() {
-                        let attachment = [];
-                        let templateObject = Template.instance();
-
-                        let invoiceId = objDetails.fields.ID;
-                        let encodedPdf = await generatePdfForMail(invoiceId);
-                        let pdfObject = "";
-                        var reader = new FileReader();
-                        reader.readAsDataURL(encodedPdf);
-                        reader.onloadend = function () {
-                            var base64data = reader.result;
-                            base64data = base64data.split(',')[1];
-                            pdfObject = {
-                                filename: 'invoice-' + invoiceId + '.pdf',
-                                content: base64data,
-                                encoding: 'base64'
-                            };
-                            attachment.push(pdfObject);
-                            let erpInvoiceId = objDetails.fields.ID;
-
-                            let mailFromName = Session.get('vs1companyName');
-                            let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
-                            let customerEmailName = $('#edtCustomerName').val();
-                            let checkEmailData = $('#edtCustomerEmail').val();
-                            let grandtotal = $('#grandTotal').html();
-                            let amountDueEmail = $('#totalBalanceDue').html();
-                            let emailDueDate = $("#dtDueDate").val();
-                            let customerBillingAddress = $('#txabillingAddress').val();
-                            let customerTerms = $('#sltTerms').val();
-
-                            let customerSubtotal = $('#subtotal_total').html();
-                            let customerTax = $('#subtotal_tax').html();
-                            let customerNett = $('#subtotal_nett').html();
-                            let customerTotal = $('#grandTotal').html();
-                            let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
-                            let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
-                                "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
-                                "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
-
-                            var htmlmailBody = ' <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                                '        <tr>' +
-                                '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                                '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                                '                    <table class="main">' +
-                                '                        <tr>' +
-                                '                            <td class="wrapper">' +
-                                '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                                '                                    <tr>' +
-                                '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                                '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr style="height: 16px;"></tr>' +
-                                '                                    <tr>' +
-                                '                                        <td>' +
-                                '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr style="height: 48px;"></tr>' +
-                                '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                                '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                                '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
-                                '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-                                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                '                                                <tbody>' +
-                                '                                                    <tr>' +
-                                '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                '                                                                <tbody>' +
-                                '                                                                    <tr>' +
-                                '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                                '                                                                    </tr>' +
-                                '                                                                </tbody>' +
-                                '                                                            </table>' +
-                                '                                                        </td>' +
-                                '                                                    </tr>' +
-                                '                                                </tbody>' +
-                                '                                            </table>' +
-                                '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr>' +
-                                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-                                '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                                '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                                '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr style="background-color: #ededed;">' +
-                                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                                '                                                <div style="width: 50%; float: left;">' +
-                                '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                                '                                                </div>' +
-                                '                                                <div style="width: 50%; float: right;">' +
-                                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-                                '                                                </div>' +
-                                '                                            </div>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr style="background-color: #ededed;">' +
-                                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                                '                                                <div style="width: 50%; float: left;">' +
-                                '                                                    <p style="font-size: 18px;">Terms</p>' +
-                                '                                                </div>' +
-                                '                                                <div style="width: 50%; float: right;">' +
-                                '                                                    <p style="font-size: 18px;">' + customerTerms + '</p>' +
-                                '                                                </div>' +
-                                '                                            </div>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr>' +
-                                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                                '                                                <div style="width: 50%; float: left;">' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                                '                                                </div>' +
-                                '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-                                '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-                                '                                                </div>' +
-                                '                                            </div>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr>' +
-                                '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                '                                                <tbody>' +
-                                '                                                    <tr>' +
-                                '                                                        <td align="center">' +
-                                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                '                                                                <tbody>' +
-                                '                                                                    <tr>' +
-                                '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                                '                                                                    </tr>' +
-                                '                                                                </tbody>' +
-                                '                                                            </table>' +
-                                '                                                        </td>' +
-                                '                                                    </tr>' +
-                                '                                                </tbody>' +
-                                '                                            </table>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr>' +
-                                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                                '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                    <tr>' +
-                                '                                        <td>' +
-                                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                                '                                                <tbody>' +
-                                '                                                    <tr>' +
-                                '                                                        <td align="center">' +
-                                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                                '                                                                <tbody>' +
-                                '                                                                    <tr>' +
-                                '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                                '                                                                    </tr>' +
-                                '                                                                </tbody>' +
-                                '                                                            </table>' +
-                                '                                                        </td>' +
-                                '                                                    </tr>' +
-                                '                                                </tbody>' +
-                                '                                            </table>' +
-                                '                                        </td>' +
-                                '                                    </tr>' +
-                                '                                </table>' +
-                                '                            </td>' +
-                                '                        </tr>' +
-                                '                    </table>' +
-                                '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                                '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                                '                            <tr>' +
-                                '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                                '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-                                '                                    <br>' +
-                                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                                '                                </td>' +
-                                '                            </tr>' +
-                                '                        </table>' +
-                                '                    </div>' +
-                                '                </div>' +
-                                '            </td>' +
-                                '        </tr>' +
-                                '    </table>';
-
-                            if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
-                                Meteor.call('sendEmail', {
-                                    from: "" + mailFromName + " <" + mailFrom + ">",
-                                    to: checkEmailData,
-                                    subject: mailSubject,
-                                    text: '',
-                                    html: htmlmailBody,
-                                    attachments: attachment
-                                }, function (error, result) {
-                                    if (error && error.error === "error") {}
-                                    else {}
-                                });
-
-                                Meteor.call('sendEmail', {
-                                    from: "" + mailFromName + " <" + mailFrom + ">",
-                                    to: mailFrom,
-                                    subject: mailSubject,
-                                    text: '',
-                                    html: htmlmailBody,
-                                    attachments: attachment
-                                }, function (error, result) {
-                                    if (error && error.error === "error") {}
-                                    else {
-                                        $('#html-2-pdfwrapper').css('display', 'none');
-                                        swal({
-                                            title: 'SUCCESS',
-                                            text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
-                                            type: 'success',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {}
-                                            else if (result.dismiss === 'cancel') {}
-                                        });
-
-                                    }
-                                });
-
-                            } else if (($('.chkEmailCopy').is(':checked'))) {
-                                Meteor.call('sendEmail', {
-                                    from: "" + mailFromName + " <" + mailFrom + ">",
-                                    to: checkEmailData,
-                                    subject: mailSubject,
-                                    text: '',
-                                    html: htmlmailBody,
-                                    attachments: attachment
-                                }, function (error, result) {
-                                    if (error && error.error === "error") {}
-                                    else {
-                                        $('#html-2-pdfwrapper').css('display', 'none');
-                                        swal({
-                                            title: 'SUCCESS',
-                                            text: "Email Sent To Customer: " + checkEmailData + " ",
-                                            type: 'success',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {}
-                                            else if (result.dismiss === 'cancel') {}
-                                        });
-
-                                    }
-                                });
-
-                            } else if (($('.chkEmailRep').is(':checked'))) {
-                                Meteor.call('sendEmail', {
-                                    from: "" + mailFromName + " <" + mailFrom + ">",
-                                    to: mailFrom,
-                                    subject: mailSubject,
-                                    text: '',
-                                    html: htmlmailBody,
-                                    attachments: attachment
-                                }, function (error, result) {
-                                    if (error && error.error === "error") {}
-                                    else {
-                                        $('#html-2-pdfwrapper').css('display', 'none');
-                                        swal({
-                                            title: 'SUCCESS',
-                                            text: "Email Sent To User: " + mailFrom + " ",
-                                            type: 'success',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'OK'
-                                        }).then((result) => {
-                                            if (result.value) {}
-                                            else if (result.dismiss === 'cancel') {}
-                                        });
-
-                                    }
-                                });
-
-                            } else {};
-                        };
-
-                    }
-                    addAttachment();
-
-                    function generatePdfForMail(invoiceId) {
-                        return new Promise((resolve, reject) => {
-                            let templateObject = Template.instance();
-                            let completeTabRecord;
-                            let doc = new jsPDF('p', 'pt', 'a4');
-                            doc.setFontSize(18);
-                            var source = document.getElementById('html-2-pdfwrapper');
-                            doc.addHTML(source, function () {
-                                resolve(doc.output('blob'));
-                                $('#html-2-pdfwrapper').css('display', 'none');
-                            });
-                        });
-                    }
-                    if (customerID !== " ") {};
-                    let linesave = objDetails.fields.ID;
-                    var getcurrentCloudDetails = CloudUser.findOne({
-                        _id: Session.get('mycloudLogonID'),
-                        clouddatabaseID: Session.get('mycloudLogonDBID')
-                    });
-                    if (getcurrentCloudDetails) {
-                        if (getcurrentCloudDetails._id.length > 0) {
-                            var clientID = getcurrentCloudDetails._id;
-                            var clientUsername = getcurrentCloudDetails.cloudUsername;
-                            var clientEmail = getcurrentCloudDetails.cloudEmail;
-                            var checkPrefDetails = CloudPreference.findOne({
-                                userid: clientID,
-                                PrefName: 'new_invoice'
-                            });
-                            if (checkPrefDetails) {
-                                CloudPreference.update({
-                                    _id: checkPrefDetails._id
-                                }, {
-                                    $set: {
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'salesform',
-                                        PrefName: 'new_invoice',
-                                        published: true,
-                                        customFields: [{
-                                                index: '1',
-                                                label: getcustomField1,
-                                                hidden: getchkcustomField1
-                                            }, {
-                                                index: '2',
-                                                label: getcustomField2,
-                                                hidden: getchkcustomField2
-                                            }
-                                        ],
-                                        updatedAt: new Date()
-                                    }
-                                }, function (err, idTag) {
-                                    if (err) {}
-                                    else {}
-                                });
-                            } else {
-                                CloudPreference.insert({
-                                    userid: clientID,
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'salesform',
-                                    PrefName: 'new_invoice',
-                                    published: true,
-                                    customFields: [{
-                                            index: '1',
-                                            label: getcustomField1,
-                                            hidden: getchkcustomField1
-                                        }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }
-                                    ],
-                                    createdAt: new Date()
-                                }, function (err, idTag) {
-                                    if (err) {}
-                                    else {}
-                                });
-                            }
-                        }
-                    } else {}
-
-                    sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
-                        addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
-                            window.open('/paymentcard?invid=' + linesave, '_self');
-                        }).catch(function (err) {
-                            window.open('/paymentcard?invid=' + linesave, '_self');
-                        });
-                    }).catch(function (err) {
-                        window.open('/paymentcard?invid=' + linesave, '_self');
-                    });
-
-                }).catch(function (err) {
-                    swal({
-                        title: 'Oooops...',
-                        text: err,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                        else if (result.dismiss === 'cancel') {}
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                });
-            }
-
-        },
-        'click #btnViewPayment': async function() {
-            let templateObject = Template.instance();
-            let salesService = new SalesBoardService();
-              $('.fullScreenSpin').css('display', 'inline-block');
-            let paymentID = "";
-            var url = FlowRouter.current().path;
-            var getso_id = url.split('?id=');
-            var currentInvoice = getso_id[getso_id.length - 1];
-            let paymentData = await salesService.getCheckPaymentLineByTransID(currentInvoice) || '';
-
-            if(paymentData){
-              for(let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
-                if (paymentData.tcustomerpaymentline.length > 1) {
-                    paymentID = paymentData.tcustomerpaymentline[x].fields.Payment_ID;
-                    window.open('/paymentcard?id=' + paymentID, '_self');
-                } else {
-                    paymentID = paymentData.tcustomerpaymentline[0].fields.Payment_ID;
-                    window.open('/paymentcard?id=' + paymentID, '_self');
-               }
-              }
-
-            }else{
-            $('.fullScreenSpin').css('display', 'none');
-            }
-
-        },
-        'click .btnTransactionPaid': async function () {
-          let templateObject = Template.instance();
-          let salesService = new SalesBoardService();
-          $('.fullScreenSpin').css('display', 'inline-block');
-          let  selectedSupplierPaymentID = [];
-          let paymentID = "";
-          var url = FlowRouter.current().path;
-          var getso_id = url.split('?id=');
-          var currentInvoice = getso_id[getso_id.length - 1];
-          let suppliername = $('#edtCustomerName').val() || '';
-          let paymentData = await salesService.getCheckPaymentLineByTransID(currentInvoice) || '';
-          if(paymentData){
-          for(let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
-                  if (paymentData.tcustomerpaymentline.length > 1) {
-                          paymentID = paymentData.tcustomerpaymentline[x].fields.Payment_ID;
-                          selectedSupplierPaymentID.push(paymentID);
-                  } else {
-                          paymentID = paymentData.tcustomerpaymentline[0].fields.Payment_ID;
-                          window.open('/paymentcard?id=' + paymentID, '_self');
-                  }
-          }
-
-          setTimeout(function () {
-            let selectPayID = selectedSupplierPaymentID;
-            window.open('/customerpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
-          }, 500);
-        }else{
-          $('.fullScreenSpin').css('display', 'none');
-        }
-        },
-        'click .btnBack': function (event) {
-
-            event.preventDefault();
-            history.back(1);
-        },
-        'click #btnCopyInvoice': function () {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            var url = FlowRouter.current().path;
-            if ((url.indexOf('?id=') > 0) || (url.indexOf('?copyquid=') > 0) || (url.indexOf('?copyinvid='))) {
-                let templateObject = Template.instance();
-                let customername = $('#edtCustomerName');
-                let salesService = new SalesBoardService();
-                let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
-                if (termname === '') {
-                    swal('Terms has not been selected!', '', 'warning');
-                    event.preventDefault();
-                    return false;
-                }
-
-                if (customername.val() === '') {
-                    swal('Customer has not been selected!', '', 'warning');
-                    e.preventDefault();
-                } else {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    var splashLineArray = new Array();
-                    let lineItemsForm = [];
-                    let lineItems = [];
-                    let lineItemObjForm = {};
-                    var erpGet = erpDb();
-                    var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-                    var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
-
-                    let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
-                    let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
-
-                    let checkBackOrder = templateObject.includeBOnShippedQty.get();
-                    $('#tblInvoiceLine > tbody > tr').each(function () {
-                        var lineID = this.id;
-                        let tdproduct = $('#' + lineID + " .lineProductName").val();
-                        let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                        let tdQty = $('#' + lineID + " .lineQty").val();
-
-                        let tdOrderd = $('#' + lineID + " .lineOrdered").val();
-
-                        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                        let tdlineamt = $('#' + lineID + " .lineAmt").text();
-
-                        lineItemObj = {
-                            description: tddescription || '',
-                            quantity: tdQty || 0,
-                            unitPrice: tdunitprice.toLocaleString(undefined, {
-                                minimumFractionDigits: 2
-                            }) || 0
-                        }
-
-                        lineItems.push(lineItemObj);
-
-                        if (tdproduct != "") {
-
-                            if (checkBackOrder == true) {
-                                lineItemObjForm = {
-                                    type: "TInvoiceLine",
-                                    fields: {
-                                        ProductName: tdproduct || '',
-                                        ProductDescription: tddescription || '',
-                                        UOMQtySold: parseFloat(tdOrderd) || 0,
-                                        UOMQtyShipped: parseFloat(tdQty) || 0,
-                                        LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                        Headershipdate: saleDate,
-                                        LineTaxCode: tdtaxCode || '',
-                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                    }
-                                };
-                            } else {
-                                lineItemObjForm = {
-                                    type: "TInvoiceLine",
-                                    fields: {
-                                        ProductName: tdproduct || '',
-                                        ProductDescription: tddescription || '',
-                                        UOMQtySold: parseFloat(tdQty) || 0,
-                                        UOMQtyShipped: parseFloat(tdQty) || 0,
-                                        LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
-                                        Headershipdate: saleDate,
-                                        LineTaxCode: tdtaxCode || '',
-                                        DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
-                                    }
-                                };
-                            }
-
-                            lineItemsForm.push(lineItemObjForm);
-                            splashLineArray.push(lineItemObjForm);
-                        }
-                    });
-                    let getchkcustomField1 = true;
-                    let getchkcustomField2 = true;
-                    let getcustomField1 = $('.customField1Text').html();
-                    let getcustomField2 = $('.customField2Text').html();
-                    if ($('#formCheck-one').is(':checked')) {
-                        getchkcustomField1 = false;
-                    }
-                    if ($('#formCheck-two').is(':checked')) {
-                        getchkcustomField2 = false;
-                    }
-
-                    let customer = $('#edtCustomerName').val();
-                    let customerEmail = $('#edtCustomerEmail').val();
-                    let billingAddress = $('#txabillingAddress').val();
-
-                    let poNumber = $('#ponumber').val();
-                    let reference = $('#edtRef').val();
-
-                    let departement = $('#sltDept').val();
-                    let shippingAddress = $('#txaShipingInfo').val();
-                    let comments = $('#txaComment').val();
-                    let pickingInfrmation = $('#txapickmemo').val();
-
-                    let saleCustField1 = $('#edtSaleCustField1').val()||'';
-                    let saleCustField2 = $('#edtSaleCustField2').val()||'';
-                    let saleCustField3 = $('#edtSaleCustField3').val()||'';
-                    var url = FlowRouter.current().path;
-                    var getso_id = url.split('?id=');
-                    var currentInvoice = getso_id[getso_id.length - 1];
-                    let uploadedItems = templateObject.uploadedFiles.get();
-                    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-                    var objDetails = '';
-                    if (getso_id[1]) {
-                        currentInvoice = parseInt(currentInvoice);
-                        objDetails = {
-                            type: "TInvoiceEx",
-                            fields: {
-                                ID: currentInvoice,
-                                CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
-                                Lines: splashLineArray,
-                                InvoiceToDesc: billingAddress,
-                                SaleDate: saleDate,
-                                CustPONumber: poNumber,
-                                Converted: true,
-                                ReferenceNo: reference,
-                                TermsName: termname,
-                                SaleClassName: departement,
-                                ShipToDesc: shippingAddress,
-                                Comments: comments,
-                                SaleCustField1: saleCustField1,
-                                SaleCustField2: saleCustField2,
-                                SaleCustField3: saleCustField3,
-                                PickMemo: pickingInfrmation,
-                                Attachments: uploadedItems,
-                                SalesStatus: $('#sltStatus').val()
-                            }
-                        };
-                    } else {
-                        objDetails = {
-                            type: "TInvoiceEx",
-                            fields: {
-                                CustomerName: customer,
-                                ForeignExchangeCode: currencyCode,
-                                Lines: splashLineArray,
-                                InvoiceToDesc: billingAddress,
-                                SaleDate: saleDate,
-                                CustPONumber: poNumber,
-                                Converted: true,
-                                ReferenceNo: reference,
-                                TermsName: termname,
-                                SaleClassName: departement,
-                                ShipToDesc: shippingAddress,
-                                Comments: comments,
-                                SaleCustField1: saleCustField1,
-                                SaleCustField2: saleCustField2,
-                                SaleCustField3: saleCustField3,
-                                PickMemo: pickingInfrmation,
-                                Attachments: uploadedItems
-                            }
-                        };
-                    }
-
-                    salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
-                        var customerID = $('#edtCustomerEmail').attr('customerid');
-                        if (customerID !== " ") {
-                            let customerEmailData = {
-                                type: "TCustomer",
-                                fields: {
-                                    ID: customerID,
-                                    Email: customerEmail
-                                }
-                            }
-                            // salesService.saveCustomerEmail(customerEmailData).then(function(customerEmailData) {});
-                        };
-                        let linesave = objDetails.fields.ID;
-                        var getcurrentCloudDetails = CloudUser.findOne({
-                            _id: Session.get('mycloudLogonID'),
-                            clouddatabaseID: Session.get('mycloudLogonDBID')
-                        });
-                        if (getcurrentCloudDetails) {
-                            if (getcurrentCloudDetails._id.length > 0) {
-                                var clientID = getcurrentCloudDetails._id;
-                                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                                var checkPrefDetails = CloudPreference.findOne({
-                                    userid: clientID,
-                                    PrefName: 'new_invoice'
-                                });
-                                if (checkPrefDetails) {
-                                    CloudPreference.update({
-                                        _id: checkPrefDetails._id
-                                    }, {
-                                        $set: {
-                                            username: clientUsername,
-                                            useremail: clientEmail,
-                                            PrefGroup: 'salesform',
-                                            PrefName: 'new_invoice',
-                                            published: true,
-                                            customFields: [{
-                                                    index: '1',
-                                                    label: getcustomField1,
-                                                    hidden: getchkcustomField1
-                                                }, {
-                                                    index: '2',
-                                                    label: getcustomField2,
-                                                    hidden: getchkcustomField2
-                                                }
-                                            ],
-                                            updatedAt: new Date()
-                                        }
-                                    }, function (err, idTag) {
-                                        if (err) {
-                                            window.open('/invoicecard?copyinvid=' + linesave, '_self');
-                                        } else {
-                                            window.open('/invoicecard?copyinvid=' + linesave, '_self');
-
-                                        }
-                                    });
-                                } else {
-                                    CloudPreference.insert({
-                                        userid: clientID,
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'salesform',
-                                        PrefName: 'new_invoice',
-                                        published: true,
-                                        customFields: [{
-                                                index: '1',
-                                                label: getcustomField1,
-                                                hidden: getchkcustomField1
-                                            }, {
-                                                index: '2',
-                                                label: getcustomField2,
-                                                hidden: getchkcustomField2
-                                            }
-                                        ],
-                                        createdAt: new Date()
-                                    }, function (err, idTag) {
-                                        if (err) {
-                                            window.open('/invoicecard?copyinvid=' + linesave, '_self');
-                                        } else {
-                                            window.open('/invoicecard?copyinvid=' + linesave, '_self');
-
-                                        }
-                                    });
-                                }
-                            }
-                        } else {
-                            window.open('/invoicecard?copyinvid=' + linesave, '_self');
-                        }
-
-                    }).catch(function (err) {
-                        swal({
-                            title: 'Oooops...',
-                            text: err,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                        }).then((result) => {
-                            if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                            else if (result.dismiss === 'cancel') {}
-                        });
-
-                        $('.fullScreenSpin').css('display', 'none');
-                    });
-
-                }
-            } else {
-
-                window.open('/invoicecard', '_self');
-            }
-        },
-        'click .chkEmailCopy': function (event) {
-            $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));
-            if ($(event.target).is(':checked')) {
-                let checkEmailData = $('#edtCustomerEmail').val();
-
-                if (checkEmailData.replace(/\s/g, '') === '') {
-                    swal('Customer Email cannot be blank!', '', 'warning');
-                    event.preventDefault();
-                } else {
-
-                    function isEmailValid(mailTo) {
-                        return /^[A-Z0-9'.1234z_%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(mailTo);
-                    };
-                    if (!isEmailValid(checkEmailData)) {
-                        swal('The email field must be a valid email address !', '', 'warning');
-
-                        event.preventDefault();
-                        return false;
-                    } else {}
-                }
-            } else {}
-        },
-        'click .btnSnLotmodal': function(event) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            var target = event.target;
-            let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
-            let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
-            localStorage.setItem('productItem', selectedunit);
-            let productService = new ProductService();
-            if (selectedProductName == '') {
-                $('.fullScreenSpin').css('display', 'none');
-                swal('You have to select Product.', '', 'info');
-                event.preventDefault();
-                return false;
-            } else {
-                productService.getProductStatus(selectedProductName).then(function(data) {
-                    $('.fullScreenSpin').css('display', 'none');
-                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
-                        event.preventDefault();
-                        return false;
-                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        $('#lotNumberModal').modal('show');
-                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        $('#serialNumberModal').modal('show');
-                    }
-                });
-            }
-        }
-    });
+    // Template.new_invoice.events({
+    //     'click .btnRefreshCustomField': function (event) {
+    //       $('.fullScreenSpin').css('display', 'inline-block');
+    //       let templateObject = Template.instance();
+    //       sideBarService.getAllCustomFields().then(function (data) {
+    //         addVS1Data('TCustomFieldList', JSON.stringify(data)).then(function (datareturn) {
+    //             Meteor._reload.reload();
+    //         }).catch(function (err) {
+    //             Meteor._reload.reload();
+    //         });
+    //             templateObject.getSalesCustomFieldsList();
+    //           $('.fullScreenSpin').css('display', 'none');
+    //       }).catch(function (err) {
+    //           $('.fullScreenSpin').css('display', 'none');
+    //       });
+    //     },
+
+
+    //     'click #edtSaleCustField1': function(event) {
+    //         clickedInput = "one";
+    //         $('#clickedControl').val(clickedInput);
+    //     },
+    //     'click #edtSaleCustField2': function(event) {
+    //         clickedInput = "two";
+    //         $('#clickedControl').val(clickedInput);
+    //     },
+    //     'click #edtSaleCustField3': function(event) {
+    //         clickedInput = "three";
+    //         $('#clickedControl').val(clickedInput);
+    //     },
+    //     'click .btnAddNewCustField': function(event) {
+    //       let templateObject = Template.instance();
+    //         let isDropDown = true;
+    //         let statusvalID = $("#selectCustFieldID").val()||'';
+    //         $("#statusId1").val(statusvalID);
+    //         $('#isdropDown').val(isDropDown);
+    //         $('#newCustomFieldPop').modal('toggle');
+    //         $('#customFieldList').modal('toggle');
+    //         let custfieldarr = templateObject.custfields.get();
+    //         if(custfieldarr[0].id == statusvalID){
+    //           if(Array.isArray(custfieldarr[0].dropdown)) {
+    //               // $('.btnAddNewTextBox').nextAll().remove();
+    //               //$('.customText').val(custfieldarr[0].dropdown[0].fields.Text);
+    //               for(let x = 0; x < custfieldarr[0].dropdown.length; x++) {
+    //                   $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
+    //                                       '<div class="col-10">'+
+    //                                           '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown[x].fields.ID+'" value="'+ custfieldarr[0].dropdown[x].fields.Text+'" autocomplete="off">'+
+    //                                       '</div>'+
+    //                                       '<div class="col-2">'+
+    //                                           '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
+    //                                       '</div>'+
+    //                                   '</div>');
+    //               }
+
+    //           } else if(Object.keys(custfieldarr[0].dropdown).length > 0) {
+    //               // $('.btnAddNewTextBox').nextAll().remove();
+    //                $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
+    //                                       '<div class="col-10">'+
+    //                                           '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown.fields.ID+'" value="'+ custfieldarr[0].dropdown.fields.Text+'" autocomplete="off">'+
+    //                                       '</div>'+
+    //                                       '<div class="col-2">'+
+    //                                           '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
+    //                                       '</div>'+
+    //                                   '</div>');
+
+    //           }
+    //         }
+
+    //     },
+    //     'click #edtCustomerName': function (event) {
+    //         $('#edtCustomerName').select();
+    //         $('#edtCustomerName').editableSelect();
+    //     },
+    //     'change #sltStatus': function () {
+    //         let status = $('#sltStatus').find(":selected").val();
+    //         if (status == "newstatus") {
+    //             $('#statusModal').modal();
+    //         }
+    //     },
+    //     'blur .lineProductDesc': function (event) {
+    //         var targetID = $(event.target).closest('tr').attr('id');
+    //         $('#' + targetID + " #lineProductDesc").text($('#' + targetID + " .lineProductDesc").text());
+    //     },
+    //     'click .payNow': function () {
+    //         let templateObject = Template.instance();
+    //         let stripe_id = templateObject.accountID.get() || '';
+    //         let stripe_fee_method = templateObject.stripe_fee_method.get();
+    //         if (stripe_id != "") {
+    //             var url = FlowRouter.current().path;
+    //             var id_available = url.includes("?id=");
+    //             if (id_available == true) {
+    //                 if ($('.edtCustomerEmail').val() != "") {
+    //                     let quoteData = templateObject.invoicerecord.get();
+    //                     let lineItems = [];
+    //                     let total = $('#totalBalanceDue').html() || 0;
+    //                     let tax = $('#subtotal_tax').html() || 0;
+    //                     let customer = $('#edtCustomerName').val();
+    //                     let company = Session.get('vs1companyName');
+    //                     let name = $('#firstname').val();
+    //                     let surname = $('#lastname').val();
+    //                     $('#tblInvoiceLine > tbody > tr').each(function () {
+    //                         var lineID = this.id;
+    //                         let tdproduct = $('#' + lineID + " .lineProductName").val();
+    //                         let tddescription = $('#' + lineID + " .lineProductDesc").text();
+    //                         let tdQty = $('#' + lineID + " .lineQty").val();
+    //                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+    //                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+    //                         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+    //                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+    //                         lineItemObj = {
+    //                             description: tddescription || '',
+    //                             quantity: tdQty || 0,
+    //                             unitPrice: tdunitprice.toLocaleString(undefined, {
+    //                                 minimumFractionDigits: 2
+    //                             }) || 0
+    //                         }
+
+    //                         lineItems.push(lineItemObj);
+    //                     });
+    //                     var erpGet = erpDb();
+    //                     let vs1User = localStorage.getItem('mySession');
+    //                     let customerEmail = $('#edtCustomerEmail').val();
+    //                     let currencyname = (CountryAbbr).toLowerCase();
+    //                     let stringQuery = "?";
+    //                     let dept = $('#sltDept').val();
+    //                     var customerID = $('#edtCustomerEmail').attr('customerid');
+    //                     for (let l = 0; l < lineItems.length; l++) {
+    //                         stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+    //                     }
+    //                     stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+    //                     window.open(stripeGlobalURL + stringQuery, '_self');
+    //                 } else {
+    //                     swal({
+    //                         title: 'Customer Email Required',
+    //                         text: 'Please enter customer email',
+    //                         type: 'error',
+    //                         showCancelButton: false,
+    //                         confirmButtonText: 'OK'
+    //                     }).then((result) => {
+    //                         if (result.value) {}
+    //                         else if (result.dismiss === 'cancel') {}
+    //                     });
+    //                 }
+    //             } else {
+    //                 let templateObject = Template.instance();
+    //                 let lineItems = [];
+    //                 let imageData = (localStorage.getItem("Image"));
+    //                 let customername = $('#edtCustomerName');
+    //                 let name = $('#edtCustomerEmail').attr('customerfirstname');
+    //                 let surname = $('#edtCustomerEmail').attr('customerlastname');
+    //                 let salesService = new SalesBoardService();
+    //                 let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
+    //                 if (termname === '') {
+    //                     swal('Terms has not been selected!', '', 'warning');
+    //                     event.preventDefault();
+    //                     return false;
+    //                 }
+    //                 if (customername.val() === '') {
+    //                     swal('Customer has not been selected!', '', 'warning');
+    //                     e.preventDefault();
+    //                 } else {
+    //                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                     var splashLineArray = new Array();
+    //                     let lineItemsForm = [];
+    //                     let lineItems = [];
+    //                     let lineItemObjForm = {};
+    //                     var erpGet = erpDb();
+    //                     var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+
+    //                     var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+    //                     let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+    //                     let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+    //                     let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    //                     $('#tblInvoiceLine > tbody > tr').each(function () {
+    //                         var lineID = this.id;
+    //                         let tdproduct = $('#' + lineID + " .lineProductName").val();
+    //                         let tddescription = $('#' + lineID + " .lineProductDesc").text();
+    //                         let tdQty = $('#' + lineID + " .lineQty").val();
+
+    //                         let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+
+    //                         let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+    //                         let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+    //                         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+    //                         let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+    //                         lineItemObj = {
+    //                             description: tddescription || '',
+    //                             quantity: tdQty || 0,
+    //                             unitPrice: tdunitprice.toLocaleString(undefined, {
+    //                                 minimumFractionDigits: 2
+    //                             }) || 0
+    //                         }
+
+    //                         lineItems.push(lineItemObj);
+
+    //                         if (tdproduct != "") {
+
+    //                             if (checkBackOrder == true) {
+    //                                 lineItemObjForm = {
+    //                                     type: "TInvoiceLine",
+    //                                     fields: {
+    //                                         ProductName: tdproduct || '',
+    //                                         ProductDescription: tddescription || '',
+    //                                         UOMQtySold: parseFloat(tdOrderd) || 0,
+    //                                         UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                         LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                         Headershipdate: saleDate,
+    //                                         LineTaxCode: tdtaxCode || '',
+    //                                         DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                                     }
+    //                                 };
+    //                             } else {
+    //                                 lineItemObjForm = {
+    //                                     type: "TInvoiceLine",
+    //                                     fields: {
+    //                                         ProductName: tdproduct || '',
+    //                                         ProductDescription: tddescription || '',
+    //                                         UOMQtySold: parseFloat(tdQty) || 0,
+    //                                         UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                         LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                         Headershipdate: saleDate,
+    //                                         LineTaxCode: tdtaxCode || '',
+    //                                         DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                                     }
+    //                                 };
+    //                             }
+
+    //                             lineItemsForm.push(lineItemObjForm);
+    //                             splashLineArray.push(lineItemObjForm);
+    //                         }
+    //                     });
+    //                     let getchkcustomField1 = true;
+    //                     let getchkcustomField2 = true;
+    //                     let getcustomField1 = $('.customField1Text').html();
+    //                     let getcustomField2 = $('.customField2Text').html();
+    //                     if ($('#formCheck-one').is(':checked')) {
+    //                         getchkcustomField1 = false;
+    //                     }
+    //                     if ($('#formCheck-two').is(':checked')) {
+    //                         getchkcustomField2 = false;
+    //                     }
+
+    //                     let customer = $('#edtCustomerName').val();
+    //                     let customerEmail = $('#edtCustomerEmail').val();
+    //                     let billingAddress = $('#txabillingAddress').val();
+
+    //                     let poNumber = $('#ponumber').val();
+    //                     let reference = $('#edtRef').val();
+
+    //                     let departement = $('#sltDept').val();
+    //                     let shippingAddress = $('#txaShipingInfo').val();
+    //                     let comments = $('#txaComment').val();
+    //                     let pickingInfrmation = $('#txapickmemo').val();
+    //                     let total = $('#totalBalanceDue').html() || 0;
+    //                     let tax = $('#subtotal_tax').html() || 0;
+    //                     let saleCustField1 = $('#edtSaleCustField1').val()||'';
+    //                     let saleCustField2 = $('#edtSaleCustField2').val()||'';
+    //                     let saleCustField3 = $('#edtSaleCustField3').val()||'';
+    //                     var url = FlowRouter.current().path;
+    //                     var getso_id = url.split('?id=');
+    //                     var currentInvoice = getso_id[getso_id.length - 1];
+    //                     let uploadedItems = templateObject.uploadedFiles.get();
+    //                     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    //                     var objDetails = '';
+    //                     if (getso_id[1]) {
+    //                         currentInvoice = parseInt(currentInvoice);
+    //                         objDetails = {
+    //                             type: "TInvoiceEx",
+    //                             fields: {
+    //                                 ID: currentInvoice,
+    //                                 CustomerName: customer,
+    //                                 ForeignExchangeCode: currencyCode,
+    //                                 Lines: splashLineArray,
+    //                                 InvoiceToDesc: billingAddress,
+    //                                 SaleDate: saleDate,
+    //                                 CustPONumber: poNumber,
+    //                                 ReferenceNo: reference,
+    //                                 TermsName: termname,
+    //                                 SaleClassName: departement,
+    //                                 ShipToDesc: shippingAddress,
+    //                                 Comments: comments,
+    //                                 SaleCustField1: saleCustField1,
+    //                                 SaleCustField2: saleCustField2,
+    //                                 SaleCustField3: saleCustField3,
+    //                                 PickMemo: pickingInfrmation,
+    //                                 Attachments: uploadedItems,
+    //                                 SalesStatus: $('#sltStatus').val()
+    //                             }
+    //                         };
+    //                     } else {
+    //                         objDetails = {
+    //                             type: "TInvoiceEx",
+    //                             fields: {
+    //                                 CustomerName: customer,
+    //                                 ForeignExchangeCode: currencyCode,
+    //                                 Lines: splashLineArray,
+    //                                 InvoiceToDesc: billingAddress,
+    //                                 SaleDate: saleDate,
+    //                                 CustPONumber: poNumber,
+    //                                 ReferenceNo: reference,
+    //                                 TermsName: termname,
+    //                                 SaleClassName: departement,
+    //                                 ShipToDesc: shippingAddress,
+    //                                 Comments: comments,
+    //                                 SaleCustField1: saleCustField1,
+    //                                 SaleCustField2: saleCustField2,
+    //                                 SaleCustField3: saleCustField3,
+    //                                 PickMemo: pickingInfrmation,
+    //                                 Attachments: uploadedItems,
+    //                                 SalesStatus: $('#sltStatus').val()
+    //                             }
+    //                         };
+    //                     }
+    //                     salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
+    //                         let company = Session.get('vs1companyName');
+    //                         let vs1User = localStorage.getItem('mySession');
+    //                         let customerEmail = $('#edtCustomerEmail').val() || '';
+    //                         let currencyname = (CountryAbbr).toLowerCase();
+    //                         let stringQuery = "?";
+    //                         var customerID = $('#edtCustomerEmail').attr('customerid');
+    //                         for (let l = 0; l < lineItems.length; l++) {
+    //                             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+    //                         }
+    //                         stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.fields.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
+    //                         let url = stripeGlobalURL + stringQuery;
+    //                         $('#html-2-pdfwrapper').css('display', 'block');
+    //                         $('.pdfCustomerName').html($('#edtCustomerName').val());
+    //                         $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+
+    //                         function generatePdfForMail(invoiceId) {
+    //                             let file = "Invoice-" + invoiceId + ".pdf"
+    //                                 return new Promise((resolve, reject) => {
+    //                                 $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+    //                                 let templateObject = Template.instance();
+    //                                 let completeTabRecord;
+    //                                 let doc = new jsPDF('p', 'pt', 'a4');
+    //                                 var source = document.getElementById('html-2-pdfwrapper');
+    //                                 var opt = {
+    //                                     margin: 0,
+    //                                     filename: file,
+    //                                     image: {
+    //                                         type: 'jpeg',
+    //                                         quality: 0.98
+    //                                     },
+    //                                     html2canvas: {
+    //                                         scale: 2
+    //                                     },
+    //                                     jsPDF: {
+    //                                         unit: 'in',
+    //                                         format: 'a4',
+    //                                         orientation: 'portrait'
+    //                                     }
+    //                                 }
+    //                                 resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+    //                                 // doc.addHTML(source, function () {
+    //                                 //     doc.setFontSize(10);
+    //                                 //     doc.setTextColor(255, 255, 255);
+    //                                 //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+    //                                 //     resolve(doc.output('blob'));
+    //                                 //     $('#html-2-pdfwrapper').css('display', 'none');
+    //                                 // });
+    //                             });
+    //                         }
+    //                         async function addAttachment() {
+    //                             let attachment = [];
+    //                             let templateObject = Template.instance();
+
+    //                             let invoiceId = objDetails.fields.ID;
+    //                             let encodedPdf = await generatePdfForMail(invoiceId);
+    //                             let pdfObject = "";
+    //                             let base64data = encodedPdf.split(',')[1];
+    //                             pdfObject = {
+    //                                 filename: 'invoice-' + invoiceId + '.pdf',
+    //                                 content: base64data,
+    //                                 encoding: 'base64'
+    //                             };
+    //                             attachment.push(pdfObject);
+    //                             let erpInvoiceId = objDetails.fields.ID;
+
+    //                             let mailFromName = Session.get('vs1companyName');
+    //                             let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+    //                             let customerEmailName = $('#edtCustomerName').val();
+    //                             let checkEmailData = $('#edtCustomerEmail').val();
+    //                             let grandtotal = $('#grandTotal').html();
+    //                             let amountDueEmail = $('#totalBalanceDue').html();
+    //                             let emailDueDate = $("#dtDueDate").val();
+    //                             let customerBillingAddress = $('#txabillingAddress').val();
+    //                             let customerTerms = $('#sltTerms').val();
+
+    //                             let customerSubtotal = $('#subtotal_total').html();
+    //                             let customerTax = $('#subtotal_tax').html();
+    //                             let customerNett = $('#subtotal_nett').html();
+    //                             let customerTotal = $('#grandTotal').html();
+
+    //                             let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+    //                             let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+    //                                 "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+    //                                 "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+    //                             var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+    //                                 '        <tr>' +
+    //                                 '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+    //                                 '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+    //                                 '                    <table class="main">' +
+    //                                 '                        <tr>' +
+    //                                 '                            <td class="wrapper">' +
+    //                                 '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+    //                                 '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr style="height: 16px;"></tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td>' +
+    //                                 '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr style="height: 48px;"></tr>' +
+    //                                 '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+    //                                 '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+    //                                 '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
+    //                                 '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+    //                                 '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                                 '                                                <tbody>' +
+    //                                 '                                                    <tr>' +
+    //                                 '                                                        <td align="center" style="padding-bottom: 15px;">' +
+    //                                 '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                                 '                                                                <tbody>' +
+    //                                 '                                                                    <tr>' +
+    //                                 '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                                 '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                                 '                                                                    </tr>' +
+    //                                 '                                                                </tbody>' +
+    //                                 '                                                            </table>' +
+    //                                 '                                                        </td>' +
+    //                                 '                                                    </tr>' +
+    //                                 '                                                </tbody>' +
+    //                                 '                                            </table>' +
+    //                                 '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                                 '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+    //                                 '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+    //                                 '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+    //                                 '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr style="background-color: #ededed;">' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                                 '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                                 '                                                <div style="width: 50%; float: left;">' +
+    //                                 '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                                <div style="width: 50%; float: right;">' +
+    //                                 '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+    //                                 '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                            </div>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr style="background-color: #ededed;">' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                                 '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                                 '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                                 '                                                <div style="width: 50%; float: left;">' +
+    //                                 '                                                    <p style="font-size: 18px;">Terms</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                                <div style="width: 50%; float: right;">' +
+    //                                 '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                            </div>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                                 '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                                 '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+    //                                 '                                                <div style="width: 50%; float: left;">' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                                <div style="width: 50%; float: right; text-align: right;">' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+    //                                 '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+    //                                 '                                                </div>' +
+    //                                 '                                            </div>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+    //                                 '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                                 '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                                 '                                                <tbody>' +
+    //                                 '                                                    <tr>' +
+    //                                 '                                                        <td align="center">' +
+    //                                 '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                                 '                                                                <tbody>' +
+    //                                 '                                                                    <tr>' +
+    //                                 '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                                 '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                                 '                                                                    </tr>' +
+    //                                 '                                                                </tbody>' +
+    //                                 '                                                            </table>' +
+    //                                 '                                                        </td>' +
+    //                                 '                                                    </tr>' +
+    //                                 '                                                </tbody>' +
+    //                                 '                                            </table>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                                 '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                    <tr>' +
+    //                                 '                                        <td>' +
+    //                                 '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                                 '                                                <tbody>' +
+    //                                 '                                                    <tr>' +
+    //                                 '                                                        <td align="center">' +
+    //                                 '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                                 '                                                                <tbody>' +
+    //                                 '                                                                    <tr>' +
+    //                                 '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+    //                                 '                                                                    </tr>' +
+    //                                 '                                                                </tbody>' +
+    //                                 '                                                            </table>' +
+    //                                 '                                                        </td>' +
+    //                                 '                                                    </tr>' +
+    //                                 '                                                </tbody>' +
+    //                                 '                                            </table>' +
+    //                                 '                                        </td>' +
+    //                                 '                                    </tr>' +
+    //                                 '                                </table>' +
+    //                                 '                            </td>' +
+    //                                 '                        </tr>' +
+    //                                 '                    </table>' +
+    //                                 '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+    //                                 '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                                 '                            <tr>' +
+    //                                 '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+    //                                 '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+    //                                 '                                    <br>' +
+    //                                 '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+    //                                 '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+    //                                 '                                </td>' +
+    //                                 '                            </tr>' +
+    //                                 '                        </table>' +
+    //                                 '                    </div>' +
+    //                                 '                </div>' +
+    //                                 '            </td>' +
+    //                                 '        </tr>' +
+    //                                 '    </table>';
+
+    //                             if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+    //                                 Meteor.call('sendEmail', {
+    //                                     from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                     to: checkEmailData,
+    //                                     subject: mailSubject,
+    //                                     text: '',
+    //                                     html: htmlmailBody,
+    //                                     attachments: attachment
+    //                                 }, function (error, result) {
+    //                                     if (error && error.error === "error") {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+
+    //                                     } else {}
+    //                                 });
+
+    //                                 Meteor.call('sendEmail', {
+    //                                     from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                     to: mailFrom,
+    //                                     subject: mailSubject,
+    //                                     text: '',
+    //                                     html: htmlmailBody,
+    //                                     attachments: attachment
+    //                                 }, function (error, result) {
+    //                                     if (error && error.error === "error") {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+    //                                     } else {
+    //                                         $('#html-2-pdfwrapper').css('display', 'none');
+    //                                         swal({
+    //                                             title: 'SUCCESS',
+    //                                             text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+    //                                             type: 'success',
+    //                                             showCancelButton: false,
+    //                                             confirmButtonText: 'OK'
+    //                                         }).then((result) => {
+    //                                             if (result.value) {
+    //                                                 window.open(url, '_self');
+    //                                             } else if (result.dismiss === 'cancel') {}
+    //                                         });
+
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     }
+    //                                 });
+
+    //                             } else if (($('.chkEmailCopy').is(':checked'))) {
+    //                                 Meteor.call('sendEmail', {
+    //                                     from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                     to: checkEmailData,
+    //                                     subject: mailSubject,
+    //                                     text: '',
+    //                                     html: htmlmailBody,
+    //                                     attachments: attachment
+    //                                 }, function (error, result) {
+    //                                     if (error && error.error === "error") {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+
+    //                                     } else {
+    //                                         $('#html-2-pdfwrapper').css('display', 'none');
+    //                                         swal({
+    //                                             title: 'SUCCESS',
+    //                                             text: "Email Sent To Customer: " + checkEmailData + " ",
+    //                                             type: 'success',
+    //                                             showCancelButton: false,
+    //                                             confirmButtonText: 'OK'
+    //                                         }).then((result) => {
+    //                                             if (result.value) {
+    //                                                 window.open(url, '_self');
+    //                                             } else if (result.dismiss === 'cancel') {}
+    //                                         });
+
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     }
+    //                                 });
+
+    //                             } else if (($('.chkEmailRep').is(':checked'))) {
+    //                                 Meteor.call('sendEmail', {
+    //                                     from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                     to: mailFrom,
+    //                                     subject: mailSubject,
+    //                                     text: '',
+    //                                     html: htmlmailBody,
+    //                                     attachments: attachment
+    //                                 }, function (error, result) {
+    //                                     if (error && error.error === "error") {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+    //                                     } else {
+    //                                         $('#html-2-pdfwrapper').css('display', 'none');
+    //                                         swal({
+    //                                             title: 'SUCCESS',
+    //                                             text: "Email Sent To User: " + mailFrom + " ",
+    //                                             type: 'success',
+    //                                             showCancelButton: false,
+    //                                             confirmButtonText: 'OK'
+    //                                         }).then((result) => {
+    //                                             if (result.value) {
+    //                                                 window.open(url, '_self');
+    //                                             } else if (result.dismiss === 'cancel') {}
+    //                                         });
+
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     }
+    //                                 });
+
+    //                             } else {
+    //                                 window.open(url, '_self');
+    //                             };
+
+    //                         }
+    //                         addAttachment();
+    //                     }).catch(function (err) {
+    //                         $('#html-2-pdfwrapper').css('display', 'none');
+    //                         swal({
+    //                             title: 'Oooops...',
+    //                             text: err,
+    //                             type: 'error',
+    //                             showCancelButton: false,
+    //                             confirmButtonText: 'Try Again'
+    //                         }).then((result) => {
+    //                             if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //                             else if (result.dismiss === 'cancel') {}
+    //                         });
+    //                         $('.fullScreenSpin').css('display', 'none');
+    //                     });
+    //                 }
+    //             }
+    //         } else {
+    //             swal({
+    //                 title: 'WARNING',
+    //                 text: "Please Set Up Payment Method To Use This Option, Click Ok to be Redirected to Payment Method page.",
+    //                 type: 'warning',
+    //                 showCancelButton: false,
+    //                 confirmButtonText: 'OK'
+    //             }).then((result) => {
+    //                 if (result.value) {
+    //                     window.open('paymentmethodSettings', '_self');
+    //                 } else if (result.dismiss === 'cancel') {}
+    //             });
+    //         }
+    //     },
+    //     'blur .lineQty': function (event) {
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let utilityService = new UtilityService();
+    //         let $tblrows = $("#tblInvoiceLine tbody tr");
+    //         let $printrows = $(".invoice_print tbody tr");
+    //         let isBOnShippedQty = templateObject.includeBOnShippedQty.get();
+    //         var targetID = $(event.target).closest('tr').attr('id');
+    //         if (isBOnShippedQty == true) {
+    //             let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
+    //             let qtyBO = $('#' + targetID + " .lineBo").val();
+    //             let qtyShipped = $('#' + targetID + " .lineQty").val();
+    //             let boValue = '';
+
+    //             if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
+    //                 qtyOrdered = 0;
+    //             }
+    //             if (parseInt(qtyOrdered) < parseInt(qtyShipped)) {
+    //                 $('#' + targetID + " .lineQty").val(qtyOrdered);
+    //                 $('#' + targetID + " .lineBo").val(0);
+    //             } else if (parseInt(qtyShipped) <= parseInt(qtyOrdered)) {
+    //                 boValue = parseInt(qtyOrdered) - parseInt(qtyShipped);
+    //                 $('#' + targetID + " .lineBo").val(boValue);
+    //             }
+    //         }
+    //         //if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //         $('#' + targetID + " #lineQty").text($('#' + targetID + " .lineQty").val());
+    //         //  }
+
+    //         let lineAmount = 0;
+    //         let subGrandTotal = 0;
+    //         let taxGrandTotal = 0;
+    //         let subDiscountTotal = 0; // New Discount
+    //         let taxGrandTotalPrint = 0;
+
+    //         let subGrandTotalNet = 0;
+    //         let taxGrandTotalNet = 0;
+    //         $tblrows.each(function (index) {
+    //             var $tblrow = $(this);
+    //             var qty = $tblrow.find(".lineQty").val() || 0;
+    //             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+    //             var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //             var taxrateamount = 0;
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                     }
+    //                 }
+    //             }
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //             let lineTotalAmount = subTotal + taxTotal;
+
+    //             let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //             var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //             var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //             if (!isNaN(discountTotal)) {
+    //                 subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                 document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //             }
+    //             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //             let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+    //             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+    //             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //             if (!isNaN(subTotal)) {
+    //               $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //               $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                 subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                 document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //             }
+    //         });
+
+    //         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //         $printrows.each(function (index) {
+    //             var $printrows = $(this);
+    //             var qty = $printrows.find("#lineQty").text() || 0;
+    //             var price = $printrows.find("#lineUnitPrice").text() || "0";
+    //             var taxrateamount = 0;
+    //             var taxcode = $printrows.find("#lineTaxCode").text();
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxcode) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                     }
+    //                 }
+    //             }
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+    //             if (!isNaN(subTotal)) {
+    //                 $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+    //             }
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+    //                 //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+    //             }
+    //         });
+    //         //  }
+
+    //     },
+    //     'blur .lineOrdered': function (event) {
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let utilityService = new UtilityService();
+    //         let $tblrows = $("#tblInvoiceLine tbody tr");
+    //         let isBOnShippedQty = templateObject.includeBOnShippedQty.get();
+    //         var targetID = $(event.target).closest('tr').attr('id');
+    //         if (isBOnShippedQty == true) {
+    //             let qtyOrdered = $('#' + targetID + " .lineOrdered").val();
+    //             let qtyBO = $('#' + targetID + " .lineBo").val();
+    //             let qtyShipped = $('#' + targetID + " .lineQty").val();
+    //             let boValue = '';
+
+    //             if ((qtyOrdered == '') || (isNaN(qtyOrdered))) {
+    //                 qtyOrdered = 0;
+    //             }
+    //             if (parseInt(qtyOrdered) < parseInt(qtyShipped)) {
+    //                 $('#' + targetID + " .lineQty").val(qtyOrdered);
+    //                 $('#' + targetID + " .lineBo").val(0);
+    //             } else if (parseInt(qtyShipped) <= parseInt(qtyOrdered)) {
+    //                 boValue = parseInt(qtyOrdered) - parseInt(qtyShipped);
+    //                 $('#' + targetID + " .lineBo").val(boValue);
+    //             }
+    //         }
+
+    //         let lineAmount = 0;
+    //         let subGrandTotal = 0;
+    //         let taxGrandTotal = 0;
+    //         let subDiscountTotal = 0; // New Discount
+
+    //         let subGrandTotalNet = 0;
+    //         let taxGrandTotalNet = 0;
+    //         $tblrows.each(function (index) {
+    //             var $tblrow = $(this);
+    //             var qty = $tblrow.find(".lineQty").val() || 0;
+    //             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+    //             var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //             var taxrateamount = 0;
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                     }
+    //                 }
+    //             }
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //             let lineTotalAmount = subTotal + taxTotal;
+
+    //             let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //             var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //             var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //             if (!isNaN(discountTotal)) {
+    //                 subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                 document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //             }
+    //             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //             let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+    //             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+    //             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //             if (!isNaN(subTotal)) {
+    //               $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //               $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                 subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                 document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //             }
+    //         });
+
+    //     },
+    //     'change .colUnitPriceExChange': function (event) {
+
+    //         let utilityService = new UtilityService();
+    //         let inputUnitPrice = 0;
+    //         if (!isNaN($(event.target).val())) {
+    //             inputUnitPrice = parseFloat($(event.target).val()) || 0;
+    //             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+    //         } else {
+    //             inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
+
+    //             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+
+    //         }
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let $tblrows = $("#tblInvoiceLine tbody tr");
+    //         let $printrows = $(".invoice_print tbody tr");
+    //         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
+    //         let lineAmount = 0;
+    //         let subGrandTotal = 0;
+    //         let taxGrandTotal = 0;
+    //         let subDiscountTotal = 0; // New Discount
+    //         let taxGrandTotalPrint = 0;
+
+    //         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //         $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());
+    //         //  }
+
+    //         let subGrandTotalNet = 0;
+    //         let taxGrandTotalNet = 0;
+    //         $tblrows.each(function (index) {
+    //             var $tblrow = $(this);
+    //             var qty = $tblrow.find(".lineQty").val() || 0;
+    //             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+    //             var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //             var taxrateamount = 0;
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100||0;
+    //                     }
+    //                 }
+    //             }
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //             let lineTotalAmount = subTotal + taxTotal;
+
+    //             let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //             var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //             var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //             if (!isNaN(discountTotal)) {
+    //                 subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                 document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //             }
+    //             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //             let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+    //             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+    //             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //             if (!isNaN(subTotal)) {
+    //               $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //               $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                 subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                 document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //             }
+    //         });
+
+    //         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //         $printrows.each(function (index) {
+    //             var $printrows = $(this);
+    //             var qty = $printrows.find("#lineQty").text() || 0;
+    //             var price = $printrows.find("#lineUnitPrice").text() || "0";
+    //             var taxrateamount = 0;
+    //             var taxRate = $printrows.find("#lineTaxCode").text();
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                     }
+    //                 }
+    //             }
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+    //             if (!isNaN(subTotal)) {
+    //                 $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+    //             }
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+    //                 //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+    //                 //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+    //             }
+    //         });
+    //         //}
+    //     },
+    //     'change .colUnitPriceIncChange': function (event) {
+
+    //         let utilityService = new UtilityService();
+    //         let inputUnitPrice = 0;
+    //         if (!isNaN($(event.target).val())) {
+    //             inputUnitPrice = parseFloat($(event.target).val()) || 0;
+    //             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+    //         } else {
+    //             inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
+
+    //             $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+
+    //         }
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let $tblrows = $("#tblInvoiceLine tbody tr");
+    //         let $printrows = $(".invoice_print tbody tr");
+    //         var targetID = $(event.target).closest('tr').attr('id'); // table row ID
+    //         let lineAmount = 0;
+    //         let subGrandTotal = 0;
+    //         let taxGrandTotal = 0;
+    //         let subDiscountTotal = 0; // New Discount
+    //         let taxGrandTotalPrint = 0;
+
+    //         let subGrandTotalNet = 0;
+    //         let taxGrandTotalNet = 0;
+    //         $tblrows.each(function (index) {
+    //             var $tblrow = $(this);
+    //             var qty = $tblrow.find(".lineQty").val() || 0;
+    //             var price = $tblrow.find(".colUnitPriceIncChange").val() || 0;
+    //             var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //             var taxrateamount = 0;
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "");
+    //                     }
+    //                 }
+    //             }
+
+    //             let taxRateAmountCalc = (parseFloat(taxrateamount) + 100)/100;
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) / (taxRateAmountCalc) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) - parseFloat(subTotal) ||0;
+
+    //             var subTotalExQty = (parseFloat(price.replace(/[^0-9.-]+/g, "")) / (taxRateAmountCalc)) || 0;
+    //             var taxTotalExQty = parseFloat(price.replace(/[^0-9.-]+/g, "")) - parseFloat(subTotalExQty) ||0;
+
+    //             var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //             let lineTotalAmount = subTotal + taxTotal;
+
+    //             let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //             var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //             var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //             if (!isNaN(discountTotal)) {
+    //                 subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                 document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //             }
+    //             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //             let lineUnitPriceIncVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //             let lineUnitPriceExVal = lineUnitPriceIncVal - taxTotalExQty||0;
+    //             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //             if (!isNaN(subTotal)) {
+    //               $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //               $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                 subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                 subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                 taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //             }
+
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                 document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //             }
+    //         });
+
+    //         $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());
+
+    //         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //         $printrows.each(function (index) {
+    //             var $printrows = $(this);
+    //             var qty = $printrows.find("#lineQty").text() || 0;
+    //             var price = $printrows.find("#lineUnitPrice").text() || "0";
+    //             var taxrateamount = 0;
+    //             var taxRate = $printrows.find("#lineTaxCode").text();
+    //             if (taxcodeList) {
+    //                 for (var i = 0; i < taxcodeList.length; i++) {
+    //                     if (taxcodeList[i].codename == taxRate) {
+    //                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                     }
+    //                 }
+    //             }
+
+    //             var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //             var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //             $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+    //             if (!isNaN(subTotal)) {
+    //                 $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+    //                 document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+    //             }
+
+    //             if (!isNaN(taxTotal)) {
+    //                 taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+    //                 document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+    //             }
+    //             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                 document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+    //                 // document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+    //                 //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                 document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+    //             }
+    //         });
+    //         //}
+    //     },
+    //     'click .th.colAmountEx': function(event) {
+    //         $('.colAmountEx').addClass('hiddenColumn');
+    //         $('.colAmountEx').removeClass('showColumn');
+
+    //         $('.colAmountInc').addClass('showColumn');
+    //         $('.colAmountInc').removeClass('hiddenColumn');
+    //     },
+    //     'click .th.colAmountInc': function(event) {
+    //         $('.colAmountInc').addClass('hiddenColumn');
+    //         $('.colAmountInc').removeClass('showColumn');
+
+    //         $('.colAmountEx').addClass('showColumn');
+    //         $('.colAmountEx').removeClass('hiddenColumn');
+    //     },
+    //     'click .th.colUnitPriceEx': function(event) {
+    //         $('.colUnitPriceEx').addClass('hiddenColumn');
+    //         $('.colUnitPriceEx').removeClass('showColumn');
+
+    //         $('.colUnitPriceInc').addClass('showColumn');
+    //         $('.colUnitPriceInc').removeClass('hiddenColumn');
+    //     },
+    //     'click .th.colUnitPriceInc': function(event) {
+    //         $('.colUnitPriceInc').addClass('hiddenColumn');
+    //         $('.colUnitPriceInc').removeClass('showColumn');
+
+    //         $('.colUnitPriceEx').addClass('showColumn');
+    //         $('.colUnitPriceEx').removeClass('hiddenColumn');
+    //     },
+    //     'click #btnCustomFileds': function (event) {
+    //         var x = document.getElementById("divCustomFields");
+    //         if (x.style.display === "none") {
+    //             x.style.display = "block";
+    //         } else {
+    //             x.style.display = "none";
+    //         }
+    //     },
+    //     'click .lineProductName, keydown .lineProductName': function (event) {
+    //         var $earch = $(event.currentTarget);
+    //         var offset = $earch.offset();
+
+    //         let customername = $('#edtCustomerName').val();
+    //         const templateObject = Template.instance();
+    //         $("#selectProductID").val('');
+    //         if (customername === '') {
+    //             swal('Customer has not been selected!', '', 'warning');
+    //             event.preventDefault();
+    //         } else {
+
+    //             var productDataName = $(event.target).val() || '';
+    //             if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+    //                 $('#productListModal').modal('toggle');
+    //                 var targetID = $(event.target).closest('tr').attr('id');
+    //                 $('#selectLineID').val(targetID);
+    //                 setTimeout(function () {
+    //                     $('#tblInventory_filter .form-control-sm').focus();
+    //                     $('#tblInventory_filter .form-control-sm').val('');
+    //                     $('#tblInventory_filter .form-control-sm').trigger("input");
+
+    //                     var datatable = $('#tblInventory').DataTable();
+    //                     datatable.draw();
+    //                     $('#tblInventory_filter .form-control-sm').trigger("input");
+
+    //                 }, 500);
+    //             } else {
+    //                 // var productDataID = $(event.target).attr('prodid').replace(/\s/g, '') || '';
+    //                 if (productDataName.replace(/\s/g, '') != '') {
+    //                     //FlowRouter.go('/productview?prodname=' + $(event.target).text());
+    //                     let lineExtaSellItems = [];
+    //                     let lineExtaSellObj = {};
+    //                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                     getVS1Data('TProductVS1').then(function (dataObject) {
+    //                         if (dataObject.length == 0) {
+    //                             sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                                 let lineItems = [];
+    //                                 let lineItemObj = {};
+    //                                 let currencySymbol = Currency;
+    //                                 let totalquantity = 0;
+    //                                 let productname = data.tproduct[0].fields.ProductName || '';
+    //                                 let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                                 let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                                 let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                                 let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                                 let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                                 let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                                 let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                                 let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                                 let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                                 let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                                 let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                                 let active = data.tproduct[0].fields.Active;
+    //                                 let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                                 let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                                 let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                                 let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                                 $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                                 $('#add-product-title').text('Edit Product');
+    //                                 $('#edtproductname').val(productname);
+    //                                 $('#edtsellqty1price').val(sellqty1price);
+    //                                 $('#txasalesdescription').val(salesdescription);
+    //                                 $('#sltsalesacount').val(incomeaccount);
+    //                                 $('#slttaxcodesales').val(taxcodesales);
+    //                                 $('#edtbarcode').val(barcode);
+    //                                 $('#txapurchasedescription').val(purchasedescription);
+    //                                 $('#sltcogsaccount').val(cogsaccount);
+    //                                 $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                                 $('#edtbuyqty1cost').val(buyqty1cost);
+
+    //                                 setTimeout(function () {
+    //                                     $('#newProductModal').modal('show');
+    //                                 }, 500);
+    //                             }).catch(function (err) {
+
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             });
+    //                         } else {
+    //                             let data = JSON.parse(dataObject[0].data);
+    //                             let useData = data.tproductvs1;
+    //                             var added = false;
+
+    //                             for (let i = 0; i < data.tproductvs1.length; i++) {
+    //                                 if (data.tproductvs1[i].fields.ProductName === productDataName) {
+    //                                     added = true;
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                     let lineItems = [];
+    //                                     let lineItemObj = {};
+    //                                     let currencySymbol = Currency;
+    //                                     let totalquantity = 0;
+
+    //                                     let productname = data.tproductvs1[i].fields.ProductName || '';
+    //                                     let productcode = data.tproductvs1[i].fields.PRODUCTCODE || '';
+    //                                     let productprintName = data.tproductvs1[i].fields.ProductPrintName || '';
+    //                                     let assetaccount = data.tproductvs1[i].fields.AssetAccount || '';
+    //                                     let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
+    //                                     let cogsaccount = data.tproductvs1[i].fields.CogsAccount || '';
+    //                                     let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || '';
+    //                                     let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || '';
+    //                                     let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
+    //                                     let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || '';
+    //                                     let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || '';
+    //                                     let salesdescription = data.tproductvs1[i].fields.SalesDescription || '';
+    //                                     let active = data.tproductvs1[i].fields.Active;
+    //                                     let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || '';
+    //                                     let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || '';
+    //                                     let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || '';
+    //                                     let barcode = data.tproductvs1[i].fields.BARCODE || '';
+    //                                     $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
+    //                                     $('#add-product-title').text('Edit Product');
+    //                                     $('#edtproductname').val(productname);
+    //                                     $('#edtsellqty1price').val(sellqty1price);
+    //                                     $('#txasalesdescription').val(salesdescription);
+    //                                     $('#sltsalesacount').val(incomeaccount);
+    //                                     $('#slttaxcodesales').val(taxcodesales);
+    //                                     $('#edtbarcode').val(barcode);
+    //                                     $('#txapurchasedescription').val(purchasedescription);
+    //                                     $('#sltcogsaccount').val(cogsaccount);
+    //                                     $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                                     $('#edtbuyqty1cost').val(buyqty1cost);
+
+    //                                     setTimeout(function () {
+    //                                         $('#newProductModal').modal('show');
+    //                                     }, 500);
+    //                                 }
+    //                             }
+    //                             if (!added) {
+    //                                 sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                     let lineItems = [];
+    //                                     let lineItemObj = {};
+    //                                     let currencySymbol = Currency;
+    //                                     let totalquantity = 0;
+    //                                     let productname = data.tproduct[0].fields.ProductName || '';
+    //                                     let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                                     let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                                     let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                                     let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                                     let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                                     let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                                     let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                                     let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                                     let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                                     let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                                     let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                                     let active = data.tproduct[0].fields.Active;
+    //                                     let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                                     let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                                     let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                                     let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                                     $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                                     $('#add-product-title').text('Edit Product');
+    //                                     $('#edtproductname').val(productname);
+    //                                     $('#edtsellqty1price').val(sellqty1price);
+    //                                     $('#txasalesdescription').val(salesdescription);
+    //                                     $('#sltsalesacount').val(incomeaccount);
+    //                                     $('#slttaxcodesales').val(taxcodesales);
+    //                                     $('#edtbarcode').val(barcode);
+    //                                     $('#txapurchasedescription').val(purchasedescription);
+    //                                     $('#sltcogsaccount').val(cogsaccount);
+    //                                     $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                                     $('#edtbuyqty1cost').val(buyqty1cost);
+
+    //                                     setTimeout(function () {
+    //                                         $('#newProductModal').modal('show');
+    //                                     }, 500);
+    //                                 }).catch(function (err) {
+
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //                             }
+    //                         }
+    //                     }).catch(function (err) {
+
+    //                         sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             let lineItems = [];
+    //                             let lineItemObj = {};
+    //                             let currencySymbol = Currency;
+    //                             let totalquantity = 0;
+    //                             let productname = data.tproduct[0].fields.ProductName || '';
+    //                             let productcode = data.tproduct[0].fields.PRODUCTCODE || '';
+    //                             let productprintName = data.tproduct[0].fields.ProductPrintName || '';
+    //                             let assetaccount = data.tproduct[0].fields.AssetAccount || '';
+    //                             let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+    //                             let cogsaccount = data.tproduct[0].fields.CogsAccount || '';
+    //                             let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || '';
+    //                             let purchasedescription = data.tproduct[0].fields.PurchaseDescription || '';
+    //                             let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+    //                             let incomeaccount = data.tproduct[0].fields.IncomeAccount || '';
+    //                             let taxcodesales = data.tproduct[0].fields.TaxCodeSales || '';
+    //                             let salesdescription = data.tproduct[0].fields.SalesDescription || '';
+    //                             let active = data.tproduct[0].fields.Active;
+    //                             let lockextrasell = data.tproduct[0].fields.LockExtraSell || '';
+    //                             let customfield1 = data.tproduct[0].fields.CUSTFLD1 || '';
+    //                             let customfield2 = data.tproduct[0].fields.CUSTFLD2 || '';
+    //                             let barcode = data.tproduct[0].fields.BARCODE || '';
+    //                             $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+    //                             $('#add-product-title').text('Edit Product');
+    //                             $('#edtproductname').val(productname);
+    //                             $('#edtsellqty1price').val(sellqty1price);
+    //                             $('#txasalesdescription').val(salesdescription);
+    //                             $('#sltsalesacount').val(incomeaccount);
+    //                             $('#slttaxcodesales').val(taxcodesales);
+    //                             $('#edtbarcode').val(barcode);
+    //                             $('#txapurchasedescription').val(purchasedescription);
+    //                             $('#sltcogsaccount').val(cogsaccount);
+    //                             $('#slttaxcodepurchase').val(taxcodepurchase);
+    //                             $('#edtbuyqty1cost').val(buyqty1cost);
+
+    //                             setTimeout(function () {
+    //                                 $('#newProductModal').modal('show');
+    //                             }, 500);
+    //                         }).catch(function (err) {
+
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                         });
+
+    //                     });
+
+    //                     setTimeout(function () {
+    //                         var begin_day_value = $('#event_begin_day').attr('value');
+    //                         $("#dtDateTo").datepicker({
+    //                             showOn: 'button',
+    //                             buttonText: 'Show Date',
+    //                             buttonImageOnly: true,
+    //                             buttonImage: '/img/imgCal2.png',
+    //                             constrainInput: false,
+    //                             dateFormat: 'd/mm/yy',
+    //                             showOtherMonths: true,
+    //                             selectOtherMonths: true,
+    //                             changeMonth: true,
+    //                             changeYear: true,
+    //                             yearRange: "-90:+10",
+    //                         }).keyup(function (e) {
+    //                             if (e.keyCode == 8 || e.keyCode == 46) {
+    //                                 $("#dtDateTo,#dtDateFrom").val('');
+    //                             }
+    //                         });
+
+    //                         $("#dtDateFrom").datepicker({
+    //                             showOn: 'button',
+    //                             buttonText: 'Show Date',
+    //                             altField: "#dtDateFrom",
+    //                             buttonImageOnly: true,
+    //                             buttonImage: '/img/imgCal2.png',
+    //                             constrainInput: false,
+    //                             dateFormat: 'd/mm/yy',
+    //                             showOtherMonths: true,
+    //                             selectOtherMonths: true,
+    //                             changeMonth: true,
+    //                             changeYear: true,
+    //                             yearRange: "-90:+10",
+    //                         }).keyup(function (e) {
+    //                             if (e.keyCode == 8 || e.keyCode == 46) {
+    //                                 $("#dtDateTo,#dtDateFrom").val('');
+    //                             }
+    //                         });
+
+    //                         $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
+
+    //                     }, 1000);
+    //                     //}
+
+
+    //                     templateObject.getProductClassQtyData = function () {
+    //                         productService.getOneProductClassQtyData(currentProductID).then(function (data) {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             let qtylineItems = [];
+    //                             let qtylineItemObj = {};
+    //                             let currencySymbol = Currency;
+    //                             let totaldeptquantity = 0;
+
+    //                             for (let j in data.tproductclassquantity) {
+    //                                 qtylineItemObj = {
+    //                                     department: data.tproductclassquantity[j].DepartmentName || '',
+    //                                     quantity: data.tproductclassquantity[j].InStockQty || 0,
+    //                                 }
+    //                                 totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+    //                                 qtylineItems.push(qtylineItemObj);
+    //                             }
+    //                             // $('#edttotalqtyinstock').val(totaldeptquantity);
+    //                             templateObject.productqtyrecords.set(qtylineItems);
+    //                             templateObject.totaldeptquantity.set(totaldeptquantity);
+
+    //                         }).catch(function (err) {
+
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                         });
+
+    //                     }
+
+    //                     //templateObject.getProductClassQtyData();
+    //                     //templateObject.getProductData();
+    //                 } else {
+    //                     $('#productListModal').modal('toggle');
+    //                     var targetID = $(event.target).closest('tr').attr('id');
+    //                     $('#selectLineID').val(targetID);
+    //                     setTimeout(function () {
+    //                         $('#tblInventory_filter .form-control-sm').focus();
+    //                         $('#tblInventory_filter .form-control-sm').val('');
+    //                         $('#tblInventory_filter .form-control-sm').trigger("input");
+
+    //                         var datatable = $('#tblInventory').DataTable();
+    //                         datatable.draw();
+    //                         $('#tblInventory_filter .form-control-sm').trigger("input");
+
+    //                     }, 500);
+    //                 }
+
+    //             }
+    //         }
+    //     },
+    //     'click .lineTaxRate': function (event) {
+    //         $('#tblInvoiceLine tbody tr .lineTaxRate').attr("data-toggle", "modal");
+    //         $('#tblInvoiceLine tbody tr .lineTaxRate').attr("data-target", "#taxRateListModal");
+    //         var targetID = $(event.target).closest('tr').attr('id');
+    //         $('#selectLineID').val(targetID);
+    //     },
+    //     'click .lineSerialNo, keydown .lineSerialNo': function(event) {
+    //         var $earch = $(event.currentTarget);
+    //         var offset = $earch.offset();
+    //         if (event.pageX > offset.left + $earch.width() - 10) {
+    //             $('#serialNumberModal').modal('toggle');
+    //         } else {
+    //             $('#serialNumberModal').modal('toggle');
+    //         }
+    //     },
+    //     'click .lineLotNo, keydown .lineLotNo': function(event) {
+    //         var $earch = $(event.currentTarget);
+    //         var offset = $earch.offset();
+    //         if (event.pageX > offset.left + $earch.width() - 10) {
+    //             $('#lotNumberModal').modal('toggle');
+    //         } else {
+    //             $('#lotNumberModal').modal('toggle');
+    //         }
+    //     },
+
+    //     'click .lineTaxCode, keydown .lineTaxCode': function(event) {
+    //        var $earch = $(event.currentTarget);
+    //        var offset = $earch.offset();
+    //        $('#edtTaxID').val('');
+    //        $('.taxcodepopheader').text('New Tax Rate');
+    //        $('#edtTaxID').val('');
+    //        $('#edtTaxNamePop').val('');
+    //        $('#edtTaxRatePop').val('');
+    //        $('#edtTaxDescPop').val('');
+    //        $('#edtTaxNamePop').attr('readonly', false);
+    //        let purchaseService = new PurchaseBoardService();
+    //        var taxRateDataName = $(event.target).val() || '';
+    //        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+    //            $('#taxRateListModal').modal('toggle');
+    //            var targetID = $(event.target).closest('tr').attr('id');
+    //            $('#selectLineID').val(targetID);
+    //            setTimeout(function() {
+    //                $('#tblTaxRate_filter .form-control-sm').focus();
+    //                $('#tblTaxRate_filter .form-control-sm').val('');
+    //                $('#tblTaxRate_filter .form-control-sm').trigger("input");
+
+    //                var datatable = $('#tblTaxRate').DataTable();
+    //                datatable.draw();
+    //                $('#tblTaxRate_filter .form-control-sm').trigger("input");
+
+    //            }, 500);
+    //        } else {
+    //            if (taxRateDataName.replace(/\s/g, '') != '') {
+
+    //                getVS1Data('TTaxcodeVS1').then(function (dataObject) {
+    //                  if(dataObject.length == 0){
+    //                    purchaseService.getTaxCodesVS1().then(function (data) {
+    //                      let lineItems = [];
+    //                      let lineItemObj = {};
+    //                      for(let i=0; i<data.ttaxcodevs1.length; i++){
+    //                        if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+    //                          $('#edtTaxNamePop').attr('readonly', true);
+    //                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+    //                        var taxRateID = data.ttaxcodevs1[i].Id || '';
+    //                         var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
+    //                         var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+    //                         $('#edtTaxID').val(taxRateID);
+    //                         $('#edtTaxNamePop').val(taxRateName);
+    //                         $('#edtTaxRatePop').val(taxRate);
+    //                         $('#edtTaxDescPop').val(taxRateDesc);
+    //                         setTimeout(function() {
+    //                         $('#newTaxRateModal').modal('toggle');
+    //                         }, 100);
+    //                       }
+    //                      }
+
+    //                    }).catch(function (err) {
+    //                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                        $('.fullScreenSpin').css('display','none');
+    //                        // Meteor._reload.reload();
+    //                    });
+    //                  }else{
+    //                    let data = JSON.parse(dataObject[0].data);
+    //                    let useData = data.ttaxcodevs1;
+    //                    let lineItems = [];
+    //                    let lineItemObj = {};
+    //                    $('.taxcodepopheader').text('Edit Tax Rate');
+    //                    for(let i=0; i<useData.length; i++){
+
+    //                      if ((useData[i].CodeName) === taxRateDataName) {
+    //                        $('#edtTaxNamePop').attr('readonly', true);
+    //                      let taxRate = (useData[i].Rate * 100).toFixed(2);
+    //                      var taxRateID = useData[i].Id || '';
+    //                       var taxRateName = useData[i].CodeName ||'';
+    //                       var taxRateDesc = useData[i].Description || '';
+    //                       $('#edtTaxID').val(taxRateID);
+    //                       $('#edtTaxNamePop').val(taxRateName);
+    //                       $('#edtTaxRatePop').val(taxRate);
+    //                       $('#edtTaxDescPop').val(taxRateDesc);
+    //                       //setTimeout(function() {
+    //                       $('#newTaxRateModal').modal('toggle');
+    //                       //}, 500);
+    //                     }
+    //                    }
+    //                  }
+    //                }).catch(function (err) {
+    //                  purchaseService.getTaxCodesVS1().then(function (data) {
+    //                    let lineItems = [];
+    //                    let lineItemObj = {};
+    //                    for(let i=0; i<data.ttaxcodevs1.length; i++){
+    //                      if ((data.ttaxcodevs1[i].CodeName) === taxRateDataName) {
+    //                        $('#edtTaxNamePop').attr('readonly', true);
+    //                      let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+    //                      var taxRateID = data.ttaxcodevs1[i].Id || '';
+    //                       var taxRateName = data.ttaxcodevs1[i].CodeName ||'';
+    //                       var taxRateDesc = data.ttaxcodevs1[i].Description || '';
+    //                       $('#edtTaxID').val(taxRateID);
+    //                       $('#edtTaxNamePop').val(taxRateName);
+    //                       $('#edtTaxRatePop').val(taxRate);
+    //                       $('#edtTaxDescPop').val(taxRateDesc);
+    //                       setTimeout(function() {
+    //                       $('#newTaxRateModal').modal('toggle');
+    //                       }, 100);
+
+    //                     }
+    //                    }
+
+    //                  }).catch(function (err) {
+    //                      // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                      $('.fullScreenSpin').css('display','none');
+    //                      // Meteor._reload.reload();
+    //                  });
+    //                });
+
+    //            } else {
+    //                $('#taxRateListModal').modal('toggle');
+    //                var targetID = $(event.target).closest('tr').attr('id');
+    //                $('#selectLineID').val(targetID);
+    //                setTimeout(function() {
+    //                    $('#tblTaxRate_filter .form-control-sm').focus();
+    //                    $('#tblTaxRate_filter .form-control-sm').val('');
+    //                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
+
+    //                    var datatable = $('#tblTaxRate').DataTable();
+    //                    datatable.draw();
+    //                    $('#tblTaxRate_filter .form-control-sm').trigger("input");
+
+    //                }, 500);
+    //            }
+
+    //        }
+
+    //     },
+    //     'click .printConfirm': function (event) {
+    //         $('.fullScreenSpin').css('display', 'inline-block');
+    //         $('#html-2-pdfwrapper').css('display', 'block');
+    //         if ($('.edtCustomerEmail').val() != "") {
+    //             $('.pdfCustomerName').html($('#edtCustomerName').val());
+    //             $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+    //             $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+    //             var ponumber = $('#ponumber').val() || '.';
+    //             $('.po').text(ponumber);
+    //             var rowCount = $('.tblInvoiceLine tbody tr').length;
+    //             exportSalesToPdf();
+    //         } else {
+    //             swal({
+    //                 title: 'Customer Email Required',
+    //                 text: 'Please enter customer email',
+    //                 type: 'error',
+    //                 showCancelButton: false,
+    //                 confirmButtonText: 'OK'
+    //             }).then((result) => {
+    //                 if (result.value) {}
+    //                 else if (result.dismiss === 'cancel') {}
+    //             });
+    //         }
+    //     },
+    //     'keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered': function (event) {
+    //         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+    //             (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+    //             (event.keyCode >= 35 && event.keyCode <= 40)) {
+    //             return;
+    //         }
+
+    //         if (event.shiftKey == true) {
+    //             event.preventDefault();
+    //         }
+
+    //         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+    //             (event.keyCode >= 96 && event.keyCode <= 105) ||
+    //             event.keyCode == 8 || event.keyCode == 9 ||
+    //             event.keyCode == 37 || event.keyCode == 39 ||
+    //             event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {}
+    //         else {
+    //             event.preventDefault();
+    //         }
+    //     },
+    //     'click .btnRemove': function (event) {
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let utilityService = new UtilityService();
+    //         var clicktimes = 0;
+    //         var targetID = $(event.target).closest('tr').attr('id');
+    //         $('#selectDeleteLineID').val(targetID);
+
+    //         times++;
+    //         if (times == 1) {
+    //             $('#deleteLineModal').modal('toggle');
+    //         } else {
+    //             if ($('#tblInvoiceLine tbody>tr').length > 1) {
+    //                 this.click;
+    //                 $(event.target).closest('tr').remove();
+    //                 $(".invoice_print #" + targetID).remove();
+    //                 event.preventDefault();
+    //                 let $tblrows = $("#tblInvoiceLine tbody tr");
+    //                 let $printrows = $(".invoice_print tbody tr");
+    //                 let lineAmount = 0;
+    //                 let subGrandTotal = 0;
+    //                 let taxGrandTotal = 0;
+    //                 let subDiscountTotal = 0; // New Discount
+    //                 let taxGrandTotalPrint = 0;
+
+    //                 let subGrandTotalNet = 0;
+    //                 let taxGrandTotalNet = 0;
+    //                 $tblrows.each(function (index) {
+    //                     var $tblrow = $(this);
+    //                     var qty = $tblrow.find(".lineQty").val() || 0;
+    //                     var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+    //                     var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //                     var taxrateamount = 0;
+    //                     if (taxcodeList) {
+    //                         for (var i = 0; i < taxcodeList.length; i++) {
+    //                             if (taxcodeList[i].codename == taxRate) {
+    //                                 taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                             }
+    //                         }
+    //                     }
+
+    //                     var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //                     var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //                     var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //                     let lineTotalAmount = subTotal + taxTotal;
+
+    //                     let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //                     var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //                     var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //                     var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //                     var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //                     var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //                     if (!isNaN(discountTotal)) {
+    //                         subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                         document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //                     }
+    //                     $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //                     let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+    //                     let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //                     let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+    //                     $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //                     $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //                     if (!isNaN(subTotal)) {
+    //                         $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                         $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                         subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                         subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                         document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //                     }
+
+    //                     if (!isNaN(taxTotal)) {
+    //                         taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                         taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                         document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //                     }
+
+    //                     if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                         let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                         let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                         document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                         document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                         document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                         document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //                     }
+    //                 });
+
+    //                 //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+    //                 $printrows.each(function (index) {
+    //                     var $printrows = $(this);
+    //                     var qty = $printrows.find("#lineQty").text() || 0;
+    //                     var price = $printrows.find("#lineUnitPrice").text() || "0";
+    //                     var taxrateamount = 0;
+    //                     var taxRate = $printrows.find("#lineTaxCode").text();
+    //                     if (taxcodeList) {
+    //                         for (var i = 0; i < taxcodeList.length; i++) {
+    //                             if (taxcodeList[i].codename == taxRate) {
+    //                                 taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                             }
+    //                         }
+    //                     }
+    //                     var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //                     var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //                     $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+    //                     if (!isNaN(subTotal)) {
+    //                         $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+    //                         document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+    //                     }
+
+    //                     if (!isNaN(taxTotal)) {
+    //                         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+    //                         document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+    //                     }
+    //                     if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                         let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                         document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+    //                         //document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+    //                         //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                         document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+    //                     }
+    //                 });
+    //                 //}
+    //                 return false;
+
+    //             } else {
+    //                 $('#deleteLineModal').modal('toggle');
+    //             }
+
+    //         }
+    //     },
+    //     'click .btnDeleteInvoice': function (event) {
+    //         $('.fullScreenSpin').css('display', 'inline-block');
+    //         let templateObject = Template.instance();
+    //         let salesService = new SalesBoardService();
+    //         var url = FlowRouter.current().path;
+    //         var getso_id = url.split('?id=');
+    //         var currentInvoice = getso_id[getso_id.length - 1];
+    //         var objDetails = '';
+    //         if (getso_id[1]) {
+    //             currentInvoice = parseInt(currentInvoice);
+    //             var objDetails = {
+    //                 type: "TInvoiceEx",
+    //                 fields: {
+    //                     ID: currentInvoice,
+    //                     Deleted: true,
+    //                     Lines: null
+    //                 }
+    //             };
+
+    //             salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
+    //                 FlowRouter.go('/invoicelist?success=true');
+    //             }).catch(function (err) {
+    //                 swal({
+    //                     title: 'Oooops...',
+    //                     text: err,
+    //                     type: 'error',
+    //                     showCancelButton: false,
+    //                     confirmButtonText: 'Try Again'
+    //                 }).then((result) => {
+    //                     if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //                     else if (result.dismiss === 'cancel') {}
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             });
+    //         } else {
+    //             FlowRouter.go('/invoicelist?success=true');
+    //         }
+    //         $('#deleteLineModal').modal('toggle');
+    //     },
+    //     'click .btnDeleteLine': function (event) {
+    //         let templateObject = Template.instance();
+    //         let taxcodeList = templateObject.taxraterecords.get();
+    //         let utilityService = new UtilityService();
+    //         let selectLineID = $('#selectDeleteLineID').val();
+    //         if ($('#tblInvoiceLine tbody>tr').length > 1) {
+    //             this.click;
+
+    //             $('#' + selectLineID).closest('tr').remove();
+    //             $('#deleteLineModal').modal('toggle');
+    //             let $tblrows = $("#tblInvoiceLine tbody tr");
+    //             let $printrows = $(".invoice_print tbody tr");
+    //             $(".invoice_print #" + selectLineID).remove();
+    //             let lineAmount = 0;
+    //             let subGrandTotal = 0;
+    //             let taxGrandTotal = 0;
+    //             let subDiscountTotal = 0; // New Discount
+    //             let taxGrandTotalPrint = 0;
+
+    //             let subGrandTotalNet = 0;
+    //             let taxGrandTotalNet = 0;
+    //             $tblrows.each(function (index) {
+    //                 var $tblrow = $(this);
+    //                 var qty = $tblrow.find(".lineQty").val() || 0;
+    //                 var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+    //                 var taxRate = $tblrow.find(".lineTaxCode").val();
+
+    //                 var taxrateamount = 0;
+    //                 if (taxcodeList) {
+    //                     for (var i = 0; i < taxcodeList.length; i++) {
+    //                         if (taxcodeList[i].codename == taxRate) {
+    //                             taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                         }
+    //                     }
+    //                 }
+
+    //                 var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //                 var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //                 var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").text()) || 0; // New Discount
+    //                 let lineTotalAmount = subTotal + taxTotal;
+
+    //                 let lineDiscountTotal = lineDiscountPerc / 100;
+
+    //                 var discountTotal = lineTotalAmount * lineDiscountTotal;
+    //                 var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+    //                 var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+    //                 var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+    //                 var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+    //                 if (!isNaN(discountTotal)) {
+    //                     subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+    //                     document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+    //                 }
+    //                 $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
+
+    //                 let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
+    //                 let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
+    //                 let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
+    //                 $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+    //                 $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
+
+    //                 if (!isNaN(subTotal)) {
+    //                   $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                   $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+    //                     subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+    //                     subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+    //                     document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+    //                 }
+
+    //                 if (!isNaN(taxTotal)) {
+    //                     taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+    //                     taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+    //                     document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+    //                 }
+
+    //                 if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                     let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                     let GrandTotalNet = (parseFloat(subGrandTotalNet)) + (parseFloat(taxGrandTotalNet));
+    //                     document.getElementById("subtotal_nett").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+    //                     document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                     document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                     document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+
+    //                 }
+    //             });
+
+    //             $printrows.each(function (index) {
+    //                 var $printrows = $(this);
+    //                 var qty = $printrows.find("#lineQty").text() || 0;
+    //                 var price = $printrows.find("#lineUnitPrice").text() || "0";
+    //                 var taxrateamount = 0;
+    //                 var taxRate = $printrows.find("#lineTaxCode").text();
+    //                 if (taxcodeList) {
+    //                     for (var i = 0; i < taxcodeList.length; i++) {
+    //                         if (taxcodeList[i].codename == taxRate) {
+    //                             taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
+    //                         }
+    //                     }
+    //                 }
+    //                 var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+    //                 var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+    //                 $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
+    //                 if (!isNaN(subTotal)) {
+    //                     $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    //                     subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+    //                     document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
+    //                 }
+
+    //                 if (!isNaN(taxTotal)) {
+    //                     taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+    //                     document.getElementById("totalTax_totalPrint").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+    //                 }
+    //                 if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
+    //                     let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
+    //                     document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
+    //                     // document.getElementById("totalTax").innerHTML = $('#subtotal_tax').text();
+    //                     //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+    //                     document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
+
+    //                 }
+    //             });
+    //             //return false;
+    //         } else {
+    //             this.click;
+    //             $('#' + selectLineID + " .lineProductName").val('');
+    //             $('#' + selectLineID + " .lineProductDesc").text('');
+    //             $('#' + selectLineID + " .lineOrdered").val('');
+    //             $('#' + selectLineID + " .lineQty").val('');
+    //             $('#' + selectLineID + " .lineBo").val('');
+    //             $('#' + selectLineID + " .lineUnitPrice").val('');
+    //             $('#' + selectLineID + " .lineCostPrice").val('');
+    //             $('#' + selectLineID + " .lineSalesLinesCustField1").text('');
+    //             $('#' + selectLineID + " .lineTaxRate").text('');
+    //             $('#' + selectLineID + " .lineTaxCode").val('');
+    //             $('#' + selectLineID + " .lineAmt").text('');
+    //             $('#' + selectLineID + " .lineTaxAmount").text('');
+    //             $('#' + selectLineID + " .lineDiscount").text('');
+
+    //             document.getElementById("subtotal_tax").innerHTML = Currency + '0.00';
+    //             document.getElementById("subtotal_total").innerHTML = Currency + '0.00';
+    //             document.getElementById("grandTotal").innerHTML = Currency + '0.00';
+    //             document.getElementById("balanceDue").innerHTML = Currency + '0.00';
+    //             document.getElementById("totalBalanceDue").innerHTML = Currency + '0.00';
+    //             $('#deleteLineModal').modal('toggle');
+    //         }
+
+    //         // $('#deleteLineModal').modal('toggle');
+    //     },
+    //     // 'click .btnSaveSettings': function (event) {
+    //     //     let custfield1 = $('.customField1').val() || 'Custom Field 1';
+    //     //     let custfield2 = $('.customField2').val() || 'Custom Field 2';
+    //     //     let custfield3 = $('.customField3').val() || 'Custom Field 3';
+
+    //     //     localStorage.setItem('custfield1',custfield1);
+    //     //     localStorage.setItem('custfield2',custfield2);
+    //     //     localStorage.setItem('custfield3',custfield3);
+    //     //     $('#myModal4').modal('toggle');
+    //     // },
+    //     'click .btnSave': function (event) {
+    //         let templateObject = Template.instance();
+    //         let stripe_id = templateObject.accountID.get();
+    //         let stripe_fee_method = templateObject.stripe_fee_method.get();
+    //         let lineItems = [];
+    //         let imageData = (localStorage.getItem("Image"));
+    //         let customername = $('#edtCustomerName');
+    //         let name = $('#edtCustomerEmail').attr('customerfirstname');
+    //         let surname = $('#edtCustomerEmail').attr('customerlastname');
+    //         let salesService = new SalesBoardService();
+    //         let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
+    //         if (termname === '') {
+    //             swal('Terms has not been selected!', '', 'warning');
+    //             event.preventDefault();
+    //             return false;
+    //         }
+    //         if (customername.val() === '') {
+    //             swal('Customer has not been selected!', '', 'warning');
+    //             event.preventDefault();
+    //         } else {
+    //             $('.fullScreenSpin').css('display', 'inline-block');
+    //             var splashLineArray = new Array();
+    //             let lineItemsForm = [];
+    //             let lineItems = [];
+    //             let lineItemObjForm = {};
+    //             var erpGet = erpDb();
+    //             var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+
+    //             var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+    //             let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+    //             let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+
+    //             let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    //             $('#tblInvoiceLine > tbody > tr').each(function () {
+    //                 var lineID = this.id;
+    //                 let tdproduct = $('#' + lineID + " .lineProductName").val();
+    //                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
+    //                 let tdQty = $('#' + lineID + " .lineQty").val();
+
+    //                 let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+
+    //                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+    //                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+    //                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+    //                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+    //                 lineItemObj = {
+    //                     description: tddescription || '',
+    //                     quantity: tdQty || 0,
+    //                     unitPrice: tdunitprice.toLocaleString(undefined, {
+    //                         minimumFractionDigits: 2
+    //                     }) || 0
+    //                 }
+
+    //                 lineItems.push(lineItemObj);
+
+    //                 if (tdproduct != "") {
+
+    //                     if (checkBackOrder == true) {
+    //                         lineItemObjForm = {
+    //                             type: "TInvoiceLine",
+    //                             fields: {
+    //                                 ProductName: tdproduct || '',
+    //                                 ProductDescription: tddescription || '',
+    //                                 UOMQtySold: parseFloat(tdOrderd) || 0,
+    //                                 UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                 Headershipdate: saleDate,
+    //                                 LineTaxCode: tdtaxCode || '',
+    //                                 DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                             }
+    //                         };
+    //                     } else {
+    //                         lineItemObjForm = {
+    //                             type: "TInvoiceLine",
+    //                             fields: {
+    //                                 ProductName: tdproduct || '',
+    //                                 ProductDescription: tddescription || '',
+    //                                 UOMQtySold: parseFloat(tdQty) || 0,
+    //                                 UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                 Headershipdate: saleDate,
+    //                                 LineTaxCode: tdtaxCode || '',
+    //                                 DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                             }
+    //                         };
+    //                     }
+
+    //                     lineItemsForm.push(lineItemObjForm);
+    //                     splashLineArray.push(lineItemObjForm);
+    //                 }
+    //             });
+    //             let getchkcustomField1 = true;
+    //             let getchkcustomField2 = true;
+    //             let getcustomField1 = $('.customField1Text').html()||'';
+    //             let getcustomField2 = $('.customField2Text').html()||'';
+    //             if ($('#formCheck-one').is(':checked')) {
+    //                 getchkcustomField1 = false;
+    //             }
+    //             if ($('#formCheck-two').is(':checked')) {
+    //                 getchkcustomField2 = false;
+    //             }
+
+    //             let customer = $('#edtCustomerName').val();
+    //             let customerEmail = $('#edtCustomerEmail').val();
+    //             let billingAddress = $('#txabillingAddress').val();
+
+    //             let poNumber = $('#ponumber').val();
+    //             let reference = $('#edtRef').val();
+
+    //             let departement = $('#sltDept').val();
+    //             let shippingAddress = $('#txaShipingInfo').val();
+    //             let comments = $('#txaComment').val();
+    //             let pickingInfrmation = $('#txapickmemo').val();
+    //             let total = $('#totalBalanceDue').html() || 0;
+    //             let tax = $('#subtotal_tax').html() || 0;
+    //             let saleCustField1 = $('#edtSaleCustField1').val()||'';
+    //             let saleCustField2 = $('#edtSaleCustField2').val()||'';
+    //             let saleCustField3 = $('#edtSaleCustField3').val()||'';
+    //             var url = FlowRouter.current().path;
+    //             var getso_id = url.split('?id=');
+    //             var currentInvoice = getso_id[getso_id.length - 1];
+    //             let uploadedItems = templateObject.uploadedFiles.get();
+    //             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    //             var objDetails = '';
+    //             if (getso_id[1]) {
+    //                 currentInvoice = parseInt(currentInvoice);
+    //                 objDetails = {
+    //                     type: "TInvoiceEx",
+    //                     fields: {
+    //                         ID: currentInvoice,
+    //                         CustomerName: customer,
+    //                         ForeignExchangeCode: currencyCode,
+    //                         Lines: splashLineArray,
+    //                         InvoiceToDesc: billingAddress,
+    //                         SaleDate: saleDate,
+    //                         CustPONumber: poNumber,
+    //                         ReferenceNo: reference,
+    //                         TermsName: termname,
+    //                         SaleClassName: departement,
+    //                         ShipToDesc: shippingAddress,
+    //                         Comments: comments,
+    //                         SaleCustField1: saleCustField1,
+    //                         SaleCustField2: saleCustField2,
+    //                         SaleCustField3: saleCustField3,
+    //                         PickMemo: pickingInfrmation,
+    //                         Attachments: uploadedItems,
+    //                         SalesStatus: $('#sltStatus').val()
+    //                     }
+    //                 };
+    //             } else {
+    //                 objDetails = {
+    //                     type: "TInvoiceEx",
+    //                     fields: {
+    //                         CustomerName: customer,
+    //                         ForeignExchangeCode: currencyCode,
+    //                         Lines: splashLineArray,
+    //                         InvoiceToDesc: billingAddress,
+    //                         SaleDate: saleDate,
+    //                         CustPONumber: poNumber,
+    //                         ReferenceNo: reference,
+    //                         TermsName: termname,
+    //                         SaleClassName: departement,
+    //                         ShipToDesc: shippingAddress,
+    //                         Comments: comments,
+    //                         SaleCustField1: saleCustField1,
+    //                         SaleCustField2: saleCustField2,
+    //                         SaleCustField3: saleCustField3,
+    //                         PickMemo: pickingInfrmation,
+    //                         Attachments: uploadedItems,
+    //                         SalesStatus: $('#sltStatus').val()
+    //                     }
+    //                 };
+    //             }
+
+    //             salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
+    //                 let company = Session.get('vs1companyName');
+    //                 let vs1User = localStorage.getItem('mySession');
+    //                 let customerEmail = $('#edtCustomerEmail').val() || '';
+    //                 let currencyname = (CountryAbbr).toLowerCase();
+    //                 let stringQuery = "?";
+    //                 var customerID = $('#edtCustomerEmail').attr('customerid');
+    //                 for (let l = 0; l < lineItems.length; l++) {
+    //                     stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+    //                 }
+    //                 stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.fields.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + departement + "&currency=" + currencyname;
+    //                 $('#html-2-pdfwrapper').css('display', 'block');
+    //                 $('.pdfCustomerName').html($('#edtCustomerName').val());
+    //                 $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+    //                 var ponumber = $('#ponumber').val() || '.';
+    //                 $('.po').text(ponumber);
+
+    //                 function generatePdfForMail(invoiceId) {
+    //                     let file = "Invoice-" + invoiceId + ".pdf"
+    //                         return new Promise((resolve, reject) => {
+    //                         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+    //                         let templateObject = Template.instance();
+    //                         let completeTabRecord;
+    //                         let doc = new jsPDF('p', 'pt', 'a4');
+    //                         var source = document.getElementById('html-2-pdfwrapper');
+    //                         var opt = {
+    //                             margin: 0,
+    //                             filename: file,
+    //                             image: {
+    //                                 type: 'jpeg',
+    //                                 quality: 0.98
+    //                             },
+    //                             html2canvas: {
+    //                                 scale: 2
+    //                             },
+    //                             jsPDF: {
+    //                                 unit: 'in',
+    //                                 format: 'a4',
+    //                                 orientation: 'portrait'
+    //                             }
+    //                         }
+    //                         resolve(html2pdf().set(opt).from(source).toPdf().output('datauristring'));
+    //                         // doc.addHTML(source, function () {
+    //                         //     doc.setFontSize(10);
+    //                         //     doc.setTextColor(255, 255, 255);
+    //                         //     doc.textWithLink('Pay Now', 482, 113, { url: 'https://www.depot.vs1cloud.com/stripe/' + stringQuery });
+    //                         //     resolve(doc.output('blob'));
+    //                         //     $('#html-2-pdfwrapper').css('display', 'none');
+    //                         // });
+    //                     });
+    //                 }
+    //                 async function addAttachment() {
+    //                     let attachment = [];
+    //                     let templateObject = Template.instance();
+
+    //                     let invoiceId = objDetails.fields.ID;
+    //                     let encodedPdf = await generatePdfForMail(invoiceId);
+
+    //                     // var base64data = reader.result;
+    //                     let base64data = encodedPdf.split(',')[1];
+    //                     pdfObject = {
+    //                         filename: 'invoice-' + invoiceId + '.pdf',
+    //                         content: base64data,
+    //                         encoding: 'base64'
+    //                     };
+    //                     attachment.push(pdfObject);
+    //                     let erpInvoiceId = objDetails.fields.ID;
+
+    //                     let mailFromName = Session.get('vs1companyName');
+    //                     let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+    //                     let customerEmailName = $('#edtCustomerName').val();
+    //                     let checkEmailData = $('#edtCustomerEmail').val();
+    //                     let grandtotal = $('#grandTotal').html();
+    //                     let amountDueEmail = $('#totalBalanceDue').html();
+    //                     let emailDueDate = $("#dtDueDate").val();
+    //                     let customerBillingAddress = $('#txabillingAddress').val();
+    //                     let customerTerms = $('#sltTerms').val();
+
+    //                     let customerSubtotal = $('#subtotal_total').html();
+    //                     let customerTax = $('#subtotal_tax').html();
+    //                     let customerNett = $('#subtotal_nett').html();
+    //                     let customerTotal = $('#grandTotal').html();
+    //                     let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+    //                     let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+    //                         "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+    //                         "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+    //                     var htmlmailBody = '    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+    //                         '        <tr>' +
+    //                         '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+    //                         '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+    //                         '                    <table class="main">' +
+    //                         '                        <tr>' +
+    //                         '                            <td class="wrapper">' +
+    //                         '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+    //                         '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr style="height: 16px;"></tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td>' +
+    //                         '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr style="height: 48px;"></tr>' +
+    //                         '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+    //                         '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+    //                         '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
+    //                         '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+    //                         '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                         '                                                <tbody>' +
+    //                         '                                                    <tr>' +
+    //                         '                                                        <td align="center" style="padding-bottom: 15px;">' +
+    //                         '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                         '                                                                <tbody>' +
+    //                         '                                                                    <tr>' +
+    //                         '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                         '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                         '                                                                    </tr>' +
+    //                         '                                                                </tbody>' +
+    //                         '                                                            </table>' +
+    //                         '                                                        </td>' +
+    //                         '                                                    </tr>' +
+    //                         '                                                </tbody>' +
+    //                         '                                            </table>' +
+    //                         '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                         '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+    //                         '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+    //                         '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+    //                         '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr style="background-color: #ededed;">' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                         '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                         '                                                <div style="width: 50%; float: left;">' +
+    //                         '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+    //                         '                                                </div>' +
+    //                         '                                                <div style="width: 50%; float: right;">' +
+    //                         '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+    //                         '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+    //                         '                                                </div>' +
+    //                         '                                            </div>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr style="background-color: #ededed;">' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                         '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                         '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                         '                                                <div style="width: 50%; float: left;">' +
+    //                         '                                                    <p style="font-size: 18px;">Terms</p>' +
+    //                         '                                                </div>' +
+    //                         '                                                <div style="width: 50%; float: right;">' +
+    //                         '                                                    <p style="font-size: 18px;">' + customerTerms + '</p>' +
+    //                         '                                                </div>' +
+    //                         '                                            </div>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                         '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                         '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+    //                         '                                                <div style="width: 50%; float: left;">' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+    //                         '                                                </div>' +
+    //                         '                                                <div style="width: 50%; float: right; text-align: right;">' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+    //                         '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+    //                         '                                                </div>' +
+    //                         '                                            </div>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+    //                         '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                         '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                         '                                                <tbody>' +
+    //                         '                                                    <tr>' +
+    //                         '                                                        <td align="center">' +
+    //                         '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                         '                                                                <tbody>' +
+    //                         '                                                                    <tr>' +
+    //                         '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                         '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                         '                                                                    </tr>' +
+    //                         '                                                                </tbody>' +
+    //                         '                                                            </table>' +
+    //                         '                                                        </td>' +
+    //                         '                                                    </tr>' +
+    //                         '                                                </tbody>' +
+    //                         '                                            </table>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                         '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                    <tr>' +
+    //                         '                                        <td>' +
+    //                         '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                         '                                                <tbody>' +
+    //                         '                                                    <tr>' +
+    //                         '                                                        <td align="center">' +
+    //                         '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                         '                                                                <tbody>' +
+    //                         '                                                                    <tr>' +
+    //                         '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+    //                         '                                                                    </tr>' +
+    //                         '                                                                </tbody>' +
+    //                         '                                                            </table>' +
+    //                         '                                                        </td>' +
+    //                         '                                                    </tr>' +
+    //                         '                                                </tbody>' +
+    //                         '                                            </table>' +
+    //                         '                                        </td>' +
+    //                         '                                    </tr>' +
+    //                         '                                </table>' +
+    //                         '                            </td>' +
+    //                         '                        </tr>' +
+    //                         '                    </table>' +
+    //                         '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+    //                         '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                         '                            <tr>' +
+    //                         '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+    //                         '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+    //                         '                                    <br>' +
+    //                         '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+    //                         '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+    //                         '                                </td>' +
+    //                         '                            </tr>' +
+    //                         '                        </table>' +
+    //                         '                    </div>' +
+    //                         '                </div>' +
+    //                         '            </td>' +
+    //                         '        </tr>' +
+    //                         '    </table>';
+
+    //                     if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+    //                         Meteor.call('sendEmail', {
+    //                             from: "" + mailFromName + " <" + mailFrom + ">",
+    //                             to: checkEmailData,
+    //                             subject: mailSubject,
+    //                             text: '',
+    //                             html: htmlmailBody,
+    //                             attachments: attachment
+    //                         }, function (error, result) {
+    //                             if (error && error.error === "error") {
+    //                                 FlowRouter.go('/invoicelist?success=true');
+
+    //                             } else {}
+    //                         });
+
+    //                         Meteor.call('sendEmail', {
+    //                             from: "" + mailFromName + " <" + mailFrom + ">",
+    //                             to: mailFrom,
+    //                             subject: mailSubject,
+    //                             text: '',
+    //                             html: htmlmailBody,
+    //                             attachments: attachment
+    //                         }, function (error, result) {
+    //                             if (error && error.error === "error") {
+    //                                 FlowRouter.go('/invoicelist?success=true');
+    //                             } else {
+    //                                 $('#html-2-pdfwrapper').css('display', 'none');
+    //                                 swal({
+    //                                     title: 'SUCCESS',
+    //                                     text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+    //                                     type: 'success',
+    //                                     showCancelButton: false,
+    //                                     confirmButtonText: 'OK'
+    //                                 }).then((result) => {
+    //                                     if (result.value) {}
+    //                                     else if (result.dismiss === 'cancel') {}
+    //                                 });
+
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             }
+    //                         });
+
+    //                     } else if (($('.chkEmailCopy').is(':checked'))) {
+    //                         Meteor.call('sendEmail', {
+    //                             from: "" + mailFromName + " <" + mailFrom + ">",
+    //                             to: checkEmailData,
+    //                             subject: mailSubject,
+    //                             text: '',
+    //                             html: htmlmailBody,
+    //                             attachments: attachment
+    //                         }, function (error, result) {
+    //                             if (error && error.error === "error") {
+    //                                 FlowRouter.go('/invoicelist?success=true');
+
+    //                             } else {
+    //                                 $('#html-2-pdfwrapper').css('display', 'none');
+    //                                 swal({
+    //                                     title: 'SUCCESS',
+    //                                     text: "Email Sent To Customer: " + checkEmailData + " ",
+    //                                     type: 'success',
+    //                                     showCancelButton: false,
+    //                                     confirmButtonText: 'OK'
+    //                                 }).then((result) => {
+    //                                     if (result.value) {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+    //                                     } else if (result.dismiss === 'cancel') {}
+    //                                 });
+
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             }
+    //                         });
+
+    //                     } else if (($('.chkEmailRep').is(':checked'))) {
+    //                         Meteor.call('sendEmail', {
+    //                             from: "" + mailFromName + " <" + mailFrom + ">",
+    //                             to: mailFrom,
+    //                             subject: mailSubject,
+    //                             text: '',
+    //                             html: htmlmailBody,
+    //                             attachments: attachment
+    //                         }, function (error, result) {
+    //                             if (error && error.error === "error") {
+    //                                 FlowRouter.go('/invoicelist?success=true');
+    //                             } else {
+    //                                 $('#html-2-pdfwrapper').css('display', 'none');
+    //                                 swal({
+    //                                     title: 'SUCCESS',
+    //                                     text: "Email Sent To User: " + mailFrom + " ",
+    //                                     type: 'success',
+    //                                     showCancelButton: false,
+    //                                     confirmButtonText: 'OK'
+    //                                 }).then((result) => {
+    //                                     if (result.value) {
+    //                                         FlowRouter.go('/invoicelist?success=true');
+    //                                     } else if (result.dismiss === 'cancel') {}
+    //                                 });
+
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             }
+    //                         });
+
+    //                     } else {
+    //                         FlowRouter.go('/invoicelist?success=true');
+    //                     };
+
+    //                 }
+    //                 addAttachment();
+    //                 if (customerID !== " ") {
+    //                     let customerEmailData = {
+    //                         type: "TCustomer",
+    //                         fields: {
+    //                             ID: customerID,
+    //                             Email: customerEmail
+    //                         }
+    //                     }
+
+    //                 };
+    //                 var getcurrentCloudDetails = CloudUser.findOne({
+    //                     _id: Session.get('mycloudLogonID'),
+    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                 });
+    //                 if (getcurrentCloudDetails) {
+    //                     if (getcurrentCloudDetails._id.length > 0) {
+    //                         var clientID = getcurrentCloudDetails._id;
+    //                         var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                         var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                         var checkPrefDetails = CloudPreference.findOne({
+    //                             userid: clientID,
+    //                             PrefName: 'new_invoice'
+    //                         });
+    //                         if (checkPrefDetails) {
+    //                             CloudPreference.update({
+    //                                 _id: checkPrefDetails._id
+    //                             }, {
+    //                                 $set: {
+    //                                     username: clientUsername,
+    //                                     useremail: clientEmail,
+    //                                     PrefGroup: 'salesform',
+    //                                     PrefName: 'new_invoice',
+    //                                     published: true,
+    //                                     customFields: [{
+    //                                             index: '1',
+    //                                             label: getcustomField1,
+    //                                             hidden: getchkcustomField1
+    //                                         }, {
+    //                                             index: '2',
+    //                                             label: getcustomField2,
+    //                                             hidden: getchkcustomField2
+    //                                         }
+    //                                     ],
+    //                                     updatedAt: new Date()
+    //                                 }
+    //                             }, function (err, idTag) {
+    //                                 if (err) {}
+    //                                 else {}
+    //                             });
+    //                         } else {
+    //                             CloudPreference.insert({
+    //                                 userid: clientID,
+    //                                 username: clientUsername,
+    //                                 useremail: clientEmail,
+    //                                 PrefGroup: 'salesform',
+    //                                 PrefName: 'new_invoice',
+    //                                 published: true,
+    //                                 customFields: [{
+    //                                         index: '1',
+    //                                         label: getcustomField1,
+    //                                         hidden: getchkcustomField1
+    //                                     }, {
+    //                                         index: '2',
+    //                                         label: getcustomField2,
+    //                                         hidden: getchkcustomField2
+    //                                     }
+    //                                 ],
+    //                                 createdAt: new Date()
+    //                             }, function (err, idTag) {
+    //                                 if (err) {}
+    //                                 else {}
+    //                             });
+    //                         }
+    //                     }
+    //                 } else {};
+
+    //             }).catch(function (err) {
+    //                 $('#html-2-pdfwrapper').css('display', 'none');
+    //                 swal({
+    //                     title: 'Oooops...',
+    //                     text: err,
+    //                     type: 'error',
+    //                     showCancelButton: false,
+    //                     confirmButtonText: 'Try Again'
+    //                 }).then((result) => {
+    //                     if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //                     else if (result.dismiss === 'cancel') {}
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             });
+
+    //         }
+
+    //     },
+    //     'click .chkProductName': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colProductName').css('display', 'table-cell');
+    //             $('.colProductName').css('padding', '.75rem');
+    //             $('.colProductName').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colProductName').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkDescription': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colDescription').css('display', 'table-cell');
+    //             $('.colDescription').css('padding', '.75rem');
+    //             $('.colDescription').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colDescription').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkQty': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colQty').css('display', 'table-cell');
+    //             $('.colQty').css('padding', '.75rem');
+    //             $('.colQty').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colQty').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkUnitPrice': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colUnitPrice').css('display', 'table-cell');
+    //             $('.colUnitPrice').css('padding', '.75rem');
+    //             $('.colUnitPrice').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colUnitPrice').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkCostPrice': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colCostPrice').css('display', 'table-cell');
+    //             $('.colCostPrice').css('padding', '.75rem');
+    //             $('.colCostPrice').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colCostPrice').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkSalesLinesCustField1': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colSalesLinesCustField1').css('display', 'table-cell');
+    //             $('.colSalesLinesCustField1').css('padding', '.75rem');
+    //             $('.colSalesLinesCustField1').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colSalesLinesCustField1').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkTaxRate': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colTaxRate').css('display', 'table-cell');
+    //             $('.colTaxRate').css('padding', '.75rem');
+    //             $('.colTaxRate').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colTaxRate').css('display', 'none');
+    //         }
+    //     },
+    //     'click .chkAmount': function (event) {
+    //         if ($(event.target).is(':checked')) {
+    //             $('.colAmount').css('display', 'table-cell');
+    //             $('.colAmount').css('padding', '.75rem');
+    //             $('.colAmount').css('vertical-align', 'top');
+    //         } else {
+    //             $('.colAmount').css('display', 'none');
+    //         }
+    //     },
+    //     'change .rngRangeProductName': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthProductName").html(range + '%');
+    //         $('.colProductName').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeDescription': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthDescription").html(range + '%');
+    //         $('.colDescription').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeQty': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthQty").html(range + '%');
+    //         $('.colQty').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeUnitPrice': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthUnitPrice").html(range + '%');
+    //         $('.colUnitPrice').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeTaxRate': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthTaxRate").html(range + '%');
+    //         $('.colTaxRate').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeAmount': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthAmount").html(range + '%');
+    //         $('.colAmount').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeCostPrice': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthCostPrice").html(range + '%');
+    //         $('.colCostPrice').css('width', range + '%');
+
+    //     },
+    //     'change .rngRangeSalesLinesCustField1': function (event) {
+
+    //         let range = $(event.target).val();
+    //         $(".spWidthSalesLinesCustField1").html(range + '%');
+    //         $('.colSalesLinesCustField1').css('width', range + '%');
+
+    //     },
+    //     'blur .divcolumn': function (event) {
+    //         let columData = $(event.target).html();
+    //         let columHeaderUpdate = $(event.target).attr("valueupdate");
+    //         $("" + columHeaderUpdate + "").html(columData);
+
+    //     },
+    //     'click .btnSaveGridSettings': function (event) {
+    //         let lineItems = [];
+    //         $('.columnSettings').each(function (index) {
+    //             var $tblrow = $(this);
+    //             var colTitle = $tblrow.find(".divcolumn").text() || '';
+    //             var colWidth = $tblrow.find(".custom-range").val() || 0;
+    //             var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+    //             var colHidden = false;
+    //             if ($tblrow.find(".custom-control-input").is(':checked')) {
+    //                 colHidden = false;
+    //             } else {
+    //                 colHidden = true;
+    //             }
+    //             let lineItemObj = {
+    //                 index: index,
+    //                 label: colTitle,
+    //                 hidden: colHidden,
+    //                 width: colWidth,
+    //                 thclass: colthClass
+    //             }
+
+    //             lineItems.push(lineItemObj);
+    //         });
+
+    //         var getcurrentCloudDetails = CloudUser.findOne({
+    //             _id: Session.get('mycloudLogonID'),
+    //             clouddatabaseID: Session.get('mycloudLogonDBID')
+    //         });
+    //         if (getcurrentCloudDetails) {
+    //             if (getcurrentCloudDetails._id.length > 0) {
+    //                 var clientID = getcurrentCloudDetails._id;
+    //                 var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                 var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                 var checkPrefDetails = CloudPreference.findOne({
+    //                     userid: clientID,
+    //                     PrefName: 'tblInvoiceLine'
+    //                 });
+    //                 if (checkPrefDetails) {
+    //                     CloudPreference.update({
+    //                         _id: checkPrefDetails._id
+    //                     }, {
+    //                         $set: {
+    //                             userid: clientID,
+    //                             username: clientUsername,
+    //                             useremail: clientEmail,
+    //                             PrefGroup: 'salesform',
+    //                             PrefName: 'tblInvoiceLine',
+    //                             published: true,
+    //                             customFields: lineItems,
+    //                             updatedAt: new Date()
+    //                         }
+    //                     }, function (err, idTag) {
+    //                         if (err) {
+    //                             $('#myModal2').modal('toggle');
+    //                         } else {
+    //                             $('#myModal2').modal('toggle');
+
+    //                         }
+    //                     });
+
+    //                 } else {
+    //                     CloudPreference.insert({
+    //                         userid: clientID,
+    //                         username: clientUsername,
+    //                         useremail: clientEmail,
+    //                         PrefGroup: 'salesform',
+    //                         PrefName: 'tblInvoiceLine',
+    //                         published: true,
+    //                         customFields: lineItems,
+    //                         createdAt: new Date()
+    //                     }, function (err, idTag) {
+    //                         if (err) {
+    //                             $('#myModal2').modal('toggle');
+    //                         } else {
+    //                             $('#myModal2').modal('toggle');
+
+    //                         }
+    //                     });
+
+    //                 }
+    //             }
+    //         }
+    //         $('#myModal2').modal('toggle');
+    //     },
+    //     'click .btnResetGridSettings': function (event) {
+    //         var getcurrentCloudDetails = CloudUser.findOne({
+    //             _id: Session.get('mycloudLogonID'),
+    //             clouddatabaseID: Session.get('mycloudLogonDBID')
+    //         });
+    //         if (getcurrentCloudDetails) {
+    //             if (getcurrentCloudDetails._id.length > 0) {
+    //                 var clientID = getcurrentCloudDetails._id;
+    //                 var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                 var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                 var checkPrefDetails = CloudPreference.findOne({
+    //                     userid: clientID,
+    //                     PrefName: 'tblInvoiceLine'
+    //                 });
+    //                 if (checkPrefDetails) {
+    //                     CloudPreference.remove({
+    //                         _id: checkPrefDetails._id
+    //                     }, function (err, idTag) {
+    //                         if (err) {}
+    //                         else {
+    //                             Meteor._reload.reload();
+    //                         }
+    //                     });
+
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     'click .btnResetSettings': function (event) {
+    //         var getcurrentCloudDetails = CloudUser.findOne({
+    //             _id: Session.get('mycloudLogonID'),
+    //             clouddatabaseID: Session.get('mycloudLogonDBID')
+    //         });
+    //         if (getcurrentCloudDetails) {
+    //             if (getcurrentCloudDetails._id.length > 0) {
+    //                 var clientID = getcurrentCloudDetails._id;
+    //                 var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                 var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                 var checkPrefDetails = CloudPreference.findOne({
+    //                     userid: clientID,
+    //                     PrefName: 'new_invoice'
+    //                 });
+    //                 if (checkPrefDetails) {
+    //                     CloudPreference.remove({
+    //                         _id: checkPrefDetails._id
+    //                     }, function (err, idTag) {
+    //                         if (err) {}
+    //                         else {
+    //                             Meteor._reload.reload();
+    //                         }
+    //                     });
+
+    //                 }
+    //             }
+    //         }
+    //     },
+    //     'click .new_attachment_btn': function (event) {
+    //         $('#attachment-upload').trigger('click');
+
+    //     },
+    //     'change #attachment-upload': function (e) {
+    //         let templateObj = Template.instance();
+    //         let saveToTAttachment = false;
+    //         let lineIDForAttachment = false;
+    //         let uploadedFilesArray = templateObj.uploadedFiles.get();
+    //         let myFiles = $('#attachment-upload')[0].files;
+    //         let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
+    //         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
+    //         templateObj.attachmentCount.set(uploadData.totalAttachments);
+    //     },
+    //     'click .img_new_attachment_btn': function (event) {
+    //         $('#img-attachment-upload').trigger('click');
+
+    //     },
+    //     'change #img-attachment-upload': function (e) {
+    //         let templateObj = Template.instance();
+    //         let saveToTAttachment = false;
+    //         let lineIDForAttachment = false;
+    //         let uploadedFilesArray = templateObj.uploadedFiles.get();
+
+    //         let myFiles = $('#img-attachment-upload')[0].files;
+    //         let uploadData = utilityService.attachmentUpload(uploadedFilesArray, myFiles, saveToTAttachment, lineIDForAttachment);
+    //         templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
+    //         templateObj.attachmentCount.set(uploadData.totalAttachments);
+    //     },
+    //     'click .remove-attachment': function (event, ui) {
+    //         let tempObj = Template.instance();
+    //         let attachmentID = parseInt(event.target.id.split('remove-attachment-')[1]);
+    //         if (tempObj.$("#confirm-action-" + attachmentID).length) {
+    //             tempObj.$("#confirm-action-" + attachmentID).remove();
+    //         } else {
+    //             let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">' +
+    //                 'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
+    //             tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
+    //         }
+    //         tempObj.$("#new-attachment2-tooltip").show();
+
+    //     },
+    //     'click .file-name': function (event) {
+    //         let attachmentID = parseInt(event.currentTarget.parentNode.id.split('attachment-name-')[1]);
+    //         let templateObj = Template.instance();
+    //         let uploadedFiles = templateObj.uploadedFiles.get();
+    //         $('#myModalAttachment').modal('hide');
+    //         let previewFile = {};
+    //         let input = uploadedFiles[attachmentID].fields.Description;
+    //         previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
+    //         previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
+    //         let type = uploadedFiles[attachmentID].fields.Description;
+    //         if (type === 'application/pdf') {
+    //             previewFile.class = 'pdf-class';
+    //         } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    //             previewFile.class = 'docx-class';
+    //         } else if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    //             previewFile.class = 'excel-class';
+    //         } else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+    //             previewFile.class = 'ppt-class';
+    //         } else if (type === 'application/vnd.oasis.opendocument.formula' || type === 'text/csv' || type === 'text/plain' || type === 'text/rtf') {
+    //             previewFile.class = 'txt-class';
+    //         } else if (type === 'application/zip' || type === 'application/rar' || type === 'application/x-zip-compressed' || type === 'application/x-zip,application/x-7z-compressed') {
+    //             previewFile.class = 'zip-class';
+    //         } else {
+    //             previewFile.class = 'default-class';
+    //         }
+
+    //         if (type.split('/')[0] === 'image') {
+    //             previewFile.image = true
+    //         } else {
+    //             previewFile.image = false
+    //         }
+    //         templateObj.uploadedFile.set(previewFile);
+
+    //         $('#files_view').modal('show');
+
+    //         return;
+    //     },
+    //     'click .confirm-delete-attachment': function (event, ui) {
+    //         let tempObj = Template.instance();
+    //         tempObj.$("#new-attachment2-tooltip").show();
+    //         let attachmentID = parseInt(event.target.id.split('delete-attachment-')[1]);
+    //         let uploadedArray = tempObj.uploadedFiles.get();
+    //         let attachmentCount = tempObj.attachmentCount.get();
+    //         $('#attachment-upload').val('');
+    //         uploadedArray.splice(attachmentID, 1);
+    //         tempObj.uploadedFiles.set(uploadedArray);
+    //         attachmentCount--;
+    //         if (attachmentCount === 0) {
+    //             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+    //             $('#file-display').html(elementToAdd);
+    //         }
+    //         tempObj.attachmentCount.set(attachmentCount);
+    //         if (uploadedArray.length > 0) {
+    //             let utilityService = new UtilityService();
+    //             utilityService.showUploadedAttachment(uploadedArray);
+    //         } else {
+    //             $(".attchment-tooltip").show();
+    //         }
+    //     },
+    //     'click #btn_Attachment': function () {
+    //         let templateInstance = Template.instance();
+    //         let uploadedFileArray = templateInstance.uploadedFiles.get();
+    //         if (uploadedFileArray.length > 0) {
+    //             let utilityService = new UtilityService();
+    //             utilityService.showUploadedAttachment(uploadedFileArray);
+    //         } else {
+    //             $(".attchment-tooltip").show();
+    //         }
+    //     },
+    //     'click #btnPayment': function () {
+
+    //         var currenturl = FlowRouter.current().path;
+    //         var getcurrent_id = currenturl.split('?id=');
+    //         var currentId = getcurrent_id[getcurrent_id.length - 1];
+    //         let templateObject = Template.instance();
+    //         let customername = $('#edtCustomerName');
+    //         let salesService = new SalesBoardService();
+    //         let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
+    //         if (termname === '') {
+    //             swal('Terms has not been selected!', '', 'warning');
+    //             event.preventDefault();
+    //             return false;
+    //         }
+    //         if (customername.val() === '') {
+    //             swal('Customer has not been selected!', '', 'warning');
+    //             e.preventDefault();
+    //         } else {
+    //             $('.fullScreenSpin').css('display', 'inline-block');
+    //             var splashLineArray = new Array();
+    //             let lineItemsForm = [];
+    //             let lineItems = [];
+    //             let lineItemObjForm = {};
+    //             var erpGet = erpDb();
+    //             var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+
+    //             var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+    //             let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+    //             let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+
+    //             let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    //             $('#tblInvoiceLine > tbody > tr').each(function () {
+    //                 var lineID = this.id;
+    //                 let tdproduct = $('#' + lineID + " .lineProductName").val();
+    //                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
+    //                 let tdQty = $('#' + lineID + " .lineQty").val();
+
+    //                 let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+
+    //                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+    //                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+    //                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+    //                 let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+    //                 lineItemObj = {
+    //                     description: tddescription || '',
+    //                     quantity: tdQty || 0,
+    //                     unitPrice: tdunitprice.toLocaleString(undefined, {
+    //                         minimumFractionDigits: 2
+    //                     }) || 0
+    //                 }
+
+    //                 lineItems.push(lineItemObj);
+
+    //                 if (tdproduct != "") {
+
+    //                     if (checkBackOrder == true) {
+    //                         lineItemObjForm = {
+    //                             type: "TInvoiceLine",
+    //                             fields: {
+    //                                 ProductName: tdproduct || '',
+    //                                 ProductDescription: tddescription || '',
+    //                                 UOMQtySold: parseFloat(tdOrderd) || 0,
+    //                                 UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                 Headershipdate: saleDate,
+    //                                 LineTaxCode: tdtaxCode || '',
+    //                                 DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                             }
+    //                         };
+    //                     } else {
+    //                         lineItemObjForm = {
+    //                             type: "TInvoiceLine",
+    //                             fields: {
+    //                                 ProductName: tdproduct || '',
+    //                                 ProductDescription: tddescription || '',
+    //                                 UOMQtySold: parseFloat(tdQty) || 0,
+    //                                 UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                 LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                 Headershipdate: saleDate,
+    //                                 LineTaxCode: tdtaxCode || '',
+    //                                 DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                             }
+    //                         };
+    //                     }
+
+    //                     lineItemsForm.push(lineItemObjForm);
+    //                     splashLineArray.push(lineItemObjForm);
+    //                 }
+    //             });
+
+    //             let getchkcustomField1 = true;
+    //             let getchkcustomField2 = true;
+    //             let getcustomField1 = $('.customField1Text').html();
+    //             let getcustomField2 = $('.customField2Text').html();
+    //             if ($('#formCheck-one').is(':checked')) {
+    //                 getchkcustomField1 = false;
+    //             }
+    //             if ($('#formCheck-two').is(':checked')) {
+    //                 getchkcustomField2 = false;
+    //             }
+
+    //             let customer = $('#edtCustomerName').val();
+    //             let customerEmail = $('#edtCustomerEmail').val();
+    //             let billingAddress = $('#txabillingAddress').val();
+
+    //             let poNumber = $('#ponumber').val();
+    //             let reference = $('#edtRef').val();
+
+    //             let departement = $('#sltDept').val();
+    //             let shippingAddress = $('#txaShipingInfo').val();
+    //             let comments = $('#txaComment').val();
+    //             let pickingInfrmation = $('#txapickmemo').val();
+
+    //             let saleCustField1 = $('#edtSaleCustField1').val()||'';
+    //             let saleCustField2 = $('#edtSaleCustField2').val()||'';
+    //             let saleCustField3 = $('#edtSaleCustField3').val()||'';
+    //             var url = FlowRouter.current().path;
+    //             var getso_id = url.split('?id=');
+    //             var currentInvoice = getso_id[getso_id.length - 1];
+    //             let uploadedItems = templateObject.uploadedFiles.get();
+    //             var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    //             var objDetails = '';
+    //             if (getso_id[1]) {
+    //                 currentInvoice = parseInt(currentInvoice);
+    //                 objDetails = {
+    //                     type: "TInvoiceEx",
+    //                     fields: {
+    //                         ID: currentInvoice,
+    //                         CustomerName: customer,
+    //                         ForeignExchangeCode: currencyCode,
+    //                         Lines: splashLineArray,
+    //                         InvoiceToDesc: billingAddress,
+    //                         SaleDate: saleDate,
+    //                         CustPONumber: poNumber,
+    //                         ReferenceNo: reference,
+    //                         TermsName: termname,
+    //                         SaleClassName: departement,
+    //                         ShipToDesc: shippingAddress,
+    //                         Comments: comments,
+    //                         SaleCustField1: saleCustField1,
+    //                         SaleCustField2: saleCustField2,
+    //                         SaleCustField3: saleCustField3,
+    //                         PickMemo: pickingInfrmation,
+    //                         Attachments: uploadedItems,
+    //                         SalesStatus: $('#sltStatus').val()
+    //                     }
+    //                 };
+    //             } else {
+    //                 objDetails = {
+    //                     type: "TInvoiceEx",
+    //                     fields: {
+    //                         CustomerName: customer,
+    //                         ForeignExchangeCode: currencyCode,
+    //                         Lines: splashLineArray,
+    //                         InvoiceToDesc: billingAddress,
+    //                         SaleDate: saleDate,
+    //                         CustPONumber: poNumber,
+    //                         ReferenceNo: reference,
+    //                         TermsName: termname,
+    //                         SaleClassName: departement,
+    //                         ShipToDesc: shippingAddress,
+    //                         Comments: comments,
+    //                         SaleCustField1: saleCustField1,
+    //                         SaleCustField2: saleCustField2,
+    //                         SaleCustField3: saleCustField3,
+    //                         PickMemo: pickingInfrmation,
+    //                         Attachments: uploadedItems,
+    //                         SalesStatus: $('#sltStatus').val()
+    //                     }
+    //                 };
+    //             }
+    //             salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
+    //                 var customerID = $('#edtCustomerEmail').attr('customerid');
+    //                 $('#html-2-pdfwrapper').css('display', 'block');
+    //                 $('.pdfCustomerName').html($('#edtCustomerName').val());
+    //                 $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+    //                 async function addAttachment() {
+    //                     let attachment = [];
+    //                     let templateObject = Template.instance();
+
+    //                     let invoiceId = objDetails.fields.ID;
+    //                     let encodedPdf = await generatePdfForMail(invoiceId);
+    //                     let pdfObject = "";
+    //                     var reader = new FileReader();
+    //                     reader.readAsDataURL(encodedPdf);
+    //                     reader.onloadend = function () {
+    //                         var base64data = reader.result;
+    //                         base64data = base64data.split(',')[1];
+    //                         pdfObject = {
+    //                             filename: 'invoice-' + invoiceId + '.pdf',
+    //                             content: base64data,
+    //                             encoding: 'base64'
+    //                         };
+    //                         attachment.push(pdfObject);
+    //                         let erpInvoiceId = objDetails.fields.ID;
+
+    //                         let mailFromName = Session.get('vs1companyName');
+    //                         let mailFrom = localStorage.getItem('VS1OrgEmail') || localStorage.getItem('VS1AdminUserName');
+    //                         let customerEmailName = $('#edtCustomerName').val();
+    //                         let checkEmailData = $('#edtCustomerEmail').val();
+    //                         let grandtotal = $('#grandTotal').html();
+    //                         let amountDueEmail = $('#totalBalanceDue').html();
+    //                         let emailDueDate = $("#dtDueDate").val();
+    //                         let customerBillingAddress = $('#txabillingAddress').val();
+    //                         let customerTerms = $('#sltTerms').val();
+
+    //                         let customerSubtotal = $('#subtotal_total').html();
+    //                         let customerTax = $('#subtotal_tax').html();
+    //                         let customerNett = $('#subtotal_nett').html();
+    //                         let customerTotal = $('#grandTotal').html();
+    //                         let mailSubject = 'Invoice ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
+    //                         let mailBody = "Hi " + customerEmailName + ",\n\n Here's invoice " + erpInvoiceId + " for  " + grandtotal + "." +
+    //                             "\n\nThe amount outstanding of " + amountDueEmail + " is due on " + emailDueDate + "." +
+    //                             "\n\nIf you have any questions, please let us know : " + mailFrom + ".\n\nThanks,\n" + mailFromName;
+
+    //                         var htmlmailBody = ' <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+    //                             '        <tr>' +
+    //                             '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+    //                             '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+    //                             '                    <table class="main">' +
+    //                             '                        <tr>' +
+    //                             '                            <td class="wrapper">' +
+    //                             '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+    //                             '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' + erpInvoiceId + ' Details</span>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr style="height: 16px;"></tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td>' +
+    //                             '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr style="height: 48px;"></tr>' +
+    //                             '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+    //                             '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+    //                             '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' + emailDueDate + '</p>' +
+    //                             '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+    //                             '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                             '                                                <tbody>' +
+    //                             '                                                    <tr>' +
+    //                             '                                                        <td align="center" style="padding-bottom: 15px;">' +
+    //                             '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                             '                                                                <tbody>' +
+    //                             '                                                                    <tr>' +
+    //                             '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                             '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                             '                                                                    </tr>' +
+    //                             '                                                                </tbody>' +
+    //                             '                                                            </table>' +
+    //                             '                                                        </td>' +
+    //                             '                                                    </tr>' +
+    //                             '                                                </tbody>' +
+    //                             '                                            </table>' +
+    //                             '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                             '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+    //                             '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+    //                             '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+    //                             '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr style="background-color: #ededed;">' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                             '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                             '                                                <div style="width: 50%; float: left;">' +
+    //                             '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+    //                             '                                                </div>' +
+    //                             '                                                <div style="width: 50%; float: right;">' +
+    //                             '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+    //                             '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+    //                             '                                                </div>' +
+    //                             '                                            </div>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr style="background-color: #ededed;">' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                             '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                             '                                            <div style="width: 100%; padding: 16px 0px;">' +
+    //                             '                                                <div style="width: 50%; float: left;">' +
+    //                             '                                                    <p style="font-size: 18px;">Terms</p>' +
+    //                             '                                                </div>' +
+    //                             '                                                <div style="width: 50%; float: right;">' +
+    //                             '                                                    <p style="font-size: 18px;">' + customerTerms + '</p>' +
+    //                             '                                                </div>' +
+    //                             '                                            </div>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                             '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                             '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+    //                             '                                                <div style="width: 50%; float: left;">' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+    //                             '                                                </div>' +
+    //                             '                                                <div style="width: 50%; float: right; text-align: right;">' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+    //                             '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+    //                             '                                                </div>' +
+    //                             '                                            </div>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+    //                             '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+    //                             '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                             '                                                <tbody>' +
+    //                             '                                                    <tr>' +
+    //                             '                                                        <td align="center">' +
+    //                             '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                             '                                                                <tbody>' +
+    //                             '                                                                    <tr>' +
+    //                             '                                                                        <td> <a href="' + stripeGlobalURL + '' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+    //                             '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+    //                             '                                                                    </tr>' +
+    //                             '                                                                </tbody>' +
+    //                             '                                                            </table>' +
+    //                             '                                                        </td>' +
+    //                             '                                                    </tr>' +
+    //                             '                                                </tbody>' +
+    //                             '                                            </table>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td class="content-block" style="padding: 16px 32px;">' +
+    //                             '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                    <tr>' +
+    //                             '                                        <td>' +
+    //                             '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+    //                             '                                                <tbody>' +
+    //                             '                                                    <tr>' +
+    //                             '                                                        <td align="center">' +
+    //                             '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+    //                             '                                                                <tbody>' +
+    //                             '                                                                    <tr>' +
+    //                             '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+    //                             '                                                                    </tr>' +
+    //                             '                                                                </tbody>' +
+    //                             '                                                            </table>' +
+    //                             '                                                        </td>' +
+    //                             '                                                    </tr>' +
+    //                             '                                                </tbody>' +
+    //                             '                                            </table>' +
+    //                             '                                        </td>' +
+    //                             '                                    </tr>' +
+    //                             '                                </table>' +
+    //                             '                            </td>' +
+    //                             '                        </tr>' +
+    //                             '                    </table>' +
+    //                             '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+    //                             '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+    //                             '                            <tr>' +
+    //                             '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+    //                             '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+    //                             '                                    <br>' +
+    //                             '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+    //                             '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+    //                             '                                </td>' +
+    //                             '                            </tr>' +
+    //                             '                        </table>' +
+    //                             '                    </div>' +
+    //                             '                </div>' +
+    //                             '            </td>' +
+    //                             '        </tr>' +
+    //                             '    </table>';
+
+    //                         if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
+    //                             Meteor.call('sendEmail', {
+    //                                 from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                 to: checkEmailData,
+    //                                 subject: mailSubject,
+    //                                 text: '',
+    //                                 html: htmlmailBody,
+    //                                 attachments: attachment
+    //                             }, function (error, result) {
+    //                                 if (error && error.error === "error") {}
+    //                                 else {}
+    //                             });
+
+    //                             Meteor.call('sendEmail', {
+    //                                 from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                 to: mailFrom,
+    //                                 subject: mailSubject,
+    //                                 text: '',
+    //                                 html: htmlmailBody,
+    //                                 attachments: attachment
+    //                             }, function (error, result) {
+    //                                 if (error && error.error === "error") {}
+    //                                 else {
+    //                                     $('#html-2-pdfwrapper').css('display', 'none');
+    //                                     swal({
+    //                                         title: 'SUCCESS',
+    //                                         text: "Email Sent To Customer: " + checkEmailData + " and User: " + mailFrom + "",
+    //                                         type: 'success',
+    //                                         showCancelButton: false,
+    //                                         confirmButtonText: 'OK'
+    //                                     }).then((result) => {
+    //                                         if (result.value) {}
+    //                                         else if (result.dismiss === 'cancel') {}
+    //                                     });
+
+    //                                 }
+    //                             });
+
+    //                         } else if (($('.chkEmailCopy').is(':checked'))) {
+    //                             Meteor.call('sendEmail', {
+    //                                 from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                 to: checkEmailData,
+    //                                 subject: mailSubject,
+    //                                 text: '',
+    //                                 html: htmlmailBody,
+    //                                 attachments: attachment
+    //                             }, function (error, result) {
+    //                                 if (error && error.error === "error") {}
+    //                                 else {
+    //                                     $('#html-2-pdfwrapper').css('display', 'none');
+    //                                     swal({
+    //                                         title: 'SUCCESS',
+    //                                         text: "Email Sent To Customer: " + checkEmailData + " ",
+    //                                         type: 'success',
+    //                                         showCancelButton: false,
+    //                                         confirmButtonText: 'OK'
+    //                                     }).then((result) => {
+    //                                         if (result.value) {}
+    //                                         else if (result.dismiss === 'cancel') {}
+    //                                     });
+
+    //                                 }
+    //                             });
+
+    //                         } else if (($('.chkEmailRep').is(':checked'))) {
+    //                             Meteor.call('sendEmail', {
+    //                                 from: "" + mailFromName + " <" + mailFrom + ">",
+    //                                 to: mailFrom,
+    //                                 subject: mailSubject,
+    //                                 text: '',
+    //                                 html: htmlmailBody,
+    //                                 attachments: attachment
+    //                             }, function (error, result) {
+    //                                 if (error && error.error === "error") {}
+    //                                 else {
+    //                                     $('#html-2-pdfwrapper').css('display', 'none');
+    //                                     swal({
+    //                                         title: 'SUCCESS',
+    //                                         text: "Email Sent To User: " + mailFrom + " ",
+    //                                         type: 'success',
+    //                                         showCancelButton: false,
+    //                                         confirmButtonText: 'OK'
+    //                                     }).then((result) => {
+    //                                         if (result.value) {}
+    //                                         else if (result.dismiss === 'cancel') {}
+    //                                     });
+
+    //                                 }
+    //                             });
+
+    //                         } else {};
+    //                     };
+
+    //                 }
+    //                 addAttachment();
+
+    //                 function generatePdfForMail(invoiceId) {
+    //                     return new Promise((resolve, reject) => {
+    //                         let templateObject = Template.instance();
+    //                         let completeTabRecord;
+    //                         let doc = new jsPDF('p', 'pt', 'a4');
+    //                         doc.setFontSize(18);
+    //                         var source = document.getElementById('html-2-pdfwrapper');
+    //                         doc.addHTML(source, function () {
+    //                             resolve(doc.output('blob'));
+    //                             $('#html-2-pdfwrapper').css('display', 'none');
+    //                         });
+    //                     });
+    //                 }
+    //                 if (customerID !== " ") {};
+    //                 let linesave = objDetails.fields.ID;
+    //                 var getcurrentCloudDetails = CloudUser.findOne({
+    //                     _id: Session.get('mycloudLogonID'),
+    //                     clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                 });
+    //                 if (getcurrentCloudDetails) {
+    //                     if (getcurrentCloudDetails._id.length > 0) {
+    //                         var clientID = getcurrentCloudDetails._id;
+    //                         var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                         var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                         var checkPrefDetails = CloudPreference.findOne({
+    //                             userid: clientID,
+    //                             PrefName: 'new_invoice'
+    //                         });
+    //                         if (checkPrefDetails) {
+    //                             CloudPreference.update({
+    //                                 _id: checkPrefDetails._id
+    //                             }, {
+    //                                 $set: {
+    //                                     username: clientUsername,
+    //                                     useremail: clientEmail,
+    //                                     PrefGroup: 'salesform',
+    //                                     PrefName: 'new_invoice',
+    //                                     published: true,
+    //                                     customFields: [{
+    //                                             index: '1',
+    //                                             label: getcustomField1,
+    //                                             hidden: getchkcustomField1
+    //                                         }, {
+    //                                             index: '2',
+    //                                             label: getcustomField2,
+    //                                             hidden: getchkcustomField2
+    //                                         }
+    //                                     ],
+    //                                     updatedAt: new Date()
+    //                                 }
+    //                             }, function (err, idTag) {
+    //                                 if (err) {}
+    //                                 else {}
+    //                             });
+    //                         } else {
+    //                             CloudPreference.insert({
+    //                                 userid: clientID,
+    //                                 username: clientUsername,
+    //                                 useremail: clientEmail,
+    //                                 PrefGroup: 'salesform',
+    //                                 PrefName: 'new_invoice',
+    //                                 published: true,
+    //                                 customFields: [{
+    //                                         index: '1',
+    //                                         label: getcustomField1,
+    //                                         hidden: getchkcustomField1
+    //                                     }, {
+    //                                         index: '2',
+    //                                         label: getcustomField2,
+    //                                         hidden: getchkcustomField2
+    //                                     }
+    //                                 ],
+    //                                 createdAt: new Date()
+    //                             }, function (err, idTag) {
+    //                                 if (err) {}
+    //                                 else {}
+    //                             });
+    //                         }
+    //                     }
+    //                 } else {}
+
+    //                 sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
+    //                     addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
+    //                         window.open('/paymentcard?invid=' + linesave, '_self');
+    //                     }).catch(function (err) {
+    //                         window.open('/paymentcard?invid=' + linesave, '_self');
+    //                     });
+    //                 }).catch(function (err) {
+    //                     window.open('/paymentcard?invid=' + linesave, '_self');
+    //                 });
+
+    //             }).catch(function (err) {
+    //                 swal({
+    //                     title: 'Oooops...',
+    //                     text: err,
+    //                     type: 'error',
+    //                     showCancelButton: false,
+    //                     confirmButtonText: 'Try Again'
+    //                 }).then((result) => {
+    //                     if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //                     else if (result.dismiss === 'cancel') {}
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             });
+    //         }
+
+    //     },
+    //     'click #btnViewPayment': async function() {
+    //         let templateObject = Template.instance();
+    //         let salesService = new SalesBoardService();
+    //           $('.fullScreenSpin').css('display', 'inline-block');
+    //         let paymentID = "";
+    //         var url = FlowRouter.current().path;
+    //         var getso_id = url.split('?id=');
+    //         var currentInvoice = getso_id[getso_id.length - 1];
+    //         let paymentData = await salesService.getCheckPaymentLineByTransID(currentInvoice) || '';
+
+    //         if(paymentData){
+    //           for(let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
+    //             if (paymentData.tcustomerpaymentline.length > 1) {
+    //                 paymentID = paymentData.tcustomerpaymentline[x].fields.Payment_ID;
+    //                 window.open('/paymentcard?id=' + paymentID, '_self');
+    //             } else {
+    //                 paymentID = paymentData.tcustomerpaymentline[0].fields.Payment_ID;
+    //                 window.open('/paymentcard?id=' + paymentID, '_self');
+    //            }
+    //           }
+
+    //         }else{
+    //         $('.fullScreenSpin').css('display', 'none');
+    //         }
+
+    //     },
+    //     'click .btnTransactionPaid': async function () {
+    //       let templateObject = Template.instance();
+    //       let salesService = new SalesBoardService();
+    //       $('.fullScreenSpin').css('display', 'inline-block');
+    //       let  selectedSupplierPaymentID = [];
+    //       let paymentID = "";
+    //       var url = FlowRouter.current().path;
+    //       var getso_id = url.split('?id=');
+    //       var currentInvoice = getso_id[getso_id.length - 1];
+    //       let suppliername = $('#edtCustomerName').val() || '';
+    //       let paymentData = await salesService.getCheckPaymentLineByTransID(currentInvoice) || '';
+    //       if(paymentData){
+    //       for(let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
+    //               if (paymentData.tcustomerpaymentline.length > 1) {
+    //                       paymentID = paymentData.tcustomerpaymentline[x].fields.Payment_ID;
+    //                       selectedSupplierPaymentID.push(paymentID);
+    //               } else {
+    //                       paymentID = paymentData.tcustomerpaymentline[0].fields.Payment_ID;
+    //                       window.open('/paymentcard?id=' + paymentID, '_self');
+    //               }
+    //       }
+
+    //       setTimeout(function () {
+    //         let selectPayID = selectedSupplierPaymentID;
+    //         window.open('/customerpayment?payment=' + selectPayID +'&name=' + suppliername, '_self');
+    //       }, 500);
+    //     }else{
+    //       $('.fullScreenSpin').css('display', 'none');
+    //     }
+    //     },
+    //     'click .btnBack': function (event) {
+
+    //         event.preventDefault();
+    //         history.back(1);
+    //     },
+    //     'click #btnCopyInvoice': function () {
+    //         $('.fullScreenSpin').css('display', 'inline-block');
+    //         var url = FlowRouter.current().path;
+    //         if ((url.indexOf('?id=') > 0) || (url.indexOf('?copyquid=') > 0) || (url.indexOf('?copyinvid='))) {
+    //             let templateObject = Template.instance();
+    //             let customername = $('#edtCustomerName');
+    //             let salesService = new SalesBoardService();
+    //             let termname = $('#sltTerms').val() || templateObject.defaultsaleterm.get();
+    //             if (termname === '') {
+    //                 swal('Terms has not been selected!', '', 'warning');
+    //                 event.preventDefault();
+    //                 return false;
+    //             }
+
+    //             if (customername.val() === '') {
+    //                 swal('Customer has not been selected!', '', 'warning');
+    //                 e.preventDefault();
+    //             } else {
+    //                 $('.fullScreenSpin').css('display', 'inline-block');
+    //                 var splashLineArray = new Array();
+    //                 let lineItemsForm = [];
+    //                 let lineItems = [];
+    //                 let lineItemObjForm = {};
+    //                 var erpGet = erpDb();
+    //                 var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+    //                 var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
+    //                 let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+    //                 let dueDate = duedateTime.getFullYear() + "-" + (duedateTime.getMonth() + 1) + "-" + duedateTime.getDate();
+
+    //                 let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    //                 $('#tblInvoiceLine > tbody > tr').each(function () {
+    //                     var lineID = this.id;
+    //                     let tdproduct = $('#' + lineID + " .lineProductName").val();
+    //                     let tddescription = $('#' + lineID + " .lineProductDesc").text();
+    //                     let tdQty = $('#' + lineID + " .lineQty").val();
+
+    //                     let tdOrderd = $('#' + lineID + " .lineOrdered").val();
+
+    //                     let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+    //                     let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+    //                     let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+    //                     let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+    //                     lineItemObj = {
+    //                         description: tddescription || '',
+    //                         quantity: tdQty || 0,
+    //                         unitPrice: tdunitprice.toLocaleString(undefined, {
+    //                             minimumFractionDigits: 2
+    //                         }) || 0
+    //                     }
+
+    //                     lineItems.push(lineItemObj);
+
+    //                     if (tdproduct != "") {
+
+    //                         if (checkBackOrder == true) {
+    //                             lineItemObjForm = {
+    //                                 type: "TInvoiceLine",
+    //                                 fields: {
+    //                                     ProductName: tdproduct || '',
+    //                                     ProductDescription: tddescription || '',
+    //                                     UOMQtySold: parseFloat(tdOrderd) || 0,
+    //                                     UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                     LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                     Headershipdate: saleDate,
+    //                                     LineTaxCode: tdtaxCode || '',
+    //                                     DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                                 }
+    //                             };
+    //                         } else {
+    //                             lineItemObjForm = {
+    //                                 type: "TInvoiceLine",
+    //                                 fields: {
+    //                                     ProductName: tdproduct || '',
+    //                                     ProductDescription: tddescription || '',
+    //                                     UOMQtySold: parseFloat(tdQty) || 0,
+    //                                     UOMQtyShipped: parseFloat(tdQty) || 0,
+    //                                     LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+    //                                     Headershipdate: saleDate,
+    //                                     LineTaxCode: tdtaxCode || '',
+    //                                     DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").text()) || 0
+    //                                 }
+    //                             };
+    //                         }
+
+    //                         lineItemsForm.push(lineItemObjForm);
+    //                         splashLineArray.push(lineItemObjForm);
+    //                     }
+    //                 });
+    //                 let getchkcustomField1 = true;
+    //                 let getchkcustomField2 = true;
+    //                 let getcustomField1 = $('.customField1Text').html();
+    //                 let getcustomField2 = $('.customField2Text').html();
+    //                 if ($('#formCheck-one').is(':checked')) {
+    //                     getchkcustomField1 = false;
+    //                 }
+    //                 if ($('#formCheck-two').is(':checked')) {
+    //                     getchkcustomField2 = false;
+    //                 }
+
+    //                 let customer = $('#edtCustomerName').val();
+    //                 let customerEmail = $('#edtCustomerEmail').val();
+    //                 let billingAddress = $('#txabillingAddress').val();
+
+    //                 let poNumber = $('#ponumber').val();
+    //                 let reference = $('#edtRef').val();
+
+    //                 let departement = $('#sltDept').val();
+    //                 let shippingAddress = $('#txaShipingInfo').val();
+    //                 let comments = $('#txaComment').val();
+    //                 let pickingInfrmation = $('#txapickmemo').val();
+
+    //                 let saleCustField1 = $('#edtSaleCustField1').val()||'';
+    //                 let saleCustField2 = $('#edtSaleCustField2').val()||'';
+    //                 let saleCustField3 = $('#edtSaleCustField3').val()||'';
+    //                 var url = FlowRouter.current().path;
+    //                 var getso_id = url.split('?id=');
+    //                 var currentInvoice = getso_id[getso_id.length - 1];
+    //                 let uploadedItems = templateObject.uploadedFiles.get();
+    //                 var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    //                 var objDetails = '';
+    //                 if (getso_id[1]) {
+    //                     currentInvoice = parseInt(currentInvoice);
+    //                     objDetails = {
+    //                         type: "TInvoiceEx",
+    //                         fields: {
+    //                             ID: currentInvoice,
+    //                             CustomerName: customer,
+    //                             ForeignExchangeCode: currencyCode,
+    //                             Lines: splashLineArray,
+    //                             InvoiceToDesc: billingAddress,
+    //                             SaleDate: saleDate,
+    //                             CustPONumber: poNumber,
+    //                             Converted: true,
+    //                             ReferenceNo: reference,
+    //                             TermsName: termname,
+    //                             SaleClassName: departement,
+    //                             ShipToDesc: shippingAddress,
+    //                             Comments: comments,
+    //                             SaleCustField1: saleCustField1,
+    //                             SaleCustField2: saleCustField2,
+    //                             SaleCustField3: saleCustField3,
+    //                             PickMemo: pickingInfrmation,
+    //                             Attachments: uploadedItems,
+    //                             SalesStatus: $('#sltStatus').val()
+    //                         }
+    //                     };
+    //                 } else {
+    //                     objDetails = {
+    //                         type: "TInvoiceEx",
+    //                         fields: {
+    //                             CustomerName: customer,
+    //                             ForeignExchangeCode: currencyCode,
+    //                             Lines: splashLineArray,
+    //                             InvoiceToDesc: billingAddress,
+    //                             SaleDate: saleDate,
+    //                             CustPONumber: poNumber,
+    //                             Converted: true,
+    //                             ReferenceNo: reference,
+    //                             TermsName: termname,
+    //                             SaleClassName: departement,
+    //                             ShipToDesc: shippingAddress,
+    //                             Comments: comments,
+    //                             SaleCustField1: saleCustField1,
+    //                             SaleCustField2: saleCustField2,
+    //                             SaleCustField3: saleCustField3,
+    //                             PickMemo: pickingInfrmation,
+    //                             Attachments: uploadedItems
+    //                         }
+    //                     };
+    //                 }
+
+    //                 salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
+    //                     var customerID = $('#edtCustomerEmail').attr('customerid');
+    //                     if (customerID !== " ") {
+    //                         let customerEmailData = {
+    //                             type: "TCustomer",
+    //                             fields: {
+    //                                 ID: customerID,
+    //                                 Email: customerEmail
+    //                             }
+    //                         }
+    //                         // salesService.saveCustomerEmail(customerEmailData).then(function(customerEmailData) {});
+    //                     };
+    //                     let linesave = objDetails.fields.ID;
+    //                     var getcurrentCloudDetails = CloudUser.findOne({
+    //                         _id: Session.get('mycloudLogonID'),
+    //                         clouddatabaseID: Session.get('mycloudLogonDBID')
+    //                     });
+    //                     if (getcurrentCloudDetails) {
+    //                         if (getcurrentCloudDetails._id.length > 0) {
+    //                             var clientID = getcurrentCloudDetails._id;
+    //                             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //                             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //                             var checkPrefDetails = CloudPreference.findOne({
+    //                                 userid: clientID,
+    //                                 PrefName: 'new_invoice'
+    //                             });
+    //                             if (checkPrefDetails) {
+    //                                 CloudPreference.update({
+    //                                     _id: checkPrefDetails._id
+    //                                 }, {
+    //                                     $set: {
+    //                                         username: clientUsername,
+    //                                         useremail: clientEmail,
+    //                                         PrefGroup: 'salesform',
+    //                                         PrefName: 'new_invoice',
+    //                                         published: true,
+    //                                         customFields: [{
+    //                                                 index: '1',
+    //                                                 label: getcustomField1,
+    //                                                 hidden: getchkcustomField1
+    //                                             }, {
+    //                                                 index: '2',
+    //                                                 label: getcustomField2,
+    //                                                 hidden: getchkcustomField2
+    //                                             }
+    //                                         ],
+    //                                         updatedAt: new Date()
+    //                                     }
+    //                                 }, function (err, idTag) {
+    //                                     if (err) {
+    //                                         window.open('/invoicecard?copyinvid=' + linesave, '_self');
+    //                                     } else {
+    //                                         window.open('/invoicecard?copyinvid=' + linesave, '_self');
+
+    //                                     }
+    //                                 });
+    //                             } else {
+    //                                 CloudPreference.insert({
+    //                                     userid: clientID,
+    //                                     username: clientUsername,
+    //                                     useremail: clientEmail,
+    //                                     PrefGroup: 'salesform',
+    //                                     PrefName: 'new_invoice',
+    //                                     published: true,
+    //                                     customFields: [{
+    //                                             index: '1',
+    //                                             label: getcustomField1,
+    //                                             hidden: getchkcustomField1
+    //                                         }, {
+    //                                             index: '2',
+    //                                             label: getcustomField2,
+    //                                             hidden: getchkcustomField2
+    //                                         }
+    //                                     ],
+    //                                     createdAt: new Date()
+    //                                 }, function (err, idTag) {
+    //                                     if (err) {
+    //                                         window.open('/invoicecard?copyinvid=' + linesave, '_self');
+    //                                     } else {
+    //                                         window.open('/invoicecard?copyinvid=' + linesave, '_self');
+
+    //                                     }
+    //                                 });
+    //                             }
+    //                         }
+    //                     } else {
+    //                         window.open('/invoicecard?copyinvid=' + linesave, '_self');
+    //                     }
+
+    //                 }).catch(function (err) {
+    //                     swal({
+    //                         title: 'Oooops...',
+    //                         text: err,
+    //                         type: 'error',
+    //                         showCancelButton: false,
+    //                         confirmButtonText: 'Try Again'
+    //                     }).then((result) => {
+    //                         if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //                         else if (result.dismiss === 'cancel') {}
+    //                     });
+
+    //                     $('.fullScreenSpin').css('display', 'none');
+    //                 });
+
+    //             }
+    //         } else {
+
+    //             window.open('/invoicecard', '_self');
+    //         }
+    //     },
+    //     'click .chkEmailCopy': function (event) {
+    //         $('#edtCustomerEmail').val($('#edtCustomerEmail').val().replace(/\s/g, ''));
+    //         if ($(event.target).is(':checked')) {
+    //             let checkEmailData = $('#edtCustomerEmail').val();
+
+    //             if (checkEmailData.replace(/\s/g, '') === '') {
+    //                 swal('Customer Email cannot be blank!', '', 'warning');
+    //                 event.preventDefault();
+    //             } else {
+
+    //                 function isEmailValid(mailTo) {
+    //                     return /^[A-Z0-9'.1234z_%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(mailTo);
+    //                 };
+    //                 if (!isEmailValid(checkEmailData)) {
+    //                     swal('The email field must be a valid email address !', '', 'warning');
+
+    //                     event.preventDefault();
+    //                     return false;
+    //                 } else {}
+    //             }
+    //         } else {}
+    //     },
+    //     'click .btnSnLotmodal': function(event) {
+    //         $('.fullScreenSpin').css('display', 'inline-block');
+    //         var target = event.target;
+    //         let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+    //         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
+    //         localStorage.setItem('productItem', selectedunit);
+    //         let productService = new ProductService();
+    //         if (selectedProductName == '') {
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             swal('You have to select Product.', '', 'info');
+    //             event.preventDefault();
+    //             return false;
+    //         } else {
+    //             productService.getProductStatus(selectedProductName).then(function(data) {
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+    //                     swal('', 'The product ' + selectedProductName + ' does not track Lot Number, Bin Location or Serial Number', 'info');
+    //                     event.preventDefault();
+    //                     return false;
+    //                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+    //                     $('#lotNumberModal').modal('show');
+    //                 } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+    //                     $('#serialNumberModal').modal('show');
+    //                 }
+    //             });
+    //         }
+    //     }
+    // });
 
     Template.registerHelper('equals', function (a, b) {
         return a === b;
