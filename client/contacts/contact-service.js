@@ -316,7 +316,7 @@ export class ContactService extends BaseService {
   getAllLeadSideDataVS1() {
       let options = {
           PropertyList: "ID,ClientName,CompanyName,Active",
-          select: "[Active]=true"
+          select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true"
       };
       return this.getList(this.ERPObjects.TProspectVS1, options);
   }
