@@ -3290,7 +3290,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?id=' + customerID);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
 
         }
@@ -3300,7 +3300,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?id=' + customerID);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
         } else {
 
         }
@@ -3310,7 +3310,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/appointments?id=' + customerID);
+            FlowRouter.go('/appointments?customerid=' + customerID);
         } else {
 
         }
@@ -3320,7 +3320,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/quotecard?id=' + customerID);
+            FlowRouter.go('/quotecard?customerid=' + customerID);
         } else {
 
         }
@@ -3330,7 +3330,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/salesordercard?id=' + customerID);
+            FlowRouter.go('/salesordercard?customerid=' + customerID);
         } else {
 
         }
@@ -3340,7 +3340,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/invoicecard?id=' + customerID);
+            FlowRouter.go('/invoicecard?customerid=' + customerID);
         } else {
 
         }
@@ -3350,7 +3350,7 @@ Template.customerscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/refundcard?id=' + customerID);
+            FlowRouter.go('/refundcard?customerid=' + customerID);
         } else {
 
         }
