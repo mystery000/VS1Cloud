@@ -6558,14 +6558,17 @@ Template.appointments.events({
         let calOptions = templateObject.globalSettings.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || '';
         $('#frmAppointment')[0].reset();
+        console.log('here');
         let element = $(event.target);
         if (element.is("p") || element.is(".card-body")) {
+          console.log('here 1');
             var id = parseInt($(event.target).closest('.card').attr('id'));
             var appointmentData = templateObject.appointmentrecords.get();
             var result = appointmentData.filter(apmt => {
                 return apmt.id == id
             });
             let hours = 0;
+            if (result.length > 0) {
             if (result[0].aStartTime != '' && result[0].aEndTime != '') {
                 var startTime = moment(result[0].startDate.split(' ')[0] + ' ' + result[0].aStartTime);
                 var endTime = moment(result[0].endDate.split(' ')[0] + ' ' + result[0].aEndTime);
@@ -6575,7 +6578,7 @@ Template.appointments.events({
 
             let hoursFormatted = templateObject.timeFormat(hours) || '';
             let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || '';
-
+            console.log(result);
             if (result[0].isPaused == "Paused") {
                 $(".paused").show();
                 $("#btnHold").prop("disabled", true);
@@ -6583,25 +6586,42 @@ Template.appointments.events({
                 $(".paused").hide();
                 $("#btnHold").prop("disabled", false);
             }
-            $(".paused").hide();
-            $("#btnHold").prop("disabled", false);
-            $("#btnStartAppointment").prop("disabled", false)
-            $("#btnStopAppointment").prop("disabled", false);
-            $("#startTime").prop("disabled", false);
-            $("#endTime").prop("disabled", false);
-            $("#tActualStartTime").prop("disabled", false);
-            $("#tActualEndTime").prop("disabled", false);
-            $("#txtActualHoursSpent").prop("disabled", false);
-            if (result[0].aEndTime != "") {
+
+            if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
                 $("#btnHold").prop("disabled", true);
-                $("#btnStartAppointment").prop("disabled", true);
-                $("#btnStopAppointment").prop("disabled", true);
-                $("#startTime").prop("disabled", true)
-                $("#endTime").prop("disabled", true);
-                $("#tActualStartTime").prop("disabled", true);
-                $("#tActualEndTime").prop("disabled", true);
-                $("#txtActualHoursSpent").prop("disabled", true);
             }
+
+            if (result[0].aEndTime != "") {
+                     $("#btnHold").prop("disabled", true);
+                     $("#btnStartAppointment").prop("disabled", true);
+                     $("#btnStopAppointment").prop("disabled", true);
+                     $("#startTime").prop("disabled", true);
+                     $("#endTime").prop("disabled", true);
+                     $("#tActualStartTime").prop("disabled", true);
+                     $("#tActualEndTime").prop("disabled", true);
+                     $("#txtActualHoursSpent").prop("disabled", true);
+                 }
+                 if (result[0].aEndTime != "") {
+                     $("#btnHold").prop("disabled", true);
+                     $("#btnStartAppointment").prop("disabled", true);
+                     $("#btnStopAppointment").prop("disabled", true);
+                     $("#startTime").prop("disabled", true);
+                     $("#endTime").prop("disabled", true);
+                     $("#tActualStartTime").prop("disabled", true);
+                     $("#tActualEndTime").prop("disabled", true);
+                     $("#txtActualHoursSpent").prop("disabled", true);
+                 }
+
+            // $(".paused").hide();
+            // $("#btnHold").prop("disabled", false);
+            // $("#btnStartAppointment").prop("disabled", false)
+            // $("#btnStopAppointment").prop("disabled", false);
+            // $("#startTime").prop("disabled", false);
+            // $("#endTime").prop("disabled", false);
+            // $("#tActualStartTime").prop("disabled", false);
+            // $("#tActualEndTime").prop("disabled", false);
+            // $("#txtActualHoursSpent").prop("disabled", false);
+
             var resultEmpData = getAllEmployeeData.filter(empDataObj => {
             	return empDataObj.employeeName == result[0].employeename
             });
@@ -6643,7 +6663,9 @@ Template.appointments.events({
             document.getElementById("txtActualHoursSpent").value = hoursFormatted || '';
 
             $('#event-modal').modal();
+          }
         } else {
+          console.log('here 2');
             let bookingDate = new Date();
             let startTime = ("0" + bookingDate.getHours()).slice(-2) + ":" + ("0" + bookingDate.getMinutes()).slice(-2);
             let defaultDuration = parseInt(calOptions.DefaultApptDuration) || 2;
