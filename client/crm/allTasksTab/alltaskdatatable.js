@@ -1,3 +1,4 @@
+import "../../lib/global/indexdbstorage.js";
 import { CRMService } from "../crm-service";
 let crmService = new CRMService();
 
@@ -602,13 +603,14 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.getInitialAllTaskList = function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    crmService
-      .getAllTaskList()
-      .then(function (data) {
-        if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+    getVS1Data("TCRMTaskList")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          templateObject.getAllTaskList();
+        } else {
+          let data = JSON.parse(dataObject[0].data);
           let today = moment().format("YYYY-MM-DD");
           let all_records = data.tprojecttasks;
-          // all_records = all_records.filter(item => item.fields.ProjectID == 11);
           templateObject.allWithCompletedRecords.set(all_records);
 
           all_records = all_records.filter(
@@ -641,15 +643,10 @@ Template.alltaskdatatable.onRendered(function () {
           }, 1000);
 
           $(".fullScreenSpin").css("display", "none");
-        } else {
-          $(".crm_all_count").text(0);
-          $(".crm_today_count").text(0);
-          $(".crm_upcoming_count").text(0);
-          $(".fullScreenSpin").css("display", "none");
         }
       })
       .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
+        templateObject.getAllTaskList();
       });
   };
 
@@ -691,13 +688,18 @@ Template.alltaskdatatable.onRendered(function () {
           setTimeout(() => {
             templateObject.initTable();
           }, 500);
+
+          addVS1Data("TCRMTaskList", JSON.stringify(data));
         } else {
           $(".crm_all_count").text(0);
           $(".crm_today_count").text(0);
           $(".crm_upcoming_count").text(0);
         }
+        $(".fullScreenSpin").css("display", "none");
       })
-      .catch(function (err) {});
+      .catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
   };
 
   templateObject.getInitialAllTaskList();
@@ -892,6 +894,66 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   // labels tab --------------
+  templateObject.getInitAllLabels = function () {
+    getVS1Data("TCRMLabelList")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          templateObject.getAllLabels();
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if (
+            data.tprojecttask_tasklabel &&
+            data.tprojecttask_tasklabel.length > 0
+          ) {
+            let alllabels = data.tprojecttask_tasklabel;
+            templateObject.alllabels.set(alllabels);
+
+            let label_dropdowns = "";
+            let detail_label_dropdowns = "";
+            let labelName = "";
+            alllabels.forEach((lbl) => {
+              labelName =
+                lbl.fields.TaskLabelName.length < 20
+                  ? lbl.fields.TaskLabelName
+                  : lbl.fields.TaskLabelName.substring(0, 19) + "...";
+
+              label_dropdowns += `<a class="dropdown-item add_label" data-id="${lbl.fields.ID}">
+              <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+                <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
+                  <div class="custom-control custom-checkbox chkBox pointer"
+                    style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
+                    <input class="custom-control-input chkBox chkAddLabel pointer" type="checkbox"
+                      id="add_label_${lbl.fields.ID}" name="${lbl.fields.ID}" value="" data-id="${lbl.fields.ID}">
+                    <label class="custom-control-label chkBox pointer" for="add_label_${lbl.fields.ID}" data-id="${lbl.fields.ID}"></label>
+                  </div>
+                </div>
+              </a>`;
+              detail_label_dropdowns += `<a class="dropdown-item detail_label" data-id="${lbl.fields.ID}">
+              <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+                <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
+                  <div class="custom-control custom-checkbox chkBox pointer"
+                    style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
+                    <input class="custom-control-input chkBox chkDetailLabel pointer" type="checkbox"
+                      id="detail_label_${lbl.fields.ID}" name="${lbl.fields.ID}" value="" data-id="${lbl.fields.ID}">
+                    <label class="custom-control-label chkBox pointer" for="detail_label_${lbl.fields.ID}" data-id="${lbl.fields.ID}"></label>
+                  </div>
+                </div>
+              </a>`;
+            });
+            $("#addTaskLabelWrapper").html(label_dropdowns);
+            $(".detailTaskLabelWrapper").html(detail_label_dropdowns);
+            templateObject.initLabelsTable();
+          } else {
+            templateObject.initLabelsTable();
+            templateObject.alllabels.set([]);
+          }
+        }
+      })
+      .catch(function (err) {
+        templateObject.getAllLabels();
+      });
+  };
+
   templateObject.getAllLabels = function () {
     crmService
       .getAllLabels()
@@ -942,6 +1004,7 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.initLabelsTable();
           templateObject.alllabels.set([]);
         }
+        addVS1Data("TCRMLabelList", JSON.stringify(data));
       })
       .catch(function (err) {});
   };
@@ -1031,7 +1094,7 @@ Template.alltaskdatatable.onRendered(function () {
     });
   };
 
-  templateObject.getAllLabels();
+  templateObject.getInitAllLabels();
 
   templateObject.makeLabelTableRows = function (task_array) {
     let taskRows = new Array();
@@ -1057,6 +1120,66 @@ Template.alltaskdatatable.onRendered(function () {
   // labels tab ----------------- //
 
   // projects tab -------------------
+  templateObject.getInitTProjectList = function () {
+    getVS1Data("TCRMProjectList")
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          templateObject.getTProjectList();
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          if (data.tprojectlist && data.tprojectlist.length > 0) {
+            let tprojectlist = data.tprojectlist;
+            let all_projects = data.tprojectlist;
+
+            tprojectlist = tprojectlist.filter(
+              (proj) => proj.fields.Active == true && proj.fields.ID != 11
+            );
+            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+            templateObject.all_projects.set(all_projects);
+
+            let add_projectlist = `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="11" data-projectname="All Tasks"><i class="fas fa-inbox text-primary no-modal"
+            style="margin-right: 8px;"></i>All Tasks</a>`;
+            let ProjectName = "";
+            tprojectlist.forEach((proj) => {
+              ProjectName =
+                proj.fields.ProjectName.length > 26
+                  ? proj.fields.ProjectName.substring(0, 26) + "..."
+                  : proj.fields.ProjectName;
+              add_projectlist += `<a class="dropdown-item setProjectIDAdd no-modal" data-projectid="${proj.fields.ID}" data-projectname="${proj.fields.ProjectName}"><i class="fas fa-circle no-modal" style="margin-right: 8px; color: ${proj.fields.ProjectColour};"></i>${ProjectName}</a>`;
+            });
+            $("#goProjectWrapper").html(add_projectlist);
+            $(".goProjectWrapper").html(add_projectlist);
+
+            let active_projects = all_projects.filter(
+              (project) => project.fields.Active == true
+            );
+            let deleted_projects = all_projects.filter(
+              (project) => project.fields.Active == false
+            );
+            let favorite_projects = active_projects.filter(
+              (project) => project.fields.AddToFavourite == true
+            );
+
+            templateObject.active_projects.set(active_projects);
+            templateObject.deleted_projects.set(deleted_projects);
+            templateObject.favorite_projects.set(favorite_projects);
+
+            $(".crm_project_count").html(active_projects.length);
+
+            setTimeout(() => {
+              templateObject.initProjectsTable();
+            }, 100);
+          } else {
+            templateObject.tprojectlist.set([]);
+            $(".crm_project_count").html(0);
+          }
+        }
+      })
+      .catch(function (err) {
+        templateObject.getTProjectList();
+      });
+  };
+
   templateObject.getTProjectList = function () {
     crmService
       .getTProjectList()
@@ -1107,6 +1230,7 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.tprojectlist.set([]);
           $(".crm_project_count").html(0);
         }
+        addVS1Data("TCRMProjectList", JSON.stringify(data));
       })
       .catch(function (err) {});
   };
@@ -1227,7 +1351,7 @@ Template.alltaskdatatable.onRendered(function () {
     });
   };
 
-  templateObject.getTProjectList();
+  templateObject.getInitTProjectList();
 
   templateObject.makeProjectTableRows = function (task_array) {
     let taskRows = new Array();
