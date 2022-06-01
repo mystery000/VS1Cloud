@@ -658,21 +658,21 @@ Template.leadscard.onRendered(function () {
         }
     };
 
-    sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
-      addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
-        resolve({success: true, ...res});
-      }).catch(function (err) {resolve({success: false, ...err})});
-    });
     // Save and load Indexdb. Comment out cause it is not needed. Data already saved
-      // contactService.saveCustomerEx(objCustomerDetails).then((res) => {
-      //   sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
-      //     addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
-      //       resolve({success: true, ...res});
-      //     }).catch(function (err) {resolve({success: false, ...err})});
-      //   });
-      // }).catch(err => resolve({success: false, ...err}));
-      //
-      // });
+
+      contactService.saveCustomerEx(objCustomerDetails).then((res) => {
+        sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+          addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+            resolve({success: true, ...res});
+          }).catch(function (err) {resolve({success: false, ...err})});
+        });
+      }).catch(err => resolve({success: false, ...err}));
+      sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+        addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+          resolve({success: true, ...res});
+        }).catch(function (err) {resolve({success: false, ...err})});
+      });
+      });
   };
 });
 
