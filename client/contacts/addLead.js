@@ -570,6 +570,110 @@ Template.leadscard.onRendered(function () {
         }
     }
 
+    templateObject.saveCustomerDetails = async function () { //Rasheed
+      return new Promise((resolve) => {
+      let leadName = $('#edtLeadEmployeeName').val()||'';
+      let email = $('#edtLeadEmail').val()||'';
+      let title = $('#edtTitle').val()||'';
+      let firstname = $('#edtFirstName').val()||'';
+      let middlename = $('#edtMiddleName').val()||'';
+      let lastname = $('#edtLastName').val()||'';
+      let phone = $('#edtLeadPhone').val()||'';
+      let mobile = $('#edtLeadMobile').val()||'';
+      let fax = $('#edtLeadFax').val()||'';
+      let skype = $('#edtSkypeID').val()||'';
+      let website = $('#edtWebsite').val()||'';
+
+      let streetAddress = $('#edtShippingAddress').val()||'';
+      let city = $('#edtShippingCity').val()||'';
+      let state = $('#edtShippingState').val()||'';
+      let postalcode = $('#edtShippingZIP').val()||'';
+      let country = $('#sedtCountry').val()||'';
+      let suburb = $('#edtShippingSuburb').val()||'';
+      let bstreetAddress = '';
+      let bcity = '';
+      let bstate = '';
+      let bzipcode = '';
+      let bcountry = '';
+      let bsuburb = '';
+      let isSupplier = !!$('#chkSameAsSupplier').is(':checked');
+      if ($('#chkSameAsShipping2').is(':checked')) {
+          bstreetAddress = streetAddress;
+          bcity = city;
+          bstate = state;
+          bzipcode = postalcode;
+          bcountry = country;
+          bsuburb = suburb;
+      } else {
+          bstreetAddress = $('#edtBillingAddress').val()||'';
+          bcity = $('#edtBillingCity').val()||'';
+          bstate = $('#edtBillingState').val()||'';
+          bzipcode = $('#edtBillingZIP').val()||'';
+          bcountry = $('#bedtCountry').val()||'';
+          bsuburb = $('#edtBillingSuburb').val()||'';
+      };
+      let notes = $('#txaNotes').val()||'';
+
+      let uploadedItems = templateObject.uploadedFiles.get()||'';
+      let objCustomerDetails = '';
+      objCustomerDetails = {
+        type: "TCustomerEx",
+        fields: {
+            Title: title,
+            ClientName: leadName,
+            FirstName: firstname,
+            CUSTFLD10: middlename,
+            LastName: lastname,
+            PublishOnVS1: true,
+            Email: email,
+            Phone: phone,
+            Mobile: mobile,
+            SkypeName: skype,
+            Faxnumber: fax,
+            // ClientTypeName: customerType,
+            Street: streetAddress,
+            Street2: city,
+            Suburb: city,
+            State: state,
+            PostCode: postalcode,
+            Country: country,
+            BillStreet: bstreetAddress,
+            BillStreet2: bcity,
+            BillState: bstate,
+            BillPostCode: bzipcode,
+            Billcountry: bcountry,
+            // IsSupplier:isSupplier,
+            Notes: notes,
+            URL: website,
+            // PaymentMethodName: sltPaymentMethodName,
+            // TermsName: sltTermsName,
+            // ShippingMethodName: sltShippingMethodName,
+            TaxCodeName: "NT",
+            Attachments: uploadedItems,
+            // CUSTFLD1: custField1,
+            // CUSTFLD2: custField2,
+            // CUSTFLD3: custField3,
+            // CUSTFLD4: custField4,
+            // Discount:parseFloat(permanentDiscount)||0
+        }
+    };
+
+    sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+      addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+        resolve({success: true, ...res});
+      }).catch(function (err) {resolve({success: false, ...err})});
+    });
+    // Save and load Indexdb. Comment out cause it is not needed. Data already saved
+      // contactService.saveCustomerEx(objCustomerDetails).then((res) => {
+      //   sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+      //     addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+      //       resolve({success: true, ...res});
+      //     }).catch(function (err) {resolve({success: false, ...err})});
+      //   });
+      // }).catch(err => resolve({success: false, ...err}));
+      //
+      // });
+  };
 });
 
 Template.leadscard.events({
@@ -1277,11 +1381,13 @@ Template.leadscard.events({
         }
         $('#deleteLeadModal').modal('toggle');
     },
-    'click .btnQuote': function (event) {
+    'click .btnQuote': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        const templateObject = Template.instance();
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
+        let customerName = $('#edtLeadEmployeeName').val()||'';
         if (!isNaN(currentId.id)) {
             let currentLead = parseInt(currentId.id);
             objDetails = {
@@ -1291,9 +1397,11 @@ Template.leadscard.events({
                     IsCustomer: true
                 }
             };
-            contactService.saveProspectEx(objDetails).then(function (data) {
+            contactService.saveProspectEx(objDetails).then(async function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/quotecard?customerid=' + customerID);
+                await templateObject.saveCustomerDetails();
+                $('.fullScreenSpin').css('display','none');
+                FlowRouter.go('/quotecard?custname=' + customerName);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
