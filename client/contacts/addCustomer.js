@@ -962,8 +962,6 @@ Template.customerscard.onRendered(function () {
         });
     };
     function setTaxCodesList(data) {
-        let records = [];
-        let inventoryData = [];
         for (let i = 0; i < data.ttaxcodevs1.length; i++) {
             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
             const dataList = [
@@ -979,7 +977,7 @@ Template.customerscard.onRendered(function () {
             taxCodesList.push(taxcoderecordObj);
             splashArrayTaxRateList.push(dataList);
         }
-        templateObject.taxraterecords.set(taxCodesList);
+        templateObject.taxCodeList.set(taxCodesList);
         if (splashArrayTaxRateList) {
             $('#tblTaxRate').DataTable({
                 data: splashArrayTaxRateList,
@@ -1032,7 +1030,7 @@ Template.customerscard.onRendered(function () {
                         added = true;
                         setOneCustomerDataEx(useData[i]);
                         setTimeout(function () {
-                            var rowCount = $('.results tbody tr').length;
+                            const rowCount = $('.results tbody tr').length;
                             $('.counter').text(rowCount + ' items');
                         }, 500);
                     }
@@ -1047,6 +1045,39 @@ Template.customerscard.onRendered(function () {
             contactService.getOneCustomerDataEx(customerID).then(function (data) {
                 $('.fullScreenSpin').css('display', 'none');
                 setOneCustomerDataEx(data);
+            });
+        });
+    };
+    templateObject.getEmployeeDataByName = function () {
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                    setOneCustomerDataEx(data.tcustomer[0]);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tcustomervs1;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ClientName) === parseInt(customerID)) {
+                        added = true;
+                        setOneCustomerDataEx(useData[i]);
+                        setTimeout(function () {
+                            const rowCount = $('.results tbody tr').length;
+                            $('.counter').text(rowCount + ' items');
+                        }, 500);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                        setOneCustomerDataEx(data.tcustomer[0]);
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneCustomerDataExByName(customerID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setOneCustomerDataEx(data.tcustomer[0]);
             });
         });
     };
@@ -1256,7 +1287,7 @@ Template.customerscard.onRendered(function () {
             templateObject.getEmployeeData();
         } else if((currentId.name)){
             customerID = currentId.name.replace(/%20/g, " ");
-            templateObject.getEmployeeData();
+            templateObject.getEmployeeDataByName();
         } else if (!isNaN(currentId.jobid)) {
             customerID = currentId.jobid;
             templateObject.getEmployeeData();
@@ -3220,8 +3251,7 @@ Template.customerscard.events({
     },
     'click .btnDeleteCustomer': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        let contactService2 = new ContactService();
+        let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
@@ -3233,7 +3263,7 @@ Template.customerscard.events({
                     Active: false
                 }
             };
-            contactService2.saveCustomerEx(objDetails).then(function (objDetails) {
+            contactService.saveCustomerEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/customerlist?success=true');
             }).catch(function (err) {
                 swal({
@@ -3254,7 +3284,77 @@ Template.customerscard.events({
             FlowRouter.go('/customerlist?success=true');
         }
         $('#deleteCustomerModal').modal('toggle');
-    }
+    },
+    'click .btnCustomerTask': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerEmail': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerAppointment': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/appointments?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerQuote': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/quotecard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerSalesOrder': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/salesordercard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerInvoice': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/invoicecard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnCustomerRefund': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/refundcard?customerid=' + customerID);
+        } else {
+
+        }
+    },
 });
 
 Template.customerscard.helpers({

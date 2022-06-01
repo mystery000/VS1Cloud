@@ -385,7 +385,7 @@
                                             </div>
                                         </div>
                                         {{#if equals isSNTrackChecked true}}
-                                        
+
                                         <div class="col-md-4 col-sm-12 d-flex pr-2">
                                             <div class="">
                                                 <div class="custom-control custom-switch d-flex">
@@ -414,7 +414,7 @@
                                         </div>
                                         {{/if}}
                                     </div>
-                                    
+
                                     <div id="trackdiv">
                                         <div class="trackItem" style="{{#if includeInventory}}{{#if isTrackChecked}}display: block;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
                                             <div class="form-group" style="margin: 4px;width: 250px;">
@@ -440,21 +440,69 @@
                                 </div>
                             </div>
                             <div class="row trackItem" style="{{#if includeInventory}}{{#if isTrackChecked}}display: flex;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}">
-                                <div class="col-lg-4 col-sm-6 col-6" style="padding-right: 0px; padding-left: 0px;">
-                                    <div class="form-group" style="margin: 4px;"><label>Department</label></div>
+                                <div class="col-4" style="padding-left: 0px; padding-right: 0px;">
+                                    <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>Department</label></div>
                                 </div>
-                                <div class="col-lg-4 col-sm-6 col-6" style="padding-right: 0px;">
-                                    <div class="form-group" style="margin: 4px;"><label>Quantity</label></div>
-                                </div>
-                                {{#each item in productqtyrecords}}
-                                <div class="col-12" style="padding-right: 0px; padding-left: 0px;">
+                                <div class="col-8">
                                     <div class="row">
-                                        <div class="col-lg-4 col-sm-6 col-6">
-                                            <div class="form-group" style="margin: 4px;"><label style="display: none;">Deparment</label><input type="text" class="form-control" style="width: 250px;" value="{{item.department}}"></div>
+                                        <!-- <div class="col-2" style="">
+                                            <div class="form-group" style="margin: ;"><label>Quantity</label></div>
+                                        </div> -->
+                                        <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>Available</label></div>
                                         </div>
-                                        <div class="col-lg-4 col-sm-6 col-6">
-                                            <div class="form-group" style="margin: 4px;"><label style="display: none;">Quantity</label><input type="text" class="form-control trackProdQty" style="width: 150px;" value="{{item.quantity}}"></div>
+                                        <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>On SO</label></div>
                                         </div>
+                                        <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>On Bo</label></div>
+                                        </div>
+                                        <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>In Stock</label></div>
+                                        </div>
+                                        <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px; margin-bottom: 0px;"><label>On Order</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{#each item in productqtyrecords}}
+                                <div class="col-12" style="">
+                                    <div class="row">
+                                        <div class="col-4" style="padding-left: 0px; padding-right: 0px;">
+                                            <div class="form-group" style="margin: 4px;">
+                                                <label style="display: none;">Deparment</label>
+                                                <input type="text" class="form-control" value="{{item.department}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <!-- <div class="col-2" style="">
+                                                    <div class="form-group" style="margin: ;"><input type="text" class="form-control trackProdQty" value="{{item.quantity}}"></div>
+                                                </div> -->
+                                                <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                                    <div class="form-group" style="margin: 4px;"><input type="text" class="form-control trackProd" value=""></div>
+                                                </div>
+                                                <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                                    <div class="form-group" style="margin: 4px;"><input type="text" class="form-control trackProd" value=""></div>
+                                                </div>
+                                                <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                                    <div class="form-group" style="margin: 4px;"><input type="text" class="form-control trackProd" value=""></div>
+                                                </div>
+                                                <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                                    <div class="form-group" style="margin: 4px;"><input type="text" class="form-control trackProd" value=""></div>
+                                                </div>
+                                                <div class="col-2" style="padding-left: 0px; padding-right: 0px;">
+                                                    <div class="form-group" style="margin: 4px;"><input type="text" class="form-control trackProd" value=""></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-2">
+                                            <div class="form-group" style="margin: 4px;">
+                                                <label style="display: none;">Quantity</label>
+                                                <input type="text" class="form-control trackProdQty" value="{{item.quantity}}">
+                                            </div>
+                                        </div> -->
                                     </div>
                                 </div>
                                 {{/each}}
@@ -727,7 +775,7 @@
                                 </thead>
                                 <tbody>
                                     {{#each item in tlotnumberList}}
-                                    
+
                                     <tr id="{{item.transactionno}}">
                                         <td class="text-center">{{item.LotNumber}}</td>
                                         <td id="transactiontype" class="text-center">{{item.Status}}</td>

@@ -112,6 +112,23 @@ Template.newsidenav.onCreated(function() {
     templateObject.isSNTrackChecked = new ReactiveVar();
     templateObject.isSNTrackChecked.set(false);
 
+    templateObject.isCRM = new ReactiveVar();
+    templateObject.isCRM.set(false);
+    templateObject.isProductList = new ReactiveVar();
+    templateObject.isProductList.set(false);
+    templateObject.isNewProduct = new ReactiveVar();
+    templateObject.isNewProduct.set(false);
+    templateObject.isNewStockTransfer = new ReactiveVar();
+    templateObject.isNewStockTransfer.set(false);
+    templateObject.isExportProduct = new ReactiveVar();
+    templateObject.isExportProduct.set(false);
+    templateObject.isImportProduct = new ReactiveVar();
+    templateObject.isImportProduct.set(false);
+    templateObject.isStockonHandDemandChart = new ReactiveVar();
+    templateObject.isStockonHandDemandChart.set(false);
+    templateObject.isAppointmentSMS = new ReactiveVar();
+    templateObject.isAppointmentSMS.set(false);
+
     $(document).ready(function() {
         var erpGet = erpDb();
         var LoggedDB = erpGet.ERPDatabase;
@@ -145,6 +162,7 @@ Template.newsidenav.onRendered(function() {
 
     let isPayments = Session.get('CloudPaymentsModule');
     let isContacts = Session.get('CloudContactsModule');
+
     let isAccounts = Session.get('CloudAccountsModule');
     let isReports = Session.get('CloudReportsModule');
     let isSettings = Session.get('CloudSettingsModule');
@@ -167,6 +185,15 @@ Template.newsidenav.onRendered(function() {
     let isAppointmentLaunch = Session.get('CloudAppointmentAppointmentLaunch');
 
     let launchAllocations = Session.get('CloudAppointmentAllocationLaunch');
+
+    let isCRM = Session.get('CloudCRM');
+    let isProductList = Session.get('CloudProdList');
+    let isNewProduct = Session.get('CloudNewProd');
+    let isNewStockTransfer = Session.get('CloudNewStockTransfer');
+    let isExportProduct = Session.get('CloudExportProd');
+    let isImportProduct = Session.get('CloudImportProd');
+    let isStockonHandDemandChart = Session.get('CloudStockOnHand');
+    let isAppointmentSMS = Session.get('CloudApptSMS');
 
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;
@@ -663,6 +690,31 @@ Template.newsidenav.onRendered(function() {
         }
         if (isTopPanel) {
             templateObject.isCloudTopPanelMenu.set(true);
+        }
+
+        if (isCRM) {
+            templateObject.isCRM.set(true);
+        }
+        if (isProductList) {
+            templateObject.isProductList.set(true);
+        }
+        if (isNewProduct) {
+            templateObject.isNewProduct.set(true);
+        }
+        if (isNewStockTransfer) {
+            templateObject.isNewStockTransfer.set(true);
+        }
+        if (isExportProduct) {
+            templateObject.isExportProduct.set(true);
+        }
+        if (isImportProduct) {
+            templateObject.isImportProduct.set(true);
+        }
+        if (isStockonHandDemandChart) {
+            templateObject.isStockonHandDemandChart.set(true);
+        }
+        if (isAppointmentSMS) {
+            templateObject.isAppointmentSMS.set(true);
         }
     }
 
@@ -7412,6 +7464,12 @@ Template.newsidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
+    'click .sidenavleads': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/leadlist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
     'click .inventoryLiHeader': function(event) {
         event.preventDefault();
         FlowRouter.go('/inventorylist');
@@ -7654,4 +7712,28 @@ Template.newsidenav.helpers({
     isSNTrackChecked: () => {
       return Template.instance().isSNTrackChecked.get();
     },
+    includeCRM: () => {
+      return Template.instance().isCRM.get();
+    },
+    isProductList: () => {
+      return Template.instance().isProductList.get();
+    },
+    isNewProduct: () => {
+      return Template.instance().isNewProduct.get();
+    },
+    isNewStockTransfer: () => {
+      return Template.instance().isNewStockTransfer.get();
+    },
+    isExportProduct: () => {
+      return Template.instance().isExportProduct.get();
+    },
+    isImportProduct: () => {
+      return Template.instance().isImportProduct.get();
+    },
+    isStockonHandDemandChart: () => {
+      return Template.instance().isStockonHandDemandChart.get();
+    },
+    isAppointmentSMS: () => {
+      return Template.instance().isAppointmentSMS.get();
+    }
 });

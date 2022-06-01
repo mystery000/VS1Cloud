@@ -11,6 +11,8 @@ const _tabGroup = 9;
 Template.crmoverview.onCreated(function () {
   let templateObject = Template.instance();
   templateObject.crmtaskmitem = new ReactiveVar("all");
+  templateObject.currentTabID = new ReactiveVar("allTasks-tab");
+  templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
 Template.crmoverview.onRendered(function () {
@@ -18,6 +20,7 @@ Template.crmoverview.onRendered(function () {
   let currentId = FlowRouter.current().queryParams.id;
   currentId = currentId ? currentId : "all";
   templateObject.crmtaskmitem.set(currentId);
+  templateObject.currentTabID.set("allTasks-tab");
 
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
@@ -141,20 +144,6 @@ Template.crmoverview.onRendered(function () {
       },
     })
     .disableSelection();
-
-  $(".task_items_wrapper").sortable({
-    handle: ".taskDrag",
-    update: function (event, ui) {
-      var sorted = $("#task_items_wrapper").sortable("serialize", {
-        key: "sort",
-      });
-      var sortedIDs = $("#task_items_wrapper").sortable("toArray");
-
-      let current_id = ui.item[0].id;
-      let prev_id = ui.item[0].previousElementSibling.id;
-      let next_id = ui.item[0].nextElementSibling.id;
-    },
-  });
 });
 
 Template.crmoverview.events({
@@ -213,6 +202,9 @@ Template.crmoverview.events({
     $("#editProjectID").val("");
     $("#txtCrmSubTaskID").val("");
 
+    $(".addTaskModalProjectName").html("All Tasks");
+    $(".lblAddTaskSchedule").html("Schedule");
+
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
     $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
@@ -224,15 +216,23 @@ Template.crmoverview.events({
     $("#newTaskModal").modal("toggle");
   },
 
+  "click .detail_label": function (e) {
+    e.stopPropagation();
+  },
+
+  "click .add_label": function (e) {
+    e.stopPropagation();
+  },
+
   // open task detail modal
   "click .openEditTaskModal": function (e) {
     if (!e.target.classList.contains("no-modal")) {
-      $("#editProjectID").val("");
+      // $("#editProjectID").val("");
 
       let id = e.target.dataset.id;
       let type = e.target.dataset.ttype;
-      let catg = e.target.dataset.catg;
-      let templateObject = Template.instance();
+      // let catg = e.target.dataset.catg;
+      // let templateObject = Template.instance();
       $("#txtCrmSubTaskID").val(id);
 
       $(".fullScreenSpin").css("display", "inline-block");
@@ -253,9 +253,47 @@ Template.crmoverview.events({
               selected_record.TaskDescription
             );
 
-            $("#taskDetailModalCategoryLabel").html(
-              `<i class="fas fa-inbox text-primary" style="margin-right: 5px;"></i>${catg}`
+            let catg = "";
+            let today = moment().format("YYYY-MM-DD");
+            if (selected_record.due_date) {
+              if (selected_record.due_date.substring(0, 10) == today) {
+                catg =
+                  `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
+                  "<span class='text-primary'>Today</span>";
+                $(".taskDueDate").css("color", "#00a3d3");
+              } else if (selected_record.due_date.substring(0, 10) > today) {
+                catg =
+                  `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
+                  "<span class='text-danger'>Upcoming</span>";
+                $(".taskDueDate").css("color", "#1cc88a");
+              } else if (selected_record.due_date.substring(0, 10) < today) {
+                // catg =
+                //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
+                //   "<span class='text-warning'>Overdue</span>";
+                // $(".taskDueDate").css("color", "#e74a3b");
+                catg =
+                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                  "<span class='text-success'>All Tasks</span>";
+                $(".taskDueDate").css("color", "#1cc88a");
+              } else {
+                catg =
+                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                  "<span class='text-success'>All Tasks</span>";
+                $(".taskDueDate").css("color", "#1cc88a");
+              }
+            } else {
+              catg =
+                `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+                "<span class='text-success'>All Tasks</span>";
+              $(".taskDueDate").css("color", "#1cc88a");
+            }
+
+            $(".taskLocation").html(
+              `<a class="taganchor">
+                ${catg}
+              </a>`
             );
+
             $("#taskmodalNameLabel").html(selected_record.TaskName);
             $(".activityAdded").html(
               "Added on " +
@@ -280,7 +318,7 @@ Template.crmoverview.events({
             if (selected_record.TaskLabel) {
               if (selected_record.TaskLabel.fields != undefined) {
                 taskmodalLabels =
-                  '<a class="taganchor" href="">' +
+                  `<a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
                   selected_record.TaskLabel.fields.TaskLabelName +
                   "</a>";
                 $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
@@ -290,7 +328,7 @@ Template.crmoverview.events({
               } else {
                 selected_record.TaskLabel.forEach((lbl) => {
                   taskmodalLabels +=
-                    '<a class="taganchor" href="">' +
+                    `<a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
                     lbl.fields.TaskLabelName +
                     "</a>, ";
                   $("#detail_label_" + lbl.fields.ID).prop("checked", true);
@@ -340,7 +378,7 @@ Template.crmoverview.events({
                 </div>
                 <div class="row justify-content-between">
                   <div class="dueDateTags" style="display: inline-flex;">
-                    <span class="taskDueDate taskOverdue"><i class="far fa-calendar-plus"
+                    <span class="taskDueDate"><i class="far fa-calendar-plus"
                         style="margin-right: 5px;"></i>${sub_due_date}</span>
                     <span class="taskTag"><a class="taganchor" href=""></a></span>
                   </div>
@@ -715,21 +753,362 @@ Template.crmoverview.events({
     Meteor._reload.reload();
   },
 
+  "click .btnSearchCrm": function () {
+    Meteor._reload.reload();
+  },
+
+  "click .btnOpenSettings": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+    let tableName = "";
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        tableName = "tblTodayTaskDatatable";
+        break;
+      case "upcomingTab-tab":
+        tableName = "tblUpcomingTaskDatatable";
+        break;
+      case "projectsTab-tab":
+        tableName = "tblNewProjectsDatatable";
+        break;
+      case "filterLabelsTab-tab":
+        tableName = "tblLabels";
+        break;
+      default:
+        tableName = "tblAllTaskDatatable";
+        break;
+    }
+
+    let templateObject = Template.instance();
+    // var columns = $("#" + tableName + " th");
+    var columns = $("#" + tableName).find("th");
+    const tableHeaderList = [];
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function (i, v) {
+      if (v.hidden == false) {
+        columVisible = true;
+      }
+      if (v.className.includes("hiddenColumn")) {
+        columVisible = false;
+      }
+      sWidth = v.style.width.replace("px", "");
+      // tempcode
+      // columVisible = false;
+      // tempcode
+
+      let datatablerecordObj = {
+        sTitle: v.innerText || "",
+        sWidth: sWidth || "",
+        sIndex: v.cellIndex || "0",
+        sVisible: columVisible || false,
+        sClass: v.className || "",
+      };
+      tableHeaderList.push(datatablerecordObj);
+    });
+
+    templateObject.tableheaderrecords.set(tableHeaderList);
+
+    setTimeout(() => {
+      tableHeaderList.forEach((element) => {
+        $("#chkSalesNo-" + element.sIndex).prop("checked", element.sVisible);
+      });
+    }, 500);
+  },
+
+  "click .chkDatatable": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+    let tableName = "";
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        tableName = "tblTodayTaskDatatable";
+        break;
+      case "upcomingTab-tab":
+        tableName = "tblUpcomingTaskDatatable";
+        break;
+      case "projectsTab-tab":
+        tableName = "tblNewProjectsDatatable";
+        break;
+      case "filterLabelsTab-tab":
+        tableName = "tblLabels";
+        break;
+      default:
+        tableName = "tblAllTaskDatatable";
+        break;
+    }
+
+    var columns = $("#" + tableName).find("th");
+    // var columns = $("#" + tableName + " th");
+    let columnDataValue = $(event.target)
+      .closest("div")
+      .find(".divcolumn")
+      .text();
+
+    $.each(columns, function (i, v) {
+      let className = v.classList;
+      let replaceClass = className[1];
+
+      if (v.innerText == columnDataValue) {
+        if ($(event.target).is(":checked")) {
+          $("#" + tableName)
+            .find("." + replaceClass + "")
+            .css("display", "table-cell");
+          $("#" + tableName)
+            .find("." + replaceClass + "")
+            .removeClass("hiddenColumn");
+          $("#" + tableName)
+            .find("." + replaceClass + "")
+            .css("padding", ".75rem");
+          $("#" + tableName)
+            .find("." + replaceClass + "")
+            .css("vertical-align", "top");
+        } else {
+          // $("#" + tableName)
+          //   .find("." + replaceClass + "")
+          //   .css("display", "none");
+          $("#" + tableName)
+            .find("." + replaceClass + "")
+            .addClass("hiddenColumn");
+        }
+      }
+    });
+  },
+
+  "click .saveTable": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+    let tableName = "";
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        tableName = "tblTodayTaskDatatable";
+        break;
+      case "upcomingTab-tab":
+        tableName = "tblUpcomingTaskDatatable";
+        break;
+      case "projectsTab-tab":
+        tableName = "tblNewProjectsDatatable";
+        break;
+      case "filterLabelsTab-tab":
+        tableName = "tblLabels";
+        break;
+      default:
+        tableName = "tblAllTaskDatatable";
+        break;
+    }
+
+    let lineItems = [];
+    $(".columnSettings").each(function (index) {
+      var $tblrow = $(this);
+      var colTitle = $tblrow.find(".divcolumn").text() || "";
+      var colWidth = $tblrow.find(".custom-range").val() || 0;
+      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+      var colHidden = false;
+      if ($tblrow.find(".custom-control-input").is(":checked")) {
+        colHidden = false;
+      } else {
+        colHidden = true;
+      }
+      let lineItemObj = {
+        index: index,
+        label: colTitle,
+        hidden: colHidden,
+        width: colWidth,
+        thclass: colthClass,
+      };
+
+      lineItems.push(lineItemObj);
+    });
+
+    var getcurrentCloudDetails = CloudUser.findOne({
+      _id: Session.get("mycloudLogonID"),
+      clouddatabaseID: Session.get("mycloudLogonDBID"),
+    });
+    if (getcurrentCloudDetails) {
+      if (getcurrentCloudDetails._id.length > 0) {
+        var clientID = getcurrentCloudDetails._id;
+        var clientUsername = getcurrentCloudDetails.cloudUsername;
+        var clientEmail = getcurrentCloudDetails.cloudEmail;
+        var checkPrefDetails = CloudPreference.findOne({
+          userid: clientID,
+          PrefName: tableName,
+        });
+        if (checkPrefDetails) {
+          CloudPreference.update(
+            { _id: checkPrefDetails._id },
+            {
+              $set: {
+                userid: clientID,
+                username: clientUsername,
+                useremail: clientEmail,
+                PrefGroup: "salesform",
+                PrefName: tableName,
+                published: true,
+                customFields: lineItems,
+                updatedAt: new Date(),
+              },
+            },
+            function (err, idTag) {
+              if (err) {
+                $("#myModal2").modal("toggle");
+              } else {
+                $("#myModal2").modal("toggle");
+              }
+            }
+          );
+        } else {
+          CloudPreference.insert(
+            {
+              userid: clientID,
+              username: clientUsername,
+              useremail: clientEmail,
+              PrefGroup: "salesform",
+              PrefName: tableName,
+              published: true,
+              customFields: lineItems,
+              createdAt: new Date(),
+            },
+            function (err, idTag) {
+              if (err) {
+                $("#myModal2").modal("toggle");
+              } else {
+                $("#myModal2").modal("toggle");
+              }
+            }
+          );
+        }
+      }
+    }
+    $("#myModal2").modal("toggle");
+  },
+
+  "click .resetTable": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+    let tableName = "";
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        tableName = "tblTodayTaskDatatable";
+        break;
+      case "upcomingTab-tab":
+        tableName = "tblUpcomingTaskDatatable";
+        break;
+      case "projectsTab-tab":
+        tableName = "tblNewProjectsDatatable";
+        break;
+      case "filterLabelsTab-tab":
+        tableName = "tblLabels";
+        break;
+      default:
+        tableName = "tblAllTaskDatatable";
+        break;
+    }
+
+    var getcurrentCloudDetails = CloudUser.findOne({
+      _id: Session.get("mycloudLogonID"),
+      clouddatabaseID: Session.get("mycloudLogonDBID"),
+    });
+    if (getcurrentCloudDetails) {
+      if (getcurrentCloudDetails._id.length > 0) {
+        var clientID = getcurrentCloudDetails._id;
+        var clientUsername = getcurrentCloudDetails.cloudUsername;
+        var clientEmail = getcurrentCloudDetails.cloudEmail;
+        var checkPrefDetails = CloudPreference.findOne({
+          userid: clientID,
+          PrefName: tableName,
+        });
+        if (checkPrefDetails) {
+          CloudPreference.remove(
+            { _id: checkPrefDetails._id },
+            function (err, idTag) {
+              if (err) {
+              } else {
+                Meteor._reload.reload();
+              }
+            }
+          );
+        }
+      }
+    }
+  },
+
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblAllTaskDatatable_wrapper .dt-buttons .btntabletocsv").click();
+    let currentTabID = Template.instance().currentTabID.get();
+
+    switch (currentTabID) {
+      case "todayTab-tab":
+        jQuery(
+          "#tblTodayTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "upcomingTab-tab":
+        jQuery(
+          "#tblUpcomingTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "projectsTab-tab":
+        jQuery(
+          "#tblNewProjectsDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+      case "filterLabelsTab-tab":
+        jQuery("#tblLabels_wrapper .dt-buttons .btntabletocsv").click();
+        break;
+      default:
+        jQuery(
+          "#tblAllTaskDatatable_wrapper .dt-buttons .btntabletocsv"
+        ).click();
+        break;
+    }
+
     $(".fullScreenSpin").css("display", "none");
   },
 
   "click .printConfirm": function (event) {
+    let currentTabID = Template.instance().currentTabID.get();
+
     $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf").click();
+    switch (currentTabID) {
+      case "todayTab-tab":
+        jQuery(
+          "#tblTodayTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "upcomingTab-tab":
+        jQuery(
+          "#tblUpcomingTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "projectsTab-tab":
+        jQuery(
+          "#tblNewProjectsDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+      case "filterLabelsTab-tab":
+        jQuery("#tblLabels_wrapper .dt-buttons .btntabletopdf").click();
+        break;
+      default:
+        jQuery(
+          "#tblAllTaskDatatable_wrapper .dt-buttons .btntabletopdf"
+        ).click();
+        break;
+    }
+
     $(".fullScreenSpin").css("display", "none");
+  },
+
+  "click #myAllTablesTab": function (e) {
+    Template.instance().currentTabID.set(e.target.id);
   },
 
   "click .btnMailchimp": function (e) {
     swal(
-      "You are not set up yet, do you wish to create an account with Mail Chimp?",
+      "You are not set up yet, do you wish to create an account with Mail Chimp",
       "",
       "warning"
     );
@@ -749,5 +1128,11 @@ Template.crmoverview.helpers({
   },
   isTaskUpcoming: () => {
     return Template.instance().crmtaskmitem.get() === "upcoming";
+  },
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  currentTabID: () => {
+    return Template.instance().currentTabID.get();
   },
 });

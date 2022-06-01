@@ -857,6 +857,49 @@ $("#login-button").click(function(e){
 
               document.getElementById("error_log").style.display = 'none';
 
+              // Add get sms messaging log when login here
+              const smsSettings = {
+                twilioAccountId: "",
+                twilioAccountToken: "",
+                twilioTelephoneNumber: "",
+            }
+            smsService.getSMSSettings().then((result) => {
+                if (result.terppreference.length > 0) {
+                    for (let i = 0; i < result.terppreference.length; i++) {
+                        switch(result.terppreference[i].PrefName) {
+                            case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                            case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                            case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                        }
+                    }
+                }
+                console.log(smsSettings);
+                $.ajax(
+                    {
+                        method: 'GET',
+                        url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
+                        dataType: 'json',
+                        contentType: 'application/x-www-form-urlencoded', // !
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("Authorization",
+                                "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
+                            );
+                        },
+                        success: function(data) {
+                            console.log('SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                            if (!data.sms_messages) {
+                                addVS1Data('TVS1SMSLogs', data).then((res) => {
+                                    console.log(res);
+                                }).then(error => console.log(error));
+                            }
+                        },
+                        error: function(e) {
+                            reject(e.message);
+                        }
+                    }
+                )
+            });
+
 
               }else{
 

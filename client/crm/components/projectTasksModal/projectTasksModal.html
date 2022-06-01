@@ -23,9 +23,9 @@
                       class="far fa-edit text-info" style="width: 16px; margin-right: 5px;"></i>Edit Project</a>
                   <div class="dropdown-divider"></div>
                   <!-- For Sasa: Show/Hide must toggle between each other -->
-                  <a class="dropdown-item showCompletedTaskOnProject" href="#"><i
-                      class="far fa-check-circle text-success" style="width: 16px; margin-right: 5px;"></i>Show
-                    Completed Tasks</a>
+                  <a class="dropdown-item showCompletedTaskOnProject"><i class="far fa-check-circle text-success"
+                      style="width: 16px; margin-right: 5px;"></i>
+                    <span class="lblShowCompletedTaskOnProject">Show Completed Tasks</span></a>
                   <a class="dropdown-item" href="#" style="display: none;"><i class="fas fa-ban text-danger"
                       style="width: 16px; margin-right: 5px;"></i>Hide Completed Tasks</a>
                   <div class="dropdown-divider"></div>
@@ -48,11 +48,11 @@
                   <tr class="dnd-moved">
                     <th class="th colCompleteTask" style="width: 2%;">
                     </th>
-                    <th class="th colDate">Date</th>
-                    <th class="th colTaskName">Task</th>
-                    <th class="th colTaskDesc">Description</th>
-                    <th class="th colTaskLabels">Labels</th>
-                    <th class="th colTaskActions">Actions</th>
+                    <th class="th colDate no-modal">Date</th>
+                    <th class="th colTaskName no-modal">Task</th>
+                    <th class="th colTaskDesc no-modal">Description</th>
+                    <th class="th colTaskLabels no-modal">Labels</th>
+                    <th class="th colTaskActions no-modal">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="tblProjectTasksBody">
@@ -63,7 +63,7 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" type="button"><i class="fa fa-save"
+          <button class="btn btn-success" data-dismiss="modal" type="button"><i class="fa fa-save"
               style="margin-right: 5px;"></i>Save</button>
           <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
               style="margin-right: 5px;"></i>Close</button>

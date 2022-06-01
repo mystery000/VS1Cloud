@@ -50,8 +50,9 @@
             </style>
         </header>
         <!-- All charts list -->
+        {{#if isStockonHandDemandChart}}
         {{> allChartLists  tabGroupID="5" chartGroup="Inventory" }}
-
+        {{/if}}
         <style>
             @media screen and (max-width: 450px) {
                 .btnNav {
@@ -69,12 +70,26 @@
                     margin: 16px 0px !important;
                 }
             }
+            .negativeVolume {
+                color: #e74a3b !important;
+                font-weight: 700 !important;
+            }
+            .positiveVolume {
+                color: #1cc88a !important;
+                font-weight: 700 !important;
+            }
+            .neutralVolume {
+                color: #f6c23e !important;
+                font-weight: 700 !important;
+            }
         </style>
 
         <div class="row">
             <div class="col-6 col-md-7">
                 <button class="btn btnNav btn-primary btnRefresh float-left" type="button" style="margin: 16px; margin-left: 0"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                {{#if isNewProduct}}
                 <a class="btn btnNav btn-primary float-left btnNewProduct" href="/productview" style="margin: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Product</a>
+                {{/if}}
                 {{#if includeStockAdjustment}}
                     <button class="btn btnNav btn-primary btnStockAdjustment" id="btnStockAdjustment" type="button" style="margin: 16px;"><i class="fas fa-wrench" style="padding-right: 5px;"></i>Stock Adjustments</button>
                 {{/if}}
@@ -96,8 +111,12 @@
             <div class="col-6 col-md-5">
                 <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btnNav btn-primary float-right printConfirm" type="button" style="margin: 16px;"><i class="fas fa-print" style="padding-right: 5px;"></i>Print</button>
+                {{#if isImportProduct}}
                 <button class="btn btnNav btn-primary float-right" type="button" style="margin: 16px;" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                {{/if}}
+                {{#if isExportProduct}}
                 <button class="btn btnNav btn-primary float-right exportinv_csv" type="button" style="margin: 16px;" id="exportinv_csv" name="exportinv_csv"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+                {{/if}}
                 <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 16px;"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
@@ -601,8 +620,11 @@
                             <th class="th colProductID hiddenColumn" style="width:3%;">#ID</th>
                             <th class="th colProductName" style="width:200px;">Product Name</th>
                             <th class="th colSalesDescription">Sales Description</th>
-                            <th class="th colBarcode">Barcode</th>
-                            <th class="th colDepartment" style="width:150px;">Department</th>
+                            <th class="th colAvailable" style="width:70px;">Available</th>
+                            <th class="th colOnSO" style="width:60px;">On SO</th>
+                            <th class="th colOnBO" style="width:60px;">On BO</th>
+                            <th class="th colInStock" style="width:65px;">In Stock</th>
+                            <th class="th colOnOrder" style="width:72px;">On Order</th>
                             <th class="th colCostPrice lblCostEx hiddenColumn" style="width:130px;">Cost Price (Ex)
                                 <i class="fas fa-random"></i>
                             </th>
@@ -611,7 +633,12 @@
                                 <i class="fas fa-random"></i>
                             </th>
                             <th class="th colSalePriceInc lblPriceInc " style="width:135px;">Sale Price (Inc) <i class="fas fa-random fa-trans"></i></th>
-                            <th class="th colQuantity" style="width:70px;">In Stock</th>
+
+                            <!-- {{#if equals isSNTrackchecked true}} -->
+                                <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
+                            <!-- {{/if}} -->
+                            <th class="th colBarcode">Barcode</th>
+                            <th class="th colDepartment" style="width:100px;">Department</th>
 
                             <th class="th colPurchaseDescription hiddenColumn">Purchase Description</th>
                             <th class="th colProdCustField1 hiddenColumn">Custom Field 1</th>

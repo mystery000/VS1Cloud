@@ -179,9 +179,7 @@
                             <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 leadInfo" id="leadInfo" style="color: #00A3D3;">
                                 {{#if record}} {{record.employeeName}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}{{/if}}</h6>
                             <!--here-->
-
                             <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#customfieldModal"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
-
                         </div>
 
                         <!-- Start {{> optionCustomFiled}} -->
@@ -374,7 +372,7 @@
                                         <div class="row d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                                             <div class="col">
                                                 <div class="row">
-                                                    <div class="form-group flex-grow-1" style="margin: 4px;"><label>Employee Name</label><input type="text" class="form-control" id="edtLeadEmployeeName" name="edtLeadEmployeeName" value="{{record.employeeName}}"></div>
+                                                    <div class="form-group flex-grow-1" style="margin: 4px;"><label>Lead Name</label><input type="text" class="form-control" id="edtLeadEmployeeName" name="edtLeadEmployeeName" value="{{record.employeeName}}"></div>
                                                     <div class="form-group flex-grow-1" style="margin: 4px;"><label>Email</label><input type="text" class="form-control" id="edtLeadEmail" name="edtLeadEmail" value="{{record.email}}"></div>
                                                 </div>
                                                 <div class="row">
@@ -415,7 +413,7 @@
                                                                 }
                                                             }
                                                         </style>
-                                                        <div class="custom-control custom-switch chkSameSupplier" style="margin: 4px; margin-top: 41px;">
+                                                        <div class="custom-control custom-switch chkSameSupplier flex-grow-1" style="margin: 4px; margin-top: 41px;">
                                                             <input class="custom-control-input" type="checkbox" id="chkSameAsSupplier" style=" cursor: pointer;" checked="{{#if record.issupplier}}checked{{/if}}">
                                                             <label class="custom-control-label" for="chkSameAsSupplier" style=" cursor: pointer;">Is Also Supplier</label>
                                                         </div>
@@ -786,10 +784,19 @@
                                                 </div>
                                             </div>
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
-                                                <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
+                                                <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                <div>
+                                                    <button class="btn btn-info btnTask" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Task</button>
+                                                    <button class="btn btn-info btnEmail" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Email</button>
+                                                    <button class="btn btn-info btnAppointment" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Appointment</button>
+                                                    <button class="btn btn-info btnQuote" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Quote</button>
+                                                    <button class="btn btn-info btnSalesOrder" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Sales Order</button>
+                                                    <button class="btn btn-info btnInvoice" type="button"><i class="icon ion-plus" style="margin-right: 5px;"></i>Invoice</button>
+                                                    <button class="btn btn-info btnRefund" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Refund</button>
+                                                </div>
                                                 <div>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteLeadModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
-                                                    <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                                    <button class="btn btn-secondary btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
                                             </div>
 
@@ -956,26 +963,69 @@
                                                         input[type=number]::-webkit-outer-spin-button {
                                                             opacity: 1;
                                                         }
+                                                        .task_priority_0 {
+                                                             color: #1cc88a;
+                                                             background: #1cc88a;
+                                                        }
+
+                                                        .task_priority_1 {
+                                                            color: #00a3d3;
+                                                            background: #00a3d3;
+                                                        }
+
+                                                        .task_priority_2 {
+                                                            color: #f6c23e;
+                                                            background: #f6c23e;
+                                                        }
+
+                                                        .task_priority_3 {
+                                                            color: #e74a3b;
+                                                            background: #e74a3b;
+                                                        }
+                                                        .taskTag {
+                                                            margin: 4px;
+                                                            /* font-size: 12px; */
+                                                        }
+                                                        .taganchor {
+                                                            color: #858796 !important;
+                                                            text-decoration: none;
+                                                        }
                                                     </style>
                                                     <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
                                                         <thead>
                                                             <tr class="dnd-moved">
                                                                 <th class="th colTaskId hiddenColumn"></th>
-                                                                <th class="th colDate" style="width:100px;">Date</th>
-                                                                <th class="th colTaskName" style="width:150px;">Task</th>
-                                                                <th class="th colTaskDesc" style="width:300px;">Description</th>
-                                                                <th class="th colTaskLabels" style="width:200px;">Labels</th>
+                                                                <th class="th colCompleteTask" style="width: 2%;"></th>
+                                                                <th class="th colDate">Date</th>
+                                                                <th class="th colTaskName">Task</th>
+                                                                <th class="th colTaskDesc">Description</th>
+                                                                <th class="th colTaskLabels">Labels</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {{#if crmRecords}}
                                                                 {{#each item in crmRecords}}
                                                                     <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}">
+                                                                        <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">
+                                                                            <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
+                                                                                 style="width:15px;">
+                                                                            </div>
+                                                                        </td>
                                                                         <td contenteditable="false" class="colTaskId hiddenColumn" >{{item.id}}</td>
                                                                         <td contenteditable="false" class="colDate">{{item.date}}</td>
                                                                         <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
-                                                                        <td contenteditable="false" class="colTaskDesc" style="white-space:pre-wrap;">{{item.description}}</td>
-                                                                        <td contenteditable="false" class="colTaskLabels">{{item.labels}}</td>
+                                                                        <td contenteditable="false" class="colTaskDesc">{{item.description}}</td>
+                                                                        <td contenteditable="false" class="colTaskLabels">
+                                                                            {{#if item.labels}}
+                                                                                {{#each label in item.labels}}
+                                                                                <span class="taskTag">
+                                                                                    <a class="taganchor filterByLabel" href="">
+                                                                                        <i class="fas fa-tag" style="margin-right: 5px;"></i>{{label.TaskLabelName}}
+                                                                                    </a>
+                                                                                </span>
+                                                                                {{/each}}
+                                                                            {{/if}}
+                                                                        </td>
                                                                     </tr>
                                                                 {{/each}}
                                                             {{/if}}

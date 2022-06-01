@@ -27,7 +27,8 @@
               <div class="dropdown taskDropdownSchedule no-modal">
                 <button class="btn btn-primary dropdown-toggle btnSchedule no-modal" type="button" id=""
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="far fa-calendar-minus no-modal" style="margin-right: 8px"></i>Schedule
+                  <i class="far fa-calendar-minus no-modal" style="margin-right: 8px"></i>
+                  <span class="lblAddTaskSchedule">Schedule</span>
                 </button>
                 <div class="dropdown-menu no-modal" aria-labelledby="dropdownMenuButton" style="width: 275px">
                   <a class="dropdown-item no-modal setScheduleTodayAdd">
@@ -60,8 +61,8 @@
                   <div class="dropdown-divider no-modal"></div>
 
                   <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
-                    title="Date format: YYYY-MM-DD" style="margin: 6px 20px; margin-top: 14px">
-                    <div class="input-group date no-modal" style="cursor: pointer">
+                    title="Date format: YYYY-MM-DD" style="margin: 6px 20px; margin-top: 14px; z-index: 99999;">
+                    <div class="input-group date no-modal" style="cursor: pointer; z-index: 99999;">
                       <input type="text" class="form-control crmEditDatepicker no-modal" autocomplete="off" />
                       <div class="input-group-addon no-modal">
                         <span class="glyphicon glyphicon-th no-modal" style="cursor: pointer"></span>
@@ -87,7 +88,7 @@
                 <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle no-modal"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add label(s)..."></i>
                 <div class="dropdown-menu dropdown-menu-right no-modal" id="addTaskLabelWrapper"
-                  aria-labelledby="dropdownMenuButton" style="width: 200px"></div>
+                  aria-labelledby="dropdownMenuButton"></div>
               </div>
               <div class="dropdown no-modal">
                 <i class="far fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle no-modal"

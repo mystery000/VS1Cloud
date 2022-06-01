@@ -2975,7 +2975,7 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
-                // console.log('TEmployeepaysettingData', TEmployeepaysettingData)
+                //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2994,6 +2994,7 @@ Template.employeescard.onRendered(function () {
                     BankAccountName: employeePaySettings.fields.BankAccountName,
                     BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
                     BankAccountNo: employeePaySettings.fields.BankAccountNo,
+                    StatementText: employeePaySettings.fields.Statement,
                     AnnualSalary: employeePaySettings.fields.AnnualSalary,
                     EarningYTD: employeePaySettings.fields.EarningYTD,
                     NextPayDate: employeePaySettings.fields.NextPayDate,
@@ -3053,7 +3054,7 @@ Template.employeescard.onRendered(function () {
 
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-
+            console.log('leavetypes', data.tleavetypes)
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -5099,7 +5100,6 @@ Template.employeescard.events({
                 });
             }
 
-
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
@@ -5160,8 +5160,48 @@ Template.employeescard.events({
         }else if(activeTab == "leave") {
 
         }else if(activeTab == "bankaccounts") {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let currentId = FlowRouter.current().queryParams;
+            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+            let templateObject = Template.instance();
+            let useData = [];
+            const listEmployeePaySettings = {}
+            let employeePaySettings = templateObject.employeePayInfos.get();
+            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            if( TEmployeepaysettings.length ){
+                listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
+                useData = EmployeePaySettings.fromList(
+                    listEmployeePaySettings.temployeepaysettings
+                ).filter((item) => {
+                    if ( item.fields.Employeeid !== parseInt(employeeID) ) {
+                        return item;
+                    }
+                });
+            }
 
-            let data = [];
+            let bankAccountStatement = $("#bankAccountStatement").val();
+            let bankAccountName = $("#bankAccountName").val();
+            let bankAccountBSB = $("#bankAccountBSB").val();
+            let bankAccountNo = $("#bankAccountNo").val();
+
+            employeePaySettings.fields.BankAccountName = bankAccountName;
+            employeePaySettings.fields.BankAccountBSB = bankAccountBSB;
+            employeePaySettings.fields.BankAccountNo = bankAccountNo;
+            employeePaySettings.fields.Statement = bankAccountStatement;
+            useData.push(employeePaySettings);
+
+            /**
+             * Saving employeePaySettings Object in indexdb
+            */
+
+            listEmployeePaySettings.temployeepaysettings = useData;
+            await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
+            $('.fullScreenSpin').css('display', 'none');
+
+
+            return false;
+            // Old Dev Code
+            let data = [];          
 
             let employeePayrollService = new EmployeePayrollService();
 

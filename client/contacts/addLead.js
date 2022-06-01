@@ -177,6 +177,42 @@ Template.leadscard.onRendered(function () {
             });
         });
     };
+    templateObject.getLeadDataByName = function () {
+        getVS1Data('TProspectEx').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                    setOneLeadDataEx(data.tprospect[0]);
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tprospect;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ClientName) === parseInt(leadID)) {
+                        added = true;
+                        setOneLeadDataEx(useData[i]);
+                        $('.fullScreenSpin').css('display', 'none');
+                        setTimeout(function () {
+                            const rowCount = $('.results tbody tr').length;
+                            $('.counter').text(rowCount + ' items');
+                        }, 500);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                        setOneLeadDataEx(data.tprospect[0]);
+                        $('.fullScreenSpin').css('display', 'none');
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneLeadDataExByName(leadID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setOneLeadDataEx(data.tprospect[0]);
+            });
+        });
+    };
     function setOneLeadDataEx(data) {
         // console.log(data);
         let lineItemObj = {
@@ -300,6 +336,27 @@ Template.leadscard.onRendered(function () {
             $('.leadTab').trigger('click');
         }
     }
+
+    function MakeNegative() {
+        $('td').each(function () {
+            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+        });
+    }
+
+    if (currentId.id === "undefined") {
+        setInitialForEmptyCurrentID();
+    } else {
+        if (!isNaN(currentId.id)) {
+            leadID = currentId.id;
+            templateObject.getLeadData();
+        } else if((currentId.name)){
+            leadID = currentId.name.replace(/%20/g, " ");
+            templateObject.getLeadDataByName();
+        } else {
+            setInitialForEmptyCurrentID();
+        }
+    }
+
     templateObject.getAllCrm = function (leadName) {
         crmService.getAllTaskList().then(function (dataObject) {
             if (dataObject.tprojecttasks.length === 0) {
@@ -331,25 +388,30 @@ Template.leadscard.onRendered(function () {
         // console.log(data);
         for (let i = 0; i < data.tprojecttasks.length; i++) {
             let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-            let taskLabelName = '';
+            let taskLabelArray = [];
             if (taskLabel !== null) {
                 if (taskLabel.length === undefined || taskLabel.length === 0) {
-                    taskLabelName = taskLabel.fields.TaskLabelName;
+                    taskLabelArray.push(taskLabel.fields);
                 } else {
-                    taskLabelName = taskLabel[0].fields.TaskLabelName;
+                    for (let j = 0; j < taskLabel.length; j++) {
+                        taskLabelArray.push(taskLabel[j].fields);
+                    }
                 }
             }
+            let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+            taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
             const dataList = {
                 id: data.tprojecttasks[i].fields.ID || 0,
+                priority: data.tprojecttasks[i].fields.priority || 0,
                 date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
                 taskName: data.tprojecttasks[i].fields.TaskName || '',
                 projectID: data.tprojecttasks[i].fields.ProjectID || '',
                 projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                description: data.tprojecttasks[i].fields.TaskDescription || '',
-                labels: taskLabelName
+                description: taskDescription,
+                labels: taskLabelArray
             };
             // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-                dataTableList.push(dataList);
+            dataTableList.push(dataList);
             // }
         }
 
@@ -461,30 +523,10 @@ Template.leadscard.onRendered(function () {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
-    function MakeNegative() {
-        $('td').each(function () {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-    }
-
-    if (currentId.id === "undefined") {
-        setInitialForEmptyCurrentID();
-    } else {
-        if (!isNaN(currentId.id)) {
-            leadID = currentId.id;
-            templateObject.getLeadData();
-        } else if((currentId.name)){
-            leadID = currentId.name.replace(/%20/g, " ");
-            templateObject.getLeadData();
-        } else {
-            setInitialForEmptyCurrentID();
-        }
-    }
-
     templateObject.getLeadsList = function () {
-        getVS1Data('TProspectEx').then(function (dataObject) {
+        getVS1Data('TProspectVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
-                contactService.getAllLeads().then(function (data) {
+                contactService.getAllLeadSideDataVS1().then(function (data) {
                     setAllLeads(data);
                 }).catch(function (err) {
                     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -494,7 +536,7 @@ Template.leadscard.onRendered(function () {
                 setAllLeads(data);
             }
         }).catch(function (err) {
-            contactService.getAllLeads().then(function (data) {
+            contactService.getAllLeadSideDataVS1().then(function (data) {
                 setAllLeads(data);
             }).catch(function (err) {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -505,17 +547,17 @@ Template.leadscard.onRendered(function () {
     templateObject.getLeadsList();
     function setAllLeads(data) {
         let lineItems = [];
-        for (let i = 0; i < data.tprospect.length; i++) {
+        for (let i = 0; i < data.tprospectvs1.length; i++) {
             let classname = '';
             if (!isNaN(currentId.id)) {
-                if (data.tprospect[i].fields.ID === parseInt(currentId.id)) {
+                if (data.tprospectvs1[i].Id === parseInt(currentId.id)) {
                     classname = 'currentSelect';
                 }
             }
             const dataList = {
-                id: data.tprospect[i].fields.ID || '',
-                employeeName: data.tprospect[i].fields.ClientName || '',
-                companyName: data.tprospect[i].fields.CompanyName || '',
+                id: data.tprospectvs1[i].Id || '',
+                employeeName: data.tprospectvs1[i].ClientName || '',
+                companyName: data.tprospectvs1[i].CompanyName || '',
                 classname: classname
             };
             lineItems.push(dataList);
@@ -528,6 +570,15 @@ Template.leadscard.onRendered(function () {
         }
     }
 
+    templateObject.saveCustomerDetails = async function () { //Rasheed
+      return new Promise((resolve) => {
+        sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+          addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+            resolve({success: true, ...res});
+          }).catch(function (err) {resolve({success: false, ...err})});
+        });
+      });
+  };
 });
 
 Template.leadscard.events({
@@ -882,7 +933,6 @@ Template.leadscard.events({
         const tableHeaderList = [];
         let sWidth = "";
         let columVisible = false;
-        let sClass = "";
         $.each(columns, function (i, v) {
             if (v.hidden === false) {
                 columVisible = true;
@@ -1084,7 +1134,6 @@ Template.leadscard.events({
     },
     'click .btnResetSettings': function (event) {
         let checkPrefDetails = getCheckPrefDetails();
-
         if (checkPrefDetails) {
             CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
                 if (err) {
@@ -1203,7 +1252,7 @@ Template.leadscard.events({
     },
     'click .btnDeleteLead': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService2 = new ContactService();
+        let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (!isNaN(currentId.id)) {
@@ -1215,7 +1264,7 @@ Template.leadscard.events({
                     Active: false
                 }
             };
-            contactService2.saveProspectEx(objDetails).then(function (objDetails) {
+            contactService.saveProspectEx(objDetails).then(function (objDetails) {
                 FlowRouter.go('/leadlist?success=true');
             }).catch(function (err) {
                 swal({
@@ -1236,6 +1285,118 @@ Template.leadscard.events({
             FlowRouter.go('/leadlist?success=true');
         }
         $('#deleteLeadModal').modal('toggle');
+    },
+    'click .btnQuote': async function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        const templateObject = Template.instance();
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        let customerName = $('#edtLeadEmployeeName').val()||'';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: true
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(async function (data) {
+                let customerID = data.fields.ID;
+                await templateObject.saveCustomerDetails();
+                $('.fullScreenSpin').css('display','none');
+                FlowRouter.go('/quotecard?custname=' + customerName);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
+    },
+    'click .btnSalesOrder': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: true
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(function (data) {
+                let customerID = data.fields.ID;
+                FlowRouter.go('/salesordercard?customerid=' + customerID);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
+    },
+    'click .btnInvoice': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let contactService = new ContactService();
+        let currentId = FlowRouter.current().queryParams;
+        let objDetails = '';
+        if (!isNaN(currentId.id)) {
+            let currentLead = parseInt(currentId.id);
+            objDetails = {
+                type: "TProspectEx",
+                fields: {
+                    ID: currentLead,
+                    IsCustomer: true
+                }
+            };
+            contactService.saveProspectEx(objDetails).then(function (data) {
+                let customerID = data.fields.ID;
+                FlowRouter.go('/invoicecard?customerid=' + customerID);
+            }).catch(function (err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {
+                    } else if (result.dismiss === 'cancel') {
+
+                    }
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+        }
     }
 });
 
@@ -1346,8 +1507,6 @@ function getCheckPrefDetails() {
             const clientUsername = getcurrentCloudDetails.cloudUsername;
             const clientEmail = getcurrentCloudDetails.cloudEmail;
             checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'leadscard'});
-            console.log('checkPrefDetails');
-            console.log(checkPrefDetails);
         }
     }
     return checkPrefDetails;
