@@ -112,6 +112,9 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
+            if (rowData[9]) {
+              $(td).addClass("taskCompleted");
+            }
           },
           width: "18px",
         },
@@ -164,7 +167,8 @@ Template.alltaskdatatable.onRendered(function () {
           text: "",
           download: "open",
           className: "btntabletocsv hiddenColumn",
-          filename: "Task List" + moment().format(),
+          filename: "All Tasks List" + moment().format(),
+          title: "All Tasks",
           orientation: "portrait",
           exportOptions: {
             // columns: ":visible",
@@ -190,6 +194,14 @@ Template.alltaskdatatable.onRendered(function () {
                   col_lbl = data;
                 }
 
+                if (Number.isInteger(col_lbl)) {
+                  col_lbl = col_lbl.toString();
+                }
+                if (col_lbl.includes("</label>")) {
+                  var res = col_lbl.split("</label>");
+                  col_lbl = res[1];
+                }
+
                 return column === 1
                   ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
                   : col_lbl.slice(0, -1);
@@ -203,8 +215,8 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletopdf hiddenColumn",
           text: "",
-          title: "Task List",
-          filename: "Task List" + moment().format(),
+          title: "All Tasks List",
+          filename: "All Tasks List" + moment().format(),
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
@@ -241,7 +253,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
             btnFilterName +
             "</span></button>"
         ).insertAfter("#tblAllTaskDatatable_filter");
@@ -266,6 +278,9 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
+            if (rowData[9]) {
+              $(td).addClass("taskCompleted");
+            }
           },
           width: "18px",
         },
@@ -318,7 +333,8 @@ Template.alltaskdatatable.onRendered(function () {
           text: "",
           download: "open",
           className: "btntabletocsv hiddenColumn",
-          filename: "Task List" + moment().format(),
+          filename: "Today Tasks List" + moment().format(),
+          title: "Today Tasks",
           orientation: "portrait",
           exportOptions: {
             // columns: ":visible",
@@ -344,6 +360,14 @@ Template.alltaskdatatable.onRendered(function () {
                   col_lbl = data;
                 }
 
+                if (Number.isInteger(col_lbl)) {
+                  col_lbl = col_lbl.toString();
+                }
+                if (col_lbl.includes("</label>")) {
+                  var res = col_lbl.split("</label>");
+                  col_lbl = res[1];
+                }
+
                 return column === 1
                   ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
                   : col_lbl.slice(0, -1);
@@ -356,8 +380,8 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletopdf hiddenColumn",
           text: "",
-          title: "Task List",
-          filename: "Task List" + moment().format(),
+          title: "Today Tasks List",
+          filename: "Today Tasks List" + moment().format(),
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
@@ -394,7 +418,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
             btnFilterName +
             "</span></button>"
         ).insertAfter("#tblTodayTaskDatatable_filter");
@@ -421,6 +445,9 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
+            if (rowData[9]) {
+              $(td).addClass("taskCompleted");
+            }
           },
           width: "18px",
         },
@@ -473,7 +500,8 @@ Template.alltaskdatatable.onRendered(function () {
           text: "",
           download: "open",
           className: "btntabletocsv hiddenColumn",
-          filename: "Task List" + moment().format(),
+          filename: "Upcoming Tasks List" + moment().format(),
+          title: "Upcoming Tasks",
           orientation: "portrait",
           exportOptions: {
             // columns: ":visible",
@@ -498,6 +526,15 @@ Template.alltaskdatatable.onRendered(function () {
                 } else {
                   col_lbl = data;
                 }
+                if (Number.isInteger(col_lbl)) {
+                  col_lbl = col_lbl.toString();
+                }
+                if (col_lbl.includes("</label>")) {
+                  var res = col_lbl.split("</label>");
+                  col_lbl = res[1];
+                }
+
+                // return column === 1 ? data.replace(/<.*?>/gi, "") : data;
 
                 return column === 1
                   ? col_lbl.replace(/<.*?>/gi, "").slice(0, -1)
@@ -511,8 +548,8 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletopdf hiddenColumn",
           text: "",
-          title: "Task List",
-          filename: "Task List" + moment().format(),
+          title: "Upcoming Tasks List",
+          filename: "Upcoming Tasks List" + moment().format(),
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
@@ -549,7 +586,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
             btnFilterName +
             "</span></button>"
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
@@ -706,7 +743,7 @@ Template.alltaskdatatable.onRendered(function () {
 
   templateObject.makeTaskTableRows = function (task_array) {
     let taskRows = new Array();
-    let td0 = (td1 = td2 = td3 = td4 = td5 = "");
+    let td0 = (td1 = td11 = td2 = td3 = td4 = td5 = "");
     let projectName = "";
     let labelsForExcel = "";
 
@@ -715,21 +752,31 @@ Template.alltaskdatatable.onRendered(function () {
     let nextMonday = moment(moment())
       .day(1 + 7)
       .format("ddd MMM D");
-
+    let chk_complete = (completed = "");
     task_array.forEach((item) => {
+      if (item.fields.Completed) {
+        completed = "disabled checked";
+        chk_complete = "";
+      } else {
+        completed = "";
+        chk_complete = "chk_complete";
+      }
       td0 = `
         <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${item.fields.priority}"
           style="width:15px;margin-right: -6px;">
           <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
-            id="formCheck-${item.fields.ID}">
-          <label class="custom-control-label chkBox pointer chk_complete" data-id="${item.fields.ID}"
+            id="formCheck-${item.fields.ID}" ${completed}>
+          <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
             for="formCheck-${item.fields.ID}"></label>
         </div>`;
 
       if (item.fields.due_date == "" || item.fields.due_date == null) {
         td1 = "";
+        td11 = "";
       } else {
-        td1 = moment(item.fields.due_date).format("DD/MM/YYYY");
+        td11 = moment(item.fields.due_date).format("DD/MM/YYYY");
+        td1 =
+          `<label style="display:none;">${item.fields.due_date}</label>` + td11;
       }
 
       td2 = item.fields.TaskName;
@@ -888,6 +935,7 @@ Template.alltaskdatatable.onRendered(function () {
         item.fields.ID,
         item.fields.priority,
         labelsForExcel,
+        item.fields.Completed,
       ]);
     });
     return taskRows;
@@ -1039,6 +1087,7 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletocsv hiddenColumn",
           filename: "Label List" + moment().format(),
+          title: "Labels",
           orientation: "portrait",
           exportOptions: {
             // columns: ":visible",
@@ -1088,7 +1137,7 @@ Template.alltaskdatatable.onRendered(function () {
           "<button class='btn btn-primary btnNewLabel' type='button' id='btnNewLabel' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' style='margin-right: 5px'></i>New Label</button>"
         ).insertAfter("#tblLabels_filter");
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          "<button class='btn btn-primary btnSearchCrm btnSearchLabelsDatatable' type='button' id='btnRefreshLabels' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
         ).insertAfter("#tblLabels_filter");
       },
     });
@@ -1247,7 +1296,6 @@ Template.alltaskdatatable.onRendered(function () {
       data: projectArray,
       columnDefs: [
         {
-          orderable: false,
           targets: 0,
           className: "colPrjectDate",
           createdCell: function (td, cellData, rowData, row, col) {
@@ -1274,17 +1322,17 @@ Template.alltaskdatatable.onRendered(function () {
           className: "colProjectStatus",
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[5]);
-          },
-        },
-        {
-          targets: 4,
-          className: "colProjectDesc",
-          createdCell: function (td, cellData, rowData, row, col) {
-            $(td).attr("data-id", rowData[5]);
             if (!rowData[6]) {
               $(td).addClass("task_priority_3");
               $(td).css("color", "white");
             }
+          },
+        },
+        {
+          targets: 4,
+          className: "colProjectTasks",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[5]);
           },
         },
       ],
@@ -1296,6 +1344,7 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletocsv hiddenColumn",
           filename: "Project List" + moment().format(),
+          title: "Projects",
           orientation: "portrait",
           exportOptions: {
             columns: ":visible",
@@ -1343,7 +1392,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
+          "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
             btnFilterName +
             "</span></button>"
         ).insertAfter("#tblNewProjectsDatatable_filter");
@@ -1376,7 +1425,7 @@ Template.alltaskdatatable.onRendered(function () {
       }
 
       td0 =
-        `<span style="display: none;">{{item.fields.ProjectStatedon}}</span>` +
+        `<span style="display: none;">${item.fields.MsTimeStamp}</span>` +
         moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
       td1 = item.fields.ProjectName;
       td2 = item.fields.Description;
@@ -1419,6 +1468,9 @@ Template.alltaskdatatable.onRendered(function () {
             $(td).closest("tr").attr("data-id", rowData[6]);
             $(td).attr("data-id", rowData[6]);
             $(td).addClass("task_priority_" + rowData[7]);
+            if (rowData[9]) {
+              $(td).addClass("taskCompleted");
+            }
           },
           width: "18px",
         },
@@ -1471,7 +1523,8 @@ Template.alltaskdatatable.onRendered(function () {
           text: "",
           download: "open",
           className: "btntabletocsv hiddenColumn",
-          filename: "Project List" + moment().format(),
+          filename: "Project Tasks List" + moment().format(),
+          title: "Project Tasks",
           orientation: "portrait",
           exportOptions: {
             // columns: ":visible",
@@ -1488,8 +1541,8 @@ Template.alltaskdatatable.onRendered(function () {
           download: "open",
           className: "btntabletopdf hiddenColumn",
           text: "",
-          title: "Project List",
-          filename: "Project List" + moment().format(),
+          title: "Project Tasks List",
+          filename: "Project Tasks List" + moment().format(),
           exportOptions: {
             // columns: ":visible",
             columns: function (idx, data, node) {
@@ -1521,7 +1574,7 @@ Template.alltaskdatatable.onRendered(function () {
       },
       fnInitComplete: function () {
         $(
-          "<button class='btn btn-primary btnSearchCrm' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          "<button class='btn btn-primary btnSearchCrm btnSearchProjectTasksDatatable' type='button' id='btnRefreshProjectTasks' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
         ).insertAfter("#tblProjectTasks_filter");
       },
     });
@@ -2833,6 +2886,19 @@ Template.alltaskdatatable.events({
     }
   },
   // labels tab ---------------
+
+  // search table
+  "keyup #tblAllTaskDatatable_filter input": function (event) {
+    console.log($(event.target).val(), event.keyCode);
+    if ($(event.target).val() != "") {
+      $(".btnSearchAllTaskDatatable").addClass("btnSearchAlert");
+    } else {
+      $(".btnSearchAllTaskDatatable").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnSearchAllTaskDatatable").trigger("click");
+    }
+  },
 });
 
 Template.alltaskdatatable.helpers({
@@ -2858,17 +2924,6 @@ Template.alltaskdatatable.helpers({
   getTodoDate: (date, format) => {
     if (date == "" || date == null) return "";
     return moment(date).format(format);
-
-    if (moment().format("YYYY-MM-DD") == moment(date).format("YYYY-MM-DD")) {
-      return "Today";
-    } else if (
-      moment().add(1, "day").format("YYYY-MM-DD") ==
-      moment(date).format("YYYY-MM-DD")
-    ) {
-      return "Tomorrow";
-    } else {
-      return moment(date).format(format);
-    }
   },
 
   getTaskStyleClass: (date) => {
