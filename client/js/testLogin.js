@@ -997,7 +997,6 @@ $("#login-button").click(function(e){
                               );
                           },
                           success: function(data) {
-                              console.log('SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                               if (!data.sms_messages) {
                                   addVS1Data('TVS1SMSLogs', data).then((res) => {
                                       console.log(res);

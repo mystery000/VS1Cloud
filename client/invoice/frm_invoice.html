@@ -284,6 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -308,9 +309,7 @@
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                {{> currencydropdown}}
-                                            </div>
+                                         
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -332,13 +331,7 @@
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Ẹxchange Rate</label>
-                                                    <input type="text" class="form-control" id="exchange_rate" value="0" />
-                                            
-                                                </div>
-                                            </div>
+                                           
                                             <div class="col-6 col-md-12 col-lg-12">
                                                 <div class="form-group" style="display: none;">
                                                     <label>Due Date</label>
@@ -351,6 +344,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -390,7 +384,9 @@
                                    
                                 </div>
                             </div>
-
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                {{> CurrencyWidget rate="sell"}}
+                            </div>
                         </div>
                         <div class="row" style="margin: 16px 16px 0px 16px;">
                             <div class="col-12 mb-3">
@@ -1659,10 +1655,7 @@
             {{> newtermspop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
-            {{> currencypop}}
-        </div>
-
+      
         <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
             {{> newcurrencypop}}
         </div>

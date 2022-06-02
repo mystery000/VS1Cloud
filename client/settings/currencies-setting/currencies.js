@@ -4,6 +4,7 @@ import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { HTTP } from "meteor/http";
 import "../../lib/global/indexdbstorage.js";
+import FxApi from "./FxApi";
 let sideBarService = new SideBarService();
 
 Template.currenciesSettings.onCreated(function () {
@@ -682,6 +683,11 @@ Template.currenciesSettings.onRendered(function () {
 });
 
 Template.currenciesSettings.events({
+  "change #currencyCode": (e) => {
+    const fxApi = new FxApi();
+
+    console.log($(e.currentTarget).val());
+  },
   "click .btnFxupdate": function (event) {
     $("#frequencyModal").modal("toggle");
     // FlowRouter.go('/settings/fx-update'); old wrong code
@@ -1216,7 +1222,9 @@ Template.currenciesSettings.events({
     $("#edtBuyRate").val(1);
     $("#edtSellRate").val(1);
   },
-  "change #sedtCountry": function () {
+  "change #sedtCountry": async (e) => {
+    $(".fullScreenSpin").css("display", "inline-block");
+   
     let taxRateService = new TaxRateService();
     let selectCountry = $("#sedtCountry").val();
     $("#edtCurrencyID").val("");
@@ -1225,40 +1233,51 @@ Template.currenciesSettings.events({
     $("#currencySymbol").val("");
     $("#edtCurrencyName").val("");
     $("#edtCurrencyDesc").val("");
-    $("#edtBuyRate").val(1);
-    $("#edtSellRate").val(1);
+    $("#edtBuyRate").val("");
+    $("#edtSellRate").val("");
+  
     if (selectCountry != "") {
-      taxRateService
-        .getOneCurrencyByCountry(selectCountry)
-        .then(function (data) {
-          for (let i = 0; i < data.tcurrency.length; i++) {
-            if (data.tcurrency[i].Country === selectCountry) {
-              var currencyid = data.tcurrency[i].Id || "";
-              var country = data.tcurrency[i].Country || "";
-              var currencyCode = data.tcurrency[i].Code || "";
-              var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
-              var currencyName = data.tcurrency[i].Currency || "";
-              var currencyDesc = data.tcurrency[i].CurrencyDesc;
-              var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
-              var currencySellRate = data.tcurrency[i].SellRate || 0;
+      const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
 
-              $("#edtCurrencyID").val(currencyid);
-              // $('#sedtCountry').val(country);
+      if (data) {
+        for (let i = 0; i < data.tcurrency.length; i++) {
+       
+          if (data.tcurrency[i].Country === selectCountry) {
+            var currencyid = data.tcurrency[i].Id || "";
+            var country = data.tcurrency[i].Country || "";
+            var currencyCode = data.tcurrency[i].Code || "";
+            var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
+            var currencyName = data.tcurrency[i].Currency || "";
+            var currencyDesc = data.tcurrency[i].CurrencyDesc;
+            var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
+            var currencySellRate = data.tcurrency[i].SellRate || 0;
 
-              $("#currencyCode").val(currencyCode);
-              $("#currencySymbol").val(currencySymbol);
-              $("#edtCurrencyName").val(currencyName);
-              $("#edtCurrencyDesc").val(currencyDesc);
-              $("#edtBuyRate").val(currencyBuyRate);
-              $("#edtSellRate").val(currencySellRate);
+            /**
+             * Let's call the Fx APis here
+             */
+            const fxApi = new FxApi();
+            let currencyRates = await fxApi.getExchangeRate(currencyCode);
+            if (currencyRates) {
+              currencyBuyRate = currencyRates.buy;
+              currencySellRate = currencyRates.sell;
             }
-          }
 
-          //data.fields.Rate || '';
-        });
+            $("#edtCurrencyID").val(currencyid);
+            // $('#sedtCountry').val(country);
+
+            $("#currencyCode").val(currencyCode);
+            $("#currencySymbol").val(currencySymbol);
+            $("#edtCurrencyName").val(currencyName);
+            $("#edtCurrencyDesc").val(currencyDesc);
+            $("#edtBuyRate").val(currencyBuyRate);
+            $("#edtSellRate").val(currencySellRate);
+          }
+        }
+      }
     }
+    $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnSaveCurrency": function () {
+  "click .btnSaveCurrency": (e) => {
     let taxRateService = new TaxRateService();
     $(".fullScreenSpin").css("display", "inline-block");
     var currencyid = $("#edtCurrencyID").val();
