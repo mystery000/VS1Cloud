@@ -637,7 +637,6 @@ Template.leadscard.events({
         let fax = $('#edtLeadFax').val();
         let skype = $('#edtSkypeID').val();
         let website = $('#edtWebsite').val();
-
         let streetAddress = $('#edtShippingAddress').val();
         let city = $('#edtShippingCity').val();
         let state = $('#edtShippingState').val();
@@ -669,25 +668,34 @@ Template.leadscard.events({
 
         let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
-
         const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
-
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-
         let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
-        let custField4 = $('#edtCustomeField4').val();
+        let custField1 = $('#edtCustomField1').val();
+        let custField2 = $('#edtCustomField2').val();
+        let custField3 = $('#edtCustomField3').val();
+        let custField4 = $('#edtCustomField4').val();
         let uploadedItems = templateObject.uploadedFiles.get();
 
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
+        let TLeadID = 0;
+        if (getemp_id[1]) {
+            TLeadID = parseInt(currentEmployee);
+        } else {
+            let custdupID = 0;
+            let checkCustData = await contactService.getCheckLeadsData(employeeName)||'';
+            if (checkCustData !== ''){
+                if (checkCustData.tprospect.length) {
+                    TLeadID = checkCustData.tprospect[0].Id;
+                }
+            }
+        }
         let objDetails = {
             type: "TProspectEx",
             fields: {
-                ID: 0,
+                ID: TLeadID,
                 Title: title,
                 ClientName: employeeName,
                 FirstName: firstname,
@@ -721,23 +729,6 @@ Template.leadscard.events({
                 CUSTFLD4: custField4
             }
         };
-        if (getemp_id[1]) {
-            currentEmployee = parseInt(currentEmployee);
-            objDetails.fields.ID = currentEmployee;
-        } else {
-            let custdupID = 0;
-            let checkCustData = await contactService.getCheckLeadsData(employeeName)||'';
-            if (checkCustData !== ''){
-                if (checkCustData.tprospect.length) {
-                    custdupID = checkCustData.tprospect[0].Id;
-                    objDetails.fields.ID = custdupID;
-                } else {
-                    objDetails.fields.ID = 0;
-                }
-            } else {
-                objDetails.fields.ID = 0;
-            }
-        }
         contactService.saveProspectEx(objDetails).then(function (objDetails) {
             let customerSaveID = objDetails.fields.ID;
             if (customerSaveID) {

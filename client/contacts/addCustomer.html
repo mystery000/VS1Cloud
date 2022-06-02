@@ -863,9 +863,7 @@
                                                     </div>
                                                     <button class="btn btn-secondary btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
-
                                             </div>
-
                                         </div>
                                     {{else}}
                                     <!-- end job -->
@@ -914,7 +912,7 @@
                                                                 }
                                                             }
                                                         </style>
-                                                        <div class="custom-control custom-switch chkSameSupplier" style="margin: 4px; margin-top: 41px;">
+                                                        <div class="custom-control custom-switch chkSameSupplier flex-grow-1" style="margin: 4px; margin-top: 41px;">
                                                             <input class="custom-control-input" type="checkbox" id="chkSameAsSupplier" style=" cursor: pointer;" checked="{{#if record.issupplier}}checked{{/if}}">
                                                             <label class="custom-control-label" for="chkSameAsSupplier" style=" cursor: pointer;">Is Also Supplier</label>
                                                         </div>
@@ -1390,19 +1388,19 @@
                                                                 <div class="col d-xl-flex align-items-xl-center">
                                                                     <div class="form-group flex-grow-1 checkbox1div" style="margin: 4px;">
                                                                         <label class="lblCustomField1">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
-                                                                        <input type="text" class="form-control" id="edtCustomeField1" name="edtCustomeField1" value="{{record.custfield1}}">
+                                                                        <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1" value="{{record.custfield1}}">
                                                                     </div>
                                                                     <div class="form-group flex-grow-1 checkbox2div" style="margin: 4px;">
                                                                         <label class="lblCustomField2">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
-                                                                        <input type="text" class="form-control" id="edtCustomeField2" name="edtCustomeField2" value="{{record.custfield2}}">
+                                                                        <input type="text" class="form-control" id="edtCustomField2" name="edtCustomField2" value="{{record.custfield2}}">
                                                                     </div>
                                                                     <div class="form-group flex-grow-1 checkbox3div" style="margin: 4px;">
                                                                         <label class="lblCustomField3">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[2].label}}{{else}}Custom Field 3{{/if}}</label>
-                                                                        <input type="text" class="form-control" id="edtCustomeField3" name="edtCustomeField3" value="{{record.custfield3}}">
+                                                                        <input type="text" class="form-control" id="edtCustomField3" name="edtCustomField3" value="{{record.custfield3}}">
                                                                     </div>
                                                                     <div class="form-group flex-grow-1 checkbox4div" style="margin: 4px;">
                                                                         <label class="lblCustomField4">{{#if contactCloudPreferenceRec}}{{contactCloudPreferenceRec.customFields.[3].label}}{{else}}Custom Field 4{{/if}}</label>
-                                                                        <input type="text" class="form-control" id="edtCustomeField4" name="edtCustomeField4" value="{{record.custfield4}}">
+                                                                        <input type="text" class="form-control" id="edtCustomField4" name="edtCustomField4" value="{{record.custfield4}}">
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1448,23 +1446,23 @@
                                                 </div>
                                             </div>
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
-                                                <button class="btn btn-success btnSave" type="button" style="min-width: 90px;"><i class="fa fa-save" style="margin: 4px;"></i>Save</button>
+                                                <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <div>
-                                                    <button class="btn btn-info btnCustomerTask" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Task</button>
-                                                    <button class="btn btn-info btnCustomerEmail" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Email</button>
-                                                    <button class="btn btn-info btnCustomerAppointment" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Appointment</button>
-                                                    <button class="btn btn-info btnCustomerQuote" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Quote</button>
-                                                    <button class="btn btn-info btnCustomerSalesOrder" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Sales Order</button>
-                                                    <button class="btn btn-info btnCustomerInvoice" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Invoice</button>
-                                                    <button class="btn btn-info btnCustomerRefund" type="button" style="min-width: 90px;"><i class="icon ion-plus" style="margin: 4px;"></i>Refund</button>
+                                                    <button class="btn btn-info btnCustomerTask" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Task</button>
+                                                    <button class="btn btn-info btnCustomerEmail" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Email</button>
+                                                    <button class="btn btn-info btnCustomerAppointment" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Appointment</button>
+                                                    <button class="btn btn-info btnCustomerQuote" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Quote</button>
+                                                    <button class="btn btn-info btnCustomerSalesOrder" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Sales Order</button>
+                                                    <button class="btn btn-info btnCustomerInvoice" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Invoice</button>
+                                                    <button class="btn btn-info btnCustomerRefund" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Refund</button>
                                                 </div>
                                                 <div>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteCustomerModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
-                                                    <button class="btn btn-secondary btnBack" type="button" style="min-width: 90px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                                    <button class="btn btn-secondary btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                                                 </div>
                                             </div>
                                             <div class="modal fade" role="dialog" tabindex="-1" id="deleteCustomerModal">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
                                                         <div class="modal-header">

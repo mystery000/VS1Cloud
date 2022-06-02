@@ -18,7 +18,7 @@ Template.leadlist.onRendered(function() {
     let splashArrayLeadList = [];
     const tableHeaderList = [];
     if(FlowRouter.current().queryParams.success){
-       // $('.btnRefresh').addClass('btnRefreshAlert');
+       $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
     templateObject.getLeads = function () {
