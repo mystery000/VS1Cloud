@@ -569,16 +569,17 @@ Template.leadscard.onRendered(function () {
             }, 100);
         }
     }
-
     templateObject.saveCustomerDetails = async function () { //Rasheed
-      return new Promise((resolve) => {
-        sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
-          addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
-            resolve({success: true, ...res});
-          }).catch(function (err) {resolve({success: false, ...err})});
+        return new Promise((resolve) => {
+            sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+                addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+                    resolve({success: true, ...res});
+                }).catch(function (err) {
+                    resolve({success: false, ...err})
+                });
+            });
         });
-      });
-  };
+    };
 });
 
 Template.leadscard.events({
