@@ -354,7 +354,17 @@ Template.newprofitandloss.onRendered(function () {
       }
     }else{
       try {
-        let departments = ( options.departments.length )? options.departments.toString(): '';        
+        options.threcords = [];
+        let fromYear = moment(dateFrom).format('YYYY');
+        let toYear = moment(dateTo).format('YYYY');
+        let dateRange = [];
+        if( toYear === fromYear ){
+          dateRange.push( moment(dateFrom).format('DD MMM') + '-' + moment(dateTo).format('DD MMM') + ' '+ toYear );
+        }else{
+          dateRange.push( moment(dateFrom).format('DD MMM YYYY') + '-' + moment(dateTo).format('DD MMM YYYY') );
+        }
+        options.threcords = dateRange;
+        let departments = ( options.departments.length )? options.departments.join(','): '';        
         let data = await reportService.getProfitandLoss(dateFrom, dateTo, false, departments)
         let records = [];        
         if (data.profitandlossreport) {
@@ -374,6 +384,19 @@ Template.newprofitandloss.onRendered(function () {
               decimalAmt: totalAmountEx,
               roundAmt: totalRoundAmount
             });
+            if( options.departments.length ){
+              options.departments.forEach(dept => {
+                let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
+                let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
+                if( i == 0 ){      
+                  options.threcords.push( dept );
+                }
+                periodAmounts.push({
+                  decimalAmt: deptAmountEx,
+                  roundAmt: deptRoundAmount
+                });
+              });
+            } 
             if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
@@ -415,6 +438,7 @@ Template.newprofitandloss.onRendered(function () {
           
           // Set Table Data
           // console.log('records', records)
+          templateObject.reportOptions.set(options);
           templateObject.records.set(records);
           if (templateObject.records.get()) {
             setTimeout(function () {
