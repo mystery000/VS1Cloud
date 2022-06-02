@@ -1286,6 +1286,36 @@ Template.leadscard.events({
         }
         $('#deleteLeadModal').modal('toggle');
     },
+    'click .btnTask': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnEmail': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnAppointment': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/appointments?customerid=' + customerID);
+        } else {
+
+        }
+    },
     'click .btnQuote': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         const templateObject = Template.instance();
@@ -1340,8 +1370,10 @@ Template.leadscard.events({
                     IsCustomer: true
                 }
             };
-            contactService.saveProspectEx(objDetails).then(function (data) {
+            contactService.saveProspectEx(objDetails).then(async function (data) {
                 let customerID = data.fields.ID;
+                await templateObject.saveCustomerDetails();
+                $('.fullScreenSpin').css('display','none');
                 FlowRouter.go('/salesordercard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
@@ -1376,8 +1408,10 @@ Template.leadscard.events({
                     IsCustomer: true
                 }
             };
-            contactService.saveProspectEx(objDetails).then(function (data) {
+            contactService.saveProspectEx(objDetails).then(async function (data) {
                 let customerID = data.fields.ID;
+                await templateObject.saveCustomerDetails();
+                $('.fullScreenSpin').css('display','none');
                 FlowRouter.go('/invoicecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
@@ -1394,6 +1428,16 @@ Template.leadscard.events({
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
+        } else {
+
+        }
+    },
+    'click .btnRefund': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/refundcard?customerid=' + customerID);
         } else {
 
         }

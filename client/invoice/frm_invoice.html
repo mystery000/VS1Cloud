@@ -93,7 +93,7 @@
                                 <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                             </div>
                             <div class="modal-body" style="padding: 0px;">
-                                 {{ > templatesettings}}
+                                 {{> templatesettings }}
                             </div>                        
                         </div>
                     </div>
@@ -191,7 +191,7 @@
 
                     {{#if equals invoicerecord.ispaid true}}
                         <div class="col-12 colPaid" style="display: none;">
-                            <p style="font-size: 25px;font-weight: 705;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
+                            <p style="font-size: 25px;font-weight: 700 ;color: #e74a3b; margin: 16px 32px 0px 32px;">Paid</p>
                             <input class="form-control form-control ispaidInv" type="hidden" value="true">
                         </div>
                     {{/if}}
@@ -409,15 +409,15 @@
                             <div class="col-12 col-md-3 col-xl-12" id="colBalanceDue">
                                 <div class="text-right" style="font-size: 14px; margin: 16px 24px;">
                                     {{#if equals invoicerecord.deleted true}}
-                                        <p style="font-size: 25px;font-weight: 705;color: #e74a3b;">Deleted</p>
+                                        <p style="font-size: 25px;font-weight: 700;color: #e74a3b;">Deleted</p>
                                     {{/if}}
                                     <p style="font-size: 20px; font-weight: 700;color: rgb(84,94,103);">BALANCE DUE</p>
                                     {{#if equals invoicerecord.ispaid true}}
-                                        <p style="font-size: 25px;font-weight: 705;color: #e74a3b;">Paid</p>
+                                        <p style="font-size: 25px;font-weight: 700;color: #e74a3b;">Paid</p>
                                         <input class="form-control form-control ispaidInv" type="hidden" value="true">
                                     {{else}}
                                         <input class="form-control form-control ispaidInv" type="hidden" value="false">
-                                        <p style="font-size: 25px;font-weight: 705;color: rgb(56,63,69);" id="balanceDue" name="balanceDue">{{invoicerecord.balanceDue}}</p>
+                                        <p style="font-size: 25px;font-weight: 700;color: rgb(56,63,69);" id="balanceDue" name="balanceDue">{{invoicerecord.balanceDue}}</p>
                                     {{/if}}
                                 </div>
                             </div>
@@ -1349,7 +1349,7 @@
                     <div class="d-xl-flex align-items-xl-start" style="height: 100%;">
                         <div class="d-flex d-xl-flex flex-column flex-nowrap align-items-xl-center" style="min-height: 100%;height: 100%;max-height: 100%;">
                             <div class="d-lg-flex d-xl-flex flex-row align-items-lg-start align-items-xl-start">
-                                <div class="card d-xl-flex flex-grow-1 specialcard" style="margin: 0px;margin-right: 50px;  border: none !important; width: 100mm; max-width: 100; background-color: rgba(0,0,0,0);">
+                                <div class="card d-xl-flex flex-grow-1 specialcard" style="margin: 0px;margin-right: 50px;  border: none !important; width: 100mm; max-width: 100px; background-color: rgba(0,0,0,0);">
                                     <div class="card-body">
                                         <div class="d-lg-flex justify-content-lg-start" style="margin-bottom: 16px;">
                                             <div class="d-lg-flex flex-column justify-content-lg-start"><img src="assets/img/VS1.png" class="uploadedImage" style="max-width: 200px;margin-bottom: 8px; color: rgb(0 0 0);max-height: 30mm;"><a
