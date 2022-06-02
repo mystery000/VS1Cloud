@@ -1,20 +1,21 @@
 import { TaxRateService } from "../settings-service";
-import { ReactiveVar } from "meteor/reactive-var";
+import { ReactiveVar } from 'meteor/reactive-var';
+import { CoreService } from '../../js/core-service';
 import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
-import { HTTP } from "meteor/http";
+// import { HTTP } from "meteor/http";
 import "../../lib/global/indexdbstorage.js";
 import FxApi from "./FxApi";
 let sideBarService = new SideBarService();
 
-Template.currenciesSettings.onCreated(function () {
+Template.currenciessettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
 });
 
-Template.currenciesSettings.onRendered(function () {
+Template.currenciessettings.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
@@ -144,7 +145,7 @@ Template.currenciesSettings.onRendered(function () {
                         text: "",
                         download: "open",
                         className: "btntabletocsv hiddenColumn",
-                        filename: "taxratelist_" + moment().format(),
+                        filename: "currencylist_" + moment().format(),
                         orientation: "portrait",
                         exportOptions: {
                           columns: ":visible",
@@ -155,8 +156,8 @@ Template.currenciesSettings.onRendered(function () {
                         download: "open",
                         className: "btntabletopdf hiddenColumn",
                         text: "",
-                        title: "Tax Rate List",
-                        filename: "taxratelist_" + moment().format(),
+                        title: "Currency List",
+                        filename: "currencylist_" + moment().format(),
                         exportOptions: {
                           columns: ":visible",
                         },
@@ -240,6 +241,7 @@ Template.currenciesSettings.onRendered(function () {
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
+          console.log(data);
           let useData = data.tcurrency;
           let lineItems = [];
           let lineItemObj = {};
@@ -248,15 +250,15 @@ Template.currenciesSettings.onRendered(function () {
             // let taxRate = (useData[i].fields.Rate * 100).toFixed(2) + '%';
 
             var dataList = {
-              id: useData[i].fields.Id || "",
-              code: useData[i].fields.Code || "-",
-              currency: useData[i].fields.Currency || "-",
-              symbol: useData[i].fields.CurrencySymbol || "-",
-              buyrate: useData[i].fields.BuyRate || "-",
-              sellrate: useData[i].fields.SellRate || "-",
-              country: useData[i].fields.Country || "-",
-              description: useData[i].fields.CurrencyDesc || "-",
-              ratelastmodified: useData[i].fields.RateLastModified || "-",
+              id: data.tcurrency[i].fields.ID || "",
+              code: data.tcurrency[i].fields.Code || "-",
+              currency: data.tcurrency[i].fields.Currency || "-",
+              symbol: data.tcurrency[i].fields.CurrencySymbol || "-",
+              buyrate: data.tcurrency[i].fields.BuyRate || "-",
+              sellrate: data.tcurrency[i].fields.SellRate || "-",
+              country: data.tcurrency[i].fields.Country || "-",
+              description: data.tcurrency[i].fields.CurrencyDesc || "-",
+              ratelastmodified: data.tcurrency[i].fields.RateLastModified || "-",
             };
 
             dataTableList.push(dataList);
@@ -319,7 +321,7 @@ Template.currenciesSettings.onRendered(function () {
                     text: "",
                     download: "open",
                     className: "btntabletocsv hiddenColumn",
-                    filename: "taxratelist_" + moment().format(),
+                    filename: "currencylist_" + moment().format(),
                     orientation: "portrait",
                     exportOptions: {
                       columns: ":visible",
@@ -330,8 +332,8 @@ Template.currenciesSettings.onRendered(function () {
                     download: "open",
                     className: "btntabletopdf hiddenColumn",
                     text: "",
-                    title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
+                    title: "Currency List",
+                    filename: "currencylist_" + moment().format(),
                     exportOptions: {
                       columns: ":visible",
                     },
@@ -412,11 +414,9 @@ Template.currenciesSettings.onRendered(function () {
             "form-control form-control-sm"
           );
         }
-      })
-      .catch(function (err) {
-        taxRateService
-          .getCurrencies()
-          .then(function (data) {
+      }).catch(function (err) {
+        console.log(err);
+        taxRateService.getCurrencies().then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
             for (let i = 0; i < data.tcurrency.length; i++) {
@@ -493,7 +493,7 @@ Template.currenciesSettings.onRendered(function () {
                       text: "",
                       download: "open",
                       className: "btntabletocsv hiddenColumn",
-                      filename: "taxratelist_" + moment().format(),
+                      filename: "currencylist_" + moment().format(),
                       orientation: "portrait",
                       exportOptions: {
                         columns: ":visible",
@@ -504,8 +504,8 @@ Template.currenciesSettings.onRendered(function () {
                       download: "open",
                       className: "btntabletopdf hiddenColumn",
                       text: "",
-                      title: "Tax Rate List",
-                      filename: "taxratelist_" + moment().format(),
+                      title: "Currency List",
+                      filename: "currencylist_" + moment().format(),
                       exportOptions: {
                         columns: ":visible",
                       },
@@ -682,7 +682,7 @@ Template.currenciesSettings.onRendered(function () {
   );
 });
 
-Template.currenciesSettings.events({
+Template.currenciessettings.events({
   "change #currencyCode": (e) => {
     const fxApi = new FxApi();
 
@@ -1110,58 +1110,10 @@ Template.currenciesSettings.events({
           let code = codearray[i];
           let value = rates[code];
 
-          objDetails = {
-            type: "TCurrency",
-            fields: {
-              Active: true,
-              Code: code,
-              Currency: code,
-              BuyRate: parseFloat(value) || 1,
-              SellRate: parseFloat(value) || 1,
-              CurrencyDesc: "Testing Tcurrecny",
-              MsTimeStamp: date,
-            },
-          };
-
-          taxRateService
-            .saveCurrency(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getCurrencies()
-                .then(function (dataReload) {
-                  addVS1Data("TCurrency", JSON.stringify(dataReload))
-                    .then(function (datareturn) {
-                      //Meteor._reload.reload();
-
-                      if (i == codearray.length - 1) {
-                        Meteor._reload.reload();
-                      }
-                    })
-                    .catch(function (err) {
-                      Meteor._reload.reload();
-                    });
-                })
-                .catch(function (err) {
-                  Meteor._reload.reload();
-                });
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: true,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              $(".fullScreenSpin").css("display", "none");
-            });
         }
       }
     );
+
   },
   "click .btnDeleteCurrency": function () {
     let taxRateService = new TaxRateService();
@@ -1224,7 +1176,7 @@ Template.currenciesSettings.events({
   },
   "change #sedtCountry": async (e) => {
     $(".fullScreenSpin").css("display", "inline-block");
-   
+
     let taxRateService = new TaxRateService();
     let selectCountry = $("#sedtCountry").val();
     $("#edtCurrencyID").val("");
@@ -1235,13 +1187,13 @@ Template.currenciesSettings.events({
     $("#edtCurrencyDesc").val("");
     $("#edtBuyRate").val("");
     $("#edtSellRate").val("");
-  
+
     if (selectCountry != "") {
       const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
 
       if (data) {
         for (let i = 0; i < data.tcurrency.length; i++) {
-       
+
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
             var country = data.tcurrency[i].Country || "";
@@ -1366,7 +1318,7 @@ Template.currenciesSettings.events({
   },
 });
 
-Template.currenciesSettings.helpers({
+Template.currenciessettings.helpers({
   datatablerecords: () => {
     return Template.instance()
       .datatablerecords.get()

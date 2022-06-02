@@ -11,6 +11,9 @@ Template.CurrencyWidget.onCreated(function () {
 
 Template.CurrencyWidget.onRendered(function () {
   console.log("Currency widget");
+  console.log($(this));
+  console.log($(".currencyModal"));
+  console.log($(".newCurrencyModal"));
 
   //   $("#sltCurrency")
   //     .editableSelect()
@@ -122,7 +125,7 @@ Template.CurrencyWidget.events({
   "click #tblCurrencyPopList tbody tr": (e) => {
     console.log("currency clicked");
 
-    const rateType = $(".currency-js").attr('type'); // String "buy" | "sell"
+    const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 
     const currencyCode = $(e.currentTarget).find(".colCode").text();
     const currencyRate =

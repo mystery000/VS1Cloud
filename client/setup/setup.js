@@ -111,7 +111,7 @@ Template.setup.onRendered(function () {
 
     // Get step local storage variable and set step
     const currentStep = localStorage.getItem("VS1Cloud_SETUP_STEP");
-    if (currentStep !== undefined) {
+    if (currentStep !== null) {
         $('.first-page').css('display', 'none');
         $('.main-setup').css('display', 'flex');
         $('.setup-step').css('display', 'none');

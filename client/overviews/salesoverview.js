@@ -1906,7 +1906,7 @@ Template.salesoverview.events({
   },
   "click .btnCurrencySettings": function (event) {
     $(".modal-backdrop").css("display", "none");
-    FlowRouter.go("/currenciesSettings");
+    FlowRouter.go("/currenciessettings");
   },
   "click .chkDatatable": function (event) {
     var columns = $("#tblSalesOverview th");

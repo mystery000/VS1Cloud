@@ -389,11 +389,14 @@
                                         <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="${{editExpenseClaim.AmountInc}}">
                                     </div>
                                 </div>
-                            
+
                                 <div class="col-6 col-md-6">
-                                    {{> CurrencyWidget rate="buy"}}
+                                  <div class="form-group">
+                                    <label>Currency</label>
+                                    <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                  </div>
                                 </div>
-                              
+
                                 <div class="col-6">
                                     <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursable" style="cursor: pointer;" checked="{{#if editExpenseClaim.Reimbursement}}checked{{/if}}">
@@ -796,11 +799,14 @@
                                         </select>
                                     </div>
                                 </div>
-                             
+
                                     <div class="col-6 col-md-6">
-                                       {{> CurrencyWidget rate="buy"}}
+                                      <div class="form-group">
+                                        <label>Currency</label>
+                                        <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                      </div>
                                     </div>
-                            
+
                                 <div class="col-6">
                                     <div class="custom-control custom-switch" style="margin-top: 40px;">
                                         <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtMergedReiumbursable" style="cursor: pointer;">
@@ -950,11 +956,14 @@
                                                 <input class="form-control form-control edtTotal" type="text" name="edtTotal" value="">
                                             </div>
                                         </div>
-                                     
-                                            <div class="col-6 col-md-6">
-                                                {{> CurrencyWidget rate="buy"}}
-                                            </div>
-                                
+
+                                      <div class="col-6 col-md-6">
+                                        <div class="form-group">
+                                          <label>Currency</label>
+                                          <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                        </div>
+                                      </div>
+
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableExpense" style="cursor: pointer;">
@@ -1072,11 +1081,14 @@
                                                 <input class="form-control edtTotal" type="text" name="edtTotal" value="" readonly>
                                             </div>
                                         </div>
-                              
+
                                             <div class="col-6 col-md-6">
-                                                {{> CurrencyWidget rate="buy"}}
+                                              <div class="form-group">
+                                                <label>Currency</label>
+                                                <select class="form-control currencies" type="search" style="background-color:rgb(255, 255, 255);cursor: pointer;"></select>
+                                              </div>
                                             </div>
-                                    
+
                                         <div class="col-6">
                                             <div class="custom-control custom-switch" style="margin-top: 40px;">
                                                 <input class="custom-control-input swtReiumbursable" type="checkbox" id="swtReiumbursableTime" style="cursor: pointer;">

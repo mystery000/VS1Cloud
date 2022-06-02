@@ -1049,18 +1049,24 @@ Template.billlist.onRendered(function() {
         });
     }
 
-    templateObject.getAllBillData();
+
 
     templateObject.getAllFilterBillData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllBillListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
             addVS1Data('TBillList', JSON.stringify(data)).then(function(datareturn) {
                 window.open('/billlist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
             }).catch(function(err) {
-                location.reload();
+                $('.fullScreenSpin').css('display', 'none');
             });
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
+    }
+
+    if(FlowRouter.current().queryParams.overview){
+      templateObject.getAllFilterBillData("", "", true);
+    }else{
+      templateObject.getAllBillData();
     }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;

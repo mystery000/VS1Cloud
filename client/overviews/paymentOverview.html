@@ -141,14 +141,14 @@
                     <div class="card-body" style="cursor: pointer;">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Awaiting Payment</span></div>
+                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Outstanding Invoices</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0 mr-3">
                                     <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
                                         <a href="/customerawaitingpayments" style="color: rgb(221,223,235)!important;"><span class="custAwaitingAmt" id="custAwaitingAmt" name="custAwaitingAmt">0</span></a>
                                     </span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
-                                    <span style="font-size: 16px;color: rgb(221,223,235);"><a href="#" class="customerAwaitingPayment">
+                                    <span style="font-size: 16px;color: rgb(221,223,235);"><a href="/customerawaitingpayments" class="customerAwaitingPayment">
                                         <span class="custAwaiting" id="custAwaiting" name="custAwaiting">0</span> Awaiting</a>
                                     </span>
                                 </div>
@@ -166,12 +166,12 @@
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0 mr-3">
                                     <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                        <a href="#" style="color: rgb(221,223,235)!important;" class="customerAwaitingPayment"><span class="custOverdueAmt" id="custOverdueAmt" name="custOverdueAmt">0</span></a>
+                                        <a href="/customerawaitingpayments?overdue=true" style="color: rgb(221,223,235)!important;" class="customerAwaitingPayment"><span class="custOverdueAmt" id="custOverdueAmt" name="custOverdueAmt">0</span></a>
                                     </span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
                                     <span style="font-size: 16px;color: rgb(221,223,235);">
-                                        <a href="#" class="customerOverdue"><span class="custOverdue" id="custOverdue" name="custOverdue">0</span> Overdue</a>
+                                        <a href="/customerawaitingpayments?overdue=true" class="customerOverdue"><span class="custOverdue" id="custOverdue" name="custOverdue">0</span> Overdue</a>
                                     </span>
                                 </div>
                             </div>
@@ -237,15 +237,15 @@
                     <div class="card-body" style="cursor: pointer;">
                         <div class="row align-items-center no-gutters">
                             <div class="col mr-2">
-                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Awaiting Payment</span></div>
+                                <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Outstanding Expenses</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0 mr-3">
                                     <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                        <a href="#" style="color: rgb(221,223,235)!important;" class="supplierAwaitingPayment"><span class="suppAwaitingAmt" id="suppAwaitingAmt" name="suppAwaitingAmt">0</span></a>
+                                        <a href="/supplierawaitingpurchaseorder" style="color: rgb(221,223,235)!important;" class="supplierAwaitingPayment"><span class="suppAwaitingAmt" id="suppAwaitingAmt" name="suppAwaitingAmt">0</span></a>
                                     </span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
                                     <span style="font-size: 16px;color: rgb(221,223,235);">
-                                        <a href="#" class="supplierAwaitingPayment"><span class="suppAwaiting" id="suppAwaiting" name="suppAwaiting">0</span> Awaiting</a>
+                                        <a href="/supplierawaitingpurchaseorder" class="supplierAwaitingPayment"><span class="suppAwaiting" id="suppAwaiting" name="suppAwaiting">0</span> Awaiting</a>
                                     </span>
                                 </div>
                             </div>
@@ -286,12 +286,12 @@
                                 <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue</span></div>
                                 <div class="text-dark font-weight-bold h5 mb-0 mr-3">
                                     <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
-                                        <a href="#" style="color: rgb(221,223,235)!important;" class="supplierOverdue"><span class="suppOverdueAmt" id="suppOverdueAmt" name="suppOverdueAmt">0</span></a>
+                                        <a href="/supplierawaitingpurchaseorder?overdue=true" style="color: rgb(221,223,235)!important;" class="supplierOverdue"><span class="suppOverdueAmt" id="suppOverdueAmt" name="suppOverdueAmt">0</span></a>
                                     </span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
                                     <span style="font-size: 16px;color: rgb(221,223,235);">
-                                        <a href="#" class="supplierOverdue"><span class="suppOverdue" id="suppOverdue" name="suppOverdue">0</span> Overdue</a>
+                                        <a href="/supplierawaitingpurchaseorder?overdue=true" class="supplierOverdue"><span class="suppOverdue" id="suppOverdue" name="suppOverdue">0</span> Overdue</a>
                                     </span>
                                 </div>
                             </div>
@@ -348,8 +348,8 @@
                     <button class="btn btn-primary btnAll" type="button">All</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Awaiting Payment List (Customer)</a>
-                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Awaiting Payment List (Supplier)</a>
+                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Outstanding Invoices</a>
+                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Outstanding Expenses</a>
                         <a class="dropdown-item" role="presentation" href="/customerpayment">Payment List (Customer)</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List (Supplier)</a>
                         <a class="dropdown-item" role="presentation" href="/paymentcard" id="newCustomerPayment" name="newCustomerPayment">+ New Customer Payment</a>
@@ -362,7 +362,7 @@
                     <button class="btn btn-primary btnCustomerlist" type="button">Customers</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Awaiting Payment List</a>
+                        <a class="dropdown-item" role="presentation" href="/customerawaitingpayments">Outstanding Invoices</a>
                         <a class="dropdown-item" role="presentation" href="/customerpayment">Payment List</a>
                         <a class="dropdown-item" role="presentation" href="/paymentcard" id="newCustomerPayment" name="newCustomerPayment">+ New Customer Payment</a>
 
@@ -372,7 +372,7 @@
                     <button class="btn btn-primary btnSupplierPaymentList" type="button">Suppliers</button>
                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Awaiting Payment List</a>
+                        <a class="dropdown-item" role="presentation" href="/supplierawaitingpurchaseorder">Outstanding Expenses</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpayment">Payment List</a>
                         <a class="dropdown-item" role="presentation" href="/supplierpaymentcard" id="newSupplierPayment" name="newSupplierPayment">+ New Supplier Payment</a>
 

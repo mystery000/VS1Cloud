@@ -393,7 +393,7 @@ Template.sidenav.onRendered(function() {
                 $('#sidenavpayroll .nav-link').removeClass('active');
             } else if ((currentLoc == "/settings") ||
                        (currentLoc == "/accesslevel") || (currentLoc == "/companyappsettings") || (currentLoc == "/organisationsettings") ||
-                       (currentLoc == "/taxratesettings") || (currentLoc == "/currenciesSettings") ||
+                       (currentLoc == "/taxratesettings") || (currentLoc == "/currenciessettings") ||
                        (currentLoc == "/departmentSettings") || (currentLoc == "/termsettings") ||
                        (currentLoc == "/paymentmethodSettings")) {
                 $('#sidenavaccounts').removeClass('active');
@@ -3392,7 +3392,7 @@ Template.sidenav.events({
     'click #sidenavcurrenciesSettings': function(event) {
 
         event.preventDefault();
-        FlowRouter.go('/currenciesSettings');
+        FlowRouter.go('/currenciessettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

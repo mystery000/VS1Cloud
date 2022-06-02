@@ -224,7 +224,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                   text: '',
                                   download: 'open',
                                   className: "btntabletocsv hiddenColumn",
-                                  filename: "Awaiting Customer Payments List - " + moment().format(),
+                                  filename: "Outstanding Invoices - " + moment().format(),
                                   orientation: 'portrait',
                                   exportOptions: {
                                       columns: ':visible:not(.chkBox)',
@@ -246,7 +246,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                   className: "btntabletopdf hiddenColumn",
                                   text: '',
                                   title: 'Supplier Payment',
-                                  filename: "Awaiting Customer Payments List - " + moment().format(),
+                                  filename: "Outstanding Invoices - " + moment().format(),
                                   exportOptions: {
                                       columns: ':visible:not(.chkBox)',
                                       stripHtml: false
@@ -522,7 +522,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 text: '',
                                 download: 'open',
                                 className: "btntabletocsv hiddenColumn",
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 orientation: 'portrait',
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
@@ -544,7 +544,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 className: "btntabletopdf hiddenColumn",
                                 text: '',
                                 title: 'Supplier Payment',
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
                                     stripHtml: false
@@ -815,7 +815,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 text: '',
                                 download: 'open',
                                 className: "btntabletocsv hiddenColumn",
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 orientation: 'portrait',
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
@@ -837,7 +837,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 className: "btntabletopdf hiddenColumn",
                                 text: '',
                                 title: 'Supplier Payment',
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
                                     stripHtml: false
@@ -1133,7 +1133,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                   text: '',
                                   download: 'open',
                                   className: "btntabletocsv hiddenColumn",
-                                  filename: "Awaiting Customer Payments List - " + moment().format(),
+                                  filename: "Outstanding Invoices - " + moment().format(),
                                   orientation: 'portrait',
                                   exportOptions: {
                                       columns: ':visible:not(.chkBox)',
@@ -1155,7 +1155,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                   className: "btntabletopdf hiddenColumn",
                                   text: '',
                                   title: 'Supplier Payment',
-                                  filename: "Awaiting Customer Payments List - " + moment().format(),
+                                  filename: "Outstanding Invoices - " + moment().format(),
                                   exportOptions: {
                                       columns: ':visible:not(.chkBox)',
                                       stripHtml: false
@@ -1399,7 +1399,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 text: '',
                                 download: 'open',
                                 className: "btntabletocsv hiddenColumn",
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 orientation: 'portrait',
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
@@ -1421,7 +1421,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 className: "btntabletopdf hiddenColumn",
                                 text: '',
                                 title: 'Supplier Payment',
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
                                     stripHtml: false
@@ -1661,7 +1661,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 text: '',
                                 download: 'open',
                                 className: "btntabletocsv hiddenColumn",
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 orientation: 'portrait',
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
@@ -1683,7 +1683,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                 className: "btntabletopdf hiddenColumn",
                                 text: '',
                                 title: 'Supplier Payment',
-                                filename: "Awaiting Customer Payments List - " + moment().format(),
+                                filename: "Outstanding Invoices - " + moment().format(),
                                 exportOptions: {
                                     columns: ':visible:not(.chkBox)',
                                     stripHtml: false

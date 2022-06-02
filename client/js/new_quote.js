@@ -5965,7 +5965,7 @@ Template.new_quote.onRendered(() => {
     }
 
 
-    const exportSalesToPdf = function () {
+     exportSalesToPdf = function () {
         let margins = {
             top: 0,
             bottom: 0,

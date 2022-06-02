@@ -46,7 +46,7 @@ Template.settings.events({
         FlowRouter.go('/clienttypesettings');
     },
     'click .btncurrenciesSettings': function(event) {
-        FlowRouter.go('/settings/currencies');
+        FlowRouter.go('/currenciessettings');
     },
     'click .btntaxRatesSettings': function(event) {
         FlowRouter.go('/taxratesettings');

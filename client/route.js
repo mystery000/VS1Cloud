@@ -937,11 +937,20 @@ authenticatedRoutes.route('/trialbalance', {
     }
 });
 
-authenticatedRoutes.route('/settings/currencies', {
-    name: 'currenciesSettings',
+// authenticatedRoutes.route('/settings/currencies', {
+//     name: 'currenciesSettings',
+//     action() {
+//         BlazeLayout.render('layout', {
+//             yield: 'currenciesSettings'
+//         });
+//     }
+// });
+
+authenticatedRoutes.route('/currenciessettings', {
+    name: 'currenciessettings',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'currenciesSettings'
+            yield: 'currenciessettings'
         });
     }
 });
