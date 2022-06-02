@@ -2472,12 +2472,13 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
             }
         });
+
     } else if (url.indexOf('?soid=') > 0) {
 
         var getsale_id = url.split('?soid=');
@@ -2592,7 +2593,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/salesordercard?id=' + listData, '_self');
@@ -2710,7 +2711,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/quotecard?id=' + listData, '_self');
@@ -3195,7 +3196,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -3524,7 +3525,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -3657,7 +3658,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -6606,7 +6607,7 @@ Template.paymentcard.events({
         //     PayMethod = 'Cash';
         // }
     },
-    'click #tblPaymentcard tr .colTransNo': function(event) {
+    'click #tblPaymentcard tr .colTransNoDONT': function(event) {
         let custname = $('#edtCustomerName').val() || '';
         if (custname === '') {
             swal('Customer has not been selected!', '', 'warning');

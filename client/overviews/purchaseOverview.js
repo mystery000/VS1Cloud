@@ -2498,13 +2498,13 @@ Template.purchasesoverview.events({
     FlowRouter.go("/purchaseordercard");
   },
   "click .cardBills": function (event) {
-    FlowRouter.go("/billlist");
+    FlowRouter.go("/billlist?overview=true");
   },
   "click .cardCredit": function (event) {
-    FlowRouter.go("/creditlist");
+    FlowRouter.go("/creditlist?overview=true");
   },
   "click .cardOutPO": function (event) {
-    FlowRouter.go("/purchaseorderlist");
+    FlowRouter.go("/purchaseorderlist?overview=true");
   },
   "click .newBill": function (event) {
     //FlowRouter.go('/creditcard');

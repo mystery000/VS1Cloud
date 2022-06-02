@@ -130,8 +130,7 @@ Template.purchaseorderlist.onRendered(function () {
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
 
-    getVS1Data("TPurchaseOrderList")
-      .then(function (dataObject) {
+    getVS1Data("TPurchaseOrderList").then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService
             .getAllTPurchaseOrderListData(
@@ -1003,10 +1002,8 @@ Template.purchaseorderlist.onRendered(function () {
             }
           });
         }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllTPurchaseOrderListData(
+      }).catch(function (err) {
+        sideBarService.getAllTPurchaseOrderListData(
             prevMonth11Date,
             toDate,
             false,
@@ -1457,42 +1454,23 @@ Template.purchaseorderlist.onRendered(function () {
       });
   };
 
-  templateObject.getAllPurchaseOrderData();
-
-  templateObject.getAllFilterPurchaseOrderData = function (
-    fromDate,
-    toDate,
-    ignoreDate
-  ) {
-    sideBarService
-      .getAllTPurchaseOrderListData(
-        fromDate,
-        toDate,
-        ignoreDate,
-        initialReportLoad,
-        0
-      )
-      .then(function (data) {
-        addVS1Data("TPurchaseOrderList", JSON.stringify(data))
-          .then(function (datareturn) {
-            window.open(
-              "/purchaseorderlist?toDate=" +
-                toDate +
-                "&fromDate=" +
-                fromDate +
-                "&ignoredate=" +
-                ignoreDate,
-              "_self"
-            );
-          })
-          .catch(function (err) {
-            location.reload();
+  templateObject.getAllFilterPurchaseOrderData = function (fromDate,toDate,ignoreDate) {
+    sideBarService.getAllTPurchaseOrderListData(fromDate,toDate,ignoreDate,initialReportLoad,0).then(function (data) {
+        addVS1Data("TPurchaseOrderList", JSON.stringify(data)).then(function (datareturn) {
+            window.open("/purchaseorderlist?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
+          }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
           });
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         $(".fullScreenSpin").css("display", "none");
       });
   };
+
+  if(FlowRouter.current().queryParams.overview){
+    templateObject.getAllFilterPurchaseOrderData("", "", true);
+  }else{
+    templateObject.getAllPurchaseOrderData();
+  }
 
   let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
   let urlParametersDateTo = FlowRouter.current().queryParams.toDate;

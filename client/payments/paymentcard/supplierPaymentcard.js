@@ -2529,9 +2529,10 @@ Template.supplierpaymentcard.onRendered(() => {
 
         }
 
-        $('#tblSupplierPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblSupplierPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
-            var columnType = $(event.target).text();
+            var columnType = $(event.target).closest('tr').find('.colType').text();
+            // var columnType = $(event.target).text();
             if (listData) {
                 if (columnType == "Purchase Order") {
                     window.open('/purchaseordercard?id=' + listData, '_self');
@@ -5314,9 +5315,10 @@ Template.supplierpaymentcard.onRendered(() => {
         });
     };
 
-    $('#tblSupplierPaymentcard tbody').on('click', 'tr .colType', function() {
+    $('#tblSupplierPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
         var listData = $(this).closest('tr').attr('id');
-        var columnType = $(event.target).text();
+        var columnType = $(event.target).closest('tr').find('.colType').text();
+        //var columnType = $(event.target).text();
         if (listData) {
             if (columnType == "Purchase Order") {
                 window.open('/purchaseordercard?id=' + listData, '_self');
@@ -8133,7 +8135,7 @@ Template.supplierpaymentcard.events({
         }
 
     },
-    'click #tblSupplierPaymentcard tr .colTransNo': function(event) {
+    'click #tblSupplierPaymentcard tr .colTransNoDONT': function(event) {
         let custname = $('#edtSupplierName').val()||'';
         if (custname === '') {
             swal('Supplier has not been selected!', '', 'warning');

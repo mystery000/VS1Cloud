@@ -1071,11 +1071,17 @@ Template.creditlist.onRendered(function() {
             addVS1Data('TCreditList', JSON.stringify(data)).then(function(datareturn) {
                 window.open('/creditlist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
             }).catch(function(err) {
-                location.reload();
+                $('.fullScreenSpin').css('display', 'none');
             });
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
+    }
+
+    if(FlowRouter.current().queryParams.overview){
+      templateObject.getAllFilterCreditData("", "", true);
+    }else{
+      templateObject.getAllCreditData();
     }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
