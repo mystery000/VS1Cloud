@@ -2158,6 +2158,7 @@ Template.new_invoice.onRendered(() => {
 
         };
     templateObject.getAllLeadStatuss();
+
     templateObject.getDepartments = function () {
         getVS1Data('TDeptClass').then(function (dataObject) {
             if (dataObject.length == 0) {
