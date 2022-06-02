@@ -1733,3 +1733,21 @@ authenticatedRoutes.route('/customersummaryreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/jobprofitabilityreport', {
+    name: 'jobprofitabilityreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'jobprofitabilityreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/jobsalessummary', {
+    name: 'jobsalessummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'jobsalessummary'
+        });
+    }
+});
