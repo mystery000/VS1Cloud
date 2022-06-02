@@ -16,7 +16,7 @@ export default class FxApi {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Basic " + encodedApiKey,
+            Authorization: "Basic " + FxApi.encodedApiKey,
           },
         }
       );
@@ -52,7 +52,7 @@ export default class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + encodedApiKey,
+          Authorization: "Basic " + FxApi.encodedApiKey,
         },
       }
     );
@@ -72,7 +72,7 @@ export default class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Basic " + encodedApiKey,
+          Authorization: "Basic " + FxApi.encodedApiKey,
         },
       }
     );
