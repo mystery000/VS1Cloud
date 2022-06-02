@@ -532,7 +532,8 @@ export class SalesBoardService extends BaseService {
   getInvSaleByCustomer() {
     let options = {
         PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
-        select: "[deleted]=false"
+        select: "[deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
     };
       return this.getList(this.ERPObjects.TInvoiceEx, options);
   }

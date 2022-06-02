@@ -509,7 +509,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       text: '',
                       download: 'open',
                       className: "btntabletocsv hiddenColumn",
-                      filename: "Awaiting Supplier Payments List - " + moment().format(),
+                      filename: "Outstanding Expenses - " + moment().format(),
                       orientation: 'portrait',
                       exportOptions: {
                           columns: ':visible:not(.chkBox)',
@@ -531,7 +531,7 @@ Template.supplierpaymentcard.onRendered(() => {
                       className: "btntabletopdf hiddenColumn",
                       text: '',
                       title: 'Supplier Payment',
-                      filename: "Awaiting Supplier Payments List - " + moment().format(),
+                      filename: "Outstanding Expenses - " + moment().format(),
                       exportOptions: {
                           columns: ':visible:not(.chkBox)',
                           stripHtml: false

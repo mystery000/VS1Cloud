@@ -524,7 +524,7 @@ Template.paymentcard.onRendered(() => {
                         text: '',
                         download: 'open',
                         className: "btntabletocsv hiddenColumn",
-                        filename: "Awaiting Customer Payments List - " + moment().format(),
+                        filename: "Outstanding Invoices - " + moment().format(),
                         orientation: 'portrait',
                         exportOptions: {
                             columns: ':visible:not(.chkBox)',
@@ -546,7 +546,7 @@ Template.paymentcard.onRendered(() => {
                         className: "btntabletopdf hiddenColumn",
                         text: '',
                         title: 'Customer Payment',
-                        filename: "Awaiting Customer Payments List - " + moment().format(),
+                        filename: "Outstanding Invoices - " + moment().format(),
                         exportOptions: {
                             columns: ':visible:not(.chkBox)',
                             stripHtml: false

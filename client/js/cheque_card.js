@@ -1970,15 +1970,25 @@ Template.chequecard.onRendered(() => {
                         if (dataObject.length == 0) {
                             $('.fullScreenSpin').css('display', 'inline-block');
                             sideBarService.getCurrencies().then(function(data) {
-                                for (let i in data.tleadstatustype) {
-                                    let leadrecordObj = {
-                                        orderstatus: data.tleadstatustype[i].TypeName || ' '
-                                    };
-                                    statusList.push(leadrecordObj);
+                                for (let i in data.tcurrency) {
+                                    if (data.tcurrency[i].Code === currencyDataName) {
+                                        $('#edtCurrencyID').val(data.tcurrency[i].Id);
+                                        setTimeout(function() {
+                                            $('#sedtCountry').val(data.tcurrency[i].Country);
+                                        }, 200);
+                                        //$('#sedtCountry').val(data.tcurrency[i].Country);
+                                        $('#currencyCode').val(currencyDataName);
+                                        $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+                                        $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+                                        $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+                                        $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+                                        $('#edtSellRate').val(data.tcurrency[i].SellRate);
+                                    }
                                 }
                                 setTimeout(function() {
                                     $('.fullScreenSpin').css('display', 'none');
                                     $('#newCurrencyModal').modal('toggle');
+                                    $('#sedtCountry').attr('readonly', true);
                                 }, 200);
                             });
                         } else {
@@ -2020,7 +2030,6 @@ Template.chequecard.onRendered(() => {
                                     $('#edtSellRate').val(data.tcurrency[i].SellRate);
                                 }
                             }
-
                             setTimeout(function() {
                                 $('.fullScreenSpin').css('display', 'none');
                                 $('#newCurrencyModal').modal('toggle');

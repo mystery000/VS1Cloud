@@ -2039,18 +2039,26 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     return this.getList(this.ERPObjects.TShippingMethod, options);
   }
 
-  getCurrencies() {
+  // getCurrencies() {
+  //
+  //   var today = new Date();
+  //   var dd = String(today.getDate()).padStart(2, '0');
+  //   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  //   var yyyy = today.getFullYear();
+  //   today = dd+'/'+mm+'/'+ yyyy;
+  //   let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
+  //   let options = {
+  //     PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
+  //     select: "[Active]=true AND [MsTimeStamp]>'"+msTimeStamp+"'",
+  //     ListType: "Detail"
+  //   };
+  //   return this.getList(this.ERPObjects.TCurrency, options);
+  // }
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = dd+'/'+mm+'/'+ yyyy;
-    let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
+  getCurrencies() {
     let options = {
-      PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
-      select: "[Active]=true AND [MsTimeStamp]>'"+msTimeStamp+"'",
-      ListType: "Detail"
+      ListType: "Detail",
+      select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }

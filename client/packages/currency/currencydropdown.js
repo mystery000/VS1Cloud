@@ -34,10 +34,10 @@ Template.currencydropdown.onRendered(function () {
           let useData = data.tcurrency;
           for (let i in useData) {
             let currencyObj = {
-              id: useData[i].Id || "",
-              currency: useData[i].Currency || "",
-              currencySellRate: useData[i].SellRate || "",
-              currencyCode: useData[i].Code || "",
+              id: data.tcurrency[i].fields.ID || "",
+              currency: data.tcurrency[i].fields.Currency || "",
+              currencySellRate: data.tcurrency[i].fields.SellRate || "",
+              currencyCode: data.tcurrency[i].fields.Code || "",
             };
 
             currencyData.push(currencyObj);

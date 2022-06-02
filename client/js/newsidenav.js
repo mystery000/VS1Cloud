@@ -481,7 +481,7 @@ Template.newsidenav.onRendered(function() {
                 $('.collapse').collapse('hide');
             } else if ((currentLoc == "/settings") ||
                 (currentLoc == "/accesslevel") || (currentLoc == "/companyappsettings") || (currentLoc == "/organisationsettings") ||
-                (currentLoc == "/taxratesettings") || (currentLoc == "/currenciesSettings") ||
+                (currentLoc == "/taxratesettings") || (currentLoc == "/currenciessettings") ||
                 (currentLoc == "/departmentSettings") || (currentLoc == "/termsettings") ||
                 (currentLoc == "/paymentmethodSettings")) {
                 $('#sidenavaccounts').removeClass('active');
@@ -7242,7 +7242,7 @@ Template.newsidenav.events({
     'click #sidenavcurrenciesSettings': function(event) {
 
         event.preventDefault();
-        FlowRouter.go('/currenciesSettings');
+        FlowRouter.go('/currenciessettings');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

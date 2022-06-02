@@ -381,7 +381,7 @@ Template.receiptsoverview.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         sideBarService.getCurrencies().then(function(data) {
                             for (let i in data.tcurrency) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
+                                if (data.tcurrency[i].fields.Code === currencyDataName) {
                                     showEditCurrencyView(data.tcurrency[i]);
                                 }
                             }
@@ -395,7 +395,7 @@ Template.receiptsoverview.onRendered(function() {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tcurrency;
                         for (let i = 0; i < data.tcurrency.length; i++) {
-                            if (data.tcurrency[i].Code === currencyDataName) {
+                            if (data.tcurrency[i].fields.Code === currencyDataName) {
                                 showEditCurrencyView(data.tcurrency[i]);
                             }
                         }
@@ -409,7 +409,7 @@ Template.receiptsoverview.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'inline-block');
                     sideBarService.getCurrencies().then(function(data) {
                         for (let i in data.tcurrency) {
-                            if (data.tcurrency[i].Code === currencyDataName) {
+                            if (data.tcurrency[i].fields.Code === currencyDataName) {
                                 showEditCurrencyView(data.tcurrency[i]);
                             }
                         }
@@ -436,17 +436,17 @@ Template.receiptsoverview.onRendered(function() {
     }
 
     function showEditCurrencyView(data) {
-        $('#edtCurrencyID').val(data.Id);
+        $('#edtCurrencyID').val(data.fields.ID);
         setTimeout(function() {
-            $('#sedtCountry').val(data.Country);
+            $('#sedtCountry').val(data.fields.Country);
         }, 200);
         //$('#sedtCountry').val(data.Country);
-        // $('#currencyCode').val(currencyDataName);
-        $('#currencySymbol').val(data.CurrencySymbol);
-        $('#edtCurrencyName').val(data.Currency);
-        $('#edtCurrencyDesc').val(data.CurrencyDesc);
-        $('#edtBuyRate').val(data.BuyRate);
-        $('#edtSellRate').val(data.SellRate);
+        $('#currencyCode').val(data.fields.Code);
+        $('#currencySymbol').val(data.fields.CurrencySymbol);
+        $('#edtCurrencyName').val(data.fields.Currency);
+        $('#edtCurrencyDesc').val(data.fields.CurrencyDesc);
+        $('#edtBuyRate').val(data.fields.BuyRate);
+        $('#edtSellRate').val(data.fields.SellRate);
     }
 
     templateObject.setAccountSelect = function(e) {
@@ -1014,7 +1014,6 @@ Template.receiptsoverview.onRendered(function() {
                 accountService.getExpenseClaim().then(function(data) {
                     addVS1Data('TExpenseClaim', JSON.stringify(data));
                     let lineItems = [];
-                    console.log('expense', data)
                     data.texpenseclaimex.forEach(expense => {
                         if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
                             expense.fields.Lines.forEach(claim => {
@@ -1191,6 +1190,7 @@ Template.receiptsoverview.onRendered(function() {
             } else { //else load data from indexdb
                 let data = JSON.parse(dataObject[0].data);
                 let lineItems = [];
+                console.log(data);
                 data.texpenseclaimex.forEach(expense => {
                     if (Object.prototype.toString.call(expense.fields.Lines) === "[object Array]") {
                         expense.fields.Lines.forEach(claim => {
@@ -1402,7 +1402,6 @@ Template.receiptsoverview.onRendered(function() {
                 parentElement = "#nav-time";
             }
 
-            console.log('vendor', data.vendor);
 
             if (!data.vendor.name) {
                 isExistSupplier = false;
@@ -1443,7 +1442,6 @@ Template.receiptsoverview.onRendered(function() {
                     };
 
                     contactService.saveSupplier(objDetails).then(function(supplier) {
-                        console.log('supplier save', supplier);
                         //$('.fullScreenSpin').css('display','none');
                         //  Meteor._reload.reload();
                         $(parentElement + ' .merchants').val(data.vendor.name);
@@ -1458,7 +1456,6 @@ Template.receiptsoverview.onRendered(function() {
 
                     }).catch(function(err) {
                         //$('.fullScreenSpin').css('display','none');
-                        console.log('supplier svae error', err);
                     });
                 }
             }
@@ -1631,7 +1628,6 @@ Template.receiptsoverview.events({
     'change #nav-expense .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
-        console.log('file changed', imageFile);
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-expense .receiptPhoto').css('background-image', "url('" + imageData + "')");
@@ -1644,7 +1640,6 @@ Template.receiptsoverview.events({
     'change #nav-time .attachment-upload': function(event) {
         let files = $(event.target)[0].files;
         let imageFile = files[0];
-        console.log('file changed', imageFile);
         let template = Template.instance();
         template.base64data(imageFile).then(imageData => {
             $('#nav-time .receiptPhoto').css('background-image', "url('" + imageData + "')");
@@ -1963,7 +1958,6 @@ Template.receiptsoverview.events({
             }
         }
 
-        console.log('ExpenseClaim', expenseClaim)
 
         $('.fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2153,11 +2147,9 @@ Template.receiptsoverview.events({
                 }
             }
 
-            console.log('ExpenseClaim', expenseClaim)
 
             $('.fullScreenSpin').css('display', 'inline-block');
             accountService.saveReceipt(expenseClaim).then(function(data) {
-                console.log('update receipt result', data);
                 // $('.fullScreenSpin').css('display', 'none');
                 // setTimeout(() => {
                 window.open('/receiptsoverview?success=true', '_self');
@@ -2169,7 +2161,6 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         $('#splitExpenseModal').modal('toggle');
         let receipt = Object.assign({}, template.editExpenseClaim.get());
-        console.log('receipt', receipt);
         template.refreshSplitTable([receipt]);
     },
     'click #btnDeleteReceipt': function(e) {
@@ -2238,7 +2229,6 @@ Template.receiptsoverview.events({
                     }
                 }
 
-                console.log('ExpenseClaim', expenseClaim)
 
                 $('.fullScreenSpin').css('display', 'inline-block');
                 accountService.saveReceipt(expenseClaim).then(function(data) {
@@ -2266,7 +2256,6 @@ Template.receiptsoverview.events({
         }
 
         let diffDays = moment(endDate, "DD/MM/YYYY").diff(moment(startDate, "DD/MM/YYYY"), 'days');
-        console.log('diffdays', diffDays);
         if (diffDays < 0) {
             swal("Select end date later than start date", '', 'warning');
             return;
@@ -2423,7 +2412,6 @@ Template.receiptsoverview.events({
                 }
             }
 
-            console.log('splited item', expenseClaim);
             accountService.saveReceipt(expenseClaim).then(function(data) {
                 // $('.fullScreenSpin').css('display', 'none');
                 setTimeout(() => {
@@ -2527,7 +2515,6 @@ Template.receiptsoverview.events({
             }
         }
 
-        console.log('duplicate object', expenseClaim);
         $('.fullScreenSpin').css('display', 'inline-block');
         accountService.saveReceipt(expenseClaim).then(function(data) {
             // $('.fullScreenSpin').css('display', 'none');
@@ -2635,7 +2622,6 @@ Template.receiptsoverview.events({
         let template = Template.instance();
         let receiptRecords = template.mergeReceiptRecords.get();
 
-        console.log('keeping expense', receiptRecords[template.mergeReceiptSelectedIndex.get()]);
         let index = template.mergeReceiptSelectedIndex.get();
         for (i = 0; i < receiptRecords.length; i++) {
             if (i == index) {
@@ -2656,7 +2642,6 @@ Template.receiptsoverview.events({
                 let selectedReiumbursable = $('#swtMergedReiumbursable').prop('checked');
                 mergedExpense.Reimbursement = selectedReiumbursable;
 
-                console.log('merged expense', mergedExpense)
 
                 let expenseClaimLine = {
                     type: "TExpenseClaimLineEx",
