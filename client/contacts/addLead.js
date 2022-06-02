@@ -1282,7 +1282,7 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?customerid=' + customerID);
+            FlowRouter.go('/crmoverview?leadid=' + customerID);
         } else {
 
         }
@@ -1292,7 +1292,7 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?customerid=' + customerID);
+            FlowRouter.go('/crmoverview?leadid=' + customerID);
         } else {
 
         }
@@ -1302,7 +1302,7 @@ Template.leadscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let customerID = parseInt(currentId.id);
-            FlowRouter.go('/appointments?customerid=' + customerID);
+            FlowRouter.go('/appointments?leadid=' + customerID);
         } else {
 
         }
