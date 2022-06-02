@@ -906,7 +906,7 @@
                 <div class="modal-body">
                     {{#each item in deptrecords}}
                         <div class="custom-control custom-switch" style="margin: 8px;">
-                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.id}}">
+                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
                             <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
                         </div>
                     {{/each}}
