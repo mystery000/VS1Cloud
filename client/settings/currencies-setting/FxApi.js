@@ -1,6 +1,8 @@
 export default class FxApi {
-  static ApiID = "zuusoft880274294";
-  static ApiKey = "o1bu59smsvcicg56meect2ffd0";
+  static ApiID = "webinfy166640657";
+  static ApiKey = "peorsc7t96poaf2k8t1segj0u2";
+  static encodedApiKey =
+    "d2ViaW5meTE2NjY0MDY1NzpwZW9yc2M3dDk2cG9hZjJrOHQxc2VnajB1Mgo=";
 
   constructor() {
     console.log("Fx Api Loaded");
@@ -14,8 +16,7 @@ export default class FxApi {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization:
-              "Basic enV1c29mdDg4MDI3NDI5NDpvMWJ1NTlzbXN2Y2ljZzU2bWVlY3QyZmZkMA==",
+            Authorization: "Basic " + encodedApiKey,
           },
         }
       );
@@ -51,8 +52,7 @@ export default class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Basic enV1c29mdDg4MDI3NDI5NDpvMWJ1NTlzbXN2Y2ljZzU2bWVlY3QyZmZkMA==",
+          Authorization: "Basic " + encodedApiKey,
         },
       }
     );
@@ -72,8 +72,7 @@ export default class FxApi {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Basic enV1c29mdDg4MDI3NDI5NDpvMWJ1NTlzbXN2Y2ljZzU2bWVlY3QyZmZkMA==",
+          Authorization: "Basic " + encodedApiKey,
         },
       }
     );
