@@ -371,6 +371,19 @@ Meteor.startup(() => {
             } catch (error) {
                 return {success: false, message: error.message};
             }
+        },
+        'getSMSLogs': async (authSid, authToken) => {
+            const smsClient = require('twilio')(authSid, authToken);
+            try {
+                return smsClient.messages.list()
+                    .then(messages => {
+                        console.log(messages[0].sid);
+                        return { success: true, messages };
+                    });
+            } catch(error) {
+                console.log('Got an error: ', error);
+                return {success: false, message: error.message};
+            }
         }
     });
 
