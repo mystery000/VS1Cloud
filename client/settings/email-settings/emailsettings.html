@@ -77,7 +77,7 @@
                                     }
 
                                     .colFrequency {
-                                        width: 20% !important;
+                                        width: 40% !important;
                                     }
 
                                     .colSend {
@@ -95,7 +95,7 @@
                                             <th class="th colTransType" style="width: 30% !important;">Transaction Type
                                             </th>
                                             <th class="th colFrequency" style="width: 20% !important;">Frequency</th>
-                                            <th class="th colSend" style="width: 20% !important;">Send</th>
+                                            <!-- <th class="th colSend" style="width: 20% !important;">Send</th> -->
                                             <th class="th colRecipients" style="width: 30% !important;">Recipients</th>
                                         </tr>
                                     </thead>
@@ -127,7 +127,7 @@
                                                             {{/if}}
                                                         {{/if}}
                                                     {{/if}}
-                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td>
+                                                    <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-inout="{{item.isEmpty}}">{{item.basedOnType}}</td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
                                                             class="es-input highlightSelect edtRecipients" type="search" data-ids="{{item.employeeid}}" value="{{item.employeeEmailID}}"></td>
                                                 </tr>
@@ -254,7 +254,7 @@
                                     }
 
                                     .colFrequency {
-                                        width: 20% !important;
+                                        width: 40% !important;
                                     }
 
                                     .colSend {
@@ -272,7 +272,7 @@
                                             <th class="th colTransType" style="width: 30% !important;">Transaction Type
                                             </th>
                                             <th class="th colFrequency" style="width: 20% !important;">Frequency</th>
-                                            <th class="th colSend" style="width: 20% !important;">Send</th>
+                                            <!-- <th class="th colSend" style="width: 20% !important;">Send</th> -->
                                             <th class="th colRecipients" style="width: 30% !important;">Recipients</th>
                                         </tr>
                                     </thead>
@@ -307,7 +307,7 @@
                                                     <!-- {{#if equals item.MsUpdateSiteCode "Time"}}
                                                         <td contenteditable="false" class="colSend s-input" id="edtBasedOn" data-time="{{item.MsTimeStamp}}">{{item.basedOnType}}</td>
                                                     {{else}} -->
-                                                    <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td>
+                                                    <!-- <td contenteditable="false" class="colSend s-input" id="edtBasedOn">{{item.basedOnType}}</td> -->
                                                     <!-- {{/if}} -->
                                                     <!-- <td contenteditable="false" class=" s-input" id="edtRecipients"></td> -->
                                                     <td contenteditable="false"><input id="edtRecipients-{{item.formID}}"
@@ -988,6 +988,96 @@
                                                                         </div>
                                                                     </div>
                                                                     <p id="edtOneTimeOnlyDateError" style="display: none; color: darkred; margin: 0; font-size: 15px;">This field is required.</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style="border-top: 1px solid #e3e6f0; padding: 1rem 1rem 0.5rem 1rem; margin: 0 -1rem"><h5 style="margin: 0;">Based On</h5></div>
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnPrint" id="basedOnPrint" checked>
+                                                            <label class="form-check-label" for="basedOnPrint">
+                                                                On Print
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnSave" id="basedOnSave">
+                                                            <label class="form-check-label" for="basedOnSave">
+                                                                On Save
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnTransactionDate" id="basedOnTransactionDate">
+                                                            <label class="form-check-label"
+                                                                for="basedOnTransactionDate">
+                                                                On Transaction Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnDueDate" id="basedOnDueDate">
+                                                            <label class="form-check-label" for="basedOnDueDate">
+                                                                On Due Date
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnOutstanding" id="basedOnOutstanding">
+                                                            <label class="form-check-label" for="basedOnOutstanding">
+                                                                If Outstanding
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="basedOnEvent" id="basedOnEvent">
+                                                            <label class="form-check-label" for="basedOnEvent">
+                                                                On Event
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-7" id="onEventSettings" style="display: none;">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h5 style="margin-bottom: 8px;">Settings</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 8px;">
+                                                            <div class="col-12">
+                                                                <div class="form-check" style="margin-top: 2px;">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="settingsOnEvents" id="settingsOnLogon"
+                                                                        checked>
+                                                                    <label class="form-check-label"
+                                                                        for="settingsOnLogon">
+                                                                        On Logon
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" style="margin-bottom: 8px;">
+                                                            <div class="col-12">
+                                                                <div class="form-check" style="margin-top: 2px;">
+                                                                    <input class="form-check-input" type="radio"
+                                                                        name="settingsOnEvents" id="settingsOnLogout">
+                                                                    <label class="form-check-label"
+                                                                        for="settingsOnLogout">
+                                                                        On Logout
+                                                                    </label>
                                                                 </div>
                                                             </div>
                                                         </div>

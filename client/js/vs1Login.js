@@ -1378,7 +1378,6 @@ Template.vs1login.onRendered(function () {
                                                                                         },
                                                                                         success: function(data) {
                                                                                             // TODO: Add indexdb function to save sms messaging logs
-                                                                                            console.log('SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
                                                                                             if (!data.sms_messages) {
                                                                                                 addVS1Data('TVS1SMSLogs', data).then((res) => {
                                                                                                     console.log(res);
