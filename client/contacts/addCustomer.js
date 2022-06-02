@@ -3355,6 +3355,76 @@ Template.customerscard.events({
 
         }
     },
+    'click .btnJobTask': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobEmail': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/crmoverview?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobAppointment': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/appointments?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobQuote': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/quotecard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobSalesOrder': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/salesordercard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobInvoice': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/invoicecard?customerid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnJobRefund': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.jobid)) {
+            let customerID = parseInt(currentId.jobid);
+            FlowRouter.go('/refundcard?customerid=' + customerID);
+        } else {
+
+        }
+    },
 });
 
 Template.customerscard.helpers({
