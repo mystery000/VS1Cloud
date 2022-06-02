@@ -750,12 +750,37 @@ Template.crmoverview.events({
   },
 
   "click .btnRefresh": function () {
-    Meteor._reload.reload();
+    $(".fullScreenSpin").css("display", "inline-block");
+    crmService
+      .getAllTaskList()
+      .then(function (data) {
+        addVS1Data("TCRMTaskList", JSON.stringify(data));
+        crmService
+          .getTProjectList()
+          .then(function (data) {
+            addVS1Data("TCRMProjectList", JSON.stringify(data));
+            crmService
+              .getAllLabels()
+              .then(function (data) {
+                addVS1Data("TCRMLabelList", JSON.stringify(data));
+                Meteor._reload.reload();
+              })
+              .catch(function (err) {
+                Meteor._reload.reload();
+              });
+          })
+          .catch(function (err) {
+            Meteor._reload.reload();
+          });
+      })
+      .catch(function (err) {
+        Meteor._reload.reload();
+      });
   },
 
-  "click .btnSearchCrm": function () {
-    Meteor._reload.reload();
-  },
+  // "click .btnSearchCrm": function () {
+  //   Meteor._reload.reload();
+  // },
 
   "click .btnOpenSettings": function (event) {
     let currentTabID = Template.instance().currentTabID.get();
