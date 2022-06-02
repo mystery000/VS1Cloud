@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP_PORT="4000"
+APP_PORT="7000"
 APP_URI="http://localhost:$APP_PORT"
 
 echo "Launching app on $APP_URI"
