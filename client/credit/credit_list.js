@@ -364,8 +364,10 @@ Template.creditlist.onRendered(function() {
                                  this.fnPageChange('last');
                              }
                                  $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
-                                 $('.myvarFilterForm').appendTo(".colDateFilter");
-
+                                 // $('.myvarFilterCreditForm').appendTo(".colDateFilter");
+                                 setTimeout(function () {
+                                     $('.myvarFilterCreditForm').appendTo(".colDateFilter");
+                                 }, 200);
                              },
                              "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                                let countTableData = data.Params.Count || 0; //get count from API data
@@ -679,7 +681,9 @@ Template.creditlist.onRendered(function() {
                                this.fnPageChange('last');
                            }
                                $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
-                              $('.myvarFilterForm').appendTo(".colDateFilter");
+                               setTimeout(function () {
+                                   $('.myvarFilterCreditForm').appendTo(".colDateFilter");
+                               }, 200);
 
                            },
                            "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
@@ -988,7 +992,9 @@ Template.creditlist.onRendered(function() {
                              this.fnPageChange('last');
                          }
                              $("<button class='btn btn-primary btnRefreshCreditList' type='button' id='btnRefreshCreditList' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcreditlist_filter");
-                             $('.myvarFilterForm').appendTo(".colDateFilter");
+                             setTimeout(function () {
+                                 $('.myvarFilterCreditForm').appendTo(".colDateFilter");
+                             }, 200);
 
                          },
                          "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
