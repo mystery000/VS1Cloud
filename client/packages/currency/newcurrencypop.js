@@ -3,6 +3,7 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import FxApi from "../../settings/currencies-setting/FxApi";
 let sideBarService = new SideBarService();
 
 Template.newcurrencypop.onCreated(function () {
@@ -565,38 +566,38 @@ Template.newcurrencypop.onRendered(function () {
 
   templateObject.getTaxRates();
 
-  templateObject.getCountryData = function () {
-    getVS1Data("TCountries")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          countryService.getCountry().then((data) => {
-            for (let i = 0; i < data.tcountries.length; i++) {
-              countries.push(data.tcountries[i].Country);
-            }
-            countries = _.sortBy(countries);
-            templateObject.countryData.set(countries);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tcountries;
-          for (let i = 0; i < useData.length; i++) {
-            countries.push(useData[i].Country);
-          }
-          countries = _.sortBy(countries);
-          templateObject.countryData.set(countries);
-        }
-      })
-      .catch(function (err) {
-        countryService.getCountry().then((data) => {
-          for (let i = 0; i < data.tcountries.length; i++) {
-            countries.push(data.tcountries[i].Country);
-          }
-          countries = _.sortBy(countries);
-          templateObject.countryData.set(countries);
-        });
-      });
-  };
-  templateObject.getCountryData();
+  //   templateObject.getCountryData = function () {
+  //     getVS1Data("TCountries")
+  //       .then(function (dataObject) {
+  //         if (dataObject.length == 0) {
+  //           countryService.getCountry().then((data) => {
+  //             for (let i = 0; i < data.tcountries.length; i++) {
+  //               countries.push(data.tcountries[i].Country);
+  //             }
+  //             countries = _.sortBy(countries);
+  //             templateObject.countryData.set(countries);
+  //           });
+  //         } else {
+  //           let data = JSON.parse(dataObject[0].data);
+  //           let useData = data.tcountries;
+  //           for (let i = 0; i < useData.length; i++) {
+  //             countries.push(useData[i].Country);
+  //           }
+  //           countries = _.sortBy(countries);
+  //           templateObject.countryData.set(countries);
+  //         }
+  //       })
+  //       .catch(function (err) {
+  //         countryService.getCountry().then((data) => {
+  //           for (let i = 0; i < data.tcountries.length; i++) {
+  //             countries.push(data.tcountries[i].Country);
+  //           }
+  //           countries = _.sortBy(countries);
+  //           templateObject.countryData.set(countries);
+  //         });
+  //       });
+  //   };
+  //   templateObject.getCountryData();
 
   $(document).on("click", ".table-remove", function () {
     event.stopPropagation();
@@ -656,6 +657,108 @@ Template.newcurrencypop.onRendered(function () {
 });
 
 Template.newcurrencypop.events({
+  "change #sedtCountry": async (e) => {
+    console.log("value changed");
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let taxRateService = new TaxRateService();
+    let selectCountry = $("#sedtCountry").val();
+    $("#edtCurrencyID").val("");
+
+    $("#currencyCode").val("");
+    $("#currencySymbol").val("");
+    $("#edtCurrencyName").val("");
+    $("#edtCurrencyDesc").val("");
+    $("#edtBuyRate").val("");
+    $("#edtSellRate").val("");
+
+    if (selectCountry != "") {
+      const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
+
+      if (data) {
+        for (let i = 0; i < data.tcurrency.length; i++) {
+          if (data.tcurrency[i].Country === selectCountry) {
+            var currencyid = data.tcurrency[i].Id || "";
+            var country = data.tcurrency[i].Country || "";
+            var currencyCode = data.tcurrency[i].Code || "";
+            var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
+            var currencyName = data.tcurrency[i].Currency || "";
+            var currencyDesc = data.tcurrency[i].CurrencyDesc;
+            var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
+            var currencySellRate = data.tcurrency[i].SellRate || 0;
+
+            /**
+             * Let's call the Fx APis here
+             */
+            const fxApi = new FxApi();
+            let currencyRates = await fxApi.getExchangeRate(currencyCode);
+            if (currencyRates) {
+              currencyBuyRate = currencyRates.buy;
+              currencySellRate = currencyRates.sell;
+            }
+
+            $("#edtCurrencyID").val(currencyid);
+            // $('#sedtCountry').val(country);
+
+            $("#currencyCode").val(currencyCode);
+            $("#currencySymbol").val(currencySymbol);
+            $("#edtCurrencyName").val(currencyName);
+            $("#edtCurrencyDesc").val(currencyDesc);
+            $("#edtBuyRate").val(currencyBuyRate);
+            $("#edtSellRate").val(currencySellRate);
+          }
+        }
+      }
+    }
+    $(".fullScreenSpin").css("display", "none");
+  },
+  "click #sedtCountry": (e) => {
+    console.log(e);
+
+    $("#countryModal").modal("show");
+  },
+  //   "change #sedtCountry": function () {
+  //     let taxRateService = new TaxRateService();
+  //     let selectCountry = $("#sedtCountry").val();
+  //     //$('#edtCurrencyID').val('');
+
+  //     $("#currencyCode").val("");
+  //     $("#currencySymbol").val("");
+  //     $("#edtCurrencyName").val("");
+  //     $("#edtCurrencyDesc").val("");
+  //     $("#edtBuyRate").val(1);
+  //     $("#edtSellRate").val(1);
+  //     if (selectCountry != "") {
+  //       taxRateService
+  //         .getOneCurrencyByCountry(selectCountry)
+  //         .then(function (data) {
+  //           for (let i = 0; i < data.tcurrency.length; i++) {
+  //             if (data.tcurrency[i].Country === selectCountry) {
+  //               var currencyid = data.tcurrency[i].Id || "";
+  //               var country = data.tcurrency[i].Country || "";
+  //               var currencyCode = data.tcurrency[i].Code || "";
+  //               var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
+  //               var currencyName = data.tcurrency[i].Currency || "";
+  //               var currencyDesc = data.tcurrency[i].CurrencyDesc;
+  //               var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
+  //               var currencySellRate = data.tcurrency[i].SellRate || 0;
+
+  //               $("#edtCurrencyID").val(currencyid);
+  //               // $('#sedtCountry').val(country);
+
+  //               $("#currencyCode").val(currencyCode);
+  //               $("#currencySymbol").val(currencySymbol);
+  //               $("#edtCurrencyName").val(currencyName);
+  //               $("#edtCurrencyDesc").val(currencyDesc);
+  //               $("#edtBuyRate").val(currencyBuyRate);
+  //               $("#edtSellRate").val(currencySellRate);
+  //             }
+  //           }
+
+  //           //data.fields.Rate || '';
+  //         });
+  //     }
+  //   },
   "click #btnNewInvoice": function (event) {
     // FlowRouter.go('/invoicecard');
   },
@@ -951,48 +1054,7 @@ Template.newcurrencypop.events({
     $("#edtBuyRate").val(1);
     $("#edtSellRate").val(1);
   },
-  "change #sedtCountry": function () {
-    let taxRateService = new TaxRateService();
-    let selectCountry = $("#sedtCountry").val();
-    //$('#edtCurrencyID').val('');
 
-    $("#currencyCode").val("");
-    $("#currencySymbol").val("");
-    $("#edtCurrencyName").val("");
-    $("#edtCurrencyDesc").val("");
-    $("#edtBuyRate").val(1);
-    $("#edtSellRate").val(1);
-    if (selectCountry != "") {
-      taxRateService
-        .getOneCurrencyByCountry(selectCountry)
-        .then(function (data) {
-          for (let i = 0; i < data.tcurrency.length; i++) {
-            if (data.tcurrency[i].Country === selectCountry) {
-              var currencyid = data.tcurrency[i].Id || "";
-              var country = data.tcurrency[i].Country || "";
-              var currencyCode = data.tcurrency[i].Code || "";
-              var currencySymbol = data.tcurrency[i].CurrencySymbol || "";
-              var currencyName = data.tcurrency[i].Currency || "";
-              var currencyDesc = data.tcurrency[i].CurrencyDesc;
-              var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
-              var currencySellRate = data.tcurrency[i].SellRate || 0;
-
-              $("#edtCurrencyID").val(currencyid);
-              // $('#sedtCountry').val(country);
-
-              $("#currencyCode").val(currencyCode);
-              $("#currencySymbol").val(currencySymbol);
-              $("#edtCurrencyName").val(currencyName);
-              $("#edtCurrencyDesc").val(currencyDesc);
-              $("#edtBuyRate").val(currencyBuyRate);
-              $("#edtSellRate").val(currencySellRate);
-            }
-          }
-
-          //data.fields.Rate || '';
-        });
-    }
-  },
   "click .btnSaveCurrency": function () {
     let taxRateService = new TaxRateService();
     $(".fullScreenSpin").css("display", "inline-block");
