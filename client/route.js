@@ -1634,3 +1634,102 @@ authenticatedRoutes.route('/setup', {
         });
     }
 });
+
+authenticatedRoutes.route('/serialnumberreport', {
+    name: 'serialnumberreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serialnumberreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollleaveaccruedreport', {
+    name: 'payrollleaveaccruedreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleaveaccruedreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/fxhistorylist', {
+    name: 'fxhistorylist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'fxhistorylist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/binlocationslist', {
+    name: 'binlocationslist',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'binlocationslist'
+        });
+    }
+});
+
+authenticatedRoutes.route('/timesheetsummary', {
+    name: 'timesheetsummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'timesheetsummary'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollhistoryreport', {
+    name: 'payrollhistoryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollhistoryreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockvaluereport', {
+    name: 'stockvaluereport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockvaluereport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockmovementreport', {
+    name: 'stockmovementreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockmovementreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/stockquantitybylocation', {
+    name: 'stockquantitybylocation',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'stockquantitybylocation'
+        });
+    }
+});
+
+authenticatedRoutes.route('/customerdetailsreport', {
+    name: 'customerdetailsreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customerdetailsreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/customersummaryreport', {
+    name: 'customersummaryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customersummaryreport'
+        });
+    }
+});

@@ -9,7 +9,7 @@ Meteor.startup(function(){
       var minutesToAdd=2;
       var currentDate = new Date();
       var futureDate = new Date(currentDate.getTime() + minutesToAdd*60000);
-      
+
       // FutureTasks.insert({
       //   to: 'silvertiger0321@gmail.com',
       //   from: 'noreply@vs1cloud.com',
@@ -64,7 +64,6 @@ Meteor.methods({
     try {
       Email.send({
         to: details.to,
-        // to: 'silvertiger0321@gmail.com',
         from: details.from,
         cc: details.cc,
         subject: details.subject,
@@ -99,7 +98,6 @@ Meteor.methods({
     try {
       Email.send({
         to: details.EmployeeEmail,
-        // to: 'silvertiger0321@gmail.com',
         from: 'noreply@vs1cloud.com',
         cc: '',
         subject: 'Report Email',
@@ -140,16 +138,17 @@ Meteor.methods({
       // If email scheduling is inactive, remove corresponding FutureTask and SyncedCron job
       FutureTasks.remove(details.EmployeeId + "_" + details.FormID);
       SyncedCron.remove(details.EmployeeId + "_" + details.FormID);
-    } 
+    }
   },
   calculateNextDate: function(details) {
+    console.log(details);
     let startDate;
     if (details.NextDueDate) startDate = new Date(details.NextDueDate);
     else {
       if (details.StartDate) startDate = new Date(details.StartDate);
       else startDate = new Date();
     }
-    startDate = startDate.getTime();
+    startDate = startDate.getTime() + (details.Offset - startDate.getTimezoneOffset()) * 60 * 1000;
     if (details.Frequency === "M") {
       let months = '0,1,2,3,4,5,6,7,8,9,10,11';
       const monthDate = details.MonthDays;
@@ -293,7 +292,7 @@ Meteor.methods({
       },
       {
           id: 77,
-          name: "Sakes Orders",
+          name: "Sales Orders",
           url: 'allreports'
       },
       {

@@ -11,6 +11,7 @@ import 'jquery-editable-select';
 import { Random } from 'meteor/random';
 import { Session } from 'meteor/session';
 import f from "jspdf";
+import { template } from "lodash";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -48,7 +49,7 @@ Template.payrollrules.onRendered(function() {
     var uleavetypearraylist = [];
     var countryService = new CountryService();
     let countries = [];
-
+    let loggedEmpID = Session.get('mySessionEmployeeLoggedID');
 
     let tabid = FlowRouter.current().queryParams.active_key;
 
@@ -1711,25 +1712,32 @@ Template.payrollrules.onRendered(function() {
                       data: splashArrayCalenderList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [
-                              
+                        {
+                          className: "colCalenderID hiddenColumn",
+                          "targets": [0]
+                        },
                         {
                             className: "colPayCalendarName",
-                            "targets": [0]
-                        },  {
-                            className: "colPayPeriod",
                             "targets": [1]
-                        }, {
-                            className: "colNextPayPeriod",
+                        },  
+                        {
+                            className: "colPayPeriod",
                             "targets": [2]
-                        }, {
-                            className: "colNextPaymentDate",
+                        }, 
+                        {
+                            className: "colNextPayPeriod",
                             "targets": [3]
-                        },  {
-                            className: "colDelete",
+                        }, 
+                        {
+                            className: "colNextPaymentDate",
+                            "targets": [4]
+                        },  
+                        {
+                            className: "colDeleteCalenders",
                             "orderable": false,
                             "targets": -1
                         }
-                      ],
+                    ],
                       select: true,
                       destroy: true,
                       colReorder: true,
@@ -1901,7 +1909,7 @@ Template.payrollrules.onRendered(function() {
                             "orderable": false,
                             "targets": -1
                         }
-                      ],
+                    ],
                       select: true,
                       destroy: true,
                       colReorder: true,
@@ -2026,27 +2034,28 @@ Template.payrollrules.onRendered(function() {
     };
     templateObject.getCalenders();
     
-    templateObject.getHolidayData = function() {
-        
+    templateObject.getHolidayData = function(){
+
         getVS1Data('TPayrollHolidays').then(function(dataObject) {
+       
             if (dataObject.length == 0) {
-                 sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+              sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
+                  
                   addVS1Data('TPayrollHolidays', JSON.stringify(data));
                   let lineItems = [];
                   let lineItemObj = {};
-                
-                  for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+                  for (let i = 0; i < data.tpayrollholidays.length; i++) {
                     
-                      var dataListAllowance = [
-                          data.Tpayrollholidays[i].fields.ID || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysDate || '',
-                          data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
-                          '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                      ];
-    
-                      splashArrayHolidayList.push(dataListAllowance);
-                  }
+                            var dataListAllowance = [
+                                data.tpayrollholidays[i].fields.ID || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
+                                '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                            ];
+            
+                        splashArrayHolidayList.push(dataListAllowance);
+                    }
     
             
     
@@ -2060,28 +2069,28 @@ Template.payrollrules.onRendered(function() {
                           data: splashArrayHolidayList,
                           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                           columnDefs: [                              
-                            
-                               {
-                                 className: "colHolidayID hiddenColumn",
-                                 "targets": [0]
-                                },
-                                {
-                                  className: "colHolidayName",
-                                  "targets": [1]
-                                },  
-                                {
-                                  className: "colHolidayDate",
-                                  "targets": [2]
-                                },  
-                                {
-                                   className: "colHolidaygroup hiddenColumn",
-                                   "targets": [3]
-                                },                                                 
-                               {
-                                  className: "colHolidayDelete",
-                                  "orderable": false,
-                                  "targets": -1
-                               }
+                        
+                            {
+                              className: "colHolidayID hiddenColumn",
+                              "targets": [0]
+                            },
+                            {
+                               className: "colHolidayName",
+                               "targets": [1]
+                            },  
+                            {
+                               className: "colHolidayDate",
+                               "targets": [2]
+                            },  
+                            {
+                                className: "colHolidaygroup hiddenColumn",
+                                "targets": [3]
+                            },                                                  
+                            {
+                               className: "colHolidayDelete",
+                               "orderable": false,
+                               "targets": -1
+                            }
                           ],
                           select: true,
                           destroy: true,
@@ -2111,35 +2120,35 @@ Template.payrollrules.onRendered(function() {
                               $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                   .on('click', function () {
                                       $('.fullScreenSpin').css('display', 'inline-block');
-                                      var splashArrayHolidayListDupp = new Array();
+                                      var splashArrayHolidayList = new Array();
                                       let dataLenght = oSettings._iDisplayLength;
                                       let customerSearch = $('#tblHolidays_filter input').val();
     
                                       sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                        for (let i = 0; i < data.Tpayrollholidays.length; i++) {
-                    
-                                            var dataListAllowance = [
-                                                data.Tpayrollholidays[i].fields.ID || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysDate || '',
-                                                data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
-                                                '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                            ];
+                                        for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                
+                                                var dataListAllowance = [
+                                                    data.tpayrollholidays[i].fields.ID || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
+                                                    '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                                                ];
                           
                                             splashArrayHolidayList.push(dataListAllowance);
                                         }
     
-                                      let uniqueChars = [...new Set(splashArrayHolidayList)];
-                                      var datatable = $('#tblHolidays').DataTable();
-                                      datatable.clear();
-                                      datatable.rows.add(uniqueChars);
-                                      datatable.draw(false);
-                                      setTimeout(function () {
-                                            $("#tblHolidays").dataTable().fnPageChange('last');
-                                      }, 400);
+                                                  let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                                  var datatable = $('#tblHolidays').DataTable();
+                                                  datatable.clear();
+                                                  datatable.rows.add(uniqueChars);
+                                                  datatable.draw(false);
+                                                  setTimeout(function () {
+                                                    $("#tblHolidays").dataTable().fnPageChange('last');
+                                                  }, 400);
     
-                                      $('.fullScreenSpin').css('display', 'none');
+                                                  $('.fullScreenSpin').css('display', 'none');
     
     
                                       }).catch(function (err) {
@@ -2152,8 +2161,9 @@ Template.payrollrules.onRendered(function() {
                               }, 100);
                           },
                           "fnInitComplete": function () {
-                              $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                              $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+                            
+                            $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+                            $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
                           }
     
@@ -2204,23 +2214,24 @@ Template.payrollrules.onRendered(function() {
               });
             }else{
     
-              let data = JSON.parse(dataObject[0].data);    
-             
+              let data = JSON.parse(dataObject[0].data);
+    
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
-              for (let i = 0; i < data.Tpayrollholidays.length; i++) {
-                    
+              for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                
                 var dataListAllowance = [
                     data.tpayrollholidays[i].fields.ID || '',
                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',   
+                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                 ];
 
                 splashArrayHolidayList.push(dataListAllowance);
             }
+    
         
     
     
@@ -2228,12 +2239,12 @@ Template.payrollrules.onRendered(function() {
                   MakeNegative();
               }, 100);
               setTimeout(function () {
-                  $('#TPayrollHolidays').DataTable({
+                  $('#tblHolidays').DataTable({
     
                       data: splashArrayHolidayList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [                              
-                            
+                        
                         {
                           className: "colHolidayID hiddenColumn",
                           "targets": [0]
@@ -2245,11 +2256,11 @@ Template.payrollrules.onRendered(function() {
                         {
                            className: "colHolidayDate",
                            "targets": [2]
-                        }, 
+                        },  
                         {
                             className: "colHolidaygroup hiddenColumn",
                             "targets": [3]
-                        },                                                   
+                        },                                                  
                         {
                            className: "colHolidayDelete",
                            "orderable": false,
@@ -2284,25 +2295,26 @@ Template.payrollrules.onRendered(function() {
                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
                               .on('click', function () {
                                   $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayHolidayListDupp = new Array();
+                                  var splashArrayHolidayListPop = new Array();
                                   let dataLenght = oSettings._iDisplayLength;
                                   let customerSearch = $('#tblHolidays_filter input').val();
     
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.Tpayrollholidays.length; i++) {
-                    
+                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
                                             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',   
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                                             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
-                        
+                      
                                         splashArrayHolidayList.push(dataListAllowance);
-                                       }
-                                              let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                    }
+    
+                                              let uniqueChars = [...new Set(splashArrayCalenderList)];
                                               var datatable = $('#tblHolidays').DataTable();
                                               datatable.clear();
                                               datatable.rows.add(uniqueChars);
@@ -2324,8 +2336,9 @@ Template.payrollrules.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
-                        $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
+                          
+                    $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
+                    $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
                       }
     
@@ -2373,28 +2386,24 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
-
-    
           sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TPayrollHolidays', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
-             
               for (let i = 0; i < data.tpayrollholidays.length; i++) {
-               
+                
                 var dataListAllowance = [
                     data.tpayrollholidays[i].fields.ID || '',
                     data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                    moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
-                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',    
+                    data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                    data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                     '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                 ];
+    
                 splashArrayHolidayList.push(dataListAllowance);
-             }
-
-
-        
-              
+            }
+      
+    
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -2404,7 +2413,7 @@ Template.payrollrules.onRendered(function() {
                       data: splashArrayHolidayList,
                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                       columnDefs: [                              
-                            
+                        
                         {
                           className: "colHolidayID hiddenColumn",
                           "targets": [0]
@@ -2461,20 +2470,20 @@ Template.payrollrules.onRendered(function() {
     
                                   sideBarService.getHolidayData(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
-                                    for (let i = 0; i < data.Tpayrollholidays.length; i++) {
-                                    
+                                    for (let i = 0; i < data.tpayrollholidays.length; i++) {
+                
                                         var dataListAllowance = [
                                             data.tpayrollholidays[i].fields.ID || '',
                                             data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                                            moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',  
-                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',    
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysDate || '',
+                                            data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || '',               
                                             '<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
-                        
+                      
                                         splashArrayHolidayList.push(dataListAllowance);
                                     }
     
-                                         let uniqueChars = [...new Set(splashArrayHolidayList)];
+                                         let uniqueChars = [...new Set(splashArrayCalenderList)];
                                          var datatable = $('#tblHolidays').DataTable();
                                               datatable.clear();
                                               datatable.rows.add(uniqueChars);
@@ -2496,7 +2505,6 @@ Template.payrollrules.onRendered(function() {
                           }, 100);
                       },
                       "fnInitComplete": function () {
-                
                         $("<button class='btn btn-primary btnAddNewHoliday' data-dismiss='modal' data-toggle='modal' data-target='#newHolidayModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblHolidays_filter");
                         $("<button class='btn btn-primary btnRefreshHoliday' type='button' id='btnRefreshHoliday' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblHolidays_filter");
     
@@ -2512,7 +2520,7 @@ Template.payrollrules.onRendered(function() {
                   }).on('length.dt', function (e, settings, len) {
                     //$('.fullScreenSpin').css('display', 'inline-block');
                     let dataLenght = settings._iDisplayLength;
-                    splashArrayHolidayList = [];
+                    splashArrayCalenderList = [];
                     if (dataLenght == -1) {
                       $('.fullScreenSpin').css('display', 'none');
     
@@ -2548,8 +2556,9 @@ Template.payrollrules.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
           });
         });
-        
-     };
+
+    };
+
     templateObject.getHolidayData();
 
     templateObject.getOrderdinaryEarning = function(){
@@ -7748,6 +7757,8 @@ Template.payrollrules.onRendered(function() {
     };
 
     templateObject.getLeaveTypeData();
+
+
    
     templateObject.getunpaidleavedata = function(){
               getVS1Data('TUnpaidLeave').then(function(dataObject) {
@@ -8826,7 +8837,6 @@ Template.payrollrules.onRendered(function() {
     };
     templateObject.getReimbursement();
 
-  
     templateObject.getSuperannuationData = function(){
         getVS1Data('TSuperannuation').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -8835,17 +8845,17 @@ Template.payrollrules.onRendered(function() {
                   let lineItems = [];
                   let lineItemObj = {};
                   for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                     var dataListAllowance = [
                         data.tsuperannuation[i].fields.ID || '',
                         data.tsuperannuation[i].fields.Superfund || '',
-                        data.tsuperannuation[i].fields.Supertypeid || '',
+                        data.tsuperannuation[i].fields.Area || '',
                         data.tsuperannuation[i].fields.Employeeid || '',
-                        'Key Missing',
-                        'Key Missing',
-                        'Key Missing',
+                        data.tsuperannuation[i].fields.ABN || '',
+                        data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                        data.tsuperannuation[i].fields.BSB || '',
                         data.tsuperannuation[i].fields.Accountno || '',
-                        'Key Missing',
+                        data.tsuperannuation[i].fields.AccountName || '',
                         '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                      ];
     
@@ -8943,22 +8953,22 @@ Template.payrollrules.onRendered(function() {
                                       sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                         for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                                             var dataListAllowance = [
                                                 data.tsuperannuation[i].fields.ID || '',
                                                 data.tsuperannuation[i].fields.Superfund || '',
-                                                data.tsuperannuation[i].fields.Supertypeid || '',
+                                                data.tsuperannuation[i].fields.Area || '',
                                                 data.tsuperannuation[i].fields.Employeeid || '',
-                                                'Key Missing',
-                                                'Key Missing',
-                                                'Key Missing',
+                                                data.tsuperannuation[i].fields.ABN || '',
+                                                data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                                data.tsuperannuation[i].fields.BSB || '',
                                                 data.tsuperannuation[i].fields.Accountno || '',
-                                                'Key Missing',
+                                                data.tsuperannuation[i].fields.AccountName || '',
                                                 '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                              ];
                             
-                                            splashArraySuperannuationList.push(dataListAllowance);
-                                        }
+                                              splashArraySuperannuationList.push(dataListAllowance);
+                                          }
     
                                                   let uniqueChars = [...new Set(splashArraySuperannuationList)];
                                                   var datatable = $('#tblLeave').DataTable();
@@ -9035,30 +9045,30 @@ Template.payrollrules.onRendered(function() {
             }else{
     
               let data = JSON.parse(dataObject[0].data);
-              console.log(data);
+          
               let useData = data;
               let lineItems = [];
               let lineItemObj = {};
               for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                 var dataListAllowance = [
                     data.tsuperannuation[i].fields.ID || '',
                     data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.Supertypeid || '',
+                    data.tsuperannuation[i].fields.Area || '',
                     data.tsuperannuation[i].fields.Employeeid || '',
-                    'Key Missing',
-                    'Key Missing',
-                    'Key Missing',
+                    data.tsuperannuation[i].fields.ABN || '',
+                    data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                    data.tsuperannuation[i].fields.BSB || '',
                     data.tsuperannuation[i].fields.Accountno || '',
-                    'Key Missing',
+                    data.tsuperannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
+                 ];
 
-                splashArraySuperannuationList.push(dataListAllowance);
-            }
+                  splashArraySuperannuationList.push(dataListAllowance);
+              }
         
     
-    
+          
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -9147,32 +9157,33 @@ Template.payrollrules.onRendered(function() {
                                   sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
     
                                     for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                                         var dataListAllowance = [
                                             data.tsuperannuation[i].fields.ID || '',
                                             data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.Supertypeid || '',
+                                            data.tsuperannuation[i].fields.Area || '',
                                             data.tsuperannuation[i].fields.Employeeid || '',
-                                            'Key Missing',
-                                            'Key Missing',
-                                            'Key Missing',
+                                            data.tsuperannuation[i].fields.ABN || '',
+                                            data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                            data.tsuperannuation[i].fields.BSB || '',
                                             data.tsuperannuation[i].fields.Accountno || '',
-                                            'Key Missing',
+                                            data.tsuperannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
+                                         ];
                         
-                                        splashArraySuperannuationList.push(dataListAllowance);
-                                    }
-                                              let uniqueChars = [...new Set(splashArraySuperannuationList)];
-                                              var datatable = $('#tblSuperannuation').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
+                                          splashArraySuperannuationList.push(dataListAllowance);
+                                      }
+                                      
+                                       let uniqueChars = [...new Set(splashArraySuperannuationList)];
+                                       var datatable = $('#tblSuperannuation').DataTable();
+                                       datatable.clear();
+                                       datatable.rows.add(uniqueChars);
+                                       datatable.draw(false);
+                                       setTimeout(function () {
                                                 $("#tblSuperannuation").dataTable().fnPageChange('last');
-                                              }, 400);
+                                       }, 400);
     
-                                              $('.fullScreenSpin').css('display', 'none');
+                                       $('.fullScreenSpin').css('display', 'none');
     
     
                                   }).catch(function (err) {
@@ -9234,31 +9245,30 @@ Template.payrollrules.onRendered(function() {
     
             }
         }).catch(function(err) {
-          sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
+             
+              sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TSuperannuation', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
 
             
-              
               for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                 var dataListAllowance = [
                     data.tsuperannuation[i].fields.ID || '',
                     data.tsuperannuation[i].fields.Superfund || '',
-                    data.tsuperannuation[i].fields.Supertypeid || '',
+                    data.tsuperannuation[i].fields.Area || '',
                     data.tsuperannuation[i].fields.Employeeid || '',
-                    'Key Missing',
-                    'Key Missing',
-                    'Key Missing',
+                    data.tsuperannuation[i].fields.ABN || '',
+                    data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                    data.tsuperannuation[i].fields.BSB || '',
                     data.tsuperannuation[i].fields.Accountno || '',
-                    'Key Missing',
+                    data.tsuperannuation[i].fields.AccountName || '',
                     '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                ];
+                 ];
 
-                splashArraySuperannuationList.push(dataListAllowance);
+                  splashArraySuperannuationList.push(dataListAllowance);
               }
-      
     
               setTimeout(function () {
                   MakeNegative();
@@ -9346,23 +9356,23 @@ Template.payrollrules.onRendered(function() {
                                   let customerSearch = $('#tblSuperannuation_filter input').val();
     
                                   sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-    
+                                  
                                     for (let i = 0; i < data.tsuperannuation.length; i++) {
-                    
+               
                                         var dataListAllowance = [
                                             data.tsuperannuation[i].fields.ID || '',
                                             data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.Supertypeid || '',
+                                            data.tsuperannuation[i].fields.Area || '',
                                             data.tsuperannuation[i].fields.Employeeid || '',
-                                            'Key Missing',
-                                            'Key Missing',
-                                            'Key Missing',
+                                            data.tsuperannuation[i].fields.ABN || '',
+                                            data.tsuperannuation[i].fields.ElectronicsServiceAddressAlias || '',
+                                            data.tsuperannuation[i].fields.BSB || '',
                                             data.tsuperannuation[i].fields.Accountno || '',
-                                            'Key Missing',
+                                            data.tsuperannuation[i].fields.AccountName || '',
                                             '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
+                                         ];
                         
-                                        splashArraySuperannuationList.push(dataListAllowance);
+                                          splashArraySuperannuationList.push(dataListAllowance);
                                       }
     
                                          let uniqueChars = [...new Set(splashArraySuperannuationList)];
@@ -9442,64 +9452,163 @@ Template.payrollrules.onRendered(function() {
     };
 
     templateObject.getSuperannuationData();
-   
-    function getPayrollOrgainzation()
+
+
+    template.getPayrollOrgainzations = function()
     {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getPayrollinformation().then((dataListRet) => {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            for (let event in dataListRet) {
-                let dataCopy = dataListRet[event];
-                for (let data in dataCopy) {
-                    let mainData = dataCopy[data];
+        $('.fullScreenSpin').css('display', 'block');
+        getVS1Data('TPayrollOrganization').then(function(dataObject) {
+            $('.fullScreenSpin').css('display', 'block');
+            if (dataObject.length == 0) {
+                 sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+                  addVS1Data('TPayrollOrganization', JSON.stringify(data));
+                   
+               
+                  for (let i = 0; i < data.tpayrollorganization.length; i++) {
+               
+                    $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                    $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                    $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                    $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                    $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                    $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                    $('#employegroup').val('');
+                    $('#timesheetcat').val('');
+                    $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
                     
-                     $('#editbankaccount').val(mainData.fields.PayrollBankAccount);
-                     $('#editpaygbankaccount').val(mainData.fields.PayrollPaygLiabilityAccount);
-                     $('#editwagesexpbankaccount').val(mainData.fields.PayrollWagesExpenseAccount);
-                     $('#editwagespaybankaccount').val(mainData.fields.PayrollWagesPayableAccount);
-                     $('#editsuperliabbankaccount').val(mainData.fields.PayrollSuperannuationLiabilityAccount);
-                     $('#editsuperexpbankaccount').val(mainData.fields.PayrollSuperannuationPayableAccount);
-                     $('#employegroup').val(mainData.fields.PayrollEmployeeGroup);
-                     $('#timesheetcat').val(mainData.fields.PayrollTimesheetCategories);
-                     $('#payrollsettingor').val(mainData.fields.ID);
-                     
-                     if(mainData.fields.PayrollShowAnnualSalary == true)
-                     {
-                         $('#swtShowAnnualSalary').attr("checked","checked");
-                     }
-                     else{
-                        $('#swtShowAnnualSalary').removeAttr('checked');
-                     }
-
-                     if(mainData.fields.PayrollShowEmploymentBasis == true)
-                     {
-                         $('#swtShowEmploymentBasis').attr("checked","checked");
-                     }
-                     else{
-                        $('#swtShowEmploymentBasis').removeAttr('checked');
-                     }
-                
-        
-                }
-                
-            }
+                    if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                    {
+                        $('#swtShowAnnualSalary').attr("checked","checked");
+                    }
+                    else{
+                       $('#swtShowAnnualSalary').removeAttr('checked');
+                    }
+    
+                    if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                    {
+                        $('#swtShowEmploymentBasis').attr("checked","checked");
+                    }
+                    else{
+                       $('#swtShowEmploymentBasis').removeAttr('checked');
+                    }
+    
+                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    $('#uploadedImage').attr('width','100%');
+                    $('#uploadedImage').attr('height','100%');
+                    $('#removeLogo').show();
+                    $('#changeLogo').show();
+                  
+                  }
+    
+   
+                  $('.fullScreenSpin').css('display', 'none');
+              }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+              });
+            }else{
+                $('.fullScreenSpin').css('display', 'block');
+                sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+              
+                let useData = data;
            
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
-          });
+                for (let i = 0; i < data.tpayrollorganization.length; i++) {
+               
+                $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                $('#employegroup').val('');
+                $('#timesheetcat').val('');
+                $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                
+                if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                {
+                    $('#swtShowAnnualSalary').attr("checked","checked");
+                }
+                else{
+                   $('#swtShowAnnualSalary').removeAttr('checked');
+                }
 
-          let imageData= (localStorage.getItem("Image"));
-          if(imageData)
-          {
-              $('#uploadedImage').attr('src', imageData);
-             $('#uploadedImage').attr('width','100%');
-             $('#uploadedImage').attr('height','100%');
-              $('#removeLogo').show();
-              $('#changeLogo').show();
-          }
-         
+                if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                {
+                    $('#swtShowEmploymentBasis').attr("checked","checked");
+                }
+                else{
+                   $('#swtShowEmploymentBasis').removeAttr('checked');
+                }
+
+                $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                $('#uploadedImage').attr('width','100%');
+                $('#uploadedImage').attr('height','100%');
+                $('#removeLogo').show();
+                $('#changeLogo').show();
+              
+              }
+              });
+        
+
+              $('.fullScreenSpin').css('display', 'none');
+    
+            }
+        }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'block');
+                sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (data) {
+                addVS1Data('TPayrollOrganization', JSON.stringify(data));
+                let lineItems = [];
+                let lineItemObj = {};
+
+                $('.fullScreenSpin').css('display', 'block');
+               
+                for (let i = 0; i < data.tpayrollorganization.length; i++) {
+                
+                    $('#editbankaccount').val(data.tpayrollorganization[i].fields.bankaccount);
+                    $('#editpaygbankaccount').val(data.tpayrollorganization[i].fields.paygaacount);
+                    $('#editwagesexpbankaccount').val(data.tpayrollorganization[i].fields.Wagesexpenseaccount);
+                    $('#editwagespaybankaccount').val(data.tpayrollorganization[i].fields.wagespayablesaccount);
+                    $('#editsuperliabbankaccount').val(data.tpayrollorganization[i].fields.Superlibaccount);
+                    $('#editsuperexpbankaccount').val(data.tpayrollorganization[i].fields.Supperexpaccount);
+                    $('#employegroup').val('');
+                    $('#timesheetcat').val('');
+                    $('#payrollsettingor').val(data.tpayrollorganization[i].fields.ID);
+                    
+                    if(data.tpayrollorganization[i].fields.showannualsalary == true)
+                    {
+                        $('#swtShowAnnualSalary').attr("checked","checked");
+                    }
+                    else{
+                    $('#swtShowAnnualSalary').removeAttr('checked');
+                    }
+
+                    if(data.tpayrollorganization[i].fields.showemployeebases == true)
+                    {
+                        $('#swtShowEmploymentBasis').attr("checked","checked");
+                    }
+                    else{
+                    $('#swtShowEmploymentBasis').removeAttr('checked');
+                    }
+
+                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    $('#uploadedImage').attr('width','100%');
+                    $('#uploadedImage').attr('height','100%');
+                    $('#removeLogo').show();
+                    $('#changeLogo').show();
+                
+                }
+    
+                $('.fullScreenSpin').css('display', 'none');
+                }).catch(function (err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+        });
+
+
+
     }
-    getPayrollOrgainzation();
+
+    template.getPayrollOrgainzations();
+   
 
     $('#tblAlowances tbody').on( 'click', 'td:not(.colDeleteAllowances)', function () {
      
@@ -16328,6 +16437,192 @@ Template.payrollrules.onRendered(function() {
   
     });
 
+    $('#holidaygroup').editableSelect().on('click.editable-select', function (e, li) {
+       
+        var $earch = $(this);
+        var offset = $earch.offset();
+        let ratetypeService = new RateTypeService();
+        const ratetypelist = [];
+         var  Description = e.target.value ||'';
+
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+          $('#selectGroupLineID').val('edtGroupType');
+          $('#groupTypeListModel').modal();
+          $('#tblgrouplist_filter .form-control-sm').focus();
+          $('#tblgrouplist_filter .form-control-sm').val();
+          $('#tblgrouplist_filter .form-control-sm').trigger("input");
+          setTimeout(function () {
+             var datatable = $('#tblgrouplist_filter').DataTable();
+             datatable.draw();   
+             $('#tblgrouplist_filter .form-control-sm').trigger("input");       
+          }, 500);
+         }else{
+           if(Description.replace(/\s/g, '') != ''){
+             getVS1Data('TVs1TabGroups').then(function (dataObject) {
+              if (dataObject.length == 0) {
+                     ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                     let lineItems = [];
+                     let lineItemObj = {};
+                     let fullDescriptionname = '';
+                      $('#add-grouptype-title').text('Edit Group Type Details');
+            
+                     if (ratetypelist) {
+                         for (var h = 0; h < ratetypelist.length; h++) {
+  
+                             if (data.tvs1tabgroups[0].fields.Description === ratetypelist[h].description) {
+  
+                                fullDescriptionname = ratetypelist[h].description || '';
+  
+                             }
+                         }
+  
+                     }
+  
+                      var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
+                      var description = fullDescriptionname || data.tvs1tabgroups[0].fields.Description;
+                   
+            
+                      $('#edtGroupID').val(ratetypeid);
+                      $('#edtGroupDescription').val(description);
+               
+                      
+                      setTimeout(function () {
+                          $('#addGroupModel').modal('show');
+                      }, 500);
+  
+                   }).catch(function (err) {
+                       $('.fullScreenSpin').css('display','none');
+                   });
+                 } else {
+                     let data = JSON.parse(dataObject[0].data);
+                     let useData = data.tvs1tabgroups;
+                     var added=false;
+                     let lineItems = [];
+                     let lineItemObj = {};
+                     let fullDescriptionname = '';
+                  
+                     $('#add-group-title').text('Edit Group Type Details');
+                     $('#edtGroupID').attr('readonly', true);
+                     $('#edtGroupDescription').attr('readonly', true);
+            
+                     for (let a = 0; a < data.tvs1tabgroups.length; a++) {
+  
+                       if((data.tvs1tabgroups[a].fields.Description) === Description){
+                         added = true;
+                         if (ratetypelist) {
+                             for (var h = 0; h < ratetypelist.length; h++) {
+  
+                                 if (data.tvs1tabgroups[a].fields.Description === ratetypelist[h].Description) {
+  
+                                    fullDescriptionname = ratetypelist[h].Description || '';
+
+                                     console.log('Description '+fullDescriptionname);
+  
+                                 }
+                             }
+  
+                         }
+  
+  
+  
+                  var ratetypeid = data.tvs1tabgroups[a].fields.ID || '';
+                  var ratetypedescription = fullDescriptionname || data.tvs1tabgroups[a].fields.Description;
+             
+                  $('#edtGroupID').val(ratetypeid);
+                  $('#edtGroupDescription').val(ratetypedescription);
+                  
+                  setTimeout(function () {
+                      $('#addGroupModel').modal('show');
+                       }, 500); } }
+
+                     if(!added) {
+                        ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                         let lineItems = [];
+                         let lineItemObj = {};
+                         let fullAccountTypeName = '';
+                      
+                         $('#add-group-title').text('Edit Group Type Details');                  
+                         $('#edtGroupID').attr('readonly', true);
+                         $('#edtGroupDescription').attr('readonly', true);
+                         if (ratetypelist) {
+                             for (var h = 0; h < ratetypelist.length; h++) {
+  
+                                 if (data.tvs1tabgroups[0].fields.Description === ratetypelist[h].Description) {
+  
+                                     fullAccountTypeName = ratetypelist[h].description || '';
+  
+                                 }
+                             }
+  
+                         }
+
+                          var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
+                          var ratetypedescription = fullAccountTypeName || data.tvs1tabgroups[0].fields.Description;
+                         
+                          $('#edtGroupID').val(ratetypeid);
+                          $('#edtGroupDescription').val(ratetypedescription);
+
+                          setTimeout(function () {
+                              $('#addGroupModel').modal('show');
+                          }, 500);
+  
+                       }).catch(function (err) {
+                           $('.fullScreenSpin').css('display','none');
+                       });
+                     }
+  
+                 }
+             }).catch(function (err) {
+                ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                 let lineItems = [];
+                 let lineItemObj = {};
+                 let fullAccountTypeName = '';
+              
+                 $('#add-grouptype-title').text('Edit Rate Type Details');                  
+                 $('#edtGroupID').attr('readonly', true);
+                 $('#edtGroupDescription').attr('readonly', true);
+
+                 if (ratetypelist) {
+                    for (var h = 0; h < ratetypelist.length; h++) {
+
+                        if (data.tvs1tabgroups[a].fields.Description === ratetypelist[h].Description) {
+                            fullDescriptionname = ratetypelist[h].Description || '';
+                            console.log('Description '+fullDescriptionname);
+                        }
+                    }
+
+                }
+  
+                 var ratetypeid = data.tvs1tabgroups[0].fields.ID || '';
+                 var ratetypedescription = fullAccountTypeName || data.tvs1tabgroups[0].fields.Description;
+                         
+                          $('#edtGroupID').val(ratetypeid);
+                          $('#edtGroupDescription').val(ratetypedescription);
+
+                          setTimeout(function () {
+                              $('#addGroupModel').modal('show');
+                          }, 500);
+  
+  
+               }).catch(function (err) {
+                   $('.fullScreenSpin').css('display','none');
+               });
+  
+               });
+               $('#addGroupModel').modal('toggle');
+           }else{
+             $('#selectGroupLineID').val('edtRateType');
+             $('#groupTypeListModel').modal();
+             setTimeout(function () {
+                  var datatable = $('#tblgrouplist').DataTable();
+                 datatable.draw();
+               
+             }, 500);
+           }
+         }
+  
+    });
+
     $('#edtFundType').editableSelect().on('click.editable-select', function (e, li) {
        
         var $earch = $(this);
@@ -17446,7 +17741,7 @@ Template.payrollrules.onRendered(function() {
 
     $(document).on("click", "#tblratetypelist tbody tr", function(e) {
 
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeOvertime';
+        let selectLineID = $('#selectRateLineID').val();
        
         var table = $(this);
         let description = table.find(".thDescription").text();
@@ -17460,150 +17755,89 @@ Template.payrollrules.onRendered(function() {
            $('#add-rateype-title').text('Edit Rate Type Details');
 
           }
+          else if(selectLineID == 'edtRateType'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateType').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
 
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
+          else if(selectLineID == 'edtRateTypeTermnination'){                            
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeTermnination').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+           else if(selectLineID == 'edtRateTypeLumpSumE'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeLumpSumE').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+          else  if(selectLineID == 'edtRateTypeBonusesCommissions'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeBonusesCommissions').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+           else if(selectLineID == 'edtRateTypeLumpSumW'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeLumpSumW').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+
+          else if(selectLineID == 'edtRateTypeDirectorsFees'){          
+            $('#edtRateDescription').val(description);
+            $('#edtRateID').val(ratetypeid);
+            $('#edtRateTypeDirectorsFees').val(description);
+            $('#add-rateype-title').text('Edit Rate Type Details');
+ 
+           }
+           else
+           {
+
+           }
+ 
+
+          $('#tblratetypelist_filter .form-control-sm').val('');
+             setTimeout(function () {
+                    $('.btnRefreshRateType').trigger('click');
+                    $('.fullScreenSpin').css('display', 'none');
+           }, 1000);
     });
 
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
 
-        let selectLineID = $('#selectRateLineID').val()||'edtRateType';
+
+
+    $(document).on("click", "#tblgrouplist tbody tr", function(e) {
+
+        let selectLineID = $('#selectGroupLineID').val()||'edtGroupType';
        
         var table = $(this);
         let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
+        let ratetypeid = table.find(".thGroupID").text()||0;
+        $('#groupTypeListModel').modal('toggle');
 
-          if(selectLineID == 'edtRateType'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateType').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeTermnination';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeTermnination'){                            
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeTermnination').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
+          if(selectLineID == 'edtGroupType'){          
+           $('#edtGroupDescription').val(description);
+           $('#edtGroupID').val(ratetypeid);
+           $('#holidaygroup').val(description);
+           $('#add-grouptype-title').text('Edit Group Type Details');
 
           }
 
-        $('#tblratetypelist_filter .form-control-sm').val('');
+        $('#tblgrouplist_filter .form-control-sm').val('');
         setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeLumpSumE';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeLumpSumE'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeLumpSumE').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeBonusesCommissions';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeBonusesCommissions'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeBonusesCommissions').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeLumpSumW';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeLumpSumW'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeLumpSumW').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblratetypelist tbody tr", function(e) {
-
-        let selectLineID = $('#selectRateLineID').val()||'edtRateTypeDirectorsFees';
-       
-        var table = $(this);
-        let description = table.find(".thDescription").text();
-        let ratetypeid = table.find(".thRateID").text()||0;
-        $('#rateTypeListModel').modal('toggle');
-
-          if(selectLineID == 'edtRateTypeDirectorsFees'){          
-           $('#edtRateDescription').val(description);
-           $('#edtRateID').val(ratetypeid);
-           $('#edtRateTypeDirectorsFees').val(description);
-           $('#add-rateype-title').text('Edit Rate Type Details');
-
-          }
-
-        $('#tblratetypelist_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshRateType').trigger('click');
+            $('.btnRefreshGroupType').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
@@ -17611,10 +17845,13 @@ Template.payrollrules.onRendered(function() {
     $(document).on("click", "#tblfundtypelist tbody tr", function(e) {
 
         let selectLineID = $('#selectFundLineID').val()||'edtFundType';
+
+
        
         var table = $(this);
         let description = table.find(".thfundDescription").text();
         let fundid = table.find(".thfundID").text()||0;
+        $('#fundtypeid').val(fundid);
         $('#fundTypeListModel').modal('toggle');
 
           if(selectLineID == 'edtFundType'){          
@@ -17700,6 +17937,19 @@ Template.payrollrules.onRendered(function() {
         let super_account_name = $(this).closest('tr').find(".colaccountname").text()||'';
           
 
+        if(super_type == 'Self-Managed Superannuation Fund')
+        {
+            $('#acountabmandelectronic').css('display','block');
+            $('#accountbsb').css('display','block');
+            $('#account_name').css('display','block');
+        }
+        else
+        {   $('#acountabmandelectronic').css('display','none');
+            $('#accountbsb').css('display','none');
+            $('#account_name').css('display','none');
+
+        }
+
         $('#newSuperannuationFundLabel').text('Edit Superannuation Details');
         $('#newSuperannuationFundId').val(super_id);
         $('#edtFundName').val(super_name);
@@ -17708,6 +17958,7 @@ Template.payrollrules.onRendered(function() {
         $('#edtelectronicsalias').val(super_service);
         $('#edtEmployerNumber').val(super_employe_num);
         $('#edtaccountnumber').val(super_account_number);
+        $('#edtbsb').val(super_bsb);
         $('#edtaccountname').val(super_account_name);     
         $('#newSuperannuationFundModal').modal('toggle');
            
@@ -18055,328 +18306,81 @@ Template.payrollrules.onRendered(function() {
     });
 
     $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountAllowance';
+        let selectLineID = $('#selectLineID').val();
         var table = $(this);
           let accountname = table.find(".productName").text();
           let accountID = table.find(".colAccountID").text()||0;
           $('#accountListModal').modal('toggle');
 
           if(selectLineID == 'edtExpenseAccountAllowance'){
-          $('#edtExpenseAccountAllowance').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
+            $('#edtExpenseAccountAllowance').val(accountname);
+            $('#edtExpenseAccountID').val(accountID);
+          }
+          else if(selectLineID == 'edtDeductionAccount'){
             $('#edtDeductionAccount').val(accountname);
             $('#edtDeductionAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountDirectorsFees';
-        var table = $(this);
-        let accountname = table.find(".productName").text();
-        let accountID = table.find(".colAccountID").text()||0;
-        $('#accountListModal').modal('toggle');
-
-        if(selectLineID == 'edtExpenseAccountDirectorsFees'){
-          $('#edtExpenseAccountDirectorsFees').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-        }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
-        }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-        
-    });
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountTermnination';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountTermnination'){
-          $('#edtExpenseAccountTermnination').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
-            
+          else if(selectLineID == 'edtExpenseAccountTermnination'){
+                  $('#edtExpenseAccountTermnination').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccount'){
-          $('#edtExpenseAccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountDirectorsFees'){
+                   $('#edtExpenseAccountDirectorsFees').val(accountname);
+                   $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountOvertime';
-     
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountOvertime'){
-          $('#edtExpenseAccountOvertime').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccount'){
+                  $('#edtExpenseAccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountLumpSumE';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountLumpSumE'){
-          $('#edtExpenseAccountLumpSumE').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountOvertime'){
+                  $('#edtExpenseAccountOvertime').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountBonusesCommissions';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountBonusesCommissions'){
-          $('#edtExpenseAccountBonusesCommissions').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountLumpSumE'){
+                  $('#edtExpenseAccountLumpSumE').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtExpenseAccountLumpSumW';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtExpenseAccountLumpSumW'){
-          $('#edtExpenseAccountLumpSumW').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountBonusesCommissions'){
+                  $('#edtExpenseAccountBonusesCommissions').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editbankaccount'){
-          $('#editbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtExpenseAccountLumpSumW'){
+                  $('#edtExpenseAccountLumpSumW').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editpaygbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editpaygbankaccount'){
-          $('#editpaygbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editbankaccount'){
+                  $('#editbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'edtReimbursementAccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'edtReimbursementAccount'){
-          $('#edtReimbursementAccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editpaygbankaccount'){
+                  $('#editpaygbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editwagesexpbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editwagesexpbankaccount'){
-          $('#editwagesexpbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'edtReimbursementAccount'){
+                  $('#edtReimbursementAccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editwagespaybankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editwagespaybankaccount'){
-          $('#editwagespaybankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editwagesexpbankaccount'){
+                  $('#editwagesexpbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editsuperliabbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editsuperliabbankaccount'){
-          $('#editsuperliabbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editwagespaybankaccount'){
+                  $('#editwagespaybankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
-
-        $('#tblAccount_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshAccount').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#tblAccount tbody tr", function(e) {
-        let selectLineID = $('#selectLineID').val()||'editsuperexpbankaccount';
-        var table = $(this);
-          let accountname = table.find(".productName").text();
-          let accountID = table.find(".colAccountID").text()||0;
-          $('#accountListModal').modal('toggle');
-
-          if(selectLineID == 'editsuperexpbankaccount'){
-          $('#editsuperexpbankaccount').val(accountname);
-          $('#edtExpenseAccountID').val(accountID);
-          }else if(selectLineID == 'edtDeductionAccount'){
-            $('#edtDeductionAccount').val(accountname);
-            $('#edtDeductionAccountID').val(accountID);
+          else if(selectLineID == 'editsuperliabbankaccount'){
+                  $('#editsuperliabbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
           }
+          else if (selectLineID == 'editsuperexpbankaccount'){
+                  $('#editsuperexpbankaccount').val(accountname);
+                  $('#edtExpenseAccountID').val(accountID);
+          }
+          else
+          {
+
+          }
+         
 
         $('#tblAccount_filter .form-control-sm').val('');
         setTimeout(function () {
@@ -18526,117 +18530,62 @@ Template.payrollrules.events({
 
     'click .addholiday':function(){
         
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
-        let holidayname = $('#holidayname').val() || '';
-        let edtHolidayDate = $('#edtHolidayDate').val() || '';
-        let holidaygroup = $('#holidaygroup').val() || '';
+            let templateObject = Template.instance();
+            $('.fullScreenSpin').css('display','inline-block');
+            let taxRateService = new TaxRateService();
+            let holidayname = $('#holidayname').val() || '';
+            let edtHolidayDate = $('#edtHolidayDate').val() || '';
+            let holidaygroup = $('#holidaygroup').val() || '';
 
-        let oldholiday = $('#holidayid').val() || 0 ;
-      
+            let oldholiday = $('#holidayid').val() || 0 ;
+        
     
-        if (holidayname === '') {
-            $('.fullScreenSpin').css('display','none');
-            swal('Holiday name has not been selected!', '', 'warning');
-            e.preventDefault();
-         }
-         else {
-
-            if(oldholiday != 0)
+            if (holidayname === '') {
+                $('.fullScreenSpin').css('display','none');
+                swal('Holiday name has not been selected!', '', 'warning');
+                e.preventDefault();
+            }
+            else if(edtHolidayDate === '')
             {
-                $('.fullScreenSpin').css('display','inline-block');
-                objDetails = {
-                    type: "Tpayrollholidays",
-                    fields: {
-                        ID: parseInt(oldholiday),
-                        PayrollHolidaysName:holidayname,
-                        PayrollHolidaysGroupName:holidaygroup,
-                        PayrollHolidaysDate:moment(edtHolidayDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
-                        PayrollHolidaysActive:true     
-                    }
-                };
-                taxRateService.saveHoliday(objDetails).then(function (objDetails) {
-                    
-                        $('.fullScreenSpin').css('display','none');
-                        swal({
-                        title: 'Success',
-                        text: 'Holiday saved successfully.',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Done'
+                $('.fullScreenSpin').css('display','none');
+                swal('Holiday Date has not been selected!', '', 'warning');
+                e.preventDefault();
 
-                        }).then((result) => {
-                        if (result.value) {
-                             sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
-                                addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
-                                    $('#addholdayhide').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=holiday','_self');
-                                }).catch(function (err) {
-                                    $('#addholdayhide').trigger('click');
-                                   $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=holiday','_self');
-                                });
-                              }).catch(function (err) {
-                                $('#addholdayhide').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=holiday','_self');
-                              });
-                        }else if (result.dismiss === 'cancel') {
-
-                        }
-                        });
-
-                }).catch(function (err) {
-
-                    $('.fullScreenSpin').css('display','none');
-                    swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: true,
-                    confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                    if (result.value) {
-                
-                    }else if (result.dismiss === 'cancel') {
-
-                    }
-                    });
-                
-                });
+            }  
+            else if(holidaygroup === '')
+            {
+                $('.fullScreenSpin').css('display','none');
+                swal('Holiday Group has not been selected!', '', 'warning');
+                e.preventDefault();
 
             }
-            else
+
+            else {
+
+                if(oldholiday != 0)
                 {
                     $('.fullScreenSpin').css('display','inline-block');
-                    taxRateService.checkHolidaybyName(holidayname).then(function (data) {                                
-                        holidayid = data.tpayrollholidays;
-                        var tpayholidadata = holidayid[0].fields.ID;
-
-                        objDetails = {
+                    objDetails = {
                         type: "Tpayrollholidays",
                         fields: {
-                            ID: parseInt(tpayholidadata),
+                            ID: parseInt(oldholiday),
                             PayrollHolidaysName:holidayname,
                             PayrollHolidaysGroupName:holidaygroup,
                             PayrollHolidaysDate:moment(edtHolidayDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
                             PayrollHolidaysActive:true     
                         }
-                        };
-
+                    };
                     taxRateService.saveHoliday(objDetails).then(function (objDetails) {
-
-                        $('.fullScreenSpin').css('display','none');
-                        swal({
+                        
+                            $('.fullScreenSpin').css('display','none');
+                            swal({
                             title: 'Success',
                             text: 'Holiday saved successfully.',
                             type: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Done'
 
-                        }).then((result) => {
+                            }).then((result) => {
                             if (result.value) {
                                 sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
                                     addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
@@ -18645,111 +18594,181 @@ Template.payrollrules.events({
                                         window.open('/payrollrules?active_key=holiday','_self');
                                     }).catch(function (err) {
                                         $('#addholdayhide').trigger('click');
-                                        $('.fullScreenSpin').css('display','inline-block');
+                                    $('.fullScreenSpin').css('display','inline-block');
                                         window.open('/payrollrules?active_key=holiday','_self');
                                     });
-                                  }).catch(function (err) {
+                                }).catch(function (err) {
                                     $('#addholdayhide').trigger('click');
                                     $('.fullScreenSpin').css('display','inline-block');
                                     window.open('/payrollrules?active_key=holiday','_self');
-                                  });
+                                });
                             }else if (result.dismiss === 'cancel') {
-                        
+
                             }
+                            });
+
+                    }).catch(function (err) {
+
+                        $('.fullScreenSpin').css('display','none');
+                        swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: true,
+                        confirmButtonText: 'Try Again'
+                        }).then((result) => {
+                        if (result.value) {
+                    
+                        }else if (result.dismiss === 'cancel') {
+
+                        }
                         });
                     
-                    }).catch(function (err) {
+                    });
+
+                }
+                else
+                    {
+                        $('.fullScreenSpin').css('display','inline-block');
+                        taxRateService.checkHolidaybyName(holidayname).then(function (data) {                                
+                            holidayid = data.tpayrollholidays;
+                            var tpayholidadata = holidayid[0].fields.ID;
+
+                            objDetails = {
+                            type: "Tpayrollholidays",
+                            fields: {
+                                ID: parseInt(tpayholidadata),
+                                PayrollHolidaysName:holidayname,
+                                PayrollHolidaysGroupName:holidaygroup,
+                                PayrollHolidaysDate:moment(edtHolidayDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
+                                PayrollHolidaysActive:true     
+                            }
+                            };
+
+                        taxRateService.saveHoliday(objDetails).then(function (objDetails) {
 
                             $('.fullScreenSpin').css('display','none');
                             swal({
-                            title: 'Oooops...',
-                            text: err,
-                            type: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Try Again'
-                            }).then((result) => {
-                            if (result.value) {
-                            } else if (result.dismiss === 'cancel') {
-                            }
-                            }); 
-                      });
-                  
-                    }).catch(function (err) {
-                            objDetails = {
-                                type: "Tpayrollholidays",
-                                fields: {
-                                    PayrollHolidaysName:holidayname,
-                                    PayrollHolidaysGroupName:holidaygroup,
-                                    PayrollHolidaysDate:moment(edtHolidayDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
-                                    PayrollHolidaysActive:true          
-                                }
-                            };
+                                title: 'Success',
+                                text: 'Holiday saved successfully.',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Done'
 
-                            taxRateService.saveHoliday(objDetails).then(function (objDetails) {
+                            }).then((result) => {
+                                if (result.value) {
+                                    sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
+                                        addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
+                                            $('#addholdayhide').trigger('click');
+                                            $('.fullScreenSpin').css('display','inline-block');
+                                            window.open('/payrollrules?active_key=holiday','_self');
+                                        }).catch(function (err) {
+                                            $('#addholdayhide').trigger('click');
+                                            $('.fullScreenSpin').css('display','inline-block');
+                                            window.open('/payrollrules?active_key=holiday','_self');
+                                        });
+                                    }).catch(function (err) {
+                                        $('#addholdayhide').trigger('click');
+                                        $('.fullScreenSpin').css('display','inline-block');
+                                        window.open('/payrollrules?active_key=holiday','_self');
+                                    });
+                                }else if (result.dismiss === 'cancel') {
+                            
+                                }
+                            });
+                        
+                        }).catch(function (err) {
+
                                 $('.fullScreenSpin').css('display','none');
                                 swal({
-                                    title: 'Success',
-                                    text: 'Holiday saved successfully.',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Done'
-
+                                title: 'Oooops...',
+                                text: err,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
                                 }).then((result) => {
-                                    if (result.value) {
-                                        sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
-                                            addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
-                                                $('#addholdayhide').trigger('click');
-                                                $('.fullScreenSpin').css('display','inline-block');
-                                              
-                                                window.open('/payrollrules?active_key=holiday','_self');
+                                if (result.value) {
+                                } else if (result.dismiss === 'cancel') {
+                                }
+                                }); 
+                        });
+                    
+                        }).catch(function (err) {
+                                objDetails = {
+                                    type: "Tpayrollholidays",
+                                    fields: {
+                                        PayrollHolidaysName:holidayname,
+                                        PayrollHolidaysGroupName:holidaygroup,
+                                        PayrollHolidaysDate:moment(edtHolidayDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
+                                        PayrollHolidaysActive:true          
+                                    }
+                                };
+
+                                taxRateService.saveHoliday(objDetails).then(function (objDetails) {
+                                    $('.fullScreenSpin').css('display','none');
+                                    swal({
+                                        title: 'Success',
+                                        text: 'Holiday saved successfully.',
+                                        type: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Done'
+
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            sideBarService.getHolidayData(initialBaseDataLoad, 0).then(function (dataReload) {
+                                                addVS1Data("TPayrollHolidays", JSON.stringify(dataReload)).then(function (datareturn) {
+                                                    $('#addholdayhide').trigger('click');
+                                                    $('.fullScreenSpin').css('display','inline-block');
+                                                
+                                                    window.open('/payrollrules?active_key=holiday','_self');
+                                                }).catch(function (err) {
+
+                                                    $('#addholdayhide').trigger('click');
+                                                    $('.fullScreenSpin').css('display','inline-block');
+                                                    window.open('/payrollrules?active_key=holiday','_self');
+                                                });
                                             }).catch(function (err) {
 
                                                 $('#addholdayhide').trigger('click');
                                                 $('.fullScreenSpin').css('display','inline-block');
-                                                window.open('/payrollrules?active_key=holiday','_self');
+                                                    window.open('/payrollrules?active_key=holiday','_self');
                                             });
-                                          }).catch(function (err) {
-
-                                            $('#addholdayhide').trigger('click');
-                                             $('.fullScreenSpin').css('display','inline-block');
-                                                window.open('/payrollrules?active_key=holiday','_self');
-                                          });
-                                    }else if (result.dismiss === 'cancel') {
-                                
-                                    }
-                                });
-                        
-                            }).catch(function (err) {
-                                
-                                    $('.fullScreenSpin').css('display','none');
-                                    swal({
-                                    title: 'Oooops...',
-                                    text: err,
-                                    type: 'error',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'Try Again'
-                                    }).then((result) => {
-                                    if (result.value) {
-                                
-                                    } else if (result.dismiss === 'cancel') {
-
-                                    }
+                                        }else if (result.dismiss === 'cancel') {
+                                    
+                                        }
                                     });
                             
-                            });
+                                }).catch(function (err) {
+                                    
+                                        $('.fullScreenSpin').css('display','none');
+                                        swal({
+                                        title: 'Oooops...',
+                                        text: err,
+                                        type: 'error',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Try Again'
+                                        }).then((result) => {
+                                        if (result.value) {
+                                    
+                                        } else if (result.dismiss === 'cancel') {
 
-                    });
-            }   
-          
-    
-                 
-         }
+                                        }
+                                        });
+                                
+                                });
+
+                        });
+                }   
+            
+        
+                    
+            }
      },
 
    'click .btnSaveAllowance':function(){
         
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display','inline-block');
+     let templateObject = Template.instance();
+     $('.fullScreenSpin').css('display','inline-block');
      let taxRateService = new TaxRateService();
      let allowanceID = $('#edtAllowanceID').val()|| 0;
      let allowanceType = $('#edtAllowanceType').val()||'';
@@ -18766,6 +18785,12 @@ Template.payrollrules.events({
      }else{
         exemptFromPAYG = false;
      }
+
+     if($('#edtDisplayNameAllowance').val() == '')
+     {
+        displayName = $('#edtEarningsNameAllowance').val() || '';
+     }
+
      if($('#formCheck-ExemptSuperannuationAllowance').is(':checked')){
         exemptFromSupernation = true;
      }else{
@@ -18782,12 +18807,30 @@ Template.payrollrules.events({
         $('.fullScreenSpin').css('display','none');
         swal('Allowance Name has not been selected!', '', 'warning');
         e.preventDefault();
-    } 
+     } 
+     else if(allowanceType === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Allowance Type has not been selected!', '', 'warning');
+        e.preventDefault();
+     }
+     else if(expensesAccount === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Expenses Account has not been selected!', '', 'warning');
+        e.preventDefault();
+     }
+     else if(amount === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Please fill Amount !', '', 'warning');
+        e.preventDefault();
+     }
      else 
      {
         if(allowanceID != 0 )
         {
-            $('.fullScreenSpin').css('display','inline-block');
+           
             objDetails = {
                 type: "TAllowance",
                 fields: {
@@ -18862,7 +18905,7 @@ Template.payrollrules.events({
         }
         else
         {
-            $('.fullScreenSpin').css('display','inline-block');
+           
             
               taxRateService.checkAllowanceByName(edtEarningsNameAllowance).then(function (data) {
                 
@@ -19406,7 +19449,7 @@ Template.payrollrules.events({
         let deductionAccount = $('#edtDeductionAccount').val();
         let deductionAccountID = $('#edtDeductionAccountID').val()||0;
 
-        let deductionAmount = $('#edtDeductionAmount').val()||0;
+        let deductionAmount = $('#edtDeductionAmount').val()|| '';
 
         let exemptFromPAYG = false;
         let exemptFromSupernation = false;
@@ -19433,12 +19476,30 @@ Template.payrollrules.events({
 
         if (deductionName === '') {
             $('.fullScreenSpin').css('display','none');
-            swal('Deduction has not been selected!', '', 'warning');
+            swal('Deduction Name can not blank!', '', 'warning');
             e.preventDefault();
-        } else {
+        }
+        else if (deductionType === '') {
+            $('.fullScreenSpin').css('display','none');
+            swal('Deduction Type has not been selected!', '', 'warning');
+            e.preventDefault();
+        } 
+        else if (deductionAmount === '') {
+            $('.fullScreenSpin').css('display','none');
+            swal('Deduction Amount can not blank !', '', 'warning');
+            e.preventDefault();
+        } 
+        else if (deductionAccount === '') {
+            $('.fullScreenSpin').css('display','none');
+            swal('Deduction Account has not been selected!', '', 'warning');
+            e.preventDefault();
+        } 
+       
+       
+        else {
           $('.fullScreenSpin').css('display','inline-block');
 
-          if(deductionID == ""){
+           if(deductionID == ""){
             taxRateService.checkDeductionByName(deductionName).then(function (data) {
               deductionID = data.tdeduction[0].Id;
               objDetails = {
@@ -19581,7 +19642,7 @@ Template.payrollrules.events({
              });
             });
 
-         }else{
+           }else{
            objDetails = {
               type: "TDeduction",
               fields: {
@@ -19598,7 +19659,7 @@ Template.payrollrules.events({
                   Description: deductionName,
                   DisplayIn: displayName,
               }
-          };
+           };
 
           taxRateService.saveDeduction(objDetails).then(function (objDetails) {
 
@@ -19671,6 +19732,27 @@ Template.payrollrules.events({
             $('.fullScreenSpin').css('display','none');
             swal('Pay period has not been selected!', '', 'warning');
             e.preventDefault();
+         }
+         else if(calender_name === '')
+         { 
+             $('.fullScreenSpin').css('display','none');
+             swal('Calender Name Can not blank!', '', 'warning');
+             e.preventDefault();
+
+         }
+         else if(startdate === '')
+         { 
+             $('.fullScreenSpin').css('display','none');
+             swal('Start Date Has not been selected!', '', 'warning');
+             e.preventDefault();
+
+         }
+         else if(FirstPaymentDate === '')
+         { 
+             $('.fullScreenSpin').css('display','none');
+             swal('First Payment Date Has not been selected!', '', 'warning');
+             e.preventDefault();
+
          }
          else 
          {
@@ -19907,6 +19989,8 @@ Template.payrollrules.events({
         let swtShowEmploymentBasis = false;
         let uploadedImage = $('#uploadedImage').attr('src');
 
+        let imagearray =  uploadedImage.split(',');
+
         let payrollsettingor = $('#payrollsettingor').val() || 0;
         
         if($('#swtShowAnnualSalary').is(':checked')){
@@ -19974,21 +20058,22 @@ Template.payrollrules.events({
             objDetails = {
                 type: "Tpayrollorganization",
                 fields: {
-                    ID: parseInt(payrollsettingor),
-                    PayrollBankAccount:editbankaccount,
-                    PayrollEmployeeGroup:employegroup,
-                    PayrollPaygLiabilityAccount:editpaygbankaccount,
-                    PayrollShowAnnualSalary:swtShowAnnualSalary,
-                    PayrollShowEmploymentBasis :swtShowEmploymentBasis, 
-                    PayrollSuperannuationLiabilityAccount:editsuperliabbankaccount,
-                    PayrollSuperannuationPayableAccount:editsuperexpbankaccount,
-                    PayrollTimesheetCategories:timesheetcat,
-                    PayrollWagesExpenseAccount:editwagesexpbankaccount,
-                    PayrollWagesPayableAccount:editwagespaybankaccount             
+                    
+                    bankaccount:editbankaccount,
+                    paygaacount:editpaygbankaccount,
+                    Wagesexpenseaccount:editwagesexpbankaccount,
+                    wagespayablesaccount:editwagespaybankaccount,
+                    Superlibaccount:editsuperliabbankaccount,
+                    Supperexpaccount:editsuperexpbankaccount,
+                    attachment:imagearray[1],  
+                    showannualsalary:swtShowAnnualSalary,
+                    showemployeebases:swtShowEmploymentBasis, 
                 }
             };
 
             taxRateService.savePayOrganization(objDetails).then(function (objDetails){
+
+                
                 
                 swal({
                     title: 'Success',
@@ -20000,9 +20085,23 @@ Template.payrollrules.events({
                 }).then((result) => {
                 if (result.value) {
                
-                 
+                    sideBarService.getPayrollinformation(initialBaseDataLoad, 0).then(function (dataReload) {
+                        addVS1Data("TPayrollOrganization", JSON.stringify(dataReload)).then(function (datareturn) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                            window.open('/payrollrules','_self');
+                        }).catch(function (err) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                            window.open('/payrollrules','_self');
+                        });
+                      }).catch(function (err) {
+                            $('#closemodel').trigger('click');
+                            $('.fullScreenSpin').css('display','inline-block');
+                           window.open('/payrollrules','_self');
+                      });
                     
-                  Meteor._reload.reload();
+                
                              
                 }else if (result.dismiss === 'cancel') {
                 
@@ -20020,11 +20119,11 @@ Template.payrollrules.events({
        
     },
 
-   'click .saveSuperannuation': function(){
-      
+   'click .saveSuperannuation': function(e){
+        let taxRateService = new TaxRateService();
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
-        let taxRateService = new TaxRateService();
+        let id  = $('#newSuperannuationFundId').val() || 0;  
         let fundType = $('#edtFundType').val() || '';
         let fundName = $('#edtFundName').val() || '';
         let abn  = $('#edtabn').val() || '';
@@ -20033,137 +20132,445 @@ Template.payrollrules.events({
         let edtbsb = $('#edtbsb').val() || '';
         let edtaccountnumber = $('#edtaccountnumber').val() || '';
         let edtaccountname = $('#edtaccountname').val() || '';
+        let fundtypeid = $('#fundtypeid').val();
          
         if (fundName === '') {
             $('.fullScreenSpin').css('display','none');
             swal('Fund Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(fundType === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Fund Type has not been Selected !', '', 'warning');
+            e.preventDefault();
+         }
          else {
-        
-            $('.fullScreenSpin').css('display','inline-block');
-            taxRateService.checkSuperannuationName(fundName).then(function (data) {
-                supperannuationId = data.tsuperannuation[0].Id;
-                objDetails = {
-                   type: "TSuperannuation",
-                   fields: {
-                       ID: parseInt(supperannuationId),
-                       Superfund:fundName,
-                       Employeeid:employeNumber,
-                       KeyStringFieldName:fundType,                                           
-                   }
-               };
-  
-              taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
-                    swal({
-                        title: 'Success',
-                        text: 'New Superannuation saved Successfully',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Done'
+            if(id != 0)
+            {    
+                            $('.fullScreenSpin').css('display','inline-block');
+                            objDetails = {
+                                type: "TSuperannuation",
+                                fields: {
+                                    ID: parseInt(id),
+                                    Superfund:fundName,
+                                    Employeeid:parseInt(employeNumber),
+                                    area:fundType, 
+                                    Supertypeid:fundtypeid,
+                                    ABN:abn,
+                                    AccountName:edtaccountname,
+                                    Accountno:edtaccountnumber,
+                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                    BSB:edtbsb,
+                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Amount:1,
+                                    DepartmentName:defaultDept,
+                                    Allclasses:true,
+                                }
+                            };
 
-                    }).then((result) => {
-                        if (result.value) {
-                            sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
-                                    $('#closeuperannution').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=super','_self');
-                                }).catch(function (err) {
-                                    $('#closeuperannution').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=super','_self');
+                            taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
+                                $('.fullScreenSpin').css('display','none');
+                                swal({
+                                    title: 'Success',
+                                    text: 'New Superannuation saved Successfully',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Done'
+            
+                                }).then((result) => {
+                                    if (result.value) {
+                                        sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
+                                            addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                                $('#closeuperannution').trigger('click');
+                                                $('.fullScreenSpin').css('display','inline-block');
+                                                window.open('/payrollrules?active_key=super','_self');
+                                            }).catch(function (err) {
+                                                $('#closeuperannution').trigger('click');
+                                                $('.fullScreenSpin').css('display','inline-block');
+                                                window.open('/payrollrules?active_key=super','_self');
+                                            });
+                                          }).catch(function (err) {
+                                            $('#closeuperannution').trigger('click');
+                                            $('.fullScreenSpin').css('display','inline-block');
+                                              window.open('/payrollrules?active_key=super','_self');
+                                          });
+                                    }else if (result.dismiss === 'cancel') {
+                                
+                                    }
                                 });
-                              }).catch(function (err) {
-                                $('#closeuperannution').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=super','_self');
-                              });
-                        }else if (result.dismiss === 'cancel') {
-                    
-                        }
-                    });
-
-                }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
-                    swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                    if (result.value) {
-                        
-                    } else if (result.dismiss === 'cancel') {
-    
-                    }
-                    });
-                  
+            
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display','none');
+                                swal({
+                                title: 'Oooops...',
+                                text: err,
+                                type: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Try Again'
+                                }).then((result) => {
+                                if (result.value) {
+                                    
+                                } else if (result.dismiss === 'cancel') {
                 
-                  });
-                  }).catch(function (err) {
-                    objDetails = {
-                    type: "TSuperannuation",
-                    fields: {
-                        Superfund:fundName,
-                        Employeeid:employeNumber,
-                        KeyStringFieldName:fundType,    
-                        
-                   }
-                };
-          
-                taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
-                    $('.fullScreenSpin').css('display','none');
-                    swal({
-                        title: 'Success',
-                        text: 'New Superannuation saved Successfully',
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Done'
-
-                    }).then((result) => {
-                        if (result.value) {
-                            sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
-                                addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
-                                    $('#closeuperannution').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=super','_self');
-                                }).catch(function (err) {
-                                    $('#closeuperannution').trigger('click');
-                                    $('.fullScreenSpin').css('display','inline-block');
-                                    window.open('/payrollrules?active_key=super','_self');
+                                }
                                 });
-                              }).catch(function (err) {
-                                $('#closeuperannution').trigger('click');
-                                $('.fullScreenSpin').css('display','inline-block');
-                                window.open('/payrollrules?active_key=super','_self');
+                              
+                            
                               });
-                        }else if (result.dismiss === 'cancel') {
-                    
-                        }
-                    });
 
+              
+            }
+            else
+            {
+                if(fundType === 'Self-Managed Superannuation Fund'){
 
-                }).catch(function (err) {
-                    $('.fullScreenSpin').css('display','none');
-                    swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                    }).then((result) => {
-                    if (result.value) {
-                 
-                    } else if (result.dismiss === 'cancel') {
-    
+                    if(abn === '')
+                    {
+                        $('.fullScreenSpin').css('display','none');
+                        swal('ABN can not be blank !', '', 'warning');
+                        e.preventDefault();
+
                     }
+                    else if(edtbsb == '')
+                    {
+                        $('.fullScreenSpin').css('display','none');
+                        swal('BSB can not be blank !', '', 'warning');
+                        e.preventDefault();
+
+
+                    }
+                    else if(edtelectronicsalias == '')
+                    {
+                        $('.fullScreenSpin').css('display','none');
+                        swal('Electronicsalias can not be blank !', '', 'warning');
+                        e.preventDefault();
+
+
+                    }
+                    else if(edtaccountnumber == '')
+                    {
+                        $('.fullScreenSpin').css('display','none');
+                        swal('Account Number can not be blank !', '', 'warning');
+                        e.preventDefault();
+
+                    }
+                    else if(edtaccountname == '')
+                    {
+                        $('.fullScreenSpin').css('display','none');
+                        swal('Account Name can not be blank !', '', 'warning');
+                        e.preventDefault();
+
+                    }
+                    else
+                    {
+                        $('.fullScreenSpin').css('display','inline-block');
+                        taxRateService.checkSuperannuationName(fundName).then(function (data) {
+                        supperannuationId = data.tsuperannuation[0].Id;
+                        objDetails = {
+                          type: "TSuperannuation",
+                          fields: {
+                                    ID: parseInt(supperannuationId),
+                                    Superfund:fundName,
+                                    Employeeid:parseInt(employeNumber),
+                                    area:fundType, 
+                                    Supertypeid:fundtypeid,
+                                    ABN:abn,
+                                    AccountName:edtaccountname,
+                                    Accountno:edtaccountnumber,
+                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                    BSB:edtbsb,
+                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Amount:1,
+                                    DepartmentName:defaultDept,
+                                    Allclasses:true,
+                          }
+                      };
+         
+   
+                     console.log(objDetails);
+                     taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
+                           $('.fullScreenSpin').css('display','none');
+                           swal({
+                               title: 'Success',
+                               text: 'New Superannuation saved Successfully',
+                               type: 'success',
+                               showCancelButton: false,
+                               confirmButtonText: 'Done'
+       
+                           }).then((result) => {
+                               if (result.value) {
+                                   sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
+                                       addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                           $('#closeuperannution').trigger('click');
+                                           $('.fullScreenSpin').css('display','inline-block');
+                                           window.open('/payrollrules?active_key=super','_self');
+                                       }).catch(function (err) {
+                                           $('#closeuperannution').trigger('click');
+                                           $('.fullScreenSpin').css('display','inline-block');
+                                           window.open('/payrollrules?active_key=super','_self');
+                                       });
+                                     }).catch(function (err) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                         window.open('/payrollrules?active_key=super','_self');
+                                     });
+                               }else if (result.dismiss === 'cancel') {
+                           
+                               }
+                           });
+       
+                       }).catch(function (err) {
+                           $('.fullScreenSpin').css('display','none');
+                           swal({
+                           title: 'Oooops...',
+                           text: err,
+                           type: 'error',
+                           showCancelButton: false,
+                           confirmButtonText: 'Try Again'
+                           }).then((result) => {
+                           if (result.value) {
+                               
+                           } else if (result.dismiss === 'cancel') {
+           
+                           }
+                           });
+                         
+                       
+                         });
+                         }).catch(function (err) {
+                           objDetails = {
+                               type: "TSuperannuation",
+                               fields: {
+                                 
+                                Superfund:fundName,
+                                Employeeid:parseInt(employeNumber),
+                                area:fundType, 
+                                Supertypeid:fundtypeid,
+                                ABN:abn,
+                                AccountName:edtaccountname,
+                                Accountno:edtaccountnumber,
+                                ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                BSB:edtbsb,
+                                Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                Amount:1,
+                                DepartmentName:defaultDept,
+                                Allclasses:true,
+                               }
+                           };
+                        
+                       console.log(objDetails);
+                       taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
+                           $('.fullScreenSpin').css('display','none');
+                           swal({
+                               title: 'Success',
+                               text: 'New Superannuation saved Successfully',
+                               type: 'success',
+                               showCancelButton: false,
+                               confirmButtonText: 'Done'
+       
+                           }).then((result) => {
+                               if (result.value) {
+                                   sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
+                                       addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                           $('#closeuperannution').trigger('click');
+                                           $('.fullScreenSpin').css('display','inline-block');
+                                           window.open('/payrollrules?active_key=super','_self');
+                                       }).catch(function (err) {
+                                           $('#closeuperannution').trigger('click');
+                                           $('.fullScreenSpin').css('display','inline-block');
+                                           window.open('/payrollrules?active_key=super','_self');
+                                       });
+                                     }).catch(function (err) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                       window.open('/payrollrules?active_key=super','_self');
+                                     });
+                               }else if (result.dismiss === 'cancel') {
+                           
+                               }
+                           });
+       
+       
+                       }).catch(function (err) {
+                           $('.fullScreenSpin').css('display','none');
+                           swal({
+                           title: 'Oooops...',
+                           text: err,
+                           type: 'error',
+                           showCancelButton: false,
+                           confirmButtonText: 'Try Again'
+                           }).then((result) => {
+                           if (result.value) {
+                        
+                           } else if (result.dismiss === 'cancel') {
+           
+                           }
+                           });
+                         
+                      });
+                        });
+
+                    }
+
+                }
+                else
+                {
+
+                    $('.fullScreenSpin').css('display','inline-block');
+                    taxRateService.checkSuperannuationName(fundName).then(function (data) {
+                    supperannuationId = data.tsuperannuation[0].Id;
+                    objDetails = {
+                      type: "TSuperannuation",
+                      fields: {
+                                  ID: parseInt(supperannuationId),
+                                   Superfund:fundName,
+                                    Employeeid:parseInt(employeNumber),
+                                    area:fundType, 
+                                    Supertypeid:fundtypeid,
+                                    ABN:abn,
+                                    AccountName:edtaccountname,
+                                    Accountno:edtaccountnumber,
+                                    ElectronicsServiceAddressAlias:edtelectronicsalias,
+                                    BSB:edtbsb,
+                                    Clientid:Session.get('mySessionEmployeeLoggedID'),
+                                    Amount:1,
+                                    DepartmentName:defaultDept,
+                                    Allclasses:true,
+                      }
+                  };
+     
+
+                 console.log(objDetails);
+                 taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
+                       $('.fullScreenSpin').css('display','none');
+                       swal({
+                           title: 'Success',
+                           text: 'New Superannuation saved Successfully',
+                           type: 'success',
+                           showCancelButton: false,
+                           confirmButtonText: 'Done'
+   
+                       }).then((result) => {
+                           if (result.value) {
+                               sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
+                                   addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                       window.open('/payrollrules?active_key=super','_self');
+                                   }).catch(function (err) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                       window.open('/payrollrules?active_key=super','_self');
+                                   });
+                                 }).catch(function (err) {
+                                   $('#closeuperannution').trigger('click');
+                                   $('.fullScreenSpin').css('display','inline-block');
+                                     window.open('/payrollrules?active_key=super','_self');
+                                 });
+                           }else if (result.dismiss === 'cancel') {
+                       
+                           }
+                       });
+   
+                   }).catch(function (err) {
+                       $('.fullScreenSpin').css('display','none');
+                       swal({
+                       title: 'Oooops...',
+                       text: err,
+                       type: 'error',
+                       showCancelButton: false,
+                       confirmButtonText: 'Try Again'
+                       }).then((result) => {
+                       if (result.value) {
+                           
+                       } else if (result.dismiss === 'cancel') {
+       
+                       }
+                       });
+                     
+                   
+                     });
+                     }).catch(function (err) {
+                       objDetails = {
+                           type: "TSuperannuation",
+                           fields: {
+                             
+                            Superfund:fundName,
+                            Employeeid:parseInt(employeNumber),
+                            area:fundType, 
+                            Supertypeid:fundtypeid,
+                            ABN:abn,
+                            AccountName:edtaccountname,
+                            Accountno:edtaccountnumber,
+                            ElectronicsServiceAddressAlias:edtelectronicsalias,
+                            BSB:edtbsb,
+                            Clientid:Session.get('mySessionEmployeeLoggedID'),
+                            Amount:1,
+                            DepartmentName:defaultDept,
+                            Allclasses:true,
+                           }
+                       };
+                    
+                   console.log(objDetails);
+                   taxRateService.saveSuperannuation(objDetails).then(function (objDetails) {
+                       $('.fullScreenSpin').css('display','none');
+                       swal({
+                           title: 'Success',
+                           text: 'New Superannuation saved Successfully',
+                           type: 'success',
+                           showCancelButton: false,
+                           confirmButtonText: 'Done'
+   
+                       }).then((result) => {
+                           if (result.value) {
+                               sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (dataReload) {
+                                   addVS1Data("TSuperannuation", JSON.stringify(dataReload)).then(function (datareturn) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                       window.open('/payrollrules?active_key=super','_self');
+                                   }).catch(function (err) {
+                                       $('#closeuperannution').trigger('click');
+                                       $('.fullScreenSpin').css('display','inline-block');
+                                       window.open('/payrollrules?active_key=super','_self');
+                                   });
+                                 }).catch(function (err) {
+                                   $('#closeuperannution').trigger('click');
+                                   $('.fullScreenSpin').css('display','inline-block');
+                                   window.open('/payrollrules?active_key=super','_self');
+                                 });
+                           }else if (result.dismiss === 'cancel') {
+                       
+                           }
+                       });
+   
+   
+                   }).catch(function (err) {
+                       $('.fullScreenSpin').css('display','none');
+                       swal({
+                       title: 'Oooops...',
+                       text: err,
+                       type: 'error',
+                       showCancelButton: false,
+                       confirmButtonText: 'Try Again'
+                       }).then((result) => {
+                       if (result.value) {
+                    
+                       } else if (result.dismiss === 'cancel') {
+       
+                       }
+                       });
+                     
+                  });
                     });
-                  
-               });
-              });
+
+
+                }
+                    
+
+
+            }
+           
              
 
 
@@ -20175,9 +20582,9 @@ Template.payrollrules.events({
     },
 
    'click .newreiumbursement': function(){
-      
+       $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+        
         let taxRateService = new TaxRateService();
         let reimbursementname = $('#edtReimbursementName').val() || '';
         let account = $('#edtReimbursementAccount').val() || '';   
@@ -20186,14 +20593,21 @@ Template.payrollrules.events({
         
         if (reimbursementname === '') {
             $('.fullScreenSpin').css('display','none');
-            swal('Reimbursement name Name has not been Filled!', '', 'warning');
+            swal('Reimbursement Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(account === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Account has not been Selected!', '', 'warning');
+            e.preventDefault();
+
+         }
          else {
-            
+            $('.fullScreenSpin').css('display','inline-block');
             if(oldres_id != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+               
                 objDetails = {
                     type: "TReimbursement",
                     fields: {
@@ -20384,9 +20798,9 @@ Template.payrollrules.events({
      },
 
    'click .savePaidLeave':function(){
-     
-        let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
+        
         let taxRateService = new TaxRateService();
         let Leavename = $('#edtLeaveName').val() || '';
         let Typeofunit = $('#edtTypeOfUnits').val() || '';     
@@ -20403,9 +20817,15 @@ Template.payrollrules.events({
 
 
 
-        if (Leavename === '') {
+         if (Leavename === '') {
             $('.fullScreenSpin').css('display','none');
-            swal('Leave name Name has not been Filled!', '', 'warning');
+            swal('Leave  Name has not been Filled!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(Typeofunit === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Type of unit has not been selected!', '', 'warning');
             e.preventDefault();
          }
          else {
@@ -20544,7 +20964,9 @@ Template.payrollrules.events({
                       
                       });
                   }).catch(function (err) {
-                        objDetails = {
+                      
+                    
+                    objDetails = {
                         type: "TPaidLeave",
                         fields: {
                             LeavePaidName:Leavename,
@@ -20619,9 +21041,9 @@ Template.payrollrules.events({
      },
 
    'click .saveUnpaidLeave':function(){
-      
-        let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
+       
         let taxRateService = new TaxRateService();
         let Leavename = $('#edtUnpaidLeaveName').val() || '';
         let Typeofunit = $('#edtUnpaidTypeOfUnits').val() || '';     
@@ -20638,15 +21060,23 @@ Template.payrollrules.events({
 
         if (Leavename === '') {
             $('.fullScreenSpin').css('display','none');
-            swal('Leave name Name has not been Filled!', '', 'warning');
+            swal('Leave Name has not been Filled!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(Typeofunit === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Type of unit has not been selected!', '', 'warning');
             e.preventDefault();
          }
          else
-         {
+         { 
+             
+            $('.fullScreenSpin').css('display','inline-block');
 
             if(leaveid != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+              
                 objDetails = {
                     type: "TUnpaidLeave",
                     fields: {
@@ -20838,9 +21268,9 @@ Template.payrollrules.events({
      },
    
    'click .saveExemptReportable':function(){
-      
-    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display','inline-block');
+    let templateObject = Template.instance();
+  
     let taxRateService = new TaxRateService();
     let edtEarningsName = $('#edtEarningsName').val() || '';
     let edtDisplayName = $('#edtDisplayName').val() || '';     
@@ -20874,11 +21304,23 @@ Template.payrollrules.events({
         swal('Earnings Name has not been Filled!', '', 'warning');
         e.preventDefault();
      }
+     else if(edtRateType === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Earnings Rate type has not been Selected!', '', 'warning');
+        e.preventDefault();
+     }
+     else if(edtExpenseAccount === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Expense Account has not been Selected!', '', 'warning');
+        e.preventDefault();
+     }
      else {
-            
+        $('.fullScreenSpin').css('display','inline-block');
             if(oldid != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+               
                 objDetails = {
                     type: "TOrdinaryTimeEarnings",
                      fields: {
@@ -21094,9 +21536,9 @@ Template.payrollrules.events({
     },
 
    'click .saveExemptReportableOvertime':function(){
-       
-    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display','inline-block');
+    let templateObject = Template.instance();
+   
     let taxRateService = new TaxRateService();
     let edtEarningsName = $('#edtEarningsNameOvertime').val() || '';
     let edtDisplayName = $('#edtDisplayNameOvertime').val() || '';     
@@ -21131,11 +21573,23 @@ Template.payrollrules.events({
         swal('Earnings Name has not been Filled!', '', 'warning');
         e.preventDefault();
      }
+     else if(edtRateType === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Earnings Rate type has not been Selected!', '', 'warning');
+        e.preventDefault();
+     }
+     else if(edtExpenseAccount === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Expense Account has not been Selected!', '', 'warning');
+        e.preventDefault();
+     }
      else {
-
+        $('.fullScreenSpin').css('display','inline-block');
           if(oldid != 0)
           {
-            $('.fullScreenSpin').css('display','inline-block');
+          
             objDetails = {
                 type: "Tovertimeearnings",
                 fields: {
@@ -21333,8 +21787,10 @@ Template.payrollrules.events({
     },
 
    'click .saveSuperannuationBonusesCommissions':function(){
-    let templateObject = Template.instance();
+
     $('.fullScreenSpin').css('display','inline-block');
+    let templateObject = Template.instance();
+   
     let taxRateService = new TaxRateService();
     let edtEarningsName = $('#edtEarningsNameBonusesCommissions').val() || '';
     let edtDisplayName = $('#edtDisplayNameBonusesCommissions').val() || '';     
@@ -21366,12 +21822,24 @@ Template.payrollrules.events({
         $('.fullScreenSpin').css('display','none');
         swal('Earnings Name has not been Filled!', '', 'warning');
         e.preventDefault();
+    }
+     else if(edtRateType === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Earnings Rate type has not been Selected!', '', 'warning');
+        e.preventDefault();
+     }
+     else if(edtExpenseAccount === '')
+     {
+        $('.fullScreenSpin').css('display','none');
+        swal('Expense Account has not been Selected!', '', 'warning');
+        e.preventDefault();
      }
      else {
-
+        $('.fullScreenSpin').css('display','inline-block');
         if(oldid != 0)
         {  
-                $('.fullScreenSpin').css('display','inline-block');
+             
                 objDetails = {
                     type: "Tearningsbonusescommissions",
                     fields: {
@@ -21578,8 +22046,9 @@ Template.payrollrules.events({
     },
 
    'click .saveExemptReportableLumpSumE':function(){
+    $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+       
         let taxRateService = new TaxRateService();
         let edtEarningsName = $('#edtEarningsNameLumpSumE').val() || '';
         let edtDisplayName = $('#edtDisplayNameLumpSumE').val() || '';     
@@ -21612,11 +22081,23 @@ Template.payrollrules.events({
             swal('Earnings Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(edtRateType === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Earnings Rate type has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(edtExpenseAccount === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Expense Account has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
          else {
-            
+            $('.fullScreenSpin').css('display','inline-block');
             if(oldid != 0)
             { 
-                $('.fullScreenSpin').css('display','inline-block');
+                
                 objDetails = {
                     type: "Tlumpsume",
                     fields: {
@@ -21833,8 +22314,9 @@ Template.payrollrules.events({
     },
 
    'click .saveExemptReportableTermnination':function(){
+       $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display','inline-block');
+       
         let taxRateService = new TaxRateService();
         let edtEarningsName = $('#edtEarningsNameTermnination').val() || '';
         let edtDisplayName = $('#edtDisplayNameTermnination').val() || '';     
@@ -21868,11 +22350,23 @@ Template.payrollrules.events({
             swal('Earnings Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(edtRateType === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Earnings Rate type has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(edtExpenseAccount === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Expense Account has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
          else {
-             
+            $('.fullScreenSpin').css('display','inline-block');
             if(oldid != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+               
                 objDetails = {
                     type: "TTerminationSimple",
                     fields: {
@@ -22091,8 +22585,9 @@ Template.payrollrules.events({
     },
 
     'click .saveDirectorFee':function(){
-        let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
+      
         let taxRateService = new TaxRateService();
         let edtEarningsName = $('#edtEarningsNameDirectorsFees').val() || '';
         let edtDisplayName = $('#edtDisplayNameDirectorsFees').val() || '';     
@@ -22125,11 +22620,23 @@ Template.payrollrules.events({
             swal('Earnings Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(edtRateType === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Earnings Rate type has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(edtExpenseAccount === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Expense Account has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
          else {
-            
+            $('.fullScreenSpin').css('display','inline-block');
             if(oldid != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+               
                 objDetails = {
                     type: "Tdirectorsfees",
                     fields: {
@@ -22341,8 +22848,9 @@ Template.payrollrules.events({
     },
 
     'click .saveLumpSumW':function(){
-        let templateObject = Template.instance();
         $('.fullScreenSpin').css('display','inline-block');
+        let templateObject = Template.instance();
+     
         let taxRateService = new TaxRateService();
         let edtEarningsName = $('#edtEarningsNameLumpSumW').val() || '';
         let edtDisplayName = $('#edtDisplayNameLumpSumW').val() || '';     
@@ -22375,11 +22883,23 @@ Template.payrollrules.events({
             swal('Earnings Name has not been Filled!', '', 'warning');
             e.preventDefault();
          }
+         else if(edtRateType === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Earnings Rate type has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
+         else if(edtExpenseAccount === '')
+         {
+            $('.fullScreenSpin').css('display','none');
+            swal('Expense Account has not been Selected!', '', 'warning');
+            e.preventDefault();
+         }
          else {
-           
+            $('.fullScreenSpin').css('display','inline-block');
             if(oldid != 0)
             {
-                $('.fullScreenSpin').css('display','inline-block');
+               
                 objDetails = {
                     type: "TLumpSumW",
                     fields: {
@@ -24239,15 +24759,15 @@ Template.payrollrules.events({
 
     'keyup #tblPayCalendars_filter input': function (event) {
         if($(event.target).val() != ''){
-          $(".btnRefreshCalender").addClass('btnSearchAlert');
+          $(".btnRefreshcalender").addClass('btnSearchAlert');
         }else{
-          $(".btnRefreshCalender").removeClass('btnSearchAlert');
+          $(".btnRefreshcalender").removeClass('btnSearchAlert');
         }
         if (event.keyCode == 13) {
            $(".btnRefreshCalender").trigger("click");
         }
     },
-    'click .btnRefreshCalender':function(event){
+    'click .btnRefreshcalender':function(event){
       
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
@@ -24259,7 +24779,7 @@ Template.payrollrules.events({
         let dataSearchName = $('#tblPayCalendars_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
             sideBarService.getNewCalenderByNameOrPayPeriod(dataSearchName).then(function (data) {
-                $(".btnRefreshCalender").removeClass('btnSearchAlert');
+                $(".btnRefreshcalender").removeClass('btnSearchAlert');
                 let lineItems = [];
                 let lineItemObj = {};
                 if (data.tpayrollcalendars.length > 0) {
@@ -24352,14 +24872,14 @@ Template.payrollrules.events({
             $(".btnRefreshHoliday").removeClass('btnSearchAlert');
             let lineItems = [];
             let lineItemObj = {};
-            if (data.Tpayrollholidays.length > 0) {
-                for (let i = 0; i < data.Tpayrollholidays.length; i++) {
+            if (data.tpayrollholidays.length > 0) {
+                for (let i = 0; i < data.tpayrollholidays.length; i++) {
                 
                     var dataTableList = {
-                        id:data.Tpayrollholidays[i].fields.ID || '',
-                        name:data.Tpayrollholidays[i].fields.PayrollHolidaysName || '',
-                        group:data.Tpayrollholidays[i].fields.PayrollHolidaysGroupName  || '',
-                        date: moment(data.Tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
+                        id:data.tpayrollholidays[i].fields.ID || '',
+                        name:data.tpayrollholidays[i].fields.PayrollHolidaysName || '',
+                        group:data.tpayrollholidays[i].fields.PayrollHolidaysGroupName  || '',
+                        date: moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format('DD/MM/YYYY') || '',
                         deletedata:'<td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                     };
   
@@ -24538,15 +25058,17 @@ Template.payrollrules.events({
     if (dataSearchName.replace(/\s/g, '') != '') {
         sideBarService.getAllowanceByName(dataSearchName).then(function (data) {
             $(".btnRefreshAllowance").removeClass('btnSearchAlert');
+         
             let lineItems = [];
             let lineItemObj = {};
             if (data.tallowance.length > 0) {
                 for (let i = 0; i < data.tallowance.length; i++) {
                     let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
+                  
                     var dataTableList = {
                         id:data.tallowance[i].fields.ID || 0,
                         description:data.tallowance[i].fields.Description || '-',
-                        type:tallowance[i].fields.AllowanceType || '',
+                        type:data.tallowance[i].fields.AllowanceType || '',
                         displayname:data.tallowance[i].fields.DisplayIn || '',
                         amount:allowanceAmount || 0.00,
                         accountname:data.tallowance[i].fields.Accountname || '',
@@ -24554,15 +25076,18 @@ Template.payrollrules.events({
                         axempt:data.tallowance[i].fields.Payrolltaxexempt || false,
                         superince:data.tallowance[i].fields.Superinc || false,
                         workcover:data.tallowance[i].fields.Workcoverexempt || false,
-                        deletedata:'<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+                        deletedata:'<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>',
                     };
-    
+                    console.log(dataTableList);
                     splashArrayInvoiceList.push(dataTableList);
                 }
                 templateObject.datatablerecords.set(splashArrayInvoiceList);
     
                 let item = templateObject.datatablerecords.get();
                 $('.fullScreenSpin').css('display', 'none');
+
+                console.log(splashArrayInvoiceList);
+
                 if (splashArrayInvoiceList) {
                     var datatable = $('#tblAlowances').DataTable();
                     $("#tblAlowances > tbody").empty();
@@ -25019,7 +25544,7 @@ Template.payrollrules.events({
         $('#fileInput').trigger('click');
     
      },
-    
+
 
 });
 

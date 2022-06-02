@@ -10,7 +10,7 @@ export class AccessLevelService extends BaseService {
 
     getEmployees() {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeName",
+              PropertyList: "ID,EmployeeName",
               Select: "[Active]=true"
           };
         return this.getList(this.ERPObjects.TEmployee, options);
@@ -18,7 +18,7 @@ export class AccessLevelService extends BaseService {
 
     getEmployeesUsers() {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeId,EmployeeName",
+              PropertyList: "ID,EmployeeId,EmployeeName",
 
           };
         return this.getList(this.ERPObjects.TUser, options);
@@ -26,7 +26,7 @@ export class AccessLevelService extends BaseService {
 
     getEmpFormAccess(EmployeeId) {
         let options = {
-            PropertyList: "PropertyList==Id,FormId,AccessLevelName,AccessLevel",
+            PropertyList: "Id,FormId,AccessLevelName,AccessLevel",
             select: "[EmployeeId]='"+EmployeeId+"'",
         };
         return this.getList(this.ERPObjects.TEmployeeFormAccess, options);

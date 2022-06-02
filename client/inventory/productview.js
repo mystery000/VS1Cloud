@@ -1873,6 +1873,7 @@ Template.productview.onRendered(function() {
                 let totaldeptquantity = 0;
 
                 for (let j in data.tproductclassquantity) {
+                    console.log(data.tproductclassquantity[j]);
                     qtylineItemObj = {
                         department: data.tproductclassquantity[j].DepartmentName || '',
                         quantity: data.tproductclassquantity[j].InStockQty || 0,
@@ -2503,6 +2504,7 @@ Template.productview.onRendered(function() {
                 let totaldeptquantity = 0;
 
                 for (let j in data.tproductclassquantity) {
+                    console.log(data.tproductclassquantity[j]);
                     qtylineItemObj = {
                         department: data.tproductclassquantity[j].DepartmentName || '',
                         quantity: data.tproductclassquantity[j].InStockQty || 0,

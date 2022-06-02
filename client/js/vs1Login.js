@@ -5,6 +5,9 @@ import 'jquery-ui-dist/jquery-ui.css';
 import {AccessLevelService} from './accesslevel-service';
 import {EmployeeProfileService} from './profile-service';
 import '../lib/global/indexdbstorage.js';
+import { SMSService } from '../js/sms-settings-service';
+
+let smsService = new SMSService();
 
 Template.vs1login.onCreated(() => {
     Template.instance().subscribe('RegisterUser');
@@ -266,6 +269,16 @@ Template.vs1login.onRendered(function () {
         let isSidePanelFormID = '';
         let isTopPanelFormID = '';
 
+        //New Access Level
+        let isCRM = false;
+        let isProductList = false;
+        let isNewProduct = false;
+        let isNewStockTransfer = false;
+        let isExportProduct = false;
+        let isImportProduct = false;
+        let isStockonHandDemandChart = false;
+        let isAppointmentSMS = false;
+
         /* Lincence Check for Menu Options */
         let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
         let isInventoryLicence = Session.get('CloudInventoryLicence');
@@ -400,6 +413,34 @@ Template.vs1login.onRendered(function () {
                                 isSalesQtyOnly = true;
                             }
 
+                            //New
+                            if (data.temployeeformaccessdetail[i].fields.Description === "CRM") {
+                                isCRM = true;
+                            }
+
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Product LIST") {
+                                isProductList = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "New Product") {
+                                isNewProduct = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "New Stock Transfer") {
+                                isNewStockTransfer = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Export Product") {
+                                isExportProduct = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Import Product") {
+                                isImportProduct = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Stock On Hand and Demand") {
+                                isStockonHandDemandChart = true;
+                            }
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Appointment - SMS") {
+                                isAppointmentSMS = true;
+                            }
+
+
                             lineItemAccessObjlevel = {
                                 formID: data.temployeeformaccessdetail[i].fields.FormId || '',
                                 accessLevel: data.temployeeformaccessdetail[i].fields.AccessLevel || '',
@@ -425,6 +466,12 @@ Template.vs1login.onRendered(function () {
                         isInventory = false;
                         isStockTransfer = false;
                         isStockAdjustment = false;
+                        isProductList = false;
+                        isNewProduct = false;
+                        isNewStockTransfer = false;
+                        isExportProduct = false;
+                        isImportProduct = false;
+                        isStockonHandDemandChart = false;
                     }
                     if (!isManufacturingLicence) {
                         isManufacturing = false;
@@ -466,7 +513,7 @@ Template.vs1login.onRendered(function () {
                         isMain = false;
                     }
 
-                    Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
+                Session.setPersistent('CloudPrintDeliveryDocket', isDocket);
                 Session.setPersistent('CloudPrintInvoice', isInvoice);
                 Session.setPersistent('CloudUserPass', isUserPassDetail);
 
@@ -501,6 +548,15 @@ Template.vs1login.onRendered(function () {
                 Session.setPersistent('CloudTopPanelMenuID', isTopPanelID);
                 Session.setPersistent('CloudSidePanelMenuFormID', isSidePanelFormID);
                 Session.setPersistent('CloudTopPanelMenuFormID', isTopPanelFormID);
+
+                Session.setPersistent('CloudCRM', isCRM);
+                Session.setPersistent('CloudProdList', isProductList);
+                Session.setPersistent('CloudNewProd', isNewProduct);
+                Session.setPersistent('CloudNewStockTransfer', isNewStockTransfer);
+                Session.setPersistent('CloudExportProd', isExportProduct);
+                Session.setPersistent('CloudImportProd', isImportProduct);
+                Session.setPersistent('CloudStockOnHand', isStockonHandDemandChart);
+                Session.setPersistent('CloudApptSMS', isAppointmentSMS);
 
                 let userSerssion = {
                     'loggedEmpID': employeeID,
@@ -657,6 +713,17 @@ Template.vs1login.onRendered(function () {
         let isTimesheetStartStop = false;
         let isTimesheetCreate = false;
         let isShowTimesheet = false;
+
+
+        //New Access Level
+        let isCRM = false;
+        let isProductList = false;
+        let isNewProduct = false;
+        let isNewStockTransfer = false;
+        let isExportProduct = false;
+        let isImportProduct = false;
+        let isStockonHandDemandChart = false;
+        let isAppointmentSMS = false;
 
         /* Lincence Check for Menu Options */
         let isFixedAssetsLicence = Session.get('CloudFixedAssetsLicence');
@@ -867,6 +934,33 @@ Template.vs1login.onRendered(function () {
                         isBanking = true;
                     }
 
+                    //New
+                    if (optionaccess.fields.Description === "CRM") {
+                        isCRM = true;
+                    }
+
+                    if (optionaccess.fields.Description === "Product LIST") {
+                        isProductList = true;
+                    }
+                    if (optionaccess.fields.Description === "New Product") {
+                        isNewProduct = true;
+                    }
+                    if (optionaccess.fields.Description === "New Stock Transfer") {
+                        isNewStockTransfer = true;
+                    }
+                    if (optionaccess.fields.Description === "Export Product") {
+                        isExportProduct = true;
+                    }
+                    if (optionaccess.fields.Description === "Import Product") {
+                        isImportProduct = true;
+                    }
+                    if (optionaccess.fields.Description === "Stock On Hand and Demand") {
+                        isStockonHandDemandChart = true;
+                    }
+                    if (optionaccess.fields.Description === "Appointment - SMS") {
+                        isAppointmentSMS = true;
+                    }
+
                     lineItemAccessObjlevel = {
                         formID: optionaccess.fields.FormId || '',
                         accessLevel: optionaccess.fields.AccessLevel || '',
@@ -890,12 +984,19 @@ Template.vs1login.onRendered(function () {
             }
             if (!isAppointmentSchedulingLicence) {
                 isAppointmentStartStop = false;
+                isAppointmentSMS = false;
             }
             if (!isInventoryLicence) {
                 isInventory = false;
                 isProductCost = false;
                 isStockTransfer = false;
                 isStockAdjustment = false;
+                isProductList = false;
+                isNewProduct = false;
+                isNewStockTransfer = false;
+                isExportProduct = false;
+                isImportProduct = false;
+                isStockonHandDemandChart = false;
             }
             if (!isManufacturingLicence) {
                 isManufacturing = false;
@@ -1017,6 +1118,16 @@ Template.vs1login.onRendered(function () {
              Session.setPersistent('CloudTimesheetStartStop', isTimesheetStartStop);
              Session.setPersistent('CloudCreateTimesheet', isTimesheetCreate);
              Session.setPersistent('CloudShowTimesheet', isShowTimesheet);
+
+             Session.setPersistent('CloudCRM', isCRM);
+             Session.setPersistent('CloudProdList', isProductList);
+             Session.setPersistent('CloudNewProd', isNewProduct);
+             Session.setPersistent('CloudNewStockTransfer', isNewStockTransfer);
+             Session.setPersistent('CloudExportProd', isExportProduct);
+             Session.setPersistent('CloudImportProd', isImportProduct);
+             Session.setPersistent('CloudStockOnHand', isStockonHandDemandChart);
+             Session.setPersistent('CloudApptSMS', isAppointmentSMS);
+
             let userSerssion = {
                 'loggedEmpID': userAccessOptions.items[0].fields.EmployeeId,
                 'loggedUserName': Session.get('EUserName'),
@@ -1236,6 +1347,50 @@ Template.vs1login.onRendered(function () {
                                                                             getSideBarData(employeeUserID, employeeUserLogon, ERPIPAdderess, erpdbname);
 
                                                                             document.getElementById("error_log").style.display = 'none';
+
+                                                                            // Add get sms messaging log when login here
+                                                                            const smsSettings = {
+                                                                                twilioAccountId: "",
+                                                                                twilioAccountToken: "",
+                                                                                twilioTelephoneNumber: "",
+                                                                            }
+                                                                            smsService.getSMSSettings().then((result) => {
+                                                                                if (result.terppreference.length > 0) {
+                                                                                    for (let i = 0; i < result.terppreference.length; i++) {
+                                                                                        switch(result.terppreference[i].PrefName) {
+                                                                                            case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
+                                                                                            case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
+                                                                                            case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                console.log(smsSettings);
+                                                                                $.ajax(
+                                                                                    {
+                                                                                        method: 'GET',
+                                                                                        url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
+                                                                                        dataType: 'json',
+                                                                                        contentType: 'application/x-www-form-urlencoded', // !
+                                                                                        beforeSend: function(xhr) {
+                                                                                            xhr.setRequestHeader("Authorization",
+                                                                                                "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
+                                                                                            );
+                                                                                        },
+                                                                                        success: function(data) {
+                                                                                            // TODO: Add indexdb function to save sms messaging logs
+                                                                                            console.log('SAVING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+                                                                                            if (!data.sms_messages) {
+                                                                                                addVS1Data('TVS1SMSLogs', data).then((res) => {
+                                                                                                    console.log(res);
+                                                                                                }).then(error => console.log(error));
+                                                                                            }
+                                                                                        },
+                                                                                        error: function(e) {
+                                                                                            reject(e.message);
+                                                                                        }
+                                                                                    }
+                                                                                )
+                                                                            });
 
                                                                         } else {
 
@@ -1507,7 +1662,8 @@ Template.vs1login.onRendered(function () {
                                                     }
                                                 }
                                                 values.forEach(value => {
-                                                    const reportData = JSON.parse(value);
+                                                    let reportData = JSON.parse(value);
+                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
                                                     if (reportData.BasedOnType === "E" && !reportData.ISEmpty)
                                                         Meteor.call('sendNormalEmail', reportData);
                                                 });

@@ -1,0 +1,29 @@
+<template name="lotnumberpop">
+
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="serialform" name="serialform">
+                <div class="modal-header">
+                    <h4><div name="newShipViaMethodName" id="newShipViaMethodName">Lot Numbers</div></h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 8px 24px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="tblLotlist" class="table">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex w-100 justify-content-between">
+                        <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        <button class="btn btn-primary btnPrint" type="button"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                        <button class="btn btn-danger btnDelete" type="button"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</template>

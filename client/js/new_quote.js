@@ -1,52 +1,25 @@
-import {
-    SalesBoardService
-} from './sales-service';
+import {SalesBoardService} from './sales-service';
 import {PurchaseBoardService} from './purchase-service';
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    CoreService
-} from '../js/core-service';
-import {
-    DashBoardService
-} from "../Dashboard/dashboard-service";
-import {
-    UtilityService
-} from "../utility-service";
-import {
-    ProductService
-} from "../product/product-service";
-import {
-    OrganisationService
-} from '../js/organisation-service';
+import {ReactiveVar} from 'meteor/reactive-var';
+import {UtilityService} from "../utility-service";
+import {ProductService} from "../product/product-service";
+import {OrganisationService} from '../js/organisation-service';
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-
-import {
-    Random
-} from 'meteor/random';
-import {
-    jsPDF
-} from 'jspdf';
+import {Random} from 'meteor/random';
+import {jsPDF} from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
-import {
-    autoTable
-} from 'jspdf-autotable';
-
 import 'jquery-editable-select';
-import {
-    SideBarService
-} from '../js/sidebar-service';
+import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-var times = 0;
+let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 Template.new_quote.onCreated(() => {
-
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
@@ -76,40 +49,44 @@ Template.new_quote.onCreated(() => {
     templateObject.record = new ReactiveVar({});
     templateObject.custfields = new ReactiveVar([]);
     templateObject.accountID = new ReactiveVar();
-    templateObject.stripe_fee_method = new ReactiveVar()
+    templateObject.stripe_fee_method = new ReactiveVar();
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
-
     templateObject.address = new ReactiveVar();
     templateObject.abn = new ReactiveVar();
     templateObject.referenceNumber = new ReactiveVar();
-
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.productextrasellrecords = new ReactiveVar([]);
 });
+
 Template.new_quote.onRendered(() => {
-  $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
-      $('#sltStatus').val($(this).find(".colStatusName").text());
-      $('#statusPopModal').modal('toggle');
+    $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
+        $('#sltStatus').val($(this).find(".colStatusName").text());
+        $('#statusPopModal').modal('toggle');
 
-      $('#tblStatusPopList_filter .form-control-sm').val('');
-      setTimeout(function () {
-          $('.btnRefreshStatus').trigger('click');
-          $('.fullScreenSpin').css('display', 'none');
-      }, 1000);
-  });
-
-    $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-        $('#sltCurrency').val($(this).find(".colCode").text());
-        $('#currencyModal').modal('toggle');
-
-        $('#tblCurrencyPopList_filter .form-control-sm').val('');
+<<<<<<< HEAD
+        $('#tblStatusPopList_filter .form-control-sm').val('');
         setTimeout(function () {
-            $('.btnRefreshCurrency').trigger('click');
+            $('.btnRefreshStatus').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
+    $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
+        $('#sltCurrency').val($(this).find(".colCode").text());
+        $('#currencyModal').modal('toggle');
+=======
+    // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
+    //     $('#sltCurrency').val($(this).find(".colCode").text());
+    //     $('#currencyModal').modal('toggle');
+>>>>>>> 7968de5ac3403066e758d842be3528106463f409
+
+    //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
+    //     setTimeout(function () {
+    //         $('.btnRefreshCurrency').trigger('click');
+    //         $('.fullScreenSpin').css('display', 'none');
+    //     }, 1000);
+    // });
 
     $(window).on('load', function() {
         var win = $(this); //this = window
@@ -126,17 +103,14 @@ Template.new_quote.onRendered(() => {
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
-    };
+    }
     const templateObject = Template.instance();
-    const records = [];
-    let salesService = new SalesBoardService();
-    let clientsService = new SalesBoardService();
-    let productsService = new SalesBoardService();
-    let accountService = new SalesBoardService();
-    let organisationService = new OrganisationService();
+    const salesService = new SalesBoardService();
+    const clientsService = new SalesBoardService();
+    const accountService = new SalesBoardService();
+    const contactService = new ContactService();
+
     const clientList = [];
-    const productsList = [];
-    const accountsList = [];
     const deptrecords = [];
     const termrecords = [];
     const statusList = [];
@@ -155,39 +129,6 @@ Template.new_quote.onRendered(() => {
         changeYear: true,
         yearRange: "-90:+10",
     });
-
-
-  //       jQuery(document).ready(function($) {
-
-  //       if (window.history && window.history.pushState) {
-
-  //   window.history.pushState('forward', null, FlowRouter.current().path);
-
-  //   $(window).on('popstate', function() {
-  //     swal({
-  //             title: 'Save Or Cancel To Continue',
-  //             text: "Do you want to Save or Cancel this transaction?",
-  //             type: 'question',
-  //             showCancelButton: true,
-  //             confirmButtonText: 'Save'
-  //         }).then((result) => {
-  //             if (result.value) {
-  //                 $(".btnSave").trigger("click");
-  //             } else if (result.dismiss === 'cancel') {
-  //                 let lastPageVisitUrl = window.location.pathname;
-  //                 if (FlowRouter.current().oldRoute) {
-  //                     lastPageVisitUrl = FlowRouter.current().oldRoute.path;
-  //                 } else {
-  //                     lastPageVisitUrl = window.location.pathname;
-  //                 }
-  //                // FlowRouter.go(lastPageVisitUrl);
-  //                 window.open(lastPageVisitUrl, '_self');
-  //             } else {}
-  //         });
-  //   });
-
-  // }
-  //   });
 
     $(document).ready(function() {
         $('#formCheck-one').click(function() {
@@ -376,15 +317,15 @@ Template.new_quote.onRendered(() => {
         let stripe_fee = Session.get('vs1companyStripeFeeMethod') || 'apply';
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
-    }
+    };
 
     templateObject.getSalesCustomFieldsList= function () {
       getVS1Data('TCustomFieldList').then(function(dataObject) {
-          if (dataObject.length == 0) {
+          if (dataObject.length === 0) {
             sideBarService.getAllCustomFields().then(function (data) {
                 let customData = {};
                 for(let x = 0; x < data.tcustomfieldlist.length; x++) {
-                    if(data.tcustomfieldlist[x].fields.ListType == "ltSales") {
+                    if(data.tcustomfieldlist[x].fields.ListType === "ltSales") {
                         customData = {
                             active: data.tcustomfieldlist[x].fields.Active||false,
                             id: data.tcustomfieldlist[x].fields.ID||0,
@@ -393,11 +334,10 @@ Template.new_quote.onRendered(() => {
                             isempty: data.tcustomfieldlist[x].fields.ISEmpty||false,
                             iscombo: data.tcustomfieldlist[x].fields.IsCombo||false,
                             dropdown: data.tcustomfieldlist[x].fields.Dropdown||null,
-                        }
+                        };
                         custField.push(customData);
                 }
             }
-
             if(custField.length < 4) {
                 let remainder = 4 - custField.length;
                 let getRemCustomFields = 0;
@@ -2298,7 +2238,7 @@ Template.new_quote.onRendered(() => {
         }).catch(function (err) {
         });
       });
-    }
+    };
 
         setTimeout(function(){
             templateObject.getSalesCustomFieldsList()
@@ -2309,19 +2249,17 @@ Template.new_quote.onRendered(() => {
 
     templateObject.getAllLeadStatuss = function() {
         getVS1Data('TLeadStatusType').then(function(dataObject) {
-            if (dataObject.length == 0) {
+            if (dataObject.length === 0) {
                 clientsService.getAllLeadStatus().then(function(data) {
                     for (let i in data.tleadstatustype) {
-                        let leadrecordObj = {
-                            orderstatus: data.tleadstatustype[i].TypeName || ' '
-
-                        };
-
-                        statusList.push(leadrecordObj);
+                        if (data.tleadstatustype.hasOwnProperty(i)) {
+                            let leadrecordObj = {
+                                orderstatus: data.tleadstatustype[i].TypeName || ' '
+                            };
+                            statusList.push(leadrecordObj);
+                        }
                     }
                     templateObject.statusrecords.set(statusList);
-
-
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -2359,19 +2297,19 @@ Template.new_quote.onRendered(() => {
 
     templateObject.getAllClients();
     templateObject.getAllLeadStatuss();
-    var url = FlowRouter.current().path;
-    var getso_id = url.split('?id=');
-    var invoiceId = getso_id[getso_id.length - 1];
+    let url = FlowRouter.current().path;
+    let getso_id = url.split('?id=');
+    let invoiceId = getso_id[getso_id.length - 1];
     let bankDetails = Session.get('vs1companyBankDetails') || '';
     //$('.bankDetails').html(bankDetails.replace(/[\r\n]/g, "<br />"));
     if (url.includes("id") && url.includes("total")) {
         url = new URL(window.location.href);
         let dateStart = new Date();
         let transDate = ("0" + dateStart.getDate()).toString().slice(-2) + "/" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "/" + dateStart.getFullYear();
-        var getso_id = url.searchParams.get("id");
-        var paymentID = url.searchParams.get("paymentID");
-        var paidAmount = url.searchParams.get("total");
-        var currency_symbol = url.searchParams.get("currency");
+        getso_id = url.searchParams.get("id");
+        const paymentID = url.searchParams.get("paymentID");
+        const paidAmount = url.searchParams.get("total");
+        const currency_symbol = url.searchParams.get("currency");
         if (getso_id != "") {
             invoiceId = parseInt(getso_id);
             $('.printID').attr("id", invoiceId);
@@ -2379,10 +2317,10 @@ Template.new_quote.onRendered(() => {
 
                 getVS1Data('TQuote').then(function(dataObject) {
                     let customerData = templateObject.clientrecords.get();
-                    if (dataObject.length == 0) {
+                    if (dataObject.length === 0) {
                         accountService.getOneQuotedataEx(currentQuote).then(function(data) {
                             let cust_result = customerData.filter(cust_data => {
-                                return cust_data.customername == data.fields.CustomerName
+                                return cust_data.customername === data.fields.CustomerName
                             });
                             $('.fullScreenSpin').css('display', 'none');
                             let lineItems = [];
@@ -5187,7 +5125,7 @@ Template.new_quote.onRendered(() => {
     $(document).ready(function() {
         $('#sltStatus').editableSelect();
         $('#edtCustomerName').editableSelect();
-        $('#sltCurrency').editableSelect();
+        //$('#sltCurrency').editableSelect();
         $('#addRow').on('click', function() {
             var rowData = $('#tblQuoteLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
@@ -5794,103 +5732,103 @@ Template.new_quote.onRendered(() => {
         // }
     });
 
-    $('#sltCurrency').editableSelect()
-        .on('click.editable-select', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var currencyDataName = e.target.value || '';
-            $('#edtCurrencyID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#currencyModal').modal('toggle');
-            } else {
-                if (currencyDataName.replace(/\s/g, '') != '') {
-                    $('#add-currency-title').text('Edit Currency');
-                    $('#sedtCountry').prop('readonly', true);
-                    getVS1Data('TCurrency').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getCurrencies().then(function(data) {
-                                for (let i in data.tcurrency) {
-                                    if (data.tcurrency[i].Code === currencyDataName) {
-                                        $('#edtCurrencyID').val(data.tcurrency[i].Id);
-                                        setTimeout(function() {
-                                            $('#sedtCountry').val(data.tcurrency[i].Country);
-                                        }, 200);
-                                        //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                        $('#currencyCode').val(currencyDataName);
-                                        $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                        $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                        $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                        $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                        $('#edtSellRate').val(data.tcurrency[i].SellRate);
-                                    }
-                                }
-                                setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newCurrencyModal').modal('toggle');
-                                    $('#sedtCountry').attr('readonly', true);
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tcurrency;
-                            for (let i = 0; i < data.tcurrency.length; i++) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].Id);
-                                    $('#sedtCountry').val(data.tcurrency[i].Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].SellRate);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                            }, 200);
-                        }
+    // $('#sltCurrency').editableSelect()
+    //     .on('click.editable-select', function(e, li) {
+    //         var $earch = $(this);
+    //         var offset = $earch.offset();
+    //         var currencyDataName = e.target.value || '';
+    //         $('#edtCurrencyID').val('');
+    //         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //             $('#currencyModal').modal('toggle');
+    //         } else {
+    //             if (currencyDataName.replace(/\s/g, '') != '') {
+    //                 $('#add-currency-title').text('Edit Currency');
+    //                 $('#sedtCountry').prop('readonly', true);
+    //                 getVS1Data('TCurrency').then(function(dataObject) {
+    //                     if (dataObject.length == 0) {
+    //                         $('.fullScreenSpin').css('display', 'inline-block');
+    //                         sideBarService.getCurrencies().then(function(data) {
+    //                             for (let i in data.tcurrency) {
+    //                                 if (data.tcurrency[i].Code === currencyDataName) {
+    //                                     $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                                     setTimeout(function() {
+    //                                         $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                                     }, 200);
+    //                                     //$('#sedtCountry').val(data.tcurrency[i].Country);
+    //                                     $('#currencyCode').val(currencyDataName);
+    //                                     $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                                     $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                                     $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                                     $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                                     $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //                                 }
+    //                             }
+    //                             setTimeout(function() {
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                                 $('#newCurrencyModal').modal('toggle');
+    //                                 $('#sedtCountry').attr('readonly', true);
+    //                             }, 200);
+    //                         });
+    //                     } else {
+    //                         let data = JSON.parse(dataObject[0].data);
+    //                         let useData = data.tcurrency;
+    //                         for (let i = 0; i < data.tcurrency.length; i++) {
+    //                             if (data.tcurrency[i].Code === currencyDataName) {
+    //                                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                                 $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                                 $('#currencyCode').val(currencyDataName);
+    //                                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //                             }
+    //                         }
+    //                         setTimeout(function() {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             $('#newCurrencyModal').modal('toggle');
+    //                         }, 200);
+    //                     }
 
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getCurrencies().then(function(data) {
-                            for (let i in data.tcurrency) {
-                                if (data.tcurrency[i].Code === currencyDataName) {
-                                    $('#edtCurrencyID').val(data.tcurrency[i].Id);
-                                    setTimeout(function() {
-                                        $('#sedtCountry').val(data.tcurrency[i].Country);
-                                    }, 200);
-                                    //$('#sedtCountry').val(data.tcurrency[i].Country);
-                                    $('#currencyCode').val(currencyDataName);
-                                    $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-                                    $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-                                    $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-                                    $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-                                    $('#edtSellRate').val(data.tcurrency[i].SellRate);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newCurrencyModal').modal('toggle');
-                                $('#sedtCountry').attr('readonly', true);
-                            }, 200);
-                        });
-                    });
+    //                 }).catch(function(err) {
+    //                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                     sideBarService.getCurrencies().then(function(data) {
+    //                         for (let i in data.tcurrency) {
+    //                             if (data.tcurrency[i].Code === currencyDataName) {
+    //                                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                                 setTimeout(function() {
+    //                                     $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                                 }, 200);
+    //                                 //$('#sedtCountry').val(data.tcurrency[i].Country);
+    //                                 $('#currencyCode').val(currencyDataName);
+    //                                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //                             }
+    //                         }
+    //                         setTimeout(function() {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             $('#newCurrencyModal').modal('toggle');
+    //                             $('#sedtCountry').attr('readonly', true);
+    //                         }, 200);
+    //                     });
+    //                 });
 
-                } else {
-                    $('#currencyModal').modal();
-                    setTimeout(function() {
-                        $('#tblCurrencyPopList_filter .form-control-sm').focus();
-                        $('#tblCurrencyPopList_filter .form-control-sm').val('');
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblCurrencyPopList').DataTable();
-                        datatable.draw();
-                        $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
+    //             } else {
+    //                 $('#currencyModal').modal();
+    //                 setTimeout(function() {
+    //                     $('#tblCurrencyPopList_filter .form-control-sm').focus();
+    //                     $('#tblCurrencyPopList_filter .form-control-sm').val('');
+    //                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+    //                     var datatable = $('#tblCurrencyPopList').DataTable();
+    //                     datatable.draw();
+    //                     $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+    //                 }, 500);
+    //             }
+    //         }
+    //     });
 
     $('#sltStatus').editableSelect()
         .on('click.editable-select', function(e, li) {
@@ -11078,6 +11016,31 @@ Template.new_quote.events({
             }
         } else {
 
+        }
+    },
+    'click .btnSnLotmodal': function(event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        var target=event.target;
+        let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+        let productService = new ProductService();
+        if (selectedProductName == '') {
+            $('.fullScreenSpin').css('display', 'none');
+            swal('You have to select Product.', '', 'info');
+            event.preventDefault();
+            return false;
+        } else {
+            productService.getProductStatus(selectedProductName).then(function(data) {
+                $('.fullScreenSpin').css('display', 'none');
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    swal('', 'The product "' + selectedProductName + '" does not track Lot Number, Bin Location or Serial Number', 'info');
+                    event.preventDefault();
+                    return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    $('#lotNumberModal').modal('show');
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    $('#serialNumberModal').modal('show');
+                }
+            });
         }
     }
 });

@@ -22,7 +22,7 @@ export class CRMService extends BaseService {
   getTProjectList() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true"
+      // select: "[Active]=true"
     }
     return this.getList(this.ERPObjects.Tprojectlist, options);
   }

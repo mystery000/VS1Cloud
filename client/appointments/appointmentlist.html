@@ -159,14 +159,21 @@
                  style="padding: 0px 20px; background-color: #ededed;">
 
                 <div class="col float-left flex-grow-1 mb-4">
-                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i
-                                                                                                      class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                    <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button"
-                            style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New
-                        Appointment</button>
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <!-- {{#if createnewappointment}} -->
+                      <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Appointment</button>
+                    <!-- {{else}}
+                      <button id="btnAppointment" name="btnAppointment" class="btn btn-primary" type="button" style="margin: 16px;"  disabled><i class="icon ion-plus" style="padding-right: 5px;"></i>New Appointment</button>
+                    {{/if}} -->
+                    {{#if includeCreateInvoice}}
                     <button id="btnInvoice" name="btnInvoice" class="btn btn-primary" type="button"
                             style="margin: 16px;"><i class="fa fa-refresh" style="padding-right: 5px;"></i>Create
                         Invoice</button>
+                    {{else}}
+                    <button id="btnInvoiceDisabled" name="btnInvoiceDisabled" class="btn btn-primary" type="button"
+                            style="margin: 16px;"><i class="fa fa-refresh" style="padding-right: 5px;"></i>Create
+                        Invoice</button>
+                    {{/if}}
                 </div>
 
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -321,8 +328,16 @@
                                     <td contenteditable="false" class="colEmployee">{{item.timeEnd}}</td>
                                     <td contenteditable="false" style="background-color: {{item.color}} !important; color:#fff" class="colStatus">{{item.finished}}</td>
                                     <td contenteditable="false" class="colConfirm d-flex justify-content-xl-center align-items-end">
-                                        {{#if equals item.msRef "Yes"}}
-                                        <i class="fa fa-check-circle text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                        {{#if equals item.custFld13 "Yes"}}
+                                            {{#if equals item.custFld11 "Yes"}}
+                                                <i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                            {{else}}
+                                                {{#if equals item.custFld11 "No"}}
+                                                    <i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>
+                                                {{else}}
+                                                    <i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>
+                                                {{/if}}
+                                            {{/if}}
                                         {{/if}}
                                     </td>
                                     <td contenteditable="false" class="colNotes hiddenColumn">{{item.notes}}</td>

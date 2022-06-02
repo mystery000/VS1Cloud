@@ -287,11 +287,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-md-12 col-lg-12">
-                                                {{#if isCurrencyEnable}}
-                                                    {{> currencydropdown}}
-                                                {{else}}
-
-                                                {{/if}}
+                                                
                                                 <div class="form-group" style="width: 90%; display: none;"><label>Due Date</label>
                                                     <div class="input-group date" style="width: 150px;cursor: pointer;">
                                                         <input type="text" class="form-control" id="dtDueDate" name="dtDueDate" value="{{purchaseorderrecord.duedate}}">
@@ -302,6 +298,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                           
+
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -324,6 +323,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-2 col-xl-2">
+                                {{> CurrencyWidget rate="buy"}}
                             </div>
                         </div>
                     </div>
@@ -1096,7 +1098,7 @@
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                                             {{#if isBatchSerialNoTracking 'true'}}
-                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                             {{/if}}
                                             <!-- <td contenteditable="false" class="lineAmt colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td> -->
                                             <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
@@ -1614,8 +1616,11 @@
             </div>
         </div>
         <!-- Start Serial/Lot numbers modal -->
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
             {{> serialnumberpop}}
+        </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+            {{> lotnumberpop}}
         </div>
         <!-- End Modal -->
         <!-- Modal print-button -modal -->

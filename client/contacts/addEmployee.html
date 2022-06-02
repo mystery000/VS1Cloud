@@ -2044,7 +2044,7 @@
                                                                         <div class="col-6 col-md-3">
                                                                             <div class="form-group">
                                                                                 <label>Statement Text</label>
-                                                                                <input type="text" class="form-control primaryStatementText" id="bankAccountStatement" value="{{employeePaySetting.BankAccountStatement}}">
+                                                                                <input type="text" class="form-control primaryStatementText" id="bankAccountStatement" value="{{employeePaySetting.StatementText}}">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-6 col-md-3">
@@ -2460,14 +2460,13 @@
                                                                                             <div class="col-6 col-md-7">
                                                                                                 <div class="form-group">
                                                                                                     <label class="borderBottom1">Earnings Rate</label>
-                                                                                                    <select type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" name="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                                    </select>
+                                                                                                    <input type="search" class="form-control earningLineDropDown" id="ptEarningRate{{ @index }}" name="ptEarningRate{{ @index }}" value="{{ item.fields.EarningRate }}" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptEarningAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="col-1 col-md-1" style="padding-left: 0px;">
@@ -2477,7 +2476,7 @@
                                                                                     </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-12">
                                                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEarningsLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
                                                                                         Earnings Line</button>
@@ -2495,8 +2494,7 @@
                                                                                                         <div class="col-12">
                                                                                                             <div class="form-group">
                                                                                                                 <label>Earnings Rate</label>
-                                                                                                                <select type="search" class="form-control earningLineDropDown" id="earningRateSelect" name="earningRateSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                                                                                </select>
+                                                                                                                <input type="search" class="form-control earningLineDropDown" id="earningRateSelect" name="earningRateSelect" style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                                                                                                 <input type="hidden" id="earningRateSelectID" value="0">
                                                                                                                 <!-- <select class="form-control" id="earningRateSelect" style="cursor: pointer;">
                                                                                                                     <option value="Allowances exempt from tax withholding and super">Allowances exempt from tax withholding and super</option>
@@ -2570,14 +2568,14 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptDeductionAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="ptDeductionPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
+                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptDeductionPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2588,9 +2586,9 @@
                                                                                 </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-12">
-                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addDeductionLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDeductionLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
                                                                                         Deduction Line</button>
                                                                                         <div class="modal fade" id="addDeductionLineModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2674,14 +2672,14 @@
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Amount</label>
-                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptSuperannuationAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                    <input type="text" class="form-control edtPriceFormatting" id="ptSuperannuationAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{else}}
                                                                                             <div class="col-5 col-md-2">
                                                                                                 <div class="form-group">
                                                                                                     <label>Percentage</label>
-                                                                                                    <input type="text" class="form-control" id="ptSuperannuationPercentage{{ @index }}" value="{{ item.fields.Percentage }}">
+                                                                                                    <input type="text" class="form-control edtPercentFormatting" id="ptSuperannuationPercentage{{ @index }}" value="{{ formatPercent item.fields.Percentage }}">
                                                                                                 </div>
                                                                                             </div>
                                                                                         {{/if}}
@@ -2692,9 +2690,9 @@
                                                                                 </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-12">
-                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addSuperannuationLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Superannuation Line</button>
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSuperannuationLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Superannuation Line</button>
                                                                                     <div class="modal fade" id="addSuperannuationLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                                                             <div class="modal-content">
@@ -2801,7 +2799,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="row mb-2">
+                                                                <div class="row mb-3">
                                                                     <div class="col-12">
                                                                         <div class="card shadow" style="padding: 8px 16px;">
                                                                             {{#if payTemplateReiumbursementLines}}
@@ -2820,7 +2818,7 @@
                                                                                         <div class="col-5 col-md-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control edtPriceFormatting" id="ptReimbursementAmount{{ @index }}" value="{{ item.fields.Amount }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting" id="ptReimbursementAmount{{ @index }}" value="{{ formatPrice item.fields.Amount }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1 col-md-1" style="padding-left: 0px;">
@@ -2830,9 +2828,9 @@
                                                                                 </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-12">
-                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addReimbursementLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Reiumbursement Line</button>
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addReimbursementLineModal"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add Reiumbursement Line</button>
                                                                                     <div class="modal fade" id="addReimbursementLineModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                                                             <div class="modal-content">
@@ -2919,7 +2917,7 @@
                                                                                     </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-7">
                                                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEarningsLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
                                                                                         Earnings Line</button>
@@ -2977,7 +2975,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateDeductionTotalAmount" value="{{ item.fields.Amount }}" id="obDeductionAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateDeductionTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obDeductionAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -2986,7 +2984,7 @@
                                                                                     </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-7">
                                                                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addDeductionLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add Deduction Line</button>
                                                                                     <div class="modal fade" id="addDeductionLineModal2" tabindex="-1" role="dialog" aria-labelledby="addDeductionLineModal2" aria-hidden="true">
@@ -3066,7 +3064,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateSuperannuationTotalAmount" value="{{ item.fields.Amount }}" id="obSuperannuationAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateSuperannuationTotalAmount" value="{{ formatPrice item.fields.Amount }}" id="obSuperannuationAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -3075,9 +3073,9 @@
                                                                                     </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-7">
-                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addSuperannuationLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSuperannuationLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
                                                                                         Superannuation Line</button>
                                                                                     <div class="modal fade" id="addSuperannuationLineModal2" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -3139,7 +3137,7 @@
                                                                                         <div class="col-2">
                                                                                             <div class="form-group">
                                                                                                 <label>Amount</label>
-                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateReimbursementTotalAmount" value="{{ item.fields.Amount }}"  id="obReimbursementAmount{{ @index }}">
+                                                                                                <input type="text" class="form-control edtPriceFormatting obCalculateReimbursementTotalAmount" value="{{ formatPrice item.fields.Amount }}"  id="obReimbursementAmount{{ @index }}">
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="col-1" style="padding-left: 0px;">
@@ -3148,9 +3146,9 @@
                                                                                     </div>
                                                                                 {{/each}}
                                                                             {{/if}}
-                                                                            <div class="row mb-2">
+                                                                            <div class="row">
                                                                                 <div class="col-7">
-                                                                                    <button type="button" class="btn btn-primary mb-2 mt-2" data-toggle="modal" data-target="#addReimbursementLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
+                                                                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addReimbursementLineModal2"><i class="fas fa-plus" style="margin-right: 5px;"></i> Add
                                                                                         Reimbursement Line</button>
                                                                                     <div class="modal fade" id="addReimbursementLineModal2" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
                                                                                         <div class="modal-dialog modal-dialog-centered" role="document">

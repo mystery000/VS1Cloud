@@ -38,13 +38,12 @@ export class ContactService extends BaseService {
       return this.getList(this.ERPObjects.TEmployee, options);
   }
 
-
   getAllEmployeesPriority() {
     let options = {
         PropertyList: "ID,CustFld5",
     };
     return this.getList(this.ERPObjects.TEmployee, options);
-}
+  }
 
   getAllCustomersData() {
       let options = {
@@ -82,6 +81,13 @@ export class ContactService extends BaseService {
           select: '[CustFld5]="'+priorityData+'" and [Active]=true',
       };
       return this.getList(this.ERPObjects.TEmployee, options);
+  }
+
+  getCheckLeadsData(leadName) {
+      let options = {
+          select: '[ClientName]="'+leadName+'" and [Active]=true',
+      };
+      return this.getList(this.ERPObjects.TProspect, options);
   }
 
   getCheckSuppliersData(supplierName) {
@@ -164,6 +170,10 @@ export class ContactService extends BaseService {
     return this.getOneById(this.ERPObjects.TEmployeeEx, id);
   }
 
+  getOneLeadDataEx(id) {
+      return this.getOneById(this.ERPObjects.TProspectEx, id);
+  }
+
   getOneSupplierData(id) {
     return this.getOneById(this.ERPObjects.TSupplier, id);
   }
@@ -179,6 +189,15 @@ export class ContactService extends BaseService {
         select: '[ClientName]="'+dataSearchName+'"'
        };
     return this.getList(this.ERPObjects.TSupplier, options);
+  }
+
+  getOneLeadDataExByName(dataSearchName) {
+    let options = '';
+    options = {
+        ListType: "Detail",
+        select: '[ClientName]="'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
   getOneCustomerDataExByName(dataSearchName) {
@@ -228,6 +247,14 @@ export class ContactService extends BaseService {
 
   saveJobEx(data) {
       return this.POST(this.ERPObjects.TJobEx, data);
+  }
+
+  saveProspect(data) {
+      return this.POST(this.ERPObjects.TProspect, data);
+  }
+
+  saveProspectEx(data) {
+      return this.POST(this.ERPObjects.TProspectEx, data);
   }
 
   saveSupplier(data) {
@@ -285,6 +312,13 @@ export class ContactService extends BaseService {
           select: "[Active]=true"
       };
       return this.getList(this.ERPObjects.TEmployee, options);
+  }
+  getAllLeadSideDataVS1() {
+      let options = {
+          PropertyList: "ID,ClientName,CompanyName,Active",
+          select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true"
+      };
+      return this.getList(this.ERPObjects.TProspectVS1, options);
   }
 
   getProductRecentTransactions(customerName) {
@@ -354,7 +388,7 @@ export class ContactService extends BaseService {
 
     getEmpUserDetail(EmployeeId) {
       let options = {
-              PropertyList: "PropertyList==ID,EmployeeName,LogonName",
+              PropertyList: "ID,EmployeeName,LogonName",
               Select: "[EmployeeId]='"+EmployeeId+"'"
           };
         return this.getList(this.ERPObjects.TUser, options);
@@ -515,7 +549,7 @@ export class ContactService extends BaseService {
 
      getEmpUserCount() {
        let options = {
-               PropertyList: "PropertyList==ID,EmployeeName,LogonName",
+               PropertyList: "ID,EmployeeName,LogonName",
            };
          return this.getList(this.ERPObjects.TUser, options);
      }

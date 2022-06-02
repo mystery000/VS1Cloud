@@ -3117,9 +3117,6 @@ Template.sidenav.events({
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
-    'click #sidenavshipping': function(event) {
-        window.open('#', '_self');
-    },
     'click #sidenavstockadjust': function(event) {
         event.preventDefault();
         FlowRouter.go('/stockadjustmentoverview');
@@ -3154,9 +3151,14 @@ Template.sidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavjobs': function(event) {
-
         event.preventDefault();
         FlowRouter.go('/joblist');
+        let templateObject = Template.instance();
+        templateObject.getSetSideNavFocus();
+    },
+    'click #sidenavcontactleads': function(event) {
+        event.preventDefault();
+        FlowRouter.go('/leadlist');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
@@ -3168,8 +3170,7 @@ Template.sidenav.events({
         templateObject.getSetSideNavFocus();
     },
     'click #sidenavnewcustomers': function(event) {
-
-        if (FlowRouter.current().path == "/customerscard") {
+        if (FlowRouter.current().path === "/customerscard") {
             window.open('/customerscard', '_self');
         } else {
             event.preventDefault();
@@ -3179,8 +3180,7 @@ Template.sidenav.events({
         }
     },
     'click #sidenavnewemployees': function(event) {
-
-        if (FlowRouter.current().path == "/employeescard") {
+        if (FlowRouter.current().path === "/employeescard") {
             window.open('/employeescard', '_self');
         } else {
             event.preventDefault();
@@ -3188,12 +3188,19 @@ Template.sidenav.events({
             let templateObject = Template.instance();
             templateObject.getSetSideNavFocus();
         }
-
+    },
+    'click #sidenavnewleads': function(event) {
+        if (FlowRouter.current().path === "/leadscard") {
+            window.open('/leadscard', '_self');
+        } else {
+            event.preventDefault();
+            FlowRouter.go('/leadscard');
+            let templateObject = Template.instance();
+            templateObject.getSetSideNavFocus();
+        }
     },
     'click #sidenavnewsuppliers': function(event) {
-
-
-        if (FlowRouter.current().path == "/supplierscard") {
+        if (FlowRouter.current().path === "/supplierscard") {
             window.open('/supplierscard', '_self');
         } else {
             event.preventDefault();

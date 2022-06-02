@@ -58,9 +58,9 @@ Template.salesorderslist.onRendered(function() {
         // Set date to picker
         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         // Hide (close) the picker
-        $(this).datepicker('hide');
-        // Change ttrigger the on change function
-        $(this).trigger('change');
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
        }
     });
 
@@ -1111,7 +1111,7 @@ Template.salesorderslist.onRendered(function() {
                     if (data.Params.IgnoreDates == true) {
                         $('#dateFrom').attr('readonly', true);
                         $('#dateTo').attr('readonly', true);
-                        if (FlowRouter.current().queryParams.converted == true) {
+                        if (FlowRouter.current().queryParams.converted == 'true') {
                           FlowRouter.go('/salesorderslist?converted=true');
                         }else {
                           FlowRouter.go('/salesorderslist?converted=false');
@@ -1432,10 +1432,10 @@ Template.salesorderslist.onRendered(function() {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    if (FlowRouter.current().queryParams.converted == true) {
-                      FlowRouter.go('/salesorderslist?converted=true&page=last');
+                    if (FlowRouter.current().queryParams.converted == 'true') {
+                      FlowRouter.go('/salesorderslist?converted=true');
                     }else {
-                      FlowRouter.go('/salesorderslist?converted=false&page=last');
+                      FlowRouter.go('/salesorderslist?converted=false');
                     }
                 } else {
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
@@ -1750,7 +1750,7 @@ Template.salesorderslist.onRendered(function() {
               if (data.Params.IgnoreDates == true) {
                   $('#dateFrom').attr('readonly', true);
                   $('#dateTo').attr('readonly', true);
-                  if (FlowRouter.current().queryParams.converted == true) {
+                  if (FlowRouter.current().queryParams.converted == 'true') {
                     FlowRouter.go('/salesorderslist?converted=true');
                   }else {
                     FlowRouter.go('/salesorderslist?converted=false');
@@ -2501,6 +2501,7 @@ Template.salesorderslist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -2515,13 +2516,14 @@ Template.salesorderslist.events({
         } else {
             templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -2536,7 +2538,7 @@ Template.salesorderslist.events({
         } else {
             templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'click #today': function () {
         let templateObject = Template.instance();

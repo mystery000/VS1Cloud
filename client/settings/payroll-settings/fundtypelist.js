@@ -47,7 +47,8 @@ Template.fundtypelistpop.onRendered(function() {
                         description = "";
                       }
                       var dataList = [                   
-                      	data.tsupertype[i].fields.Description || '',                    
+                      	data.tsupertype[i].fields.Description || '',    
+                        data.tsupertype[i].fields.ID || ''                
                       ];                 
                       splashArrayFundTypeList.push(dataList);
                     }

@@ -1,225 +1,299 @@
-import { ReactiveVar } from 'meteor/reactive-var';
-Template.allreports.onCreated(function(){
-   const templateObject = Template.instance();
-   templateObject.isBalanceSheet = new ReactiveVar();
-   templateObject.isBalanceSheet.set(false);
-   templateObject.isProfitLoss = new ReactiveVar();
-   templateObject.isProfitLoss.set(false);
-   templateObject.isAgedReceivables = new ReactiveVar();
-   templateObject.isAgedReceivables.set(false);
-   templateObject.isAgedReceivablesSummary = new ReactiveVar();
-   templateObject.isAgedReceivablesSummary.set(false);
-   templateObject.isProductSalesReport = new ReactiveVar();
-   templateObject.isProductSalesReport.set(false);
-   templateObject.isSalesReport = new ReactiveVar();
-   templateObject.isSalesReport.set(false);
-   templateObject.isSalesSummaryReport = new ReactiveVar();
-   templateObject.isSalesSummaryReport.set(false);
-   templateObject.isGeneralLedger = new ReactiveVar();
-   templateObject.isGeneralLedger.set(false);
-   templateObject.isTaxSummaryReport = new ReactiveVar();
-   templateObject.isTaxSummaryReport.set(false);
-   templateObject.isTrialBalance = new ReactiveVar();
-   templateObject.isTrialBalance.set(false);
-   templateObject.is1099Transaction = new ReactiveVar();
-   templateObject.is1099Transaction.set(false);
-   templateObject.isAccountsLists = new ReactiveVar();
-   templateObject.isAccountsLists.set(false);
-   templateObject.isTransactionJournal = new ReactiveVar();
-   templateObject.isTransactionJournal.set(false);
-   templateObject.isUnpaidBills = new ReactiveVar();
-   templateObject.isUnpaidBills.set(false);
-   templateObject.isUnpaidPO = new ReactiveVar();
-   templateObject.isUnpaidPO.set(false);
-   templateObject.isBackOrderedPO = new ReactiveVar();
-   templateObject.isBackOrderedPO.set(false);
-   templateObject.isSalesOrderConverted = new ReactiveVar();
-   templateObject.isSalesOrderConverted.set(false);
-   templateObject.isSalesOrderUnconverted = new ReactiveVar();
-   templateObject.isSalesOrderUnconverted.set(false);
-   templateObject.isPaymentMethodsList = new ReactiveVar();
-   templateObject.isPaymentMethodsList.set(false);
-   templateObject.isBackOrderedInvoices = new ReactiveVar();
-   templateObject.isBackOrderedInvoices.set(false);
-   templateObject.isQuotesConverted = new ReactiveVar();
-   templateObject.isQuotesConverted.set(false);
-   templateObject.isQuotesUnconverted = new ReactiveVar();
-   templateObject.isQuotesUnconverted.set(false);
-   templateObject.isInvoicesPaid = new ReactiveVar();
-   templateObject.isInvoicesPaid.set(false);
-   templateObject.isInvoicesUnpaid = new ReactiveVar();
-   templateObject.isInvoicesUnpaid.set(false);
-   templateObject.isTimeSheetDetails = new ReactiveVar();
-   templateObject.isTimeSheetDetails.set(false);
-   templateObject.isChequeList = new ReactiveVar();
-   templateObject.isChequeList.set(false);
-   templateObject.isJournalEntryList = new ReactiveVar();
-   templateObject.isJournalEntryList.set(false);
-   templateObject.isStockAdjustmentList = new ReactiveVar();
-   templateObject.isStockAdjustmentList.set(false);
-   templateObject.isAgedPayables = new ReactiveVar();
-   templateObject.isAgedPayables.set(false);
-   templateObject.isAgedPayablesSummary = new ReactiveVar();
-   templateObject.isAgedPayablesSummary.set(false);
-   templateObject.isPurchaseReport = new ReactiveVar();
-   templateObject.isPurchaseReport.set(false);
-   templateObject.isPurchaseSummaryReport = new ReactiveVar();
-   templateObject.isPurchaseSummaryReport.set(false);
-   templateObject.isPrintStatement = new ReactiveVar();
-   templateObject.isPrintStatement.set(false);
+import {
+    ReactiveVar
+} from 'meteor/reactive-var';
+Template.allreports.onCreated(function() {
+    const templateObject = Template.instance();
+    templateObject.isBalanceSheet = new ReactiveVar();
+    templateObject.isBalanceSheet.set(false);
+    templateObject.isProfitLoss = new ReactiveVar();
+    templateObject.isProfitLoss.set(false);
+    templateObject.isAgedReceivables = new ReactiveVar();
+    templateObject.isAgedReceivables.set(false);
+    templateObject.isAgedReceivablesSummary = new ReactiveVar();
+    templateObject.isAgedReceivablesSummary.set(false);
+    templateObject.isProductSalesReport = new ReactiveVar();
+    templateObject.isProductSalesReport.set(false);
+    templateObject.isSalesReport = new ReactiveVar();
+    templateObject.isSalesReport.set(false);
+    templateObject.isCustomerDetails = new ReactiveVar();
+    templateObject.isCustomerDetails.set(false);
+    templateObject.isCustomerSummary = new ReactiveVar();
+    templateObject.isCustomerSummary.set(false);
+    templateObject.isLotReport = new ReactiveVar();
+    templateObject.isLotReport.set(false);
+    templateObject.isStockValue = new ReactiveVar();
+    templateObject.isStockValue.set(false);
+    templateObject.isStockQuantity = new ReactiveVar();
+    templateObject.isStockQuantity.set(false);
+    templateObject.isStockMovementReport = new ReactiveVar();
+    templateObject.isStockMovementReport.set(false);
+    templateObject.isPayrollHistoryReport = new ReactiveVar();
+    templateObject.isPayrollHistoryReport.set(false);
+    templateObject.isForeignExchangeHistoryList = new ReactiveVar();
+    templateObject.isForeignExchangeHistoryList.set(false);
+    templateObject.isSalesSummaryReport = new ReactiveVar();
+    templateObject.isSalesSummaryReport.set(false);
+    templateObject.isGeneralLedger = new ReactiveVar();
+    templateObject.isGeneralLedger.set(false);
+    templateObject.isTaxSummaryReport = new ReactiveVar();
+    templateObject.isTaxSummaryReport.set(false);
+    templateObject.isTrialBalance = new ReactiveVar();
+    templateObject.isTrialBalance.set(false);
+    templateObject.isTimeSheetSummary = new ReactiveVar();
+    templateObject.isTimeSheetSummary.set(false);
+    templateObject.isPayrollLeaveAccrued = new ReactiveVar();
+    templateObject.isPayrollLeaveAccrued.set(false);
+    templateObject.isSerialNumberReport = new ReactiveVar();
+    templateObject.isSerialNumberReport.set(false);
+    templateObject.is1099Transaction = new ReactiveVar();
+    templateObject.is1099Transaction.set(false);
+    templateObject.isAccountsLists = new ReactiveVar();
+    templateObject.isAccountsLists.set(false);
+    templateObject.isBinLocations = new ReactiveVar();
+    templateObject.isBinLocations.set(false);
+    templateObject.isTransactionJournal = new ReactiveVar();
+    templateObject.isTransactionJournal.set(false);
+    templateObject.isUnpaidBills = new ReactiveVar();
+    templateObject.isUnpaidBills.set(false);
+    templateObject.isUnpaidPO = new ReactiveVar();
+    templateObject.isUnpaidPO.set(false);
+    templateObject.isBackOrderedPO = new ReactiveVar();
+    templateObject.isBackOrderedPO.set(false);
+    templateObject.isSalesOrderConverted = new ReactiveVar();
+    templateObject.isSalesOrderConverted.set(false);
+    templateObject.isSalesOrderUnconverted = new ReactiveVar();
+    templateObject.isSalesOrderUnconverted.set(false);
+    templateObject.isPaymentMethodsList = new ReactiveVar();
+    templateObject.isPaymentMethodsList.set(false);
+    templateObject.isBackOrderedInvoices = new ReactiveVar();
+    templateObject.isBackOrderedInvoices.set(false);
+    templateObject.isQuotesConverted = new ReactiveVar();
+    templateObject.isQuotesConverted.set(false);
+    templateObject.isQuotesUnconverted = new ReactiveVar();
+    templateObject.isQuotesUnconverted.set(false);
+    templateObject.isInvoicesPaid = new ReactiveVar();
+    templateObject.isInvoicesPaid.set(false);
+    templateObject.isInvoicesUnpaid = new ReactiveVar();
+    templateObject.isInvoicesUnpaid.set(false);
+    templateObject.isTimeSheetDetails = new ReactiveVar();
+    templateObject.isTimeSheetDetails.set(false);
+    templateObject.isChequeList = new ReactiveVar();
+    templateObject.isChequeList.set(false);
+    templateObject.isJournalEntryList = new ReactiveVar();
+    templateObject.isJournalEntryList.set(false);
+    templateObject.isStockAdjustmentList = new ReactiveVar();
+    templateObject.isStockAdjustmentList.set(false);
+    templateObject.isAgedPayables = new ReactiveVar();
+    templateObject.isAgedPayables.set(false);
+    templateObject.isAgedPayablesSummary = new ReactiveVar();
+    templateObject.isAgedPayablesSummary.set(false);
+    templateObject.isPurchaseReport = new ReactiveVar();
+    templateObject.isPurchaseReport.set(false);
+    templateObject.isPurchaseSummaryReport = new ReactiveVar();
+    templateObject.isPurchaseSummaryReport.set(false);
+    templateObject.isPrintStatement = new ReactiveVar();
+    templateObject.isPrintStatement.set(false);
 });
 Template.allreports.onRendered(() => {
-  let templateObject = Template.instance();
-  let isBalanceSheet = Session.get('cloudBalanceSheet');
-  let isProfitLoss = Session.get('cloudProfitLoss');
-  let isAgedReceivables = Session.get('cloudAgedReceivables');
-  let isAgedReceivablesSummary = Session.get('cloudAgedReceivablesSummary');
-  let isProductSalesReport = Session.get('cloudProductSalesReport');
-  let isSalesReport = Session.get('cloudSalesReport');
-  let isSalesSummaryReport = Session.get('cloudSalesSummaryReport');
-  let isGeneralLedger = Session.get('cloudGeneralLedger');
-  let isTaxSummaryReport = Session.get('cloudTaxSummaryReport');
-  let isTrialBalance = Session.get('cloudTrialBalance');
-  let is1099Transaction = Session.get('cloud1099Transaction');
-  let isAccountsLists = Session.get('cloudAccountList');
-  let isTransactionJournal = Session.get('cloudTransactionJournal');
-  let isUnpaidBills = Session.get('cloudBillsUnpaid');
-  let isUnpaidPO = Session.get('cloudPurchaseOrderUnpaid');
-  let isBackOrderedPO = Session.get('cloudPurchaseOrderBO');
-  let isSalesOrderConverted = Session.get('cloudSalesOrderConverted');
-  let isSalesOrderUnconverted = Session.get('cloudSalesOrderUnconverted');
-  let isPaymentMethodsList = Session.get('cloudPaymentMethodList');
-  let isBackOrderedInvoices = Session.get('cloudInvoicesBackOrdered');
-  let isQuotesConverted = Session.get('cloudQuotesConverted');
-  let isQuotesUnconverted = Session.get('cloudQuotesUnconverted');
-  let isInvoicesPaid = Session.get('cloudInvoicesPaid');
-  let isInvoicesUnpaid = Session.get('cloudInvoicesUnpaid');
-  let isTimeSheetDetails = Session.get('cloudTimeSheet');
-  let isChequeList = Session.get('cloudChequeList');
-  let isStockAdjustmentList = Session.get('cloudStockAdjustmentList');
-  let isJournalEntryList = Session.get('cloudJournalEntryList');
-  let isAgedPayables = Session.get('cloudAgedPayables');
-  let isAgedPayablesSummary = Session.get('cloudAgedPayablesSummary');
-  let isPurchaseReport = Session.get('cloudPurchaseReport');
-  let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
-  let isPrintStatement = Session.get('cloudPrintStatement');
+    let templateObject = Template.instance();
+    let isBalanceSheet = Session.get('cloudBalanceSheet');
+    let isProfitLoss = Session.get('cloudProfitLoss');
+    let isAgedReceivables = Session.get('cloudAgedReceivables');
+    let isAgedReceivablesSummary = Session.get('cloudAgedReceivablesSummary');
+    let isProductSalesReport = Session.get('cloudProductSalesReport');
+    let isSalesReport = Session.get('cloudSalesReport');
+    let isCustomerDetails = Session.get('cloudCustomerDetails');
+    let isCustomerSummary = Session.get('cloudCustomerSummary');
+    let isLotReport = Session.get('cloudLotReport');
+    let isStockValue = Session.get('cloudStockValue');
+    let isStockQuantity = Session.get('cloudStockQuantity');
+    let isStockMovementReport = Session.get('cloudStockMovementReport');
+    let isPayrollHistoryReport = Session.get('cloudPayrollHistoryReport');
+    let isForeignExchangeHistoryList = Session.get('cloudForeignExchangeHistoryList');
+    let isSalesSummaryReport = Session.get('cloudSalesSummaryReport');
+    let isGeneralLedger = Session.get('cloudGeneralLedger');
+    let isTaxSummaryReport = Session.get('cloudTaxSummaryReport');
+    let isTrialBalance = Session.get('cloudTrialBalance');
+    let isTimeSheetSummary = Session.get('cloudTimeSheetSummary');
+    let isPayrollLeaveAccrued = Session.get('cloudPayrollLeaveAccrued');
+    let isSerialNumberReport = Session.get('cloudSerialNumberReport');
+    let is1099Transaction = Session.get('cloud1099Transaction');
+    let isAccountsLists = Session.get('cloudAccountList');
+    let isBinLocations = Session.get('cloudBinLocations');
+    let isTransactionJournal = Session.get('cloudTransactionJournal');
+    let isUnpaidBills = Session.get('cloudBillsUnpaid');
+    let isUnpaidPO = Session.get('cloudPurchaseOrderUnpaid');
+    let isBackOrderedPO = Session.get('cloudPurchaseOrderBO');
+    let isSalesOrderConverted = Session.get('cloudSalesOrderConverted');
+    let isSalesOrderUnconverted = Session.get('cloudSalesOrderUnconverted');
+    let isPaymentMethodsList = Session.get('cloudPaymentMethodList');
+    let isBackOrderedInvoices = Session.get('cloudInvoicesBackOrdered');
+    let isQuotesConverted = Session.get('cloudQuotesConverted');
+    let isQuotesUnconverted = Session.get('cloudQuotesUnconverted');
+    let isInvoicesPaid = Session.get('cloudInvoicesPaid');
+    let isInvoicesUnpaid = Session.get('cloudInvoicesUnpaid');
+    let isTimeSheetDetails = Session.get('cloudTimeSheet');
+    let isChequeList = Session.get('cloudChequeList');
+    let isStockAdjustmentList = Session.get('cloudStockAdjustmentList');
+    let isJournalEntryList = Session.get('cloudJournalEntryList');
+    let isAgedPayables = Session.get('cloudAgedPayables');
+    let isAgedPayablesSummary = Session.get('cloudAgedPayablesSummary');
+    let isPurchaseReport = Session.get('cloudPurchaseReport');
+    let isPurchaseSummaryReport = Session.get('cloudPurchaseSummaryReport');
+    let isPrintStatement = Session.get('cloudPrintStatement');
 
-    if(isProfitLoss == true){
-    templateObject.isProfitLoss.set(true);
+    if (isProfitLoss == true) {
+        templateObject.isProfitLoss.set(true);
     }
-    if(isBalanceSheet == true){
-    templateObject.isBalanceSheet.set(true);
+    if (isBalanceSheet == true) {
+        templateObject.isBalanceSheet.set(true);
     }
-    if(isAgedReceivables == true){
-    templateObject.isAgedReceivables.set(true);
+    if (isAgedReceivables == true) {
+        templateObject.isAgedReceivables.set(true);
     }
-    if(isAgedReceivablesSummary == true){
-    templateObject.isAgedReceivablesSummary.set(true);
+    if (isAgedReceivablesSummary == true) {
+        templateObject.isAgedReceivablesSummary.set(true);
     }
-    if(isProductSalesReport == true){
-    templateObject.isProductSalesReport.set(true);
+    if (isProductSalesReport == true) {
+        templateObject.isProductSalesReport.set(true);
     }
-    if(isSalesReport == true){
-    templateObject.isSalesReport.set(true);
+    if (isSalesReport == true) {
+        templateObject.isSalesReport.set(true);
     }
-    if(isSalesSummaryReport == true){
-    templateObject.isSalesSummaryReport.set(true);
+    if (isCustomerDetails == true) {
+        templateObject.isCustomerDetails.set(true);
     }
-    if(isGeneralLedger == true){
-    templateObject.isGeneralLedger.set(true);
+    if (isCustomerSummary == true) {
+        templateObject.isCustomerSummary.set(true);
     }
-    if(isTaxSummaryReport == true){
-    templateObject.isTaxSummaryReport.set(true);
+    if (isLotReport == true) {
+        templateObject.isLotReport.set(true);
     }
-    if(isTrialBalance == true){
-    templateObject.isTrialBalance.set(true);
+    if (isStockValue == true) {
+        templateObject.isStockValue.set(true);
     }
-    if(is1099Transaction == true){
-    templateObject.is1099Transaction.set(true);
+    if (isStockQuantity == true) {
+        templateObject.isStockQuantity.set(true);
     }
-    if(isAccountsLists == true){
-    templateObject.isAccountsLists.set(true);
+    if (isStockMovementReport == true) {
+        templateObject.isStockMovementReport.set(true);
     }
-    if(isTransactionJournal == true){
-    templateObject.isTransactionJournal.set(true);
+    if (isPayrollHistoryReport == true) {
+        templateObject.isPayrollHistoryReport.set(true);
     }
-    if(isUnpaidBills == true){
-    templateObject.isUnpaidBills.set(true);
+    if (isForeignExchangeHistoryList == true) {
+        templateObject.isForeignExchangeHistoryList.set(true);
     }
-    if(isUnpaidPO == true){
-    templateObject.isUnpaidPO.set(true);
+    if (isSalesSummaryReport == true) {
+        templateObject.isSalesSummaryReport.set(true);
     }
-    if(isBackOrderedPO == true){
-    templateObject.isBackOrderedPO.set(true);
+    if (isGeneralLedger == true) {
+        templateObject.isGeneralLedger.set(true);
     }
-    if(isSalesOrderConverted == true){
-    templateObject.isSalesOrderConverted.set(true);
+    if (isTaxSummaryReport == true) {
+        templateObject.isTaxSummaryReport.set(true);
     }
-    if(isSalesOrderUnconverted == true){
-    templateObject.isSalesOrderUnconverted.set(true);
+    if (isTrialBalance == true) {
+        templateObject.isTrialBalance.set(true);
     }
-    if(isPaymentMethodsList == true){
-    templateObject.isPaymentMethodsList.set(true);
+    if (isTimeSheetSummary == true) {
+        templateObject.isTimeSheetSummary.set(true);
     }
-    if(isBackOrderedInvoices == true){
-    templateObject.isBackOrderedInvoices.set(true);
+    if (isPayrollLeaveAccrued == true) {
+        templateObject.isPayrollLeaveAccrued.set(true);
     }
-    if(isQuotesConverted == true){
-    templateObject.isQuotesConverted.set(true);
+    if (isSerialNumberReport == true) {
+        templateObject.isSerialNumberReport.set(true);
     }
-    if(isQuotesUnconverted == true){
-    templateObject.isQuotesUnconverted.set(true);
+    if (is1099Transaction == true) {
+        templateObject.is1099Transaction.set(true);
     }
-    if(isInvoicesPaid == true){
-    templateObject.isInvoicesPaid.set(true);
+    if (isAccountsLists == true) {
+        templateObject.isAccountsLists.set(true);
     }
-    if(isInvoicesUnpaid == true){
-    templateObject.isInvoicesUnpaid.set(true);
+    if (isBinLocations == true) {
+        templateObject.isBinLocations.set(true);
     }
-    if(isTimeSheetDetails == true){
-    templateObject.isTimeSheetDetails.set(true);
+    if (isTransactionJournal == true) {
+        templateObject.isTransactionJournal.set(true);
     }
-    if(isChequeList == true){
-    templateObject.isChequeList.set(true);
+    if (isUnpaidBills == true) {
+        templateObject.isUnpaidBills.set(true);
     }
-    if(isStockAdjustmentList == true){
-    templateObject.isStockAdjustmentList.set(true);
+    if (isUnpaidPO == true) {
+        templateObject.isUnpaidPO.set(true);
     }
-    if(isJournalEntryList == true){
-    templateObject.isJournalEntryList.set(true);
+    if (isBackOrderedPO == true) {
+        templateObject.isBackOrderedPO.set(true);
     }
-    if(isAgedPayables == true){
-    templateObject.isAgedPayables.set(true);
+    if (isSalesOrderConverted == true) {
+        templateObject.isSalesOrderConverted.set(true);
     }
-    if(isAgedPayablesSummary == true){
-    templateObject.isAgedPayablesSummary.set(true);
+    if (isSalesOrderUnconverted == true) {
+        templateObject.isSalesOrderUnconverted.set(true);
     }
-    if(isPurchaseReport == true){
-    templateObject.isPurchaseReport.set(true);
+    if (isPaymentMethodsList == true) {
+        templateObject.isPaymentMethodsList.set(true);
     }
-    if(isPurchaseSummaryReport == true){
-    templateObject.isPurchaseSummaryReport.set(true);
+    if (isBackOrderedInvoices == true) {
+        templateObject.isBackOrderedInvoices.set(true);
     }
-    if(isPrintStatement == true){
-    templateObject.isPrintStatement.set(true);
+    if (isQuotesConverted == true) {
+        templateObject.isQuotesConverted.set(true);
+    }
+    if (isQuotesUnconverted == true) {
+        templateObject.isQuotesUnconverted.set(true);
+    }
+    if (isInvoicesPaid == true) {
+        templateObject.isInvoicesPaid.set(true);
+    }
+    if (isInvoicesUnpaid == true) {
+        templateObject.isInvoicesUnpaid.set(true);
+    }
+    if (isTimeSheetDetails == true) {
+        templateObject.isTimeSheetDetails.set(true);
+    }
+    if (isChequeList == true) {
+        templateObject.isChequeList.set(true);
+    }
+    if (isStockAdjustmentList == true) {
+        templateObject.isStockAdjustmentList.set(true);
+    }
+    if (isJournalEntryList == true) {
+        templateObject.isJournalEntryList.set(true);
+    }
+    if (isAgedPayables == true) {
+        templateObject.isAgedPayables.set(true);
+    }
+    if (isAgedPayablesSummary == true) {
+        templateObject.isAgedPayablesSummary.set(true);
+    }
+    if (isPurchaseReport == true) {
+        templateObject.isPurchaseReport.set(true);
+    }
+    if (isPurchaseSummaryReport == true) {
+        templateObject.isPurchaseSummaryReport.set(true);
+    }
+    if (isPrintStatement == true) {
+        templateObject.isPrintStatement.set(true);
     }
 
 
     $('.c-report-favourite-icon').on("click", function() {
-        if(!$(this).hasClass('marked-star')){
+        if (!$(this).hasClass('marked-star')) {
             $(this).addClass('marked-star');
-        }else{
+        } else {
             $(this).removeClass('marked-star');
         }
     });
 });
 Template.allreports.events({
-    'click .reportComingSoon': function (event) {
+    'click .reportComingSoon': function(event) {
         swal('Coming Soon', '', 'info');
     },
-    'click .chkBalanceSheet': function (event) {
+    'click .chkBalanceSheet': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudBalanceSheet', true);
             templateObject.isBalanceSheet.set(true);
         } else {
@@ -227,19 +301,19 @@ Template.allreports.events({
             templateObject.isBalanceSheet.set(false);
         }
     },
-    'click .chkProfitLoss': function (event) {
+    'click .chkProfitLoss': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudProfitLoss', true);
-              templateObject.isProfitLoss.set(true);
+            templateObject.isProfitLoss.set(true);
         } else {
             Session.setPersistent('cloudProfitLoss', false);
             templateObject.isProfitLoss.set(false);
         }
     },
-    'click .chkAgedReceivables': function (event) {
+    'click .chkAgedReceivables': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudAgedReceivables', true);
             templateObject.isAgedReceivables.set(true);
         } else {
@@ -247,9 +321,9 @@ Template.allreports.events({
             templateObject.isAgedReceivables.set(false);
         }
     },
-    'click .chkAgedReceivablesSummary': function (event) {
+    'click .chkAgedReceivablesSummary': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudAgedReceivablesSummary', true);
             templateObject.isAgedReceivablesSummary.set(true);
         } else {
@@ -257,9 +331,9 @@ Template.allreports.events({
             templateObject.isAgedReceivablesSummary.set(false);
         }
     },
-    'click .chkProductSalesReport': function (event) {
+    'click .chkProductSalesReport': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudProductSalesReport', true);
             templateObject.isProductSalesReport.set(true);
         } else {
@@ -267,9 +341,9 @@ Template.allreports.events({
             templateObject.isProductSalesReport.set(false);
         }
     },
-    'click .chkSalesReport': function (event) {
+    'click .chkSalesReport': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudSalesReport', true);
             templateObject.isSalesReport.set(true);
         } else {
@@ -277,9 +351,89 @@ Template.allreports.events({
             templateObject.isSalesReport.set(false);
         }
     },
-    'click .chkSalesSummaryReport': function (event) {
+    'click .chkCustomerDetails': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudCustomerDetails', true);
+            templateObject.isCustomerDetails.set(true);
+        } else {
+            Session.setPersistent('cloudCustomerDetails', false);
+            templateObject.isCustomerDetails.set(false);
+        }
+    },
+    'click .chkCustomerSummary': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudCustomerSummary', true);
+            templateObject.isCustomerSummary.set(true);
+        } else {
+            Session.setPersistent('cloudCustomerSummary', false);
+            templateObject.isCustomerSummary.set(false);
+        }
+    },
+    'click .chkLotReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudLotReport', true);
+            templateObject.isLotReport.set(true);
+        } else {
+            Session.setPersistent('cloudLotReport', false);
+            templateObject.isLotReport.set(false);
+        }
+    },
+    'click .chkStockValue': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockValue', true);
+            templateObject.isStockValue.set(true);
+        } else {
+            Session.setPersistent('cloudStockValue', false);
+            templateObject.isStockValue.set(false);
+        }
+    },
+    'click .chkStockQuantity': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockQuantity', true);
+            templateObject.isStockQuantity.set(true);
+        } else {
+            Session.setPersistent('cloudStockQuantity', false);
+            templateObject.isStockQuantity.set(false);
+        }
+    },
+    'click .chkStockMovementReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudStockMovementReport', true);
+            templateObject.isStockMovementReport.set(true);
+        } else {
+            Session.setPersistent('cloudStockMovementReport', false);
+            templateObject.isStockMovementReport.set(false);
+        }
+    },
+    'click .chkPayrollHistoryReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudPayrollHistoryReport', true);
+            templateObject.isPayrollHistoryReport.set(true);
+        } else {
+            Session.setPersistent('cloudPayrollHistoryReport', false);
+            templateObject.isPayrollHistoryReport.set(false);
+        }
+    },
+    'click .chkForeignExchangeHistoryList': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudForeignExchangeHistoryList', true);
+            templateObject.isForeignExchangeHistoryList.set(true);
+        } else {
+            Session.setPersistent('cloudForeignExchangeHistoryList', false);
+            templateObject.isForeignExchangeHistoryList.set(false);
+        }
+    },
+    'click .chkSalesSummaryReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudSalesSummaryReport', true);
             templateObject.isSalesSummaryReport.set(true);
         } else {
@@ -287,9 +441,9 @@ Template.allreports.events({
             templateObject.isSalesSummaryReport.set(false);
         }
     },
-    'click .chkGeneralLedger': function (event) {
+    'click .chkGeneralLedger': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudGeneralLedger', true);
             templateObject.isGeneralLedger.set(true);
         } else {
@@ -297,9 +451,9 @@ Template.allreports.events({
             templateObject.isGeneralLedger.set(false);
         }
     },
-    'click .chkTaxSummaryReport': function (event) {
+    'click .chkTaxSummaryReport': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudTaxSummaryReport', true);
             templateObject.isTaxSummaryReport.set(true);
         } else {
@@ -307,9 +461,9 @@ Template.allreports.events({
             templateObject.isTaxSummaryReport.set(false);
         }
     },
-    'click .chkTrialBalance': function (event) {
+    'click .chkTrialBalance': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudTrialBalance', true);
             templateObject.isTrialBalance.set(true);
         } else {
@@ -317,9 +471,29 @@ Template.allreports.events({
             templateObject.isTrialBalance.set(false);
         }
     },
-    'click .chk1099Transaction': function (event) {
+    'click .chkTimeSheetSummary': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudTimeSheetSummary', true);
+            templateObject.isTimeSheetSummary.set(true);
+        } else {
+            Session.setPersistent('cloudTimeSheetSummary', false);
+            templateObject.isTimeSheetSummary.set(false);
+        }
+    },
+    'click .chkSerialNumberReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudSerialNumberReport', true);
+            templateObject.isSerialNumberReport.set(true);
+        } else {
+            Session.setPersistent('cloudSerialNumberReport', false);
+            templateObject.isSerialNumberReport.set(false);
+        }
+    },
+    'click .chk1099Transaction': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloud1099Transaction', true);
             templateObject.is1099Transaction.set(true);
         } else {
@@ -327,9 +501,9 @@ Template.allreports.events({
             templateObject.is1099Transaction.set(false);
         }
     },
-    'click .chkAccountsLists': function (event) {
+    'click .chkAccountsLists': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudAccountList', true);
             templateObject.isAccountsLists.set(true);
         } else {
@@ -337,9 +511,19 @@ Template.allreports.events({
             templateObject.isAccountsLists.set(false);
         }
     },
-    'click .chkTransactionJournal': function (event) {
+    'click .chkBinLocationsList': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudBinLocations', true);
+            templateObject.isBinLocations.set(true);
+        } else {
+            Session.setPersistent('cloudBinLocations', false);
+            templateObject.isBinLocations.set(false);
+        }
+    },
+    'click .chkTransactionJournal': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudTransactionJournal', true);
             templateObject.isTransactionJournal.set(true);
         } else {
@@ -347,9 +531,9 @@ Template.allreports.events({
             templateObject.isTransactionJournal.set(false);
         }
     },
-    'click .chkUnpaidBills': function (event) {
+    'click .chkUnpaidBills': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudBillsUnpaid', true);
             templateObject.isUnpaidBills.set(true);
         } else {
@@ -357,9 +541,9 @@ Template.allreports.events({
             templateObject.isUnpaidBills.set(false);
         }
     },
-    'click .chkUnpaidPO': function (event) {
+    'click .chkUnpaidPO': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPurchaseOrderBO', true);
             templateObject.isUnpaidPO.set(true);
         } else {
@@ -367,9 +551,9 @@ Template.allreports.events({
             templateObject.isUnpaidPO.set(false);
         }
     },
-    'click .chkBackOrderedPO': function (event) {
+    'click .chkBackOrderedPO': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPurchaseOrderBO', true);
             templateObject.isBackOrderedPO.set(true);
         } else {
@@ -377,9 +561,9 @@ Template.allreports.events({
             templateObject.isBackOrderedPO.set(false);
         }
     },
-    'click .chkSalesOrderConverted': function (event) {
+    'click .chkSalesOrderConverted': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudSalesOrderConverted', true);
             templateObject.isSalesOrderConverted.set(true);
         } else {
@@ -387,9 +571,9 @@ Template.allreports.events({
             templateObject.isSalesOrderConverted.set(false);
         }
     },
-    'click .chkSalesOrderUnconverted': function (event) {
+    'click .chkSalesOrderUnconverted': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudSalesOrderUnconverted', true);
             templateObject.isSalesOrderUnconverted.set(true);
         } else {
@@ -397,9 +581,9 @@ Template.allreports.events({
             templateObject.isSalesOrderUnconverted.set(false);
         }
     },
-    'click .chkPaymentMethodsList': function (event) {
+    'click .chkPaymentMethodsList': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPaymentMethodList', true);
             templateObject.isPaymentMethodsList.set(true);
         } else {
@@ -407,9 +591,9 @@ Template.allreports.events({
             templateObject.isPaymentMethodsList.set(false);
         }
     },
-    'click .chkBackOrderedInvoices': function (event) {
+    'click .chkBackOrderedInvoices': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudInvoicesBackOrdered', true);
             templateObject.isBackOrderedInvoices.set(true);
         } else {
@@ -417,9 +601,9 @@ Template.allreports.events({
             templateObject.isBackOrderedInvoices.set(false);
         }
     },
-    'click .chkQuotesConverted': function (event) {
+    'click .chkQuotesConverted': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudQuotesConverted', true);
             templateObject.isQuotesConverted.set(true);
         } else {
@@ -427,9 +611,9 @@ Template.allreports.events({
             templateObject.isQuotesConverted.set(false);
         }
     },
-    'click .chkQuotesUnconverted': function (event) {
+    'click .chkQuotesUnconverted': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudQuotesUnconverted', true);
             templateObject.isQuotesUnconverted.set(true);
         } else {
@@ -437,9 +621,9 @@ Template.allreports.events({
             templateObject.isQuotesUnconverted.set(false);
         }
     },
-    'click .chkInvoicesPaid': function (event) {
+    'click .chkInvoicesPaid': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudInvoicesPaid', true);
             templateObject.isInvoicesPaid.set(true);
         } else {
@@ -447,9 +631,9 @@ Template.allreports.events({
             templateObject.isInvoicesPaid.set(false);
         }
     },
-    'click .chkInvoicesUnpaid': function (event) {
+    'click .chkInvoicesUnpaid': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudInvoicesUnpaid', true);
             templateObject.isInvoicesUnpaid.set(true);
         } else {
@@ -457,9 +641,9 @@ Template.allreports.events({
             templateObject.isInvoicesUnpaid.set(false);
         }
     },
-    'click .chkTimeSheet': function (event) {
+    'click .chkTimeSheet': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudTimeSheet', true);
             templateObject.isTimeSheetDetails.set(true);
         } else {
@@ -467,9 +651,9 @@ Template.allreports.events({
             templateObject.isTimeSheetDetails.set(false);
         }
     },
-    'click .chkChequeList': function (event) {
+    'click .chkChequeList': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudChequeList', true);
             templateObject.isChequeList.set(true);
         } else {
@@ -477,9 +661,19 @@ Template.allreports.events({
             templateObject.isChequeList.set(false);
         }
     },
-    'click .chkStockAdjustmentList': function (event) {
+    'click .chkPayrollLeaveAccrued': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
+            Session.setPersistent('cloudPayrollLeaveAccrued', true);
+            templateObject.isPayrollLeaveAccrued.set(true);
+        } else {
+            Session.setPersistent('cloudPayrollLeaveAccrued', false);
+            templateObject.isPayrollLeaveAccrued.set(false);
+        }
+    },
+    'click .chkStockAdjustmentList': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudStockAdjustmentList', true);
             templateObject.isStockAdjustmentList.set(true);
         } else {
@@ -487,9 +681,9 @@ Template.allreports.events({
             templateObject.isStockAdjustmentList.set(false);
         }
     },
-    'click .chkJournalEntryList': function (event) {
+    'click .chkJournalEntryList': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudJournalEntryList', true);
             templateObject.isJournalEntryList.set(true);
         } else {
@@ -497,9 +691,9 @@ Template.allreports.events({
             templateObject.isJournalEntryList.set(false);
         }
     },
-    'click .chkAgedPayables': function (event) {
+    'click .chkAgedPayables': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudAgedPayables', true);
             templateObject.isAgedPayables.set(true);
         } else {
@@ -507,9 +701,9 @@ Template.allreports.events({
             templateObject.isAgedPayables.set(false);
         }
     },
-    'click .chkAgedPayablesSummary': function (event) {
+    'click .chkAgedPayablesSummary': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudAgedPayablesSummary', true);
             templateObject.isAgedPayablesSummary.set(true);
         } else {
@@ -517,9 +711,9 @@ Template.allreports.events({
             templateObject.isAgedPayablesSummary.set(false);
         }
     },
-    'click .chkPurchaseReport': function (event) {
-      let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+    'click .chkPurchaseReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPurchaseReport', true);
             templateObject.isPurchaseReport.set(true);
         } else {
@@ -527,9 +721,9 @@ Template.allreports.events({
             templateObject.isPurchaseReport.set(false);
         }
     },
-    'click .chkPurchaseSummaryReport': function (event) {
-      let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+    'click .chkPurchaseSummaryReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPurchaseSummaryReport', true);
             templateObject.isPurchaseSummaryReport.set(true);
         } else {
@@ -537,9 +731,9 @@ Template.allreports.events({
             templateObject.isPurchaseSummaryReport.set(false);
         }
     },
-    'click .chkPrintStatement': function (event) {
+    'click .chkPrintStatement': function(event) {
         let templateObject = Template.instance();
-        if ($(event.target).is(':checked')){
+        if ($(event.target).is(':checked')) {
             Session.setPersistent('cloudPrintStatement', true);
             templateObject.isPrintStatement.set(true);
         } else {
@@ -547,7 +741,7 @@ Template.allreports.events({
             templateObject.isPrintStatement.set(false);
         }
     },
-    'click .showhidden_fin': function (event) {
+    'click .showhidden_fin': function(event) {
         if (event.target.id === "ellipsis_fin") {
             $('#ellipsis_fin').hide();
             $('#chevron_up_fin').show();
@@ -556,7 +750,7 @@ Template.allreports.events({
             $('#ellipsis_fin').show();
         }
     },
-    'click .showhidden_account': function (event) {
+    'click .showhidden_account': function(event) {
         if (event.target.id === "ellipsis_account") {
             $('#ellipsis_account').hide();
             $('#chevron_up_account').show();
@@ -565,7 +759,7 @@ Template.allreports.events({
             $('#ellipsis_account').show();
         }
     },
-    'click .showhidden_sales': function (event) {
+    'click .showhidden_sales': function(event) {
         if (event.target.id === "ellipsis_sales") {
             $('#ellipsis_sales').hide();
             $('#chevron_up_sales').show();
@@ -574,7 +768,7 @@ Template.allreports.events({
             $('#ellipsis_sales').show();
         }
     },
-    'click .showhidden_purchases': function (event) {
+    'click .showhidden_purchases': function(event) {
         if (event.target.id === "ellipsis_purchases") {
             $('#ellipsis_purchases').hide();
             $('#chevron_up_purchases').show();
@@ -583,7 +777,7 @@ Template.allreports.events({
             $('#ellipsis_purchases').show();
         }
     },
-    'click .showhidden_inventory': function (event) {
+    'click .showhidden_inventory': function(event) {
         if (event.target.id === "ellipsis_inventory") {
             $('#ellipsis_inventory').hide();
             $('#chevron_up_inventory').show();
@@ -592,158 +786,206 @@ Template.allreports.events({
             $('#ellipsis_inventory').show();
         }
     },
-    'click .btnBatchUpdate': function () {
-      $('.fullScreenSpin').css('display','inline-block');
+    'click .btnBatchUpdate': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
         batchUpdateCall();
     }
 });
 
 Template.allreports.helpers({
-  isBalanceSheet: function() {
+    isBalanceSheet: function() {
         return Template.instance().isBalanceSheet.get();
-  },
-  isAccountsLists: function() {
+    },
+    isAccountsLists: function() {
         return Template.instance().isAccountsLists.get();
-  },
-  isTransactionJournal: function() {
+    },
+    isBinLocations: function() {
+        return Template.instance().isBinLocations.get();
+    },
+    isTransactionJournal: function() {
         return Template.instance().isTransactionJournal.get();
-  },
-  isUnpaidBills: function() {
+    },
+    isUnpaidBills: function() {
         return Template.instance().isUnpaidBills.get();
-  },
-  isUnpaidPO: function() {
+    },
+    isUnpaidPO: function() {
         return Template.instance().isUnpaidPO.get();
-  },
-  isBackOrderedPO: function() {
+    },
+    isBackOrderedPO: function() {
         return Template.instance().isBackOrderedPO.get();
-  },
-  isSalesOrderConverted: function() {
+    },
+    isSalesOrderConverted: function() {
         return Template.instance().isSalesOrderConverted.get();
-  },
-  isSalesOrderUnconverted: function() {
+    },
+    isSalesOrderUnconverted: function() {
         return Template.instance().isSalesOrderUnconverted.get();
-  },
-  isPaymentMethodsList: function() {
+    },
+    isPaymentMethodsList: function() {
         return Template.instance().isPaymentMethodsList.get();
-  },
-  isBackOrderedInvoices: function() {
+    },
+    isBackOrderedInvoices: function() {
         return Template.instance().isBackOrderedInvoices.get();
-  },
-  isQuotesConverted: function() {
+    },
+    isQuotesConverted: function() {
         return Template.instance().isQuotesConverted.get();
-  },
-  isQuotesUnconverted: function() {
+    },
+    isQuotesUnconverted: function() {
         return Template.instance().isQuotesUnconverted.get();
-  },
-  isInvoicesPaid: function() {
+    },
+    isInvoicesPaid: function() {
         return Template.instance().isInvoicesPaid.get();
-  },
-  isInvoicesUnpaid: function() {
+    },
+    isInvoicesUnpaid: function() {
         return Template.instance().isInvoicesUnpaid.get();
-  },
-  isTimeSheetDetails: function() {
+    },
+    isPayrollLeaveAccrued: function() {
+        return Template.instance().isPayrollLeaveAccrued.get();
+    },
+    isTimeSheetDetails: function() {
         return Template.instance().isTimeSheetDetails.get();
-  },
-  isChequeList: function() {
+    },
+    isChequeList: function() {
         return Template.instance().isChequeList.get();
-  },
-  isStockAdjustmentList: function() {
+    },
+    isStockAdjustmentList: function() {
         return Template.instance().isStockAdjustmentList.get();
-  },
-  isJournalEntryList: function() {
+    },
+    isJournalEntryList: function() {
         return Template.instance().isJournalEntryList.get();
-  },
-  isProfitLoss: function() {
+    },
+    isProfitLoss: function() {
         return Template.instance().isProfitLoss.get();
-  },
-  isAgedReceivables: function() {
+    },
+    isAgedReceivables: function() {
         return Template.instance().isAgedReceivables.get();
-  },
-  isAgedReceivablesSummary: function() {
+    },
+    isAgedReceivablesSummary: function() {
         return Template.instance().isAgedReceivablesSummary.get();
-  },
-  isProductSalesReport: function() {
+    },
+    isProductSalesReport: function() {
         return Template.instance().isProductSalesReport.get();
-  },
-  isSalesReport: function() {
+    },
+    isSalesReport: function() {
         return Template.instance().isSalesReport.get();
-  },
-  isSalesSummaryReport: function() {
+    },
+    isCustomerDetails: function() {
+        return Template.instance().isCustomerDetails.get();
+    },
+    isCustomerSummary: function() {
+        return Template.instance().isCustomerSummary.get();
+    },
+    isLotReport: function() {
+        return Template.instance().isLotReport.get();
+    },
+    isStockValue: function() {
+        return Template.instance().isStockValue.get();
+    },
+    isStockQuantity: function() {
+        return Template.instance().isStockQuantity.get();
+    },
+    isStockMovementReport: function() {
+        return Template.instance().isStockMovementReport.get();
+    },
+    isPayrollHistoryReport: function() {
+        return Template.instance().isPayrollHistoryReport.get();
+    },
+    isForeignExchangeHistoryList: function() {
+        return Template.instance().isForeignExchangeHistoryList.get();
+    },
+    isSalesSummaryReport: function() {
         return Template.instance().isSalesSummaryReport.get();
-  },
-  isGeneralLedger: function() {
+    },
+    isGeneralLedger: function() {
         return Template.instance().isGeneralLedger.get();
-  },
-  isTaxSummaryReport: function() {
+    },
+    isTaxSummaryReport: function() {
         return Template.instance().isTaxSummaryReport.get();
-  },
-  isTrialBalance: function() {
+    },
+    isTrialBalance: function() {
         return Template.instance().isTrialBalance.get();
-  },
-  is1099Transaction: function() {
+    },
+    isTimeSheetSummary: function() {
+        return Template.instance().isTimeSheetSummary.get();
+    },
+    isSerialNumberReport: function() {
+        return Template.instance().isSerialNumberReport.get();
+    },
+    is1099Transaction: function() {
         return Template.instance().is1099Transaction.get();
-  },
-  isAgedPayables: function() {
+    },
+    isAgedPayables: function() {
         return Template.instance().isAgedPayables.get();
-  },
-  isAgedPayablesSummary: function() {
+    },
+    isAgedPayablesSummary: function() {
         return Template.instance().isAgedPayablesSummary.get();
-  },
-  isPurchaseReport: function() {
+    },
+    isPurchaseReport: function() {
         return Template.instance().isPurchaseReport.get();
-  },
-  isPurchaseSummaryReport: function() {
+    },
+    isPurchaseSummaryReport: function() {
         return Template.instance().isPurchaseSummaryReport.get();
-  },
-  isPrintStatement: function() {
+    },
+    isPrintStatement: function() {
         return Template.instance().isPrintStatement.get();
-  },
-  isFavorite: function() {
-      let isBalanceSheet = Template.instance().isBalanceSheet.get();
-      let isProfitLoss =  Template.instance().isProfitLoss.get();
-      let isAgedReceivables =  Template.instance().isAgedReceivables.get();
-      let isAgedReceivablesSummary =  Template.instance().isAgedReceivablesSummary.get();
-      let isProductSalesReport =  Template.instance().isProductSalesReport.get();
-      let isSalesReport =  Template.instance().isSalesReport.get();
-      let isSalesSummaryReport =  Template.instance().isSalesSummaryReport.get();
-      let isGeneralLedger =  Template.instance().isGeneralLedger.get();
-      let isTaxSummaryReport =  Template.instance().isTaxSummaryReport.get();
-      let isTrialBalance =  Template.instance().isTrialBalance.get();
-      let is1099Transaction =  Template.instance().is1099Transaction.get();
-      let isAccountsLists =  Template.instance().isAccountsLists.get();
-      let isTransactionJournal =  Template.instance().isTransactionJournal.get();
-      let isUnpaidBills =  Template.instance().isUnpaidBills.get();
-      let isUnpaidPO =  Template.instance().isUnpaidPO.get();
-      let isBackOrderedPO =  Template.instance().isBackOrderedPO.get();
-      let isSalesOrderConverted =  Template.instance().isSalesOrderConverted.get();
-      let isSalesOrderUnconverted =  Template.instance().isSalesOrderUnconverted.get();
-      let isPaymentMethodsList =  Template.instance().isPaymentMethodsList.get();
-      let isBackOrderedInvoices =  Template.instance().isBackOrderedInvoices.get();
-      let isQuotesConverted =  Template.instance().isQuotesConverted.get();
-      let isQuotesUnconverted =  Template.instance().isQuotesUnconverted.get();
-      let isInvoicesPaid =  Template.instance().isInvoicesPaid.get();
-      let isInvoicesUnpaid =  Template.instance().isInvoicesUnpaid.get();
-      let isTimeSheetDetails =  Template.instance().isTimeSheetDetails.get();
-      let isChequeList =  Template.instance().isChequeList.get();
-      let isStockAdjustmentList =  Template.instance().isStockAdjustmentList.get();
-      let isJournalEntryList =  Template.instance().isJournalEntryList.get();
-      let isAgedPayables =  Template.instance().isAgedPayables.get();
-      let isAgedPayablesSummary =  Template.instance().isAgedPayablesSummary.get();
-      let isPurchaseReport =  Template.instance().isPurchaseReport.get();
-      let isPurchaseSummaryReport =  Template.instance().isPurchaseSummaryReport.get();
-      let isPrintStatement =  Template.instance().isPrintStatement.get();
-      let isShowFavorite = false;
+    },
+    isFavorite: function() {
+        let isBalanceSheet = Template.instance().isBalanceSheet.get();
+        let isProfitLoss = Template.instance().isProfitLoss.get();
+        let isAgedReceivables = Template.instance().isAgedReceivables.get();
+        let isAgedReceivablesSummary = Template.instance().isAgedReceivablesSummary.get();
+        let isProductSalesReport = Template.instance().isProductSalesReport.get();
+        let isSalesReport = Template.instance().isSalesReport.get();
+        let isCustomerDetails = Template.instance().isCustomerDetails.get();
+        let isCustomerSummary = Template.instance().isCustomerSummary.get();
+        let isLotReport = Template.instance().isLotReport.get();
+        let isStockValue = Template.instance().isStockValue.get();
+        let isStockQuantity = Template.instance().isStockQuantity.get();
+        let isStockMovementReport = Template.instance().isStockMovementReport.get();
+        let isPayrollHistoryReport = Template.instance().isPayrollHistoryReport.get();
+        let isForeignExchangeHistoryList = Template.instance().isForeignExchangeHistoryList.get();
+        let isSalesSummaryReport = Template.instance().isSalesSummaryReport.get();
+        let isGeneralLedger = Template.instance().isGeneralLedger.get();
+        let isTaxSummaryReport = Template.instance().isTaxSummaryReport.get();
+        let isTrialBalance = Template.instance().isTrialBalance.get();
+        let isTimeSheetSummary = Template.instance().isTimeSheetSummary.get();
+        let isPayrollLeaveAccrued = Template.instance().isPayrollLeaveAccrued.get();
+        let isSerialNumberReport = Template.instance().isSerialNumberReport.get();
+        let is1099Transaction = Template.instance().is1099Transaction.get();
+        let isAccountsLists = Template.instance().isAccountsLists.get();
+        let isBinLocations = Template.instance().isBinLocations.get();
+        let isTransactionJournal = Template.instance().isTransactionJournal.get();
+        let isUnpaidBills = Template.instance().isUnpaidBills.get();
+        let isUnpaidPO = Template.instance().isUnpaidPO.get();
+        let isBackOrderedPO = Template.instance().isBackOrderedPO.get();
+        let isSalesOrderConverted = Template.instance().isSalesOrderConverted.get();
+        let isSalesOrderUnconverted = Template.instance().isSalesOrderUnconverted.get();
+        let isPaymentMethodsList = Template.instance().isPaymentMethodsList.get();
+        let isBackOrderedInvoices = Template.instance().isBackOrderedInvoices.get();
+        let isQuotesConverted = Template.instance().isQuotesConverted.get();
+        let isQuotesUnconverted = Template.instance().isQuotesUnconverted.get();
+        let isInvoicesPaid = Template.instance().isInvoicesPaid.get();
+        let isInvoicesUnpaid = Template.instance().isInvoicesUnpaid.get();
+        let isTimeSheetDetails = Template.instance().isTimeSheetDetails.get();
+        let isChequeList = Template.instance().isChequeList.get();
+        let isStockAdjustmentList = Template.instance().isStockAdjustmentList.get();
+        let isJournalEntryList = Template.instance().isJournalEntryList.get();
+        let isAgedPayables = Template.instance().isAgedPayables.get();
+        let isAgedPayablesSummary = Template.instance().isAgedPayablesSummary.get();
+        let isPurchaseReport = Template.instance().isPurchaseReport.get();
+        let isPurchaseSummaryReport = Template.instance().isPurchaseSummaryReport.get();
+        let isPrintStatement = Template.instance().isPrintStatement.get();
+        let isShowFavorite = false;
 
-      if(isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport|| isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement ||isAgedReceivablesSummary ||isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal){
-        isShowFavorite = true;
-      }
-      return isShowFavorite;
-  },
-  loggedCompany: () => {
-    return localStorage.getItem('mySession') || '';
- }
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isForeignExchangeHistoryList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary) {
+            isShowFavorite = true;
+        }
+        return isShowFavorite;
+    },
+    loggedCompany: () => {
+        return localStorage.getItem('mySession') || '';
+    }
 });
 
-Template.registerHelper('equals', function (a, b) {
+Template.registerHelper('equals', function(a, b) {
     return a === b;
 });

@@ -22,19 +22,13 @@
                   <a class="dropdown-item edit-project" data-toggle="modal" data-target="#editCrmProject"><i
                       class="far fa-edit text-info" style="width: 16px; margin-right: 5px;"></i>Edit Project</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" data-toggle="modal" data-target="#newSectionModal"><i
-                      class="fas fa-bars text-orange" style="width: 16px; margin-right: 5px;"></i>Add Section</a>
-                  <!-- <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#"><i class="far fa-clone text-primary" style="width: 16px; margin-right: 5px;"></i>Duplicate Project</a> -->
-                  <div class="dropdown-divider"></div>
                   <!-- For Sasa: Show/Hide must toggle between each other -->
-                  <a class="dropdown-item" href="#"><i class="far fa-check-circle text-success"
-                      style="width: 16px; margin-right: 5px;"></i>Show Completed Tasks</a>
+                  <a class="dropdown-item showCompletedTaskOnProject"><i class="far fa-check-circle text-success"
+                      style="width: 16px; margin-right: 5px;"></i>
+                    <span class="lblShowCompletedTaskOnProject">Show Completed Tasks</span></a>
                   <a class="dropdown-item" href="#" style="display: none;"><i class="fas fa-ban text-danger"
                       style="width: 16px; margin-right: 5px;"></i>Hide Completed Tasks</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item archive-project"><i class="fas fa-archive text-warning"
-                      style="width: 16px; margin-right: 5px;"></i>Archive</a>
                   <a class="dropdown-item delete-project"><i class="far fa-trash-alt text-danger"
                       style="width: 16px; margin-right: 5px;"></i>Delete Project</a>
                 </div>
@@ -53,16 +47,12 @@
                 <thead>
                   <tr class="dnd-moved">
                     <th class="th colCompleteTask" style="width: 2%;">
-                      <div class="custom-control custom-checkbox chkBox" style="width:15px;margin-right: -6px;">
-                        <input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All">
-                        <label class="custom-control-label chkBoxAll" for="formCheck-All"></label>
-                      </div>
                     </th>
-                    <th class="th colDate">Date</th>
-                    <th class="th colTaskName">Task</th>
-                    <th class="th colTaskDesc">Description</th>
-                    <th class="th colTaskLabels">Labels</th>
-                    <th class="th colTaskActions">Actions</th>
+                    <th class="th colDate no-modal">Date</th>
+                    <th class="th colTaskName no-modal">Task</th>
+                    <th class="th colTaskDesc no-modal">Description</th>
+                    <th class="th colTaskLabels no-modal">Labels</th>
+                    <th class="th colTaskActions no-modal">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="tblProjectTasksBody">
@@ -73,7 +63,7 @@
 
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" type="button"><i class="fa fa-save"
+          <button class="btn btn-success" data-dismiss="modal" type="button"><i class="fa fa-save"
               style="margin-right: 5px;"></i>Save</button>
           <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
               style="margin-right: 5px;"></i>Close</button>

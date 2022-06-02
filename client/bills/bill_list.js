@@ -54,9 +54,9 @@ Template.billlist.onRendered(function() {
         // Set date to picker
         $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
         // Hide (close) the picker
-        $(this).datepicker('hide');
-        // Change ttrigger the on change function
-        $(this).trigger('change');
+        // $(this).datepicker('hide');
+        // // Change ttrigger the on change function
+        // $(this).trigger('change');
        }
     });
 
@@ -1423,6 +1423,7 @@ Template.billlist.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1437,13 +1438,14 @@ Template.billlist.events({
         } else {
             templateObject.getAllFilterBillData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'change #dateFrom': function() {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', false);
         $('#dateTo').attr('readonly', false);
+        setTimeout(function(){
         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
         var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
@@ -1458,7 +1460,7 @@ Template.billlist.events({
         } else {
             templateObject.getAllFilterBillData(formatDateFrom, formatDateTo, false);
         }
-
+        },500);
     },
     'click #today': function () {
         let templateObject = Template.instance();

@@ -86,6 +86,20 @@
                 </div>
                 <!-- END  -->
 
+                <div class="modal fade" role="dialog" tabindex="-1" id="myModalTemplate">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>Select Template</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            </div>
+                            <div class="modal-body" style="padding: 0px;">
+                                 {{ > templatesettings}}
+                            </div>                        
+                        </div>
+                    </div>
+
+                </div>
+
                 <!-- Start Attachemt -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="myModalAttachment">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -270,6 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -294,9 +309,7 @@
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                {{> currencydropdown}}
-                                            </div>
+                                         
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -318,13 +331,7 @@
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label>Ẹxchange Rate</label>
-                                                    <input type="text" class="form-control" id="exchange_rate" value="0" />
-                                            
-                                                </div>
-                                            </div>
+                                           
                                             <div class="col-6 col-md-12 col-lg-12">
                                                 <div class="form-group" style="display: none;">
                                                     <label>Due Date</label>
@@ -337,6 +344,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -373,7 +381,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                {{> CurrencyWidget rate="sell"}}
                             </div>
                         </div>
                         <div class="row" style="margin: 16px 16px 0px 16px;">
@@ -1011,7 +1023,7 @@
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                                             {{#if isBatchSerialNoTracking 'true'}}
-                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success" style="margin-left: 40px; font-size: 22px;" data-toggle="modal" data-target="#serialLotNumberModal"></i></td>
+                                                <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
                                             {{/if}}
                                             <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
                                             <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
@@ -1113,7 +1125,7 @@
                 </style>
 
                 <div class="row align-items-end" style="margin: 16px;">
-                    <div class="col-12 col-lg-8 col-xl-10" style="rpadding-right: 24px;">
+                    <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px;">
                         <div class="row">
                             <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 36px; margin-left: 16px;">+ Add New Entry</button>
                         </div>
@@ -1129,23 +1141,41 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row justify-content-center desktopButtons">
-                            <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                            </button>
+                        <div class="row">
+                              <div class="col-12 col-md-4">
+                                <div class="row justify-content-center desktopButtons">
 
-                            <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-print" style="padding-right: 8px;"></i>Print
-                            </button>
+                                    <button class="btn btn-primary btnchousetemplate btnFooter" data-toggle="modal" data-target="#" type="button" >
+                                        <i class="fa fa-file" style="padding-right: 8px;"></i> Choose Template
+                                    </button>
+                             
+                                </div>
 
-                            <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 16px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
-                                {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
-                            </a>
+                              </div>
+                              <div class="col-12 col-md-8">
+                                <div class="row justify-content-center desktopButtons">
 
-                            <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                            </button>
+                                  
+                                    <button class="btn btn-success btnSave btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                                    </button>
+        
+                                    <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-print" style="padding-right: 8px;"></i>Print
+                                    </button>
+        
+                                    <a class="btn btn-primary btn_Attachment btnFooter" role="button" style="margin: 16px;margin-top: 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
+                                        {{#if attachmentCount}}<span id="attachment-count">{{attachmentCount}}</span>{{/if}} <i class="fa fa-paperclip" style="padding-right: 8px;"></i>Add Attachments
+                                    </a>
+        
+                                    <button class="btn btn-secondary btnBack btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+                                    </button>
+                                </div>
+
+                              </div>
                         </div>
+                       
                     </div>
                     <!-- <div class="col-12 col-md-6 col-lg-4 col-xl-5">
                         <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 120px;">+ Add New Entry</button>
@@ -1625,10 +1655,7 @@
             {{> newtermspop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
-            {{> currencypop}}
-        </div>
-
+      
         <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
             {{> newcurrencypop}}
         </div>
@@ -1653,9 +1680,13 @@
             {{> customfieldformpop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="serialLotNumberModal">
+        <div class="modal fade" role="dialog" tabindex="-1" id="serialNumberModal">
             {{> serialnumberpop}}
         </div>
+        <div class="modal fade" role="dialog" tabindex="-1" id="lotNumberModal">
+            {{> lotnumberpop}}
+        </div>
+
         <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
                 <div class="modal-content">

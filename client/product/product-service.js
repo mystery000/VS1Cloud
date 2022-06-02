@@ -355,4 +355,19 @@ export class ProductService extends BaseService {
         };
         return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
     }
+
+    getProductStatus(productName) {
+        let options = {
+            PropertyList: "ID, ProductName, Batch, SNTracking",
+            select: "[ProductName]='" + productName + "'",
+        };
+        return this.getList(this.ERPObjects.TProductVS1, options);
+    }
+
+    getProductInfo(productName) {
+        let options = {
+            select: "[Lines][TInvoiceLine][ProductName]='" + productName + "'",
+        }
+        return this.getList(this.ERPObjects.TInvoiceEx, options);
+    }
 }

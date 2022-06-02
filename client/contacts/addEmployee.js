@@ -10,10 +10,8 @@ import { EmployeePayrollService } from '../js/employeepayroll-service';
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
 import { Random } from 'meteor/random';
 import { AppointmentService } from '../appointments/appointment-service';
-import '../lib/global/indexdbstorage.js';
 import EmployeePaySettings from "../js/Api/Model/EmployeePaySettings";
 import EmployeePaySettingFields from "../js/Api/Model/EmployeePaySettingFields";
-import 'jquery-editable-select';
 import AssignLeaveType from "../js/Api/Model/AssignLeaveType";
 import AssignLeaveTypeFields from "../js/Api/Model/AssignLeaveTypeFields";
 import PayTemplateEarningLine from "../js/Api/Model/PayTemplateEarningLine";
@@ -31,6 +29,8 @@ import LeaveRequest from "../js/Api/Model/LeaveRequest";
 import LeaveRequestFields from "../js/Api/Model/LeaveRequestFields";
 import PayNotes from "../js/Api/Model/PayNotes";
 import PayNotesFields from "../js/Api/Model/PayNotesFields";
+import 'jquery-editable-select';
+import '../lib/global/indexdbstorage.js';
 import { functionsIn } from "lodash";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -163,7 +163,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -236,7 +235,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -305,7 +303,6 @@ Template.employeescard.onRendered(function () {
             }],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
                 fixedColumnsRight: 1
             },
@@ -511,7 +508,6 @@ Template.employeescard.onRendered(function () {
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         select: true,
                         destroy: true,
-                        colReorder: true,
                         colReorder: {
                                 fixedColumnsRight: 1
                             },
@@ -600,7 +596,6 @@ Template.employeescard.onRendered(function () {
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         select: true,
                         destroy: true,
-                        colReorder: true,
                         colReorder: {
                                 fixedColumnsRight: 1
                             },
@@ -2430,6 +2425,7 @@ Template.employeescard.onRendered(function () {
 
     $(document).ready(function () {
         setTimeout(function () {
+            
             $('#product-list').editableSelect();
 
 
@@ -2979,7 +2975,7 @@ Template.employeescard.onRendered(function () {
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
                 let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
-                // console.log('TEmployeepaysettingData', TEmployeepaysettingData)
+                //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
                 ).filter((item) => {
@@ -2998,6 +2994,7 @@ Template.employeescard.onRendered(function () {
                     BankAccountName: employeePaySettings.fields.BankAccountName,
                     BankAccountBSB: employeePaySettings.fields.BankAccountBSB,
                     BankAccountNo: employeePaySettings.fields.BankAccountNo,
+                    StatementText: employeePaySettings.fields.Statement,
                     AnnualSalary: employeePaySettings.fields.AnnualSalary,
                     EarningYTD: employeePaySettings.fields.EarningYTD,
                     NextPayDate: employeePaySettings.fields.NextPayDate,
@@ -3057,7 +3054,7 @@ Template.employeescard.onRendered(function () {
 
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-
+            console.log('leavetypes', data.tleavetypes)
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -3144,12 +3141,10 @@ Template.employeescard.onRendered(function () {
         }
     }
 
-    // Standard drop down
-    templateObject.setEarningLineDropDown = function() {
+    templateObject.setEarningLineDropDown = function(){
         setTimeout(function () {
             $('.earningLineDropDown').editableSelect();
-            $('.earningLineDropDown').editableSelect()
-                .on('click.editable-select', function (e, li) {                    
+            $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {     
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
@@ -3157,15 +3152,17 @@ Template.employeescard.onRendered(function () {
                 let currencyDataName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#earningRateSettingsModal').modal('show');
+                    console.log('step 1')
                 } else {
-                    if (currencyDataName.replace(/\s/g, '') != '') {
-                        console.log('step 2')
-                    }
+                    // if (currencyDataName.replace(/\s/g, '') != '') {
+                    //     console.log('step 2')
+                    // }
+                    console.log('step 2')
+                    $('#earningRateSettingsModal').modal('show');
                 }
             });
-        }, 1000);
+        }, 500)
     }
-    templateObject.setEarningLineDropDown();
 
     templateObject.setDeductionLineDropDown = function() {
         setTimeout(function () {
@@ -3183,9 +3180,10 @@ Template.employeescard.onRendered(function () {
                         if (currencyDataName.replace(/\s/g, '') != '') {
                             // console.log('step 2')
                         }
+                        $('#deductionSettingsModal').modal('show');
                     }
                 });
-        }, 1000);
+        }, 500);
     }
     templateObject.setDeductionLineDropDown();
 
@@ -3205,9 +3203,10 @@ Template.employeescard.onRendered(function () {
                         if (currencyDataName.replace(/\s/g, '') != '') {
                             // console.log('step 2')
                         }
+                        $('#superannuationSettingsModal').modal('show');
                     }
                 });
-        }, 1000);
+        }, 500);
     }
     templateObject.setSuperannuationDropDown();
 
@@ -3227,9 +3226,10 @@ Template.employeescard.onRendered(function () {
                         if (currencyDataName.replace(/\s/g, '') != '') {
                             // console.log('step 2')
                         }
+                        $('#reimbursementSettingsModal').modal('show');
                     }
                 });
-        }, 1000);
+        }, 500);
     }
     templateObject.setReimbursementDropDown();
     
@@ -4227,7 +4227,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obEarningRate' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 1000); 
+            }, 500); 
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4275,7 +4275,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obDeductionLine' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 1000); 
+            }, 500); 
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4326,7 +4326,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obSuperannuationFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 1000); 
+            }, 500); 
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4374,7 +4374,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obReimbursementFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 1000); 
+            }, 500); 
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4559,7 +4559,7 @@ Template.employeescard.events({
         setTimeout(function () {
             let index = payEarningLinesTemp.length - 1;
             $('#ptEarningRate' + index).val(payEarningLinesTemp[index].fields.EarningRate);
-        }, 1000);
+        }, 500);
         $('#addEarningsLineModal').modal('hide');
     },
 
@@ -4797,24 +4797,52 @@ Template.employeescard.events({
 
     'click .removeObEarning': async function(e){
         let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance('EarningLine');
-        let updatedLines = obLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.BalanceField = $('#obEarningRate' + index).val();
-                item.fields.Amount = $('#obEarningAmount' + index).val();
-                return item;
-            }
-        });
-        await templateObject.openingBalanceInfo.set(updatedLines);
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        let counter = 0;
+        let openingBalanceLines = [];
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalanceLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    if( item.fields.Type == 'EarningLine' ){
+                        item.fields.BalanceField = $('#obEarningRate' + counter).val();
+                        item.fields.Amount = $('#obEarningAmount' + counter).val();
+                        if( parseInt( counter ) != parseInt( deleteID ) ){
+                            return item;
+                        }
+                        counter++
+                    }else{
+                        return item;
+                    }                  
+                }else{
+                    return item;
+                }
+            });
+        }
+
+        console.log( 'openingBalanceLines', openingBalanceLines )
+
+        await templateObject.openingBalanceInfo.set(openingBalanceLines);
         let totalAmount = 0;
         let amount = 0;
-        Array.prototype.forEach.call(updatedLines, (item, index) => {
-            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-            totalAmount += parseFloat( amount );
-            $('#obEarningRate' + index).val(item.fields.BalanceField);
-            $('#obEarningAmount' + index).val(item.fields.Amount);
-        })
+        let bCounter = 0;
+        if( openingBalanceLines.length ){
+            Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'EarningLine' ) {
+                    amount = ( item.fields.Amount === undefined || item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    totalAmount += parseFloat( amount );
+                    $('#obEarningRate' + bCounter).val(item.fields.BalanceField);
+                    $('#obEarningAmount' + bCounter).val(item.fields.Amount);
+                    bCounter++;
+                }
+            })
+            
+        }
         let utilityService = new UtilityService();
         let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
         $('#obEarningTotalAmount').text(totalFomattedAmount);
@@ -4822,24 +4850,48 @@ Template.employeescard.events({
 
     'click .removeObDeduction': async function(e){
         let templateObject = Template.instance();
+        let currentId = FlowRouter.current().queryParams;
+        let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
         let deleteID = $(e.target).data('id');
-        let obLines = templateObject.filterOpeningBalance('DeductionLine');
-        let updatedLines = obLines.filter((item, index) => {
-            if ( parseInt( index ) != parseInt( deleteID ) ) {
-                item.fields.BalanceField = $('#obDeductionLine' + index).val();
-                item.fields.Amount = $('#obDeductionAmount' + index).val();
-                return item;
-            }
-        });
-        await templateObject.openingBalanceInfo.set(updatedLines);
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        let counter = 0;
+        let openingBalanceLines = [];
+        if( Array.isArray( checkOpeningBalances ) ){
+            openingBalanceLines = OpeningBalance.fromList(
+                checkOpeningBalances
+            ).filter((item) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) ) {
+                    if( item.fields.Type == 'DeductionLine' ){
+                        item.fields.BalanceField = $('#obDeductionLine' + counter).val();
+                        item.fields.Amount = $('#obDeductionAmount' + counter).val();
+                        if( parseInt( counter ) != parseInt( deleteID ) ){                            
+                            return item;
+                        }
+                        counter++
+                    }else{
+                        return item;
+                    }                  
+                }
+            });
+        }
+
+        await templateObject.openingBalanceInfo.set(openingBalanceLines);
         let totalAmount = 0;
         let amount = 0;
-        Array.prototype.forEach.call(updatedLines, (item, index) => {
-            amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
-            totalAmount += parseFloat( amount );
-            $('#obDeductionLine' + index).val(item.fields.BalanceField);
-            $('#obDeductionAmount' + index).val(item.fields.Amount);
-        })
+        let bCounter = 0;
+        if( openingBalanceLines.length ){
+            Array.prototype.forEach.call(openingBalanceLines, (item, index) => {
+                if ( parseInt( item.fields.EmployeeID ) == parseInt( employeeID ) && item.fields.Type == 'DeductionLine' ) {
+                    amount = ( item.fields.Amount === null || item.fields.Amount == '') ? 0 : item.fields.Amount;
+                    amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
+                    totalAmount += parseFloat( amount );
+                    $('#obDeductionLine' + bCounter).val(item.fields.BalanceField);
+                    $('#obDeductionAmount' + bCounter).val(item.fields.Amount);
+                    console.log( bCounter )
+                    bCounter++;
+                }
+            })
+        }
         let utilityService = new UtilityService();
         let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
         $('#obDeductionTotalAmount').text(totalFomattedAmount);
@@ -4849,14 +4901,15 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let deleteID = $(e.target).data('id');
         let obLines = templateObject.filterOpeningBalance('SuperannuationLine');
-        let updatedLines = obLines.filter((item, index) => {
+        let checkOpeningBalances = templateObject.openingBalanceInfo.get();
+        checkOpeningBalances.push( obLines.filter((item, index) => {
             if ( parseInt( index ) != parseInt( deleteID ) ) {
                 item.fields.BalanceField = $('#obSuperannuationFund' + index).val();
                 item.fields.Amount = $('#obSuperannuationAmount' + index).val();
                 return item;
             }
-        });
-        await templateObject.openingBalanceInfo.set(updatedLines);
+        }) );
+        await templateObject.openingBalanceInfo.set(checkOpeningBalances);
         let totalAmount = 0;
         let amount = 0;
         Array.prototype.forEach.call(updatedLines, (item, index) => {
@@ -5047,7 +5100,6 @@ Template.employeescard.events({
                 });
             }
 
-
             let TaxFileNumber = $("#edtTaxFileNumber").val();
             let TFNExemption = $("#edtTfnExemption").val();
             let EmploymentBasis = $("#edtEmploymentBasis").val();
@@ -5108,8 +5160,48 @@ Template.employeescard.events({
         }else if(activeTab == "leave") {
 
         }else if(activeTab == "bankaccounts") {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            let currentId = FlowRouter.current().queryParams;
+            let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
+            let templateObject = Template.instance();
+            let useData = [];
+            const listEmployeePaySettings = {}
+            let employeePaySettings = templateObject.employeePayInfos.get();
+            let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
+            if( TEmployeepaysettings.length ){
+                listEmployeePaySettings = JSON.parse(TEmployeepaysettings[0].data);
+                useData = EmployeePaySettings.fromList(
+                    listEmployeePaySettings.temployeepaysettings
+                ).filter((item) => {
+                    if ( item.fields.Employeeid !== parseInt(employeeID) ) {
+                        return item;
+                    }
+                });
+            }
 
-            let data = [];
+            let bankAccountStatement = $("#bankAccountStatement").val();
+            let bankAccountName = $("#bankAccountName").val();
+            let bankAccountBSB = $("#bankAccountBSB").val();
+            let bankAccountNo = $("#bankAccountNo").val();
+
+            employeePaySettings.fields.BankAccountName = bankAccountName;
+            employeePaySettings.fields.BankAccountBSB = bankAccountBSB;
+            employeePaySettings.fields.BankAccountNo = bankAccountNo;
+            employeePaySettings.fields.Statement = bankAccountStatement;
+            useData.push(employeePaySettings);
+
+            /**
+             * Saving employeePaySettings Object in indexdb
+            */
+
+            listEmployeePaySettings.temployeepaysettings = useData;
+            await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
+            $('.fullScreenSpin').css('display', 'none');
+
+
+            return false;
+            // Old Dev Code
+            let data = [];          
 
             let employeePayrollService = new EmployeePayrollService();
 
@@ -6363,7 +6455,17 @@ Template.employeescard.events({
             sellPrice = Number($(event.target).val().replace(/[^0-9.-]+/g,""));
             $(event.target).val(utilityService.modifynegativeCurrencyFormat(sellPrice));
         }
-
+    },
+    'blur .edtPercentFormatting':function (event) {
+        let utilityService = new UtilityService();
+        let sellPrice= $(event.target).val();
+        if (!isNaN(sellPrice)){
+            sellPrice = Number($(event.target).val().replace(/[^0-9.-]+/g,""));
+            $(event.target).val(`${parseFloat(sellPrice).toFixed(2)}%`);
+        }else{
+            sellPrice = Number($(event.target).val().replace(/[^0-9.-]+/g,""));
+            $(event.target).val(`${parseFloat(sellPrice).toFixed(2)}%`);
+        }
     },
     'blur .customField1Text': function (event) {
         var inputValue1 = $('.customField1Text').text();
@@ -6905,8 +7007,8 @@ Template.employeescard.helpers({
         let amount = 0;
         $('.' + amountField).each(function(){
             amount = $(this).val();
-            amount = ( amount === null || amount == '') ? 0 : amount;
-            amount = Number(amount.replace(/[^0-9.-]+/g,""));
+            amount = ( amount === undefined || amount === null || amount == '') ? 0 : amount;
+            amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
             totalAmount += parseFloat( amount );
         });
         let utilityService = new UtilityService();
@@ -6914,9 +7016,14 @@ Template.employeescard.helpers({
     },
     formatPrice( amount ){
         let utilityService = new UtilityService();
-        amount = ( amount === null || amount == '') ? 0 : amount;
-        amount = Number(amount.replace(/[^0-9.-]+/g,""));
+        amount = ( amount === undefined || amount === null || amount.length === 0 ) ? 0 : amount;
+        amount = ( amount )? Number(amount.replace(/[^0-9.-]+/g,"")): 0;
         return utilityService.modifynegativeCurrencyFormat(amount)|| 0.00;
+    },
+    formatPercent( percentVal ){
+        percentVal = ( percentVal === undefined || percentVal === null || percentVal.length === 0) ? 0 : percentVal;
+        percentVal = ( percentVal )? Number(percentVal.replace(/[^0-9.-]+/g,"")): 0;
+        return `${parseFloat(percentVal).toFixed(2)}%`;
     },
     formatDate: ( date ) => {
         return moment(date).format("DD/MM/YYYY");
@@ -6958,14 +7065,7 @@ Template.employeescard.helpers({
         });
     },
     notesrecords: () => {
-        return Template.instance().notesrecords.get().sort(function (a, b) {
-            if (a.createdat == 'NA') {
-                return 1;
-            } else if (b.createdat == 'NA') {
-                return -1;
-            }
-            return (a.createdat.toUpperCase() > b.createdat.toUpperCase()) ? 1 : -1;
-        });
+        return Template.instance().notesrecords.get();
     },
     
     tableheaderrecords: () => {

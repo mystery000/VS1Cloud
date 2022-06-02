@@ -23,12 +23,12 @@ export default class draggableCharts {
           placeholder: "portlet-placeholder ui-corner-all",
           tolerance: 'pointer',
           stop: async (event, ui) => {
-            // console.log($(ui.item[0]));
-            console.log('Dropped the sortable chart');
             $(".fullScreenSpin").css("display", "block");
-            await ChartHandler.buildPositions();
-            await ChartHandler.saveCharts();
-            await ChartHandler.saveChartsInLocalDB();
+            if( $(ui.item[0]).hasClass("editCharts") == false ){
+              await ChartHandler.buildPositions();
+              await ChartHandler.saveCharts();
+              await ChartHandler.saveChartsInLocalDB();
+            } 
             $(".fullScreenSpin").css("display", "none");
           },
         })

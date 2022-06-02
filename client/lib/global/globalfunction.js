@@ -77,14 +77,32 @@ $("select[name='edtBankAccountName'] > option").each(function () {
              if(parts.length){
                  if(!isReceiptDateValid) {
                      if (!(parts[0] && (parts[1] < 13) && (parts[2] > 999 && parts[2] < 9999 ))) {
-                         $(event.target).val(moment().format('DD/MM/YYYY'));
+                       //let parts = dateEntered.match(/.{1,2}/g);
+                       tempDay = parseInt(parts[0]);
+                       tempMonth = parseInt(parts[1])-1;
+                       tempYear = parseInt(parts[2])+2000;
+                       if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+                           $(event.target).val(moment().format('DD/MM/YYYY'));
+                       }else {
+                           let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                           $(event.target).val(tempDate);
+                       }
                      } else {
                          let myDate = moment(new Date(parts[2], parts[1] - 1, parts[0])).format("DD/MM/YYYY");
                          $(event.target).val(myDate);
                      }
                  }else{
                      if (!(parts[0] && (parts[1] < 13) && (parts[2] > 999 && parts[2] < 9999 ))) {
-                         $(event.target).val(moment($(event.target).val()).format('DD/MM/YYYY'));
+                       //let parts = dateEntered.match(/.{1,2}/g);
+                       tempDay = parseInt(parts[0]);
+                       tempMonth = parseInt(parts[1])-1;
+                       tempYear = parseInt(parts[2])+2000;
+                       if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+                           $(event.target).val(moment().format('DD/MM/YYYY'));
+                       }else {
+                           let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                           $(event.target).val(tempDate);
+                       }
                      } else {
                          let myDate = moment(new Date(parts[2], parts[1] - 1, parts[0])).format("DD/MM/YYYY");
                          $(event.target).val(myDate);
@@ -107,8 +125,119 @@ $("select[name='edtBankAccountName'] > option").each(function () {
                  $(event.target).val(tempDate);
              }
          }else {
+           let symbolArr = ['/', '-', '.', ' ',','];
+           symbolArr.forEach(function (e, i) {
+               if ($(event.target).val().indexOf(symbolArr[i]) > -1) {
+                   parts = $(event.target).val().split(symbolArr[i]);
+               }
+           });
+           if(parts.length > 1){
+             tempDay = parseInt(parts[0]);
+             tempMonth = parseInt(parts[1])-1;
+             tempYear = new Date().getFullYear();  // returns the current year
+             if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+                 $(event.target).val(moment().format('DD/MM/YYYY'));
+             }else {
+                 let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                 $(event.target).val(tempDate);
+             }
+           }else{
              $(event.target).val(moment().format('DD/MM/YYYY'));
+           }
          }
+});
+
+$(document).on('keypress', '.hasDatepicker', function (e) {
+    if(e.which == 13) {
+       let dateEntered = $(event.target).val();
+       let parts = [];
+       if(dateEntered.length > 6){
+
+           let isReceiptDateValid = moment($(event.target).val()).isValid();
+           let symbolArr = ['/', '-', '.', ' ',','];
+           symbolArr.forEach(function (e, i) {
+               if ($(event.target).val().indexOf(symbolArr[i]) > -1) {
+                   parts = $(event.target).val().split(symbolArr[i]);
+               }
+           });
+           if(parts.length){
+               if(!isReceiptDateValid) {
+
+                   if (!(parts[0] && (parts[1] < 13) && (parts[2] > 999 && parts[2] < 9999 ))) {
+
+                     tempDay = parseInt(parts[0]);
+                     tempMonth = parseInt(parts[1])-1;
+                     tempYear = parseInt(parts[2])+2000;
+
+                     if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+
+                         $(event.target).val(moment().format('DD/MM/YYYY'));
+                     }else {
+
+                         let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                         $(event.target).val(tempDate);
+                     }
+                   } else {
+
+                       let myDate = moment(new Date(parts[2], parts[1] - 1, parts[0])).format("DD/MM/YYYY");
+                       $(event.target).val(myDate);
+                   }
+               }else{
+
+                   if (!(parts[0] && (parts[1] < 13) && (parts[2] > 999 && parts[2] < 9999 ))) {
+
+                     tempDay = parseInt(parts[0]);
+                     tempMonth = parseInt(parts[1])-1;
+                     tempYear = parseInt(parts[2])+2000;
+                     if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+                         $(event.target).val(moment().format('DD/MM/YYYY'));
+                     }else {
+                         let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+                         $(event.target).val(tempDate);
+                     }
+                   } else {
+                       let myDate = moment(new Date(parts[2], parts[1] - 1, parts[0])).format("DD/MM/YYYY");
+                       $(event.target).val(myDate);
+                   }
+               }
+           }else{
+               $(event.target).val(moment().format('DD/MM/YYYY'));
+
+           }
+
+       }else if(dateEntered.length === 6){
+           let parts = dateEntered.match(/.{1,2}/g);
+           tempDay = parseInt(parts[0]);
+           tempMonth = parseInt(parts[1])-1;
+           tempYear = parseInt(parts[2])+2000;
+           if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+               $(event.target).val(moment().format('DD/MM/YYYY'));
+           }else {
+               let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+               $(event.target).val(tempDate);
+           }
+       }else {
+         let symbolArr = ['/', '-', '.', ' ',','];
+         symbolArr.forEach(function (e, i) {
+             if ($(event.target).val().indexOf(symbolArr[i]) > -1) {
+                 parts = $(event.target).val().split(symbolArr[i]);
+             }
+         });
+         if(parts.length > 1){
+           tempDay = parseInt(parts[0]);
+           tempMonth = parseInt(parts[1])-1;
+           tempYear = new Date().getFullYear();  // returns the current year
+           if(!((tempDay < 31) && (tempMonth <12) && tempDay && tempMonth && tempYear)){
+               $(event.target).val(moment().format('DD/MM/YYYY'));
+           }else {
+               let tempDate = moment(new Date(tempYear,tempMonth,tempDay)).format('DD/MM/YYYY');
+               $(event.target).val(tempDate);
+           }
+         }else{
+           $(event.target).val(moment().format('DD/MM/YYYY'));
+         }
+       }
+     }
 });
 
 $('.dropdown-toggle').on("click",function(event){

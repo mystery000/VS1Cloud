@@ -41,6 +41,14 @@ export class RateTypeService extends BaseService {
      return this.getList(this.ERPObjects.TRateTypes, options);
   }
 
+  getOneGroupTypeByName(dataSearchName){
+    let options = {
+      ListType:"Detail",
+      select: '[Description]="'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TVs1TabGroups, options);
+ }
+
   getOneFundTypeByName(dataSearchName){
     let options = {
       ListType:"Detail",

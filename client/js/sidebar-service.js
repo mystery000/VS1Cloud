@@ -20,6 +20,33 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+
+  getNewGroupListVS1() {
+    let options = '';
+    options = {
+           ListType: "Detail",
+           //select: "[Active]=true"
+          };
+    // if(limitcount == 'All'){
+    //    options = {
+    //      ListType: "Detail",
+    //      select: "[Active]=true"
+    //     };
+    // }else{
+    //   options = {
+
+    //      ListType: "Detail",
+    //      select: "[Active]=true",
+    //      LimitCount:'"'+limitcount+'"',
+    //      LimitFrom:'"'+limitfrom+'"'
+    //  };
+    // }
+    return this.getList(this.ERPObjects.TVs1TabGroups, options);
+  }
+
+
+
+
   // getAllCurrencies()
   // {
   //   return this.getList('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json');
@@ -282,6 +309,16 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getGroupTypeByName(dataSearchName) {
+
+     let options = '';
+       options = {
+        ListType: "Detail",
+       // select: '[ProductName] f7like "'+dataSearchName+'" OR [BARCODE] f7like "'+dataSearchName+'" and [ProductType]!="INV"'
+       };
+     return this.getList(this.ERPObjects.TVs1TabGroups, options);
+  }
+
   getSelectedProducts(employeeID) {
        let options = {
            PropertyList: "ID,EmployeeName,PayRate,Rate, ServiceDesc",
@@ -483,14 +520,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployee, options);
   }
 
-  getLeadByName(dataSearchName) {
-
+  getLeadByNameOrID(dataSearchName) {
     let options = '';
     options = {
      ListType: "Detail",
-     select: '[EnteredByEmployee] f7like "'+dataSearchName+'"'
+     select: '[ClientName] f7like "'+dataSearchName+'" OR [ID] f7like "'+dataSearchName+'"'
     };
-    return this.getList(this.ERPObjects.TLeads, options);
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
 
@@ -892,16 +928,20 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
   getAllLeads(limitcount, limitfrom) {
     let options = '';
-    if(limitcount == 'All'){
-       options = {
-        ListType: "Detail",
-       };
-    }else{
-      options = {
-          ListType: "Detail",
-      };
+    if(limitcount === 'All'){
+        options = {
+            ListType: "Detail",
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true'
+        };
+    } else {
+        options = {
+            ListType: "Detail",
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true',
+            LimitCount:'"'+limitcount+'"',
+            LimitFrom:'"'+limitfrom+'"'
+        };
     }
-    return this.getList(this.ERPObjects.TLeads, options);
+    return this.getList(this.ERPObjects.TProspect, options);
   }
 
   getCheckLeadData(limitcount, limitfrom) {
@@ -1476,29 +1516,54 @@ getAllContactCombineVS1(limitcount, limitfrom) {
 
   getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
 
-    let options = '';
-    if(ignoreDate == true){
-      options = {
-         OrderBy:"CreationDate desc",
-         IgnoreDates:true,
-         IsDetailReport:false,
-         LimitCount:'"'+limitcount+'"',
-         LimitFrom:'"'+limitfrom+'"'
-     };
-   }else{
-     options = {
-        OrderBy:"CreationDate desc",
-        IgnoreDates:false,
-        IsDetailReport:false,
-        DateFrom:'"'+dateFrom+'"',
-        DateTo:'"'+dateTo+'"',
-        LimitCount:'"'+limitcount+'"',
-        LimitFrom:'"'+limitfrom+'"'
-    };
-   }
-
-  return this.getList(this.ERPObjects.TAppointmentList, options);
+   let options = '';
+   let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly')|| false;
+   let loggedEmpID = Session.get('mySessionEmployeeLoggedID')||0;
+   if (seeOwnAppointments == true) {//Check Access Level
+         if(ignoreDate == true){
+           options = {
+              OrderBy:"CreationDate desc",
+              IgnoreDates:true,
+              IsDetailReport:false,
+              LimitCount:'"'+limitcount+'"',
+              LimitFrom:'"'+limitfrom+'"',
+              Search:'TrainerID = '+loggedEmpID+'',
+          };
+        }else{
+          options = {
+             OrderBy:"CreationDate desc",
+             IgnoreDates:false,
+             IsDetailReport:false,
+             DateFrom:'"'+dateFrom+'"',
+             DateTo:'"'+dateTo+'"',
+             LimitCount:'"'+limitcount+'"',
+             LimitFrom:'"'+limitfrom+'"',
+             Search:'TrainerID = '+loggedEmpID+'',
+         };
+        }
+  }else{
+        if(ignoreDate == true){
+          options = {
+             OrderBy:"CreationDate desc",
+             IgnoreDates:true,
+             IsDetailReport:false,
+             LimitCount:'"'+limitcount+'"',
+             LimitFrom:'"'+limitfrom+'"'
+         };
+       }else{
+         options = {
+            OrderBy:"CreationDate desc",
+            IgnoreDates:false,
+            IsDetailReport:false,
+            DateFrom:'"'+dateFrom+'"',
+            DateTo:'"'+dateTo+'"',
+            LimitCount:'"'+limitcount+'"',
+            LimitFrom:'"'+limitfrom+'"'
+        };
+       }
   }
+ return this.getList(this.ERPObjects.TAppointmentList, options);
+ }
 
   getTJournalEntryListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
 
@@ -1604,7 +1669,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
   getAllSerialNumber() {
       let options = '';
       options = {
-          
+
       };
       return this.getList(this.ERPObjects.TSerialNumberListCurrentReport, options);
   }
@@ -1753,6 +1818,23 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     }
       return this.getList(this.ERPObjects.TTransactionListReport, options);
   }
+    getTProjectTasks(msTimeStamp){
+        let options = '';
+        if(msTimeStamp){
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }else{
+            options = {
+                ListType: "Detail",
+                select: "[Active]=true",
+                LimitCount:'"'+initialReportLoad+'"'
+            };
+        }
+        return this.getList(this.ERPObjects.Tprojecttasks, options);
+    }
 
   getAllAppointmentList(limitcount, limitfrom){
     let options = '';
@@ -2381,7 +2463,7 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
   getGlobalSettings(){
         let options = {
            PropertyList: "PrefName,Fieldvalue",
-           select: '[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime"'
+           select: '[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime" or [PrefName]="VS1SMSID" or [PrefName]="VS1SMSToken" or [PrefName]="VS1SMSPhone" or [PrefName]="VS1SAVESMSMSG" or [PrefName]="VS1STARTSMSMSG" or [PrefName]="VS1STOPSMSMSG"'
         }
        return this.getList(this.ERPObjects.TERPPreference,options);
    }
@@ -2575,19 +2657,23 @@ getCalender(limitcount, limitfrom) {
 }
 
 getSuperannuation(limitcount, limitfrom) {
-  let options = '';
-  if(limitcount == 'All'){
-    options = {
-      ListType: "Detail",
-      select: "[Allclasses]=false"
+    let options = '';
+
+    if(limitcount == 'All'){
+      options = {
+       ListType: "Detail",
+       select: '[Allclasses]=true'
+      };
+   }else{
+     options = {
+      // orderby:'"ClientID desc"',
+        ListType: "Detail",
+        select: '[Allclasses]=true'
+
      };
-  }
-  else{
-    options = {
-      ListType: "Detail",
-      select: "[Allclasses]=false"
-     };
-  }
+   }
+
+
 
    return this.getList(this.ERPObjects.TSuperannuation, options);
 }
@@ -2668,6 +2754,24 @@ getTvs1charts() {
     ListType: "Detail"
    };
    return this.getList(this.ERPObjects.Tvs1charts, options);
+}
+
+getEarnings(limitcount, limitfrom)
+{
+  let options = '';
+  if(limitcount == 'All'){
+     options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+      };
+  }else{
+    options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+   }  ;
+  }
+  return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+
 }
 
 
