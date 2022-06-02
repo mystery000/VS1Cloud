@@ -193,6 +193,7 @@ Template.new_quote.onRendered(() => {
         templateObject.accountID.set(account_id);
         templateObject.stripe_fee_method.set(stripe_fee);
     };
+    templateObject.getOrganisationDetails();
 
     templateObject.getSalesCustomFieldsList= function () {
       getVS1Data('TCustomFieldList').then(function(dataObject) {
@@ -2114,13 +2115,10 @@ Template.new_quote.onRendered(() => {
         });
       });
     };
-
     setTimeout(function(){
         templateObject.getSalesCustomFieldsList()
     },500);
 
-
-    templateObject.getOrganisationDetails();
     templateObject.getAllLeadStatuss = function() {
         getVS1Data('TLeadStatusType').then(function(dataObject) {
             if (dataObject.length === 0) {
@@ -5000,10 +4998,10 @@ Template.new_quote.onRendered(() => {
                             if (columnWidth != 0) {
                                 $("" + columHeaderUpdate + "").css('width', columnWidth);
                             }
-                            if (hiddenColumn == true) {
+                            if (hiddenColumn === true) {
                                 $("." + columnClass + "").addClass('hiddenColumn');
                                 $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn == false) {
+                            } else if (hiddenColumn === false) {
                                 $("." + columnClass + "").removeClass('hiddenColumn');
                                 $("." + columnClass + "").addClass('showColumn');
                             }
@@ -5050,7 +5048,6 @@ Template.new_quote.onRendered(() => {
             //     $('.fullScreenSpin').css('display', 'none');
             // }, 1000);
         });
-
 
     let table;
     if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
