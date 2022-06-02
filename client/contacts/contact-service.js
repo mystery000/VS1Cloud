@@ -313,6 +313,13 @@ export class ContactService extends BaseService {
       };
       return this.getList(this.ERPObjects.TEmployee, options);
   }
+  getAllLeadSideDataVS1() {
+      let options = {
+          PropertyList: "ID,ClientName,CompanyName,Active",
+          select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true"
+      };
+      return this.getList(this.ERPObjects.TProspectVS1, options);
+  }
 
   getProductRecentTransactions(customerName) {
       let options = {

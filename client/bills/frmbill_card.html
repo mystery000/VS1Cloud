@@ -255,13 +255,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-6 col-md-12 col-lg-12">
-                                                {{#if isCurrencyEnable}}
-                                                    {{> currencydropdown}}
-                                                {{else}}
-                                                    <div class="form-group"><label>Department</label>
-                                                        <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                                    </div>
-                                                {{/if}}
+                                            
+                                                   
+                                       
+                                                <div class="form-group"><label>Department</label>
+                                                    <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -307,7 +306,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6 col-lg-2 col-xl-3">  
+                                {{> CurrencyWidget rate="buy"}}
+                            </div>
+
+                          
+                          
                         </div>
+                       
                     </div>
                     <div class="col-12 col-xl-2">
                         <div class="text-right" style="font-size: 14px;min-width: 175px;margin: 16px; margin-right: 24px;">

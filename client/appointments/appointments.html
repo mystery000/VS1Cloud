@@ -710,8 +710,13 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 8px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        {{#if equals accessStartStopOnly true}}
+                          <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
+                          <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button>
+                        {{else}}
                         <button class="btn btn-danger btnDelete" type="button" style="margin: 8px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                         <button class="btn btn-warning btnOptions" type="button" style="margin: 8px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button>
+                        {{/if}}
 
 
 
@@ -832,7 +837,7 @@
                                            application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
 
                                         <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Upload</button>
-                                        <button class="btn btn-success closeModal" data-dismiss="modal" type="button" style="margin-right: 5px;" autocomplete="off">
+                                        <button class="btn btn-success btnAddAttachmentSave" type="button" style="margin-right: 5px;" autocomplete="off">
                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                     </button>
                                         <!-- <button class="btn btn-warning btnResetSettings" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button> -->
@@ -1216,7 +1221,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" role="dialog" id="frmOnHoldModal">
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
             <div class="modal-content">

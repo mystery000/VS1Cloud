@@ -251,9 +251,7 @@
                                                 <input class="form-control form-control" type="hidden"  id="lastname" value="{{quoterecord.lastname}}">
                                             </div>
                                         </div>
-                                        <div class="col-6 col-md-12 col-lg-12">
-                                            {{> currencydropdown}}
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -324,6 +322,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                            {{> CurrencyWidget rate="sell"}}
+                        </div>
+                        
 
                     </div>
                     <div class="row" style="margin: 16px 16px 0px 16px;">

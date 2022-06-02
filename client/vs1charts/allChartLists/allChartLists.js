@@ -206,8 +206,8 @@ Template.allChartLists.onRendered(function () {
             // Default charts
             defaultChartList.push(chart.fields._chartSlug);
 
-            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
-              "Hide"
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
+              "<i class='far fa-eye'></i>"
             );
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
               "is-hidden",
@@ -224,9 +224,10 @@ Template.allChartLists.onRendered(function () {
             if( chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand'){
               $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
             }
-          } else {            
-            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).text(
-              "Show"
+          } else {
+            $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
+              "<i class='far fa-eye-slash'></i>"
+
             );
             $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
               "is-hidden",
@@ -318,7 +319,7 @@ Template.allChartLists.onRendered(function () {
         );
 
         if (tvs1chart.fields.Active == true) {
-          $(`[key='${itemName}'] .on-editor-change-mode`).text("Hide");
+          $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
           $(`[key='${itemName}'] .on-editor-change-mode`).attr(
             "is-hidden",
             "false"
@@ -349,7 +350,7 @@ Template.allChartLists.onRendered(function () {
           let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
           $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
           $(`[key='${itemName}']`).addClass("hideelement");
-          $(`[key='${itemName}'] .on-editor-change-mode`).text("Show");
+          $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
           // $(`[key='${itemName}']`).attr("is-hidden", true);
           $(`[key='${itemName}'] .on-editor-change-mode`).attr(
             "is-hidden",
@@ -368,7 +369,7 @@ Template.allChartLists.onRendered(function () {
         // show only the first one
         let item = defaultChartList.length ? defaultChartList[0] : "";
         if (item) {
-          $(`[key='${item}'] .on-editor-change-mode`).text("Hide");
+          $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
           $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
           $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
           $(`[key='${item}']`).removeClass("hideelement");
@@ -409,13 +410,13 @@ Template.allChartLists.events({
       // $(e.currentTarget).parent(".chart-visibility").addClass('hideelement');
       $(e.currentTarget).attr("is-hidden", "false");
 
-      $(e.currentTarget).text("Hide");
+      $(e.currentTarget).html("<i class='far fa-eye'></i>");
     } else {
       // console.log('was false');
       // $(e.currentTarget).parent(".chart-visibility").attr("is-hidden", 'true');
       // $(e.currentTarget).parent(".chart-visibility").removeClass('hideelement');
       $(e.currentTarget).attr("is-hidden", "true");
-      $(e.currentTarget).text("Show");
+      $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
     }
     // const templateObject = Template.instance();
   },

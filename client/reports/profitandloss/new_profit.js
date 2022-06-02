@@ -2,6 +2,7 @@ import { ReportService } from "../report-service";
 import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
 import layoutEditor from "./layoutEditor";
+import ApiService from "../../js/Api/Module/ApiService";
 import { ProductService } from "../../product/product-service";
 import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
@@ -11,7 +12,6 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 
-
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -20,7 +20,18 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.reportOptions = new ReactiveVar();
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
+  templateObject.profitlosslayoutfields = new ReactiveVar([]);
 });
+
+function buildPositions() {
+  const sortfields = $(".sortItem");
+  // console.log('Sorting elements')
+  let counter = 1;
+  for (let i = 0; i <= sortfields.length; i++) {
+    $(sortfields[i]).attr("position", counter);
+    counter++;
+  }
+}
 
 Template.newprofitandloss.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
@@ -51,7 +62,7 @@ Template.newprofitandloss.onRendered(function () {
         threcords: dateRange,
         departments: [],
         showDecimal: true,
-        showtotal: false
+        showtotal: true
       }
     }
     await templateObject.reportOptions.set( defaultOptions );
@@ -240,10 +251,13 @@ Template.newprofitandloss.onRendered(function () {
     // Compare period    
     if ( options.compPeriod ) {
       try {
-        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, true, "1 Month")
+        let periodMonths = `${options.compPeriod} Month`
+        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, false, periodMonths)
         let records = [];
+        options.threcords = [];
         if (data.tprofitandlossperiodcomparereport) {
           let accountData = data.tprofitandlossperiodcomparereport;
+          // console.log('accountData', dateFrom, dateTo, accountData)
           let accountType = "";
           var dataList = "";
           for (let i = 0; i < accountData.length; i++) {
@@ -252,9 +266,21 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               accountType = accountData[i]["AccountTypeDesc"];
             }
-
+            let compPeriod = options.compPeriod  + 1;
+            let periodAmounts = [];
+            for (let counter = 1; counter <= compPeriod; counter++) { 
+              if( i == 0 ){      
+                options.threcords.push( accountData[i]["DateDesc_" + counter] );
+              }
+              let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
+              let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+              periodAmounts.push({
+                decimalAmt: AmountEx,
+                roundAmt: RoundAmount
+              });
+            }  
             let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmount"] ) || 0.0;
-            let totalRoundAmount = Number(accountData[i]["TotalAmount"]) || 0;
+            let totalRoundAmount = Math.round(accountData[i]["TotalAmount"]) || 0;
             if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
@@ -265,6 +291,7 @@ Template.newprofitandloss.onRendered(function () {
                 accountno: accountData[i]["AccountNo"] || "",
                 totalamountex: "",
                 totalroundamountex: "",
+                periodAmounts: "",
                 name: $.trim(accountData[i]["AccountName"])
                   .split(" ")
                   .join("_"),
@@ -278,6 +305,7 @@ Template.newprofitandloss.onRendered(function () {
                 accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
                 accountno: accountData[i]["AccountNo"] || "",
                 totalamountex: totalAmountEx || 0.0,
+                periodAmounts: periodAmounts,
                 totalroundamountex: totalRoundAmount,
                 name: $.trim(accountData[i]["AccountName"])
                   .split(" ")
@@ -292,8 +320,8 @@ Template.newprofitandloss.onRendered(function () {
             }
           }
           
-          // Set Table Data
-          // console.log('records', records)
+          // Set Table Data          
+          templateObject.reportOptions.set(options);
           templateObject.records.set(records);
           if (templateObject.records.get()) {
             setTimeout(function () {
@@ -339,9 +367,13 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               accountType = accountData[i]["Account Type"];
             }
-
+            let periodAmounts = []
             let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
-            let totalRoundAmount = Number(accountData[i]["TotalAmountEx"]) || 0;
+            let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
+            periodAmounts.push({
+              decimalAmt: totalAmountEx,
+              roundAmt: totalRoundAmount
+            });
             if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
@@ -351,6 +383,7 @@ Template.newprofitandloss.onRendered(function () {
                 accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
                 accountno: accountData[i]["AccountNo"] || "",
                 totalamountex: "",
+                periodAmounts: "",
                 totalroundamountex: "",
                 name: $.trim(accountData[i]["AccountName"])
                   .split(" ")
@@ -366,6 +399,7 @@ Template.newprofitandloss.onRendered(function () {
                 accountno: accountData[i]["AccountNo"] || "",
                 totalamountex: totalAmountEx || 0.0,
                 totalroundamountex: totalRoundAmount,
+                periodAmounts: periodAmounts,
                 name: $.trim(accountData[i]["AccountName"])
                   .split(" ")
                   .join("_"), 
@@ -404,7 +438,7 @@ Template.newprofitandloss.onRendered(function () {
                   $(this).removeClass("fgrblue");
                 }
               });
-              $(".fullScreenSpin").css("display", "none");
+              $(".fullScreenSpin").css("display", "none");              
             }, 500);
           }
         }
@@ -486,43 +520,98 @@ templateObject.getProfitLossLayout = async function() {
       profitLossLayoutApi.collectionNames.TProfitLossLayout
   );
 
+  // Fetch list type details
   profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");  
 
   const profitLossLayoutEndResponse =  await profitLossLayoutEndpoint.fetch();  
   if (profitLossLayoutEndResponse.ok == true) {
-    const profitLossLayouts = {}
+    let profitLossLayouts = [];
     let jsonResponse = await profitLossLayoutEndResponse.json();
-    let profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
-    // profitLossLists.forEach(function(item){
-      // let AccountLevel0Group =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-      // let AccountLevel1Group =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-      // let AccountLevel2Group =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
-      // if( item.fields.IsRoot == true ){
-      //   profitLossLayouts[AccountLevel0Group] = 
-      // }
-    // });
-    // console.log('profitLossLayouts', profitLossLists)
-    templateObject.profitlosslayoutrecords.set( profitLossLists );
+    // handle API json reponse
+    const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
+    // Save default list
+    templateObject.profitlosslayoutfields.set( profitLossLists );
+
+    // console.log('profitLossLists', profitLossLists)
+    // Filter Total Group and Root Group
+    profitLossLayouts = profitLossLists.filter((item) => {
+      let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+      let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+      let AccountName =  item.fields.AccountName.replace(/\s/g, '')
+      if( level0GroupName == AccountName || AccountName == level1GroupName ){
+        return item;
+      }
+    });
+    let newprofitLossLayouts = [];
+    var counter = 1;
+    // Fetch Subchilds According to the Above grouping
+    profitLossLayouts.forEach(function(item){
+        let level1Childs = []
+        let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+        let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+        let level2GroupName =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
+        let AccountName =  item.fields.AccountName.replace(/\s/g, '')
+        if( item.fields.IsRoot ){
+          item.fields.Position = ( item.fields.Position )? item.fields.Position : counter;
+          counter++;
+        }
+        profitLossLists.filter((subitem) => {
+          let sublevel0GroupName =  subitem.fields.AccountLevel0GroupName.replace(/\s/g, '')
+          let sublevel1GroupName =  subitem.fields.AccountLevel1GroupName.replace(/\s/g, '')
+          let sublevel2GroupName =  subitem.fields.AccountLevel2GroupName.replace(/\s/g, '')
+          let subAccountName =  subitem.fields.AccountName.replace(/\s/g, '')
+          if( level0GroupName == sublevel0GroupName && level1GroupName == sublevel1GroupName && level2GroupName == sublevel2GroupName && AccountName != subAccountName){
+            subitem.fields.Position = ( subitem.fields.Position )? subitem.fields.Position : counter;
+            counter++;
+            level1Childs.push(subitem.fields)
+          }
+        });
+
+        if( item.fields.IsRoot == false){
+          item.fields.Position = ( item.fields.Position )? item.fields.Position : counter;
+          counter++;
+        }
+        
+        newprofitLossLayouts.push({
+          parent: item.fields,
+          childs: level1Childs
+        }) 
+    });
+    // console.log('profitLossLayouts', newprofitLossLayouts)    
+    templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
+
+    // handle Dragging and sorting
     setTimeout(function () {
-      let currentIndex;
-      $(".sortableAccountParent").sortable({
-        revert: true,
-        cancel: ".undraggableDate,.accdate,.edtInfo",
-      });
+      // let $chartWrappper = $(".sortableAccount");
+      // $chartWrappper
+      // .find(".setParentPosition")
+      // .sort(function (a, b) {
+      //   return +a.getAttribute("position") - +b.getAttribute("position");
+      // })
+      // .appendTo($chartWrappper);
       $(".sortableAccount").sortable({
-        revert: true,
-        handle: ".avoid",
-        start: (event, ui) => {
-          currentIndex = ui.helper.index();
-          console.log(currentIndex);
-        },
+        containment: "parent",
+        items: "> div",
+        handle: ".handel",
+        tolerance: "pointer",
+        cursor: "move",
+        opacity: 0.7,
+        revert: 300,
+        delay: 150,
+        dropOnEmpty: true,
+        placeholder: "movable-placeholder",
+        start: function(e, ui) {
+            ui.placeholder.height(ui.helper.outerHeight());
+        }
       });
-      $(".draggable").draggable({
-        connectToSortable: ".sortableAccount",
-        helper: "none",
-        revert: "true",
-      });
+      $(".group-items").sortable({
+          containment: "document",
+          items: ".group-item",
+          placeholder: "item-placeholder",
+          connectWith: '.group-items'
+      });      
     }, 1000);    
+    
   }
 };
 templateObject.getProfitLossLayout();
@@ -561,10 +650,7 @@ $('.tblAvoid').each(function(){
   //    $( "ul, li" ).disableSelection();
   //Dragable items in edit layout screen end
   /*Visually hide additional periods so that custom selection handles it*/
-  setTimeout(function () {
-    $("td:nth-child(n+4)").hide();
-    $("th:nth-child(n+4)").hide();
-  }, 6000);
+
   setTimeout(function () {
     $(".pnlTable").show();
   }, 6000);
@@ -711,13 +797,40 @@ Template.newprofitandloss.events({
     // });
   },
 
-   // Current Month
-  "click #thisMonth": function(){
+  "click .selPeriod": async function(e){
+    let periods = $(e.target).data('period');
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let defaultOptions = await templateObject.reportOptions.get();
+    if( defaultOptions ){
+      defaultOptions.compPeriod = periods;
+      defaultOptions.departments = [];
+    }
+    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.getProfitandLossReports();
+  },
+
+  //custom selection period number
+  "click .btnSaveComparisonPeriods": async function (event) {
+      let periods = $("#comparisonPeriodNum").val();
       $(".fullScreenSpin").css("display", "block");
       let templateObject = Template.instance();
-      let fromDate = moment().startOf('month').format('YYYY-MM-DD');
-      let endDate   = moment().endOf('month').format('YYYY-MM-DD');
-      templateObject.setReportOptions(0, fromDate, endDate );
+      let defaultOptions = await templateObject.reportOptions.get();
+      if( defaultOptions ){
+        defaultOptions.compPeriod = periods;
+        defaultOptions.departments = [];
+      }
+      await templateObject.reportOptions.set( defaultOptions );
+      await templateObject.getProfitandLossReports();
+  },
+
+  // Current Month
+  "click #thisMonth": function(){
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let fromDate = moment().startOf('month').format('YYYY-MM-DD');
+    let endDate   = moment().endOf('month').format('YYYY-MM-DD');
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #thisQuarter": function(){
@@ -800,6 +913,7 @@ Template.newprofitandloss.events({
 
   "click .btnDepartmentSelect": async function(){
     let departments = []
+    $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     $('.chkDepartment').each(function(){
       if( $(this).is(":checked") ){
@@ -814,6 +928,7 @@ Template.newprofitandloss.events({
     }
     await templateObject.reportOptions.set( defaultOptions );
     await templateObject.getProfitandLossReports();
+    $('#myModalDepartment').modal('hide');
   },
 
   "click #last12Months": function () {
@@ -908,96 +1023,6 @@ Template.newprofitandloss.events({
       $(".table tbody tr").show();
     }
   },
-  "click .nonePeriod": function (event) {
-    $("td:nth-child(n+3)").show();
-    $("th:nth-child(n+3)").show();
-    $("td:nth-child(n+4)").hide();
-    $("th:nth-child(n+4)").hide();
-  },
-  "click .onePeriod": function (event) {
-    $("#dateFrom").attr("readonly", false);
-    $("#dateTo").attr("readonly", false);
-    var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    let formatDateFrom =
-      dateFrom.getFullYear() +
-      "-" +
-      (dateFrom.getMonth() + 1) +
-      "-" +
-      dateFrom.getDate();
-    let formatDateTo =
-      dateTo.getFullYear() +
-      "-" +
-      (dateTo.getMonth() + 1) +
-      "-" +
-      dateTo.getDate();
-
-    $("td:nth-child(n+4)").show();
-    $("th:nth-child(n+4)").show();
-    $("td:nth-child(n+5)").hide();
-    $("th:nth-child(n+5)").hide();
-  },
-  "click .twoPeriods": function (event) {
-    $("td:nth-child(n+4)").show();
-    $("th:nth-child(n+4)").show();
-    $("td:nth-child(n+6)").hide();
-    $("th:nth-child(n+6)").hide();
-  },
-  "click .threePeriods": function (event) {
-    $("td:nth-child(n+4)").show();
-    $("th:nth-child(n+4)").show();
-    $("td:nth-child(n+7)").hide();
-    $("th:nth-child(n+7)").hide();
-  },
-  "click .fourPeriods": function (event) {
-    $("td:nth-child(n+4)").show();
-    $("th:nth-child(n+4)").show();
-    $("td:nth-child(n+8)").hide();
-    $("th:nth-child(n+8)").hide();
-  },
-  //custom selection period number
-  "click .btnSaveComparisonPeriods": function (event) {
-    if (typeof custPeriod !== "undefined") {
-      $("td:nth-child(n+4)").hide();
-      $("th:nth-child(n+4)").hide();
-      j = 0;
-      custPeriod = 0;
-      custPeriod = $("#comparisonPeriodNum").val();
-      perModded = 0;
-      perModded = custPeriod;
-      while (j < perModded) {
-        j++;
-        $("td:nth-child(" + (j + 3) + ")").show();
-        $("th:nth-child(" + (j + 3) + ")").show();
-      }
-    } else {
-      $("td:nth-child(n+4)").hide();
-      $("th:nth-child(n+4)").hide();
-      var j = 0;
-      var custPeriod;
-      custPeriod = $("#comparisonPeriodNum").val();
-
-      var perModded;
-      perModded = custPeriod;
-      while (j < perModded) {
-        j++;
-        $("td:nth-child(" + (j + 3) + ")").show();
-        $("th:nth-child(" + (j + 3) + ")").show();
-      }
-    }
-    //        }
-
-    //        var custPeriod = $('#comparisonPeriodNum').val();
-    //
-    //        let i = 0;
-    //        while (i < custPeriod) {
-    //            i++;
-    //            $('.table-active').append('<th style="width: 178px;" class="text-right">Next Date</th>');
-    //            $('tbody').each('tr').append('<td></td>');
-    //
-    //        }
-  },
-  // period selector end
 
   "click .btnCloseCustomComparison": function (event) {},
 
@@ -1551,6 +1576,28 @@ Template.newprofitandloss.events({
       options.showtotal = false;
     }
     templateObject.reportOptions.set( options );
+    setTimeout(function () {
+      $("td a").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        ) {
+          $(this).addClass("text-danger");
+          $(this).removeClass("fgrblue");
+        }
+      });
+      $("td").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        ) {
+          $(this).addClass("text-danger");
+          $(this).removeClass("fgrblue");
+        }
+      });
+    }, 500);
   },
   "click .chkDecimals": async function (event) {
     let templateObject = Template.instance();
@@ -1560,8 +1607,29 @@ Template.newprofitandloss.events({
     }else{
       options.showDecimal = false;
     }
-    console.log('options', options)
     templateObject.reportOptions.set( options );
+    setTimeout(function () {
+      $("td a").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        ) {
+          $(this).addClass("text-danger");
+          $(this).removeClass("fgrblue");
+        }
+      });
+      $("td").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        ) {
+          $(this).addClass("text-danger");
+          $(this).removeClass("fgrblue");
+        }
+      });
+    }, 500);
   },
   
   "click .chkYTDate": function (event) {
@@ -1575,9 +1643,10 @@ Template.newprofitandloss.events({
   },
   "click .rbAccrual": function (event) {
     $(".tglAccBasis").text("Accrual Basis");
-    if ($(".chkAccBasis").is(":checked") == "true") {
+    if ($(".chkAccBasis").is(":checked") ) {
       // $('.chkAccBasis').trigger('click');
       $(".tglAccBasis").text("Accrual Basis");
+
     } else if ($(".chkAccBasis").is(":not(:checked)")) {
       $(".tglAccBasis").text("Accrual Basis");
       $(".chkAccBasis").trigger("click");
@@ -1588,10 +1657,8 @@ Template.newprofitandloss.events({
   },
   "click .rbCash": function (event) {
     $(".tglAccBasis").text("Cash Basis");
-    if ($(".chkAccBasis").is(":checked") == "true") {
+    if ( $(".chkAccBasis").is(":checked") ) {
       $(".tglAccBasis").text("Cash Basis");
-      //
-      // $('.chkAccBasis').trigger('click');
     } else if ($(".chkAccBasis").is(":not(:checked)")) {
       $(".tglAccBasis").text("Cash Basis");
       $(".chkAccBasis").trigger("click");
@@ -1609,6 +1676,67 @@ Template.newprofitandloss.events({
     // })
     // var numVal = $('.fgr').html().parseInt();
   },
+  "click .saveProfitLossLayouts": async function (){
+
+    const profitLossLayoutApis = new ProfitLossLayoutApi();
+
+    // make post request to save layout data
+    const apiEndpoint = profitLossLayoutApis.collection.findByName(
+      profitLossLayoutApis.collectionNames.TProfitLossLayout
+    );
+
+    let templateObject = Template.instance();    
+
+    /** Set layout positions */    
+    buildPositions();
+    
+    let fieldsList = [];
+    // Fetch default lists of layout
+    let profitlosslayoutfields = await templateObject.profitlosslayoutfields.get();
+    Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
+      let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
+      if( Position != undefined ){
+        // update lists with custom fields only
+        item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
+        item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
+        item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
+        item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
+      }
+      // fieldsList.push(item);
+      /**
+       * Update layout fields one by one API call
+       */
+      const ApiResponse = await apiEndpoint.fetch(null, {
+        method: "POST",
+        headers: ApiService.getPostHeaders(),
+        body: JSON.stringify(item),
+      });
+      if (ApiResponse.ok == true) {
+        const jsonResponse = await ApiResponse.json();
+        console.log(jsonResponse)
+      }
+    });
+
+    /**
+     * 
+     * Update all layout fields with single API call
+     */
+
+    // let layoutLists = {
+    //   tprofitlosslayout: fieldsList
+    // }
+
+    // const ApiResponse = await apiEndpoint.fetch(null, {
+    //   method: "POST",
+    //   headers: ApiService.getPostHeaders(),
+    //   body: JSON.stringify(layoutLists),
+    // });
+    // if (ApiResponse.ok == true) {
+    //   const jsonResponse = await ApiResponse.json();
+    //   console.log(jsonResponse)
+    // }
+
+  }
 });
 
 Template.newprofitandloss.helpers({
@@ -1623,64 +1751,6 @@ Template.newprofitandloss.helpers({
   },
   profitlosslayoutrecords(){
     return Template.instance().profitlosslayoutrecords.get();
-  },
-  parentsProfitlossLayoutRecords(){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.IsRoot == true ){
-        return item;
-      }
-    });
-    return parentsProfitlossLayouts;
-  },
-  accountsProfitlossLayoutRecords( parentID ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.IsAccount == true ){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  secPLGroupLayoutRecords( parentID ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName != '' && item.fields.IsAccount == true){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  plarrayify(val) {
-      return val ? (Array.isArray(val) ? val : [val]) : [];
-  },
-  firstPLGroupLayoutRecords( parentID ){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let accountsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.Parent == parentID && item.fields.AccountLevel1GroupName != '' && item.fields.AccountLevel2GroupName == '' && item.fields.IsAccount == true){
-        return item;
-      }
-    });
-    return accountsProfitlossLayouts;
-  },
-  totalPLGroupLayoutRecords(){
-    let profitLossLayoutInfo = Template.instance().profitlosslayoutrecords.get()
-    let parentsProfitlossLayouts = ProfitLossLayout.fromList(
-      profitLossLayoutInfo
-    ).filter((item) => {
-      if( item.fields.IsRoot == false && item.fields.Parent == 0 && item.fields.IsAccount == false ){
-        return item;
-      }
-    });
-    return parentsProfitlossLayouts;
   },
   records: () => {
     return Template.instance().records.get();

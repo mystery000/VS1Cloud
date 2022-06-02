@@ -1,9 +1,8 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../js/core-service';
 import { ReconService } from "./recon-service";
 import { UtilityService } from "../utility-service";
 import '../lib/global/erp-objects';
-import XLSX from 'xlsx';
+import '../lib/global/indexdbstorage.js';
 import 'jquery-editable-select';
 import { AccountService } from "../accounts/account-service";
 import { ProductService } from "../product/product-service";
@@ -195,8 +194,9 @@ Template.newbankrecon.onRendered(function() {
             let access_token = data.token.accessToken;
             let depositVS1Data = [];
             let withdrawalVS1Data = [];
+            const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                const yodleeAccountID = getYodleeAccountID(accountId);
+                console.log(data);
                 let lastTransactionDate = '1899-12-31';
                 for (let i = 0; i < data.transaction.length; i++ ) {
                     if (yodleeAccountID === data.transaction[i].accountId && (data.transaction[i].baseType === 'DEBIT' || data.transaction[i].baseType === 'CREDIT')) {
@@ -243,6 +243,11 @@ Template.newbankrecon.onRendered(function() {
                             YodleeTransactionDate: yodleeTransactionDate,
                             YodleeAmount: data.transaction[i].amount.amount,
                             YodleeDescription: description,
+                            YodleeBaseType: data.transaction[i].baseType || '',
+                            YodleeCategory: data.transaction[i].category || '',
+                            YodleeCategoryType: data.transaction[i].categoryType || '',
+                            YodleeCheckNumber: data.transaction[i].checkNumber || '',
+                            YodleeType: data.transaction[i].type || '',
                             deporwith: deporwith,
                             matched: false,
                             spentYodleeAmount: utilityService.modifynegativeCurrencyFormat(spentYodleeAmount),
@@ -397,6 +402,11 @@ Template.newbankrecon.onRendered(function() {
                                     YodleeTransactionDate: yodleeData[k].YodleeTransactionDate,
                                     YodleeAmount: yodleeData[k].YodleeAmount,
                                     YodleeDescription: yodleeData[k].YodleeDescription,
+                                    YodleeBaseType: yodleeData[k].YodleeBaseType,
+                                    YodleeCategory: yodleeData[k].YodleeCategory,
+                                    YodleeCategoryType: yodleeData[k].YodleeCategoryType,
+                                    YodleeCheckNumber: yodleeData[k].YodleeCheckNumber,
+                                    YodleeType: yodleeData[k].YodleeType,
                                     deporwith: yodleeData[k].deporwith,
                                     matched: matched,
                                     spentYodleeAmount: yodleeData[k].spentYodleeAmount,
@@ -419,13 +429,23 @@ Template.newbankrecon.onRendered(function() {
                     $('.fullScreenSpin').css('display', 'none');
                 });
             }).catch(function(err) {
-                return null;
+                $('.fullScreenSpin').css('display', 'none');
+            });
+            yodleeService.getAccountData(access_token, yodleeAccountID).then(function(data) {
+                for (let i = 0; i < data.account.length; i++ ) {
+                    let yodleeBalance = data.account[0].currentBalance.amount;
+                    let yodleeProviderAccountId = data.account[0].providerAccountId;
+                    let yodleeAccountName = data.account[0].accountName;
+                    $('.yodleeBalance').text(utilityService.modifynegativeCurrencyFormat(yodleeBalance));
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            }).catch(function(err) {
+                $('.fullScreenSpin').css('display', 'none');
             });
         }).catch(function (err) {
-            return null;
+            $('.fullScreenSpin').css('display', 'none');
         });
     };
-
     function setBankTransactionData(reconData) {
         page_total = reconData.length;
         templateObject.page_total.set(page_total);
@@ -503,7 +523,6 @@ Template.newbankrecon.onRendered(function() {
         let yodleeAccountID = 12187126;
         return yodleeAccountID;
     }
-
     function sortBankTransactionData(array, key, desc=true) {
         return array.sort(function(a, b) {
             let x = a[key];
@@ -523,11 +542,9 @@ Template.newbankrecon.onRendered(function() {
         });
     }
 
-
     templateObject.getOpenBalance = function(bankAccount) {
         reconService.getReconciliationBalance(bankAccount).then(function(data) {
-            var counter = 0;
-            var openBal = 0;
+            let openBal = 0;
             let dataArray = [];
             if (data.treconciliation.length) {
                 for (let k = 0; k < data.treconciliation.length; k++ ) {
@@ -561,15 +578,12 @@ Template.newbankrecon.onRendered(function() {
                         }
                     }
                 }
-                $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
             } else {
-                $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
 
             }
         }).catch(function(err) {
-            $('.openingbalance').val(utilityService.modifynegativeCurrencyFormat(openBal));
             $('.fullScreenSpin').css('display', 'none');
         });
     };
@@ -641,24 +655,21 @@ Template.newbankrecon.onRendered(function() {
         $('#edtAccountName').attr('readonly', true);
         $('#sltAccountType').attr('readonly', true);
         $('#sltAccountType').attr('disabled', 'disabled');
-        var accountid = data.taccountvs1[i].fields.ID || '';
-        var accounttype = fullAccountTypeName || data.taccountvs1[i].fields.AccountTypeName;
-        var accountname = data.taccountvs1[i].fields.AccountName || '';
-        var accountno = data.taccountvs1[i].fields.AccountNumber || '';
-        var taxcode = data.taccountvs1[i].fields.TaxCode || '';
-        var accountdesc = data.taccountvs1[i].fields.Description || '';
-        var bankaccountname = data.taccountvs1[i].fields.BankAccountName || '';
-        var bankbsb = data.taccountvs1[i].fields.BSB || '';
-        var bankacountno = data.taccountvs1[i].fields.BankAccountNumber || '';
-
-        var swiftCode = data.taccountvs1[i].fields.Extra || '';
-        var routingNo = data.taccountvs1[i].fields.BankCode || '';
-
-        var showTrans = data.taccountvs1[i].fields.IsHeader || false;
-
-        var cardnumber = data.taccountvs1[i].fields.CarNumber || '';
-        var cardcvc = data.taccountvs1[i].fields.CVC || '';
-        var cardexpiry = data.taccountvs1[i].fields.ExpiryDate || '';
+        const accountid = data.taccountvs1[i].fields.ID || '';
+        const accounttype = fullAccountTypeName || data.taccountvs1[i].fields.AccountTypeName;
+        const accountname = data.taccountvs1[i].fields.AccountName || '';
+        const accountno = data.taccountvs1[i].fields.AccountNumber || '';
+        const taxcode = data.taccountvs1[i].fields.TaxCode || '';
+        const accountdesc = data.taccountvs1[i].fields.Description || '';
+        const bankaccountname = data.taccountvs1[i].fields.BankAccountName || '';
+        const bankbsb = data.taccountvs1[i].fields.BSB || '';
+        const bankacountno = data.taccountvs1[i].fields.BankAccountNumber || '';
+        const swiftCode = data.taccountvs1[i].fields.Extra || '';
+        const routingNo = data.taccountvs1[i].fields.BankCode || '';
+        const showTrans = data.taccountvs1[i].fields.IsHeader || false;
+        const cardnumber = data.taccountvs1[i].fields.CarNumber || '';
+        const cardcvc = data.taccountvs1[i].fields.CVC || '';
+        const cardexpiry = data.taccountvs1[i].fields.ExpiryDate || '';
 
         if ((accounttype === "BANK")) {
             $('.isBankAccount').removeClass('isNotBankAccount');
@@ -734,7 +745,6 @@ Template.newbankrecon.onRendered(function() {
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
-
             $('#ctaxRate_'+item.YodleeLineID).editableSelect();
             $('#ctaxRate_'+item.YodleeLineID).editableSelect().on("click.editable-select", function (e, li) {
                 const $each = $(this);
@@ -842,13 +852,14 @@ Template.newbankrecon.onRendered(function() {
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
                 let taxRate = $('#ctaxRateID_'+item.YodleeLineID).val();
                 let who = $('#who_'+item.YodleeLineID).val();
+                who = (who !== '')?who:item.YodleeDescription;
                 let what = $('#whatID_'+item.YodleeLineID).val();
                 let why = $('#why_'+item.YodleeLineID).val();
-                let amount = item.StatementAmount;
+                let amount = item.YodleeAmount;
                 let dateIn = item.SortDate;
                 Session.setPersistent('bankaccountid', bankaccountid);
                 Session.setPersistent('bankaccountname', bankaccountname);
-                Session.setPersistent('reconDepositID', item.YodleeLineID);
+                Session.setPersistent('reconYodleeID', item.YodleeLineID);
                 Session.setPersistent('reconPaymentID', item.PaymentID);
                 Session.setPersistent('reconTaxRate', taxRate);
                 Session.setPersistent('reconWho', who);
@@ -865,6 +876,20 @@ Template.newbankrecon.onRendered(function() {
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
                 FlowRouter.go('/bankrecon?id='+item.YodleeLineID);
             });
+            $('#btnMoreDetail_'+item.YodleeLineID).on('click', function(e, li) {
+                $('#mdTransactionDate').text(item.YodleeTransactionDate);
+                $('#mdCategory').text(item.YodleeCategory);
+                $('#mdCategoryType').text(item.YodleeCategoryType);
+                $('#mdDescription').text(item.YodleeDescription);
+                $('#mdTransactionAmount').text(item.YodleeAmount);
+                $('#mdTransactionType').text(item.YodleeBaseType);
+                $('#mdChequeNo').text(item.YodleeCheckNumber);
+                $('#mdType').text(item.YodleeType);
+                $('#moreDetailModal').modal('show');
+            });
+            $('#btnDeleteLine_'+item.YodleeLineID).on('click', function(e, li) {
+                $('#divTransactionLine'+item.YodleeLineID).hide();
+            });
         })
     }
     function openCustomerModal() {
@@ -873,7 +898,7 @@ Template.newbankrecon.onRendered(function() {
             $('#tblCustomerlist_filter .form-control-sm').focus();
             $('#tblCustomerlist_filter .form-control-sm').val('');
             $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-            var datatable = $('#tblCustomerlist').DataTable();
+            const datatable = $('#tblCustomerlist').DataTable();
             //datatable.clear();
             //datatable.rows.add(splashArrayCustomerList);
             datatable.draw();
@@ -1025,7 +1050,6 @@ Template.newbankrecon.onRendered(function() {
 });
 
 Template.newbankrecon.events({
-
     'click .btnReconTransactionDetail': function() {
         FlowRouter.go('/recontransactiondetail');
         // window.open('/recontransactiondetail', '_self');
@@ -1084,7 +1108,6 @@ Template.newbankrecon.events({
         }
         window.open('/newbankrecon?sort='+sort, '_self');
     },
-
 });
 
 Template.newbankrecon.helpers({

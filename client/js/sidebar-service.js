@@ -931,12 +931,12 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     if(limitcount === 'All'){
         options = {
             ListType: "Detail",
-            select: '[Active]=true'
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true'
         };
     } else {
         options = {
             ListType: "Detail",
-            select: '[Active]=true',
+            select: '[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true',
             LimitCount:'"'+limitcount+'"',
             LimitFrom:'"'+limitfrom+'"'
         };
@@ -2754,6 +2754,24 @@ getTvs1charts() {
     ListType: "Detail"
    };
    return this.getList(this.ERPObjects.Tvs1charts, options);
+}
+
+getEarnings(limitcount, limitfrom)
+{
+  let options = '';
+  if(limitcount == 'All'){
+     options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+      };
+  }else{
+    options = {
+       ListType: "Detail",
+       select:'[Active]=true'
+   }  ;
+  }
+  return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+
 }
 
 

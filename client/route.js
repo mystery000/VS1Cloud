@@ -1715,3 +1715,39 @@ authenticatedRoutes.route('/stockquantitybylocation', {
         });
     }
 });
+
+authenticatedRoutes.route('/customerdetailsreport', {
+    name: 'customerdetailsreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customerdetailsreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/customersummaryreport', {
+    name: 'customersummaryreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'customersummaryreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/jobprofitabilityreport', {
+    name: 'jobprofitabilityreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'jobprofitabilityreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/jobsalessummary', {
+    name: 'jobsalessummary',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'jobsalessummary'
+        });
+    }
+});

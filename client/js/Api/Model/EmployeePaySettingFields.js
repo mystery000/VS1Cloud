@@ -6,6 +6,7 @@ import EmployeeModel from "./Employee";
   constructor({
     Abn,
     AnnualSalary,
+    Statement,
     BankAccountBSB,
     BankAccountName,
     BankAccountNo,
@@ -46,6 +47,7 @@ import EmployeeModel from "./Employee";
   }) {
     this.Abn = Abn;
     this.AnnualSalary = AnnualSalary;
+    this.Statement = Statement;
     this.BankAccountBSB = BankAccountBSB;
     this.BankAccountName = BankAccountName; 
     this.BankAccountNo = BankAccountNo;

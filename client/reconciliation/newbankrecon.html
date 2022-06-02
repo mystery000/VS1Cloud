@@ -98,7 +98,7 @@
                     <div class="row">
                         <div class="col-12 col-md-6" style="display: flex;">
                             <div style="border-right: 1px solid #e3e6f0; padding-right: 16px; margin-right: 16px;">
-                                <p class="openingbalance" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">$ 0.00</p>
+                                <p class="yodleeBalance" style="margin-bottom: 0; font-weight: 700; font-size: 26px;">$ 0.00</p>
                                 <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;">Statement Balance</p>
                             </div>
                             <div style="border-right: 1px solid #e3e6f0; padding-right: 16px; margin-right: 16px;">
@@ -207,7 +207,7 @@
         </div>
         {{#if bankTransactionData}}
         {{#each itemTransaction in bankTransactionData}}
-        <div class="row justify-content-center mb-6">
+        <div class="row justify-content-center mb-6" id="divTransactionLine_{{ itemTransaction.YodleeLineID }}">
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <div class="card-header">
@@ -217,7 +217,7 @@
                                 style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important;"></button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
                                 <a class="dropdown-item" href="" data-toggle="modal" data-target="#newBankRuleModal">Create Bank Rule</a>
-                                <a class="dropdown-item" href="#" style="color: red;">Delete Line</a>
+                                <a class="dropdown-item" href="" style="color: red;" id="btnDeleteLine_{{ itemTransaction.YodleeLineID }}">Delete Line</a>
                             </div>
                         </div>
                     </div>
@@ -226,7 +226,8 @@
                             <div class="col-6" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0;">
                                 <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
                                 <p style="margin-bottom: 0;"><span>{{ itemTransaction.YodleeDescription }}</span></p>
-                                <a href="">More Details</a>
+                                <br>
+                                <a href="" id="btnMoreDetail_{{ itemTransaction.YodleeLineID }}">More Details</a>
                             </div>
                             <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
                                 <span style="float: right; font-weight: 700;">{{ itemTransaction.spentYodleeAmount }}</span>
@@ -415,72 +416,133 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="newBankRuleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="">Bank Rules</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-12 mb-4">
-                                <button type="button" class="btn btn-primary" style="margin-right: 8px;"><i class="fas fa-plus" style="margin-right: 5px;"></i> Create Rule</button>
-                                <button type="button" class="btn btn-primary" style="margin-left: 8px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Reconcile</button>
-                            </div>
-                            <div class="col-12">
-                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-spendmoneyrules" role="tab" aria-controls="pills-home" aria-selected="true">Spend Money Rules</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-receivemoneyrules" role="tab" aria-controls="pills-profile" aria-selected="false">Receive Money Rules</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-transferrules" role="tab" aria-controls="pills-contact" aria-selected="false">Transfer Rules</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="pills-bankrules">
-                                    <div class="tab-pane fade show active" id="pills-spendmoneyrules" role="tabpanel" aria-labelledby="">...</div>
-                                    <div class="tab-pane fade" id="pills-receivemoneyrules" role="tabpanel" aria-labelledby="">...</div>
-                                    <div class="tab-pane fade" id="pills-transferrules" role="tabpanel" aria-labelledby="">...</div>
-                                </div>
+    <div class="modal fade" id="newBankRuleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Bank Rules</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <button type="button" class="btn btn-primary" style="margin-right: 8px;"><i class="fas fa-plus" style="margin-right: 5px;"></i> Create Rule</button>
+                            <button type="button" class="btn btn-primary" style="margin-left: 8px;"><i class="fas fa-check" style="margin-right: 5px;"></i> Reconcile</button>
+                        </div>
+                        <div class="col-12">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-spendmoneyrules" role="tab" aria-controls="pills-home" aria-selected="true">Spend Money Rules</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-receivemoneyrules" role="tab" aria-controls="pills-profile" aria-selected="false">Receive Money Rules</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-transferrules" role="tab" aria-controls="pills-contact" aria-selected="false">Transfer Rules</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-bankrules">
+                                <div class="tab-pane fade show active" id="pills-spendmoneyrules" role="tabpanel" aria-labelledby="">...</div>
+                                <div class="tab-pane fade" id="pills-receivemoneyrules" role="tabpanel" aria-labelledby="">...</div>
+                                <div class="tab-pane fade" id="pills-transferrules" role="tabpanel" aria-labelledby="">...</div>
                             </div>
                         </div>
+                    </div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success" type="button" style="margin: 0 16px;">
-                            <i class="fa fa-save" style="padding-right: 8px;"></i>Save
-                        </button>
-                        <button class="btn btn-secondary" type="button" style="margin: 0 16px;">
-                            <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
-                        </button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="button" style="margin: 0 16px;">
+                        <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                    </button>
+                    <button class="btn btn-secondary" type="button" style="margin: 0 16px;">
+                        <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+                    </button>
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="modal fade" id="moreDetailModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" style="width: 540px;">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">Statement Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Transaction Date</div>
+                                <div class="col-md-6" id="mdTransactionDate"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Category</div>
+                                <div class="col-md-6" id="mdCategory"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Category Type</div>
+                                <div class="col-md-6" id="mdCategoryType"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Description</div>
+                                <div class="col-md-6" id="mdDescription"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Transaction Amount</div>
+                                <div class="col-md-6" id="mdTransactionAmount"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Transaction Type</div>
+                                <div class="col-md-6" id="mdTransactionType"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Cheque No.</div>
+                                <div class="col-md-6" id="mdChequeNo"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-4">
+                            <div class="row">
+                                <div class="col-md-6" style="text-align: right;">Type</div>
+                                <div class="col-md-6" id="mdType"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
         {{> taxratelistpop}}
     </div>
-
     <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
         {{> newtaxratepop}}
     </div>
-
     <div class="modal fade newbankrecon" role="dialog" tabindex="-1" id="bankAccountListModal">
         {{> accountlistpop}}
     </div>
-
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
     </div>
-
     <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
             <div class="modal-content customerListContent">
@@ -497,7 +559,6 @@
             </div>
         </div>
     </div>
-
     <script>
         modalDraggable();
     </script>

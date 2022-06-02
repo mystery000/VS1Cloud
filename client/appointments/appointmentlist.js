@@ -12,6 +12,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let smsService = new SMSService();
 let utilityService = new UtilityService();
+let createAppointment = Session.get('CloudAppointmentCreateAppointment') || false;
 Template.appointmentlist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -112,7 +113,7 @@ Template.appointmentlist.onRendered(async function () {
     templateObject.resetData = function (dataVal) {
       setTimeout(function () {
           window.open('/appointmentlist?page=last','_self');
-      }, 100);
+      }, 500);
 
     }
 
@@ -419,7 +420,9 @@ Template.appointmentlist.onRendered(async function () {
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
         await templateObject.getSMSSettings();
-        const recentSMSLogs = await templateObject.smsMessagingLogs();
+        const recentSMSLogs = await templateObject.smsMessagingLogs()||'';
+        console.log(recentSMSLogs);
+        const accessLevel = Session.get('CloudApptSMS');
 
         getVS1Data('TAppointmentList').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -490,15 +493,15 @@ Template.appointmentlist.onRendered(async function () {
                           custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                           custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
-
+                      if (!accessLevel) {
                       if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
@@ -523,7 +526,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -539,7 +542,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -553,7 +556,7 @@ Template.appointmentlist.onRendered(async function () {
                             }
                         }
                     }
-
+                  }
                     dataTableList.push(dataList);
                   }
 
@@ -730,6 +733,8 @@ Template.appointmentlist.onRendered(async function () {
                                  $('.fullScreenSpin').css('display','none');
                                });
                               }
+
+
                              });
 
                               setTimeout(function () {
@@ -863,15 +868,15 @@ Template.appointmentlist.onRendered(async function () {
                         custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                         custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                     };
-
+                    if (!accessLevel) {
                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                         // Get SMS Confimation Info
                         const smsSettings = templateObject.smsSettings.get();
                         if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
                             const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '')
-                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''));
+                                && message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', ''))||'';
                             let currentSentSMSDate = null;
                             let nextSentSMSDate = null;
                             if (sentSMSs.length > 0) {
@@ -896,7 +901,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -912,7 +917,7 @@ Template.appointmentlist.onRendered(async function () {
                                                     }
                                                 }).then(function (data) {
                                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
-                                                        addVS1Data('TAppointmentList', JSON.stringify(dataUpdate));
+                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                     });
                                                 }).catch(e => {
                                                     console.log(e);
@@ -926,7 +931,7 @@ Template.appointmentlist.onRendered(async function () {
                             }
                         }
                     }
-
+                  }
                     dataTableList.push(dataList);
 
                 }
@@ -1043,6 +1048,8 @@ Template.appointmentlist.onRendered(async function () {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+
                              if(checkurlIgnoreDate == 'true'){
                                sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TAppointmentList').then(function (dataObjectold) {
@@ -1059,8 +1066,7 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                        addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                         templateObject.resetData(objCombineData);
-                                       $('.fullScreenSpin').css('display','none');
+
                                        }).catch(function (err) {
                                        $('.fullScreenSpin').css('display','none');
                                        });
@@ -1089,8 +1095,8 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                      addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
+                                     //   templateObject.resetData(objCombineData);
+                                     // $('.fullScreenSpin').css('display','none');
                                      }).catch(function (err) {
                                      $('.fullScreenSpin').css('display','none');
                                      });
@@ -1104,6 +1110,30 @@ Template.appointmentlist.onRendered(async function () {
                                $('.fullScreenSpin').css('display','none');
                              });
                             }
+                            sideBarService.getAllAppointmentList(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnewApp) {
+                                getVS1Data("TAppointment").then(function (dataObjectoldApp) {
+                                    if (dataObjectoldApp.length == 0) {
+                                    } else {
+                                      let dataOldApp = JSON.parse(dataObjectoldApp[0].data);
+
+                                      var thirdaryDataApp = $.merge($.merge([],dataObjectnewApp.tappointmentex),dataOldApp.tappointmentex);
+                                      let objCombineDataApp = {
+                                        tappointmentex: thirdaryDataApp,
+                                      };
+                                      addVS1Data("TAppointment",JSON.stringify(objCombineDataApp)).then(function (datareturnApp) {
+                                        templateObject.resetData(objCombineDataApp);
+                                        $('.fullScreenSpin').css('display','none');
+                                        }).catch(function (err) {
+                                          $('.fullScreenSpin').css('display','none');
+                                        });
+                                    }
+                                  }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                  });
+                              }).catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+
                            });
 
                             setTimeout(function () {
@@ -1547,7 +1577,7 @@ Template.appointmentlist.onRendered(async function () {
                     method: 'GET',
                     url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
                     dataType: 'json',
-                    contentType: 'application/x-www-form-urlencoded', // !
+                    contentType: 'application/json', // !
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("Authorization",
                             "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
@@ -1557,7 +1587,8 @@ Template.appointmentlist.onRendered(async function () {
                         resolve(data);
                     },
                     error: function(e) {
-                        reject(e.message);
+                      resolve('');
+                        //reject(e.message);
                     }
                 }
             )
@@ -1568,7 +1599,22 @@ Template.appointmentlist.onRendered(async function () {
 
 Template.appointmentlist.events({
     'click #btnAppointment': function (event) {
-        FlowRouter.go('/appointments');
+      if (createAppointment == false) {
+                swal({
+                    title: 'Oops...',
+                    text: "You don't have access to create a new Appointment",
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {}
+                    else if (result.dismiss === 'cancel') {}
+                });
+                return false;
+    }else{
+      FlowRouter.go('/appointments');
+    };
+
     },
     'change #hideConverted': function () {
         let templateObject = Template.instance();
@@ -2560,6 +2606,18 @@ Template.appointmentlist.events({
             // });
         }
 
+    },
+    'click #btnInvoiceDisabled': function () {
+      swal({
+          title: 'Oops...',
+          text: "You don't have access to create Invoice",
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonText: 'OK'
+      }).then((result) => {
+          if (result.value) {}
+          else if (result.dismiss === 'cancel') {}
+      });
     }
 
 });
@@ -2603,6 +2661,9 @@ Template.appointmentlist.helpers({
         checkCreateInvoice = true;
       }
         return checkCreateInvoice;
+    },
+    createnewappointment: () => {
+        return Session.get('CloudAppointmentCreateAppointment') || false;
     }
 
 });

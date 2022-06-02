@@ -388,22 +388,27 @@ Template.leadscard.onRendered(function () {
         // console.log(data);
         for (let i = 0; i < data.tprojecttasks.length; i++) {
             let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-            let taskLabelName = '';
+            let taskLabelArray = [];
             if (taskLabel !== null) {
                 if (taskLabel.length === undefined || taskLabel.length === 0) {
-                    taskLabelName = taskLabel.fields.TaskLabelName;
+                    taskLabelArray.push(taskLabel.fields);
                 } else {
-                    taskLabelName = taskLabel[0].fields.TaskLabelName;
+                    for (let j = 0; j < taskLabel.length; j++) {
+                        taskLabelArray.push(taskLabel[j].fields);
+                    }
                 }
             }
+            let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+            taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
             const dataList = {
                 id: data.tprojecttasks[i].fields.ID || 0,
+                priority: data.tprojecttasks[i].fields.priority || 0,
                 date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
                 taskName: data.tprojecttasks[i].fields.TaskName || '',
                 projectID: data.tprojecttasks[i].fields.ProjectID || '',
                 projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                description: data.tprojecttasks[i].fields.TaskDescription || '',
-                labels: taskLabelName
+                description: taskDescription,
+                labels: taskLabelArray
             };
             // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
             dataTableList.push(dataList);
@@ -519,9 +524,9 @@ Template.leadscard.onRendered(function () {
     }
 
     templateObject.getLeadsList = function () {
-        getVS1Data('TProspectEx').then(function (dataObject) {
+        getVS1Data('TProspectVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
-                contactService.getAllLeads().then(function (data) {
+                contactService.getAllLeadSideDataVS1().then(function (data) {
                     setAllLeads(data);
                 }).catch(function (err) {
                     //Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -531,7 +536,7 @@ Template.leadscard.onRendered(function () {
                 setAllLeads(data);
             }
         }).catch(function (err) {
-            contactService.getAllLeads().then(function (data) {
+            contactService.getAllLeadSideDataVS1().then(function (data) {
                 setAllLeads(data);
             }).catch(function (err) {
                 //Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -542,17 +547,17 @@ Template.leadscard.onRendered(function () {
     templateObject.getLeadsList();
     function setAllLeads(data) {
         let lineItems = [];
-        for (let i = 0; i < data.tprospect.length; i++) {
+        for (let i = 0; i < data.tprospectvs1.length; i++) {
             let classname = '';
             if (!isNaN(currentId.id)) {
-                if (data.tprospect[i].fields.ID === parseInt(currentId.id)) {
+                if (data.tprospectvs1[i].Id === parseInt(currentId.id)) {
                     classname = 'currentSelect';
                 }
             }
             const dataList = {
-                id: data.tprospect[i].fields.ID || '',
-                employeeName: data.tprospect[i].fields.ClientName || '',
-                companyName: data.tprospect[i].fields.CompanyName || '',
+                id: data.tprospectvs1[i].Id || '',
+                employeeName: data.tprospectvs1[i].ClientName || '',
+                companyName: data.tprospectvs1[i].CompanyName || '',
                 classname: classname
             };
             lineItems.push(dataList);
@@ -564,7 +569,17 @@ Template.leadscard.onRendered(function () {
             }, 100);
         }
     }
-
+    templateObject.saveCustomerDetails = async function () { //Rasheed
+        return new Promise((resolve) => {
+            sideBarService.getAllCustomersDataVS1(initialBaseDataLoad,0).then(function(data) {
+                addVS1Data('TCustomerVS1', JSON.stringify(data)).then(() => {
+                    resolve({success: true, ...res});
+                }).catch(function (err) {
+                    resolve({success: false, ...err})
+                });
+            });
+        });
+    };
 });
 
 Template.leadscard.events({
@@ -885,7 +900,6 @@ Template.leadscard.events({
 
                         }
                     });
-
                 }
             }
         }
@@ -1272,23 +1286,27 @@ Template.leadscard.events({
         }
         $('#deleteLeadModal').modal('toggle');
     },
-    'click .btnQuote': function (event) {
+    'click .btnQuote': async function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
+        const templateObject = Template.instance();
         let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
+        let customerName = $('#edtLeadEmployeeName').val()||'';
         if (!isNaN(currentId.id)) {
             let currentLead = parseInt(currentId.id);
             objDetails = {
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
-            contactService.saveProspectEx(objDetails).then(function (data) {
+            contactService.saveProspectEx(objDetails).then(async function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/quotecard?id=' + customerID);
+                await templateObject.saveCustomerDetails();
+                $('.fullScreenSpin').css('display','none');
+                FlowRouter.go('/quotecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
@@ -1319,12 +1337,12 @@ Template.leadscard.events({
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
             contactService.saveProspectEx(objDetails).then(function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/salesordercard?id=' + customerID);
+                FlowRouter.go('/salesordercard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',
@@ -1355,12 +1373,12 @@ Template.leadscard.events({
                 type: "TProspectEx",
                 fields: {
                     ID: currentLead,
-                    IsCustomer: 'true'
+                    IsCustomer: true
                 }
             };
             contactService.saveProspectEx(objDetails).then(function (data) {
                 let customerID = data.fields.ID;
-                FlowRouter.go('/invoicecard?id=' + customerID);
+                FlowRouter.go('/invoicecard?customerid=' + customerID);
             }).catch(function (err) {
                 swal({
                     title: 'Oooops...',

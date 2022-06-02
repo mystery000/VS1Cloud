@@ -109,6 +109,7 @@ export class ReportService extends BaseService {
       };
     } else if( departments != "" ) {
       options = {
+        AllDepartments: false,
         IgnoreDates: false,
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
