@@ -9,10 +9,15 @@ import { ProductService } from "../product/product-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
 import { YodleeService } from '../js/yodlee-service';
+import { Random } from 'meteor/random';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let yodleeService = new YodleeService();
+
+let selectedLineID = null;
+let selectedYodleeID = null;
+
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
 
@@ -30,6 +35,9 @@ Template.newbankrecon.onCreated(function() {
     templateObject.fa_sortWithdrawReceived = new ReactiveVar();
     templateObject.bankTransactionData = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
+    templateObject.clientrecords = new ReactiveVar();
+    templateObject.baselinedata = new ReactiveVar([]);
+    templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
 Template.newbankrecon.onRendered(function() {
@@ -55,6 +63,7 @@ Template.newbankrecon.onRendered(function() {
     let bankaccountname = Session.get('bankaccountname') || '';
     let statementDate = localStorage.getItem('statementdate')|| '';
     let selectedAccountFlag = '';
+    let selectedTaxFlag = '';
     let selectedDepositID = null;
 
     templateObject.getAccountNames = function() {
@@ -176,6 +185,54 @@ Template.newbankrecon.onRendered(function() {
         }
     }
 
+    templateObject.getAllClients = function () {
+        getVS1Data('TCustomerVS1').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                sideBarService.getClientVS1().then(function (data) {
+                    setClientList(data.tcustomervs1);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tcustomervs1;
+                setClientList(useData);
+            }
+        }).catch(function (err) {
+            sideBarService.getClientVS1().then(function (data) {
+                setClientList(data.tcustomervs1);
+            });
+        });
+    };
+    function setClientList (data) {
+        let clientList = [];
+        for (let i in data) {
+            if (data.hasOwnProperty(i)) {
+                let customerrecordObj = {
+                    customerid: data[i].fields.CallPriority || ' ',
+                    firstname: data[i].fields.FirstName || '',
+                    lastname: data[i].fields.LastName || '',
+                    customername: data[i].fields.ClientName || ' ',
+                    customeremail: data[i].fields.Email || ' ',
+                    street: data[i].fields.Street || ' ',
+                    street2: data[i].fields.Street2 || ' ',
+                    street3: data[i].fields.Street3 || ' ',
+                    suburb: data[i].fields.Suburb || ' ',
+                    statecode: data[i].fields.State + ' ' + data[i].fields.Postcode || ' ',
+                    country: data[i].fields.Country || ' ',
+                    termsName: data[i].fields.TermsName || '',
+                    taxCode: data[i].fields.TaxCodeName || 'E',
+                    clienttypename: data[i].fields.ClientTypeName || 'Default',
+                    discount: data[i].fields.Discount || 0,
+                };
+                clientList.push(customerrecordObj);
+            }
+
+        }
+        templateObject.clientrecords.set(clientList);
+        for (let i = 0; i < clientList.length; i++) {
+            //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
+        }
+    }
+
     templateObject.getBankTransactionData = function (accountId, statementDate, ignoreDate) {
         $('.fullScreenSpin').css('display', 'inline-block');
         let reconData = [];
@@ -196,7 +253,7 @@ Template.newbankrecon.onRendered(function() {
             let withdrawalVS1Data = [];
             const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                console.log(data);
+                // console.log(data);
                 let lastTransactionDate = '1899-12-31';
                 for (let i = 0; i < data.transaction.length; i++ ) {
                     if (yodleeAccountID === data.transaction[i].accountId && (data.transaction[i].baseType === 'DEBIT' || data.transaction[i].baseType === 'CREDIT')) {
@@ -296,7 +353,6 @@ Template.newbankrecon.onRendered(function() {
                     //         }
                     //     ]
                     // };
-                    // console.log(data);
                     if (data.ttobereconcileddeposit.length > 0) {
                         for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                             let depositamount = data.ttobereconcileddeposit[i].Amount;
@@ -323,7 +379,6 @@ Template.newbankrecon.onRendered(function() {
                         }
                     }
                     reconService.getToBeReconciledWithdrawal(accountId, statementDate, ignoreDate).then(function(data) {
-                        // console.log(data);
                         if (data.ttobereconciledwithdrawal.length > 0) {
                             for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
                                 let withdrawalamount = data.ttobereconciledwithdrawal[j].Amount;
@@ -421,9 +476,7 @@ Template.newbankrecon.onRendered(function() {
                         setBankTransactionData(reconData);
                     }).catch(function(err) {
                         setBankTransactionData(reconData);
-                        $('.fullScreenSpin').css('display', 'none');
                     });
-
                     $('.fullScreenSpin').css('display', 'none');
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -591,6 +644,7 @@ Template.newbankrecon.onRendered(function() {
     setTimeout(function () {
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
+        templateObject.getAllClients();
     }, 500);
 
     $('#bankAccountName').editableSelect();
@@ -711,38 +765,6 @@ Template.newbankrecon.onRendered(function() {
         }, 500);
     }
 
-    function setTaxCodeVS1(taxRateDataName) {
-        purchaseService.getTaxCodesVS1().then(function (data) {
-            setTaxRateData(data, taxRateDataName);
-        }).catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-        });
-    }
-    function setTaxRateData(data, taxRateDataName) {
-        let lineItems = [];
-        let lineItemObj = {};
-        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-            if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                $("#edtTaxNamePop").attr("readonly", true);
-                let taxRate = (
-                    data.ttaxcodevs1[i].Rate * 100
-                ).toFixed(2);
-                const taxRateID = data.ttaxcodevs1[i].Id || "";
-                const taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                const taxRateDesc = data.ttaxcodevs1[i].Description || "";
-                $("#edtTaxID").val(taxRateID);
-                $("#edtTaxNamePop").val(taxRateName);
-                $("#edtTaxRatePop").val(taxRate);
-                $("#edtTaxDescPop").val(taxRateDesc);
-                setTimeout(function () {
-                    $("#newTaxRateModal").modal("toggle");
-                }, 100);
-            }
-        }
-    }
-
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
             $('#ctaxRate_'+item.YodleeLineID).editableSelect();
@@ -751,6 +773,7 @@ Template.newbankrecon.onRendered(function() {
                 const offset = $each.offset();
                 const taxRateDataName = e.target.value || "";
                 selectedDepositID = item.YodleeLineID;
+                selectedTaxFlag = 'ForTab';
                 if (e.pageX > offset.left + $each.width() - 8) {
                     // X button 16px wide?
                     $("#taxRateListModal").modal("toggle");
@@ -850,28 +873,28 @@ Template.newbankrecon.onRendered(function() {
                 }
             });
             $('#btnAddDetail_'+item.YodleeLineID).on('click', function(e, li) {
-                let taxRate = $('#ctaxRateID_'+item.YodleeLineID).val();
                 let who = $('#who_'+item.YodleeLineID).val();
                 who = (who !== '')?who:item.YodleeDescription;
-                let what = $('#whatID_'+item.YodleeLineID).val();
-                let why = $('#why_'+item.YodleeLineID).val();
                 let amount = item.YodleeAmount;
                 let dateIn = item.SortDate;
-                Session.setPersistent('bankaccountid', bankaccountid);
-                Session.setPersistent('bankaccountname', bankaccountname);
-                Session.setPersistent('reconYodleeID', item.YodleeLineID);
-                Session.setPersistent('reconPaymentID', item.PaymentID);
-                Session.setPersistent('reconTaxRate', taxRate);
-                Session.setPersistent('reconWho', who);
-                Session.setPersistent('reconWhat', what);
-                Session.setPersistent('reconWhy', why);
-                Session.setPersistent('reconAmount', amount);
-                Session.setPersistent('reconDateIn', dateIn);
-                Session.setPersistent('reconSOR', item.deporwith);
-                // FlowRouter.go('/recontransactiondetail?ID='+item.YodleeLineID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate+'&amount='+amount+'&dateIn='+dateIn);
-                FlowRouter.go('/recontransactiondetail');
-                // let queryParams = {ID: item.YodleeLineID, who: who, what: what, why: why, taxRate: taxRate};
-                // FlowRouter.go('/recontransactiondetail', queryParams);
+                setTransactionDetail(item.YodleeLineID, amount, dateIn, who, item.deporwith);
+
+                // Session.setPersistent('bankaccountid', bankaccountid);
+                // Session.setPersistent('bankaccountname', bankaccountname);
+                // Session.setPersistent('reconYodleeID', item.YodleeLineID);
+                // Session.setPersistent('reconPaymentID', item.PaymentID);
+                // Session.setPersistent('reconTaxRate', taxRate);
+                // Session.setPersistent('reconWho', who);
+                // Session.setPersistent('reconWhat', what);
+                // Session.setPersistent('reconWhy', why);
+                // Session.setPersistent('reconAmount', amount);
+                // Session.setPersistent('reconDateIn', dateIn);
+                // Session.setPersistent('reconSOR', item.deporwith);
+                // // FlowRouter.go('/recontransactiondetail?ID='+item.YodleeLineID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate+'&amount='+amount+'&dateIn='+dateIn);
+                // FlowRouter.go('/recontransactiondetail');
+                // // let queryParams = {ID: item.YodleeLineID, who: who, what: what, why: why, taxRate: taxRate};
+                // // FlowRouter.go('/recontransactiondetail', queryParams);
+                $('#divLineDetail').show();
             });
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
                 FlowRouter.go('/bankrecon?id='+item.YodleeLineID);
@@ -888,121 +911,55 @@ Template.newbankrecon.onRendered(function() {
                 $('#moreDetailModal').modal('show');
             });
             $('#btnDeleteLine_'+item.YodleeLineID).on('click', function(e, li) {
-                $('#divTransactionLine'+item.YodleeLineID).hide();
+                $('#divLine_'+item.YodleeLineID).hide();
             });
         })
     }
-    function openCustomerModal() {
-        $('#customerListModal').modal();
-        setTimeout(function () {
-            $('#tblCustomerlist_filter .form-control-sm').focus();
-            $('#tblCustomerlist_filter .form-control-sm').val('');
-            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-            const datatable = $('#tblCustomerlist').DataTable();
-            //datatable.clear();
-            //datatable.rows.add(splashArrayCustomerList);
-            datatable.draw();
-            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-            //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
-        }, 500);
-    }
-    function setOneCustomerDataExByName(customerDataName) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
-            $('.fullScreenSpin').css('display', 'none');
-            setCustomerModal(data.tcustomer[0]);
-        }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    }
-    function setCustomerModal(data) {
-        $('.fullScreenSpin').css('display', 'none');
-        let lineItems = [];
-        $('#add-customer-title').text('Edit Customer');
-        let popCustomerID = data.fields.ID || '';
-        let popCustomerName = data.fields.ClientName || '';
-        let popCustomerEmail = data.fields.Email || '';
-        let popCustomerTitle = data.fields.Title || '';
-        let popCustomerFirstName = data.fields.FirstName || '';
-        let popCustomerMiddleName = data.fields.CUSTFLD10 || '';
-        let popCustomerLastName = data.fields.LastName || '';
-        let popCustomertfn = '' || '';
-        let popCustomerPhone = data.fields.Phone || '';
-        let popCustomerMobile = data.fields.Mobile || '';
-        let popCustomerFaxnumber = data.fields.Faxnumber || '';
-        let popCustomerSkypeName = data.fields.SkypeName || '';
-        let popCustomerURL = data.fields.URL || '';
-        let popCustomerStreet = data.fields.Street || '';
-        let popCustomerStreet2 = data.fields.Street2 || '';
-        let popCustomerState = data.fields.State || '';
-        let popCustomerPostcode = data.fields.Postcode || '';
-        let popCustomerCountry = data.fields.Country || LoggedCountry;
-        let popCustomerbillingaddress = data.fields.BillStreet || '';
-        let popCustomerbcity = data.fields.BillStreet2 || '';
-        let popCustomerbstate = data.fields.BillState || '';
-        let popCustomerbpostalcode = data.fields.BillPostcode || '';
-        let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
-        let popCustomercustfield1 = data.fields.CUSTFLD1 || '';
-        let popCustomercustfield2 = data.fields.CUSTFLD2 || '';
-        let popCustomercustfield3 = data.fields.CUSTFLD3 || '';
-        let popCustomercustfield4 = data.fields.CUSTFLD4 || '';
-        let popCustomernotes = data.fields.Notes || '';
-        let popCustomerpreferedpayment = data.fields.PaymentMethodName || '';
-        let popCustomerterms = data.fields.TermsName || '';
-        let popCustomerdeliverymethod = data.fields.ShippingMethodName || '';
-        let popCustomeraccountnumber = data.fields.ClientNo || '';
-        let popCustomerisContractor = data.fields.Contractor || false;
-        let popCustomerissupplier = data.fields.IsSupplier || false;
-        let popCustomeriscustomer = data.fields.IsCustomer || false;
-        let popCustomerTaxCode = data.fields.TaxCodeName || '';
-        let popCustomerDiscount = data.fields.Discount || 0;
-        let popCustomerType = data.fields.ClientTypeName || '';
-        //$('#edtCustomerCompany').attr('readonly', true);
-        $('#edtCustomerCompany').val(popCustomerName);
-        $('#edtCustomerPOPID').val(popCustomerID);
-        $('#edtCustomerPOPEmail').val(popCustomerEmail);
-        $('#edtTitle').val(popCustomerTitle);
-        $('#edtFirstName').val(popCustomerFirstName);
-        $('#edtMiddleName').val(popCustomerMiddleName);
-        $('#edtLastName').val(popCustomerLastName);
-        $('#edtCustomerPhone').val(popCustomerPhone);
-        $('#edtCustomerMobile').val(popCustomerMobile);
-        $('#edtCustomerFax').val(popCustomerFaxnumber);
-        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-        $('#edtCustomerWebsite').val(popCustomerURL);
-        $('#edtCustomerShippingAddress').val(popCustomerStreet);
-        $('#edtCustomerShippingCity').val(popCustomerStreet2);
-        $('#edtCustomerShippingState').val(popCustomerState);
-        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-        $('#sedtCountry').val(popCustomerCountry);
-        $('#txaNotes').val(popCustomernotes);
-        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-        $('#sltTermsPOP').val(popCustomerterms);
-        $('#sltCustomerType').val(popCustomerType);
-        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-        $('#edtCustomeField1').val(popCustomercustfield1);
-        $('#edtCustomeField2').val(popCustomercustfield2);
-        $('#edtCustomeField3').val(popCustomercustfield3);
-        $('#edtCustomeField4').val(popCustomercustfield4);
 
-        $('#sltTaxCode').val(popCustomerTaxCode);
+    function setTransactionDetail (YodleeID, Amount, DateIn, Who, DepOrWith) {
+        if (YodleeID !== null) {
+            let clientDetail = templateObject.clientrecords.get().filter(customer => {
+                return customer.customername === $('#whatID_'+YodleeID).val();
+            });
+            clientDetail = clientDetail[0];
+            let discountAmount = (clientDetail !== undefined)? Amount*clientDetail.discount/100: 0;
+            let taxCodeDetail = templateObject.taxraterecords.get().filter(taxcode => {
+                return taxcode.codename === $('#ctaxRateID_'+YodleeID).val();
+            });
+            taxCodeDetail = taxCodeDetail[0];
+            let taxAmount = (taxCodeDetail !== undefined)?Amount*taxCodeDetail.coderate/100:0;
+            selectedLineID = Random.id();
+            let basedataObj = {
+                lineID: selectedLineID,
+                product: '',
+                description: $('#why_'+YodleeID).val() || '',
+                quantity: 1,
+                unitPrice: utilityService.modifynegativeCurrencyFormat(Amount),
+                unitPriceInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) + taxAmount),
+                subtotal: utilityService.modifynegativeCurrencyFormat(Amount),
+                account: (clientDetail !== undefined)? clientDetail.customername:'',
+                discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
+                taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
+                taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
+                amount: parseFloat(Amount),
+                totalAmount: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount),
+                totalAmountInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount + taxAmount)
+            };
 
-        if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
-            (data.fields.State === data.fields.BillState) && (data.fields.Postcode === data.fields.BillPostcode) &&
-            (data.fields.Country === data.fields.Billcountry)) {
-            $('#chkSameAsShipping2').attr("checked", "checked");
+            let basedataArr = [];
+            basedataArr.push(basedataObj);
+            let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
+            templateObject.baselinedata.set(thirdaryData);
+            $('#labelWho').text(DepOrWith==='spent'?'To':'From');
+            $('#FromWho').val(Who);
+            let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
+            $('#DateIn').val(dateIn_val);
+            $('#TotalAmount').val(Amount);
+            setTimeout(function () {
+                setCalculated();
+                $('#' + selectedLineID + " .btnRemove").hide();
+            }, 500);
         }
-
-        if (data.fields.IsSupplier === true) {
-            // $('#isformcontractor')
-            $('#chkSameAsSupplier').attr("checked", "checked");
-        } else {
-            $('#chkSameAsSupplier').removeAttr("checked");
-        }
-
-        setTimeout(function () {
-            $('#addCustomerModal').modal('show');
-        }, 200);
     }
 
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
@@ -1016,7 +973,6 @@ Template.newbankrecon.onRendered(function() {
         if (selectedAccountFlag === 'ForBank') {
             $('#bankAccountName').val(accountname);
             $('#bankAccountID').val(accountId);
-
             if (accountId !== "") {
                 bankaccountid = accountId;
                 bankaccountname = accountname;
@@ -1042,11 +998,31 @@ Template.newbankrecon.onRendered(function() {
         $('#customerListModal').modal('toggle');
     });
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
-        // $('#ctaxRateID_'+selectedDepositID).val(parseInt($(this).find(".sorting_1").text()));
-        $('#ctaxRateID_'+selectedDepositID).val($(this).find(".taxName").text());
-        $('#ctaxRate_'+selectedDepositID).val($(this).find(".taxName").text());
+        if (selectedTaxFlag === "ForTab") {
+            // $('#ctaxRateID_'+selectedDepositID).val(parseInt($(this).find(".sorting_1").text()));
+            $('#ctaxRateID_' + selectedDepositID).val($(this).find(".taxName").text());
+            $('#ctaxRate_' + selectedDepositID).val($(this).find(".taxName").text());
+        }
         $('#taxRateListModal').modal('toggle');
     });
+
+    $("#DateIn").datepicker({
+        showOn: 'button',
+        buttonText: 'Show Date',
+        buttonImageOnly: true,
+        buttonImage: '/img/imgCal2.png',
+        dateFormat: 'dd/mm/yy',
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+    });
+    function setCalculated() {
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList)
+    }
 });
 
 Template.newbankrecon.events({
@@ -1064,12 +1040,12 @@ Template.newbankrecon.events({
     },
     'click .btnPagePrev': function() {
         let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
-        let prev_page = (Template.instance().page_number.get() <= 1)? 1: Template.instance().page_number.get() - 1;
+        let prev_page = (Template.instance().page_number.get() <= 1)? 1: parseInt(Template.instance().page_number.get()) - 1;
         window.open('/newbankrecon?page='+prev_page+sort, '_self');
     },
     'click .btnPageNext': function() {
         let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
-        let next_page = (Template.instance().page_number.get() >= Template.instance().page_count.get())? Template.instance().page_count.get(): Template.instance().page_number.get() + 1;
+        let next_page = (Template.instance().page_number.get() >= Template.instance().page_count.get())? Template.instance().page_count.get(): parseInt(Template.instance().page_number.get()) + 1;
         window.open('/newbankrecon?page='+next_page+sort, '_self');
     },
     'click .sortDepositSpent': function() {
@@ -1107,6 +1083,337 @@ Template.newbankrecon.events({
             sort = "descWithdrawReceived";
         }
         window.open('/newbankrecon?sort='+sort, '_self');
+    },
+    'click .lineProductName, keydown .lineProductName': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const $each = $(event.currentTarget);
+        const offset = $each.offset();
+        $("#selectProductID").val('');
+        const productDataName = $(event.target).val() || '';
+        if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
+            openProductListModal();
+        } else {
+            if (productDataName.replace(/\s/g, '') !== '') {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                getVS1Data('TProductVS1').then(function (dataObject) {
+                    if (dataObject.length === 0) {
+                        setOneProductDataByName(productDataName);
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let added = false;
+                        for (let i = 0; i < data.tproductvs1.length; i++) {
+                            if (data.tproductvs1[i].fields.ProductName === productDataName) {
+                                added = true;
+                                $('.fullScreenSpin').css('display', 'none');
+                                setProductNewModal(data.tproductvs1[i]);
+                                setTimeout(function () {
+                                    $('#newProductModal').modal('show');
+                                }, 500);
+                            }
+                        }
+                        if (!added) {
+                            setOneProductDataByName(productDataName);
+                        }
+                    }
+                }).catch(function (err) {
+                    setOneProductDataByName(productDataName);
+                });
+
+                setTimeout(function () {
+                    // WangYan: where are these element - dtDateTo, dtDateFrom
+                    $("#dtDateTo").datepicker({
+                        showOn: 'button',
+                        buttonText: 'Show Date',
+                        buttonImageOnly: true,
+                        buttonImage: '/img/imgCal2.png',
+                        constrainInput: false,
+                        dateFormat: 'd/mm/yy',
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-90:+10",
+                    }).keyup(function (e) {
+                        if (e.keyCode === 8 || e.keyCode === 46) {
+                            $("#dtDateTo,#dtDateFrom").val('');
+                        }
+                    });
+
+                    $("#dtDateFrom").datepicker({
+                        showOn: 'button',
+                        buttonText: 'Show Date',
+                        altField: "#dtDateFrom",
+                        buttonImageOnly: true,
+                        buttonImage: '/img/imgCal2.png',
+                        constrainInput: false,
+                        dateFormat: 'd/mm/yy',
+                        showOtherMonths: true,
+                        selectOtherMonths: true,
+                        changeMonth: true,
+                        changeYear: true,
+                        yearRange: "-90:+10",
+                    }).keyup(function (e) {
+                        if (e.keyCode === 8 || e.keyCode === 46) {
+                            $("#dtDateTo,#dtDateFrom").val('');
+                        }
+                    });
+
+                    $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
+
+                }, 1000);
+
+            } else {
+                openProductListModal();
+            }
+        }
+    },
+    'click .lineAccountName, keydown .lineAccountName': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const $each = $(event.currentTarget);
+        const offset = $each.offset();
+        $('#edtCustomerPOPID').val('');
+        //$('#edtCustomerCompany').attr('readonly', false);
+        const customerDataName = event.target.value || '';
+        if (event.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+            openCustomerModal();
+        } else {
+            if (customerDataName.replace(/\s/g, '') !== '') {
+                //FlowRouter.go('/customerscard?name=' + e.target.value);
+                $('#edtCustomerPOPID').val('');
+                getVS1Data('TCustomerVS1').then(function (dataObject) {
+                    if (dataObject.length === 0) {
+                        setOneCustomerDataExByName(customerDataName);
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tcustomervs1;
+                        let added = false;
+                        for (let i = 0; i < useData.length; i++) {
+                            if (useData[i].fields.ClientName === customerDataName) {
+                                setCustomerModal(useData[i]);
+                            }
+                        }
+                        if (!added) {
+                            setOneCustomerDataExByName(customerDataName);
+                        }
+                    }
+                }).catch(function (err) {
+                    setOneCustomerDataExByName(customerDataName);
+                });
+            } else {
+                openCustomerModal();
+            }
+        }
+    },
+    'click .lineTaxRate, keydown .lineTaxRate': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const $each = $(event.currentTarget);
+        const offset = $each.offset();
+        const taxRateDataName = event.target.value || "";
+        if (event.pageX > offset.left + $each.width() - 8) {
+            // X button 16px wide?
+            $("#taxRateListModal").modal("toggle");
+        } else {
+            if (taxRateDataName.replace(/\s/g, "") !== "") {
+                $(".taxcodepopheader").text("Edit Tax Rate");
+                getVS1Data("TTaxcodeVS1").then(function (dataObject) {
+                    if (dataObject.length === 0) {
+                        setTaxCodeVS1(taxRateDataName);
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        $(".taxcodepopheader").text("Edit Tax Rate");
+                        setTaxRateData(data, taxRateDataName);
+                    }
+                }).catch(function (err) {
+                    setTaxCodeVS1(taxRateDataName);
+                });
+            } else {
+                $("#taxRateListModal").modal("toggle");
+            }
+        }
+    },
+    'keydown .lineQty, keydown .lineUnitPrice': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return;
+        }
+        if (event.shiftKey === true) {
+            event.preventDefault();
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+            (event.keyCode >= 96 && event.keyCode <= 105) ||
+            event.keyCode === 8 || event.keyCode === 9 ||
+            event.keyCode === 37 || event.keyCode === 39 ||
+            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {
+
+        }
+        else {
+            event.preventDefault();
+        }
+    },
+    'change .lineQty': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const templateObject = Template.instance();
+        let qty = parseInt($(event.target).val()) || 0;
+        $(event.target).val(qty);
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'change .lineUnitPrice': function (event) {
+        selectedLineID = $(event.target).closest('tr').attr('id');
+        const templateObject = Template.instance();
+        let inputUnitPrice = 0;
+        if (!isNaN($(event.target).val())) {
+            inputUnitPrice = parseFloat($(event.target).val()) || 0;
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+        } else {
+            inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
+            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+        }
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'click .btnRemove': function (event) {
+        selectedLineID = null;
+        let templateObject = Template.instance();
+        $(event.target).closest('tr').remove();
+        event.preventDefault();
+
+        let taxcodeList = templateObject.taxraterecords.get();
+        let customerList = templateObject.clientrecords.get();
+        setCalculated2(taxcodeList, customerList);
+    },
+    'click #btnCancel': function() {
+        Session.setPersistent('bankaccountid', Session.get('bankaccountid'));
+        Session.setPersistent('bankaccountname', Session.get('bankaccountname'));
+        FlowRouter.go('/newbankrecon');
+    },
+    'click #btnSave': function (event) {
+        let match_total = parseFloat($("#TotalAmount").val());
+        let grand_total =  Number($(".grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
+        if (match_total !== grand_total) {
+            swal('The totals do not match.', '', 'error');
+            $("#TotalAmount").focus();
+            return false;
+        }
+        let reconType = "";
+        if (DepOrWith === "spent") {
+            reconType = "TReconciliationDepositLines";
+        } else if (DepOrWith === "received") {
+            reconType = "TReconciliationWithdrawalLines";
+        } else {
+            return false;
+        }
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let lineItems = [];
+        let lineItemsObj = {};
+        $('#tblrecontransactiondetail > tbody > tr').each(function () {
+            let lineID = this.id;
+            let lineProductDesc = $('#' + lineID + " .lineProductDesc").val();
+            let lineAccountName = $('#' + lineID + " .lineAccountName").val();
+            let lineAmount = $('#' + lineID + " .lineAmount").text();
+            lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
+            let refText = $('#reference').val();
+
+            let dateIn = $("#DateIn").val() || '';
+            let splitwithdepositdate = dateIn.split("/");
+            let withYear = splitwithdepositdate[2];
+            let withMonth = splitwithdepositdate[1];
+            let withDay = splitwithdepositdate[0];
+            let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
+
+            lineItemsObj = {
+                type: reconType,
+                fields: {
+                    AccountName: BankAccountName || '',
+                    Amount: lineAmount,
+                    BankStatementLineID: 0, //Hardcoded for now
+                    ClientName: lineAccountName || '',
+                    DepositDate: formatWithDate + " 00:00:00" || '',
+                    Deposited: true,
+                    DepositLineID: parseInt(YodleeID) || 0,
+                    Notes: lineProductDesc || '',
+                    Payee: lineAccountName || '',
+                    PaymentID: parseInt(PaymentID) || 0,
+                    // Reconciled: true,
+                    Reconciled: false,
+                    Reference: refText || ''
+                }
+            };
+            lineItems.push(lineItemsObj);
+        });
+
+        // Pulling initial variables BEGIN
+        let deptname = "Default"; //Set to Default as it isn't used for recons
+        let employeename = Session.get('mySessionEmployee');
+        const notes = ''; //pending addition of notes field
+        const openbalance = 0;
+        let closebalance = 0;
+        const statementno = '';
+        let recondate = DateIn;
+        // Pulling initial variables END
+
+        let objDetails = {};
+        if (DepOrWith === "spent") {
+            objDetails = {
+                type: "TReconciliation",
+                fields: {
+                    // ID: parseInt(YodleeID) || 0,
+                    AccountName: BankAccountName || '',
+                    CloseBalance: closebalance,
+                    Deleted: false,
+                    DepositLines: lineItems || '',
+                    DeptName: deptname || '',
+                    EmployeeName: employeename || '',
+                    Finished: false,
+                    Notes: notes || '',
+                    OnHold: true,
+                    OpenBalance: openbalance,
+                    ReconciliationDate: recondate,
+                    StatementNo: statementno || '0',
+                    WithdrawalLines: ''
+                }
+            };
+
+        } else {
+            objDetails = {
+                type: "TReconciliation",
+                fields: {
+                    // ID: parseInt(YodleeID) || 0,
+                    AccountName: BankAccountName || '',
+                    CloseBalance: closebalance,
+                    Deleted: false,
+                    DepositLines: '',
+                    DeptName: deptname || '',
+                    EmployeeName: employeename || '',
+                    Finished: false,
+                    Notes: notes || '',
+                    OnHold: true,
+                    OpenBalance: openbalance,
+                    ReconciliationDate: recondate,
+                    StatementNo: statementno || '0',
+                    WithdrawalLines: lineItems || ''
+                }
+            };
+        }
+        reconService.saveReconciliation(objDetails).then(function(data) {
+            FlowRouter.go('/newbankrecon');
+        }).catch(function(err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+                else if (result.dismiss === 'cancel') {}
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
     },
 });
 
@@ -1170,8 +1477,276 @@ Template.newbankrecon.helpers({
     },
     fa_sortWithdrawReceived: () => {
         return Template.instance().fa_sortWithdrawReceived.get();
-    }
+    },
+    baselinedata : () => {
+        return Template.instance().baselinedata.get();
+    },
 });
+
+function openProductListModal() {
+    $('#productListModal').modal('toggle');
+    setTimeout(function () {
+        $('#tblInventory_filter .form-control-sm').focus();
+        $('#tblInventory_filter .form-control-sm').val('');
+        $('#tblInventory_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblInventory').DataTable();
+        datatable.draw();
+        $('#tblInventory_filter .form-control-sm').trigger("input");
+    }, 500);
+}
+function setOneProductDataByName(productDataName) {
+    sideBarService.getOneProductdatavs1byname(productDataName).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setProductNewModal(data.tproduct[0]);
+        setTimeout(function () {
+            $('#newProductModal').modal('show');
+        }, 500);
+    }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+    });
+}
+function setProductNewModal(productInfo) {
+    let lineItems = [];
+    let lineItemObj = {};
+    let currencySymbol = Currency;
+    let totalquantity = 0;
+    let productname = productInfo.fields.ProductName || '';
+    let productcode = productInfo.fields.PRODUCTCODE || '';
+    let productprintName = productInfo.fields.ProductPrintName || '';
+    let assetaccount = productInfo.fields.AssetAccount || '';
+    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(productInfo.fields.BuyQty1Cost) || 0;
+    let cogsaccount = productInfo.fields.CogsAccount || '';
+    let taxcodepurchase = productInfo.fields.TaxCodePurchase || '';
+    let purchasedescription = productInfo.fields.PurchaseDescription || '';
+    let sellqty1price = utilityService.modifynegativeCurrencyFormat(productInfo.fields.SellQty1Price) || 0;
+    let incomeaccount = productInfo.fields.IncomeAccount || '';
+    let taxcodesales = productInfo.fields.TaxCodeSales || '';
+    let salesdescription = productInfo.fields.SalesDescription || '';
+    let active = productInfo.fields.Active;
+    let lockextrasell = productInfo.fields.LockExtraSell || '';
+    let customfield1 = productInfo.fields.CUSTFLD1 || '';
+    let customfield2 = productInfo.fields.CUSTFLD2 || '';
+    let barcode = productInfo.fields.BARCODE || '';
+    $("#selectProductID").val(productInfo.fields.ID).trigger("change");
+    $('#add-product-title').text('Edit Product');
+    $('#edtproductname').val(productname);
+    $('#edtsellqty1price').val(sellqty1price);
+    $('#txasalesdescription').val(salesdescription);
+    $('#sltsalesacount').val(incomeaccount);
+    $('#slttaxcodesales').val(taxcodesales);
+    $('#edtbarcode').val(barcode);
+    $('#txapurchasedescription').val(purchasedescription);
+    $('#sltcogsaccount').val(cogsaccount);
+    $('#slttaxcodepurchase').val(taxcodepurchase);
+    $('#edtbuyqty1cost').val(buyqty1cost);
+}
+
+function openCustomerModal() {
+    $('#customerListModal').modal();
+    setTimeout(function () {
+        $('#tblCustomerlist_filter .form-control-sm').focus();
+        $('#tblCustomerlist_filter .form-control-sm').val('');
+        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblCustomerlist').DataTable();
+        //datatable.clear();
+        //datatable.rows.add(splashArrayCustomerList);
+        datatable.draw();
+        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+        //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+    }, 500);
+}
+function setOneCustomerDataExByName(customerDataName) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    sideBarService.getOneCustomerDataExByName(customerDataName).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerModal(data.tcustomer[0]);
+    }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+    });
+}
+function setCustomerModal(data) {
+    $('.fullScreenSpin').css('display', 'none');
+    let lineItems = [];
+    $('#add-customer-title').text('Edit Customer');
+    let popCustomerID = data.fields.ID || '';
+    let popCustomerName = data.fields.ClientName || '';
+    let popCustomerEmail = data.fields.Email || '';
+    let popCustomerTitle = data.fields.Title || '';
+    let popCustomerFirstName = data.fields.FirstName || '';
+    let popCustomerMiddleName = data.fields.CUSTFLD10 || '';
+    let popCustomerLastName = data.fields.LastName || '';
+    let popCustomertfn = '' || '';
+    let popCustomerPhone = data.fields.Phone || '';
+    let popCustomerMobile = data.fields.Mobile || '';
+    let popCustomerFaxnumber = data.fields.Faxnumber || '';
+    let popCustomerSkypeName = data.fields.SkypeName || '';
+    let popCustomerURL = data.fields.URL || '';
+    let popCustomerStreet = data.fields.Street || '';
+    let popCustomerStreet2 = data.fields.Street2 || '';
+    let popCustomerState = data.fields.State || '';
+    let popCustomerPostcode = data.fields.Postcode || '';
+    let popCustomerCountry = data.fields.Country || LoggedCountry;
+    let popCustomerbillingaddress = data.fields.BillStreet || '';
+    let popCustomerbcity = data.fields.BillStreet2 || '';
+    let popCustomerbstate = data.fields.BillState || '';
+    let popCustomerbpostalcode = data.fields.BillPostcode || '';
+    let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
+    let popCustomercustfield1 = data.fields.CUSTFLD1 || '';
+    let popCustomercustfield2 = data.fields.CUSTFLD2 || '';
+    let popCustomercustfield3 = data.fields.CUSTFLD3 || '';
+    let popCustomercustfield4 = data.fields.CUSTFLD4 || '';
+    let popCustomernotes = data.fields.Notes || '';
+    let popCustomerpreferedpayment = data.fields.PaymentMethodName || '';
+    let popCustomerterms = data.fields.TermsName || '';
+    let popCustomerdeliverymethod = data.fields.ShippingMethodName || '';
+    let popCustomeraccountnumber = data.fields.ClientNo || '';
+    let popCustomerisContractor = data.fields.Contractor || false;
+    let popCustomerissupplier = data.fields.IsSupplier || false;
+    let popCustomeriscustomer = data.fields.IsCustomer || false;
+    let popCustomerTaxCode = data.fields.TaxCodeName || '';
+    let popCustomerDiscount = data.fields.Discount || 0;
+    let popCustomerType = data.fields.ClientTypeName || '';
+    //$('#edtCustomerCompany').attr('readonly', true);
+    $('#edtCustomerCompany').val(popCustomerName);
+    $('#edtCustomerPOPID').val(popCustomerID);
+    $('#edtCustomerPOPEmail').val(popCustomerEmail);
+    $('#edtTitle').val(popCustomerTitle);
+    $('#edtFirstName').val(popCustomerFirstName);
+    $('#edtMiddleName').val(popCustomerMiddleName);
+    $('#edtLastName').val(popCustomerLastName);
+    $('#edtCustomerPhone').val(popCustomerPhone);
+    $('#edtCustomerMobile').val(popCustomerMobile);
+    $('#edtCustomerFax').val(popCustomerFaxnumber);
+    $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+    $('#edtCustomerWebsite').val(popCustomerURL);
+    $('#edtCustomerShippingAddress').val(popCustomerStreet);
+    $('#edtCustomerShippingCity').val(popCustomerStreet2);
+    $('#edtCustomerShippingState').val(popCustomerState);
+    $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+    $('#sedtCountry').val(popCustomerCountry);
+    $('#txaNotes').val(popCustomernotes);
+    $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+    $('#sltTermsPOP').val(popCustomerterms);
+    $('#sltCustomerType').val(popCustomerType);
+    $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+    $('#edtCustomeField1').val(popCustomercustfield1);
+    $('#edtCustomeField2').val(popCustomercustfield2);
+    $('#edtCustomeField3').val(popCustomercustfield3);
+    $('#edtCustomeField4').val(popCustomercustfield4);
+
+    $('#sltTaxCode').val(popCustomerTaxCode);
+
+    if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
+        (data.fields.State === data.fields.BillState) && (data.fields.Postcode === data.fields.BillPostcode) &&
+        (data.fields.Country === data.fields.Billcountry)) {
+        $('#chkSameAsShipping2').attr("checked", "checked");
+    }
+
+    if (data.fields.IsSupplier === true) {
+        // $('#isformcontractor')
+        $('#chkSameAsSupplier').attr("checked", "checked");
+    } else {
+        $('#chkSameAsSupplier').removeAttr("checked");
+    }
+
+    setTimeout(function () {
+        $('#addCustomerModal').modal('show');
+    }, 200);
+}
+
+function setTaxCodeVS1(taxRateDataName) {
+    purchaseService.getTaxCodesVS1().then(function (data) {
+        setTaxRateData(data, taxRateDataName);
+    }).catch(function (err) {
+        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+        $(".fullScreenSpin").css("display", "none");
+        // Meteor._reload.reload();
+    });
+}
+function setTaxRateData(data, taxRateDataName) {
+    let lineItems = [];
+    let lineItemObj = {};
+    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+            $("#edtTaxNamePop").attr("readonly", true);
+            let taxRate = (
+                data.ttaxcodevs1[i].Rate * 100
+            ).toFixed(2);
+            const taxRateID = data.ttaxcodevs1[i].Id || "";
+            const taxRateName = data.ttaxcodevs1[i].CodeName || "";
+            const taxRateDesc = data.ttaxcodevs1[i].Description || "";
+            $("#edtTaxID").val(taxRateID);
+            $("#edtTaxNamePop").val(taxRateName);
+            $("#edtTaxRatePop").val(taxRate);
+            $("#edtTaxDescPop").val(taxRateDesc);
+            setTimeout(function () {
+                $("#newTaxRateModal").modal("toggle");
+            }, 100);
+        }
+    }
+}
+
+function setCalculated2(taxcodeList, customerList) {
+    let $tblrows = $("#tblrecontransactiondetail tbody tr");
+    let lineAmount = 0;
+    let subTotal = 0;
+    let discountTotal = 0;
+    let taxTotal = 0;
+    let grandTotal = 0;
+    if (selectedLineID) {
+        let lineQty = parseInt($('#' + selectedLineID + " .lineQty").val());
+        let lineUnitPrice = $('#' + selectedLineID + " .lineUnitPrice").val();
+        lineUnitPrice = Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
+        $('#' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
+        let lineTaxRate = $('#' + selectedLineID + " .lineTaxRate").val();
+        let lineTaxRateVal = 0;
+        if (lineTaxRate !== "") {
+            for (let i = 0; i < taxcodeList.length; i++) {
+                if (taxcodeList[i].codename === lineTaxRate) {
+                    lineTaxRateVal = taxcodeList[i].coderate;
+                }
+            }
+        }
+        // let lineUnitPriceInc = lineUnitPrice + lineUnitPrice * lineTaxRateVal /100;
+        // $('#' + selectedLineID + " .lineUnitPriceInc").text(utilityService.modifynegativeCurrencyFormat(lineUnitPriceInc));
+        let lineTaxAmount = lineQty * lineUnitPrice * lineTaxRateVal /100;
+        $('#' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
+        let lineAccountName = $('#' + selectedLineID + " .lineAccountName").val();
+        let lineDiscountRate = 0;
+        if (lineAccountName !== "") {
+            let customerDetail = customerList.filter(customer => {
+                return customer.customername === lineAccountName
+            });
+            customerDetail = customerDetail[0];
+            lineDiscountRate = customerDetail.discount;
+        }
+        let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * lineDiscountRate/100;
+        $('#' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
+        lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
+        $('#' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
+    }
+
+    $tblrows.each(function (index) {
+        const $tblrow = $(this);
+        let lineSubTotal = $tblrow.find(".lineSubTotal").text();
+        lineSubTotal = Number(lineSubTotal.replace(/[^0-9.-]+/g, "")) || 0;
+        let lineTaxAmount = $tblrow.find(".lineTaxAmount").text();
+        lineTaxAmount = Number(lineTaxAmount.replace(/[^0-9.-]+/g, "")) || 0;
+        let lineDiscount = $tblrow.find(".lineDiscount").text();
+        lineDiscount = Number(lineDiscount.replace(/[^0-9.-]+/g, "")) || 0;
+        let lineAmount = $tblrow.find(".lineAmount").text();
+        lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
+
+        subTotal += lineSubTotal;
+        taxTotal += lineTaxAmount;
+        discountTotal += lineDiscount;
+        grandTotal += lineAmount;
+    });
+    $(".sub_total").text(utilityService.modifynegativeCurrencyFormat(subTotal));
+    $(".tax_total").text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+    $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
+    $(".grand_total").text(utilityService.modifynegativeCurrencyFormat(grandTotal));
+}
 
 // function connectYodlee() {
 //     let fastLinkURL = "https://fl4.sandbox.yodlee.com/authenticate/restserver/fastlink"; // Fastlink URL

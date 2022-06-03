@@ -146,8 +146,7 @@ Template.recontransactiondetail.onRendered(function() {
 
         }
         templateObject.clientrecords.set(clientList);
-
-        for (var i = 0; i < clientList.length; i++) {
+        for (let i = 0; i < clientList.length; i++) {
             //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
         }
         setTimeout(function () {
@@ -156,94 +155,94 @@ Template.recontransactiondetail.onRendered(function() {
         }, 200);
     }
 
-    templateObject.getAllTaxCodes = function () {
-        getVS1Data("TTaxcodeVS1")
-            .then(function (dataObject) {
-                if (dataObject.length === 0) {
-                    productService.getTaxCodesVS1().then(function (data) {
-                        setTaxCodeModal(data);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    setTaxCodeModal(data);
-                }
-            })
-            .catch(function (err) {
-                productService.getTaxCodesVS1().then(function (data) {
-                    setTaxCodeModal(data);
-                });
-            });
-    };
-    function setTaxCodeModal(data) {
-        let useData = data.ttaxcodevs1;
-        // let records = [];
-        // let inventoryData = [];
-        for (let i = 0; i < useData.length; i++) {
-            let taxRate = (useData[i].Rate * 100).toFixed(2);
-            var dataList = [
-                useData[i].Id || "",
-                useData[i].CodeName || "",
-                useData[i].Description || "-",
-                taxRate || 0,
-            ];
-            let taxcoderecordObj = {
-                codename: useData[i].CodeName || " ",
-                coderate: taxRate || " ",
-            };
-            taxCodesList.push(taxcoderecordObj);
-            splashArrayTaxRateList.push(dataList);
-        }
-        templateObject.taxraterecords.set(taxCodesList);
-        if (splashArrayTaxRateList) {
-            $("#tblTaxRate").DataTable({
-                data: splashArrayTaxRateList,
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                columnDefs: [
-                    {
-                        orderable: false,
-                        targets: 0,
-                    },
-                    {
-                        className: "taxName",
-                        targets: [1],
-                    },
-                    {
-                        className: "taxDesc",
-                        targets: [2],
-                    },
-                    {
-                        className: "taxRate text-right",
-                        targets: [3],
-                    },
-                ],
-                colReorder: true,
-
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                fnDrawCallback: function (oSettings) {
-                    // $('.dataTables_paginate').css('display', 'none');
-                },
-                fnInitComplete: function () {
-                    $(
-                        "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-                    ).insertAfter("#tblTaxRate_filter");
-                    $(
-                        "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                    ).insertAfter("#tblTaxRate_filter");
-                },
-            });
-        }
-    }
+    // templateObject.getAllTaxCodes = function () {
+    //     getVS1Data("TTaxcodeVS1")
+    //         .then(function (dataObject) {
+    //             if (dataObject.length === 0) {
+    //                 productService.getTaxCodesVS1().then(function (data) {
+    //                     setTaxCodeModal(data);
+    //                 });
+    //             } else {
+    //                 let data = JSON.parse(dataObject[0].data);
+    //                 setTaxCodeModal(data);
+    //             }
+    //         })
+    //         .catch(function (err) {
+    //             productService.getTaxCodesVS1().then(function (data) {
+    //                 setTaxCodeModal(data);
+    //             });
+    //         });
+    // };
+    // function setTaxCodeModal(data) {
+    //     let useData = data.ttaxcodevs1;
+    //     // let records = [];
+    //     // let inventoryData = [];
+    //     for (let i = 0; i < useData.length; i++) {
+    //         let taxRate = (useData[i].Rate * 100).toFixed(2);
+    //         const dataList = [
+    //             useData[i].Id || "",
+    //             useData[i].CodeName || "",
+    //             useData[i].Description || "-",
+    //             taxRate || 0,
+    //         ];
+    //         let taxcoderecordObj = {
+    //             codename: useData[i].CodeName || " ",
+    //             coderate: taxRate || " ",
+    //         };
+    //         taxCodesList.push(taxcoderecordObj);
+    //         splashArrayTaxRateList.push(dataList);
+    //     }
+    //     templateObject.taxraterecords.set(taxCodesList);
+    //     if (splashArrayTaxRateList) {
+    //         $("#tblTaxRate").DataTable({
+    //             data: splashArrayTaxRateList,
+    //             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //
+    //             columnDefs: [
+    //                 {
+    //                     orderable: false,
+    //                     targets: 0,
+    //                 },
+    //                 {
+    //                     className: "taxName",
+    //                     targets: [1],
+    //                 },
+    //                 {
+    //                     className: "taxDesc",
+    //                     targets: [2],
+    //                 },
+    //                 {
+    //                     className: "taxRate text-right",
+    //                     targets: [3],
+    //                 },
+    //             ],
+    //             colReorder: true,
+    //
+    //             pageLength: initialDatatableLoad,
+    //             lengthMenu: [
+    //                 [initialDatatableLoad, -1],
+    //                 [initialDatatableLoad, "All"],
+    //             ],
+    //             info: true,
+    //             responsive: true,
+    //             fnDrawCallback: function (oSettings) {
+    //                 // $('.dataTables_paginate').css('display', 'none');
+    //             },
+    //             fnInitComplete: function () {
+    //                 $(
+    //                     "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+    //                 ).insertAfter("#tblTaxRate_filter");
+    //                 $(
+    //                     "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+    //                 ).insertAfter("#tblTaxRate_filter");
+    //             },
+    //         });
+    //     }
+    // }
 
     setTimeout(function () {
         templateObject.getAllClients();
-        templateObject.getAllTaxCodes();
+        // templateObject.getAllTaxCodes();
     }, 500);
 
     $('#addLine').on('click', function () {
@@ -293,15 +292,15 @@ Template.recontransactiondetail.onRendered(function() {
         }
         setCalculated();
     });
-    $(document).on("click", "#tblTaxRate tbody tr", function (e) {
-        let trow = $(this);
-        if (selectLineID) {
-            let lineTaxRate = trow.find(".taxRate").text();
-            $('#' + selectLineID + " .lineTaxRate").val(lineTaxRate);
-            $('#taxRateListModal').modal('toggle');
-        }
-        setCalculated();
-    });
+    // $(document).on("click", "#tblTaxRate tbody tr", function (e) {
+    //     let trow = $(this);
+    //     if (selectLineID) {
+    //         let lineTaxRate = trow.find(".taxRate").text();
+    //         $('#' + selectLineID + " .lineTaxRate").val(lineTaxRate);
+    //         $('#taxRateListModal').modal('toggle');
+    //     }
+    //     setCalculated();
+    // });
 
     $("#DateIn").datepicker({
         showOn: 'button',
@@ -325,7 +324,6 @@ Template.recontransactiondetail.onRendered(function() {
 
 
 Template.recontransactiondetail.events({
-
     'click .lineProductName, keydown .lineProductName': function (event) {
         selectLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -657,7 +655,6 @@ Template.recontransactiondetail.events({
             $('.fullScreenSpin').css('display', 'none');
         });
     },
-
 });
 
 Template.recontransactiondetail.helpers({
@@ -686,11 +683,9 @@ function openProductListModal() {
         $('#tblInventory_filter .form-control-sm').focus();
         $('#tblInventory_filter .form-control-sm').val('');
         $('#tblInventory_filter .form-control-sm').trigger("input");
-
-        var datatable = $('#tblInventory').DataTable();
+        const datatable = $('#tblInventory').DataTable();
         datatable.draw();
         $('#tblInventory_filter .form-control-sm').trigger("input");
-
     }, 500);
 }
 function setOneProductDataByName(productDataName) {

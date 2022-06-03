@@ -70,7 +70,6 @@ export class ReconService extends BaseService {
     }
 
     getOneReconData(id) {
-
         return this.getOneById(this.ERPObjects.TReconciliation, id);
     }
 

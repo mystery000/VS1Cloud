@@ -119,44 +119,44 @@
                                 <p style="margin-bottom: 0; font-weight: 300; font-size: 14px; margin-top: 12px;">{{ lastTransactionDate }}</p>
                                 <p style="margin-bottom: 0; font-weight: 300; font-size: 14px;"><a href="/reconciliationlist">Reconciliation Report</a></p>
                             </div>
-                            <div>
-                                <div class="dropdown" style="margin-top: 14px;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Manage Account
-                                    </button>
-                                    <div class="dropdown-menu manage-account" aria-labelledby="dropdownMenuButton">
-                                        <div class="row">
-                                            <div class="col-12 col-md-4">
-                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Find</div>
-                                                <ul>
-                                                    <li><a class="dropdown-item" href="">Account Transactions</a></li>
-                                                    <li><a class="dropdown-item" href="">Bank Statements</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">New</div>
-                                                <ul>
-                                                    <li><a class="dropdown-item" href="">Spend Money</a></li>
-                                                    <li><a class="dropdown-item" href="">Receive Money</a></li>
-                                                    <li><a class="dropdown-item" href="">Transfer Money</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Reconcile</div>
-                                                <ul>
-                                                    <li><a class="dropdown-item" href="">Reconcile Account</a></li>
-                                                    <li><a class="dropdown-item" href="">Bank Rules</a></li>
-                                                    <li><a class="dropdown-item" href="">Reconciliation Report</a></li>
-                                                    <li><a class="dropdown-item" href="">Import a Statement</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-12 col-md-12">
-                                                <button type="button" class="btn btn-primary" style="margin: 5px 10px;">Edit Account Details</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div>-->
+<!--                                <div class="dropdown" style="margin-top: 14px;">-->
+<!--                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                        Manage Account-->
+<!--                                    </button>-->
+<!--                                    <div class="dropdown-menu manage-account" aria-labelledby="dropdownMenuButton">-->
+<!--                                        <div class="row">-->
+<!--                                            <div class="col-12 col-md-4">-->
+<!--                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Find</div>-->
+<!--                                                <ul>-->
+<!--                                                    <li><a class="dropdown-item" href="">Account Transactions</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Bank Statements</a></li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-12 col-md-4">-->
+<!--                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">New</div>-->
+<!--                                                <ul>-->
+<!--                                                    <li><a class="dropdown-item" href="">Spend Money</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Receive Money</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Transfer Money</a></li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-12 col-md-4">-->
+<!--                                                <div class="dropdown-item" style="font-weight: 700; font-size: 18px;">Reconcile</div>-->
+<!--                                                <ul>-->
+<!--                                                    <li><a class="dropdown-item" href="">Reconcile Account</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Bank Rules</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Reconciliation Report</a></li>-->
+<!--                                                    <li><a class="dropdown-item" href="">Import a Statement</a></li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+<!--                                            <div class="col-12 col-md-12">-->
+<!--                                                <button type="button" class="btn btn-primary" style="margin: 5px 10px;">Edit Account Details</button>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -206,8 +206,8 @@
             </div>
         </div>
         {{#if bankTransactionData}}
-        {{#each itemTransaction in bankTransactionData}}
-        <div class="row justify-content-center mb-6" id="divTransactionLine_{{ itemTransaction.YodleeLineID }}">
+            {{#each itemTransaction in bankTransactionData}}
+            <div class="row justify-content-center mb-6" id="divLine_{{ itemTransaction.YodleeLineID }}">
             <div class="col-12 col-md-5">
                 <div class="card shadow">
                     <div class="card-header">
@@ -349,7 +349,11 @@
                 </div>
             </div>
         </div>
-        {{/each}}
+            {{/each}}
+
+            <div class="row justify-content-center mb-6" id="divLineDetail" style="display:none;">
+                {{> recontransactiondetail}}
+            </div>
         {{/if}}
 
         <div class="row justify-content-center mb-6">
