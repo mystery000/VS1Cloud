@@ -6609,24 +6609,23 @@ Template.appointments.events({
             }else{
             templateObject.getAllProductData();
             }
-            document.getElementById("aStartDate").value = result[0].aStartDate || 0;
+            document.getElementById("aStartDate").value = result[0].aStartDate || '';
             document.getElementById("updateID").value = result[0].id || 0;
             document.getElementById("appID").value = result[0].id;
             document.getElementById("customer").value = result[0].accountname;
             document.getElementById("phone").value = result[0].phone;
             document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
-            document.getElementById("state").value = result[0].state || ''
-            document.getElementById("address").value = result[0].street || ''
+            document.getElementById("state").value = result[0].state || '';
+            document.getElementById("address").value = result[0].street || '';
             if (Session.get('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = result[0].notes;
             }
-            document.getElementById("suburb").value = result[0].suburb || ''
-            document.getElementById("zip").value = result[0].zip || ''
+            document.getElementById("suburb").value = result[0].suburb || '';
+            document.getElementById("zip").value = result[0].zip || '';
             document.getElementById("country").value = result[0].country || '';
 
 
             document.getElementById("product-list").value = result[0].product || '';
-            //$('#product-list').prepend('<option value="' + result[0].product + '">' + result[0].product + '</option>');
             document.getElementById("employee_name").value = result[0].employeename;
             document.getElementById("dtSODate").value = moment(result[0].startDate.split(' ')[0]).format('DD/MM/YYYY');
             document.getElementById("dtSODate2").value = moment(result[0].endDate.split(' ')[0]).format('DD/MM/YYYY');
@@ -6636,6 +6635,17 @@ Template.appointments.events({
             document.getElementById("tActualStartTime").value = result[0].aStartTime;
             document.getElementById("tActualEndTime").value = result[0].aEndTime;
             document.getElementById("txtActualHoursSpent").value = hoursFormatted || '';
+            templateObject.attachmentCount.set(0);
+            if (result[0].attachments) {
+                if (result.length) {
+                    templateObject.attachmentCount.set(result[0].attachments.length);
+                    templateObject.uploadedFiles.set(result[0].attachments);
+                }
+            } else {
+                templateObject.attachmentCount.set('');
+                templateObject.uploadedFiles.set('');
+                templateObject.uploadedFile.set('')
+            }
 
             $('#event-modal').modal();
           }
