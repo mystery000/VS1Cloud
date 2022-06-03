@@ -676,6 +676,10 @@ Template.newcurrencypop.events({
       const data = await taxRateService.getOneCurrencyByCountry(selectCountry);
 
       if (data) {
+        /**
+         * Let's call the Fx APis here
+         */
+        const fxApi = new FxApi();
         for (let i = 0; i < data.tcurrency.length; i++) {
           if (data.tcurrency[i].Country === selectCountry) {
             var currencyid = data.tcurrency[i].Id || "";
@@ -687,11 +691,7 @@ Template.newcurrencypop.events({
             var currencyBuyRate = data.tcurrency[i].BuyRate || 0;
             var currencySellRate = data.tcurrency[i].SellRate || 0;
 
-            /**
-             * Let's call the Fx APis here
-             */
-            const fxApi = new FxApi();
-            let currencyRates = await fxApi.getExchangeRate(currencyCode);
+            let currencyRates = await fxApi.getExchangeRate(currencyName); // we were using currencyCode instead...
             if (currencyRates) {
               currencyBuyRate = currencyRates.buy;
               currencySellRate = currencyRates.sell;
