@@ -1308,130 +1308,16 @@ Template.leadscard.events({
         }
     },
     'click .btnQuote': async function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        const templateObject = Template.instance();
-        let contactService = new ContactService();
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        let customerName = $('#edtLeadEmployeeName').val()||'';
-        if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(async function (data) {
-                let customerID = data.fields.ID;
-                await templateObject.saveCustomerDetails();
-                $('.fullScreenSpin').css('display','none');
-                FlowRouter.go('/quotecard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-
-        }
+        convertToCustomer('quotecard');
     },
     'click .btnSalesOrder': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(async function (data) {
-                let customerID = data.fields.ID;
-                await templateObject.saveCustomerDetails();
-                $('.fullScreenSpin').css('display','none');
-                FlowRouter.go('/salesordercard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-
-        }
+        convertToCustomer('salesordercard');
     },
     'click .btnInvoice': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(async function (data) {
-                let customerID = data.fields.ID;
-                await templateObject.saveCustomerDetails();
-                $('.fullScreenSpin').css('display','none');
-                FlowRouter.go('/invoicecard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-
-        }
+        convertToCustomer('invoicecard');
     },
     'click .btnRefund': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let currentId = FlowRouter.current().queryParams;
-        if (!isNaN(currentId.id)) {
-            let customerID = parseInt(currentId.id);
-            FlowRouter.go('/refundcard?customerid=' + customerID);
-        } else {
-
-        }
+        convertToCustomer('refundcard');
     }
 });
 
@@ -1545,6 +1431,45 @@ function getCheckPrefDetails() {
         }
     }
     return checkPrefDetails;
+}
+function convertToCustomer(nav) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    const templateObject = Template.instance();
+    let contactService = new ContactService();
+    let currentId = FlowRouter.current().queryParams;
+    let objDetails = '';
+    if (!isNaN(currentId.id)) {
+        let currentLead = parseInt(currentId.id);
+        objDetails = {
+            type: "TProspectEx",
+            fields: {
+                ID: currentLead,
+                IsCustomer: true
+            }
+        };
+        contactService.saveProspectEx(objDetails).then(async function (data) {
+            let customerID = data.fields.ID;
+            await templateObject.saveCustomerDetails();
+            $('.fullScreenSpin').css('display','none');
+            FlowRouter.go('/' + nav + '?customerid=' + customerID);
+        }).catch(function (err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    } else {
+
+    }
 }
 function removeAttachment(suffix, event) {
     let tempObj = Template.instance();

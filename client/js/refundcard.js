@@ -168,8 +168,6 @@ Template.refundcard.onRendered(() => {
             var inputValue2 = $('.customField2Text').text();
             $('.lblCustomField2').text(inputValue2);
         });
-
-
     });
 
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -214,7 +212,7 @@ Template.refundcard.onRendered(() => {
         }
         templateObject.clientrecords.set(clientList);
 
-        for (var i = 0; i < clientList.length; i++) {
+        for (let i = 0; i < clientList.length; i++) {
             //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
         }
         if (FlowRouter.current().queryParams.id || FlowRouter.current().queryParams.customerid) {
@@ -2145,7 +2143,7 @@ Template.refundcard.onRendered(() => {
         }).catch(function (err) {
         });
       });
-    }
+    };
     setTimeout(function(){
         templateObject.getSalesCustomFieldsList()
     },500);
@@ -2188,14 +2186,10 @@ Template.refundcard.onRendered(() => {
                 for (let i in data.tleadstatustype) {
                     let leadrecordObj = {
                         orderstatus: data.tleadstatustype[i].TypeName || ' '
-
                     };
-
                     statusList.push(leadrecordObj);
                 }
                 templateObject.statusrecords.set(statusList);
-
-
             });
         });
     };
@@ -2293,19 +2287,14 @@ Template.refundcard.onRendered(() => {
                     let termrecordObj = {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
-
                     if (data.ttermsvs1[i].isSalesdefault == true) {
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
-
-
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
-
                 }
             });
         });
-
     };
     templateObject.getTerms();
 

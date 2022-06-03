@@ -3469,8 +3469,6 @@ function getCheckPrefDetails() {
             const clientUsername = getcurrentCloudDetails.cloudUsername;
             const clientEmail = getcurrentCloudDetails.cloudEmail;
             checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'customerscard'});
-            console.log('checkPrefDetails');
-            console.log(checkPrefDetails);
         }
     }
     return checkPrefDetails;
