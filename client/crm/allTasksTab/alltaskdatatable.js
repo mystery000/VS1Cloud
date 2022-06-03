@@ -93,7 +93,7 @@ Template.alltaskdatatable.onRendered(function () {
   };
 
   // initialize 3 tasks datatable
-  templateObject.initTable = function () {
+  templateObject.initAllTasksTable = function (search = null) {
     let splashArrayTaskList = templateObject.makeTaskTableRows(
       templateObject.allRecords.get()
     );
@@ -260,6 +260,54 @@ Template.alltaskdatatable.onRendered(function () {
       },
     });
 
+    $("#tblAllTaskDatatable_filter input").val(search);
+
+    // if project task modal is opened,
+    // initialize projecttask table
+    let id = $("#editProjectID").val();
+    if (id) {
+      crmService
+        .getTProjectDetail(id)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (data.fields.ID == id) {
+            let selected_record = data.fields;
+
+            // set task list
+            let active_projecttasks = [];
+            let projecttasks = [];
+            if (selected_record.projecttasks) {
+              if (selected_record.projecttasks.fields == undefined) {
+                projecttasks = selected_record.projecttasks;
+              } else {
+                projecttasks.push(selected_record.projecttasks);
+              }
+
+              active_projecttasks = projecttasks.filter(
+                (item) =>
+                  item.fields.Active == true && item.fields.Completed == false
+              );
+            }
+            templateObject.projecttasks.set(projecttasks);
+            templateObject.active_projecttasks.set(active_projecttasks);
+
+            templateObject.initProjectTasksTable();
+          } else {
+            return;
+          }
+        })
+        .catch(function (err) {
+          swal(err, "", "error");
+          return;
+        });
+    }
+
+    setTimeout(() => {
+      templateObject.initDatepicker();
+    }, 500);
+  };
+
+  templateObject.initTodayTasksTable = function (search = null) {
     let todayTaskArray = templateObject.makeTaskTableRows(
       templateObject.todayRecords.get()
     );
@@ -424,7 +472,10 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblTodayTaskDatatable_filter");
       },
     });
+    $("#tblTodayTaskDatatable_filter input").val(search);
+  };
 
+  templateObject.initUpcomingTasksTable = function (search = null) {
     let upcomingTaskArray = templateObject.makeTaskTableRows(
       templateObject.upcomingRecords.get()
     );
@@ -592,50 +643,7 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
-
-    // if project task modal is opened,
-    // initialize projecttask table
-    let id = $("#editProjectID").val();
-    if (id) {
-      crmService
-        .getTProjectDetail(id)
-        .then(function (data) {
-          $(".fullScreenSpin").css("display", "none");
-          if (data.fields.ID == id) {
-            let selected_record = data.fields;
-
-            // set task list
-            let active_projecttasks = [];
-            let projecttasks = [];
-            if (selected_record.projecttasks) {
-              if (selected_record.projecttasks.fields == undefined) {
-                projecttasks = selected_record.projecttasks;
-              } else {
-                projecttasks.push(selected_record.projecttasks);
-              }
-
-              active_projecttasks = projecttasks.filter(
-                (item) =>
-                  item.fields.Active == true && item.fields.Completed == false
-              );
-            }
-            templateObject.projecttasks.set(projecttasks);
-            templateObject.active_projecttasks.set(active_projecttasks);
-
-            templateObject.initProjectTasksTable();
-          } else {
-            return;
-          }
-        })
-        .catch(function (err) {
-          swal(err, "", "error");
-          return;
-        });
-    }
-
-    setTimeout(() => {
-      templateObject.initDatepicker();
-    }, 500);
+    $("#tblUpcomingTaskDatatable_filter input").val(search);
   };
 
   templateObject.getInitialAllTaskList = function () {
@@ -676,7 +684,9 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.overdueRecords.set(overdue_records);
 
           setTimeout(() => {
-            templateObject.initTable();
+            templateObject.initTodayTasksTable();
+            templateObject.initUpcomingTasksTable();
+            templateObject.initAllTasksTable();
           }, 1000);
 
           $(".fullScreenSpin").css("display", "none");
@@ -723,7 +733,9 @@ Template.alltaskdatatable.onRendered(function () {
           templateObject.overdueRecords.set(overdue_records);
 
           setTimeout(() => {
-            templateObject.initTable();
+            templateObject.initTodayTasksTable();
+            templateObject.initUpcomingTasksTable();
+            templateObject.initAllTasksTable();
           }, 500);
 
           addVS1Data("TCRMTaskList", JSON.stringify(data));
@@ -1057,7 +1069,7 @@ Template.alltaskdatatable.onRendered(function () {
       .catch(function (err) {});
   };
 
-  templateObject.initLabelsTable = function () {
+  templateObject.initLabelsTable = function (search = null) {
     let labelArray = templateObject.makeLabelTableRows(
       templateObject.alllabels.get()
     );
@@ -1141,6 +1153,7 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblLabels_filter");
       },
     });
+    $("#tblLabels_filter input").val(search);
   };
 
   templateObject.getInitAllLabels();
@@ -1284,7 +1297,7 @@ Template.alltaskdatatable.onRendered(function () {
       .catch(function (err) {});
   };
 
-  templateObject.initProjectsTable = function () {
+  templateObject.initProjectsTable = function (search = null) {
     let projectArray = templateObject.makeProjectTableRows(
       templateObject.active_projects.get()
     );
@@ -1398,6 +1411,7 @@ Template.alltaskdatatable.onRendered(function () {
         ).insertAfter("#tblNewProjectsDatatable_filter");
       },
     });
+    $("#tblNewProjectsDatatable_filter input").val(search);
   };
 
   templateObject.getInitTProjectList();
@@ -2231,7 +2245,10 @@ Template.alltaskdatatable.events({
     }
 
     templateObject.allRecords.set(allCompletedRecords);
-    templateObject.initTable();
+
+    templateObject.initTodayTasksTable();
+    templateObject.initUpcomingTasksTable();
+    templateObject.initAllTasksTable();
   },
 
   // view today completed task
@@ -2261,7 +2278,9 @@ Template.alltaskdatatable.events({
     }
 
     templateObject.todayRecords.set(allCompletedRecords);
-    templateObject.initTable();
+
+    templateObject.initTodayTasksTable();
+    templateObject.initAllTasksTable();
   },
 
   // view upcoming completed task
@@ -2291,7 +2310,9 @@ Template.alltaskdatatable.events({
     }
 
     templateObject.upcomingRecords.set(allCompletedRecords);
-    templateObject.initTable();
+
+    templateObject.initUpcomingTasksTable();
+    templateObject.initAllTasksTable();
   },
 
   // submit save new project
@@ -2481,7 +2502,10 @@ Template.alltaskdatatable.events({
 
       $("#allTasks-tab").click();
       templateObject.allRecords.set(filterRecord);
-      templateObject.initTable();
+
+      templateObject.initTodayTasksTable();
+      templateObject.initUpcomingTasksTable();
+      templateObject.initAllTasksTable();
     }
   },
 
@@ -2889,7 +2913,6 @@ Template.alltaskdatatable.events({
 
   // search table
   "keyup #tblAllTaskDatatable_filter input": function (event) {
-    console.log($(event.target).val(), event.keyCode);
     if ($(event.target).val() != "") {
       $(".btnSearchAllTaskDatatable").addClass("btnSearchAlert");
     } else {
@@ -2897,6 +2920,214 @@ Template.alltaskdatatable.events({
     }
     if (event.keyCode == 13) {
       $(".btnSearchAllTaskDatatable").trigger("click");
+    }
+  },
+
+  "click .btnSearchAllTaskDatatable": function (event) {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let dataSearchName = $("#tblAllTaskDatatable_filter input").val();
+
+    if (dataSearchName.replace(/\s/g, "") != "") {
+      crmService
+        .getTasksByNameOrID(dataSearchName)
+        .then(function (data) {
+          $(".btnSearchAllTaskDatatable").removeClass("btnSearchAlert");
+
+          let all_records = data.tprojecttasks;
+          templateObject.allWithCompletedRecords.set(all_records);
+
+          all_records = all_records.filter(
+            (item) => item.fields.Completed == false
+          );
+
+          templateObject.allRecords.set(all_records);
+
+          templateObject.initAllTasksTable(dataSearchName);
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      $(".btnRefresh").trigger("click");
+    }
+  },
+
+  // search table
+  "keyup #tblTodayTaskDatatable_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnSearchTodayTaskDatatable").addClass("btnSearchAlert");
+    } else {
+      $(".btnSearchTodayTaskDatatable").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnSearchTodayTaskDatatable").trigger("click");
+    }
+  },
+
+  "click .btnSearchTodayTaskDatatable": function (event) {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let dataSearchName = $("#tblTodayTaskDatatable_filter input").val();
+
+    if (dataSearchName.replace(/\s/g, "") != "") {
+      crmService
+        .getTasksByNameOrID(dataSearchName)
+        .then(function (data) {
+          $(".btnSearchTodayTaskDatatable").removeClass("btnSearchAlert");
+
+          let all_records = data.tprojecttasks;
+          templateObject.allWithCompletedRecords.set(all_records);
+
+          all_records = all_records.filter(
+            (item) => item.fields.Completed == false
+          );
+
+          let today = moment().format("YYYY-MM-DD");
+          let today_records = all_records.filter(
+            (item) => item.fields.due_date.substring(0, 10) == today
+          );
+
+          templateObject.todayRecords.set(today_records);
+          templateObject.initTodayTasksTable(dataSearchName);
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      $(".btnRefresh").trigger("click");
+    }
+  },
+
+  // search table
+  "keyup #tblUpcomingTaskDatatable_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnSearchUpcomingTaskDatatable").addClass("btnSearchAlert");
+    } else {
+      $(".btnSearchUpcomingTaskDatatable").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnSearchUpcomingTaskDatatable").trigger("click");
+    }
+  },
+
+  "click .btnSearchUpcomingTaskDatatable": function (event) {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let dataSearchName = $("#tblUpcomingTaskDatatable_filter input").val();
+
+    if (dataSearchName.replace(/\s/g, "") != "") {
+      crmService
+        .getTasksByNameOrID(dataSearchName)
+        .then(function (data) {
+          $(".btnSearchUpcomingTaskDatatable").removeClass("btnSearchAlert");
+
+          let all_records = data.tprojecttasks;
+          templateObject.allWithCompletedRecords.set(all_records);
+
+          all_records = all_records.filter(
+            (item) => item.fields.Completed == false
+          );
+
+          let today = moment().format("YYYY-MM-DD");
+          let upcoming_records = all_records.filter(
+            (item) => item.fields.due_date.substring(0, 10) > today
+          );
+          templateObject.upcomingRecords.set(upcoming_records);
+
+          templateObject.initUpcomingTasksTable(dataSearchName);
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      $(".btnRefresh").trigger("click");
+    }
+  },
+
+  // search projects table
+  "keyup #tblNewProjectsDatatable_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnSearchProjectsDatatable").addClass("btnSearchAlert");
+    } else {
+      $(".btnSearchProjectsDatatable").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnSearchProjectsDatatable").trigger("click");
+    }
+  },
+
+  "click .btnSearchProjectsDatatable": function (event) {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let dataSearchName = $("#tblNewProjectsDatatable_filter input").val();
+
+    if (dataSearchName.replace(/\s/g, "") != "") {
+      crmService
+        .getProjectsByNameOrID(dataSearchName)
+        .then(function (data) {
+          $(".btnSearchProjectsDatatable").removeClass("btnSearchAlert");
+
+          let all_projects = data.tprojectlist;
+          all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+          let active_projects = all_projects.filter(
+            (project) => project.fields.Active == true
+          );
+          templateObject.active_projects.set(active_projects);
+
+          templateObject.initProjectsTable(dataSearchName);
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      $(".btnRefresh").trigger("click");
+    }
+  },
+
+  // search labels table
+  "keyup #tblLabels_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnSearchLabelsDatatable").addClass("btnSearchAlert");
+    } else {
+      $(".btnSearchLabelsDatatable").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnSearchLabelsDatatable").trigger("click");
+    }
+  },
+
+  "click .btnSearchLabelsDatatable": function (event) {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    let dataSearchName = $("#tblLabels_filter input").val();
+
+    if (dataSearchName.replace(/\s/g, "") != "") {
+      crmService
+        .getLabelsByNameOrID(dataSearchName)
+        .then(function (data) {
+          $(".btnSearchLabelsDatatable").removeClass("btnSearchAlert");
+
+          let alllabels = data.tprojecttask_tasklabel;
+          templateObject.alllabels.set(alllabels);
+
+          templateObject.initLabelsTable(dataSearchName);
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      $(".btnRefresh").trigger("click");
     }
   },
 });
