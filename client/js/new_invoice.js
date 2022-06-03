@@ -2328,10 +2328,6 @@ Template.new_invoice.onRendered(() => {
                     if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
                         added = true;
                         setCustomerByID(useData[i]);
-                        setTimeout(function () {
-                            const rowCount = $('.results tbody tr').length;
-                            $('.counter').text(rowCount + ' items');
-                        }, 500);
                     }
                 }
                 if (!added) {

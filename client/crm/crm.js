@@ -5,6 +5,7 @@ import Tvs1CardPreference from "../js/Api/Model/Tvs1CardPreference";
 import Tvs1CardPreferenceFields from "../js/Api/Model/Tvs1CardPreferenceFields";
 
 import { CRMService } from "./crm-service";
+import {ContactService} from "../contacts/contact-service";
 let crmService = new CRMService();
 const _tabGroup = 9;
 
@@ -17,10 +18,94 @@ Template.crmoverview.onCreated(function () {
 
 Template.crmoverview.onRendered(function () {
   const templateObject = Template.instance();
+  const contactService = new ContactService();
   let currentId = FlowRouter.current().queryParams.id;
   currentId = currentId ? currentId : "all";
   templateObject.crmtaskmitem.set(currentId);
   templateObject.currentTabID.set("allTasks-tab");
+
+  function getCustomerData(customerID) {
+    getVS1Data('TCustomerVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneCustomerDataEx(customerID).then(function (data) {
+          setCustomerByID(data);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tcustomervs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+            added = true;
+            setCustomerByID(useData[i]);
+          }
+        }
+        if (!added) {
+          contactService.getOneCustomerDataEx(customerID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneCustomerDataEx(customerID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
+      });
+    });
+  }
+  function getLeadData(leadID) {
+    getVS1Data('TProspectVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneLeadDataEx(leadID).then(function (data) {
+          setCustomerByID(data);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tprospectvs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
+            added = true;
+            setCustomerByID(useData[i]);
+          }
+        }
+        if (!added) {
+          contactService.getOneLeadDataEx(leadID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneLeadDataEx(leadID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
+      });
+    });
+  }
+  function setCustomerByID(data){
+    $('#add_task_name').val(data.fields.ClientName);
+    $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
+
+    $(".addTaskModalProjectName").html("All Tasks");
+    $(".lblAddTaskSchedule").html("Schedule");
+
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
+
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
+    $("#newTaskModal").modal("toggle");
+  }
+  if (FlowRouter.current().queryParams.customerid) {
+    getCustomerData(FlowRouter.current().queryParams.customerid);
+  }
+  if (FlowRouter.current().queryParams.leadid) {
+    getLeadData(FlowRouter.current().queryParams.leadid);
+  }
 
   templateObject.deactivateDraggable = () => {
     draggableCharts.disable();
@@ -750,12 +835,37 @@ Template.crmoverview.events({
   },
 
   "click .btnRefresh": function () {
-    Meteor._reload.reload();
+    $(".fullScreenSpin").css("display", "inline-block");
+    crmService
+      .getAllTaskList()
+      .then(function (data) {
+        addVS1Data("TCRMTaskList", JSON.stringify(data));
+        crmService
+          .getTProjectList()
+          .then(function (data) {
+            addVS1Data("TCRMProjectList", JSON.stringify(data));
+            crmService
+              .getAllLabels()
+              .then(function (data) {
+                addVS1Data("TCRMLabelList", JSON.stringify(data));
+                Meteor._reload.reload();
+              })
+              .catch(function (err) {
+                Meteor._reload.reload();
+              });
+          })
+          .catch(function (err) {
+            Meteor._reload.reload();
+          });
+      })
+      .catch(function (err) {
+        Meteor._reload.reload();
+      });
   },
 
-  "click .btnSearchCrm": function () {
-    Meteor._reload.reload();
-  },
+  // "click .btnSearchCrm": function () {
+  //   Meteor._reload.reload();
+  // },
 
   "click .btnOpenSettings": function (event) {
     let currentTabID = Template.instance().currentTabID.get();

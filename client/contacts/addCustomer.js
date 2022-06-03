@@ -1082,6 +1082,7 @@ Template.customerscard.onRendered(function () {
         });
     };
     function setOneCustomerDataEx(data) {
+        // console.log(data);
         let lineItems = [];
         let lineItemObj = {
             id: data.fields.ID || '',
@@ -1295,7 +1296,6 @@ Template.customerscard.onRendered(function () {
             setInitialForEmptyCurrentID();
         }
     }
-
     templateObject.getCustomersList = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
@@ -1895,10 +1895,6 @@ Template.customerscard.events({
         //         $('.fullScreenSpin').css('display','none');
         //     });
         // }
-
-
-
-
     },
     'click #chkSameAsShipping': function (event) {
         /*if($(event.target).is(':checked')){
@@ -1926,7 +1922,6 @@ Template.customerscard.events({
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
-
         let company = $('#edtCustomerCompany').val();
         let email = $('#edtCustomerEmail').val();
         let title = $('#edtTitle').val();
@@ -1940,7 +1935,6 @@ Template.customerscard.events({
         let accountno = $('#edtClientNo').val();
         let skype = $('#edtCustomerSkypeID').val();
         let website = $('#edtCustomerWebsite').val();
-
         let streetAddress = $('#edtCustomerShippingAddress').val();
         let city = $('#edtCustomerShippingCity').val();
         let state = $('#edtCustomerShippingState').val();
@@ -1965,33 +1959,26 @@ Template.customerscard.events({
             bzipcode = $('#edtCustomerBillingZIP').val();
             bcountry = $('#bedtCountry').val();
         }
-
         let permanentDiscount = $('#edtCustomerCardDiscount').val()||0;
-
         let sltPaymentMethodName = $('#sltPreferredPayment').val();
         let sltTermsName = $('#sltTerms').val();
         let sltShippingMethodName = '';
         let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
-
-        var sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
-
+        const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-
         let sltTaxCodeName = "";
-
         let isChecked = $(".chkTaxExempt").is(":checked");
         if (isChecked) {
             sltTaxCodeName = "NT";
         } else {
             sltTaxCodeName = $('#sltTaxCode').val();
         }
-
         let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
-        let custField4 = $('#edtCustomeField4').val();
+        let custField1 = $('#edtCustomField1').val();
+        let custField2 = $('#edtCustomField2').val();
+        let custField3 = $('#edtCustomField3').val();
+        let custField4 = $('#edtCustomField4').val();
         let customerType = $('#sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
 
@@ -1999,195 +1986,66 @@ Template.customerscard.events({
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
         let objDetails = '';
+        let TCustomerID = 0;
         if (getemp_id[1]) {
-            currentEmployee = parseInt(currentEmployee);
-            objDetails = {
-                type: "TCustomerEx",
-                fields: {
-                    ID: currentEmployee,
-                    Title: title,
-                    ClientName: company,
-                    FirstName: firstname,
-                    // MiddleName:middlename,
-                    CUSTFLD10: middlename,
-                    LastName: lastname,
-                    PublishOnVS1: true,
-                    Email: email,
-                    Phone: phone,
-                    Mobile: mobile,
-                    SkypeName: skype,
-                    Faxnumber: fax,
-                    // Sex: gender,
-                    ClientTypeName: customerType,
-                    // Position: position,
-                    Street: streetAddress,
-                    Street2: city,
-                    Suburb: city,
-                    State: state,
-                    PostCode: postalcode,
-                    Country: country,
-
-                    BillStreet: bstreetAddress,
-                    BillStreet2: bcity,
-                    BillState: bstate,
-                    BillPostCode: bzipcode,
-                    Billcountry: bcountry,
-                    IsSupplier:isSupplier,
-                    Notes: notes,
-                    // CustFld1: custfield1,
-                    // CustFld2: custfield2,
-                    URL: website,
-                    PaymentMethodName: sltPaymentMethodName,
-                    TermsName: sltTermsName,
-                    ShippingMethodName: sltShippingMethodName,
-                    // RewardPointsOpeningBalance:parseInt(rewardPointsOpeningBalance),
-                    // RewardPointsOpeningDate:openingDate,
-                    TaxCodeName: sltTaxCodeName,
-                    Attachments: uploadedItems,
-                    CUSTFLD1: custField1,
-                    CUSTFLD2: custField2,
-                    CUSTFLD3: custField3,
-                    CUSTFLD4: custField4,
-                    Discount:parseFloat(permanentDiscount)||0
-                }
-            };
-
+            TCustomerID = parseInt(currentEmployee);
         } else {
-            let custdupID = 0;
             let checkCustData = await contactService.getCheckCustomersData(company)||'';
             if (checkCustData !== ''){
                 if (checkCustData.tcustomer.length) {
-                    custdupID = checkCustData.tcustomer[0].Id;
-                    objDetails = {
-                        type: "TCustomerEx",
-                        fields: {
-                            ID: custdupID || 0,
-                            Title: title,
-                            ClientName: company,
-                            FirstName: firstname,
-                            CUSTFLD10: middlename,
-                            LastName: lastname,
-                            PublishOnVS1: true,
-                            Email: email,
-                            Phone: phone,
-                            Mobile: mobile,
-                            SkypeName: skype,
-                            Faxnumber: fax,
-                            ClientTypeName: customerType,
-                            Street: streetAddress,
-                            Street2: city,
-                            Suburb: city,
-                            State: state,
-                            PostCode: postalcode,
-                            Country: country,
-                            BillStreet: bstreetAddress,
-                            BillStreet2: bcity,
-                            BillState: bstate,
-                            BillPostCode: bzipcode,
-                            Billcountry: bcountry,
-                            IsSupplier:isSupplier,
-                            Notes: notes,
-                            URL: website,
-                            PaymentMethodName: sltPaymentMethodName,
-                            TermsName: sltTermsName,
-                            ShippingMethodName: sltShippingMethodName,
-                            TaxCodeName: sltTaxCodeName,
-                            Attachments: uploadedItems,
-                            CUSTFLD1: custField1,
-                            CUSTFLD2: custField2,
-                            CUSTFLD3: custField3,
-                            CUSTFLD4: custField4,
-                            Discount:parseFloat(permanentDiscount)||0
-                        }
-                    };
-                } else {
-                    objDetails = {
-                        type: "TCustomerEx",
-                        fields: {
-                            Title: title,
-                            ClientName: company,
-                            FirstName: firstname,
-                            CUSTFLD10: middlename,
-                            LastName: lastname,
-                            PublishOnVS1: true,
-                            Email: email,
-                            Phone: phone,
-                            Mobile: mobile,
-                            SkypeName: skype,
-                            Faxnumber: fax,
-                            ClientTypeName: customerType,
-                            Street: streetAddress,
-                            Street2: city,
-                            Suburb: city,
-                            State: state,
-                            PostCode: postalcode,
-                            Country: country,
-                            BillStreet: bstreetAddress,
-                            BillStreet2: bcity,
-                            BillState: bstate,
-                            BillPostCode: bzipcode,
-                            Billcountry: bcountry,
-                            IsSupplier:isSupplier,
-                            Notes: notes,
-                            URL: website,
-                            PaymentMethodName: sltPaymentMethodName,
-                            TermsName: sltTermsName,
-                            ShippingMethodName: sltShippingMethodName,
-                            TaxCodeName: sltTaxCodeName,
-                            Attachments: uploadedItems,
-                            CUSTFLD1: custField1,
-                            CUSTFLD2: custField2,
-                            CUSTFLD3: custField3,
-                            CUSTFLD4: custField4,
-                            Discount:parseFloat(permanentDiscount)||0
-                        }
-                    };
+                    TCustomerID = checkCustData.tcustomer[0].Id;
                 }
-            } else {
-                objDetails = {
-                type: "TCustomerEx",
-                fields: {
-                    Title: title,
-                    ClientName: company,
-                    FirstName: firstname,
-                    CUSTFLD10: middlename,
-                    LastName: lastname,
-                    PublishOnVS1: true,
-                    Email: email,
-                    Phone: phone,
-                    Mobile: mobile,
-                    SkypeName: skype,
-                    Faxnumber: fax,
-                    ClientTypeName: customerType,
-                    Street: streetAddress,
-                    Street2: city,
-                    Suburb: city,
-                    State: state,
-                    PostCode: postalcode,
-                    Country: country,
-                    BillStreet: bstreetAddress,
-                    BillStreet2: bcity,
-                    BillState: bstate,
-                    BillPostCode: bzipcode,
-                    Billcountry: bcountry,
-                    IsSupplier:isSupplier,
-                    Notes: notes,
-                    URL: website,
-                    PaymentMethodName: sltPaymentMethodName,
-                    TermsName: sltTermsName,
-                    ShippingMethodName: sltShippingMethodName,
-                    TaxCodeName: sltTaxCodeName,
-                    Attachments: uploadedItems,
-                    CUSTFLD1: custField1,
-                    CUSTFLD2: custField2,
-                    CUSTFLD3: custField3,
-                    CUSTFLD4: custField4,
-                    Discount:parseFloat(permanentDiscount)||0
-                }
-            };
             }
         }
-
+        objDetails = {
+            type: "TCustomerEx",
+            fields: {
+                ID: TCustomerID,
+                Title: title,
+                ClientName: company,
+                FirstName: firstname,
+                MiddleName: middlename,
+                CUSTFLD10: middlename,
+                LastName: lastname,
+                PublishOnVS1: true,
+                Email: email,
+                Phone: phone,
+                Mobile: mobile,
+                SkypeName: skype,
+                Faxnumber: fax,
+                // Sex: gender,
+                ClientTypeName: customerType,
+                // Position: position,
+                Street: streetAddress,
+                Street2: city,
+                Suburb: city,
+                State: state,
+                PostCode: postalcode,
+                Country: country,
+                BillStreet: bstreetAddress,
+                BillStreet2: bcity,
+                BillState: bstate,
+                BillPostCode: bzipcode,
+                Billcountry: bcountry,
+                IsSupplier:isSupplier,
+                Notes: notes,
+                // CustFld1: custfield1,
+                // CustFld2: custfield2,
+                URL: website,
+                PaymentMethodName: sltPaymentMethodName,
+                TermsName: sltTermsName,
+                ShippingMethodName: sltShippingMethodName,
+                // RewardPointsOpeningBalance:parseInt(rewardPointsOpeningBalance),
+                // RewardPointsOpeningDate:openingDate,
+                TaxCodeName: sltTaxCodeName,
+                Attachments: uploadedItems,
+                CUSTFLD1: custField1,
+                CUSTFLD2: custField2,
+                CUSTFLD3: custField3,
+                CUSTFLD4: custField4,
+                Discount: parseFloat(permanentDiscount)||0
+            }
+        };
         contactService.saveCustomerEx(objDetails).then(function (objDetails) {
             let customerSaveID = objDetails.fields.ID;
             if (customerSaveID) {
@@ -3002,7 +2860,6 @@ Template.customerscard.events({
             });
         }
     },
-
     // 'click .new_attachment_btn': function (event) {
     //     $('#attachment-upload').trigger('click');
     //
@@ -3612,8 +3469,6 @@ function getCheckPrefDetails() {
             const clientUsername = getcurrentCloudDetails.cloudUsername;
             const clientEmail = getcurrentCloudDetails.cloudEmail;
             checkPrefDetails = CloudPreference.findOne({userid: clientID, PrefName: 'customerscard'});
-            console.log('checkPrefDetails');
-            console.log(checkPrefDetails);
         }
     }
     return checkPrefDetails;

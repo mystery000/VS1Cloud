@@ -1,46 +1,23 @@
-import {
-    SalesBoardService
-} from './sales-service';
-import {
-    PurchaseBoardService
-} from './purchase-service';
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    CoreService
-} from '../js/core-service';
-import {
-    DashBoardService
-} from "../Dashboard/dashboard-service";
-import {
-    UtilityService
-} from "../utility-service";
-import {
-    ProductService
-} from "../product/product-service";
-import {
-    AccountService
-} from "../accounts/account-service";
+import {SalesBoardService} from './sales-service';
+import {PurchaseBoardService} from './purchase-service';
+import {ReactiveVar} from 'meteor/reactive-var';
+import {CoreService} from '../js/core-service';
+import {DashBoardService} from "../Dashboard/dashboard-service";
+import {UtilityService} from "../utility-service";
+import {ProductService} from "../product/product-service";
+import {AccountService} from "../accounts/account-service";
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-
-import {
-    Random
-} from 'meteor/random';
-import {
-    jsPDF
-} from 'jspdf';
+import {Random} from 'meteor/random';
+import {jsPDF} from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
-import {
-    autoTable
-} from 'jspdf-autotable';
+import {autoTable} from 'jspdf-autotable';
 import 'jquery-editable-select';
-import {
-    SideBarService
-} from '../js/sidebar-service';
+import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {ContactService} from "../contacts/contact-service";
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
@@ -87,27 +64,35 @@ Template.billcard.onCreated(() => {
     templateObject.statusrecords = new ReactiveVar([]);
 });
 Template.billcard.onRendered(() => {
+    const dataListTable = [
+        ' ' || '',
+        ' ' || '',
+        0 || 0,
+        0.00 || 0.00,
+        ' ' || '',
+        0.00 || 0.00,
+        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
+    ];
     $(window).on('load', function () {
         var win = $(this); //this = window
         if (win.width() <= 1024 && win.width() >= 450) {
             $("#colBalanceDue").addClass("order-12");
         }
-
         if (win.width() <= 926) {
             $("#totalSection").addClass("offset-md-6");
         }
-
     });
 
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
-    };
+    }
     const templateObject = Template.instance();
     const records = [];
     let purchaseService = new PurchaseBoardService();
     let clientsService = new PurchaseBoardService();
     let productsService = new PurchaseBoardService();
+    const contactService = new ContactService();
 
     const clientList = [];
     const productsList = [];
@@ -165,7 +150,6 @@ Template.billcard.onRendered(() => {
 */
     $(document).ready(function() {
 
-
         $('#formCheck-one').click(function() {
 
             if ($(event.target).is(':checked')) {
@@ -196,129 +180,55 @@ Template.billcard.onRendered(() => {
 
     });
     $('.fullScreenSpin').css('display', 'inline-block');
+
     templateObject.getAllClients = function() {
         getVS1Data('TSupplierVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
+            if (dataObject.length === 0) {
                 clientsService.getSupplierVS1().then(function(data) {
-                    for (let i in data.tsuppliervs1) {
-
-                        let supplierrecordObj = {
-                            supplierid: data.tsuppliervs1[i].Id || ' ',
-                            suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                            supplieremail: data.tsuppliervs1[i].Email || ' ',
-                            street: data.tsuppliervs1[i].Street || ' ',
-                            street2: data.tsuppliervs1[i].Street2 || ' ',
-                            street3: data.tsuppliervs1[i].Street3 || ' ',
-                            suburb: data.tsuppliervs1[i].Suburb || ' ',
-                            statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
-                            country: data.tsuppliervs1[i].Country || ' ',
-                            termsName: data.tsuppliervs1[i].TermsName || ''
-                        };
-
-                        clientList.push(supplierrecordObj);
-
-                    }
-                    templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                        if (a.suppliername == 'NA') {
-                            return 1;
-                        } else if (b.suppliername == 'NA') {
-                            return -1;
-                        }
-                        return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                    }));
-
-                    for (var i = 0; i < clientList.length; i++) {
-                        //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                    }
-                    if (FlowRouter.current().queryParams.id) {
-
-                    } else {
-                        setTimeout(function() {
-                            $('#edtSupplierName').trigger("click");
-                        }, 200);
-                    }
+                    setClientVS1(data);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsuppliervs1;
-                for (let i in useData) {
-
-                    let supplierrecordObj = {
-                        supplierid: useData[i].fields.ID || ' ',
-                        suppliername: useData[i].fields.ClientName || ' ',
-                        supplieremail: useData[i].fields.Email || ' ',
-                        street: useData[i].fields.Street || ' ',
-                        street2: useData[i].fields.Street2 || ' ',
-                        street3: useData[i].fields.Street3 || ' ',
-                        suburb: useData[i].fields.Suburb || ' ',
-                        statecode: useData[i].fields.State + ' ' + useData[i].fields.Postcode || ' ',
-                        country: useData[i].fields.Country || ' ',
-                        termsName: useData[i].fields.TermsName || ''
-                    };
-                    clientList.push(supplierrecordObj);
-                }
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                    if (a.suppliername == 'NA') {
-                        return 1;
-                    } else if (b.suppliername == 'NA') {
-                        return -1;
-                    }
-                    return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                }
-                if (FlowRouter.current().queryParams.id) {
-
-                } else {
-                    setTimeout(function() {
-                        $('#edtSupplierName').trigger("click");
-                    }, 100);
-                }
-
-
+                setClientVS1(data);
             }
         }).catch(function(err) {
             clientsService.getSupplierVS1().then(function(data) {
-                for (let i in data.tsuppliervs1) {
-
-                    let supplierrecordObj = {
-                        supplierid: data.tsuppliervs1[i].Id || ' ',
-                        suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                        supplieremail: data.tsuppliervs1[i].Email || ' ',
-                        street: data.tsuppliervs1[i].Street || ' ',
-                        street2: data.tsuppliervs1[i].Street2 || ' ',
-                        street3: data.tsuppliervs1[i].Street3 || ' ',
-                        suburb: data.tsuppliervs1[i].Suburb || ' ',
-                        statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
-                        country: data.tsuppliervs1[i].Country || ' ',
-                        termsName: data.tsuppliervs1[i].TermsName || ''
-                    };
-                    clientList.push(supplierrecordObj);
-                }
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                    if (a.suppliername == 'NA') {
-                        return 1;
-                    } else if (b.suppliername == 'NA') {
-                        return -1;
-                    }
-                    return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                }
-                if (FlowRouter.current().queryParams.id) {
-
-                } else {
-                    setTimeout(function() {
-                        $('#edtSupplierName').trigger("click");
-                    }, 200);
-                }
+                setClientVS1(data);
             });
         });
     };
+    function setClientVS1(data){
+        for (let i in data.tsuppliervs1) {
+            if (data.tsuppliervs1.hasOwnProperty(i)) {
+                let supplierrecordObj = {
+                    supplierid: data.tsuppliervs1[i].Id || ' ',
+                    suppliername: data.tsuppliervs1[i].ClientName || ' ',
+                    supplieremail: data.tsuppliervs1[i].Email || ' ',
+                    street: data.tsuppliervs1[i].Street || ' ',
+                    street2: data.tsuppliervs1[i].Street2 || ' ',
+                    street3: data.tsuppliervs1[i].Street3 || ' ',
+                    suburb: data.tsuppliervs1[i].Suburb || ' ',
+                    statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
+                    country: data.tsuppliervs1[i].Country || ' ',
+                    termsName: data.tsuppliervs1[i].TermsName || ''
+                };
+                clientList.push(supplierrecordObj);
+            }
+        }
+        templateObject.clientrecords.set(clientList);
+
+        for (let i = 0; i < clientList.length; i++) {
+            //$('#edtSupplierName').editableSelect('add', clientList[i].customername);
+        }
+        if (FlowRouter.current().queryParams.id || FlowRouter.current().queryParams.supplierid) {
+
+        } else {
+            setTimeout(function() {
+                $('#edtSupplierName').trigger("click");
+            }, 200);
+        }
+    }
+    templateObject.getAllClients();
 
     templateObject.getAllLeadStatuss = function() {
         getVS1Data('TLeadStatusType').then(function(dataObject) {
@@ -369,7 +279,7 @@ Template.billcard.onRendered(() => {
             });
         });
     };
-
+    templateObject.getAllLeadStatuss();
 
     templateObject.getAllSelectPaymentData = function () {
       let supplierNamer = $('#edtSupplierName').val() || '';
@@ -410,15 +320,57 @@ Template.billcard.onRendered(() => {
 
       });
 
-}
+};
 
+    function getSupplierData(supplierID) {
+        getVS1Data('TSupplierVS1').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                    setSupplierByID(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tsuppliervs1;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ID) === parseInt(supplierID)) {
+                        added = true;
+                        setSupplierByID(useData[i]);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                        setSupplierByID(data);
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setSupplierByID(data);
+            });
+        });
+    }
+    function setSupplierByID(data){
+        $('#edtSupplierName').val(data.fields.ClientName);
+        $('#edtSupplierName').attr("suppid", data.fields.ID);
+        $('#edtSupplierEmail').val(data.fields.Email);
+        $('#edtSupplierEmail').attr('customerid', data.fields.ID);
+        $('#edtSupplierName').attr('suppid', data.fields.ID);
 
-    templateObject.getAllClients();
-    templateObject.getAllLeadStatuss();
-    var url = FlowRouter.current().path;
+        let postalAddress = data.fields.Companyname + '\n' + data.fields.Street + '\n' + data.fields.Street2 + ' ' + data.fields.State + ' ' + data.fields.Postcode + '\n' + data.fields.Country;
+        $('#txabillingAddress').val(postalAddress);
+        $('#pdfSupplierAddress').html(postalAddress);
+        $('.pdfSupplierAddress').text(postalAddress);
+        $('#txaShipingInfo').val(postalAddress);
+        $('#sltTerms').val(data.fields.TermsName || purchaseDefaultTerms);
+        setSupplierInfo();
+    }
+
+    const url = FlowRouter.current().path;
     if (url.indexOf('?id=') > 0) {
-        var getso_id = url.split('?id=');
-        var currentBill = getso_id[getso_id.length - 1];
+        const getso_id = url.split('?id=');
+        let currentBill = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
             currentBill = parseInt(currentBill);
             $('.printID').attr("id", currentBill);
@@ -1335,13 +1287,10 @@ Template.billcard.onRendered(() => {
                 });
 
             };
-
             templateObject.getBillData();
         }
-
     } else {
         $('.fullScreenSpin').css('display', 'none');
-
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -1362,20 +1311,10 @@ Template.billcard.onRendered(() => {
             TaxRate: 0,
 
         };
-
-        var dataListTable = [
-            ' ' || '',
-            ' ' || '',
-            0 || 0,
-            0.00 || 0.00,
-            ' ' || '',
-            0.00 || 0.00,
-            '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-        ];
         lineItemsTable.push(dataListTable);
         lineItems.push(lineItemObj);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        const currentDate = new Date();
+        const begunDate = moment(currentDate).format("DD/MM/YYYY");
         let billrecord = {
             id: '',
             lid: 'New Bill',
@@ -1416,15 +1355,16 @@ Template.billcard.onRendered(() => {
             isPartialPaid: false
 
         };
-
-        $('#edtSupplierName').val('');
+        if (FlowRouter.current().queryParams.supplierid) {
+            getSupplierData(FlowRouter.current().queryParams.supplierid);
+        } else {
+            $('#edtSupplierName').val('');
+        }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
         }, 200);
-
         templateObject.billrecord.set(billrecord);
         if (templateObject.billrecord.get()) {
-
             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblBillLine', function(error, result) {
                 if (error) {
 
@@ -1456,9 +1396,7 @@ Template.billcard.onRendered(() => {
                 }
             });
         }
-
     }
-
 
     templateObject.getShpVias = function() {
         getVS1Data('TShippingMethod').then(function(dataObject) {
@@ -1505,7 +1443,7 @@ Template.billcard.onRendered(() => {
             });
         });
 
-    }
+    };
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -1552,7 +1490,7 @@ Template.billcard.onRendered(() => {
             });
         });
 
-    }
+    };
 
     templateObject.getTerms = function() {
         getVS1Data('TTermsVS1').then(function(dataObject) {
@@ -1611,7 +1549,7 @@ Template.billcard.onRendered(() => {
             });
         });
 
-    }
+    };
     templateObject.getShpVias();
     //templateObject.getTerms();
     templateObject.getDepartments();
@@ -1751,7 +1689,7 @@ Template.billcard.onRendered(() => {
             }
         });
 
-        $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
+    $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
             $('#shipvia').val($(this).find(".colShipName ").text());
             $('#shipViaModal').modal('toggle');
 
@@ -1761,7 +1699,6 @@ Template.billcard.onRendered(() => {
                 $('.fullScreenSpin').css('display', 'none');
             }, 1000);
         });
-
     $(document).on("click", "#tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
@@ -1888,8 +1825,6 @@ Template.billcard.onRendered(() => {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
-
-
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -1999,11 +1934,9 @@ Template.billcard.onRendered(() => {
             }
         }
     });
-
-
     $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         let selectLineID = $('#customerSelectLineID').val();
-        var table = $(this);
+        const table = $(this);
         let utilityService = new UtilityService();
         let $tblrows = $("#tblBillLine tbody tr");
         if (selectLineID) {
@@ -2014,9 +1947,7 @@ Template.billcard.onRendered(() => {
             } else {
                 $('#' + selectLineID + " .lineCustomerJob").val(companyName || '');
             }
-
             $('#customerListModal').modal('toggle');
-
         }
     });
 
@@ -2036,12 +1967,10 @@ Template.billcard.onRendered(() => {
         $('#sltDept').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
     });
-
     $(document).on("click", "#termsList tbody tr", function(e) {
         $('#sltTerms').val($(this).find(".colTermName").text());
         $('#termsListModal').modal('toggle');
     });
-
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#sltStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
@@ -2841,16 +2770,9 @@ Template.billcard.onRendered(() => {
     });
 
     $(document).on("click", "#tblSupplierlist tbody tr", function(e) {
-        let selectLineID = $('#supplierSelectLineID').val();
-        var table = $(this);
-        let utilityService = new UtilityService();
-        let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#tblBillLine tbody tr");
-        var tableSupplier = $(this);
+        const tableSupplier = $(this);
         $('#edtSupplierName').val(tableSupplier.find(".colCompany").text());
         $('#edtSupplierName').attr("suppid", tableSupplier.find(".colID").text());
-
-
         $('#edtSupplierEmail').val(tableSupplier.find(".colEmail").text());
         $('#edtSupplierEmail').attr('customerid', tableSupplier.find(".colID").text());
         $('#edtSupplierName').attr('suppid', tableSupplier.find(".colID").text());
@@ -2861,37 +2783,41 @@ Template.billcard.onRendered(() => {
         $('.pdfSupplierAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
-        $('#supplierListModal').modal('toggle');
+        setSupplierInfo();
+    });
 
+    function setSupplierInfo(){
+        if (!FlowRouter.current().queryParams.supplierid) {
+            $('#supplierListModal').modal('toggle');
+        }
+        let utilityService = new UtilityService();
+        let taxcodeList = templateObject.taxraterecords.get();
+        let $tblrows = $("#tblBillLine tbody tr");
         let lineAmount = 0;
         let subGrandTotal = 0;
         let taxGrandTotal = 0;
         let taxGrandTotalPrint = 0;
-
         $tblrows.each(function(index) {
-            var $tblrow = $(this);
-            var amount = $tblrow.find(".colAmountExChange").val() || 0;
-            var taxcode = $tblrow.find(".lineTaxCode").val() || '';
-            if ($tblrow.find(".lineAccountName").val() == '') {
+            let taxTotal;
+            const $tblrow = $(this);
+            const amount = $tblrow.find(".colAmountExChange").val() || 0;
+            const taxcode = $tblrow.find(".lineTaxCode").val() || '';
+            if ($tblrow.find(".lineAccountName").val() === '') {
                 $tblrow.find(".colAccountName").addClass('boldtablealertsborder');
             }
-            var taxrateamount = 0;
+            let taxrateamount = 0;
             if (taxcodeList) {
                 for (var i = 0; i < taxcodeList.length; i++) {
-                    if (taxcodeList[i].codename == taxcode) {
-
+                    if (taxcodeList[i].codename === taxcode) {
                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-
                     }
                 }
             }
-
-
-            var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-            if ((taxrateamount == '') || (taxrateamount == ' ')) {
-                var taxTotal = 0;
+            const subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+            if ((taxrateamount === '') || (taxrateamount === ' ')) {
+                taxTotal = 0;
             } else {
-                var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
             }
             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
             if (!isNaN(subTotal)) {
@@ -2901,27 +2827,23 @@ Template.billcard.onRendered(() => {
                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal.toFixed(2));
             }
-
             if (!isNaN(taxTotal)) {
                 taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal.toFixed(2));
             }
-
             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal.toFixed(2));
-
             }
         });
-
         $('#tblSupplierlist_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshSupplier').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
-    });
+    }
 
     exportSalesToPdf = function() {
         let margins = {
@@ -2962,7 +2884,6 @@ Template.billcard.onRendered(() => {
 
     };
 
-
     setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 1024px)")
@@ -2993,7 +2914,6 @@ Template.billcard.onRendered(() => {
         mediaQuery(x)
         x.addListener(mediaQuery)
     }, 10);
-
     setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 420px)")
@@ -3031,8 +2951,8 @@ Template.billcard.onRendered(() => {
         x.addListener(mediaQuery)
     }, 10);
 
-
 });
+
 Template.billcard.onRendered(function() {
     let tempObj = Template.instance();
     let utilityService = new UtilityService();
@@ -3289,9 +3209,7 @@ Template.billcard.onRendered(function() {
             });
         });
     };
-
     //tempObj.getAllProducts();
-
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -3526,8 +3444,8 @@ Template.billcard.onRendered(function() {
         });
     };
     tempObj.getAllTaxCodes();
-
 });
+
 Template.billcard.helpers({
     billrecord: () => {
         return Template.instance().billrecord.get();
@@ -3560,6 +3478,16 @@ Template.billcard.helpers({
                 return -1;
             }
             return (a.termsname.toUpperCase() > b.termsname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    clientrecords: () => {
+        return Template.instance().clientrecords.get().sort(function(a, b) {
+            if (a.suppliername == 'NA') {
+                return 1;
+            } else if (b.suppliername == 'NA') {
+                return -1;
+            }
+            return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
         });
     },
     purchaseCloudPreferenceRec: () => {

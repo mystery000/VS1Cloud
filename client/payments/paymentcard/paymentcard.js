@@ -1744,7 +1744,7 @@ Template.paymentcard.onRendered(() => {
         var currentSalesID = getsale_id[getsale_id.length - 1];
         if (getsale_id[1]) {
             currentSalesID = parseInt(currentSalesID);
-            getVS1Data('TCustomerPayment1').then(function(dataObject) {
+            getVS1Data('TCustomerPayment').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     paymentService.getOneCustomerPayment(currentSalesID).then(function(data) {
                         let lineItems = [];
@@ -2472,12 +2472,13 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
             }
         });
+
     } else if (url.indexOf('?soid=') > 0) {
 
         var getsale_id = url.split('?soid=');
@@ -2592,7 +2593,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/salesordercard?id=' + listData, '_self');
@@ -2710,7 +2711,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/quotecard?id=' + listData, '_self');
@@ -2743,7 +2744,7 @@ Template.paymentcard.onRendered(() => {
                         let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
-                        let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                        let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                         });
                         let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
@@ -2864,7 +2865,7 @@ Template.paymentcard.onRendered(() => {
                             let paymentAmt = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
-                            let outstandingAmt = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalBalance).toLocaleString(undefined, {
+                            let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
                             let originalAmt = utilityService.modifynegativeCurrencyFormat(useData[d].fields.TotalAmountInc).toLocaleString(undefined, {
@@ -2982,7 +2983,7 @@ Template.paymentcard.onRendered(() => {
                             let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
-                            let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                            let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                                 minimumFractionDigits: 2
                             });
                             let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
@@ -3098,7 +3099,7 @@ Template.paymentcard.onRendered(() => {
                     let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     });
-                    let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                    let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     });
                     let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
@@ -3195,7 +3196,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -3427,7 +3428,7 @@ Template.paymentcard.onRendered(() => {
                 let paymentAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
                     minimumFractionDigits: 2
                 });
-                let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                     minimumFractionDigits: 2
                 });
                 let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
@@ -3524,7 +3525,7 @@ Template.paymentcard.onRendered(() => {
             });
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -3561,7 +3562,7 @@ Template.paymentcard.onRendered(() => {
                         minimumFractionDigits: 2
                     });
                     amountData = amountData + data.fields.TotalBalance;
-                    let outstandingAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalBalance).toLocaleString(undefined, {
+                    let outstandingAmt = utilityService.modifynegativeCurrencyFormat(0).toLocaleString(undefined, {
                         minimumFractionDigits: 2
                     });
                     let originalAmt = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc).toLocaleString(undefined, {
@@ -3657,7 +3658,7 @@ Template.paymentcard.onRendered(() => {
 
         }
 
-        $('#tblPaymentcard tbody').on('click', 'tr .colType', function() {
+        $('#tblPaymentcard tbody').on('click', 'tr .colType, tr .colTransNo', function() {
             var listData = $(this).closest('tr').attr('id');
             if (listData) {
                 window.open('/invoicecard?id=' + listData, '_self');
@@ -6606,7 +6607,7 @@ Template.paymentcard.events({
         //     PayMethod = 'Cash';
         // }
     },
-    'click #tblPaymentcard tr .colTransNo': function(event) {
+    'click #tblPaymentcard tr .colTransNoDONT': function(event) {
         let custname = $('#edtCustomerName').val() || '';
         if (custname === '') {
             swal('Customer has not been selected!', '', 'warning');
