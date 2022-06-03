@@ -76,7 +76,8 @@ Template.CountryModal.events({
   },
   "click #tblCountryPopList tbody tr": (e) => {
     $("#searchCountry").val('');
-    $("#searchCountry").trigger("keyup");
+    const listContainerNode = $("#searchCountry").attr("aria-controls");
+    $(`#${listContainerNode} tbody tr`).css("display", "");
 
     const countryName = $(e.currentTarget).attr("value");
 
