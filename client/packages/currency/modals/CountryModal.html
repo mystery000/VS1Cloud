@@ -11,12 +11,19 @@
                 <div class="card-body p-1 rounded">
                     <div class="table-responsive">
                         <style>
-  
                             .colCountry {
                                 width: 5%;
                             }
-
                         </style>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_filter">
+                                    <label style="display: flex;">Search:<input type="search" class="searchInput"
+                                            placeholder="" aria-controls="tblCountryPopList" autocomplete="off"
+                                            id="searchCountry" name="search-country" style="margin-left: 0.5em;"></label>
+                                </div>
+                            </div>
+                        </div>
                         <table id="tblCountryPopList" name="tblCountryPopList" style="width:100%"
                             class="dataTable table table-hover table-striped table-bordered tblCountryPopList">
                             <thead>

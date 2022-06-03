@@ -54,7 +54,31 @@ Template.CountryModal.onRendered(function () {
 });
 
 Template.CountryModal.events({
+  "keyup #searchCountry": (e) => {
+    const ariaControls = $(e.currentTarget).attr("aria-controls");
+    const searchedValue = $(e.currentTarget).val().trim().toLowerCase();
+
+    if (!searchedValue) {
+      //   console.log("search is empty");
+      $(`#${ariaControls} tbody tr td`).css("display", "");
+    } else {
+      /**
+       * Search
+       */
+      $(`#${ariaControls} tbody tr`).each((index, element) => {
+        const _value = $(element).find("td").text().toLowerCase();
+        $(element).css(
+          "display",
+          _value.includes(searchedValue) == true ? "" : "none"
+        );
+      });
+    }
+  },
   "click #tblCountryPopList tbody tr": (e) => {
+    $("#searchCountry").val('');
+    const listContainerNode = $("#searchCountry").attr("aria-controls");
+    $(`#${listContainerNode} tbody tr`).css("display", "");
+
     const countryName = $(e.currentTarget).attr("value");
 
     //    console.log($(e.target).parent('.modal'));
@@ -62,9 +86,8 @@ Template.CountryModal.events({
     //    console.log(countryName);
 
     $("#sedtCountry").val(countryName);
-    $("#sedtCountry").attr('value', countryName);
-    $("#sedtCountry").trigger('change');
-   
+    $("#sedtCountry").attr("value", countryName);
+    $("#sedtCountry").trigger("change");
 
     $(e.currentTarget).parents(".modal").modal("hide");
   },
