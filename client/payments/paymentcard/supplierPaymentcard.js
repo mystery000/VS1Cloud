@@ -25,6 +25,8 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
 let clickedTableID = 0;
+
+
 Template.supplierpaymentcard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -5415,6 +5417,9 @@ Template.supplierpaymentcard.onRendered(() => {
 });
 
 Template.supplierpaymentcard.helpers({
+    isCurrencyEnable: () => {
+        return Session.get("CloudUseForeignLicence");
+    },
     record: () => {
         return Template.instance().record.get();
     },
@@ -5541,6 +5546,15 @@ Template.supplierpaymentcard.events({
         }
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        /**
+         * Currency module data
+         * TODO: Adding this into the saved object
+         */
+        let foreignCurrency = $('#edtForeignCurrency').val();
+        let foreignAmount = $('#foreignAmount').val();
+        let variation = $('#edtVariation').val();
+        let appliedAmount = $('#edtApplied').val();
 
         let checkSuppInvoiceNo = templateObject.isInvoiceNo.get();
         if(checkSuppInvoiceNo){

@@ -138,24 +138,30 @@
 
                     </div>
                     
+                
+                    {{#if isCurrencyEnable}}
                     <div class="col-12 col-lg-2">
                         {{> CurrencyWidget rate="buy"}}
                     </div>
+
                     <div class="col-12 col-lg-2">
-                            <div class="form-group"><label>Foreign currency</label>
-                                <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtPaymentAmount" name='edtPaymentAmount'>
-                            </div>
-                            <div class="form-group"><label>Foreign Amount</label>
-                                <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtPaymentAmount" name='edtPaymentAmount'>
-                            </div>
-                            <div class="form-group"><label>Variation</label>
-                                <input class="form-control form-control" type="text" value="{{record.variation}}" id="edtPaymentAmount" name='edtPaymentAmount'>
-                            </div>
-                            <div class="form-group"><label>Applied</label>
-                                <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtPaymentAmount" name='edtPaymentAmount'>
-                            </div>
-                        
+                        <div class="form-group"><label>Foreign Currency</label>
+                            <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignCurrency" name='ForeignCurrency'>
+                        </div>
+                        <div class="form-group"><label>Foreign Amount</label>
+                            <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignAmount" name='foreignAmount'>
+                        </div>
+                        <div class="form-group"><label>Variation</label>
+                            <input class="form-control form-control" type="text" value="{{record.variation}}" id="edtVariation" name='variation'>
+                        </div>
+                        <div class="form-group"><label>Applied</label>
+                            <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                        </div>
                     </div>
+                
+                
+                    {{/if}}
+                
                     <div class="col-12 col-lg-2">
                         <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
                     </div>
