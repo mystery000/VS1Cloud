@@ -386,6 +386,7 @@ Template.supplierpaymentcard.onRendered(() => {
           let lineItems = [];
           let lineItemObj = {};
           let totalPaidCal = 0;
+          console.log(data);
 
           for (let i = 0; i < data.tbillreport.length; i++) {
               if (data.tbillreport[i].Type == "Credit") {
@@ -3085,6 +3086,7 @@ Template.supplierpaymentcard.onRendered(() => {
             getVS1Data('TBillEx').then(function(dataObject) {
                 if (dataObject.length == 0) {
                     paymentService.getOneBillPayment(currentPOID).then(function(data) {
+                        console.log(data);
                         let lineItems = [];
                         let lineItemObj = {};
 
