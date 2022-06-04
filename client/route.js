@@ -1437,15 +1437,6 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
-authenticatedRoutes.route('/recontransactiondetail', {
-    name: 'recontransactiondetail',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'recontransactiondetail'
-        });
-    }
-});
-
 authenticatedRoutes.route('/depositcard', {
     name: 'depositcard',
     action() {

@@ -17,6 +17,9 @@ let yodleeService = new YodleeService();
 
 let selectedLineID = null;
 let selectedYodleeID = null;
+let selectedAccountFlag = '';
+let selectedTaxFlag = '';
+let selectedCustomerFlag = '';
 
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
@@ -62,8 +65,6 @@ Template.newbankrecon.onRendered(function() {
     let bankaccountid = Session.get('bankaccountid') || '';
     let bankaccountname = Session.get('bankaccountname') || '';
     let statementDate = localStorage.getItem('statementdate')|| '';
-    let selectedAccountFlag = '';
-    let selectedTaxFlag = '';
     let selectedDepositID = null;
 
     templateObject.getAccountNames = function() {
@@ -490,7 +491,6 @@ Template.newbankrecon.onRendered(function() {
                     let yodleeProviderAccountId = data.account[0].providerAccountId;
                     let yodleeAccountName = data.account[0].accountName;
                     $('.yodleeBalance').text(utilityService.modifynegativeCurrencyFormat(yodleeBalance));
-                    $('.fullScreenSpin').css('display', 'none');
                 }
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
@@ -645,7 +645,7 @@ Template.newbankrecon.onRendered(function() {
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
         templateObject.getAllClients();
-    }, 500);
+    }, 100);
 
     $('#bankAccountName').editableSelect();
     $('#bankAccountName').editableSelect().on('click.editable-select', function (e, li) {
@@ -799,10 +799,11 @@ Template.newbankrecon.onRendered(function() {
             $('#what_'+item.YodleeLineID).editableSelect();
             $('#what_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
                 selectedDepositID = item.YodleeLineID;
+                selectedCustomerFlag = 'ForTab';
                 const $each = $(this);
                 const offset = $each.offset();
                 $('#edtCustomerPOPID').val('');
-                    //$('#edtCustomerCompany').attr('readonly', false);
+                //$('#edtCustomerCompany').attr('readonly', false);
                 const customerDataName = e.target.value || '';
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     openCustomerModal();
@@ -842,7 +843,6 @@ Template.newbankrecon.onRendered(function() {
                 let accountDataName = e.target.value ||'';
                 selectedAccountFlag = 'ForTransfer';
                 selectedDepositID = item.YodleeLineID;
-
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     openBankAccountListModal();
                 }else{
@@ -877,24 +877,21 @@ Template.newbankrecon.onRendered(function() {
                 who = (who !== '')?who:item.YodleeDescription;
                 let amount = item.YodleeAmount;
                 let dateIn = item.SortDate;
-                setTransactionDetail(item.YodleeLineID, amount, dateIn, who, item.deporwith);
-
-                // Session.setPersistent('bankaccountid', bankaccountid);
-                // Session.setPersistent('bankaccountname', bankaccountname);
-                // Session.setPersistent('reconYodleeID', item.YodleeLineID);
-                // Session.setPersistent('reconPaymentID', item.PaymentID);
-                // Session.setPersistent('reconTaxRate', taxRate);
-                // Session.setPersistent('reconWho', who);
-                // Session.setPersistent('reconWhat', what);
-                // Session.setPersistent('reconWhy', why);
-                // Session.setPersistent('reconAmount', amount);
-                // Session.setPersistent('reconDateIn', dateIn);
-                // Session.setPersistent('reconSOR', item.deporwith);
-                // // FlowRouter.go('/recontransactiondetail?ID='+item.YodleeLineID+'&who='+who+'&what='+what+'&why='+why+'&taxRate='+taxRate+'&amount='+amount+'&dateIn='+dateIn);
-                // FlowRouter.go('/recontransactiondetail');
-                // // let queryParams = {ID: item.YodleeLineID, who: who, what: what, why: why, taxRate: taxRate};
-                // // FlowRouter.go('/recontransactiondetail', queryParams);
-                $('#divLineDetail').show();
+                selectedYodleeID = item.YodleeLineID;
+                $('#matchNav_'+item.YodleeLineID+' a.nav-link').addClass('active');
+                $('#createNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
+                $('#createNav_'+item.YodleeLineID).hide();
+                $('#transferNav_'+item.YodleeLineID).hide();
+                $('#discussNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
+                $('#btnFindMatchNav_'+item.YodleeLineID).hide();
+                $('#match_'+item.YodleeLineID).addClass('show');
+                $('#match_'+item.YodleeLineID).addClass('active');
+                $('#create_'+item.YodleeLineID).removeClass('show');
+                $('#create_'+item.YodleeLineID).removeClass('active');
+                $('#match_'+item.YodleeLineID+' .textFindMatch').show();
+                $('#match_'+item.YodleeLineID+' .btnFindMatch').hide();
+                $('#divLineDetail_'+item.YodleeLineID).show();
+                setTransactionDetail(amount, dateIn, who, item.deporwith);
             });
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
                 FlowRouter.go('/bankrecon?id='+item.YodleeLineID);
@@ -916,49 +913,63 @@ Template.newbankrecon.onRendered(function() {
         })
     }
 
-    function setTransactionDetail (YodleeID, Amount, DateIn, Who, DepOrWith) {
-        if (YodleeID !== null) {
+    function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
+        if (selectedYodleeID !== null) {
             let clientDetail = templateObject.clientrecords.get().filter(customer => {
-                return customer.customername === $('#whatID_'+YodleeID).val();
+                return customer.customername === $('#whatID_'+selectedYodleeID).val();
             });
             clientDetail = clientDetail[0];
             let discountAmount = (clientDetail !== undefined)? Amount*clientDetail.discount/100: 0;
             let taxCodeDetail = templateObject.taxraterecords.get().filter(taxcode => {
-                return taxcode.codename === $('#ctaxRateID_'+YodleeID).val();
+                return taxcode.codename === $('#ctaxRateID_'+selectedYodleeID).val();
             });
             taxCodeDetail = taxCodeDetail[0];
             let taxAmount = (taxCodeDetail !== undefined)?Amount*taxCodeDetail.coderate/100:0;
-            selectedLineID = Random.id();
-            let basedataObj = {
-                lineID: selectedLineID,
-                product: '',
-                description: $('#why_'+YodleeID).val() || '',
-                quantity: 1,
-                unitPrice: utilityService.modifynegativeCurrencyFormat(Amount),
-                unitPriceInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) + taxAmount),
-                subtotal: utilityService.modifynegativeCurrencyFormat(Amount),
-                account: (clientDetail !== undefined)? clientDetail.customername:'',
-                discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
-                taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
-                taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
-                amount: parseFloat(Amount),
-                totalAmount: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount),
-                totalAmountInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount + taxAmount)
-            };
+            selectedLineID = 'firstLine';
+            // let basedataObj = {
+            //     lineID: selectedLineID,
+            //     product: '',
+            //     description: $('#why_'+selectedYodleeID).val() || '',
+            //     quantity: 1,
+            //     unitPrice: utilityService.modifynegativeCurrencyFormat(Amount),
+            //     unitPriceInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) + taxAmount),
+            //     subtotal: utilityService.modifynegativeCurrencyFormat(Amount),
+            //     account: (clientDetail !== undefined)? clientDetail.customername:'',
+            //     discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
+            //     taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
+            //     taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
+            //     amount: parseFloat(Amount),
+            //     totalAmount: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount),
+            //     totalAmountInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount + taxAmount)
+            // };
+            let accountName = (clientDetail !== undefined)? clientDetail.customername:'';
+            let taxrateName = (taxCodeDetail !== undefined)? taxCodeDetail.codename:'';
 
-            let basedataArr = [];
-            basedataArr.push(basedataObj);
-            let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
-            templateObject.baselinedata.set(thirdaryData);
-            $('#labelWho').text(DepOrWith==='spent'?'To':'From');
-            $('#FromWho').val(Who);
+            $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith==='spent'?'Spent as':'Received as');
+            $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith==='spent'?'To':'From');
+            $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
             let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
-            $('#DateIn').val(dateIn_val);
-            $('#TotalAmount').val(Amount);
+            $('#divLineDetail_'+selectedYodleeID+' #DateIn').val(dateIn_val);
+            $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(Amount);
+            $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith==='spent'?'spent - Spent':'received - Received');
+            $('#divLineDetail_'+selectedYodleeID+' #totalBottom1').text(utilityService.modifynegativeCurrencyFormat(Amount));
+            $('#divLineDetail_'+selectedYodleeID+' #totalBottom2').text(utilityService.modifynegativeCurrencyFormat(Amount));
+
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductName').val('');
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val($('#why_'+selectedYodleeID).val());
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val(accountName);
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxRate').val(taxrateName);
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxAmount').val(utilityService.modifynegativeCurrencyFormat(taxAmount));
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAmount').val(utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount));
+
             setTimeout(function () {
                 setCalculated();
                 $('#' + selectedLineID + " .btnRemove").hide();
-            }, 500);
+            }, 1000);
         }
     }
 
@@ -969,7 +980,6 @@ Template.newbankrecon.onRendered(function() {
         let accountname = table.find(".productName").text();
         let accountId = table.find(".colAccountID").text();
         $('#bankAccountListModal').modal('toggle');
-
         if (selectedAccountFlag === 'ForBank') {
             $('#bankAccountName').val(accountname);
             $('#bankAccountID').val(accountId);
@@ -992,18 +1002,47 @@ Template.newbankrecon.onRendered(function() {
         $('#tblAccount_filter .form-control-sm').val('');
     });
     $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
-        // $('#whatID_'+selectedDepositID).val(parseInt($(this).find(".colID").text()));
-        $('#whatID_'+selectedDepositID).val($(this).find(".colCompany").text());
-        $('#what_'+selectedDepositID).val($(this).find(".colCompany").text());
         $('#customerListModal').modal('toggle');
+        if (selectedCustomerFlag === "ForTab") {
+            // $('#whatID_'+selectedDepositID).val(parseInt($(this).find(".colID").text()));
+            $('#whatID_'+selectedDepositID).val($(this).find(".colCompany").text());
+            $('#what_'+selectedDepositID).val($(this).find(".colCompany").text());
+        } else {
+            if (selectLineID) {
+                let lineAccountName = $(this).find(".colCompany").text();
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineAccountName").val(lineAccountName);
+            }
+            setCalculated();
+        }
     });
     $(document).on("click", "#tblTaxRate tbody tr", function (e) {
+        $('#taxRateListModal').modal('toggle');
         if (selectedTaxFlag === "ForTab") {
             // $('#ctaxRateID_'+selectedDepositID).val(parseInt($(this).find(".sorting_1").text()));
             $('#ctaxRateID_' + selectedDepositID).val($(this).find(".taxName").text());
             $('#ctaxRate_' + selectedDepositID).val($(this).find(".taxName").text());
+        } else {
+            if (selectLineID) {
+                let lineTaxRate = $(this).find(".taxRate").text();
+                $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineTaxRate").val(lineTaxRate);
+            }
+            setCalculated();
         }
-        $('#taxRateListModal').modal('toggle');
+    });
+    $(document).on("click", "#tblInventory tbody tr", function (e) {
+        $(".colProductName").removeClass('boldtablealertsborder');
+        const trow = $(this);
+        if (selectedYodleeID && selectLineID) {
+            let lineProductName = trow.find(".productName").text();
+            let lineProductDesc = trow.find(".productDesc").val();
+            let lineUnitPrice = trow.find(".salePrice").val();
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineProductName").val(lineProductName);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineProductDesc").val(lineProductDesc);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineQty").val(1);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
+            $('#productListModal').modal('toggle');
+        }
+        setCalculated();
     });
 
     $("#DateIn").datepicker({
@@ -1018,6 +1057,7 @@ Template.newbankrecon.onRendered(function() {
         changeYear: true,
         yearRange: "-90:+10",
     });
+
     function setCalculated() {
         let taxcodeList = templateObject.taxraterecords.get();
         let customerList = templateObject.clientrecords.get();
@@ -1118,7 +1158,6 @@ Template.newbankrecon.events({
                 }).catch(function (err) {
                     setOneProductDataByName(productDataName);
                 });
-
                 setTimeout(function () {
                     // WangYan: where are these element - dtDateTo, dtDateFrom
                     $("#dtDateTo").datepicker({
@@ -1161,13 +1200,13 @@ Template.newbankrecon.events({
                     $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
 
                 }, 1000);
-
             } else {
                 openProductListModal();
             }
         }
     },
     'click .lineAccountName, keydown .lineAccountName': function (event) {
+        selectedCustomerFlag = "ForDetail";
         selectedLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
         const offset = $each.offset();
@@ -1205,6 +1244,7 @@ Template.newbankrecon.events({
         }
     },
     'click .lineTaxRate, keydown .lineTaxRate': function (event) {
+        selectedTaxFlag = "ForDetail";
         selectedLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
         const offset = $each.offset();
@@ -1281,15 +1321,37 @@ Template.newbankrecon.events({
         let templateObject = Template.instance();
         $(event.target).closest('tr').remove();
         event.preventDefault();
-
         let taxcodeList = templateObject.taxraterecords.get();
         let customerList = templateObject.clientrecords.get();
         setCalculated2(taxcodeList, customerList);
     },
     'click #btnCancel': function() {
-        Session.setPersistent('bankaccountid', Session.get('bankaccountid'));
-        Session.setPersistent('bankaccountname', Session.get('bankaccountname'));
-        FlowRouter.go('/newbankrecon');
+        selectedYodleeID = null;
+        $('match_'+selectedYodleeID+' .textFindMatch').hide();
+        $('match_'+selectedYodleeID+' .btnFindMatch').show();
+        $('#divLineDetail_'+selectedYodleeID).hide();
+    },
+    'click #addLine': function() {
+        if (selectedYodleeID) {
+            const rowData = $("#divLineDetail_"+selectedYodleeID+" #tblrecontransactiondetail tbody>tr:last").clone(true);
+            let tokenid = Random.id();
+            $(".lineProductName", rowData).val("");
+            $(".lineProductDesc", rowData).val("");
+            $(".lineQty", rowData).val("");
+            $(".lineAccountName", rowData).val("");
+            $(".lineUnitPrice", rowData).val("");
+            $(".lineAmount", rowData).text("");
+            $(".lineSubTotal", rowData).text("");
+            $(".lineTaxRate", rowData).val("");
+            $(".lineTaxAmount", rowData).text("");
+            $(".lineDiscount", rowData).text("");
+            $(".btnRemove", rowData).show();
+            rowData.attr('id', tokenid);
+            $("#divLineDetail_"+selectedYodleeID+" #tblrecontransactiondetail tbody").append(rowData);
+            setTimeout(function () {
+                $("#divLineDetail_"+selectedYodleeID+" #" + tokenid + " .lineProductName").trigger('click');
+            }, 200);
+        }
     },
     'click #btnSave': function (event) {
         let match_total = parseFloat($("#TotalAmount").val());
@@ -1687,18 +1749,18 @@ function setTaxRateData(data, taxRateDataName) {
 }
 
 function setCalculated2(taxcodeList, customerList) {
-    let $tblrows = $("#tblrecontransactiondetail tbody tr");
+    let $tblrows = $('#divLineDetail_'+selectedYodleeID+' #tblrecontransactiondetail tbody tr');
     let lineAmount = 0;
     let subTotal = 0;
     let discountTotal = 0;
     let taxTotal = 0;
     let grandTotal = 0;
-    if (selectedLineID) {
-        let lineQty = parseInt($('#' + selectedLineID + " .lineQty").val());
-        let lineUnitPrice = $('#' + selectedLineID + " .lineUnitPrice").val();
+    if (selectedYodleeID && selectedLineID) {
+        let lineQty = parseInt($('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + ' .lineQty').val());
+        let lineUnitPrice = $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + ' .lineUnitPrice').val();
         lineUnitPrice = Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
-        $('#' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
-        let lineTaxRate = $('#' + selectedLineID + " .lineTaxRate").val();
+        $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
+        let lineTaxRate = $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineTaxRate").val();
         let lineTaxRateVal = 0;
         if (lineTaxRate !== "") {
             for (let i = 0; i < taxcodeList.length; i++) {
@@ -1710,8 +1772,8 @@ function setCalculated2(taxcodeList, customerList) {
         // let lineUnitPriceInc = lineUnitPrice + lineUnitPrice * lineTaxRateVal /100;
         // $('#' + selectedLineID + " .lineUnitPriceInc").text(utilityService.modifynegativeCurrencyFormat(lineUnitPriceInc));
         let lineTaxAmount = lineQty * lineUnitPrice * lineTaxRateVal /100;
-        $('#' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
-        let lineAccountName = $('#' + selectedLineID + " .lineAccountName").val();
+        $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
+        let lineAccountName = $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val();
         let lineDiscountRate = 0;
         if (lineAccountName !== "") {
             let customerDetail = customerList.filter(customer => {
@@ -1721,9 +1783,9 @@ function setCalculated2(taxcodeList, customerList) {
             lineDiscountRate = customerDetail.discount;
         }
         let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * lineDiscountRate/100;
-        $('#' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
+        $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
         lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
-        $('#' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
+        $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
     }
 
     $tblrows.each(function (index) {

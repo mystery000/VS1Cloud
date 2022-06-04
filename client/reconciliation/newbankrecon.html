@@ -89,6 +89,23 @@
                 list-style: none;
                 padding: 0;
             }
+            .textFindMatch {
+                min-height: 110px;
+                text-align: center;
+                background-color: #f2f3f4;
+            }
+            .textFindMatch p {
+                line-height: 110px;
+                margin: 0;
+                text-align: center;
+            }
+            .btnFindMatch {
+                min-height: 110px;
+            }
+            .btnFindMatch a{
+                margin-top: 32px;
+                margin-left: 32px;
+            }
 
             /* If there's a reconciliation match, add class "matched" to the Tab-Pane and "matchedtab" to the Match Nav-Item anchor tag */
         </style>
@@ -207,156 +224,166 @@
         </div>
         {{#if bankTransactionData}}
             {{#each itemTransaction in bankTransactionData}}
-            <div class="row justify-content-center mb-6" id="divLine_{{ itemTransaction.YodleeLineID }}">
-            <div class="col-12 col-md-5">
-                <div class="card shadow">
-                    <div class="card-header">
-                        {{ itemTransaction.YodleeTransactionDate }}
-                        <div class="dropdown float-right">
-                            <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important;"></button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
-                                <a class="dropdown-item" href="" data-toggle="modal" data-target="#newBankRuleModal">Create Bank Rule</a>
-                                <a class="dropdown-item" href="" style="color: red;" id="btnDeleteLine_{{ itemTransaction.YodleeLineID }}">Delete Line</a>
+            <div class="row justify-content-center mb-1" id="divLine_{{ itemTransaction.YodleeLineID }}">
+                <div class="col-12 col-md-5">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            {{ itemTransaction.YodleeTransactionDate }}
+                            <div class="dropdown float-right">
+                                <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="color: #00a3d3 !important; background-color: rgba(0,0,0,0) !important;"></button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="">
+                                    <a class="dropdown-item" href="" data-toggle="modal" data-target="#newBankRuleModal">Create Bank Rule</a>
+                                    <a class="dropdown-item" href="" style="color: red;" id="btnDeleteLine_{{ itemTransaction.YodleeLineID }}">Delete Line</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body" style="padding: 0;">
-                        <div class="row" style="margin-left: 0; margin-right: 0;">
-                            <div class="col-6" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0;">
-                                <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
-                                <p style="margin-bottom: 0;"><span>{{ itemTransaction.YodleeDescription }}</span></p>
-                                <br>
-                                <a href="" id="btnMoreDetail_{{ itemTransaction.YodleeLineID }}">More Details</a>
-                            </div>
-                            <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                <span style="float: right; font-weight: 700;">{{ itemTransaction.spentYodleeAmount }}</span>
-                            </div>
-                            <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedYodleeAmount }}</span>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="row" style="margin-left: 0; margin-right: 0;">
+                                <div class="col-6" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0;">
+                                    <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
+                                    <p style="margin-bottom: 0;"><span>{{ itemTransaction.YodleeDescription }}</span></p>
+                                    <br>
+                                    <a href="" id="btnMoreDetail_{{ itemTransaction.YodleeLineID }}">More Details</a>
+                                </div>
+                                <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                    <span style="float: right; font-weight: 700;">{{ itemTransaction.spentYodleeAmount }}</span>
+                                </div>
+                                <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-top: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                    <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedYodleeAmount }}</span>
+                                </div>
                             </div>
                         </div>
+                        <!-- <div class="card-footer">
+                        </div> -->
                     </div>
-                    <!-- <div class="card-footer">
-                    </div> -->
+                </div>
+                <div class="col-12 col-md-1" style="text-align: center;">
+                    {{#if itemTransaction.matched }}
+                    <button type="button" class="btn btn-primary" style="margin: 0 auto; margin-top: 50%;">Ok</button>
+                    {{/if}}
+                </div>
+                <div class="col-12 col-md-5">
+                    <div class="card shadow">
+                        <div class="card-header rightsideheader">
+                            <ul class="nav nav-tabs nav-fill" role="tablist">
+                                <li class="nav-item" id="matchNav_{{ itemTransaction.YodleeLineID }}">
+                                    <a class="nav-link {{#if itemTransaction.matched }}active matchedtab{{/if}}" data-toggle="tab" href="#match_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="#match">Match</a>
+                                </li>
+                                <li class="nav-item" id="createNav_{{ itemTransaction.YodleeLineID }}">
+                                    <a class="nav-link {{#unless itemTransaction.matched }}active{{/unless}}" data-toggle="tab" href="#create_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="create">Create</a>
+                                </li>
+                                <li class="nav-item" id="transferNav_{{ itemTransaction.YodleeLineID }}">
+                                    <a class="nav-link" data-toggle="tab" href="#transfer_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="transfer">Transfer</a>
+                                </li>
+                                <li class="nav-item" id="discussNav_{{ itemTransaction.YodleeLineID }}">
+                                    <a class="nav-link" data-toggle="tab" href="#discuss_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="discuss">Discuss</a>
+                                </li>
+                                <li class="nav-item" id="btnFindMatchNav_{{ itemTransaction.YodleeLineID }}">
+                                    <a class="btn" id="btnFindMatch_{{ itemTransaction.YodleeLineID }}" aria-controls="btnFindMatch" style="font-weight: 700; color: blue;">Find & Match</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body" style="padding: 0;">
+                            <div class="tab-content">
+                                <div class="tab-pane fade {{#if itemTransaction.matched }}show active matched{{/if}}" id="match_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="match-tab">
+                                    {{#if itemTransaction.matched }}
+                                        <div class="row" style="margin-left: 0; margin-right: 0;">
+                                            <div class="col-6" style="padding: 16px; border: 1px solid #e3e6f0;">
+                                                <p style="margin-bottom: 0;">{{ itemTransaction.VS1Date }}</p>
+                                                <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
+                                                <p style="margin-bottom: 0;">Ref: <span>{{ itemTransaction.ReferenceNo }}</span></p>
+                                            </div>
+                                            <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
+                                                <p style="margin-bottom: 0; float: right;">Spent</p>
+                                                <span style="float: right; font-weight: 700;">{{ itemTransaction.spentVS1Amount }}</span>
+                                            </div>
+                                            <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0;">
+                                                <p style="margin-bottom: 0; float: right;">Received</p>
+                                                <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedVS1Amount }}</span>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#unless itemTransaction.matched }}
+                                        <div class="textFindMatch" style="display: none;">
+                                            <p>Find & select matching transactions below</p>
+                                        </div>
+                                        <div class="btnFindMatch" style="display: none;">
+                                            <button class="btn btn-primary btnEmail" type="button">Find & Match</button>
+                                        </div>
+                                    {{/unless}}
+                                </div>
+                                <div class="tab-pane fade {{#unless itemTransaction.matched }}show active{{/unless}}" id="create_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="create-tab">
+                                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                                        <div class="col-6" style="padding: 16px; padding-bottom: 0;">
+                                            <div class="form-group mb-0">
+                                                <label>Who</label>
+                                                <input type="text" class="form-control" id="who_{{ itemTransaction.YodleeLineID }}" placeholder="Name of the contact..." value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-6" style="padding: 16px; padding-bottom: 0;">
+                                            <div class="form-group mb-0">
+                                                <label>What</label>
+                                                <select type="search" class="form-control" id="what_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
+                                                <input type="hidden" id="whatID_{{ itemTransaction.YodleeLineID }}" value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-12" style="padding: 16px;">
+                                            <div class="form-group mb-0">
+                                                <label>Why</label>
+                                                <input type="text" class="form-control" id="why_{{ itemTransaction.YodleeLineID }}" placeholder="Enter a description..." value="">
+                                            </div>
+                                        </div>
+                                        <div class="col-4" style="padding: 0 !important; border: 0;">
+                                            <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.YodleeLineID }}" placehoder="Choose the tax code..." style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                            <input type="hidden" id="ctaxRateID_{{ itemTransaction.YodleeLineID }}" value="">
+                                        </div>
+                                        <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
+                                            <a href="" style="float: right;" id="btnAddDetail_{{ itemTransaction.YodleeLineID }}">Add Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="transfer_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="transfer-tab">
+                                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                                        <div class="col-6" style="padding: 16px;">
+                                            <div class="form-group mb-0">
+                                                <label>Select a Bank Account</label>
+                                                <select type="search" class="form-control" id="transferAccount_{{ itemTransaction.YodleeLineID }}" value=""
+                                                    style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-6" style="padding: 16px;">
+                                            <div class="form-group mb-0">
+                                                <label>Reference</label>
+                                                <input type="text" class="form-control" id="reference_{{ itemTransaction.YodleeLineID }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="discuss_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="discuss-tab">
+                                    <div class="row" style="margin-left: 0; margin-right: 0;">
+                                        <div class="col-12" style="padding: 16px;">
+                                            <div class="form-group mb-0">
+                                                <textarea class="form-control" id="discussText_{{ itemTransaction.YodleeLineID }}" rows="6"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="card-footer">
+                        </div> -->
+                    </div>
                 </div>
             </div>
-            <div class="col-12 col-md-1" style="text-align: center;">
-                {{#if itemTransaction.matched }}
-                <button type="button" class="btn btn-primary" style="margin: 0 auto; margin-top: 50%;">Ok</button>
-                {{/if}}
-            </div>
-            <div class="col-12 col-md-5">
-                <div class="card shadow">
-                    <div class="card-header rightsideheader">
-                        <ul class="nav nav-tabs nav-fill" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link {{#if itemTransaction.matched }}active matchedtab{{/if}}" id="home-tab" data-toggle="tab" href="#match_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="home" aria-selected="true">Match</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{#unless itemTransaction.matched }}active{{/unless}}" id="profile-tab" data-toggle="tab" href="#create_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="profile" aria-selected="false">Create</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#transfer_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="contact" aria-selected="false">Transfer</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#discuss_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="contact" aria-selected="false">Discuss</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn" id="btnFindMatch_{{ itemTransaction.YodleeLineID }}" aria-controls="contact" aria-selected="false" style="font-weight: 700; color: blue;">Find & Match</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body" style="padding: 0;">
-                        <div class="tab-content">
-                            <div class="tab-pane fade {{#if itemTransaction.matched }}show active matched{{/if}}" id="match_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="match-tab">
-                                <div class="row" style="margin-left: 0; margin-right: 0;">
-                                    <div class="col-12" style="padding: 16px; border: 1px solid #e3e6f0; border-bottom: 0 solid #e3e6f0; border-top: 0 solid #e3e6f0;">
-                                        <p style="margin-bottom: 0;">{{ itemTransaction.VS1Date }}</p>
-                                    </div>
-                                    <div class="col-6" style="padding: 16px; border: 1px solid #e3e6f0;">
-                                        <p style="margin-bottom: 0; font-weight: 700;">{{ itemTransaction.CompanyName }}</p>
-                                        <p style="margin-bottom: 0;">Ref: <span>{{ itemTransaction.ReferenceNo }}</span></p>
-                                    </div>
-                                    <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0; border-left: 0 solid #e3e6f0; border-right: 0 solid #e3e6f0;">
-                                        <span style="float: right; font-weight: 700;">{{ itemTransaction.spentVS1Amount }}</span>
-                                    </div>
-                                    <div class="col-3" style="padding: 16px; border: 1px solid #e3e6f0;">
-                                        <span style="float: right; font-weight: 700;">{{ itemTransaction.receivedVS1Amount }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade {{#unless itemTransaction.matched }}show active{{/unless}}" id="create_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="create-tab">
-                                <div class="row" style="margin-left: 0; margin-right: 0;">
-                                    <div class="col-6" style="padding: 16px; padding-bottom: 0;">
-                                        <div class="form-group mb-0">
-                                            <label>Who</label>
-                                            <input type="text" class="form-control" id="who_{{ itemTransaction.YodleeLineID }}" placeholder="Name of the contact..." value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-6" style="padding: 16px; padding-bottom: 0;">
-                                        <div class="form-group mb-0">
-                                            <label>What</label>
-                                            <select type="search" class="form-control" id="what_{{ itemTransaction.YodleeLineID }}" placeholder="Choose the customer..." style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>
-                                            <input type="hidden" id="whatID_{{ itemTransaction.YodleeLineID }}" value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-12" style="padding: 16px;">
-                                        <div class="form-group mb-0">
-                                            <label>Why</label>
-                                            <input type="text" class="form-control" id="why_{{ itemTransaction.YodleeLineID }}" placeholder="Enter a description..." value="">
-                                        </div>
-                                    </div>
-                                    <div class="col-4" style="padding: 0 !important; border: 0;">
-                                        <select type="search" class="form-control" id="ctaxRate_{{ itemTransaction.YodleeLineID }}" placehoder="Choose the tax code..." style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
-                                        <input type="hidden" id="ctaxRateID_{{ itemTransaction.YodleeLineID }}" value="">
-                                    </div>
-                                    <div class="col-8" style="padding: 6px 16px 4px 4px; border: 1px solid #e3e6f0; border-right: 0;">
-                                        <a href="" style="float: right;" id="btnAddDetail_{{ itemTransaction.YodleeLineID }}">Add Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="transfer_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="transfer-tab">
-                                <div class="row" style="margin-left: 0; margin-right: 0;">
-                                    <div class="col-6" style="padding: 16px;">
-                                        <div class="form-group mb-0">
-                                            <label>Select a Bank Account</label>
-                                            <select type="search" class="form-control" id="transferAccount_{{ itemTransaction.YodleeLineID }}" value=""
-                                                style="background-color:rgb(255, 255, 255); cursor: pointer; border-radius: 0; border-color:#e3e6f0;"></select>
-                                        </div>
-                                    </div>
-                                    <div class="col-6" style="padding: 16px;">
-                                        <div class="form-group mb-0">
-                                            <label>Reference</label>
-                                            <input type="text" class="form-control" id="reference_{{ itemTransaction.YodleeLineID }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="discuss_{{ itemTransaction.YodleeLineID }}" role="tabpanel" aria-labelledby="discuss-tab">
-                                <div class="row" style="margin-left: 0; margin-right: 0;">
-                                    <div class="col-12" style="padding: 16px;">
-                                        <div class="form-group mb-0">
-                                            <textarea class="form-control" id="discussText_{{ itemTransaction.YodleeLineID }}" rows="6"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="card-footer">
-                    </div> -->
+            <div class="row justify-content-center mb-3" id="divLineDetail_{{ itemTransaction.YodleeLineID }}" style="display:none;">
+                <div class="col-12 col-md-11">
+                    {{> recontransactiondetail}}
                 </div>
             </div>
-        </div>
             {{/each}}
-
-            <div class="row justify-content-center mb-6" id="divLineDetail" style="display:none;">
-                {{> recontransactiondetail}}
-            </div>
         {{/if}}
-
-        <div class="row justify-content-center mb-6">
+        <div class="row justify-content-center mb-4">
             <div class="col-12 col-md-11">
                 <div class="card shadow" style="padding: 16px;">
                     <div class="row">
@@ -400,8 +427,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="row justify-content-center mb-6">
+        <div class="row justify-content-center mb-4">
             <div class="col-12 col-md-11">
                 <div class="card shadow" style="padding: 16px;">
                     <div class="row justify-content-center">
@@ -547,6 +573,12 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
         {{> addaccountpop}}
     </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+        {{> productlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+        {{> newproductpop}}
+    </div>
     <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
             <div class="modal-content customerListContent">
@@ -556,7 +588,6 @@
                 <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
                     <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
                     {{> customerlistpop}}
-
                 </div>
                 <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
                 </div>

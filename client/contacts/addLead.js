@@ -763,24 +763,19 @@ Template.leadscard.events({
         const searchTerm = $(".search").val();
         const listItem = $('.results tbody').children('tr');
         const searchSplit = searchTerm.replace(/ /g, "'):containsi('");
-
         $.extend($.expr[':'], {
             'containsi': function (elem, i, match, array) {
                 return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
             }
         });
-
         $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'false');
         });
-
         $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'true');
         });
-
         const jobCount = $('.results tbody tr[visible="true"]').length;
         $('.counter').text(jobCount + ' items');
-
         if (jobCount === '0') { $('.no-result').show(); }
         else {
             $('.no-result').hide();
@@ -790,13 +785,11 @@ Template.leadscard.events({
                 $(this).attr('visible', 'true');
                 $('.no-result').hide();
             });
-
             //setTimeout(function () {
-            var rowCount = $('.results tbody tr').length;
+            const rowCount = $('.results tbody tr').length;
             $('.counter').text(rowCount + ' items');
             //}, 500);
         }
-
     },
     'click .tblLeadSideList tbody tr': function (event) {
         const leadLineID = $(event.target).attr('id');
@@ -975,7 +968,7 @@ Template.leadscard.events({
             }
         });
     },
-    'click #activeChk': function () {
+    'click #activeChk': function (event) {
         if ($(event.target).is(':checked')) {
             $('#customerInfo').css('color', '#00A3D3');
         } else {

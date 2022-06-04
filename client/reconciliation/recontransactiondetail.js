@@ -36,17 +36,17 @@ Template.recontransactiondetail.onRendered(function() {
     const splashArrayTaxRateList = [];
     let clientList = [];
 
-    YodleeID = (Session.get("reconYodleeID") !== undefined && parseInt(Session.get("reconYodleeID")) > 0)?Session.get("reconYodleeID"):null;
-    PaymentID = (Session.get("reconPaymentID") !== undefined && parseInt(Session.get("reconPaymentID")) > 0)?Session.get("reconPaymentID"):null;
-    BankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
-    BankAccountID = (Session.get("bankaccountid") !== undefined && parseInt(Session.get("bankaccountid")) > 0)?Session.get("bankaccountid"):null;
-    Who = (Session.get("reconWho") !== undefined && Session.get("reconWho") !== '')?Session.get("reconWho"):null;
-    let what = (Session.get("reconWhat") !== undefined && Session.get("reconWhat") !== '')?Session.get("reconWhat"):null;
-    let why = (Session.get("reconWhy") !== undefined && Session.get("reconWhy") !== '')?Session.get("reconWhy"):null;
-    let taxRate = (Session.get("reconTaxRate") !== undefined && Session.get("reconTaxRate") !== '')?Session.get("reconTaxRate"):null;
-    let amount = (Session.get("reconAmount") !== undefined && Session.get("reconAmount") !== '')?Session.get("reconAmount"):0;
-    DateIn = (Session.get("reconDateIn") !== undefined && Session.get("reconDateIn") !== '')?Session.get("reconDateIn"):'';
-    DepOrWith = (Session.get("reconSOR") !== undefined && Session.get("reconSOR") !== '')?Session.get("reconSOR"):null;
+    // YodleeID = (Session.get("reconYodleeID") !== undefined && parseInt(Session.get("reconYodleeID")) > 0)?Session.get("reconYodleeID"):null;
+    // PaymentID = (Session.get("reconPaymentID") !== undefined && parseInt(Session.get("reconPaymentID")) > 0)?Session.get("reconPaymentID"):null;
+    // BankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
+    // BankAccountID = (Session.get("bankaccountid") !== undefined && parseInt(Session.get("bankaccountid")) > 0)?Session.get("bankaccountid"):null;
+    // Who = (Session.get("reconWho") !== undefined && Session.get("reconWho") !== '')?Session.get("reconWho"):null;
+    // let what = (Session.get("reconWhat") !== undefined && Session.get("reconWhat") !== '')?Session.get("reconWhat"):null;
+    // let why = (Session.get("reconWhy") !== undefined && Session.get("reconWhy") !== '')?Session.get("reconWhy"):null;
+    // let taxRate = (Session.get("reconTaxRate") !== undefined && Session.get("reconTaxRate") !== '')?Session.get("reconTaxRate"):null;
+    // let amount = (Session.get("reconAmount") !== undefined && Session.get("reconAmount") !== '')?Session.get("reconAmount"):0;
+    // DateIn = (Session.get("reconDateIn") !== undefined && Session.get("reconDateIn") !== '')?Session.get("reconDateIn"):'';
+    // DepOrWith = (Session.get("reconSOR") !== undefined && Session.get("reconSOR") !== '')?Session.get("reconSOR"):null;
 
     // let YodleeID = (FlowRouter.current().queryParams.ID !== undefined && parseInt(FlowRouter.current().queryParams.ID) > 0)?FlowRouter.current().queryParams.ID:null;
     // let who = (FlowRouter.current().queryParams.who !== undefined && FlowRouter.current().queryParams.who !== '')?FlowRouter.current().queryParams.who:null;
@@ -56,104 +56,104 @@ Template.recontransactiondetail.onRendered(function() {
     // let amount = (FlowRouter.current().queryParams.amount !== undefined && FlowRouter.current().queryParams.amount !== '')?FlowRouter.current().queryParams.amount:0;
     // let dateIn = (FlowRouter.current().queryParams.dateIn !== undefined && FlowRouter.current().queryParams.dateIn !== '')?FlowRouter.current().queryParams.dateIn:'';
 
-    function setFirstlineByParam () {
-        if (YodleeID !== null) {
-            let clientDetail = templateObject.clientrecords.get().filter(customer => {
-                return customer.customername === what;
-            });
-            clientDetail = clientDetail[0];
-            // let clientDetail = (what !== null && templateObject.clientrecords.get().hasOwnProperty(what))?templateObject.clientrecords.get()[what]:null;
-            let discountAmount = (clientDetail !== undefined)? amount*clientDetail.discount/100: 0;
-            // let taxCodeDetail = (taxRate !== null && templateObject.taxraterecords.get().hasOwnProperty(taxRate))?templateObject.taxraterecords.get()[taxRate]:null;
-            let taxCodeDetail = templateObject.taxraterecords.get().filter(taxcode => {
-                return taxcode.codename === taxRate;
-            });
-            taxCodeDetail = taxCodeDetail[0];
-            let taxAmount = (taxCodeDetail !== undefined)?amount*taxCodeDetail.coderate/100:0;
-            selectLineID = Random.id();
-            let basedataObj = {
-                lineID: selectLineID,
-                product: '',
-                description: (why !== null)? why:'',
-                quantity: 1,
-                unitPrice: utilityService.modifynegativeCurrencyFormat(amount),
-                unitPriceInc: utilityService.modifynegativeCurrencyFormat(amount + taxAmount),
-                subtotal: utilityService.modifynegativeCurrencyFormat(amount),
-                account: (clientDetail !== undefined)? clientDetail.customername:'',
-                discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
-                taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
-                taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
-                amount: amount,
-                totalAmount: utilityService.modifynegativeCurrencyFormat(amount - discountAmount),
-                totalAmountInc: utilityService.modifynegativeCurrencyFormat(amount - discountAmount + taxAmount)
-            };
+    // function setFirstlineByParam () {
+    //     if (YodleeID !== null) {
+    //         let clientDetail = templateObject.clientrecords.get().filter(customer => {
+    //             return customer.customername === what;
+    //         });
+    //         clientDetail = clientDetail[0];
+    //         // let clientDetail = (what !== null && templateObject.clientrecords.get().hasOwnProperty(what))?templateObject.clientrecords.get()[what]:null;
+    //         let discountAmount = (clientDetail !== undefined)? amount*clientDetail.discount/100: 0;
+    //         // let taxCodeDetail = (taxRate !== null && templateObject.taxraterecords.get().hasOwnProperty(taxRate))?templateObject.taxraterecords.get()[taxRate]:null;
+    //         let taxCodeDetail = templateObject.taxraterecords.get().filter(taxcode => {
+    //             return taxcode.codename === taxRate;
+    //         });
+    //         taxCodeDetail = taxCodeDetail[0];
+    //         let taxAmount = (taxCodeDetail !== undefined)?amount*taxCodeDetail.coderate/100:0;
+    //         selectLineID = Random.id();
+    //         let basedataObj = {
+    //             lineID: selectLineID,
+    //             product: '',
+    //             description: (why !== null)? why:'',
+    //             quantity: 1,
+    //             unitPrice: utilityService.modifynegativeCurrencyFormat(amount),
+    //             unitPriceInc: utilityService.modifynegativeCurrencyFormat(amount + taxAmount),
+    //             subtotal: utilityService.modifynegativeCurrencyFormat(amount),
+    //             account: (clientDetail !== undefined)? clientDetail.customername:'',
+    //             discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
+    //             taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
+    //             taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
+    //             amount: amount,
+    //             totalAmount: utilityService.modifynegativeCurrencyFormat(amount - discountAmount),
+    //             totalAmountInc: utilityService.modifynegativeCurrencyFormat(amount - discountAmount + taxAmount)
+    //         };
+    //
+    //         let basedataArr = [];
+    //         basedataArr.push(basedataObj);
+    //         let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
+    //         templateObject.baselinedata.set(thirdaryData);
+    //         $('#labelWho').text(DepOrWith==='spent'?'To':'From');
+    //         $('#FromWho').val(Who);
+    //         let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
+    //         $('#DateIn').val(dateIn_val);
+    //         $('#TotalAmount').val(amount);
+    //         setTimeout(function () {
+    //             setCalculated();
+    //             $('#' + selectLineID + " .btnRemove").hide();
+    //         }, 500);
+    //     }
+    // }
 
-            let basedataArr = [];
-            basedataArr.push(basedataObj);
-            let thirdaryData = $.merge($.merge([], templateObject.baselinedata.get()), basedataArr);
-            templateObject.baselinedata.set(thirdaryData);
-            $('#labelWho').text(DepOrWith==='spent'?'To':'From');
-            $('#FromWho').val(Who);
-            let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
-            $('#DateIn').val(dateIn_val);
-            $('#TotalAmount').val(amount);
-            setTimeout(function () {
-                setCalculated();
-                $('#' + selectLineID + " .btnRemove").hide();
-            }, 500);
-        }
-    }
-
-    templateObject.getAllClients = function () {
-        getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
-                sideBarService.getClientVS1().then(function (data) {
-                    setClientList(data.tcustomervs1);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tcustomervs1;
-                setClientList(useData);
-            }
-        }).catch(function (err) {
-            sideBarService.getClientVS1().then(function (data) {
-                setClientList(data.tcustomervs1);
-            });
-        });
-    };
-    function setClientList (data) {
-        for (let i in data) {
-            if (data.hasOwnProperty(i)) {
-                let customerrecordObj = {
-                    customerid: data[i].fields.CallPriority || ' ',
-                    firstname: data[i].fields.FirstName || '',
-                    lastname: data[i].fields.LastName || '',
-                    customername: data[i].fields.ClientName || ' ',
-                    customeremail: data[i].fields.Email || ' ',
-                    street: data[i].fields.Street || ' ',
-                    street2: data[i].fields.Street2 || ' ',
-                    street3: data[i].fields.Street3 || ' ',
-                    suburb: data[i].fields.Suburb || ' ',
-                    statecode: data[i].fields.State + ' ' + data[i].fields.Postcode || ' ',
-                    country: data[i].fields.Country || ' ',
-                    termsName: data[i].fields.TermsName || '',
-                    taxCode: data[i].fields.TaxCodeName || 'E',
-                    clienttypename: data[i].fields.ClientTypeName || 'Default',
-                    discount: data[i].fields.Discount || 0,
-                };
-                clientList.push(customerrecordObj);
-            }
-
-        }
-        templateObject.clientrecords.set(clientList);
-        for (let i = 0; i < clientList.length; i++) {
-            //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
-        }
-        setTimeout(function () {
-            // $('#edtCustomerName').trigger("click");
-            setFirstlineByParam();
-        }, 200);
-    }
+    // templateObject.getAllClients = function () {
+    //     getVS1Data('TCustomerVS1').then(function (dataObject) {
+    //         if (dataObject.length === 0) {
+    //             sideBarService.getClientVS1().then(function (data) {
+    //                 setClientList(data.tcustomervs1);
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tcustomervs1;
+    //             setClientList(useData);
+    //         }
+    //     }).catch(function (err) {
+    //         sideBarService.getClientVS1().then(function (data) {
+    //             setClientList(data.tcustomervs1);
+    //         });
+    //     });
+    // };
+    // function setClientList (data) {
+    //     for (let i in data) {
+    //         if (data.hasOwnProperty(i)) {
+    //             let customerrecordObj = {
+    //                 customerid: data[i].fields.CallPriority || ' ',
+    //                 firstname: data[i].fields.FirstName || '',
+    //                 lastname: data[i].fields.LastName || '',
+    //                 customername: data[i].fields.ClientName || ' ',
+    //                 customeremail: data[i].fields.Email || ' ',
+    //                 street: data[i].fields.Street || ' ',
+    //                 street2: data[i].fields.Street2 || ' ',
+    //                 street3: data[i].fields.Street3 || ' ',
+    //                 suburb: data[i].fields.Suburb || ' ',
+    //                 statecode: data[i].fields.State + ' ' + data[i].fields.Postcode || ' ',
+    //                 country: data[i].fields.Country || ' ',
+    //                 termsName: data[i].fields.TermsName || '',
+    //                 taxCode: data[i].fields.TaxCodeName || 'E',
+    //                 clienttypename: data[i].fields.ClientTypeName || 'Default',
+    //                 discount: data[i].fields.Discount || 0,
+    //             };
+    //             clientList.push(customerrecordObj);
+    //         }
+    //
+    //     }
+    //     templateObject.clientrecords.set(clientList);
+    //     for (let i = 0; i < clientList.length; i++) {
+    //         //$('#edtCustomerName').editableSelect('add', clientList[i].customername);
+    //     }
+    //     setTimeout(function () {
+    //         // $('#edtCustomerName').trigger("click");
+    //         setFirstlineByParam();
+    //     }, 200);
+    // }
 
     // templateObject.getAllTaxCodes = function () {
     //     getVS1Data("TTaxcodeVS1")
@@ -241,57 +241,57 @@ Template.recontransactiondetail.onRendered(function() {
     // }
 
     setTimeout(function () {
-        templateObject.getAllClients();
+        // templateObject.getAllClients();
         // templateObject.getAllTaxCodes();
     }, 500);
 
-    $('#addLine').on('click', function () {
-        const rowData = $('#tblrecontransactiondetail tbody>tr:last').clone(true);
-        let tokenid = Random.id();
-        $(".lineProductName", rowData).val("");
-        $(".lineProductDesc", rowData).val("");
-        $(".lineQty", rowData).val("");
-        $(".lineAccountName", rowData).val("");
-        $(".lineUnitPrice", rowData).val("");
-        $(".lineAmount", rowData).text("");
-        $(".lineTaxRate", rowData).val("");
-        $(".lineTaxAmount", rowData).text("");
-        $(".lineDiscount", rowData).text("");
-        $(".btnRemove", rowData).show();
-        rowData.attr('id', tokenid);
-        $("#tblrecontransactiondetail tbody").append(rowData);
+    // $('#addLine').on('click', function () {
+    //     const rowData = $('#tblrecontransactiondetail tbody>tr:last').clone(true);
+    //     let tokenid = Random.id();
+    //     $(".lineProductName", rowData).val("");
+    //     $(".lineProductDesc", rowData).val("");
+    //     $(".lineQty", rowData).val("");
+    //     $(".lineAccountName", rowData).val("");
+    //     $(".lineUnitPrice", rowData).val("");
+    //     $(".lineAmount", rowData).text("");
+    //     $(".lineTaxRate", rowData).val("");
+    //     $(".lineTaxAmount", rowData).text("");
+    //     $(".lineDiscount", rowData).text("");
+    //     $(".btnRemove", rowData).show();
+    //     rowData.attr('id', tokenid);
+    //     $("#tblrecontransactiondetail tbody").append(rowData);
+    //
+    //     setTimeout(function () {
+    //         $('#' + tokenid + " .lineProductName").trigger('click');
+    //     }, 200);
+    // });
 
-        setTimeout(function () {
-            $('#' + tokenid + " .lineProductName").trigger('click');
-        }, 200);
-    });
-
-    $(document).on("click", "#tblInventory tbody tr", function (e) {
-        $(".colProductName").removeClass('boldtablealertsborder');
-        const trow = $(this);
-
-        if (selectLineID) {
-            let lineProductName = trow.find(".productName").text();
-            let lineProductDesc = trow.find(".productDesc").val();
-            let lineUnitPrice = trow.find(".salePrice").val();
-
-            $('#' + selectLineID + " .lineProductName").val(lineProductName);
-            $('#' + selectLineID + " .lineProductDesc").val(lineProductDesc);
-            $('#' + selectLineID + " .lineQty").val(1);
-            $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
-            $('#productListModal').modal('toggle');
-        }
-        setCalculated();
-    });
-    $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
-        const trow = $(this);
-        if (selectLineID) {
-            let lineAccountName = trow.find(".colCompany").text();
-            $('#' + selectLineID + " .lineAccountName").val(lineAccountName);
-            $('#customerListModal').modal('toggle');
-        }
-        setCalculated();
-    });
+    // $(document).on("click", "#tblInventory tbody tr", function (e) {
+    //     $(".colProductName").removeClass('boldtablealertsborder');
+    //     const trow = $(this);
+    //
+    //     if (selectLineID) {
+    //         let lineProductName = trow.find(".productName").text();
+    //         let lineProductDesc = trow.find(".productDesc").val();
+    //         let lineUnitPrice = trow.find(".salePrice").val();
+    //
+    //         $('#' + selectLineID + " .lineProductName").val(lineProductName);
+    //         $('#' + selectLineID + " .lineProductDesc").val(lineProductDesc);
+    //         $('#' + selectLineID + " .lineQty").val(1);
+    //         $('#' + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
+    //         $('#productListModal').modal('toggle');
+    //     }
+    //     setCalculated();
+    // });
+    // $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
+    //     const trow = $(this);
+    //     if (selectLineID) {
+    //         let lineAccountName = trow.find(".colCompany").text();
+    //         $('#' + selectLineID + " .lineAccountName").val(lineAccountName);
+    //         $('#customerListModal').modal('toggle');
+    //     }
+    //     setCalculated();
+    // });
     // $(document).on("click", "#tblTaxRate tbody tr", function (e) {
     //     let trow = $(this);
     //     if (selectLineID) {
@@ -302,359 +302,358 @@ Template.recontransactiondetail.onRendered(function() {
     //     setCalculated();
     // });
 
-    $("#DateIn").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-    });
-
-    function setCalculated() {
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customerList = templateObject.clientrecords.get();
-        setCalculated2(taxcodeList, customerList)
-    }
+    // $("#DateIn").datepicker({
+    //     showOn: 'button',
+    //     buttonText: 'Show Date',
+    //     buttonImageOnly: true,
+    //     buttonImage: '/img/imgCal2.png',
+    //     dateFormat: 'dd/mm/yy',
+    //     showOtherMonths: true,
+    //     selectOtherMonths: true,
+    //     changeMonth: true,
+    //     changeYear: true,
+    //     yearRange: "-90:+10",
+    // });
+    //
+    // function setCalculated() {
+    //     let taxcodeList = templateObject.taxraterecords.get();
+    //     let customerList = templateObject.clientrecords.get();
+    //     setCalculated2(taxcodeList, customerList)
+    // }
 });
 
-
 Template.recontransactiondetail.events({
-    'click .lineProductName, keydown .lineProductName': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        const $each = $(event.currentTarget);
-        const offset = $each.offset();
-        $("#selectProductID").val('');
-        const productDataName = $(event.target).val() || '';
-        if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
-            openProductListModal();
-        } else {
-            if (productDataName.replace(/\s/g, '') !== '') {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                getVS1Data('TProductVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        setOneProductDataByName(productDataName);
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let added = false;
-                        for (let i = 0; i < data.tproductvs1.length; i++) {
-                            if (data.tproductvs1[i].fields.ProductName === productDataName) {
-                                added = true;
-                                $('.fullScreenSpin').css('display', 'none');
-                                setProductNewModal(data.tproductvs1[i]);
-                                setTimeout(function () {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
-                            }
-                        }
-                        if (!added) {
-                            setOneProductDataByName(productDataName);
-                        }
-                    }
-                }).catch(function (err) {
-                    setOneProductDataByName(productDataName);
-                });
-
-                setTimeout(function () {
-                    // WangYan: where are these element - dtDateTo, dtDateFrom
-                    $("#dtDateTo").datepicker({
-                        showOn: 'button',
-                        buttonText: 'Show Date',
-                        buttonImageOnly: true,
-                        buttonImage: '/img/imgCal2.png',
-                        constrainInput: false,
-                        dateFormat: 'd/mm/yy',
-                        showOtherMonths: true,
-                        selectOtherMonths: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-90:+10",
-                    }).keyup(function (e) {
-                        if (e.keyCode === 8 || e.keyCode === 46) {
-                            $("#dtDateTo,#dtDateFrom").val('');
-                        }
-                    });
-
-                    $("#dtDateFrom").datepicker({
-                        showOn: 'button',
-                        buttonText: 'Show Date',
-                        altField: "#dtDateFrom",
-                        buttonImageOnly: true,
-                        buttonImage: '/img/imgCal2.png',
-                        constrainInput: false,
-                        dateFormat: 'd/mm/yy',
-                        showOtherMonths: true,
-                        selectOtherMonths: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-90:+10",
-                    }).keyup(function (e) {
-                        if (e.keyCode === 8 || e.keyCode === 46) {
-                            $("#dtDateTo,#dtDateFrom").val('');
-                        }
-                    });
-
-                    $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
-
-                }, 1000);
-
-            } else {
-                openProductListModal();
-            }
-        }
-    },
-    'click .lineAccountName, keydown .lineAccountName': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        const $each = $(event.currentTarget);
-        const offset = $each.offset();
-        $('#edtCustomerPOPID').val('');
-        //$('#edtCustomerCompany').attr('readonly', false);
-        const customerDataName = event.target.value || '';
-        if (event.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-            openCustomerModal();
-        } else {
-            if (customerDataName.replace(/\s/g, '') !== '') {
-                //FlowRouter.go('/customerscard?name=' + e.target.value);
-                $('#edtCustomerPOPID').val('');
-                getVS1Data('TCustomerVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        setOneCustomerDataExByName(customerDataName);
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tcustomervs1;
-                        let added = false;
-                        for (let i = 0; i < useData.length; i++) {
-                            if (useData[i].fields.ClientName === customerDataName) {
-                                setCustomerModal(useData[i]);
-                            }
-                        }
-                        if (!added) {
-                            setOneCustomerDataExByName(customerDataName);
-                        }
-                    }
-                }).catch(function (err) {
-                    setOneCustomerDataExByName(customerDataName);
-                });
-            } else {
-                openCustomerModal();
-            }
-        }
-    },
-    'click .lineTaxRate, keydown .lineTaxRate': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        const $each = $(event.currentTarget);
-        const offset = $each.offset();
-        const taxRateDataName = event.target.value || "";
-        if (event.pageX > offset.left + $each.width() - 8) {
-            // X button 16px wide?
-            $("#taxRateListModal").modal("toggle");
-        } else {
-            if (taxRateDataName.replace(/\s/g, "") !== "") {
-                $(".taxcodepopheader").text("Edit Tax Rate");
-                getVS1Data("TTaxcodeVS1").then(function (dataObject) {
-                    if (dataObject.length === 0) {
-                        setTaxCodeVS1(taxRateDataName);
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        $(".taxcodepopheader").text("Edit Tax Rate");
-                        setTaxRateData(data, taxRateDataName);
-                    }
-                }).catch(function (err) {
-                    setTaxCodeVS1(taxRateDataName);
-                });
-            } else {
-                $("#taxRateListModal").modal("toggle");
-            }
-        }
-    },
-    'keydown .lineQty, keydown .lineUnitPrice': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-            (event.keyCode >= 35 && event.keyCode <= 40)) {
-            return;
-        }
-        if (event.shiftKey === true) {
-            event.preventDefault();
-        }
-        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-            (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode === 8 || event.keyCode === 9 ||
-            event.keyCode === 37 || event.keyCode === 39 ||
-            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {
-
-        }
-        else {
-            event.preventDefault();
-        }
-    },
-    'change .lineQty': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        const templateObject = Template.instance();
-        let qty = parseInt($(event.target).val()) || 0;
-        $(event.target).val(qty);
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customerList = templateObject.clientrecords.get();
-        setCalculated2(taxcodeList, customerList);
-    },
-    'change .lineUnitPrice': function (event) {
-        selectLineID = $(event.target).closest('tr').attr('id');
-        const templateObject = Template.instance();
-        let inputUnitPrice = 0;
-        if (!isNaN($(event.target).val())) {
-            inputUnitPrice = parseFloat($(event.target).val()) || 0;
-            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-        } else {
-            inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
-            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-        }
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customerList = templateObject.clientrecords.get();
-        setCalculated2(taxcodeList, customerList);
-    },
-    'click .btnRemove': function (event) {
-        selectLineID = null;
-        let templateObject = Template.instance();
-        $(event.target).closest('tr').remove();
-        event.preventDefault();
-
-        let taxcodeList = templateObject.taxraterecords.get();
-        let customerList = templateObject.clientrecords.get();
-        setCalculated2(taxcodeList, customerList);
-    },
-    'click #btnCancel': function() {
-        Session.setPersistent('bankaccountid', Session.get('bankaccountid'));
-        Session.setPersistent('bankaccountname', Session.get('bankaccountname'));
-        FlowRouter.go('/newbankrecon');
-    },
-    'click #btnSave': function (event) {
-        let match_total = parseFloat($("#TotalAmount").val());
-        let grand_total =  Number($(".grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
-        if (match_total !== grand_total) {
-            swal('The totals do not match.', '', 'error');
-            $("#TotalAmount").focus();
-            return false;
-        }
-        let reconType = "";
-        if (DepOrWith === "spent") {
-            reconType = "TReconciliationDepositLines";
-        } else if (DepOrWith === "received") {
-            reconType = "TReconciliationWithdrawalLines";
-        } else {
-            return false;
-        }
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let lineItems = [];
-        let lineItemsObj = {};
-        $('#tblrecontransactiondetail > tbody > tr').each(function () {
-            let lineID = this.id;
-            let lineProductDesc = $('#' + lineID + " .lineProductDesc").val();
-            let lineAccountName = $('#' + lineID + " .lineAccountName").val();
-            let lineAmount = $('#' + lineID + " .lineAmount").text();
-            lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
-            let refText = $('#reference').val();
-
-            let dateIn = $("#DateIn").val() || '';
-            let splitwithdepositdate = dateIn.split("/");
-            let withYear = splitwithdepositdate[2];
-            let withMonth = splitwithdepositdate[1];
-            let withDay = splitwithdepositdate[0];
-            let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
-
-            lineItemsObj = {
-                type: reconType,
-                fields: {
-                    AccountName: BankAccountName || '',
-                    Amount: lineAmount,
-                    BankStatementLineID: 0, //Hardcoded for now
-                    ClientName: lineAccountName || '',
-                    DepositDate: formatWithDate + " 00:00:00" || '',
-                    Deposited: true,
-                    DepositLineID: parseInt(YodleeID) || 0,
-                    Notes: lineProductDesc || '',
-                    Payee: lineAccountName || '',
-                    PaymentID: parseInt(PaymentID) || 0,
-                    // Reconciled: true,
-                    Reconciled: false,
-                    Reference: refText || ''
-                }
-            };
-            lineItems.push(lineItemsObj);
-        });
-
-        // Pulling initial variables BEGIN
-        let deptname = "Default"; //Set to Default as it isn't used for recons
-        let employeename = Session.get('mySessionEmployee');
-        const notes = ''; //pending addition of notes field
-        const openbalance = 0;
-        let closebalance = 0;
-        const statementno = '';
-        let recondate = DateIn;
-        // Pulling initial variables END
-
-        let objDetails = {};
-        if (DepOrWith === "spent") {
-            objDetails = {
-                type: "TReconciliation",
-                fields: {
-                    // ID: parseInt(YodleeID) || 0,
-                    AccountName: BankAccountName || '',
-                    CloseBalance: closebalance,
-                    Deleted: false,
-                    DepositLines: lineItems || '',
-                    DeptName: deptname || '',
-                    EmployeeName: employeename || '',
-                    Finished: false,
-                    Notes: notes || '',
-                    OnHold: true,
-                    OpenBalance: openbalance,
-                    ReconciliationDate: recondate,
-                    StatementNo: statementno || '0',
-                    WithdrawalLines: ''
-                }
-            };
-
-        } else {
-            objDetails = {
-                type: "TReconciliation",
-                fields: {
-                    // ID: parseInt(YodleeID) || 0,
-                    AccountName: BankAccountName || '',
-                    CloseBalance: closebalance,
-                    Deleted: false,
-                    DepositLines: '',
-                    DeptName: deptname || '',
-                    EmployeeName: employeename || '',
-                    Finished: false,
-                    Notes: notes || '',
-                    OnHold: true,
-                    OpenBalance: openbalance,
-                    ReconciliationDate: recondate,
-                    StatementNo: statementno || '0',
-                    WithdrawalLines: lineItems || ''
-                }
-            };
-        }
-        reconService.saveReconciliation(objDetails).then(function(data) {
-            FlowRouter.go('/newbankrecon');
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-                else if (result.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        });
-    },
+    // 'click .lineProductName, keydown .lineProductName': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     const $each = $(event.currentTarget);
+    //     const offset = $each.offset();
+    //     $("#selectProductID").val('');
+    //     const productDataName = $(event.target).val() || '';
+    //     if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
+    //         openProductListModal();
+    //     } else {
+    //         if (productDataName.replace(/\s/g, '') !== '') {
+    //             $('.fullScreenSpin').css('display', 'inline-block');
+    //             getVS1Data('TProductVS1').then(function (dataObject) {
+    //                 if (dataObject.length === 0) {
+    //                     setOneProductDataByName(productDataName);
+    //                 } else {
+    //                     let data = JSON.parse(dataObject[0].data);
+    //                     let added = false;
+    //                     for (let i = 0; i < data.tproductvs1.length; i++) {
+    //                         if (data.tproductvs1[i].fields.ProductName === productDataName) {
+    //                             added = true;
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                             setProductNewModal(data.tproductvs1[i]);
+    //                             setTimeout(function () {
+    //                                 $('#newProductModal').modal('show');
+    //                             }, 500);
+    //                         }
+    //                     }
+    //                     if (!added) {
+    //                         setOneProductDataByName(productDataName);
+    //                     }
+    //                 }
+    //             }).catch(function (err) {
+    //                 setOneProductDataByName(productDataName);
+    //             });
+    //
+    //             setTimeout(function () {
+    //                 // WangYan: where are these element - dtDateTo, dtDateFrom
+    //                 $("#dtDateTo").datepicker({
+    //                     showOn: 'button',
+    //                     buttonText: 'Show Date',
+    //                     buttonImageOnly: true,
+    //                     buttonImage: '/img/imgCal2.png',
+    //                     constrainInput: false,
+    //                     dateFormat: 'd/mm/yy',
+    //                     showOtherMonths: true,
+    //                     selectOtherMonths: true,
+    //                     changeMonth: true,
+    //                     changeYear: true,
+    //                     yearRange: "-90:+10",
+    //                 }).keyup(function (e) {
+    //                     if (e.keyCode === 8 || e.keyCode === 46) {
+    //                         $("#dtDateTo,#dtDateFrom").val('');
+    //                     }
+    //                 });
+    //
+    //                 $("#dtDateFrom").datepicker({
+    //                     showOn: 'button',
+    //                     buttonText: 'Show Date',
+    //                     altField: "#dtDateFrom",
+    //                     buttonImageOnly: true,
+    //                     buttonImage: '/img/imgCal2.png',
+    //                     constrainInput: false,
+    //                     dateFormat: 'd/mm/yy',
+    //                     showOtherMonths: true,
+    //                     selectOtherMonths: true,
+    //                     changeMonth: true,
+    //                     changeYear: true,
+    //                     yearRange: "-90:+10",
+    //                 }).keyup(function (e) {
+    //                     if (e.keyCode === 8 || e.keyCode === 46) {
+    //                         $("#dtDateTo,#dtDateFrom").val('');
+    //                     }
+    //                 });
+    //
+    //                 $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
+    //
+    //             }, 1000);
+    //
+    //         } else {
+    //             openProductListModal();
+    //         }
+    //     }
+    // },
+    // 'click .lineAccountName, keydown .lineAccountName': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     const $each = $(event.currentTarget);
+    //     const offset = $each.offset();
+    //     $('#edtCustomerPOPID').val('');
+    //     //$('#edtCustomerCompany').attr('readonly', false);
+    //     const customerDataName = event.target.value || '';
+    //     if (event.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+    //         openCustomerModal();
+    //     } else {
+    //         if (customerDataName.replace(/\s/g, '') !== '') {
+    //             //FlowRouter.go('/customerscard?name=' + e.target.value);
+    //             $('#edtCustomerPOPID').val('');
+    //             getVS1Data('TCustomerVS1').then(function (dataObject) {
+    //                 if (dataObject.length === 0) {
+    //                     setOneCustomerDataExByName(customerDataName);
+    //                 } else {
+    //                     let data = JSON.parse(dataObject[0].data);
+    //                     let useData = data.tcustomervs1;
+    //                     let added = false;
+    //                     for (let i = 0; i < useData.length; i++) {
+    //                         if (useData[i].fields.ClientName === customerDataName) {
+    //                             setCustomerModal(useData[i]);
+    //                         }
+    //                     }
+    //                     if (!added) {
+    //                         setOneCustomerDataExByName(customerDataName);
+    //                     }
+    //                 }
+    //             }).catch(function (err) {
+    //                 setOneCustomerDataExByName(customerDataName);
+    //             });
+    //         } else {
+    //             openCustomerModal();
+    //         }
+    //     }
+    // },
+    // 'click .lineTaxRate, keydown .lineTaxRate': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     const $each = $(event.currentTarget);
+    //     const offset = $each.offset();
+    //     const taxRateDataName = event.target.value || "";
+    //     if (event.pageX > offset.left + $each.width() - 8) {
+    //         // X button 16px wide?
+    //         $("#taxRateListModal").modal("toggle");
+    //     } else {
+    //         if (taxRateDataName.replace(/\s/g, "") !== "") {
+    //             $(".taxcodepopheader").text("Edit Tax Rate");
+    //             getVS1Data("TTaxcodeVS1").then(function (dataObject) {
+    //                 if (dataObject.length === 0) {
+    //                     setTaxCodeVS1(taxRateDataName);
+    //                 } else {
+    //                     let data = JSON.parse(dataObject[0].data);
+    //                     $(".taxcodepopheader").text("Edit Tax Rate");
+    //                     setTaxRateData(data, taxRateDataName);
+    //                 }
+    //             }).catch(function (err) {
+    //                 setTaxCodeVS1(taxRateDataName);
+    //             });
+    //         } else {
+    //             $("#taxRateListModal").modal("toggle");
+    //         }
+    //     }
+    // },
+    // 'keydown .lineQty, keydown .lineUnitPrice': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+    //         (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+    //         (event.keyCode >= 35 && event.keyCode <= 40)) {
+    //         return;
+    //     }
+    //     if (event.shiftKey === true) {
+    //         event.preventDefault();
+    //     }
+    //     if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+    //         (event.keyCode >= 96 && event.keyCode <= 105) ||
+    //         event.keyCode === 8 || event.keyCode === 9 ||
+    //         event.keyCode === 37 || event.keyCode === 39 ||
+    //         event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {
+    //
+    //     }
+    //     else {
+    //         event.preventDefault();
+    //     }
+    // },
+    // 'change .lineQty': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     const templateObject = Template.instance();
+    //     let qty = parseInt($(event.target).val()) || 0;
+    //     $(event.target).val(qty);
+    //     let taxcodeList = templateObject.taxraterecords.get();
+    //     let customerList = templateObject.clientrecords.get();
+    //     setCalculated2(taxcodeList, customerList);
+    // },
+    // 'change .lineUnitPrice': function (event) {
+    //     selectLineID = $(event.target).closest('tr').attr('id');
+    //     const templateObject = Template.instance();
+    //     let inputUnitPrice = 0;
+    //     if (!isNaN($(event.target).val())) {
+    //         inputUnitPrice = parseFloat($(event.target).val()) || 0;
+    //         $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+    //     } else {
+    //         inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
+    //         $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
+    //     }
+    //     let taxcodeList = templateObject.taxraterecords.get();
+    //     let customerList = templateObject.clientrecords.get();
+    //     setCalculated2(taxcodeList, customerList);
+    // },
+    // 'click .btnRemove': function (event) {
+    //     selectLineID = null;
+    //     let templateObject = Template.instance();
+    //     $(event.target).closest('tr').remove();
+    //     event.preventDefault();
+    //
+    //     let taxcodeList = templateObject.taxraterecords.get();
+    //     let customerList = templateObject.clientrecords.get();
+    //     setCalculated2(taxcodeList, customerList);
+    // },
+    // 'click #btnCancel': function() {
+    //     Session.setPersistent('bankaccountid', Session.get('bankaccountid'));
+    //     Session.setPersistent('bankaccountname', Session.get('bankaccountname'));
+    //     FlowRouter.go('/newbankrecon');
+    // },
+    // 'click #btnSave': function (event) {
+    //     let match_total = parseFloat($("#TotalAmount").val());
+    //     let grand_total =  Number($(".grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
+    //     if (match_total !== grand_total) {
+    //         swal('The totals do not match.', '', 'error');
+    //         $("#TotalAmount").focus();
+    //         return false;
+    //     }
+    //     let reconType = "";
+    //     if (DepOrWith === "spent") {
+    //         reconType = "TReconciliationDepositLines";
+    //     } else if (DepOrWith === "received") {
+    //         reconType = "TReconciliationWithdrawalLines";
+    //     } else {
+    //         return false;
+    //     }
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     let lineItems = [];
+    //     let lineItemsObj = {};
+    //     $('#tblrecontransactiondetail > tbody > tr').each(function () {
+    //         let lineID = this.id;
+    //         let lineProductDesc = $('#' + lineID + " .lineProductDesc").val();
+    //         let lineAccountName = $('#' + lineID + " .lineAccountName").val();
+    //         let lineAmount = $('#' + lineID + " .lineAmount").text();
+    //         lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
+    //         let refText = $('#reference').val();
+    //
+    //         let dateIn = $("#DateIn").val() || '';
+    //         let splitwithdepositdate = dateIn.split("/");
+    //         let withYear = splitwithdepositdate[2];
+    //         let withMonth = splitwithdepositdate[1];
+    //         let withDay = splitwithdepositdate[0];
+    //         let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
+    //
+    //         lineItemsObj = {
+    //             type: reconType,
+    //             fields: {
+    //                 AccountName: BankAccountName || '',
+    //                 Amount: lineAmount,
+    //                 BankStatementLineID: 0, //Hardcoded for now
+    //                 ClientName: lineAccountName || '',
+    //                 DepositDate: formatWithDate + " 00:00:00" || '',
+    //                 Deposited: true,
+    //                 DepositLineID: parseInt(YodleeID) || 0,
+    //                 Notes: lineProductDesc || '',
+    //                 Payee: lineAccountName || '',
+    //                 PaymentID: parseInt(PaymentID) || 0,
+    //                 // Reconciled: true,
+    //                 Reconciled: false,
+    //                 Reference: refText || ''
+    //             }
+    //         };
+    //         lineItems.push(lineItemsObj);
+    //     });
+    //
+    //     // Pulling initial variables BEGIN
+    //     let deptname = "Default"; //Set to Default as it isn't used for recons
+    //     let employeename = Session.get('mySessionEmployee');
+    //     const notes = ''; //pending addition of notes field
+    //     const openbalance = 0;
+    //     let closebalance = 0;
+    //     const statementno = '';
+    //     let recondate = DateIn;
+    //     // Pulling initial variables END
+    //
+    //     let objDetails = {};
+    //     if (DepOrWith === "spent") {
+    //         objDetails = {
+    //             type: "TReconciliation",
+    //             fields: {
+    //                 // ID: parseInt(YodleeID) || 0,
+    //                 AccountName: BankAccountName || '',
+    //                 CloseBalance: closebalance,
+    //                 Deleted: false,
+    //                 DepositLines: lineItems || '',
+    //                 DeptName: deptname || '',
+    //                 EmployeeName: employeename || '',
+    //                 Finished: false,
+    //                 Notes: notes || '',
+    //                 OnHold: true,
+    //                 OpenBalance: openbalance,
+    //                 ReconciliationDate: recondate,
+    //                 StatementNo: statementno || '0',
+    //                 WithdrawalLines: ''
+    //             }
+    //         };
+    //
+    //     } else {
+    //         objDetails = {
+    //             type: "TReconciliation",
+    //             fields: {
+    //                 // ID: parseInt(YodleeID) || 0,
+    //                 AccountName: BankAccountName || '',
+    //                 CloseBalance: closebalance,
+    //                 Deleted: false,
+    //                 DepositLines: '',
+    //                 DeptName: deptname || '',
+    //                 EmployeeName: employeename || '',
+    //                 Finished: false,
+    //                 Notes: notes || '',
+    //                 OnHold: true,
+    //                 OpenBalance: openbalance,
+    //                 ReconciliationDate: recondate,
+    //                 StatementNo: statementno || '0',
+    //                 WithdrawalLines: lineItems || ''
+    //             }
+    //         };
+    //     }
+    //     reconService.saveReconciliation(objDetails).then(function(data) {
+    //         FlowRouter.go('/newbankrecon');
+    //     }).catch(function(err) {
+    //         swal({
+    //             title: 'Oooops...',
+    //             text: err,
+    //             type: 'error',
+    //             showCancelButton: false,
+    //             confirmButtonText: 'Try Again'
+    //         }).then((result) => {
+    //             if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+    //             else if (result.dismiss === 'cancel') {}
+    //         });
+    //         $('.fullScreenSpin').css('display', 'none');
+    //     });
+    // },
 });
 
 Template.recontransactiondetail.helpers({

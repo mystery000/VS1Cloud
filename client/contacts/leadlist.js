@@ -270,7 +270,7 @@ Template.leadlist.events({
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-                            FlowRouter.go('/leadlist');
+                            FlowRouter.go('/leadscard');
                         } else if (result.dismiss === 'cancel') {
                             //$('#productListModal').modal('toggle');
                         }
