@@ -266,8 +266,17 @@
                 border-style: dashed;
                 border-width: 1px;
                 border-color: rgba(0,0,0,0.3);
-                min-height: 38px;
+                height: 38px !important;
+                max-height: unset !important;
+                min-height: unset !important;
             }
+            .ui-sortable-helper.setParentPosition {
+                height: 38px !important;
+                overflow: hidden;
+            }
+            .ui-sortable-helper.setParentPosition .group-items.ui-sortable{
+                display: none !important;
+            } 
         </style>
         <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
             style="width: 100%;">
