@@ -9,7 +9,7 @@ export class ReconService extends BaseService {
         return this.getList(this.ERPObjects.TAccountVS1, options);
     }
 
-    getToBeReconciledDeposit(accountid,dateTo, ignoreDate) {
+    getToBeReconciledDeposit(accountid, dateTo, ignoreDate) {
         let options = '';
         if (ignoreDate === true) {
             options = {
@@ -47,6 +47,13 @@ export class ReconService extends BaseService {
             };
         }
         return this.getList(this.ERPObjects.TToBeReconciledWithDrawal, options);
+    }
+
+    getReconciliationAll(){
+        let options = {
+            select: "[Deleted]=false"
+        };
+        return this.getList(this.ERPObjects.TReconciliation, options);
     }
 
     getReconciliation(){
