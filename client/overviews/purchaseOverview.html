@@ -193,13 +193,29 @@
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="7" chartGroup="Purchases" }}
 
+        <style>
+            @media screen and (max-width: 450px) {
+                .btnNav {
+                    width: 95% !important;
+                    margin: 12px 0px !important;
+                }
+                .btnOpenSettingsDesktop {
+                    display: none !important;
+                }
+                .btnOpenSettingsMobile {
+                    margin: 12px 0px !important;
+                    display: block !important;
+                }
+            }
+        </style>
 
-        <div class="row d-xl-flex flex-row justify-content-xl-center">
-            <div class="col d-xl-flex flex-grow-1 align-items-xl-start">
-                <button id="btnRefresh" class="btn btn-primary btnRefresh" type="button" style="margin: 12px;min-width: 117.016px;margin-left:0"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+        <div class="row ">
+            <div class="col-6 col-md-8">
+                <button id="btnRefresh" class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px;margin-left:0"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
 
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary allList" role="button" href="/purchasesoverview?id=all" style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">All</a><button
-                        class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary allList" role="button" href="/purchasesoverview?id=all">All</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item newpo" role="presentation" href="/purchaseordercard">+ New Purchase
                             Order</a>
@@ -207,39 +223,37 @@
                         <a class="dropdown-item newCredit" role="presentation" href="/creditcard">+ New Credit</a>
                     </div>
                 </div>
-                <div class="btn-group float-left text-nowrap" style="margin: 12px;"><a class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist"
-                        style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Purchase
-                        Order</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button" style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                <div class="btn-group btnNav text-nowrap" style="margin: 12px;">
+                    <a class="btn btn-primary purchaseorderList" role="button" href="/purchaseorderlist">Purchase Order</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item purchaseorderList" role="presentation" href="/purchaseorderlist">Purchase Order List</a>
                         <a class="dropdown-item purchaseorderListBO" role="presentation" href="/purchaseorderlistBO">Purchase Order List - BO</a>
                         <a class="dropdown-item" role="presentation" href="/purchaseordercard" id="newPurchaseorder" name="newPurchaseorder">+ New Purchase Order</a>
                     </div>
                 </div>
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary billList" role="button" style="color: rgb(255,255,255);min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;" href="/billlist"
-                        id="billList" name="billList">Bill</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
-                        style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary billList" role="button" href="/billlist" id="billList" name="billList">Bill</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item billList" role="presentation" href="/billlist">Bill List</a>
-                        <a class="dropdown-item" role="presentation" href="/billcard" id="newBill" name="newBill">+ New
-                            Bill</a>
+                        <a class="dropdown-item" role="presentation" href="/billcard" id="newBill" name="newBill">+ New Bill</a>
                     </div>
                 </div>
-                <div class="btn-group float-left" style="margin: 12px;"><a class="btn btn-primary creditList" role="button" href="/creditlist" id="creditList" name="creditList"
-                        style="min-width: 117.016px; background-color: #00A3D3; border-color: #00A3D3;">Credit</a><button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"
-                        style="background-color: #00A3D3; border-color: #00A3D3;"></button>
+                <div class="btn-group btnNav" style="margin: 12px;">
+                    <a class="btn btn-primary creditList" role="button" href="/creditlist" id="creditList" name="creditList">Credit</a>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item creditList" role="presentation" href="/creditlist">Credit List</a>
                         <a class="dropdown-item" role="presentation" href="/creditcard" id="newCredit" name="newCredit">+ New Credit</a>
                     </div>
                 </div>
             </div>
-            <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                <button class="btn btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export"
-                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
-                <button class="btn btn-primary printConfirm float-right" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
-                        style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin:12px;"><i class="icon ion-android-more-horizontal"></i></a>
+            <div class="col-6 col-md-4">
+                <a class="btn btnOpenSettings btnOpenSettingsDesktop float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <button class="btn btnNav btn-primary printConfirm float-right" type="button" style="margin:12px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
+                <button class="btn btnNav btn-primary export float-right" type="button" style="margin: 12px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
 
