@@ -68,83 +68,143 @@
                     </div>
                 </div>
                 <div class="row" style="background-color: #ededed; padding: 16px 32px;">
-                    <div class="col-12 col-lg-6">
+                    <div class="col-12 col-xl-10">
                         <div class="row">
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Amount</label>
-                                    <input class="form-control form-control" type="text" value="{{record.paymentAmount}}" id="edtPaymentAmount" name='edtPaymentAmount' readonly>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Amount</label>
+                                                    <input class="form-control form-control" type="text" value="{{record.paymentAmount}}" id="edtPaymentAmount" name='edtPaymentAmount' readonly>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Date</label>
+                                                    <div class="input-group date">
+                                                        <input type="text" class="form-control" value="{{record.paymentDate}}" id="dtPaymentDate" name="dtPaymentDate" style="cursor: pointer;">
+                                                        <div class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-th"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Bank Account</label>
+                                                    <select type="search" class="form-control" id="edtSelectBankAccountName" name="edtSelectBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                    <!-- <select class="form-control" id="edtBankAccountName" name="edtBankAccountName" style="cursor: pointer;">
+                                                        <option value="{{item.paymentmethod}}" selected="">{{record.bankAccount}}</option>
+                                                        {{#each item in accountnamerecords}}
+                                                            <option value="{{item.accountname}}">{{item.accountname}}</option>
+                                                        {{/each}}
+                                                    </select> -->
+                                                </div>
+                                              
+
+                                            </div>
+
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Payment Method</label>
+                                                    <select type="search" class="form-control" id="sltPaymentMethod" name="sltPaymentMethod" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltPaymentMethod" name="sltPaymentMethod">
+                                                        {{#each item in paymentmethodrecords}}
+                                                            {{#if equals item.paymentmethod record.checkpayment }}
+                                                                <option value="{{item.paymentmethod}}" selected="">{{item.paymentmethod}}</option>
+                                                            {{else}}
+                                                                <option value="{{item.paymentmethod}}">{{item.paymentmethod}}</option>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    </select> -->
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                      
+                                    </div>
+
+                                   
                                 </div>
+                              
+                               
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Bank Account</label>
-                                    <select type="search" class="form-control" id="edtSelectBankAccountName" name="edtSelectBankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-                                    <!-- <select class="form-control" id="edtBankAccountName" name="edtBankAccountName" style="cursor: pointer;">
-                                        <option value="{{item.paymentmethod}}" selected="">{{record.bankAccount}}</option>
-                                        {{#each item in accountnamerecords}}
-                                            <option value="{{item.accountname}}">{{item.accountname}}</option>
-                                        {{/each}}
-                                    </select> -->
+
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Reference No.</label>
+                                                    <input class="form-control form-control" type="text" value="{{record.reference}}" id="edtReference" name="edtReference">
+                                                </div>
+                                              
+
+                                            </div>
+
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label>Department</label>
+                                                    <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                    </select>
+                                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltDepartment" name="sltDepartment">
+                                                        {{#each item in deptrecords}}
+                                                            {{#if equals item.department record.department }}
+                                                                <option value="{{record.department}}" selected="">{{record.department}}</option>
+                                                            {{else}}
+                                                                <option value="{{item.department}}">{{item.department}}</option>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    </select> -->
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                      
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                {{> CurrencyWidget rate="buy"}}
+                                            </div>
+                                        </div>
+                                    </div>
+                              
                                 </div>
+                              
+                               
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Reference No.</label>
-                                    <input class="form-control form-control" type="text" value="{{record.reference}}" id="edtReference" name="edtReference">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Date</label>
-                                    <div class="input-group date">
-                                        <input type="text" class="form-control" value="{{record.paymentDate}}" id="dtPaymentDate" name="dtPaymentDate" style="cursor: pointer;">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                <div class="row">
+                                    
+                                    
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6 col-md-12 col-lg-12">
+                                                <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                              
+                               
                             </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Payment Method</label>
-                                    <select type="search" class="form-control" id="sltPaymentMethod" name="sltPaymentMethod" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltPaymentMethod" name="sltPaymentMethod">
-                                        {{#each item in paymentmethodrecords}}
-                                            {{#if equals item.paymentmethod record.checkpayment }}
-                                                <option value="{{item.paymentmethod}}" selected="">{{item.paymentmethod}}</option>
-                                            {{else}}
-                                                <option value="{{item.paymentmethod}}">{{item.paymentmethod}}</option>
-                                            {{/if}}
-                                        {{/each}}
-                                    </select> -->
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-4">
-                                <div class="form-group"><label>Department</label>
-                                    <select type="search" class="form-control" id="sltDept" name="sltDept" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
-                                    <!-- <select class="form-control" style="cursor: pointer;" id="sltDepartment" name="sltDepartment">
-                                        {{#each item in deptrecords}}
-                                            {{#if equals item.department record.department }}
-                                                <option value="{{record.department}}" selected="">{{record.department}}</option>
-                                            {{else}}
-                                                <option value="{{item.department}}">{{item.department}}</option>
-                                            {{/if}}
-                                        {{/each}}
-                                    </select> -->
-                                </div>
-                            </div>
+                           
+                          
+                          
                         </div>
-                        <div class="row">
-                            <div class="col-12 col-lg-4">
-                                {{> CurrencyWidget rate="buy"}}
-                            </div>
-
-                        </div>
+        
+                   
                     </div>
-                    <div class="col-12 col-lg-2">
-                        <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
-                    </div>
+                 
                 </div>
                 <!-- <div class="row" style="background-color: #ededed; padding: 0px 32px;">
                     <div class="col-12 col-lg-6">
