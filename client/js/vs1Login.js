@@ -418,7 +418,7 @@ Template.vs1login.onRendered(function () {
                                 isCRM = true;
                             }
 
-                            if (data.temployeeformaccessdetail[i].fields.Description === "Product LIST") {
+                            if (data.temployeeformaccessdetail[i].fields.Description === "Product LIST" || data.temployeeformaccessdetail[i].fields.Description === "Product List") {
                                 isProductList = true;
                             }
                             if (data.temployeeformaccessdetail[i].fields.Description === "New Product") {
@@ -939,7 +939,7 @@ Template.vs1login.onRendered(function () {
                         isCRM = true;
                     }
 
-                    if (optionaccess.fields.Description === "Product LIST") {
+                    if (optionaccess.fields.Description === "Product LIST" || optionaccess.fields.Description === "Product List") {
                         isProductList = true;
                     }
                     if (optionaccess.fields.Description === "New Product") {

@@ -1466,6 +1466,7 @@ Template.productlist.helpers({
                   if(data.tproductvs1.length > 0){
                   for (let i = 0; i < data.tproductvs1.length; i++) {
                     var dataList = [
+                      data.tproductvs1[i].fields.ID || '',
                       data.tproductvs1[i].fields.ProductName || '-',
                       data.tproductvs1[i].fields.SalesDescription || '',
                       data.tproductvs1[i].fields.BARCODE || '',
@@ -1473,12 +1474,9 @@ Template.productlist.helpers({
                       utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
                       utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
                       data.tproductvs1[i].fields.TotalQtyInStock,
-
                       data.tproductvs1[i].fields.PurchaseDescription || '',
                       data.tproductvs1[i].fields.CUSTFLD1 || '',
-                      data.tproductvs1[i].fields.CUSTFLD2 || '',
-                      data.tproductvs1[i].fields.ID || ''
-                      // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
+                      data.tproductvs1[i].fields.CUSTFLD2 || ''
                   ];
 
                       splashArrayProductList.push(dataList);
@@ -1519,6 +1517,7 @@ Template.productlist.helpers({
                     let inventoryData = [];
                     for (let i = 0; i < data.tproductvs1.length; i++) {
                       var dataList = [
+                        data.tproductvs1[i].fields.ID || '',
                         data.tproductvs1[i].fields.ProductName || '-',
                         data.tproductvs1[i].fields.SalesDescription || '',
                         data.tproductvs1[i].fields.BARCODE || '',
@@ -1526,12 +1525,9 @@ Template.productlist.helpers({
                         utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
                         utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
                         data.tproductvs1[i].fields.TotalQtyInStock,
-
                         data.tproductvs1[i].fields.PurchaseDescription || '',
                         data.tproductvs1[i].fields.CUSTFLD1 || '',
-                        data.tproductvs1[i].fields.CUSTFLD2 || '',
-                        data.tproductvs1[i].fields.ID || ''
-                        // JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null
+                        data.tproductvs1[i].fields.CUSTFLD2 || ''
                     ];
 
                         splashArrayProductList.push(dataList);
