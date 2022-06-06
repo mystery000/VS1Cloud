@@ -2106,6 +2106,9 @@ Template.accountsoverview.events({
   "click #btnJournalEntries": function (event) {
     FlowRouter.go("/journalentrylist");
   },
+  "click #btnNewJournalEntry": function (event) {
+    FlowRouter.go("/journalentrycard");
+  },
 
   "click .chkDatatable": function (event) {
     var columns = $("#tblAccountOverview th");
