@@ -64,6 +64,7 @@ Template.appointments.onCreated(function () {
         friday: 0
     };
     templateObject.repeatDays.set(dayObj);
+    templateObject.toupdatelogid = new ReactiveVar();
 });
 
 Template.appointments.onRendered(function () {
@@ -3248,7 +3249,9 @@ Template.appointments.onRendered(function () {
                 for (i = 0; i <= weekResults[0].dates.length; i++) {
                     days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
                 }
+
                 $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
+
                 $('.sunday').attr('id', moment(weekStart).subtract(1, 'days').format("YYYY-MM-DD"));
                 $('.monday').attr('id', moment(weekStart).add(0, 'days').format("YYYY-MM-DD"));
                 $('.tuesday').attr('id', moment(weekStart).add(1, 'days').format("YYYY-MM-DD"));
@@ -7438,7 +7441,7 @@ Template.appointments.events({
     'click #prev': async function () {
         let templateObject = Template.instance();
         let changeAppointmentView = templateObject.appointmentrecords.get();
-        console.log(changeAppointmentView);
+
         let seeOwnAllocations = Session.get('CloudAppointmentSeeOwnAllocationsOnly') || false;
         let seeOwnAppointments = Session.get('CloudAppointmentSeeOwnAppointmentsOnly') || false;
         //get current week monday date to use it to search week in month
@@ -7447,6 +7450,7 @@ Template.appointments.events({
 
         //get weeks of the month from a template object
         let weeksOfThisMonth = templateObject.weeksOfMonth.get();
+
         //Since we have all weeks of the month we query the weeks of the month object for data to get current week
         var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
             return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
@@ -7829,7 +7833,7 @@ Template.appointments.events({
                 tableRowData.push(tableRow);
 
             }
-            console.log(tableRowData);
+            //console.log(tableRowData);
             $('#here_table table').append(tableRowData);
 
             $('.sunday').attr('id', dayPrev[0]);
@@ -8346,6 +8350,8 @@ Template.appointments.events({
                                         return e.id;
                                     }).indexOf(parseInt(result[0].id));
                                     appointmentData[index].isPaused = '';
+                                    //appointmentData[index].aStartTime = startTime;
+
                                     templateObject.appointmentrecords.set(appointmentData);
                                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                                         addVS1Data('TAppointment', JSON.stringify(data)).then(async (datareturn) => {
@@ -8386,9 +8392,22 @@ Template.appointments.events({
                                                     templateObject.checkRefresh.set(true);
                                                 }
                                             } else {
-                                                $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-                                                    $('#btnCloseStartAppointmentModal').trigger('click');
+                                                //$("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                                            $('#btnCloseStartAppointmentModal').trigger('click');
                                                     //$('#frmAppointment').trigger('submit');
+                                            swal({
+                                                title: 'Job Started',
+                                                text: "Job Has Been Started",
+                                                type: 'success',
+                                                showCancelButton: false,
+                                                confirmButtonText: 'Ok'
+                                            }).then((result) => {
+                                                if (result.value) {
+
+                                                } else {
+                                                    // window.open('/appointments', '_self');
+                                                }
+                                            });
                                                     templateObject.checkRefresh.set(true);
                                             }
                                         }).catch(function (err) {
@@ -8567,6 +8586,8 @@ Template.appointments.events({
                 }
 
                 appointmentService.saveTimeLog(objectData).then(function (data) {
+                  let getReponseID = data.fields.ID||'';
+                    templateObject.toupdatelogid.set(getReponseID);
                     let endTime1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2) + ' ' + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
                     objectData1 = {
                         type: "TAppointmentEx",
@@ -8578,6 +8599,13 @@ Template.appointments.events({
                     };
 
                     appointmentService.saveAppointment(objectData1).then(function (data1) {
+                      let index = appointmentData.map(function (e) {
+                          return e.id;
+                      }).indexOf(parseInt(result[0].id));
+                      appointmentData[index].aStartTime = startTime;
+
+                      templateObject.appointmentrecords.set(appointmentData);
+
                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
                             addVS1Data('TAppointment', JSON.stringify(data)).then(async function (datareturn) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -8617,9 +8645,21 @@ Template.appointments.events({
                                         templateObject.checkRefresh.set(true);
                                     }
                                 } else {
-                                    $("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
+                                    //$("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
                                     $('#btnCloseStartAppointmentModal').trigger('click');
                                     //$('#frmAppointment').submit();
+                                    swal({
+                                    title: 'Job Started',
+                                    text: "Job Has Been Started",
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Ok'
+                                }).then((result) => {
+                                    if (result.value) {
+                                    } else {
+                                        // window.open('/appointments', '_self');
+                                    }
+                                });
                                     templateObject.checkRefresh.set(true);
                                 }
                             }).catch(function (err) {
@@ -9650,6 +9690,7 @@ Template.appointments.events({
         templateObject = Template.instance();
         let appointmentService = new AppointmentService();
         var appointmentData = templateObject.appointmentrecords.get();
+        let toUpdateLogID = templateObject.toupdatelogid.get();
         var result = appointmentData.filter(apmt => {
             return apmt.id == $('#updateID').val()
         });
@@ -9709,11 +9750,15 @@ Template.appointments.events({
                 };
 
                 appointmentService.saveTimeLog(objectData).then(function (data) {
+                  if(result[0].timelog != ""){
                     if (Array.isArray(result[0].timelog) && result[0].timelog != "") {
                         toUpdateID = result[0].timelog[result[0].timelog.length - 1].fields.ID;
                     } else {
                         toUpdateID = result[0].timelog.fields.ID;
                     }
+                  }else{
+                    toUpdateID = toUpdateLogID;
+                  };
                     let endTime1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2) + ' ' + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
                     if (toUpdateID != "") {
                         objectData = {
