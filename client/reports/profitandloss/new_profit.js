@@ -559,15 +559,20 @@ templateObject.getProfitLossLayout = async function() {
     // console.log('profitLossLists', profitLossLists)
     // Filter Total Group and Root Group
     profitLossLayouts = profitLossLists.filter((item) => {
-      let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-      let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-      let AccountName =  item.fields.AccountName.replace(/\s/g, '')
-      if( level0GroupName == AccountName || AccountName == level1GroupName ){
+      if( item.fields.IsRoot == true ){
         return item;
       }
     });
+    // profitLossLayouts = profitLossLists.filter((item) => {
+    //   let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
+    //   let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
+    //   let AccountName =  item.fields.AccountName.replace(/\s/g, '')
+    //   if( ( level0GroupName == AccountName || AccountName == level1GroupName ) && item.fields.IsRoot == false ){
+    //     return item;
+    //   }
+    // });
+    // console.log(profitLossLayouts, parentprofitLossLayouts);
     let newprofitLossLayouts = [];
-    var counter = 1;
     // Fetch Subchilds According to the Above grouping
     profitLossLayouts.forEach(function(item){
         let level1Childs = []
@@ -575,33 +580,31 @@ templateObject.getProfitLossLayout = async function() {
         let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
         let level2GroupName =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
         let AccountName =  item.fields.AccountName.replace(/\s/g, '')
-        if( item.fields.IsRoot ){
-          item.fields.Position = ( item.fields.Position )? item.fields.Position : counter;
-          counter++;
-        }
+        
         profitLossLists.filter((subitem) => {
           let sublevel0GroupName =  subitem.fields.AccountLevel0GroupName.replace(/\s/g, '')
           let sublevel1GroupName =  subitem.fields.AccountLevel1GroupName.replace(/\s/g, '')
           let sublevel2GroupName =  subitem.fields.AccountLevel2GroupName.replace(/\s/g, '')
           let subAccountName =  subitem.fields.AccountName.replace(/\s/g, '')
+          let subposition = subitem.fields.Pos.match(/.{1,2}/g);
           if( level0GroupName == sublevel0GroupName && level1GroupName == sublevel1GroupName && level2GroupName == sublevel2GroupName && AccountName != subAccountName){
-            subitem.fields.Position = ( subitem.fields.Position )? subitem.fields.Position : counter;
-            counter++;
+            subitem.fields.Position = parseInt(subposition[1]) || 0;
+            level1Childs.push(subitem.fields)
+          }
+          if( ( sublevel0GroupName == subAccountName || subAccountName == sublevel1GroupName ) && subitem.fields.IsRoot == false && AccountName == sublevel0GroupName ){
+            subitem.fields.Position = parseInt(subposition[0]) || 0;
             level1Childs.push(subitem.fields)
           }
         });
 
-        if( item.fields.IsRoot == false){
-          item.fields.Position = ( item.fields.Position )? item.fields.Position : counter;
-          counter++;
-        }
-        
+        let position = item.fields.Pos.match(/.{1,2}/g);
+        item.fields.Position = parseInt(position[0]) || 0;
+        let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
         newprofitLossLayouts.push({
-          parent: item.fields,
-          childs: level1Childs
+          ...item.fields,
+          subAccounts: sortedAccounts
         }) 
-    });
-    // console.log('profitLossLayouts', newprofitLossLayouts)    
+    });   
     templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
 
     // handle Dragging and sorting
@@ -1700,8 +1703,69 @@ Template.newprofitandloss.events({
     // })
     // var numVal = $('.fgr').html().parseInt();
   },
+  "click #savePnLFieldsLayout": function(){
+    let templateObject = Template.instance();
+    let groupName = $('#newGroupName').val();
+    if( groupName == '' ){
+      swal({
+        title: 'Please enter group name',
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Try Again'
+      })
+      return false;
+    }
+    let accountName = $('#nplPlaceInMoveSelection').val();
+    let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
+    if( profitlosslayoutfields ){
+      let updateLayouts = profitlosslayoutfields.filter(function( item, index ){
+        if( item.AccountName == accountName ){
+          item.subAccounts.push({
+            Account: "",
+            AccountID: 0,
+            AccountLevel0GroupName: item.AccountName,
+            AccountLevel1GroupName: groupName,
+            AccountLevel2GroupName: "",
+            AccountName: groupName,
+            Direction: "",
+            GlobalRef: "DEF1",
+            Group: "",
+            ID: 0,
+            ISEmpty: false,
+            IsAccount: false,
+            IsRoot: false,
+            KeyStringFieldName: "",
+            KeyValue: "",
+            LayoutID: 1,
+            LayoutToUse: "",
+            Level: "",
+            Level1Group: "",
+            Level1Order: 0,
+            Level2Order: 0,
+            Level3Order: 0,
+            MsTimeStamp: "2022-04-06 16:00:23",
+            MsUpdateSiteCode: "DEF",
+            Parent: item.ID,
+            Pos: "0",
+            Position: 0,
+            Recno: 3,
+            Up: false
+          })
+          
+        }
+        return item;
+       
+      });
+      $('#newGroupName').val('');
+      templateObject.profitlosslayoutrecords.set( updateLayouts );
+      $('#nplAddGroupScreen').modal('hide');
+    }
+
+  },
   "click .saveProfitLossLayouts": async function (){
 
+    return false;
+    // Under progress
     const profitLossLayoutApis = new ProfitLossLayoutApi();
 
     // make post request to save layout data
@@ -1788,18 +1852,6 @@ Template.newprofitandloss.helpers({
     // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
     // });
-  },
-  checkForSecGroup( profitLoss ){
-    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName == '' ){
-      return true
-    }
-    return false
-  },
-  checkForThGroup( profitLoss ){
-    if( profitLoss.fields.AccountLevel1GroupName != '' && profitLoss.fields.AccountLevel1GroupName != '' ){
-      return true
-    }
-    return false
   },
   recordslayout: () => {
     return Template.instance().recordslayout.get();
