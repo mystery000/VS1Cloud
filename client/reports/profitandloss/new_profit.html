@@ -1815,29 +1815,18 @@
                                         <div class="customSortableDiv" >
                                             <div class="sortableAccount">
                                                 {{#each item in profitlosslayoutrecords }}
-                                                    {{#if item.parent.IsRoot}}
-                                                        <div class="group-caption setParentPosition" data-acg0level="{{ item.parent.AccountLevel0GroupName }}" data-acg1level="{{ item.parent.AccountLevel1GroupName }}" data-acg2level="{{ item.parent.AccountLevel2GroupName }}" parent="{{ item.parent.ID }}" >
-                                                            <h1 class="handel sortItem draggable" data-id="{{ item.parent.ID }}" position="{{ item.parent.Position }}" key="layoutFields-{{ item.parent.ID }}">{{ item.parent.AccountName }}</h1>
+                                                    {{#if item.IsRoot}}
+                                                        <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
+                                                            <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
                                                             <div class="group-items">
-                                                                {{#each acItem in item.childs }}
-                                                                    <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
+                                                                {{#each acItem in item.subAccounts }}
+                                                                    {{#if acItem.IsAccount}}
+                                                                        <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
+                                                                    {{else}}    
+                                                                        <h2 class="handel sortItem disableCursor" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h2>
+                                                                    {{/if}}
                                                                 {{/each}}
                                                             </div>
-                                                        </div>
-                                                    {{else}} 
-                                                        {{#each acItem in item.childs }}
-                                                            <div class="group-caption setParentPosition" data-acg0level="{{ acItem.AccountLevel0GroupName }}" data-acg1level="{{ acItem.AccountLevel1GroupName }}" data-acg2level="{{ acItem.AccountLevel2GroupName }}" parent="{{ acItem.ID }}" position="{{ item.parent.Position }}">
-                                                                {{#if acItem.IsAccount}}
-                                                                    <div class="group-items">
-                                                                        <p class="group-item g0 sortItem draggable" parent="{{ acItem.Parent }}" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
-                                                                    </div>
-                                                                {{else}} 
-                                                                    <h3 class="handel sortItem disableCursor" parent="{{ acItem.Parent }}" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h3>
-                                                                {{/if}}
-                                                            </div>
-                                                        {{/each}}
-                                                        <div class="group-caption setParentPosition" data-acg0level="{{ item.parent.AccountLevel0GroupName }}" data-acg1level="{{ item.parent.AccountLevel1GroupName }}" data-acg2level="{{ item.parent.AccountLevel2GroupName }}" parent="{{ item.parent.ID }}">
-                                                            <h2 class="handel sortItem disableCursor" data-id="{{ item.parent.ID }}" position="{{ item.parent.Position }}" key="layoutFields-{{ item.parent.ID }}">{{ item.parent.AccountName }}</h2>
                                                         </div>
                                                     {{/if}}
                                                 {{/each}}
@@ -2966,21 +2955,19 @@
                     <div class="form-group-sm d-flex flex-column">
                         <div class="m-1 pr-2">
                             <label for="nplGroupName" class="p-1 mb-0">Group Name:</label>
-                            <input type="text" class="form-control m-1" id="nplGroupName" name="cnplGroupName"
+                            <input type="text" class="form-control m-1" id="newGroupName" name="cnplGroupName"
                                 autocomplete="off">
                         </div>
                         <div class="p-1 m-1">
                             <h6>Place in:</h6>
                         </div>
                         <div class="p-1 m-1">
-                            <select class="form-control" id="nplMoveSelection">
-                                <option>Income</option>
-                                <option>Less Cost of Sales</option>
-                                <option>Plus Other Income</option>
-                                <option>Less Operatin Expenses</option>
-                                <option>Foreign Currency Gains and Losses</option>
-                                <option>Non-operating Income</option>
-                                <option>Non-operating Expenses</option>
+                            <select class="form-control" id="nplPlaceInMoveSelection">
+                                {{#each item in profitlosslayoutrecords }}
+                                    {{#if item.IsRoot }}
+                                        <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
+                                    {{/if}}
+                                {{/each}}
                             </select>
                         </div>
                         <div class="p-1 m-1">
@@ -3030,7 +3017,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-success saveTable" type="button" autocomplete="off">
+                        <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
                         <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
