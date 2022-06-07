@@ -196,8 +196,8 @@ Template.employeecompletedjobs.onRendered(() => {
                     var sortable = [];
                     for (var vehicle in jobsCompleted) {
                         let dataObj = {
-                            name: vehicle,
-                            jobscompleted: jobsCompleted[vehicle]
+                            name: vehicle||'',
+                            jobscompleted: jobsCompleted[vehicle]||''
                         }
                         sortable.push(dataObj);
                     }
@@ -206,12 +206,12 @@ Template.employeecompletedjobs.onRendered(() => {
                         return (b.jobscompleted > a.jobscompleted) ? 1 : -1;
                     });
 
-
+                    if(sortable.length > 0){
                     for (let j = 0; j < 5; j++) {
                         itemName.push(sortable[j].name);
                         itemBalance.push(sortable[j].jobscompleted);
                     }
-
+                  }
                     itemName.reverse();
                     itemBalance.reverse();
 
@@ -301,7 +301,7 @@ Template.employeecompletedjobs.onRendered(() => {
                             }
                         }
                     });
-                }, 1000)    
+                }, 1000)
                 //let url = window.location.href;
                 $('.fullScreenSpin').css('display', 'none');
             }
@@ -437,7 +437,7 @@ Template.employeecompletedjobs.onRendered(() => {
                             }
                         }
                     });
-                }, 1000)    
+                }, 1000)
                 $('.fullScreenSpin').css('display', 'none');
 
             }).catch(function (err) {

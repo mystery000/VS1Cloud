@@ -2368,6 +2368,23 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
 
+    getAllTReconcilation(dateFrom, dateTo) {
+        let options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"'
+        };
+        return this.getList(this.ERPObjects.TReconciliation, options);
+    }
+    getAllTReconcilationList(dateFrom, dateTo) {
+        let options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"'
+        };
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
+
 
 
   getProductStocknSaleReportData(dateFrom, dateTo) {

@@ -1834,6 +1834,12 @@ Template.bankingoverview.events({
     'click .QuoteList': function(event) {
         FlowRouter.go('/quoteslist');
     },
+    'click .btnNewDepositEnrty' : function(event){
+        FlowRouter.go('/depositcard');
+    },
+    'click #btnNewCheck': function(event) {
+        FlowRouter.go('/chequecard');
+    },
     'click .chkDatatable': function(event) {
         var columns = $('#tblBankingOverview th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();

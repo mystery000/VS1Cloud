@@ -292,7 +292,7 @@ export class ProductService extends BaseService {
 
     getOneProductClassQtyData(productID){
       let options = {
-          PropertyList: "ID,DepartmentID,DepartmentName,InStockQty",
+          PropertyList: "ID,DepartmentID,DepartmentName,InStockQty,AvailableQty,OnOrderQty,SOQty,SOBOQty,POBOQty",
           select: "[ProductID]="+productID
       };
       return this.getList(this.ERPObjects.TProductClassQuantity, options);
