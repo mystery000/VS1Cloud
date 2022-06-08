@@ -674,7 +674,7 @@ Template.alltaskdatatable.onRendered(function () {
               item.fields.due_date.substring(0, 10) < today
           );
 
-          $(".crm_all_count").text(all_records.length);
+          $(".").text(all_records.length);
           $(".crm_today_count").text(today_records.length);
           $(".crm_upcoming_count").text(upcoming_records.length);
 
