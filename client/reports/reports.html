@@ -716,6 +716,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isSupplierProduct}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/supplierlist">Supplier Product Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProductFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SupplierProductFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isTaxSummaryReport}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -1094,11 +1108,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Supplier Product Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/supplierproductreport">Supplier Product Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProduct" disabled>
+                                                    <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProduct">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SupplierProduct"></label>
                                                 </div>
                                             </div>
