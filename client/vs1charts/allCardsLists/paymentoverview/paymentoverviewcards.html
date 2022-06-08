@@ -1,0 +1,106 @@
+<template name="paymentoverviewcards">
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility paymentCard1" id="paymentCard1" position="0" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-customers-outstanding-invoices">
+        <div class="card shadow border-left-info customCardMainDiv">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body customerAwaitingPayment" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Outstanding Invoices</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
+                                <a href="/customerawaitingpayments" style="color: rgb(221,223,235)!important;"><span class="custAwaitingAmt" id="custAwaitingAmt" name="custAwaitingAmt">0</span></a>
+                            </span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0">
+                            <span style="font-size: 16px;color: rgb(221,223,235);"><a href="/customerawaitingpayments" class="customerAwaitingPayment">
+                                <span class="custAwaiting" id="custAwaiting" name="custAwaiting">0</span> Awaiting</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility paymentCard2" id="paymentCard2" position="1" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-customers-overdue">
+        <div class="card shadow border-left-warning customCardMainDiv">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body customerOverdue" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
+                                <a href="/customerawaitingpayments?overdue=true" style="color: rgb(221,223,235)!important;" class="customerAwaitingPayment"><span class="custOverdueAmt" id="custOverdueAmt" name="custOverdueAmt">0</span></a>
+                            </span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0">
+                            <span style="font-size: 16px;color: rgb(221,223,235);">
+                                <a href="/customerawaitingpayments?overdue=true" class="customerOverdue"><span class="custOverdue" id="custOverdue" name="custOverdue">0</span> Overdue</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-clock fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility paymentCard3" id="paymentCard3" position="2" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-suppliers-outstanding-expenses">
+        <div class="card shadow border-left-info customCardMainDiv">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body supplierAwaitingPayment" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Outstanding Expenses</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
+                                <a href="/supplierawaitingpurchaseorder" style="color: rgb(221,223,235)!important;" class="supplierAwaitingPayment"><span class="suppAwaitingAmt" id="suppAwaitingAmt" name="suppAwaitingAmt">0</span></a>
+                            </span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0">
+                            <span style="font-size: 16px;color: rgb(221,223,235);">
+                                <a href="/supplierawaitingpurchaseorder" class="supplierAwaitingPayment"><span class="suppAwaiting" id="suppAwaiting" name="suppAwaiting">0</span> Awaiting</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3 mb-4 card-visibility paymentCard3" id="paymentCard3" position="3" chartgroup="PaymentOverview" card-active="true" card-key="paymentoverview-suppliers-overdue">
+        <div class="card shadow border-left-warning customCardMainDiv">
+            <div class="hideShowDiv">
+                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
+            </div>
+            <div class="card-body supplierOverdue" style="cursor: pointer;">
+                <div class="row align-items-center no-gutters">
+                    <div class="col mr-2">
+                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Overdue</span></div>
+                        <div class="text-dark font-weight-bold h5 mb-0 mr-3">
+                            <span class="text-nowrap banklink" style="font-size: 28px;color: rgb(221,223,235);margin-left: 8px;">
+                                <a href="/supplierawaitingpurchaseorder?overdue=true" style="color: rgb(221,223,235)!important;" class="supplierOverdue"><span class="suppOverdueAmt" id="suppOverdueAmt" name="suppOverdueAmt">0</span></a>
+                            </span>
+                        </div>
+                        <div class="text-dark font-weight-bold h5 mb-0">
+                            <span style="font-size: 16px;color: rgb(221,223,235);">
+                                <a href="/supplierawaitingpurchaseorder?overdue=true" class="supplierOverdue"><span class="suppOverdue" id="suppOverdue" name="suppOverdue">0</span> Overdue</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-auto"><i class="far fa-clock fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
