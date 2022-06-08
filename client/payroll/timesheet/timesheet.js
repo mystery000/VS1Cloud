@@ -6656,10 +6656,10 @@ Template.timesheet.onRendered(function () {
                 'click #btnNewTimeSheet': function (event) {
                     $('#edtTimesheetID').val('');
                     $('#add-timesheet-title').text('New Timesheet');
-                    $('.sltEmployee').val('');
+                    $('.sltEmployee').val(Session.get('mySessionEmployee'));
                     $('.sltJob').val('');
                     $('.lineEditHourlyRate').val('');
-                    $('.lineEditHour').val('');
+                    $('.lineEditHour').val('8');
                     $('.lineEditTechNotes').val('');
                 },
                 'change #dateTo': function () {
