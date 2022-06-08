@@ -3990,6 +3990,11 @@ Template.paymentcard.events({
         let department = $("#sltDepartment").val();
         let empName = localStorage.getItem('mySession');
         let paymentData = [];
+
+
+        const exchangeRate = $('#exchange_rate').val();
+        const currency = $('#sltCurrency').val();
+        
         Session.setPersistent('paymentmethod', payMethod);
         Session.setPersistent('bankaccount', bankAccount);
         Session.setPersistent('department', department);
@@ -4035,7 +4040,9 @@ Template.paymentcard.events({
                         PayMethodName: payMethod,
                         Payment: true,
                         ReferenceNo: reference,
-                        Notes: notes
+                        Notes: notes,
+                        exchangeRate: exchangeRate,
+                        currency: currency
                     }
                 };
 
