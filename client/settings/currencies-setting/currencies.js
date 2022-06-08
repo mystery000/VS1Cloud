@@ -693,12 +693,16 @@ Template.currenciessettings.events({
   //   console.log($(e.currentTarget).val());
   // },
   "click .btn-fx-history": (e) => {
-    FlowRouter.go(`/fx-currency-history`);
+    window.location.href = `/fx-currency-history`;
+    // FlowRouter.go(`/fx-currency-history`);
+    // Meteor._reload.reload();
   },
   "click #currencyLists tbody tr": (e) => {
     const currency = $(e.currentTarget).find(".colCurrency").text();
 
-    FlowRouter.go(`/fx-currency-history?currency=${currency}`);
+    // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
+    window.location.href = `/fx-currency-history?currency=${currency}`;
+    // Meteor._reload.reload();
   },
   "click .btnFxupdate": function (event) {
     $("#frequencyModal").modal("toggle");
