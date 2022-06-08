@@ -1,6 +1,6 @@
 import { TaxRateService } from "../settings-service";
-import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../../js/core-service';
+import { ReactiveVar } from "meteor/reactive-var";
+import { CoreService } from "../../js/core-service";
 import { CountryService } from "../../js/country-service";
 import { SideBarService } from "../../js/sidebar-service";
 // import { HTTP } from "meteor/http";
@@ -258,7 +258,8 @@ Template.currenciessettings.onRendered(function () {
               sellrate: data.tcurrency[i].fields.SellRate || "-",
               country: data.tcurrency[i].fields.Country || "-",
               description: data.tcurrency[i].fields.CurrencyDesc || "-",
-              ratelastmodified: data.tcurrency[i].fields.RateLastModified || "-",
+              ratelastmodified:
+                data.tcurrency[i].fields.RateLastModified || "-",
             };
 
             dataTableList.push(dataList);
@@ -414,9 +415,12 @@ Template.currenciessettings.onRendered(function () {
             "form-control form-control-sm"
           );
         }
-      }).catch(function (err) {
+      })
+      .catch(function (err) {
         console.log(err);
-        taxRateService.getCurrencies().then(function (data) {
+        taxRateService
+          .getCurrencies()
+          .then(function (data) {
             let lineItems = [];
             let lineItemObj = {};
             for (let i = 0; i < data.tcurrency.length; i++) {
@@ -688,6 +692,18 @@ Template.currenciessettings.events({
 
   //   console.log($(e.currentTarget).val());
   // },
+  "click .btn-fx-history": (e) => {
+    window.location.href = `/fx-currency-history`;
+    // FlowRouter.go(`/fx-currency-history`);
+    // Meteor._reload.reload();
+  },
+  "click #currencyLists tbody tr": (e) => {
+    const currency = $(e.currentTarget).find(".colCurrency").text();
+
+    // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
+    window.location.href = `/fx-currency-history?currency=${currency}`;
+    // Meteor._reload.reload();
+  },
   "click .btnFxupdate": function (event) {
     $("#frequencyModal").modal("toggle");
     // FlowRouter.go('/settings/fx-update'); old wrong code
@@ -1109,11 +1125,9 @@ Template.currenciessettings.events({
         for (let i = 0; i < codearray.length; i++) {
           let code = codearray[i];
           let value = rates[code];
-
         }
       }
     );
-
   },
   "click .btnDeleteCurrency": function () {
     let taxRateService = new TaxRateService();
