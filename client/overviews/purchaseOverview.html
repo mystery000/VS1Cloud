@@ -130,65 +130,8 @@
 
         </header>
 
-        <div class="row connectedCardSortable" data-key="card">
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="0" card-active="true" card-key="outstanding-purchase-orders">
-                <div class="card shadow border-left-info py-2 cardOutPO customCardMainDiv" style="cursor: pointer;">
-                    <div class="hideShowDiv">
-                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1">
-                                    <span class="text-info">Outstanding PO</span>
-                                </div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><a href="/purchaseorderlist?overview=true">
-                                        <span class="suppAwaitingAmt">0.00</span></a>
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-file-contract fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="1" card-active="true" card-key="outstanding-bills">
-                <div class="card shadow border-left-info py-2 cardBills customCardMainDiv" style="cursor: pointer;">
-                    <div class="hideShowDiv">
-                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-info">Outstanding Bills</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><a href="/billlist?overview=true"><span class="billAmt">0.00</span></a></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3 mb-4 card-visibility" position="2" card-active="true" card-key="outstanding-credit">
-                <div class="card shadow border-left-info py-2 cardCredit customCardMainDiv" key="" style="cursor: pointer;">
-                    <div class="hideShowDiv">
-                        <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                        <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-                    </div>
-                    <div class="card-body">
-                        <div class="row align-items-center no-gutters">
-                            <div class="col mr-2">
-                                <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span class="text-info">Outstanding Credit</span></div>
-                                <div class="text-dark font-weight-bold h5 mb-0"><a href="/creditlist?overview=true"><span class="creditAmt">0.00</span></a></div>
-                            </div>
-                            <div class="col-auto"><i class="fas fa-file-invoice fa-2x text-gray-300"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- All Cards List -->
+        {{> allCardsLists tabGroupID="4" chartGroup="Purchases"}}
 
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="7" chartGroup="Purchases" }}
