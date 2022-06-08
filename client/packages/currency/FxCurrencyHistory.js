@@ -30,7 +30,6 @@ Template.FxCurrencyHistory.onRendered(function () {
   var countryService = new CountryService();
   let countries = [];
 
-
   var today = moment().format("DD/MM/YYYY");
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
@@ -57,19 +56,21 @@ Template.FxCurrencyHistory.onRendered(function () {
     changeMonth: true,
     changeYear: true,
     yearRange: "-90:+10",
-    onChangeMonthYear: function(year, month, inst){
-    // Set date to picker
-    $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-    // Hide (close) the picker
-    // $(this).datepicker('hide');
-    // // Change ttrigger the on change function
-    // $(this).trigger('change');
-   }
+    onChangeMonthYear: function (year, month, inst) {
+      // Set date to picker
+      $(this).datepicker(
+        "setDate",
+        new Date(year, inst.selectedMonth, inst.selectedDay)
+      );
+      // Hide (close) the picker
+      // $(this).datepicker('hide');
+      // // Change ttrigger the on change function
+      // $(this).trigger('change');
+    },
   });
 
   $("#dateFrom").val(fromDate);
   $("#dateTo").val(begunDate);
-
 
   function MakeNegative() {
     $("td").each(function () {
@@ -83,548 +84,191 @@ Template.FxCurrencyHistory.onRendered(function () {
   }
 
   templateInstance.getTaxRates = function () {
-    getVS1Data("TCurrency")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          taxRateService
-            .getCurrencies()
-            .then(function (data) {
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.tcurrency.length; i++) {
-                // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-                var dataList = {
-                  id: data.tcurrency[i].fields.Id || "",
-                  code: data.tcurrency[i].fields.Code || "-",
-                  currency: data.tcurrency[i].fields.Currency || "-",
-                  symbol: data.tcurrency[i].fields.CurrencySymbol || "-",
-                  buyrate: data.tcurrency[i].fields.BuyRate || "-",
-                  sellrate: data.tcurrency[i].fields.SellRate || "-",
-                  country: data.tcurrency[i].fields.Country || "-",
-                  description: data.tcurrency[i].fields.CurrencyDesc || "-",
-                  ratelastmodified:
-                    data.tcurrency[i].fields.RateLastModified || "-",
-                };
+    taxRateService
+      .getCurrencyHistory()
+      .then((result) => {
+        // console.log(result);
+        const data = result.tcurrencyratehistory;
+        // console.log(data);
+        let lineItems = [];
+        let lineItemObj = {};
+        for (let i = 0; i < data.length; i++) {
+          // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+          var dataList = {
+            id: data[i].Id || "",
+            code: data[i].Code || "-",
+            currency: data[i].Currency || "-",
+            symbol: data[i].CurrencySymbol || "-",
+            buyrate: data[i].BuyRate || "-",
+            sellrate: data[i].SellRate || "-",
+            country: data[i].Country || "-",
+            description: data[i].CurrencyDesc || "-",
+            ratelastmodified: data[i].RateLastModified || "-",
+            createdAt: data[i].MsTimeStamp || "-",
+          };
 
-                dataTableList.push(dataList);
-                //}
-              }
-
-              templateInstance.datatablerecords.set(dataTableList);
-
-              if (templateInstance.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "currencyLists",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
-
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
-
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              }
-
-              $(".fullScreenSpin").css("display", "none");
-              setTimeout(function () {
-                $("#currencyLists")
-                  .DataTable({
-                    columnDefs: [
-                      { type: "date", targets: 0 },
-                      { orderable: false, targets: -1 },
-                    ],
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                      {
-                        extend: "excelHtml5",
-                        text: "",
-                        download: "open",
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "currencylist_" + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                      {
-                        extend: "print",
-                        download: "open",
-                        className: "btntabletopdf hiddenColumn",
-                        text: "",
-                        title: "Currency List",
-                        filename: "currencylist_" + moment().format(),
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    colReorder: {
-                      fixedColumnsRight: 1,
-                    },
-                    // bStateSave: true,
-                    // rowId: 0,
-                    paging: false,
-                    //                      "scrollY": "400px",
-                    //                      "scrollCollapse": true,
-                    info: true,
-                    responsive: true,
-                    order: [[0, "asc"]],
-                    action: function () {
-                      $("#currencyLists").DataTable().ajax.reload();
-                    },
-                    fnDrawCallback: function (oSettings) {
-                      setTimeout(function () {
-                        MakeNegative();
-                      }, 100);
-                    },
-                  })
-                  .on("page", function () {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                    let draftRecord = templateInstance.datatablerecords.get();
-                    templateInstance.datatablerecords.set(draftRecord);
-                  })
-                  .on("column-reorder", function () {})
-                  .on("length.dt", function (e, settings, len) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  });
-
-                // $('#currencyLists').DataTable().column( 0 ).visible( true );
-                $(".fullScreenSpin").css("display", "none");
-              }, 0);
-
-              var columns = $("#currencyLists th");
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function (i, v) {
-                if (v.hidden == false) {
-                  columVisible = true;
-                }
-                if (v.className.includes("hiddenColumn")) {
-                  columVisible = false;
-                }
-                sWidth = v.style.width.replace("px", "");
-
-                let datatablerecordObj = {
-                  sTitle: v.innerText || "",
-                  sWidth: sWidth || "",
-                  sIndex: v.cellIndex || "",
-                  sVisible: columVisible || false,
-                  sClass: v.className || "",
-                };
-                tableHeaderList.push(datatablerecordObj);
-              });
-              templateInstance.tableheaderrecords.set(tableHeaderList);
-              $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-              );
-            })
-            .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          console.log(data);
-          let useData = data.tcurrency;
-          let lineItems = [];
-          let lineItemObj = {};
-
-          for (let i = 0; i < useData.length; i++) {
-            // let taxRate = (useData[i].fields.Rate * 100).toFixed(2) + '%';
-
-            var dataList = {
-              id: data.tcurrency[i].fields.ID || "",
-              code: data.tcurrency[i].fields.Code || "-",
-              currency: data.tcurrency[i].fields.Currency || "-",
-              symbol: data.tcurrency[i].fields.CurrencySymbol || "-",
-              buyrate: data.tcurrency[i].fields.BuyRate || "-",
-              sellrate: data.tcurrency[i].fields.SellRate || "-",
-              country: data.tcurrency[i].fields.Country || "-",
-              description: data.tcurrency[i].fields.CurrencyDesc || "-",
-              ratelastmodified:
-                data.tcurrency[i].fields.RateLastModified || "-",
-            };
-
-            dataTableList.push(dataList);
-            //}
-          }
-
-         
-
-          if(urlParams.get("currency")) {
-            // Filter by currency
-            dataTableList = dataTableList.filter((value, index) => {
-              //console.log(value);
-              return value.currency == urlParams.get("currency");
-            });
-          }
-
-       
-
-          templateInstance.datatablerecords.set(dataTableList);
-
-          if (templateInstance.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "currencyLists",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
-
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
-
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
-          }
-
-          $(".fullScreenSpin").css("display", "none");
-          setTimeout(function () {
-            $("#currencyLists")
-              .DataTable({
-                columnDefs: [
-                  { type: "date", targets: 0 },
-                  { orderable: false, targets: -1 },
-                ],
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                  {
-                    extend: "excelHtml5",
-                    text: "",
-                    download: "open",
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "currencylist_" + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                  {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Currency List",
-                    filename: "currencylist_" + moment().format(),
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                colReorder: {
-                  fixedColumnsRight: 1,
-                },
-                // bStateSave: true,
-                // rowId: 0,
-                paging: false,
-                //              "scrollY": "400px",
-                //              "scrollCollapse": true,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                order: [[0, "asc"]],
-                action: function () {
-                  $("#currencyLists").DataTable().ajax.reload();
-                },
-                fnDrawCallback: function (oSettings) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                },
-              })
-              .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-                let draftRecord = templateInstance.datatablerecords.get();
-                templateInstance.datatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {})
-              .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              });
-
-            // $('#currencyLists').DataTable().column( 0 ).visible( true );
-            $(".fullScreenSpin").css("display", "none");
-          }, 0);
-
-          var columns = $("#currencyLists th");
-          let sTible = "";
-          let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
-          let columVisible = false;
-          let sClass = "";
-          $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-              columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-              columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-              sTitle: v.innerText || "",
-              sWidth: sWidth || "",
-              sIndex: v.cellIndex || "",
-              sVisible: columVisible || false,
-              sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-          });
-          templateInstance.tableheaderrecords.set(tableHeaderList);
-          $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-          );
+          dataTableList.push(dataList);
+          //}
         }
-      })
-      .catch(function (err) {
-        console.log(err);
-        taxRateService
-          .getCurrencies()
-          .then(function (data) {
-            let lineItems = [];
-            let lineItemObj = {};
-            for (let i = 0; i < data.tcurrency.length; i++) {
-              // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-              var dataList = {
-                id: data.tcurrency[i].Id || "",
-                code: data.tcurrency[i].Code || "-",
-                currency: data.tcurrency[i].Currency || "-",
-                symbol: data.tcurrency[i].CurrencySymbol || "-",
-                buyrate: data.tcurrency[i].BuyRate || "-",
-                sellrate: data.tcurrency[i].SellRate || "-",
-                country: data.tcurrency[i].Country || "-",
-                description: data.tcurrency[i].CurrencyDesc || "-",
-                ratelastmodified: data.tcurrency[i].RateLastModified || "-",
-              };
+         // console.log(dataTableList);
 
-              dataTableList.push(dataList);
-              //}
-            }
+        if(urlParams.get("currency")) {
+          // Filter by currency
+          dataTableList = dataTableList.filter((value, index) => {
+            //console.log(value);
+            return value.code == urlParams.get("currency");
+          });
+        }
 
-            templateInstance.datatablerecords.set(dataTableList);
+        templateInstance.datatablerecords.set(dataTableList);
 
-            if (templateInstance.datatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "currencyLists",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
+        if (templateInstance.datatablerecords.get()) {
+          Meteor.call(
+            "readPrefMethod",
+            Session.get("mycloudLogonID"),
+            "currencyLists",
+            function (error, result) {
+              if (error) {
+              } else {
+                if (result) {
+                  for (let i = 0; i < result.customFields.length; i++) {
+                    let customcolumn = result.customFields;
+                    let columData = customcolumn[i].label;
+                    let columHeaderUpdate = customcolumn[i].thclass.replace(
+                      / /g,
+                      "."
+                    );
+                    let hiddenColumn = customcolumn[i].hidden;
+                    let columnClass = columHeaderUpdate.split(".")[1];
+                    let columnWidth = customcolumn[i].width;
+                    let columnindex = customcolumn[i].index + 1;
 
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
+                    if (hiddenColumn == true) {
+                      $("." + columnClass + "").addClass("hiddenColumn");
+                      $("." + columnClass + "").removeClass("showColumn");
+                    } else if (hiddenColumn == false) {
+                      $("." + columnClass + "").removeClass("hiddenColumn");
+                      $("." + columnClass + "").addClass("showColumn");
                     }
                   }
                 }
-              );
+              }
+            }
+          );
 
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        }
+
+        $(".fullScreenSpin").css("display", "none");
+        setTimeout(function () {
+          $("#currencyLists")
+            .DataTable({
+              columnDefs: [
+                { type: "date", targets: 0 },
+                { orderable: false, targets: -1 },
+              ],
+              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+              buttons: [
+                {
+                  extend: "excelHtml5",
+                  text: "",
+                  download: "open",
+                  className: "btntabletocsv hiddenColumn",
+                  filename: "currencylist_" + moment().format(),
+                  orientation: "portrait",
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+                {
+                  extend: "print",
+                  download: "open",
+                  className: "btntabletopdf hiddenColumn",
+                  text: "",
+                  title: "Currency List",
+                  filename: "currencylist_" + moment().format(),
+                  exportOptions: {
+                    columns: ":visible",
+                  },
+                },
+              ],
+              select: true,
+              destroy: true,
+              colReorder: true,
+              colReorder: {
+                fixedColumnsRight: 1,
+              },
+              // bStateSave: true,
+              // rowId: 0,
+              paging: false,
+              //                    "scrollY": "400px",
+              //                    "scrollCollapse": true,
+              info: true,
+              responsive: true,
+              order: [[0, "asc"]],
+              action: function () {
+                $("#currencyLists").DataTable().ajax.reload();
+              },
+              fnDrawCallback: function (oSettings) {
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              },
+            })
+            .on("page", function () {
               setTimeout(function () {
                 MakeNegative();
               }, 100);
-            }
-
-            $(".fullScreenSpin").css("display", "none");
-            setTimeout(function () {
-              $("#currencyLists")
-                .DataTable({
-                  columnDefs: [
-                    { type: "date", targets: 0 },
-                    { orderable: false, targets: -1 },
-                  ],
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [
-                    {
-                      extend: "excelHtml5",
-                      text: "",
-                      download: "open",
-                      className: "btntabletocsv hiddenColumn",
-                      filename: "currencylist_" + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                    {
-                      extend: "print",
-                      download: "open",
-                      className: "btntabletopdf hiddenColumn",
-                      text: "",
-                      title: "Currency List",
-                      filename: "currencylist_" + moment().format(),
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  colReorder: {
-                    fixedColumnsRight: 1,
-                  },
-                  // bStateSave: true,
-                  // rowId: 0,
-                  paging: false,
-                  //                    "scrollY": "400px",
-                  //                    "scrollCollapse": true,
-                  info: true,
-                  responsive: true,
-                  order: [[0, "asc"]],
-                  action: function () {
-                    $("#currencyLists").DataTable().ajax.reload();
-                  },
-                  fnDrawCallback: function (oSettings) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  },
-                })
-                .on("page", function () {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                  let draftRecord = templateInstance.datatablerecords.get();
-                  templateInstance.datatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function () {})
-                .on("length.dt", function (e, settings, len) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                });
-
-              // $('#currencyLists').DataTable().column( 0 ).visible( true );
-              $(".fullScreenSpin").css("display", "none");
-            }, 0);
-
-            var columns = $("#currencyLists th");
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function (i, v) {
-              if (v.hidden == false) {
-                columVisible = true;
-              }
-              if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-              }
-              sWidth = v.style.width.replace("px", "");
-
-              let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-              };
-              tableHeaderList.push(datatablerecordObj);
+              let draftRecord = templateInstance.datatablerecords.get();
+              templateInstance.datatablerecords.set(draftRecord);
+            })
+            .on("column-reorder", function () {})
+            .on("length.dt", function (e, settings, len) {
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
             });
-            templateInstance.tableheaderrecords.set(tableHeaderList);
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
-          })
-          .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-          });
+
+          // $('#currencyLists').DataTable().column( 0 ).visible( true );
+          $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+        var columns = $("#currencyLists th");
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function (i, v) {
+          if (v.hidden == false) {
+            columVisible = true;
+          }
+          if (v.className.includes("hiddenColumn")) {
+            columVisible = false;
+          }
+          sWidth = v.style.width.replace("px", "");
+
+          let datatablerecordObj = {
+            sTitle: v.innerText || "",
+            sWidth: sWidth || "",
+            sIndex: v.cellIndex || "",
+            sVisible: columVisible || false,
+            sClass: v.className || "",
+          };
+          tableHeaderList.push(datatablerecordObj);
+        });
+        templateInstance.tableheaderrecords.set(tableHeaderList);
+        $("div.dataTables_filter input").addClass(
+          "form-control form-control-sm"
+        );
+      })
+      .catch(function (err) {
+        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+        $(".fullScreenSpin").css("display", "none");
+        // Meteor._reload.reload();
       });
   };
 
