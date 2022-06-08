@@ -387,32 +387,34 @@ Template.leadscard.onRendered(function () {
         let tableHeaderList = [];
         // console.log(data);
         for (let i = 0; i < data.tprojecttasks.length; i++) {
-            let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-            let taskLabelArray = [];
-            if (taskLabel !== null) {
-                if (taskLabel.length === undefined || taskLabel.length === 0) {
-                    taskLabelArray.push(taskLabel.fields);
-                } else {
-                    for (let j = 0; j < taskLabel.length; j++) {
-                        taskLabelArray.push(taskLabel[j].fields);
+            if (data.tprojecttasks[i].fields.TaskName === leadName) {
+                let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                let taskLabelArray = [];
+                if (taskLabel !== null) {
+                    if (taskLabel.length === undefined || taskLabel.length === 0) {
+                        taskLabelArray.push(taskLabel.fields);
+                    } else {
+                        for (let j = 0; j < taskLabel.length; j++) {
+                            taskLabelArray.push(taskLabel[j].fields);
+                        }
                     }
                 }
+                let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                const dataList = {
+                    id: data.tprojecttasks[i].fields.ID || 0,
+                    priority: data.tprojecttasks[i].fields.priority || 0,
+                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                    taskName: data.tprojecttasks[i].fields.TaskName || '',
+                    projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                    projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                    description: taskDescription,
+                    labels: taskLabelArray
+                };
+                // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
+                dataTableList.push(dataList);
+                // }
             }
-            let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-            taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-            const dataList = {
-                id: data.tprojecttasks[i].fields.ID || 0,
-                priority: data.tprojecttasks[i].fields.priority || 0,
-                date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                taskName: data.tprojecttasks[i].fields.TaskName || '',
-                projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                description: taskDescription,
-                labels: taskLabelArray
-            };
-            // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-            dataTableList.push(dataList);
-            // }
         }
 
         templateObject.crmRecords.set(dataTableList);

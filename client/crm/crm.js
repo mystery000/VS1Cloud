@@ -49,6 +49,35 @@ Template.crmoverview.onRendered(function () {
       });
     });
   }
+  function getSupplierData(customerID) {
+    getVS1Data('TSupplierVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneSupplierDataEx(customerID).then(function (data) {
+          setCustomerByID(data);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tsuppliervs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+            added = true;
+            setCustomerByID(useData[i]);
+          }
+        }
+        if (!added) {
+          contactService.getOneSupplierDataEx(customerID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneSupplierDataEx(customerID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
+      });
+    });
+  }
   function getLeadData(leadID) {
     getVS1Data('TProspectVS1').then(function (dataObject) {
       if (dataObject.length === 0) {
@@ -101,6 +130,9 @@ Template.crmoverview.onRendered(function () {
   }
   if (FlowRouter.current().queryParams.leadid) {
     getLeadData(FlowRouter.current().queryParams.leadid);
+  }
+  if (FlowRouter.current().queryParams.supplierid) {
+    getSupplierData(FlowRouter.current().queryParams.supplierid);
   }
 });
 
