@@ -81,14 +81,22 @@ Template.new_invoice.onCreated(() => {
 Template.new_invoice.onRendered(() => {
 	
 	  let templateObject = Template.instance();
-        document.querySelectorAll(".templateItem").forEach((el) => {
+
+      $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+    
+        title = $(this).parent().attr("data-id");
+        number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+        templateObject.generateInvoiceData(title,number);
+           
+     });
+        // document.querySelectorAll(".templateItem").forEach((el) => {
         
-            el.addEventListener("click", function () {
-            title = el.getAttribute("data-id");
-            number = el.getAttribute("data-template-id");
-            templateObject.generateInvoiceData(title,number);
-            });
-        });
+        //     el.addEventListener("click", ".templateItem:not(.chkGlobalSettings)", function () {
+        //     title = el.getAttribute("data-id");
+        //     number = el.getAttribute("data-template-id");
+        //     templateObject.generateInvoiceData(title,number);
+        //     });
+        // });
 
 
     let currentInvoice;
@@ -8537,7 +8545,6 @@ Template.new_invoice.onRendered(() => {
             await updateTemplate(object_invoce);
         
             await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-
             return true;
     }
    
@@ -8820,7 +8827,59 @@ Template.new_invoice.onRendered(() => {
             return true;
   
 
-    };
+        };
+
+       exportSalesToPdf1 =   function () {   
+                      
+            let margins = {
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                width: 100
+                          };
+
+      
+            let invoice_data_info = templateObject.invoicerecord.get();
+            document.getElementById('html-Invoice-pdfwrapper').style.display="block";
+            var source = document.getElementById('html-Invoice-pdfwrapper');
+
+            let file = "Invoice.pdf";
+            if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+                file = 'Invoice-' + invoice_data_info.id + '.pdf';
+            }
+
+            var opt = {
+                margin: 0,
+                filename: file,
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+
+
+            html2pdf().set(opt).from(source).save().then(function (dataObject) {
+                if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
+                    $(".btnSave").trigger("click");
+                } else {
+                    document.getElementById('html-Invoice-pdfwrapper').style.display="none";
+                    $('#html-Invoice-pdfwrapper').css('display', 'none');
+                    $('.fullScreenSpin').css('display', 'none');
+                }
+            });
+
+            return true;
+  
+
+        };
 
     function updateTemplate1(object_invoce) {
         $("#templatePreviewModal").modal("toggle");
@@ -9229,7 +9288,7 @@ Template.new_invoice.onRendered(function () {
     const lineExtaSellItems = [];
 
     $("#templatePreviewModal").on("shown.bs.modal", function () {
-        const data = templateObject.invoice_data.get();
+        const data = tempObj.invoice_data.get();
         // Session.set("template",data)
     });
 
@@ -9955,6 +10014,60 @@ Template.new_invoice.events({
     'click #edtSaleCustField2': function(event) {
         clickedInput = "two";
         $('#clickedControl').val(clickedInput);
+    },
+    'click  #open_print_confirm':function(event)
+    {
+        if($('#choosetemplate').is(':checked'))
+        {
+            $('#confirmprint').modal('show');
+        }
+        else
+        {
+         
+            $('.fullScreenSpin').css('display', 'inline-block');
+            $('#html-2-pdfwrapper').css('display', 'block');
+            if ($('.edtCustomerEmail').val() != "") {
+                $('.pdfCustomerName').html($('#edtCustomerName').val());
+                $('.pdfCustomerAddress').html($('#txabillingAddress').val().replace(/[\r\n]/g, "<br />"));
+                $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
+                var ponumber = $('#ponumber').val() || '.';
+                $('.po').text(ponumber);
+                var rowCount = $('.tblInvoiceLine tbody tr').length;  
+
+                exportSalesToPdf1();
+             
+
+            } else {
+                swal({
+                    title: 'Customer Email Required',
+                    text: 'Please enter customer email',
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.value) {}
+                    else if (result.dismiss === 'cancel') {}
+                });
+            }
+
+
+
+            $('#confirmprint').modal('hide');
+        }
+
+    },
+
+    'click #choosetemplate':function(event)
+    {   
+        if($('#choosetemplate').is(':checked'))
+        {        
+            $('#templateselection').modal('show');
+        }
+        else
+        {   
+           $('#templateselection').modal('hide');
+        }
+         
     },
     'click #edtSaleCustField3': function(event) {
         clickedInput = "three";
@@ -11644,6 +11757,9 @@ Template.new_invoice.events({
        }
 
     },
+
+    
+
     'click .printConfirm':async function (event) {
    
             var printTemplate = [];

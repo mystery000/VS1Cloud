@@ -427,8 +427,8 @@
                             <div class="modal-body" style="padding: 0px;">
                                 <div class="divTable" id="file-display">
                                     <!-- <div class="uploaded-element-header">
-<span class="uploaded-on uploaded-header">Upload a file</span>
-</div> -->
+                                     <span class="uploaded-on uploaded-header">Upload a file</span>
+                          </div> -->
                                     <div class="col inboxcol1">
                                         <img src="/icons/nofiles_icon.jpg" class="" style="width:100%;">
                                     </div>
@@ -1466,9 +1466,8 @@
                                     <div class="custom-control custom-switch">
                                                           
                                       
-                                        <input class="custom-control-input chkGlobalSettings" data-toggle="modal" data-target="#templateselection" id="choosetemplate" type="checkbox" 
-                                             style="cursor: pointer;">
-                                                                                                       
+                                        <input class="custom-control-input chkGlobalSettings"  id="choosetemplate" type="checkbox" 
+                                             style="cursor: pointer;">                                                                                                    
                                         <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate" >Choose Template</label>
                                     
                                     
@@ -1493,7 +1492,7 @@
                                         <i class="fa fa-save" style="padding-right: 8px;"></i>Save
                                     </button>
         
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#confirmprint" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
+                                    <button class="btn btn-primary" id="open_print_confirm"  type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
                                         <i class="fa fa-print" style="padding-right: 8px;"></i>Print
                                     </button>
         
@@ -1523,7 +1522,17 @@
 
                                    <div class="modal-body">
 
-                                     <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_invoice" type="checkbox" id="print_invoice" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_invoice">Print Invoice</label>
+                                    </div>
+
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_delivery_docket" type="checkbox" id="print_delivery_docket" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket">Print Delivery Docket</label>
+                                    </div>
+                                    
+                                     <!-- <div class="form-group">
                                               <label class="control-label">
                                                 <input type="checkbox" name="print_invoice" id="print_invoice" value="1"/> Print Invoice
                                               </label>
@@ -1532,7 +1541,7 @@
                                         <label class="control-label">
                                           <input type="checkbox" name="print_delivery_docket" id="print_delivery_docket"  value="1"/> Print Delivery Docket
                                         </label>
-                                     </div>
+                                     </div> -->
                                      <!-- <div class="form-group">
                                         <label class="control-label">
                                           <input type="checkbox" name="print_Invoices_back_orders" id="print_Invoices_back_orders" value="1"/> Print Invoice Back Orders
@@ -1544,11 +1553,11 @@
 
                                    <div class="modal-footer ">
                                     <div class="col-sm-12">
-                                        <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;width: 100px;">
-                                            <i class="fa fa-print" style="padding-right: 8px;"></i>Print
+                                        <button class="btn btn-primary printConfirm btnFooter" type="button" style="margin: 16px;margin-top: 0px;">
+                                            <i class="fa fa-print" style="padding-right: 8px;"></i>Print Confirm
                                         </button>
                                       
-                                       <button class="btn btn-secondary" data-dismiss="modal" style="margin: 16px;margin-top: 0px;width: 100px;">Close</button>
+                                       <button class="btn btn-secondary" data-dismiss="modal" style="margin: 16px;margin-top: 0px;">Close</button>
                                     </div>
                                    
                                    </div>
