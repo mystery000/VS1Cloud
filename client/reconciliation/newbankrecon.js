@@ -10,6 +10,7 @@ import { PurchaseBoardService } from "../js/purchase-service";
 import { SideBarService } from '../js/sidebar-service';
 import { YodleeService } from '../js/yodlee-service';
 import { Random } from 'meteor/random';
+import {PaymentsService} from "../payments/payments-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -22,6 +23,7 @@ let selectedAccountFlag = '';
 let selectedTaxFlag = '';
 let selectedCustomerFlag = '';
 let customerList = [];
+let supplierList = [];
 let taxcodeList = [];
 
 Template.newbankrecon.onCreated(function() {
@@ -41,15 +43,15 @@ Template.newbankrecon.onCreated(function() {
     templateObject.bankTransactionData = new ReactiveVar([]);
     templateObject.matchTransactionData = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
-    templateObject.clientrecords = new ReactiveVar();
     templateObject.baselinedata = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
 Template.newbankrecon.onRendered(function() {
     const templateObject = Template.instance();
-    let productService = new ProductService();
-    let accountService = new AccountService();
+    const productService = new ProductService();
+    const accountService = new AccountService();
+    const supplierService = new PurchaseBoardService();
 
     let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
     templateObject.page_number.set(page_number);
@@ -183,24 +185,24 @@ Template.newbankrecon.onRendered(function() {
         }
     }
 
-    templateObject.getAllClients = function () {
+    templateObject.getAllCustomers = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
             if (dataObject.length === 0) {
                 sideBarService.getClientVS1().then(function (data) {
-                    setClientList(data.tcustomervs1);
+                    setCustomerList(data.tcustomervs1);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.tcustomervs1;
-                setClientList(useData);
+                setCustomerList(useData);
             }
         }).catch(function (err) {
             sideBarService.getClientVS1().then(function (data) {
-                setClientList(data.tcustomervs1);
+                setCustomerList(data.tcustomervs1);
             });
         });
     };
-    function setClientList (data) {
+    function setCustomerList(data) {
         for (let i in data) {
             if (data.hasOwnProperty(i)) {
                 let customerrecordObj = {
@@ -215,6 +217,10 @@ Template.newbankrecon.onRendered(function() {
                     suburb: data[i].fields.Suburb || '',
                     statecode: data[i].fields.State + ' ' + data[i].fields.Postcode || '',
                     country: data[i].fields.Country || '',
+                    billstreet: data[i].fields.BillStreet || '',
+                    billstreet2: data[i].fields.BillStreet2 || '',
+                    billcountry: data[i].fields.Billcountry || '',
+                    billstatecode: data[i].fields.BillState + ' ' + data[i].fields.BillPostcode || '',
                     termsName: data[i].fields.TermsName || '',
                     taxCode: data[i].fields.TaxCodeName || 'E',
                     clienttypename: data[i].fields.ClientTypeName || 'Default',
@@ -223,7 +229,48 @@ Template.newbankrecon.onRendered(function() {
                 customerList.push(customerrecordObj);
             }
         }
-        templateObject.clientrecords.set(customerList);
+    }
+
+    templateObject.getAllSuppliers = function() {
+        getVS1Data('TSupplierVS1').then(function(dataObject) {
+            if (dataObject.length === 0) {
+                supplierService.getSupplierVS1().then(function(data) {
+                    setSupplierList(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tsuppliervs1;
+                setSupplierList(useData);
+            }
+        }).catch(function(err) {
+            supplierService.getSupplierVS1().then(function(data) {
+                setSupplierList(data);
+            });
+        });
+    };
+    function setSupplierList(data) {
+        for (let i in data) {
+            if (data.hasOwnProperty(i)) {
+                let supplierrecordObj = {
+                    supplierid: data[i].fields.ID || '',
+                    suppliername: data[i].fields.ClientName || '',
+                    supplieremail: data[i].fields.Email || '',
+                    street: data[i].fields.Street || '',
+                    street2: data[i].fields.Street2 || '',
+                    street3: data[i].fields.Street3 || '',
+                    suburb: data[i].fields.Suburb || '',
+                    statecode: data[i].fields.State + ' ' + data[i].fields.Postcode || '',
+                    country: data[i].fields.Country || '',
+                    billstreet: data[i].fields.BillStreet || '',
+                    billstree2: data[i].fields.BillStreet2 || '',
+                    billcountry: data[i].fields.Billcountry || '',
+                    billstatecode: data[i].fields.BillState + ' ' + data[i].fields.BillPostcode || '',
+                    termsName: data[i].fields.TermsName || ''
+                };
+                supplierList.push(supplierrecordObj);
+            }
+        }
+        console.log(supplierList);
     }
 
     templateObject.getBankTransactionData = function (accountId, statementDate, ignoreDate) {
@@ -243,8 +290,10 @@ Template.newbankrecon.onRendered(function() {
             let access_token = data.token.accessToken;
             const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                // console.log(data);
+                console.log(data);
                 let lastTransactionDate = '1899-12-31';
+                let debitTypeList = [];
+                let creditTypeList = [];
                 for (let i = 0; i < data.transaction.length; i++ ) {
                     if (yodleeAccountID === data.transaction[i].accountId && (data.transaction[i].baseType === 'DEBIT' || data.transaction[i].baseType === 'CREDIT')) {
                         let description = '';
@@ -265,9 +314,11 @@ Template.newbankrecon.onRendered(function() {
                         if (data.transaction[i].baseType === 'DEBIT') {
                             deporwith = 'spent';
                             spentYodleeAmount = data.transaction[i].amount.amount;
+                            debitTypeList.push(data.transaction[i].type);
                         } else {
                             deporwith = 'received';
                             receivedYodleeAmount = data.transaction[i].amount.amount;
+                            creditTypeList.push(data.transaction[i].type);
                         }
                         if (yodleeTransactionDate > yodleeDate) {
                             lastTransactionDate = yodleeTransactionDate;
@@ -299,6 +350,10 @@ Template.newbankrecon.onRendered(function() {
                         yodleeData.push(yodleeObject);
                     }
                 }
+                debitTypeList = [...new Set(debitTypeList)];
+                creditTypeList = [...new Set(creditTypeList)];
+                console.log(debitTypeList);
+                console.log(creditTypeList);
                 templateObject.lastTransactionDate.set(lastTransactionDate);
                 const currentBeginDate = new Date();
                 let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -349,6 +404,7 @@ Template.newbankrecon.onRendered(function() {
         });
     };
     function setAllTReconcilation(data, yodleeData) {
+        console.log(data);
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
             let openBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliation[i].fields.OpenBalance)|| 0.00;
@@ -501,9 +557,9 @@ Template.newbankrecon.onRendered(function() {
         if (templateObject.bankTransactionData.get().length > 0) {
             setTimeout(function() {
                 defineTabpanelEvent();
+                $('.fullScreenSpin').css('display', 'none');
             }, 500);
         }
-        $('.fullScreenSpin').css('display', 'none');
     }
     function getYodleeAccountID(accountID) {
         let yodleeAccountID = 12187126;
@@ -532,6 +588,7 @@ Template.newbankrecon.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let matchData = [];
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
+            console.log(data);
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                     let reconciledepositObj = {
@@ -559,6 +616,7 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
             reconService.getToBeReconciledWithdrawal(accountId, statementDate, ignoreDate).then(function(data) {
+                console.log(data);
                 if (data.ttobereconciledwithdrawal.length > 0) {
                     for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
                         let reconcilewithdrawalObj = {
@@ -589,7 +647,6 @@ Template.newbankrecon.onRendered(function() {
             }).catch(function(err) {
                 setMatchTransactionData(matchData);
             });
-            $('.fullScreenSpin').css('display', 'none');
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
@@ -703,7 +760,6 @@ Template.newbankrecon.onRendered(function() {
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
             } else {
                 $('.vs1cloudBalance').text(utilityService.modifynegativeCurrencyFormat(openBal));
-
             }
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
@@ -713,7 +769,8 @@ Template.newbankrecon.onRendered(function() {
     setTimeout(function () {
         templateObject.getAccountNames();
         templateObject.getAllTaxCodes();
-        templateObject.getAllClients();
+        templateObject.getAllCustomers();
+        templateObject.getAllSuppliers();
         // templateObject.getAllReconListData();
     }, 100);
 
@@ -837,6 +894,25 @@ Template.newbankrecon.onRendered(function() {
 
     function defineTabpanelEvent() {
         templateObject.bankTransactionData.get().forEach(function(item, index) {
+            $('#DateIn_'+item.YodleeLineID).datepicker({
+                showOn: 'button',
+                buttonText: 'Show Date',
+                buttonImageOnly: true,
+                buttonImage: '/img/imgCal2.png',
+                dateFormat: 'dd/mm/yy',
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-90:+10",
+            });
+            if (item.deporwith === "spent") {
+                $('#what_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
+                $('#whatDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
+            } else {
+                $('#what_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
+                $('#whatDetail_'+item.YodleeLineID).attr("placeholder", "Choose the supplier...");
+            }
             $('#ctaxRate_'+item.YodleeLineID).editableSelect();
             $('#ctaxRate_'+item.YodleeLineID).editableSelect().on("click.editable-select", function (e, li) {
                 const $each = $(this);
@@ -869,42 +945,12 @@ Template.newbankrecon.onRendered(function() {
             $('#what_'+item.YodleeLineID).editableSelect();
             $('#what_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
                 selectedYodleeID = item.YodleeLineID;
-                selectedCustomerFlag = 'ForTab';
-                const $each = $(this);
-                const offset = $each.offset();
-                $('#edtCustomerPOPID').val('');
-                //$('#edtCustomerCompany').attr('readonly', false);
-                const customerDataName = e.target.value || '';
-                if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-                    openCustomerModal();
-                } else {
-                    if (customerDataName.replace(/\s/g, '') !== '') {
-                        //FlowRouter.go('/customerscard?name=' + e.target.value);
-                        $('#edtCustomerPOPID').val('');
-                        getVS1Data('TCustomerVS1').then(function (dataObject) {
-                            if (dataObject.length === 0) {
-                                setOneCustomerDataExByName(customerDataName);
-                            } else {
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tcustomervs1;
-                                let added = false;
-                                for (let i = 0; i < useData.length; i++) {
-                                    if (useData[i].fields.ClientName === customerDataName) {
-                                        setCustomerModal(useData[i]);
-                                    }
-                                }
-                                if (!added) {
-                                    setOneCustomerDataExByName(customerDataName);
-                                }
-                            }
-                        }).catch(function (err) {
-                            setOneCustomerDataExByName(customerDataName);
-                        });
-                    } else {
-                        openCustomerModal();
-                    }
-                }
-
+                editableWhat(item, $(this), e);
+            });
+            $('#whatDetail_'+item.YodleeLineID).editableSelect();
+            $('#whatDetail_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
+                selectedYodleeID = item.YodleeLineID;
+                editableWhat(item, $(this), e);
             });
             $('#transferAccount_'+item.YodleeLineID).editableSelect();
             $('#transferAccount_'+item.YodleeLineID).editableSelect().on('click.editable-select', function (e, li) {
@@ -970,6 +1016,74 @@ Template.newbankrecon.onRendered(function() {
             });
         })
     }
+    function editableWhat(item, $each, e) {
+        const offset = $each.offset();
+        if (item.deporwith === "spent") {
+            selectedCustomerFlag = 'ForTab';
+            $('#edtCustomerPOPID').val('');
+            //$('#edtCustomerCompany').attr('readonly', false);
+            const customerDataName = e.target.value || '';
+            if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+                openCustomerModal();
+            } else {
+                if (customerDataName.replace(/\s/g, '') !== '') {
+                    //FlowRouter.go('/customerscard?name=' + e.target.value);
+                    $('#edtCustomerPOPID').val('');
+                    getVS1Data('TCustomerVS1').then(function (dataObject) {
+                        if (dataObject.length === 0) {
+                            setOneCustomerDataExByName(customerDataName);
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tcustomervs1;
+                            let added = false;
+                            for (let i = 0; i < useData.length; i++) {
+                                if (useData[i].fields.ClientName === customerDataName) {
+                                    setCustomerModal(useData[i]);
+                                }
+                            }
+                            if (!added) {
+                                setOneCustomerDataExByName(customerDataName);
+                            }
+                        }
+                    }).catch(function (err) {
+                        setOneCustomerDataExByName(customerDataName);
+                    });
+                } else {
+                    openCustomerModal();
+                }
+            }
+        }
+        if (item.deporwith === "received") {
+            const supplierDataName = e.target.value || '';
+            if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
+                openSupplierModal();
+            } else {
+                if (supplierDataName.replace(/\s/g, '') !== '') {
+                    getVS1Data('TSupplierVS1').then(function (dataObject) {
+                        if (dataObject.length === 0) {
+                            setOneSupplierDataExByName(supplierDataName);
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tsuppliervs1;
+                            let added = false;
+                            for (let i = 0; i < useData.length; i++) {
+                                if (useData[i].fields.ClientName === supplierDataName) {
+                                    setSupplierModal(useData[i]);
+                                }
+                            }
+                            if (!added) {
+                                setOneSupplierDataExByName(supplierDataName);
+                            }
+                        }
+                    }).catch(function (err) {
+                        setOneSupplierDataExByName(supplierDataName);
+                    });
+                } else {
+                    openSupplierModal();
+                }
+            }
+        }
+    }
 
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
@@ -1003,25 +1117,31 @@ Template.newbankrecon.onRendered(function() {
         $('#customerListModal').modal('toggle');
         if (selectedCustomerFlag === "ForTab") {
             // $('#whatID_'+selectedYodleeID).val(parseInt($(this).find(".colID").text()));
-            $('#whatID_'+selectedYodleeID).val($(this).find(".colCompany").text());
+            $('#whatID_'+selectedYodleeID).val($(this).find(".colID").text());
             $('#what_'+selectedYodleeID).val($(this).find(".colCompany").text());
+            $('#whatDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
         } else {
             if (selectedLineID) {
                 let lineAccountID = $(this).find(".colID").text();
                 let lineAccountName = $(this).find(".colCompany").text();
-                let lineTaxRate = $(this).find(".colCustomerTaxCode").text();
                 $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountName").val(lineAccountName);
                 $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineAccountID").val(lineAccountID);
-                $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineTaxRate").val(lineTaxRate);
             }
-            setCalculated();
         }
+        setCalculated();
+    });
+    $(document).on("click", ".newbankrecon #tblSupplierlist tbody tr", function (e) {
+        $('#supplierListModal').modal('toggle');
+        $('#whatID_'+selectedYodleeID).val($(this).find(".colID").text());
+        $('#what_'+selectedYodleeID).val($(this).find(".colCompany").text());
+        $('#whatDetail_' + selectedYodleeID).val($(this).find(".colCompany").text());
+        setCalculated();
     });
     $(document).on("click", ".newbankrecon #tblTaxRate tbody tr", function (e) {
         $('#taxRateListModal').modal('toggle');
         if (selectedTaxFlag === "ForTab") {
-            // $('#ctaxRateID_'+selectedYodleeID).val(parseInt($(this).find(".sorting_1").text()));
-            $('#ctaxRateID_' + selectedYodleeID).val($(this).find(".taxName").text());
+            $('#ctaxRateID_'+selectedYodleeID).val(parseInt($(this).find(".sorting_1").text()));
+            // $('#ctaxRateID_' + selectedYodleeID).val($(this).find(".taxName").text());
             $('#ctaxRate_' + selectedYodleeID).val($(this).find(".taxName").text());
         } else {
             if (selectedLineID) {
@@ -1038,10 +1158,12 @@ Template.newbankrecon.onRendered(function() {
             let lineProductName = trow.find(".productName").text();
             let lineProductDesc = trow.find(".productDesc").text();
             let lineUnitPrice = trow.find(".salePrice").text();
+            let lineTaxRate = trow.find(".taxrate").text();
             $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineProductName").val(lineProductName);
             $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineProductDesc").val(lineProductDesc);
             $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineQty").val(1);
             $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineUnitPrice").val(lineUnitPrice);
+            $('#divLineDetail_'+selectedYodleeID+' #' + selectedLineID + " .lineTaxRate").val(lineTaxRate);
             $('#productListModal').modal('toggle');
         }
         setCalculated();
@@ -1073,20 +1195,6 @@ Template.newbankrecon.onRendered(function() {
             }
         }
     });
-
-    $("#DateIn").datepicker({
-        showOn: 'button',
-        buttonText: 'Show Date',
-        buttonImageOnly: true,
-        buttonImage: '/img/imgCal2.png',
-        dateFormat: 'dd/mm/yy',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        changeMonth: true,
-        changeYear: true,
-        yearRange: "-90:+10",
-    });
-
 });
 
 Template.newbankrecon.events({
@@ -1348,21 +1456,26 @@ Template.newbankrecon.events({
     },
     'click #addLine': function() {
         if (selectedYodleeID) {
-            const rowData = $("#divLineDetail_"+selectedYodleeID+" #tblrecontransactiondetail tbody>tr:last").clone(true);
+            const rowData = $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr:last").clone(true);
+            let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).val("");
             $(".lineQty", rowData).val("");
-            $(".lineAccountName", rowData).val("");
+            if (DepOrWith === "received") {
+                $(".lineAccountName", rowData).val("");
+            }
             $(".lineUnitPrice", rowData).val("");
             $(".lineAmount", rowData).text("");
             $(".lineSubTotal", rowData).text("");
             $(".lineTaxRate", rowData).val("");
             $(".lineTaxAmount", rowData).text("");
-            $(".lineDiscount", rowData).text("");
+            if (DepOrWith === "spent") {
+                $(".lineDiscount", rowData).text("");
+            }
             $(".btnRemove", rowData).show();
             rowData.attr('id', tokenid);
-            $("#divLineDetail_"+selectedYodleeID+" #tblrecontransactiondetail tbody").append(rowData);
+            $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody").append(rowData);
             setTimeout(function () {
                 $("#divLineDetail_"+selectedYodleeID+" #" + tokenid + " .lineProductName").trigger('click');
             }, 200);
@@ -1370,6 +1483,8 @@ Template.newbankrecon.events({
     },
     'click #btnSave': function (event) {
         if (selectedYodleeID) {
+            let purchaseService = new PurchaseBoardService();
+            let paymentService = new PaymentsService();
             let match_total = parseFloat($("#divLineDetail_"+selectedYodleeID+" #TotalAmount").val());
             let grand_total = Number($("#divLineDetail_"+selectedYodleeID+" .grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
             if (match_total !== grand_total) {
@@ -1378,134 +1493,248 @@ Template.newbankrecon.events({
                 return false;
             }
             let reconType = "";
+            let employeeID = Session.get('mySessionEmployeeLoggedID');
+            let employeename = Session.get('mySessionEmployee');
             let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+            let clientID = $("#whatID_"+selectedYodleeID).val();
+            let clientName = $("#whatDetail_"+selectedYodleeID).val();
+            let clientDetail = null;
             if (DepOrWith === "spent") {
                 reconType = "TReconciliationWithdrawalLines";
+                clientDetail = getClientDetail(clientName, 'customer');
+                if (!clientDetail) {
+                    swal('Customer must be vaild.', '', 'error');
+                    $("#whatDetail_"+selectedYodleeID).focus();
+                    return false;
+                }
             } else if (DepOrWith === "received") {
                 reconType = "TReconciliationDepositLines";
+                clientDetail = getClientDetail(clientName, 'supplier');
+                if (!clientDetail) {
+                    swal('Supplier must be vaild.', '', 'error');
+                    $("#whatDetail_"+selectedYodleeID).focus();
+                    return false;
+                }
             } else {
                 return false;
             }
-            $('.fullScreenSpin').css('display', 'inline-block');
+
             let lineItems = [];
             let lineItemsObj = {};
+            let clientShippingAddress = clientName + '\n' + clientDetail.street + '\n' + clientDetail.street2 + ' ' + clientDetail.statecode + '\n' + clientDetail.country;
+            let clientBillingAddress = clientName + '\n' + clientDetail.billstreet + '\n' + clientDetail.billstreet2 + ' ' + clientDetail.billstatecode + '\n' + clientDetail.billcountry;
+            let clientTermsName = clientDetail.termsName;
+            $('.fullScreenSpin').css('display', 'inline-block');
             let bankaccountid = parseInt(Session.get('bankaccountid'));
             let bankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
             let refText = $("#divLineDetail_"+selectedYodleeID+" #reference").val();
-            let dateIn = $("#divLineDetail_"+selectedYodleeID+" #DateIn").val() || '';
-            let splitwithdepositdate = dateIn.split("/");
-            let withYear = splitwithdepositdate[2];
-            let withMonth = splitwithdepositdate[1];
-            let withDay = splitwithdepositdate[0];
-            let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
-            let isEmptyAccount = false;
-            $("#divLineDetail_"+selectedYodleeID+" #tblrecontransactiondetail > tbody > tr").each(function () {
-                let lineID = this.id;
-                let lineProductName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductName").val();
-                let lineAccountName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountName").val();
-                let lineAccountID = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountID").val();
-                if (lineAccountName === '') {
-                    swal('Account must be valid.', '', 'error');
-                    $('.fullScreenSpin').css('display', 'none');
-                    isEmptyAccount = true;
-                    return false;
-                } else {
+            let dateIn = $("#DateIn_"+selectedYodleeID).val() || '';
+            let splitDate = dateIn.split("/");
+            let withYear = splitDate[2];
+            let withMonth = splitDate[1];
+            let withDay = splitDate[0];
+            let invoiceDate = withYear + "-" + withMonth + "-" + withDay;
+            let comment = $("#divLineDetail_"+selectedYodleeID+" #textComment").val();
+
+            if (DepOrWith === "spent") {
+
+            }
+            if (DepOrWith === "received") {
+                let isEmptyAccount = false;
+                $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
+                    let lineID = this.id;
+                    let lineProductName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductName").val();
+                    let lineProductDesc = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductDesc").val();
+                    let lineQty = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineQty").val();
+                    let lineUnitPrice = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineUnitPrice").val();
+                    let lineAccountName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountName").val();
+                    let lineAccountID = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAccountID").val();
+                    let lineTaxRate = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineTaxRate").val();
                     let lineAmount = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAmount").text();
                     lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
-                    lineItemsObj = {
-                        type: reconType,
-                        fields: {
-                            AccountID: bankaccountid || 0,
-                            AccountName: bankAccountName || '',
-                            Amount: lineAmount,
-                            BankStatementLineID: selectedYodleeID,
-                            ClientID: lineAccountID,
-                            ClientName: lineAccountName || '',
-                            DepositDate: formatWithDate + " 00:00:00" || '',
-                            Deposited: true,
-                            Notes: lineProductName || '',
-                            Payee: '',
-                            Reconciled: false,
-                            Reference: refText || ''
-                        }
-                    };
-                    lineItems.push(lineItemsObj);
-                }
-            });
-            if (lineItems.length === 0 || isEmptyAccount) {
-                return false;
-            }
-            // Pulling initial variables BEGIN
-            let deptname = "Default"; //Set to Default as it isn't used for recons
-            let employeename = Session.get('mySessionEmployee');
-            const notes = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val(); //pending addition of notes field
-            const openbalance = 0;
-            let closebalance = 0;
-            // Pulling initial variables END
-            let objDetails = {};
-            if (DepOrWith === "received") {
-                objDetails = {
-                    type: "TReconciliation",
-                    fields: {
-                        // ID: parseInt(YodleeID) || 0,
-                        AccountID: bankaccountid || 0,
-                        AccountName: bankAccountName || '',
-                        // CloseBalance: closebalance,
-                        Deleted: false,
-                        DepositLines: lineItems || '',
-                        DeptName: deptname || '',
-                        EmployeeName: employeename || '',
-                        Finished: true,
-                        Notes: notes || '',
-                        OnHold: false,
-                        // OpenBalance: openbalance,
-                        ReconciliationDate: formatWithDate + " 00:00:00" || '',
-                        StatementNo: selectedYodleeID.toString() || '0',
-                        WithdrawalLines: ''
-                    }
-                };
-            } else {
-                objDetails = {
-                    type: "TReconciliation",
-                    fields: {
-                        // ID: parseInt(YodleeID) || 0,
-                        AccountID: bankaccountid || 0,
-                        AccountName: bankAccountName || '',
-                        // CloseBalance: closebalance,
-                        Deleted: false,
-                        DepositLines: '',
-                        DeptName: deptname || '',
-                        EmployeeName: employeename || '',
-                        Finished: true,
-                        Notes: notes || '',
-                        OnHold: false,
-                        // OpenBalance: openbalance,
-                        ReconciliationDate: formatWithDate + " 00:00:00" || '',
-                        StatementNo: selectedYodleeID.toString() || '0',
-                        WithdrawalLines: lineItems || ''
-                    }
-                };
-            }
-            console.log(objDetails);
-            reconService.saveReconciliation(objDetails).then(function (data) {
-                FlowRouter.go('/newbankrecon');
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                        if (err === checkResponseError) {
-                            window.open('/', '_self');
-                        }
-                    } else if (result.dismiss === 'cancel') {
+                    if (lineAccountName === '') {
+                        swal('Account must be valid.', '', 'error');
+                        $('.fullScreenSpin').css('display', 'none');
+                        isEmptyAccount = true;
+                        return false;
+                    } else {
+                        // lineItemsObj = {
+                        //     type: reconType,
+                        //     fields: {
+                        //         AccountID: bankaccountid || 0,
+                        //         AccountName: bankAccountName || '',
+                        //         Amount: lineAmount,
+                        //         BankStatementLineID: selectedYodleeID,
+                        //         ClientID: parseInt(lineAccountID) || 0,
+                        //         ClientName: lineAccountName || '',
+                        //         DepositDate: formatWithDate + " 00:00:00" || '',
+                        //         Deposited: true,
+                        //         Notes: lineProductName || '',
+                        //         Payee: '',
+                        //         Reconciled: false,
+                        //         Reference: refText || ''
+                        //     }
+                        // };
+                        lineItemsObj = {
+                            type: "TPurchaseOrderLine",
+                            fields: {
+                                ProductName: lineProductName || '',
+                                ProductDescription: lineProductDesc || '',
+                                UOMQtySold: parseFloat(lineQty) || 0,
+                                UOMQtyShipped: parseFloat(lineQty) || 0,
+                                LineCost: Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0,
+                                CustomerJob: lineAccountName || '',
+                                LineTaxCode: lineTaxRate || '',
+                                LineClassName: defaultDept
+                            }
+                        };
+                        lineItems.push(lineItemsObj);
                     }
                 });
-                $('.fullScreenSpin').css('display', 'none');
-            });
+                if (lineItems.length === 0 || isEmptyAccount) {
+                    $('.fullScreenSpin').css('display', 'none');
+                    return false;
+                }
+                let objPODetails = {
+                    type: "TPurchaseOrderEx",
+                    fields: {
+                        SupplierName: clientName,
+                        ForeignExchangeCode: CountryAbbr,
+                        // SupplierInvoiceNumber: refText || '',
+                        Lines: lineItems,
+                        OrderTo: clientBillingAddress,
+                        OrderDate: invoiceDate,
+                        SupplierInvoiceDate: invoiceDate,
+                        SaleLineRef: refText || '',
+                        TermsName: clientTermsName || '',
+                        Shipping: defaultDept,
+                        ShipTo: clientShippingAddress,
+                        Comments: comment || '',
+                        OrderStatus: ''
+                    }
+                };
+                console.log(objPODetails);
+                purchaseService.savePurchaseOrderEx(objPODetails).then(function(resultPO) {
+                    console.log(resultPO);
+                    if (resultPO.fields.ID) {
+                        let paymentData = [];
+                        const lineID = resultPO.fields.ID;
+                        let Line = {
+                            type: 'TGuiSuppPaymentLines',
+                            fields: {
+                                TransType: "Purchase Order",
+                                TransID: parseInt(lineID) || 0,
+                                Paid: true,
+                                Payment: parseFloat(grand_total) || 0
+                            }
+                        };
+                        paymentData.push(Line);
+                        let objPaymentDetails = {
+                            type: "TSuppPayments",
+                            fields: {
+                                ID: 0,
+                                Deleted: false,
+                                ClientPrintName: clientName,
+                                CompanyName: clientName,
+                                DeptClassName: defaultDept,
+                                EmployeeID: parseInt(employeeID) || 0,
+                                EmployeeName: employeename || '',
+                                GUILines: paymentData,
+                                Notes: comment || '',
+                                Payment: true,
+                                PaymentDate: invoiceDate,
+                                PayMethodName: "Cheque",
+                                ReferenceNo: refText || '',
+                                AccountID: bankaccountid || 0,
+                                AccountName: bankAccountName || '',
+                            }
+                        };
+                        console.log(objPaymentDetails);
+                        paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
+                            console.log(resultPayment);
+                        }).catch(function(err) {
+                            handleSaveError(err);
+                        });
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                    }
+                }).catch(function(err) {
+                    handleSaveError(err);
+                });
+            }
+
+            // Pulling initial variables BEGIN
+            // let deptname = "Default"; //Set to Default as it isn't used for recons
+            // const notes = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val(); //pending addition of notes field
+            // const openbalance = 0;
+            // let closebalance = 0;
+            // // Pulling initial variables END
+            // let objDetails = {};
+            // if (DepOrWith === "received") {
+            //     objDetails = {
+            //         type: "TReconciliation",
+            //         fields: {
+            //             // ID: parseInt(YodleeID) || 0,
+            //             AccountID: bankaccountid || 0,
+            //             AccountName: bankAccountName || '',
+            //             // CloseBalance: closebalance,
+            //             Deleted: false,
+            //             DepositLines: lineItems || '',
+            //             DeptName: deptname || '',
+            //             EmployeeID: parseInt(emplyeeID) || 0,
+            //             EmployeeName: employeename || '',
+            //             Finished: true,
+            //             Notes: notes || '',
+            //             OnHold: false,
+            //             // OpenBalance: openbalance,
+            //             ReconciliationDate: formatWithDate + " 00:00:00" || '',
+            //             StatementNo: selectedYodleeID.toString() || '0',
+            //             WithdrawalLines: ''
+            //         }
+            //     };
+            // } else {
+            //     objDetails = {
+            //         type: "TReconciliation",
+            //         fields: {
+            //             // ID: parseInt(YodleeID) || 0,
+            //             AccountID: bankaccountid || 0,
+            //             AccountName: bankAccountName || '',
+            //             // CloseBalance: closebalance,
+            //             Deleted: false,
+            //             DepositLines: '',
+            //             DeptName: deptname || '',
+            //             EmployeeID: parseInt(emplyeeID) || 0,
+            //             EmployeeName: employeename || '',
+            //             Finished: true,
+            //             Notes: notes || '',
+            //             OnHold: false,
+            //             // OpenBalance: openbalance,
+            //             ReconciliationDate: formatWithDate + " 00:00:00" || '',
+            //             StatementNo: selectedYodleeID.toString() || '0',
+            //             WithdrawalLines: lineItems || ''
+            //         }
+            //     };
+            // }
+            // console.log(objDetails);
+            // reconService.saveReconciliation(objDetails).then(function (data) {
+            //     FlowRouter.go('/newbankrecon');
+            // }).catch(function (err) {
+            //     swal({
+            //         title: 'Oooops...',
+            //         text: err,
+            //         type: 'error',
+            //         showCancelButton: false,
+            //         confirmButtonText: 'Try Again'
+            //     }).then((result) => {
+            //         if (result.value) {
+            //             if (err === checkResponseError) {
+            //                 window.open('/', '_self');
+            //             }
+            //         } else if (result.dismiss === 'cancel') {
+            //         }
+            //     });
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         }
     },
     'click #btnMatchCancel': function() {
@@ -1791,6 +2020,109 @@ function setCustomerModal(data) {
     }, 200);
 }
 
+function openSupplierModal() {
+    $('#supplierListModal').modal();
+    setTimeout(function() {
+        $('#tblSupplierlist_filter .form-control-sm').focus();
+        $('#tblSupplierlist_filter .form-control-sm').val('');
+        $('#tblSupplierlist_filter .form-control-sm').trigger("input");
+        const datatable = $('#tblSupplierlist').DataTable();
+        datatable.draw();
+        $('#tblSupplierlist_filter .form-control-sm').trigger("input");
+    }, 500);
+}
+function setOneSupplierDataExByName(supplierDataName) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    sideBarService.getOneSupplierDataExByName(supplierDataName).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerModal(data.tsupplier[0]);
+    }).catch(function (err) {
+        $('.fullScreenSpin').css('display', 'none');
+    });
+}
+function setSupplierModal(data) {
+    $('.fullScreenSpin').css('display', 'none');
+    $('#add-supplier-title').text('Edit Supplier');
+    let popSupplierID = data.tsupplier[0].fields.ID || '';
+    let popSupplierName = data.tsupplier[0].fields.ClientName || '';
+    let popSupplierEmail = data.tsupplier[0].fields.Email || '';
+    let popSupplierTitle = data.tsupplier[0].fields.Title || '';
+    let popSupplierFirstName = data.tsupplier[0].fields.FirstName || '';
+    let popSupplierMiddleName = data.tsupplier[0].fields.CUSTFLD10 || '';
+    let popSupplierLastName = data.tsupplier[0].fields.LastName || '';
+    let popSuppliertfn = '' || '';
+    let popSupplierPhone = data.tsupplier[0].fields.Phone || '';
+    let popSupplierMobile = data.tsupplier[0].fields.Mobile || '';
+    let popSupplierFaxnumber = data.tsupplier[0].fields.Faxnumber || '';
+    let popSupplierSkypeName = data.tsupplier[0].fields.SkypeName || '';
+    let popSupplierURL = data.tsupplier[0].fields.URL || '';
+    let popSupplierStreet = data.tsupplier[0].fields.Street || '';
+    let popSupplierStreet2 = data.tsupplier[0].fields.Street2 || '';
+    let popSupplierState = data.tsupplier[0].fields.State || '';
+    let popSupplierPostcode = data.tsupplier[0].fields.Postcode || '';
+    let popSupplierCountry = data.tsupplier[0].fields.Country || LoggedCountry;
+    let popSupplierbillingaddress = data.tsupplier[0].fields.BillStreet || '';
+    let popSupplierbcity = data.tsupplier[0].fields.BillStreet2 || '';
+    let popSupplierbstate = data.tsupplier[0].fields.BillState || '';
+    let popSupplierbpostalcode = data.tsupplier[0].fields.BillPostcode || '';
+    let popSupplierbcountry = data.tsupplier[0].fields.Billcountry || LoggedCountry;
+    let popSuppliercustfield1 = data.tsupplier[0].fields.CUSTFLD1 || '';
+    let popSuppliercustfield2 = data.tsupplier[0].fields.CUSTFLD2 || '';
+    let popSuppliercustfield3 = data.tsupplier[0].fields.CUSTFLD3 || '';
+    let popSuppliercustfield4 = data.tsupplier[0].fields.CUSTFLD4 || '';
+    let popSuppliernotes = data.tsupplier[0].fields.Notes || '';
+    let popSupplierpreferedpayment = data.tsupplier[0].fields.PaymentMethodName || '';
+    let popSupplierterms = data.tsupplier[0].fields.TermsName || '';
+    let popSupplierdeliverymethod = data.tsupplier[0].fields.ShippingMethodName || '';
+    let popSupplieraccountnumber = data.tsupplier[0].fields.ClientNo || '';
+    let popSupplierisContractor = data.tsupplier[0].fields.Contractor || false;
+    let popSupplierissupplier = data.tsupplier[0].fields.IsSupplier || false;
+    let popSupplieriscustomer = data.tsupplier[0].fields.IsCustomer || false;
+
+    $('#edtSupplierCompany').val(popSupplierName);
+    $('#edtSupplierPOPID').val(popSupplierID);
+    $('#edtSupplierCompanyEmail').val(popSupplierEmail);
+    $('#edtSupplierTitle').val(popSupplierTitle);
+    $('#edtSupplierFirstName').val(popSupplierFirstName);
+    $('#edtSupplierMiddleName').val(popSupplierMiddleName);
+    $('#edtSupplierLastName').val(popSupplierLastName);
+    $('#edtSupplierPhone').val(popSupplierPhone);
+    $('#edtSupplierMobile').val(popSupplierMobile);
+    $('#edtSupplierFax').val(popSupplierFaxnumber);
+    $('#edtSupplierSkypeID').val(popSupplierSkypeName);
+    $('#edtSupplierWebsite').val(popSupplierURL);
+    $('#edtSupplierShippingAddress').val(popSupplierStreet);
+    $('#edtSupplierShippingCity').val(popSupplierStreet2);
+    $('#edtSupplierShippingState').val(popSupplierState);
+    $('#edtSupplierShippingZIP').val(popSupplierPostcode);
+    $('#sedtCountry').val(popSupplierCountry);
+    $('#txaNotes').val(popSuppliernotes);
+    $('#sltPreferedPayment').val(popSupplierpreferedpayment);
+    $('#sltTerms').val(popSupplierterms);
+    $('#suppAccountNo').val(popSupplieraccountnumber);
+    $('#edtCustomeField1').val(popSuppliercustfield1);
+    $('#edtCustomeField2').val(popSuppliercustfield2);
+    $('#edtCustomeField3').val(popSuppliercustfield3);
+    $('#edtCustomeField4').val(popSuppliercustfield4);
+
+    if ((data.tsupplier[0].fields.Street === data.tsupplier[0].fields.BillStreet) && (data.tsupplier[0].fields.Street2 === data.tsupplier[0].fields.BillStreet2) &&
+        (data.tsupplier[0].fields.State === data.tsupplier[0].fields.BillState) && (data.tsupplier[0].fields.Postcode === data.tsupplier[0].fields.Postcode) &&
+        (data.tsupplier[0].fields.Country === data.tsupplier[0].fields.Billcountry)) {
+        //templateObject.isSameAddress.set(true);
+        $('#chkSameAsShipping').attr("checked", "checked");
+    }
+    if (data.tsupplier[0].fields.Contractor === true) {
+        // $('#isformcontractor')
+        $('#isformcontractor').attr("checked", "checked");
+    } else {
+        $('#isformcontractor').removeAttr("checked");
+    }
+
+    setTimeout(function() {
+        $('#addSupplierModal').modal('show');
+    }, 200);
+}
+
 function setTaxCodeVS1(taxRateDataName) {
     purchaseService.getTaxCodesVS1().then(function (data) {
         setTaxRateData(data, taxRateDataName);
@@ -1823,12 +2155,24 @@ function setTaxRateData(data, taxRateDataName) {
 
 function setCalculated() {
     if (selectedYodleeID) {
-        let $tblrows = $('#divLineDetail_' + selectedYodleeID + ' #tblrecontransactiondetail tbody tr');
+        let $tblrows = $('#divLineDetail_' + selectedYodleeID + ' #tblReconInvoice tbody tr');
         let lineAmount = 0;
         let subTotal = 0;
         let discountTotal = 0;
         let taxTotal = 0;
         let grandTotal = 0;
+        let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+        let discountRate = 0;
+        if (DepOrWith === "spent") {
+            let customerName = $('#whatDetail_' + selectedYodleeID).val();
+            if (customerName !== "") {
+                let customerDetail = customerList.filter(customer => {
+                    return customer.customername === customerName
+                });
+                customerDetail = customerDetail[0];
+                discountRate = customerDetail.discount;
+            }
+        }
         if (selectedLineID) {
             let lineQty = parseInt($('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineQty').val());
             let lineUnitPrice = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + ' .lineUnitPrice').val();
@@ -1847,17 +2191,11 @@ function setCalculated() {
             // $('#' + selectedLineID + " .lineUnitPriceInc").text(utilityService.modifynegativeCurrencyFormat(lineUnitPriceInc));
             let lineTaxAmount = lineQty * lineUnitPrice * lineTaxRateVal / 100;
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
-            let lineAccountName = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineAccountName").val();
-            let lineDiscountRate = 0;
-            if (lineAccountName !== "") {
-                let customerDetail = customerList.filter(customer => {
-                    return customer.customername === lineAccountName
-                });
-                customerDetail = customerDetail[0];
-                lineDiscountRate = customerDetail.discount;
+
+            let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * discountRate / 100;
+            if (DepOrWith === "spent") {
+                $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             }
-            let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * lineDiscountRate / 100;
-            $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineAmount").text(utilityService.modifynegativeCurrencyFormat(lineAmount));
         }
@@ -1889,61 +2227,75 @@ function setCalculated() {
         });
         $(".sub_total").text(utilityService.modifynegativeCurrencyFormat(subTotal));
         $(".tax_total").text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-        $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
+        if (DepOrWith === "spent") {
+            $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
+        }
         $(".grand_total").text(utilityService.modifynegativeCurrencyFormat(grandTotal));
     }
 }
+function getClientDetail(clientName, clientType) {
+    let clientDetail = null;
+    if (clientType === "customer") {
+        clientDetail = customerList.filter(customer => {
+            return customer.customername === clientName;
+        });
+        clientDetail = clientDetail.length > 0 ? clientDetail[0] : null;
+    } else if (clientType === "supplier") {
+        clientDetail = supplierList.filter(supplier => {
+            return supplier.suppliername === clientName;
+        });
+        clientDetail = clientDetail.length > 0 ? clientDetail[0] : null;
+    }
+    return clientDetail;
+}
 function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
     if (selectedYodleeID !== null) {
-        let clientDetail = customerList.filter(customer => {
-            return customer.customername === $('#whatID_'+selectedYodleeID).val();
-        });
-        clientDetail = clientDetail[0];
-        let discountAmount = (clientDetail !== undefined)? Amount*clientDetail.discount/100: 0;
+        let clientDetail;
+        let accountName = '';
+        if (DepOrWith === "spent") {
+            clientDetail = getClientDetail($('#whatDetail_' + selectedYodleeID).val(), 'customer');
+            accountName = clientDetail? clientDetail.customername:'';
+        } else {
+            clientDetail = getClientDetail($('#whatDetail_' + selectedYodleeID).val(), 'supplier');
+            accountName = clientDetail? clientDetail.suppliername:'';
+        }
+        let discountAmount = 0;
+        if (DepOrWith === "spent") {
+            discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;
+        }
         let taxCodeDetail = taxcodeList.filter(taxcode => {
-            return taxcode.codename === $('#ctaxRateID_'+selectedYodleeID).val();
+            return taxcode.codename === $('#ctaxRate_'+selectedYodleeID).val();
         });
         taxCodeDetail = taxCodeDetail[0];
         let taxAmount = (taxCodeDetail !== undefined)?Amount*taxCodeDetail.coderate/100:0;
         selectedLineID = 'firstLine';
-        // let basedataObj = {
-        //     lineID: selectedLineID,
-        //     product: '',
-        //     description: $('#why_'+selectedYodleeID).val() || '',
-        //     quantity: 1,
-        //     unitPrice: utilityService.modifynegativeCurrencyFormat(Amount),
-        //     unitPriceInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) + taxAmount),
-        //     subtotal: utilityService.modifynegativeCurrencyFormat(Amount),
-        //     account: (clientDetail !== undefined)? clientDetail.customername:'',
-        //     discountPercent: utilityService.modifynegativeCurrencyFormat(discountAmount),
-        //     taxrate: (taxCodeDetail !== undefined)? taxCodeDetail.codename:'',
-        //     taxAmount: utilityService.modifynegativeCurrencyFormat(taxAmount),
-        //     amount: parseFloat(Amount),
-        //     totalAmount: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount),
-        //     totalAmountInc: utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount + taxAmount)
-        // };
-        let accountID = (clientDetail !== undefined)? clientDetail.customerid:'';
-        let accountName = (clientDetail !== undefined)? clientDetail.customername:'';
         let taxrateName = (taxCodeDetail !== undefined)? taxCodeDetail.codename:'';
+
+        $('#whatDetail_'+selectedYodleeID).val(accountName);
+        let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
+        $('#DateIn_'+selectedYodleeID).val(dateIn_val);
 
         $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith==='spent'?'Spent as':'Received as');
         $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith==='spent'?'To':'From');
         $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
-        let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
-        $('#divLineDetail_'+selectedYodleeID+' #DateIn').val(dateIn_val);
         $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(Amount);
         $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith==='spent'?'spent - Spent':'received - Received');
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom1').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom2').text(utilityService.modifynegativeCurrencyFormat(Amount));
+        $('#divLineDetail_'+selectedYodleeID+' #textComment').text($('#why_'+selectedYodleeID).val());
 
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductName').val('');
-        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val($('#why_'+selectedYodleeID).val());
+        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineProductDesc').val('');
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
-        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val(accountID);
-        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val(accountName);
-        $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));
+        if (DepOrWith === "received") {
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val('');
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val('');
+        }
+        if (DepOrWith === "spent") {
+            $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));
+        }
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxRate').val(taxrateName);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxAmount').val(utilityService.modifynegativeCurrencyFormat(taxAmount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAmount').val(utilityService.modifynegativeCurrencyFormat(parseFloat(Amount) - discountAmount));
@@ -2067,6 +2419,22 @@ function closeFindMatch() {
         $('#match_' + selectedYodleeID + ' .btnFindMatch').show();
     }
     selectedYodleeID = null;
+}
+
+function handleSaveError(err) {
+    swal({
+        title: 'Oooops...',
+        text: err,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Try Again'
+    }).then((result) => {
+        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
+        else if (result.dismiss === 'cancel') {
+
+        }
+    });
+    $('.fullScreenSpin').css('display', 'none');
 }
 
 // function connectYodlee() {
