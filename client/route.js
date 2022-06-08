@@ -1751,3 +1751,12 @@ authenticatedRoutes.route('/jobsalessummary', {
         });
     }
 });
+
+authenticatedRoutes.route('/supplierproductreport', {
+    name: 'supplierproductreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierproductreport'
+        });
+    }
+});

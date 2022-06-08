@@ -788,7 +788,7 @@ getCustomersDataByName(dataSearchName) {
 
   getClientVS1() {
       let options = {
-          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount",
+          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
           select: "[Active]=true"
       };
       return this.getList(this.ERPObjects.TCustomerVS1, options);

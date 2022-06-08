@@ -32,14 +32,22 @@ Template.templatesettings.onCreated(() => {
 
 Template.templatesettings.onRendered(function () {
   let templateObject = Template.instance();
-  document.querySelectorAll(".templateItem").forEach((el) => {
+
+  $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+    
+    title = $(this).parent().attr("data-id");
+    number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+    templateObject.generateInvoiceData(title,number);
+       
+ });
+  // document.querySelectorAll(".templateItem").forEach((el) => {
       
-    el.addEventListener("click", function () {
-      title = el.getAttribute("data-id");
-      number = el.getAttribute("data-template-id");
-      templateObject.generateInvoiceData(title,number);
-    });
-  });
+  //   el.addEventListener("click", function () {
+  //     title = el.getAttribute("data-id");
+  //     number = el.getAttribute("data-template-id");
+  //     templateObject.generateInvoiceData(title,number);
+  //   });
+  // });
 
   $("#templatePreviewModal").on("shown.bs.modal", function () {
     const data = templateObject.invoice_data.get();

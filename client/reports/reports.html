@@ -422,6 +422,62 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isPLMonthly}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=monthly">Profit and Loss - Monthly</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPLMonthly" type="checkbox" id="formCheck-PLMonthlyFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLMonthlyFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPLQuarterly}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=quarterly">Profit and Loss - Quarterly</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPLQuarterly" type="checkbox" id="formCheck-PLQuarterlyFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLQuarterlyFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPLYearly}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=yearly">Profit and Loss - Yearly</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPLYearly" type="checkbox" id="formCheck-PLYearlyFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLYearlyFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isPLYTD}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=ytd">Profit and Loss - YTD</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkPLYTD" type="checkbox" id="formCheck-PLYTDFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLYTDFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isBackOrderedPO}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -660,6 +716,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isSupplierProduct}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/supplierlist">Supplier Product Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProductFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SupplierProductFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isTaxSummaryReport}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -845,11 +915,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Profit and Loss - Monthly *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=monthly">Profit and Loss - Monthly *</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPLMonthly" type="checkbox" id="formCheck-PLMonthly" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPLMonthly" type="checkbox" id="formCheck-PLMonthly">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLMonthly"></label>
                                                 </div>
                                             </div>
@@ -866,11 +936,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Profit and Loss - Quarterly *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=quarterly">Profit and Loss - Quarterly *</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPLQuarterly" type="checkbox" id="formCheck-PLQuarterly" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPLQuarterly" type="checkbox" id="formCheck-PLQuarterly">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLQuarterly"></label>
                                                 </div>
                                             </div>
@@ -887,11 +957,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Profit and Loss - Yearly *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=yearly">Profit and Loss - Yearly *</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPLYearly" type="checkbox" id="formCheck-PLYearly" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPLYearly" type="checkbox" id="formCheck-PLYearly">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLYearly"></label>
                                                 </div>
                                             </div>
@@ -908,11 +978,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Profit and Loss - YTD *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/newprofitandloss?daterange=ytd">Profit and Loss - YTD *</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkPLYTD" type="checkbox" id="formCheck-PLYTD" disabled>
+                                                    <input class="custom-control-input favCheckBox chkPLYTD" type="checkbox" id="formCheck-PLYTD">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-PLYTD"></label>
                                                 </div>
                                             </div>
@@ -1038,11 +1108,11 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Supplier Product Report *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/supplierproductreport">Supplier Product Report</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProduct" disabled>
+                                                    <input class="custom-control-input favCheckBox chkSupplierProduct" type="checkbox" id="formCheck-SupplierProduct">
                                                     <label style="cursor: pointer;" class="custom-control-label" for="formCheck-SupplierProduct"></label>
                                                 </div>
                                             </div>
