@@ -5510,6 +5510,12 @@ Template.supplierpaymentcard.events({
     // 'click #sltDepartment': function(event) {
     //     $('#departmentModal').modal('toggle');
     // },
+    "change #sltCurrency": (e) => {
+        if($('#sltCurrency').val() && $('#sltCurrency').val() != "AUD") {
+            $('.foreign-currency-js').css('display', 'block');
+        }
+       
+    },
     'change #exchange_rate': (e) => {
         console.log(e);
         const paymentAmount = parseInt($('#edtPaymentAmount').val());
