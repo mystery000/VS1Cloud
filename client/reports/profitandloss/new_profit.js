@@ -612,35 +612,8 @@ templateObject.getProfitLossLayout = async function() {
 
     // handle Dragging and sorting
     setTimeout(function () {
-      // let $chartWrappper = $(".sortableAccount");
-      // $chartWrappper
-      // .find(".setParentPosition")
-      // .sort(function (a, b) {
-      //   return +a.getAttribute("position") - +b.getAttribute("position");
-      // })
-      // .appendTo($chartWrappper);
-      $(".sortableAccount").sortable({
-        containment: "parent",
-        items: "> div",
-        handle: ".handel",
-        tolerance: "pointer",
-        cursor: "move",
-        opacity: 0.7,
-        revert: 300,
-        delay: 150,
-        dropOnEmpty: true,
-        placeholder: "movable-placeholder",
-        start: function(e, ui) {
-            ui.placeholder.height(ui.helper.outerHeight());
-        }
-      });
-      $(".group-items").sortable({
-          containment: "document",
-          items: ".group-item",
-          placeholder: "item-placeholder",
-          connectWith: '.group-items'
-      }); 
-      console.log('chal pdaa');
+    
+      console.log('chdsdsdsdal sdsdsd');
       var oldContainer;
       $("ol.nested_with_switch").sortable({
           group: 'nested_with_switch',
@@ -649,6 +622,7 @@ templateObject.getProfitLossLayout = async function() {
           exclude: '.noDrag',
           onDrag: function ($item, position, _super, event) {
             $item.parents('.vertical').find('.selected').removeClass('selected');
+            $item.parents('.vertical').find('.selected').removeClass('dragged');
             $item.addClass('selected');
           },
           // onDrop:function ($item, position, _super, event) {
@@ -657,9 +631,9 @@ templateObject.getProfitLossLayout = async function() {
           // },
           serialize: function ($parent, $children, parentIsContainer) {
             var result = $.extend({}, $parent.data())
-             if(parentIsContainer)
+              if(parentIsContainer)
               return [$children]
-            else if ($children[0]){
+              else if ($children[0]){
               result.children = $children
             }
           },

@@ -290,24 +290,7 @@
                         <div class="row">
                             <div class="col-12 col-md-5" style="padding-top: 32px;">
                                 <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Update</button>
-                                <div class="dropdown btnNav periodSelector float-left" style="margin: 8px;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Comparison Period
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item nonePeriod selPeriod" data-period="0" role="presentation" href="#">None</a>
-                                        <hr class="periodSelectorLine" />
-                                        <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Period</a>
-                                        <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Periods</a>
-                                        <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Periods</a>
-                                        <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Periods</a>
-                                        <hr class="periodSelectorLine" />
-                                        <a class="dropdown-item PSother pointer" style="color:#3a3b45;"
-                                            data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
-                                    </div>
-                                </div>
+                                
                                 <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 8px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
                                         id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -355,8 +338,54 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="dropdown btnNav periodSelector float-left" style="margin: 8px;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        Comparison Period
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item nonePeriod selPeriod" data-period="0" role="presentation" href="#">None</a>
+                                        <hr class="periodSelectorLine" />
+                                        <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Period</a>
+                                        <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Periods</a>
+                                        <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Periods</a>
+                                        <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Periods</a>
+                                        <hr class="periodSelectorLine" />
+                                        <a class="dropdown-item PSother pointer" style="color:#3a3b45;"
+                                            data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
+                                    </div>
+                                </div>
                                 <div class="dropdown float-left" style="margin: 8px;">
                                     <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
+                                </div>
+
+
+                                <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 8px;">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="fxRate" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        FX Rate
+                                    </button>
+                                    <div class="dropdown-menu accountingBasisDropdown"
+                                        aria-labelledby="fxRate" style="width: 250px;">
+                                        <span>Show</span>
+                                        <hr class="periodSelectorLine" />
+                                       
+                                        <span class="dropdown-item custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input aud" id="aud" name="checkbox">
+                                            <label class="custom-control-label" for="aud">AUD</label>
+                                        </span>
+                                        <span class="dropdown-item custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input gbp" id="gbp" name="checkbox">
+                                            <label class="custom-control-label" for="gbp">GBP</label>
+                                        </span>
+                                        <span class="dropdown-item custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input usd" id="usd" name="checkbox">
+                                            <label class="custom-control-label" for="usd">USD</label>
+                                        </span>
+                                        
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -1932,32 +1961,31 @@
                                                 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        {{#if item.IsRoot}}
-                                                            <li data-id="5" data-name='Christiano Ronaldo'>
-                                                                <div class="mainHeadingDiv">
-                                                                    <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
-                                                                </div>
-                                                                <ol class="ddllkk">
-                                                                    {{#each acItem in item.subAccounts }}
-                                                                        {{#if acItem.AccountID}}
-                                                                            <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
-                                                                                <span class="childInner">
-                                                                                    <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
-                                                                                </span>
-                                                                            </li>
-                                                                        {{else}}    
-                                                                            <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
-                                                                                <span class="childInner">
-                                                                                    <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
-                                                                                </span>
-                                                                            </li>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                </ol>
-                                                            </li>
-                                                        {{/if}}
+                                                        <li data-id="5" data-name='Christiano Ronaldo'>
+                                                            <div class="mainHeadingDiv">
+                                                                <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
+                                                            </div>
+                                                            <ol class="ddllkk">
+                                                                {{#each acItem in item.subAccounts }}
+                                                                    {{#if acItem.AccountID}}
+                                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
+                                                                            <span class="childInner">
+                                                                                <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
+                                                                            </span>
+                                                                        </li>
+                                                                    {{else}}    
+                                                                        <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
+                                                                            <span class="childInner">
+                                                                                <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
+                                                                            </span>
+                                                                        </li>
+                                                                    {{/if}}
+                                                                {{/each}}
+                                                            </ol>
+                                                        </li>
                                                     {{/each}}
                                                 </ol>
+
                                             </form>
 
 
