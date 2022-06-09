@@ -53,7 +53,7 @@
             }
         </style>
         <div class="row no-gutters justify-content-center mb-3">
-            <div class="col-12 col-md-10">
+            <div class="col-12 col-md-auto">
                 <div class="card shadow" style="margin: 16px;">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
                         <div class="row no-gutters justify-content-between">
@@ -177,45 +177,48 @@
                                     <table class="table table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
-                                                <th>Company</th>
-                                                <th>Job Name</th>
+                                                <th>Customer</th>
+                                                <th>Job Customer</th>
                                                 <th>Job No</th>
-                                                <th>Cost (ex)</th>
-                                                <th>Income (ex)</th>
-                                                <th>Quoted (ex)</th>
-                                                <th>Diff Inc Cost</th>
-                                                <th>Backorders</th>
-                                                <th>Credit</th>
-                                                <th>Profit %</th>
-                                                <th>Profit</th>
+                                                <th>Job Name</th>
+                                                <th>Product Name</th>
+                                                <th>Qty Shipped</th>
+                                                <th>Discount</th>
+                                                <th>Tax</th>
+                                                <th>Amount (ex)</th>
+                                                <th>Amount (inc)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>4x4 World</td>
-                                                <td>Kitchen Repairs</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right text-danger">$ 941.16</td>
-                                                <td class="text-right text-success">$ 1,054.56</td>
-                                                <td class="text-right text-success">$ 741.40</td>
-                                                <td class="text-right text-success">$ 1,000.00</td>
-                                                <td class="text-right">28.00</td>
-                                                <td class="text-right text-danger">-$ 0.45</td>
-                                                <td class="text-right">25.13 %</td>
-                                                <td class="text-right text-success">$ 1,136.11</td>
+                                                <td colspan="10" style="font-weight: 800;">4x4 World</td>
                                             </tr>
                                             <tr>
-                                                <td>ABC</td>
-                                                <td>Kitchen Repairs</td>
-                                                <td class="text-right">0</td>
-                                                <td class="text-right text-danger">$ 8,941.16</td>
-                                                <td class="text-right text-success">$ 38,054.56</td>
-                                                <td class="text-right text-success">$ 541.40</td>
-                                                <td class="text-right text-success">$ 8,000.00</td>
-                                                <td class="text-right">45.00</td>
-                                                <td class="text-right text-warning">$ 0.00</td>
-                                                <td class="text-right">25.13 %</td>
-                                                <td class="text-right text-success">$ 12,136.11</td>
+                                                <td></td>
+                                                <td>4x4 World^Delivery</td>
+                                                <td>#00012</td>
+                                                <td>Food Delivery</td>
+                                                <td>Pepsi Can</td>
+                                                <td>10</td>
+                                                <td class="text-right text-success">$ 0.00</td>
+                                                <td class="text-right text-danger">13.13 %</td>
+                                                <td class="text-right text-success">$ 1,000.00</td>
+                                                <td class="text-right text-success">$ 1,136.11</td>
+                                            </tr>
+                                            <tr class="departmentHeader">
+                                                <td colspan="10" style="font-weight: 800;">4x4 World</td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>4x4 World^Delivery</td>
+                                                <td>#00012</td>
+                                                <td>Food Delivery</td>
+                                                <td>Pepsi Can</td>
+                                                <td>10</td>
+                                                <td class="text-right text-success">$ 0.00</td>
+                                                <td class="text-right text-danger">13.13 %</td>
+                                                <td class="text-right text-success">$ 1,000.00</td>
+                                                <td class="text-right text-success">$ 1,136.11</td>
                                             </tr>
                                             <!-- {{#if records}}
                                                 <tr>
