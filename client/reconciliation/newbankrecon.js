@@ -2526,7 +2526,6 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
 function openTransactionDetail(item){
     if (selectedYodleeID) {
         closeTransactionDetail();
-        closeFindMatch();
     }
     selectedYodleeID = item.YodleeLineID;
     let who = $('#who_'+item.YodleeLineID).val();
@@ -2557,6 +2556,7 @@ function openTransactionDetail(item){
 function closeTransactionDetail() {
     if (selectedYodleeID) {
         $('#divLineDetail_' + selectedYodleeID).hide();
+        $('#divLineFindMatch_' + selectedYodleeID).hide();
         $('#matchNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
         $('#createNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#createNav_' + selectedYodleeID).show();
@@ -2612,7 +2612,6 @@ function setCalculated2() {
 function openFindMatch(item){
     if (selectedYodleeID) {
         closeTransactionDetail();
-        closeFindMatch();
     }
     selectedYodleeID = item.YodleeLineID;
     $('#DepOrWith_'+selectedYodleeID).val(item.deporwith);
@@ -2667,23 +2666,6 @@ function openFindMatch(item){
     $('#divLineFindMatch_'+item.YodleeLineID+ ' #matchTotal2').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
     $('#divLineFindMatch_'+item.YodleeLineID).show();
     setCalculated2();
-}
-function closeFindMatch() {
-    if (selectedYodleeID) {
-        $('#divLineFindMatch_' + selectedYodleeID).hide();
-        $('#matchNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
-        $('#createNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
-        $('#createNav_' + selectedYodleeID).show();
-        $('#transferNav_' + selectedYodleeID).show();
-        $('#btnFindMatchNav_' + selectedYodleeID).show();
-        $('#match_' + selectedYodleeID).addClass('show');
-        $('#match_' + selectedYodleeID).addClass('active');
-        $('#create_' + selectedYodleeID).removeClass('show');
-        $('#create_' + selectedYodleeID).removeClass('active');
-        $('#match_' + selectedYodleeID + ' .textFindMatch').hide();
-        $('#match_' + selectedYodleeID + ' .btnFindMatch').show();
-    }
-    selectedYodleeID = null;
 }
 
 function handleSaveError(err) {
