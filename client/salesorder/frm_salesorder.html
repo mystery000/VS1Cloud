@@ -306,9 +306,6 @@
                                                     </select> -->
                                                 </div>
                                             </div>
-                                            <div class="col-6 col-md-12 col-lg-12">
-                                                {{> CurrencyWidget rate="sell"}}
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -347,6 +344,9 @@
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        {{> CurrencyWidget rate="sell"}}
+                                    </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="row">
                                             <div class="col-6 col-md-12 col-lg-12">
@@ -1709,13 +1709,9 @@
             {{> newstatuspop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
-            {{> currencypop}}
-        </div>
+ 
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
-            {{> newcurrencypop}}
-        </div>
+      
 
         <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
             {{> departmentpop}}

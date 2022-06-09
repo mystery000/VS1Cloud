@@ -17,16 +17,8 @@ export class BaseService {
     };
     return headers;
   }
-  getBaseUrl() {
-    return (
-      URLRequest +
-      this.erpGet.ERPIPAddress +
-      ":" +
-      this.erpGet.ERPPort +
-      "/" +
-      this.erpGet.ERPApi +
-      "/"
-    );
+  getBaseUrl(){
+          return URLRequest + this.erpGet.ERPIPAddress + ':' + this.erpGet.ERPPort + '/' + this.erpGet.ERPApi + '/';
   }
 
   getPostHeaders() {
@@ -41,8 +33,7 @@ export class BaseService {
 
   responseHandler(url, response) {
     if (response === undefined) {
-      let getResponse =
-        "You have lost internet connection, please log out and log back in.";
+      let getResponse = "You have lost internet connection, please log out and log back in.";
       return getResponse;
     } else {
       if (response.statusCode === 200) {
@@ -51,50 +42,52 @@ export class BaseService {
 
           return content;
         } catch (e) {}
+      }else if (response.statusCode === 401) {
+
+        window.indexedDB.databases().then((r) => {
+            for (var i = 0; i < r.length; i++) {
+                window.indexedDB.deleteDatabase(r[i].name);
+            }
+
+        }).then(() => {
+           window.open('/', '_self');
+        });
+
       } else {
         return response.headers.errormessage;
       }
     }
   }
 
-  GET(url) {
-    var that = this;
-    var promise = new Promise(function (resolve, reject) {
-      HTTP.get(
-        that.getBaseUrl() + url,
-        { headers: that.getHeaders() },
-        function (err, response) {
-          var data = that.responseHandler(url, response);
-          if (err || !data) {
-            reject(err);
-          }
-          if (data) {
-            resolve(data);
-          }
-        }
-      );
-    });
-    return promise;
+  GET(url){
+      var that = this;
+      var promise = new Promise(function(resolve, reject) {
+          HTTP.get(that.getBaseUrl() + url, { headers : that.getHeaders()}, function(err, response){
+              var data = that.responseHandler(url, response);
+              if(err || !data){
+                  reject(err);
+              }
+              if(data){
+                  resolve(data);
+              }
+          });
+      });
+      return promise;
   }
-  getList(objName, options) {
-    var that = this;
-    let url = objName;
-    function jsonToQueryString(json) {
-      return (
-        "?" +
-        Object.keys(json)
-          .map(function (key) {
-            return (
-              encodeURIComponent(key) + "=" + encodeURIComponent(json[key])
-            );
-          })
-          .join("&")
-      );
-    }
-    if (options) {
-      url += jsonToQueryString(options);
-    }
-    return that.GET(url);
+  getList(objName, options){
+      var that = this;
+      let url = objName;
+      function jsonToQueryString(json) {
+          return '?' +
+              Object.keys(json).map(function(key) {
+                  return encodeURIComponent(key) + '=' +
+                      encodeURIComponent(json[key]);
+              }).join('&');
+      }
+      if(options){
+          url += jsonToQueryString(options);
+      }
+      return that.GET(url);
   }
   getOneById(objName, id) {
     let url = objName + "/" + id;
@@ -102,22 +95,18 @@ export class BaseService {
   }
 
   POST(url, data) {
-    let that = this;
-    let promise = new Promise(function (resolve, reject) {
-      HTTP.post(
-        that.getBaseUrl() + url,
-        { headers: that.getPostHeaders(), data: data },
-        function (err, response) {
-          let data = that.responseHandler(url, response);
-          if (err) {
-            reject(data);
-          } else {
-            resolve(data);
-          }
-        }
-      );
-    });
-    return promise;
+      let that = this;
+      let promise = new Promise(function (resolve, reject) {
+          HTTP.post(that.getBaseUrl() + url, {headers: that.getPostHeaders(), data: data}, function (err, response) {
+              let data = that.responseHandler(url, response);
+              if(err){
+                  reject(data);
+              } else{
+                  resolve(data);
+              }
+          });
+      });
+      return promise;
   }
 
   POSTJsonIn(url, data) {

@@ -10,7 +10,8 @@ let vs1chartService = new VS1ChartService();
 let utilityService = new UtilityService();
 
 import Customer from "./Customer";
-
+import { SideBarService } from '../../js/sidebar-service';
+import '../../lib/global/indexdbstorage.js';
 Template.top10Customers.onCreated(function () {
   const templateObject = Template.instance();
 
@@ -52,8 +53,6 @@ Template.top10Customers.onRendered(function () {
       let overDuePayment = 0;
 
       topData.topTenData.set(data);
-
-      //console.log(topTenData1);
 
       templateObject.topTenData.set(topTenData1);
 
@@ -161,13 +160,10 @@ Template.top10Customers.onRendered(function () {
     return new Promise((res, rej) => {
       var salesBoardService = new SalesBoardService();
 
-      getVS1Data("TInvoiceEx")
-        .then(function (dataObject) {
-          //console.log(dataObject);
+      getVS1Data("TInvoiceList").then(function (dataObject) {
           if (dataObject.length == 0) {
             salesBoardService.getInvSaleByCustomer().then((data) => {
               // templateObject.getAllData(data);
-
               // This will return not deleted data only
               let filterData = _.filter(data.tinvoiceex, function (data) {
                 return !data.deleted;
@@ -208,14 +204,14 @@ Template.top10Customers.onRendered(function () {
             });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            let useData = data.tinvoiceex;
+            let useData = data.tinvoicelist;
             let invoiceItemObj = {};
             let invoiceItems = [];
             for (let j in useData) {
               invoiceItemObj = {
-                deleted: useData[j].fields.Deleted || false,
-                CustomerName: useData[j].fields.CustomerName || "",
-                TotalAmountInc: useData[j].fields.TotalAmountInc || 0,
+                deleted: useData[j].Deleted || false,
+                CustomerName: useData[j].CustomerName || "",
+                TotalAmountInc: useData[j].TotalAmountInc || 0,
               };
               // totaldeptquantity += data.tproductvs1class[j].InStockQty;
               invoiceItems.push(invoiceItemObj);
@@ -254,8 +250,7 @@ Template.top10Customers.onRendered(function () {
               callback(sortedArray);
             }
           }
-        })
-        .catch(function (err) {
+        }).catch(function (err) {
           salesBoardService.getInvSaleByCustomer().then((data) => {
             // templateObject.getAllData(data);
             let filterData = _.filter(data.tinvoiceex, function (data) {

@@ -18,6 +18,7 @@ export default class ProfitLossLayoutFields {
         LayoutID,
         LayoutToUse,
         Level,
+        Level0Order,
         Level1Group,
         Level1Order,
         Level2Order,
@@ -28,6 +29,7 @@ export default class ProfitLossLayoutFields {
         Pos,
         Position,
         Recno,
+        Steps,
         Up
     }) {
       this.Account = Account;
@@ -49,6 +51,7 @@ export default class ProfitLossLayoutFields {
       this.LayoutToUse = LayoutToUse;
       this.Level = Level;
       this.Level1Group = Level1Group;
+      this.Level0Order = Level0Order;
       this.Level1Order = Level1Order;
       this.Level2Order = Level2Order;
       this.Level3Order = Level3Order;
@@ -58,7 +61,7 @@ export default class ProfitLossLayoutFields {
       this.Pos = Pos;
       this.Position = Position;
       this.Recno = Recno;
+      this.Steps = Steps;
       this.Up = Up;
     }
   }
-  

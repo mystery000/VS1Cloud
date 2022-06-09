@@ -11,7 +11,8 @@
       </h2>
     </header>
 
-    {{> crm_top_cards}}
+    <!-- All Cards List -->
+    {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
     {{> crm_top_menu}}
 
     {{> alltaskdatatable}}
@@ -506,7 +507,7 @@
     }
 
     .taskDescription {
-      margin: 0xp 4px;
+      margin: 0 4px;
       margin-left: 64px;
       /* font-size: 12px; */
     }
@@ -724,7 +725,7 @@
     #addTaskLabelWrapper,
     #detailTaskLabelWrapper {
       width: 270px;
-      height: 300px;
+      max-height: 300px;
       overflow-y: auto;
     }
 

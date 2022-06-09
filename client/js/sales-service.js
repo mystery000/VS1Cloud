@@ -54,7 +54,8 @@ export class SalesBoardService extends BaseService {
     getInvSaleCustomer() {
       let options = {
           PropertyList: "ID,TotalAmountInc,printflag,converted,SalesStatus,DueDate,CustomerName,SaleDate,CustPONumber,TotalPaid,TotalBalance,deleted,IsPaid",
-          select: "[deleted]=false"
+          select: "[deleted]=false",
+          LimitCount:'"'+initialDataLoad+'"'
       };
         return this.getList(this.ERPObjects.TInvoiceEx, options);
     }
@@ -80,7 +81,8 @@ export class SalesBoardService extends BaseService {
     getInvSaleForChart() {
         let options = {
             PropertyList: "ID,TotalAmountInc,printflag,converted,SalesStatus,DueDate,CustomerName,SaleDate,CustPONumber,TotalPaid,TotalBalance",
-            select: "[IsPaid]=false and [deleted]=false"
+            select: "[IsPaid]=false and [deleted]=false",
+            LimitCount:'"'+initialDataLoad+'"'
         };
         return this.getList(this.ERPObjects.TInvoice, options);
 
@@ -269,6 +271,7 @@ export class SalesBoardService extends BaseService {
         let options = {
             PropertyList: "ID,ProductName,PurchaseDescription,BuyQty1Cost,TaxCodePurchase,ProductPrintName,ProductCode,SalesDescription,UOMSales",
             select: "[Active]=true",
+            LimitCount:'"'+initialDataLoad+'"'
         };
         return this.getList(this.ERPObjects.TProduct, options);
     }
@@ -355,6 +358,7 @@ export class SalesBoardService extends BaseService {
         let options = {
             PropertyList: "ClientName,ContactName,ID,DocNumber,TotalAmount,TotalTax,TotalAmountInc,OrderDate,DueDate,Comments,SupplierInvoiceNumber,GlobalRef,ETADate,Invoiced,Deleted,SalesComments,Approved,TotalBalance",
             select: "[deleted]=false and [IsBill]=true",
+            LimitCount:'"'+initialDataLoad+'"'
         };
         return this.getList(this.ERPObjects.TBill, options);
     }
@@ -440,6 +444,7 @@ export class SalesBoardService extends BaseService {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,SaleCustField1,SaleCustField2,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments",
         select: "[Deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.TSalesOrder, options);
     }
@@ -448,6 +453,7 @@ export class SalesBoardService extends BaseService {
       let options = {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,SaleCustField1,SaleCustField2,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        LimitCount:'"'+initialDataLoad+'"'
 
       };
       return this.getList(this.ERPObjects.TsalesOrderNonBackOrder, options);
@@ -458,6 +464,7 @@ export class SalesBoardService extends BaseService {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,DueDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments",
         select: "[Deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.TQuote, options);
     }
@@ -466,6 +473,7 @@ export class SalesBoardService extends BaseService {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,DueDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,IsBackOrder",
         select: "[Deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.TInvoice, options);
     }
@@ -475,6 +483,7 @@ export class SalesBoardService extends BaseService {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,DueDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,IsBackOrder",
         select: "[Deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.TRefundSale, options);
     }
@@ -483,6 +492,7 @@ export class SalesBoardService extends BaseService {
       let options = {
 
         PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,DueDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        LimitCount:'"'+initialDataLoad+'"'
 
       };
       return this.getList(this.ERPObjects.TInvoiceNonBackOrder, options);
@@ -493,6 +503,7 @@ export class SalesBoardService extends BaseService {
 
         FilterString: "SaleType='Invoice'",
         select: "[Deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.BackOrderSalesList, options);
     }
@@ -508,7 +519,8 @@ export class SalesBoardService extends BaseService {
     getInvoicePrint() {
       let options = {
           PropertyList: "ID,DocNumber,ClientName,ClientPrintName,SaleClassName,EmployeeName,SaleDate,TotalAmount,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,ShipDate,TermsName,DueDate,BackOrderGlobalRef,SalesStatus",
-          select: "[deleted]=false"
+          select: "[deleted]=false",
+          LimitCount:'"'+initialDataLoad+'"'
       };
       return this.getList(this.ERPObjects.TInvoice, options);
   }
@@ -532,7 +544,8 @@ export class SalesBoardService extends BaseService {
   getInvSaleByCustomer() {
     let options = {
         PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
-        select: "[deleted]=false"
+        select: "[deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
     };
       return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
@@ -540,7 +553,8 @@ export class SalesBoardService extends BaseService {
   getPurchaseBySupplier() {
     let options = {
         PropertyList: "ID,DueDate,ClientName,OrderDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc",
-        select: "[deleted]=false"
+        select: "[deleted]=false",
+        LimitCount:'"'+initialDataLoad+'"'
     };
       return this.getList(this.ERPObjects.TPurchaseOrderEx, options);
   }

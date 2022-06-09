@@ -2,11 +2,12 @@
     <style>
         .currency-module {
             display: flex;
+            /* display:none!important;*/
             flex-direction: row;
             flex-wrap: wrap;
-            border: 1px solid rgb(215, 215, 215);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
+            /* border: 1px solid rgb(215, 215, 215); */
+            /* padding: 0.75rem; */
+            /* border-radius: 0.5rem; */
             /* max-width: 200px; */
         }
 
@@ -26,7 +27,17 @@
         </div>
     </div>
 
+   
+
     <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
         {{> currencypop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
+        {{> newcurrencypop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
+        {{> CountryModal}}
     </div>
 </template>

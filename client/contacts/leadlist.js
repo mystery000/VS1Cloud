@@ -18,7 +18,7 @@ Template.leadlist.onRendered(function() {
     let splashArrayLeadList = [];
     const tableHeaderList = [];
     if(FlowRouter.current().queryParams.success){
-       // $('.btnRefresh').addClass('btnRefreshAlert');
+       $('.btnRefresh').addClass('btnRefreshAlert');
     }
 
     templateObject.getLeads = function () {
@@ -270,7 +270,7 @@ Template.leadlist.events({
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-                            FlowRouter.go('/leadlist');
+                            FlowRouter.go('/leadscard');
                         } else if (result.dismiss === 'cancel') {
                             //$('#productListModal').modal('toggle');
                         }

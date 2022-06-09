@@ -21,6 +21,7 @@ var template_list = [
   "Statements",
   "Delivery Docket",
 ];
+
 var modal_data = [];
 
 Template.templatesettings.onCreated(() => {
@@ -31,12 +32,22 @@ Template.templatesettings.onCreated(() => {
 
 Template.templatesettings.onRendered(function () {
   let templateObject = Template.instance();
-  document.querySelectorAll(".templateItem").forEach((el) => {
-    el.addEventListener("click", function () {
-      title = el.getAttribute("data-id");
-      templateObject.generateInvoiceData(title);
-    });
-  });
+
+  $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+    
+    title = $(this).parent().attr("data-id");
+    number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
+    templateObject.generateInvoiceData(title,number);
+       
+ });
+  // document.querySelectorAll(".templateItem").forEach((el) => {
+      
+  //   el.addEventListener("click", function () {
+  //     title = el.getAttribute("data-id");
+  //     number = el.getAttribute("data-template-id");
+  //     templateObject.generateInvoiceData(title,number);
+  //   });
+  // });
 
   $("#templatePreviewModal").on("shown.bs.modal", function () {
     const data = templateObject.invoice_data.get();
@@ -53,8 +64,7 @@ Template.templatesettings.onRendered(function () {
   function updateTemplate(object_invoce) {
     $("#templatePreviewModal").modal("toggle");
     if (object_invoce.length > 0) {
-      console.log("entered");
-
+     
       $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
       $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
       $("#templatePreviewModal .o_address1").text(
@@ -151,11 +161,23 @@ Template.templatesettings.onRendered(function () {
       $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
     
       if (object_invoce[0]["paylink"] == "") {
-        $("#templatePreviewModal .link").hide();
-        $("#templatePreviewModal .linkText").hide();
+            $("#templatePreviewModal .link").hide();
+            $("#templatePreviewModal .linkText").hide();
       } else {
-        $("#templatePreviewModal .link").show();
-        $("#templatePreviewModal .linkText").show();
+            $("#templatePreviewModal .link").show();
+            $("#templatePreviewModal .linkText").show();
+      }
+
+      if(object_invoce[0]["customfield1"] == "")
+      {   
+            $('#customfieldlable').css('display', 'none');
+            $('#customfieldlabledata').css('display', 'none');
+
+      }
+      else
+      {
+            $('#customfieldlable').css('display', 'block');
+            $('#customfieldlabledata').css('display', 'block');
       }
 
     //   table header
@@ -207,7 +229,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   // show bill data with dummy data
-  function showBillData(template_title) {
+  function showBillData(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -216,37 +238,139 @@ Template.templatesettings.onRendered(function () {
       "$0.00",
       "$900.00",
     ]);
-    let item = {
-      o_url: "vs1cloud.com",
-      o_name: "Sample Company",
-      o_address: "123 street",
-      o_city: "Los Angeles",
-      o_state: "Califonia 12345",
-      o_reg: "",
-      o_abn: "ABN : 5678905",
-      o_phone: "Phone : 25151944",
-      title: template_title,
-      date: "30 / 03 / 2022",
-      invoicenumber: "789",
-      refnumber: "",
-      pqnumber: "",
-      duedate: "",
-      paylink: "",
-      supplier_type: "Supplier",
-      supplier_name : "<p>Car Wash Express</p>",
-      supplier_addr : "",
-      fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-      subtotal : "$900.00",
-      gst : "$0.00",
-      total : "$900.00",
-      paid_amount : "$900.00",
-      bal_due : "$0.00",
-      bsb : "",
-      account : "",
-      swift : "",
-      applied : "",
-      data: array_data,
-    };
+
+    let item = '';
+ 
+
+    if(number == 1)
+    {
+
+       
+           item = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "30 / 03 / 2022",
+            invoicenumber: "789",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "<p>Car Wash Express</p>",
+            supplier_addr : "",
+            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+            subtotal : "$900.00",
+            gst : "$0.00",
+            total : "$900.00",
+            paid_amount : "$900.00",
+            bal_due : "$0.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            applied : "",
+            data: array_data,
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+
+    }
+    else if(number == 2)
+    {
+           item = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "30 / 03 / 2022",
+            invoicenumber: "789",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "<p>Car Wash Express</p>",
+            supplier_addr : "",
+            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+            subtotal : "$900.00",
+            gst : "$0.00",
+            total : "$900.00",
+            paid_amount : "$900.00",
+            bal_due : "$0.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            applied : "",
+            data: array_data,
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+    }
+    else{
+
+        
+      item = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title,
+        date: "30 / 03 / 2022",
+        invoicenumber: "789",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "",
+        paylink: "",
+        supplier_type: "Supplier",
+        supplier_name : "<p>Car Wash Express</p>",
+        supplier_addr : "",
+        fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+        subtotal : "$900.00",
+        gst : "$0.00",
+        total : "$900.00",
+        paid_amount : "$900.00",
+        bal_due : "$0.00",
+        bsb : "",
+        account : "",
+        swift : "",
+        applied : "",
+        data: array_data,
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
+      };
+
+
+
+
+    }
+   
     object_invoce.push(item);
     $("#templatePreviewModal .field_payment").hide();
     $("#templatePreviewModal .field_amount").show();
@@ -256,7 +380,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   //show credit data with dummy data
-  function showCreditData(template_title) {
+  function showCreditData(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -272,37 +396,134 @@ Template.templatesettings.onRendered(function () {
       "$70.00",
     ]);
 
-    let item_credits = {
-      o_url: "vs1cloud.com",
-      o_name: "Sample Company",
-      o_address: "123 street",
-      o_city: "Los Angeles",
-      o_state: "Califonia 12345",
-      o_reg: "",
-      o_abn: "ABN : 5678905",
-      o_phone: "Phone : 25151944",
-      title: template_title,
-      date: "",
-      invoicenumber: "17/03/2022",
-      refnumber: "",
-      pqnumber: "",
-      duedate: "",
-      paylink: "",
-      supplier_type: "Supplier",
-      supplier_name : "<p>The interesting <br>Company</p>",
-      supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
-      fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-      subtotal : "$125.00",
-      gst : "$0.00",
-      total : "$125.00",
-      paid_amount : "$0.00",
-      bal_due : "$125.00",
-      bsb : "",
-      account : "",
-      swift : "",
-      data: array_data,
-      applied : ""
-    };
+    let item_credits = '';
+    
+    if(number == 1)
+    {
+       item_credits = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title,
+        date: "",
+        invoicenumber: "17/03/2022",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "",
+        paylink: "",
+        supplier_type: "Supplier",
+        supplier_name : "<p>The interesting <br>Company</p>",
+        supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+        fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+        subtotal : "$125.00",
+        gst : "$0.00",
+        total : "$125.00",
+        paid_amount : "$0.00",
+        bal_due : "$125.00",
+        bsb : "",
+        account : "",
+        swift : "",
+        data: array_data,
+        applied : "",
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
+      };
+
+    }
+    else if(number == 2)
+    {
+         item_credits = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "ABN : 5678905",
+          o_phone: "Phone : 25151944",
+          title: template_title,
+          date: "",
+          invoicenumber: "17/03/2022",
+          refnumber: "",
+          pqnumber: "",
+          duedate: "",
+          paylink: "",
+          supplier_type: "Supplier",
+          supplier_name : "<p>The interesting <br>Company</p>",
+          supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+          fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+          subtotal : "$125.00",
+          gst : "$0.00",
+          total : "$125.00",
+          paid_amount : "$0.00",
+          bal_due : "$125.00",
+          bsb : "",
+          account : "",
+          swift : "",
+          data: array_data,
+          applied : "",
+          customfield1:'customfield1',
+          customfield2:'customfield2',
+          customfield3:'customfield3',
+          customfieldlabel1:'customfield1 data',
+          customfieldlabel2:'customfield2 data',
+          customfieldlabel3:'customfield3 data',
+        };
+
+    }
+    else
+    {
+
+      item_credits = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title,
+        date: "",
+        invoicenumber: "17/03/2022",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "",
+        paylink: "",
+        supplier_type: "Supplier",
+        supplier_name : "<p>The interesting <br>Company</p>",
+        supplier_addr : "<p>123 Street <br> PE Eastern 5115 <br> Australia</p>",
+        fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+        subtotal : "$125.00",
+        gst : "$0.00",
+        total : "$125.00",
+        paid_amount : "$0.00",
+        bal_due : "$125.00",
+        bsb : "",
+        account : "",
+        swift : "",
+        data: array_data,
+        applied : "",
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
+      };
+
+
+    }
+   
 
     object_invoce.push(item_credits);
 
@@ -310,12 +531,12 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal .field_amount").show();
 
     updateTemplate(object_invoce);
-
     saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+
   }
 
   //show customer payment info with DummyData
-  function showCustomerPayment(template_title) {
+  function showCustomerPayment(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -328,37 +549,134 @@ Template.templatesettings.onRendered(function () {
       "$0.00",
     ]);
 
-    let item_payments = {
-      o_url: "vs1cloud.com",
-      o_name: "Sample Company",
-      o_address: "123 street",
-      o_city: "Los Angeles",
-      o_state: "Califonia 12345",
-      o_reg: "",
-      o_abn: "ABN : 5678905",
-      o_phone: "Phone : 25151944",
-      title: template_title,
-      date: "14/04/2022",
-      invoicenumber: "",
-      refnumber: "5677",
-      pqnumber: "",
-      duedate: "",
-      paylink: "",
-      supplier_type: "Customer",
-      supplier_name : "<p>Brand New <br> Company </p>",
-      supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
-      fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-      subtotal : "",
-      gst : "",
-      total : "",
-      paid_amount : "",
-      bal_due : "",
-      bsb : "",
-      account : "",
-      swift : "",
-      data: array_data,
-      applied : "$50.00"
-    };
+    let item_payments = '';
+    if(number == 1)
+    {
+           item_payments = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "5677",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "<p>Brand New <br> Company </p>",
+            supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+            fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "$50.00",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+            
+          };
+
+    }
+    else if(number == 2)
+    {
+       item_payments = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title,
+        date: "14/04/2022",
+        invoicenumber: "",
+        refnumber: "5677",
+        pqnumber: "",
+        duedate: "",
+        paylink: "",
+        supplier_type: "Customer",
+        supplier_name : "<p>Brand New <br> Company </p>",
+        supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+        fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+        subtotal : "",
+        gst : "",
+        total : "",
+        paid_amount : "",
+        bal_due : "",
+        bsb : "",
+        account : "",
+        swift : "",
+        data: array_data,
+        applied : "$50.00",
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+      };
+
+    }
+    else
+    {
+
+      item_payments = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title,
+        date: "14/04/2022",
+        invoicenumber: "",
+        refnumber: "5677",
+        pqnumber: "",
+        duedate: "",
+        paylink: "",
+        supplier_type: "Customer",
+        supplier_name : "<p>Brand New <br> Company </p>",
+        supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
+        fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+        subtotal : "",
+        gst : "",
+        total : "",
+        paid_amount : "",
+        bal_due : "",
+        bsb : "",
+        account : "",
+        swift : "",
+        data: array_data,
+        applied : "$50.00",
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
+        
+      };
+
+    }
+   
 
     object_invoce.push(item_payments);
 
@@ -371,7 +689,7 @@ Template.templatesettings.onRendered(function () {
   }
 
     //show customer payment info with DummyData
-    function showCustomerStatments(template_title) {
+  function showCustomerStatments(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -403,38 +721,135 @@ Template.templatesettings.onRendered(function () {
             "$0.00",
             "-$15,000.00",
           ]);
-    
-        let item_statement = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "",
-          o_state: "",
-          o_reg: "",
-          o_abn: "ABN : 5678905",
-          o_phone: "Phone : 25151944",
-          title: template_title,
-          date: "11/04/2022",
-          invoicenumber: "",
-          refnumber: "",
-          pqnumber: "",
-          duedate: "",
-          paylink: "Pay Now",
-          supplier_type: "Customer",
-          supplier_name : "John Wayne Inc",
-          supplier_addr : "",
-          fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
-          subtotal : "",
-          gst : "",
-          total : "",
-          paid_amount : "",
-          bal_due : "$100,000.00",
-          bsb : "",
-          account : "",
-          swift : "",
-          data: array_data,
-          applied : "$0.00"
-        };
+      
+        let item_statement = '';
+        if(number == 1)
+        {
+           item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "",
+            o_state: "",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "John Wayne Inc",
+            supplier_addr : "",
+            fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "$100,000.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "$0.00",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+
+        }
+        else if(number == 2)
+        {  
+           item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "",
+            o_state: "",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "John Wayne Inc",
+            supplier_addr : "",
+            fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "$100,000.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "$0.00",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+
+        }
+        else{
+
+          item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "",
+            o_state: "",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title,
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "John Wayne Inc",
+            supplier_addr : "",
+            fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "$100,000.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "$0.00",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+
+
+
+        }
+      
     
         object_invoce.push(item_statement);
 
@@ -445,10 +860,10 @@ Template.templatesettings.onRendered(function () {
         updateTemplate(object_invoce);
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-      }
+  }
 
   //show invoice payment info with DummyData
-  function showInvoice(template_title) {
+  function showInvoice(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -468,39 +883,132 @@ Template.templatesettings.onRendered(function () {
         "$0.00",
         "$0.00",
       ]);
+    let item_invoices = '';
+    if(number == 1)
+    {
+             item_invoices = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "ABN : 5678905",
+              o_phone: "Phone : 25151944",
+              title: template_title + "733",
+              date: "12/04/2022",
+              invoicenumber: "12/04/2022",
+              refnumber: "",
+              pqnumber: "",
+              duedate: "14/04/2022",
+              paylink: "Pay Now",
+              supplier_type: "Customer",
+              supplier_name : "<p>Car Wash Express</p>",
+              supplier_addr : "",
+              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+              subtotal : "$10.00",
+              gst : "$0.00",
+              total : "$10.00",
+              paid_amount : "$0.00",
+              bal_due : "$10.00",
+              bsb : "4654-454",
+              account : "16161616",
+              swift : "WPOCA5s",
+              data: array_data,
+              applied : "",
+              customfield1:'',
+              customfield2:'',
+              customfield3:'',
+              customfieldlabel1:'',
+              customfieldlabel2:'',
+              customfieldlabel3:'',
+              
+            };
 
 
-    let item_invoices = {
-      o_url: "vs1cloud.com",
-      o_name: "Sample Company",
-      o_address: "123 street",
-      o_city: "Los Angeles",
-      o_state: "Califonia 12345",
-      o_reg: "",
-      o_abn: "ABN : 5678905",
-      o_phone: "Phone : 25151944",
-      title: template_title + "733",
-      date: "12/04/2022",
-      invoicenumber: "12/04/2022",
-      refnumber: "",
-      pqnumber: "",
-      duedate: "14/04/2022",
-      paylink: "Pay Now",
-      supplier_type: "Customer",
-      supplier_name : "<p>Car Wash Express</p>",
-      supplier_addr : "",
-      fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-      subtotal : "$10.00",
-      gst : "$0.00",
-      total : "$10.00",
-      paid_amount : "$0.00",
-      bal_due : "$10.00",
-      bsb : "4654-454",
-      account : "16161616",
-      swift : "WPOCA5s",
-      data: array_data,
-      applied : ""
-    };
+    }
+    else if(number == 2)
+    {
+             item_invoices = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "ABN : 5678905",
+              o_phone: "Phone : 25151944",
+              title: template_title + "733",
+              date: "12/04/2022",
+              invoicenumber: "12/04/2022",
+              refnumber: "",
+              pqnumber: "",
+              duedate: "14/04/2022",
+              paylink: "Pay Now",
+              supplier_type: "Customer",
+              supplier_name : "<p>Car Wash Express</p>",
+              supplier_addr : "",
+              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+              subtotal : "$10.00",
+              gst : "$0.00",
+              total : "$10.00",
+              paid_amount : "$0.00",
+              bal_due : "$10.00",
+              bsb : "4654-454",
+              account : "16161616",
+              swift : "WPOCA5s",
+              data: array_data,
+              applied : "",
+              customfield1:'Custom Field 1',
+              customfield2:'Custom Field 2',
+              customfield3:'Custom Field 3',
+              customfieldlabel1:'Cat 1',
+              customfieldlabel2:'25 ',
+              customfieldlabel3:'22423',
+            };
+
+    }
+    else{
+
+           item_invoices = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title + "733",
+            date: "12/04/2022",
+            invoicenumber: "12/04/2022",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "<p>Car Wash Express</p>",
+            supplier_addr : "",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$10.00",
+            gst : "$0.00",
+            total : "$10.00",
+            paid_amount : "$0.00",
+            bal_due : "$10.00",
+            bsb : "4654-454",
+            account : "16161616",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+    }
+    
 
     object_invoce.push(item_invoices);
 
@@ -513,7 +1021,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   //show invoice back  info with DummyData
-  function showInvoiceBack(template_title) {
+    function showInvoiceBack(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -534,7 +1042,11 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
         ]);
 
-    let item_invoices_back = {
+     let item_invoices_back = '';
+
+    if(number == 1)
+    {
+        item_invoices_back = {
         o_url: "vs1cloud.com",
         o_name: "Sample Company",
         o_address: "123 street",
@@ -563,8 +1075,101 @@ Template.templatesettings.onRendered(function () {
         account : "16161616",
         swift : "WPOCA5s",
         data: array_data,
-        applied : ""
+        applied : "",
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
     };
+
+    }
+    else if(number == 2)
+    {
+
+       item_invoices_back = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title + "733",
+        date: "12/04/2022",
+        invoicenumber: "12/04/2022",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "14/04/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name : "<p>Car Wash Express</p>",
+        supplier_addr : "",
+        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+        subtotal : "$10.00",
+        gst : "$0.00",
+        total : "$10.00",
+        paid_amount : "$0.00",
+        bal_due : "$10.00",
+        bsb : "4654-454",
+        account : "16161616",
+        swift : "WPOCA5s",
+        data: array_data,
+        applied : "",
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+    };
+
+    }
+    else
+    {
+      item_invoices_back = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "ABN : 5678905",
+        o_phone: "Phone : 25151944",
+        title: template_title + "733",
+        date: "12/04/2022",
+        invoicenumber: "12/04/2022",
+        refnumber: "",
+        pqnumber: "",
+        duedate: "14/04/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name : "<p>Car Wash Express</p>",
+        supplier_addr : "",
+        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+        subtotal : "$10.00",
+        gst : "$0.00",
+        total : "$10.00",
+        paid_amount : "$0.00",
+        bal_due : "$10.00",
+        bsb : "4654-454",
+        account : "16161616",
+        swift : "WPOCA5s",
+        data: array_data,
+        applied : "",
+        customfield1:'',
+        customfield2:'',
+        customfield3:'',
+        customfieldlabel1:'',
+        customfieldlabel2:'',
+        customfieldlabel3:'',
+    };
+
+    }
+
+    
 
     object_invoce.push(item_invoices_back);
     $("#templatePreviewModal .field_payment").show();
@@ -573,11 +1178,11 @@ Template.templatesettings.onRendered(function () {
     updateTemplate(object_invoce);
 
     saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-  }
+    }
 
 
     //show purchase orders  info with DummyData
-    function showPurchaseOrder(template_title) {
+    function showPurchaseOrder(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -588,38 +1193,138 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
           "$0.00",
         ]);
+        let item_purchase = '';
+        if(number == 1)
+        {
+           item_purchase = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "29/03/2022",
+            invoicenumber: ".",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "29/03/2022",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "<p>ABC Building Company</p>",
+            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+            
+          };
 
-        let item_purchase = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 287",
-          date: "29/03/2022",
-          invoicenumber: ".",
-          refnumber: "",
-          pqnumber: "",
-          duedate: "29/03/2022",
-          paylink: "",
-          supplier_type: "Supplier",
-          supplier_name : "<p>ABC Building Company</p>",
-          supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
-          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "$0.00",
-          gst : "$0.00",
-          total : "$0.00",
-          paid_amount : "",
-          bal_due : "",
-          bsb : "",
-          account : "",
-          swift : "",
-          data: array_data,
-          applied : ""
-        };
+
+        }
+        else if(number == 2)
+        {
+
+           item_purchase = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "29/03/2022",
+            invoicenumber: ".",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "29/03/2022",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "<p>ABC Building Company</p>",
+            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+        }
+        else{
+
+
+          item_purchase = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "29/03/2022",
+            invoicenumber: ".",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "29/03/2022",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "<p>ABC Building Company</p>",
+            supplier_addr : "<p> Dallas <br> Texas 8877 <br> United States",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+            
+          };
+
+
+        }
+
+       
 
         object_invoce.push(item_purchase);
         $("#templatePreviewModal .field_payment").hide();
@@ -631,7 +1336,7 @@ Template.templatesettings.onRendered(function () {
 
 
     //show Quotes  info with DummyData
-    function showQuotes(template_title) {
+    function showQuotes(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -643,37 +1348,135 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
         ]);
 
-        let item_quote = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 287",
-          date: "14/04/2022",
-          invoicenumber: "",
-          refnumber: "",
-          pqnumber: "_",
-          duedate: "14/04/2022",
-          paylink: "Pay Now",
-          supplier_type: "Customer",
-          supplier_name : "<p>Accenture Software Dev</p>",
-          supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
-          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "$0.00",
-          gst : "$0.00",
-          total : "$0.00",
-          paid_amount : "$0.00",
-          bal_due : "$0.00",
-          bsb : "4654-454",
-          account : "151515",
-          swift : "WPOCA5s",
-          data: array_data,
-          applied : ""
-        };
+        let item_quote = '';
+
+        if(number == 1)
+        {
+           item_quote = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "_",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "<p>Accenture Software Dev</p>",
+            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
+            bsb : "4654-454",
+            account : "151515",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+
+          };
+
+        }
+        else if(number == 2)
+        {
+           item_quote = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "_",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "<p>Accenture Software Dev</p>",
+            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
+            bsb : "4654-454",
+            account : "151515",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+        }
+        else{
+
+          item_quote = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "_",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "<p>Accenture Software Dev</p>",
+            supplier_addr : "<p>Building 3 , Waterfall Corporate <br> South Africa</p>",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
+            bsb : "4654-454",
+            account : "151515",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+
+          };
+
+
+        }
+     
 
         object_invoce.push(item_quote);
         $("#templatePreviewModal .field_payment").show();
@@ -685,7 +1488,7 @@ Template.templatesettings.onRendered(function () {
 
 
     //show refund  info with DummyData
-    function showRefund(template_title) {
+    function showRefund(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -696,38 +1499,137 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
           "-$50.00",
         ]);
+        let item_refund = '';
 
-        let item_refund = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 738",
-          date: "14/04/2022",
-          invoicenumber: "",
-          refnumber: "",
-          pqnumber: "90 days",
-          duedate: "29/03/2022",
-          paylink: "",
-          supplier_type: "Customer",
-          supplier_name : "<p>Accenture Software Dev</p>",
-          supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
-          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "-$50.00",
-          gst : "$0.00",
-          total : "-$50.00",
-          paid_amount : "$0.00",
-          bal_due : "-$50.00",
-          bsb : "",
-          account : "",
-          swift : "",
-          data: array_data,
-          applied : ""
-        };
+        if(number == 1)
+        {
+           item_refund = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 738",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "90 days",
+            duedate: "29/03/2022",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "<p>Accenture Software Dev</p>",
+            supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "-$50.00",
+            gst : "$0.00",
+            total : "-$50.00",
+            paid_amount : "$0.00",
+            bal_due : "-$50.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+            
+          };
+
+        }
+        else if(number == 2)
+        {
+             item_refund = {
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "5678905",
+              o_phone: "25151944",
+              title: template_title + " 738",
+              date: "14/04/2022",
+              invoicenumber: "",
+              refnumber: "",
+              pqnumber: "90 days",
+              duedate: "29/03/2022",
+              paylink: "",
+              supplier_type: "Customer",
+              supplier_name : "<p>Accenture Software Dev</p>",
+              supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+              subtotal : "-$50.00",
+              gst : "$0.00",
+              total : "-$50.00",
+              paid_amount : "$0.00",
+              bal_due : "-$50.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              data: array_data,
+              applied : "",
+              customfield1:'customfield1',
+              customfield2:'customfield2',
+              customfield3:'customfield3',
+              customfieldlabel1:'customfield1 data',
+              customfieldlabel2:'customfield2 data',
+              customfieldlabel3:'customfield3 data',
+            };
+
+
+        }
+        else
+        {
+
+          item_refund = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 738",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: "90 days",
+            duedate: "29/03/2022",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "<p>Accenture Software Dev</p>",
+            supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "-$50.00",
+            gst : "$0.00",
+            total : "-$50.00",
+            paid_amount : "$0.00",
+            bal_due : "-$50.00",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+            
+          };
+
+
+        }
+       
 
         object_invoce.push(item_refund);
         $("#templatePreviewModal .field_payment").hide();
@@ -738,7 +1640,7 @@ Template.templatesettings.onRendered(function () {
       }
 
       //show selas order  info with DummyData
-    function showSealsOrder(template_title) {
+    function showSealsOrder(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -750,37 +1652,133 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
         ]);
 
-        let item_sale = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 287",
-          date: "14/04/2022",
-          invoicenumber: "",
-          refnumber: "",
-          pqnumber: " _ ",
-          duedate: "14/04/2022",
-          paylink: "Pay Now",
-          supplier_type: "Customer",
-          supplier_name : "Car Wash Express",
-          supplier_addr : "Australia",
-          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "$0.00",
-          gst : "$0",
-          total : "$0",
-          paid_amount : "$0",
-          bal_due : "$0",
-          bsb : "4654-454",
-          account : "16161616",
-          swift : "WPOCA5s",
-          data: array_data,
-          applied : ""
-        };
+        let item_sale = '';
+        if(number == 1)
+        {
+           item_sale = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: " _ ",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "Car Wash Express",
+            supplier_addr : "Australia",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0",
+            total : "$0",
+            paid_amount : "$0",
+            bal_due : "$0",
+            bsb : "4654-454",
+            account : "16161616",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+
+          };
+        }
+        else if(number == 2)
+        {
+           item_sale = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: " _ ",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "Car Wash Express",
+            supplier_addr : "Australia",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0",
+            total : "$0",
+            paid_amount : "$0",
+            bal_due : "$0",
+            bsb : "4654-454",
+            account : "16161616",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+        }
+        else
+        {
+          item_sale = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "14/04/2022",
+            invoicenumber: "",
+            refnumber: "",
+            pqnumber: " _ ",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "Car Wash Express",
+            supplier_addr : "Australia",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$0.00",
+            gst : "$0",
+            total : "$0",
+            paid_amount : "$0",
+            bal_due : "$0",
+            bsb : "4654-454",
+            account : "16161616",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+
+          };
+
+        }
+
+        
 
         object_invoce.push(item_sale);
         $("#templatePreviewModal .field_payment").show();
@@ -792,7 +1790,7 @@ Template.templatesettings.onRendered(function () {
 
 
     //show suppliers order  info with DummyData
-    function showSuppliers(template_title) {
+    function showSuppliers(template_title,number) {
         object_invoce = [];
         var array_data = [];
         array_data.push([
@@ -804,37 +1802,134 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
         ]);
 
-        let item_supplier = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 287",
-          date: "11/04/2022",
-          invoicenumber: "",
-          refnumber: "67886",
-          pqnumber: "",
-          duedate: "",
-          paylink: "",
-          supplier_type: "Supplier",
-          supplier_name : "Brand New Company",
-          supplier_addr : "",
-          fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-          subtotal : "",
-          gst : "",
-          total : "",
-          paid_amount : "",
-          bal_due : "",
-          bsb : "",
-          account : "",
-          swift : "",
-          data: array_data,
-          applied : ""
-        };
+        let item_supplier = '';
+        if(number == 1)
+        {
+               item_supplier = {
+                o_url: "vs1cloud.com",
+                o_name: "Sample Company",
+                o_address: "123 street",
+                o_city: "Los Angeles",
+                o_state: "Califonia 12345",
+                o_reg: "",
+                o_abn: "5678905",
+                o_phone: "25151944",
+                title: template_title + " 287",
+                date: "11/04/2022",
+                invoicenumber: "",
+                refnumber: "67886",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : "Brand New Company",
+                supplier_addr : "",
+                fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                subtotal : "",
+                gst : "",
+                total : "",
+                paid_amount : "",
+                bal_due : "",
+                bsb : "",
+                account : "",
+                swift : "",
+                data: array_data,
+                applied : "",
+                customfield1:'',
+                customfield2:'',
+                customfield3:'',
+                customfieldlabel1:'',
+                customfieldlabel2:'',
+                customfieldlabel3:'',
+                
+              };
+        }
+        else if(number == 2)
+        {
+
+            item_supplier = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "67886",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "Brand New Company",
+            supplier_addr : "",
+            fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+
+        }
+        else
+        {
+           item_supplier = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "67886",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Supplier",
+            supplier_name : "Brand New Company",
+            supplier_addr : "",
+            fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+
+        }
+
+
 
         object_invoce.push(item_supplier);
 
@@ -847,7 +1942,7 @@ Template.templatesettings.onRendered(function () {
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
       }
 
-    function showStatements(template_title)
+    function showStatements(template_title,number)
     {
         object_invoce = [];
         var array_data = [];
@@ -859,38 +1954,132 @@ Template.templatesettings.onRendered(function () {
               "$900.00",
               "$0.00",
             ]);
+        let item_statement = '';
+        if(number == 1)
+        {
+           item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "67886",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "Brand New Company",
+            supplier_addr : "",
+            fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
 
-        let item_statement = {
-          o_url: "vs1cloud.com",
-          o_name: "Sample Company",
-          o_address: "123 street",
-          o_city: "Los Angeles",
-          o_state: "Califonia 12345",
-          o_reg: "",
-          o_abn: "5678905",
-          o_phone: "25151944",
-          title: template_title + " 287",
-          date: "11/04/2022",
-          invoicenumber: "",
-          refnumber: "67886",
-          pqnumber: "",
-          duedate: "",
-          paylink: "",
-          supplier_type: "Customer",
-          supplier_name : "Brand New Company",
-          supplier_addr : "",
-          fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-          subtotal : "",
-          gst : "",
-          total : "",
-          paid_amount : "",
-          bal_due : "",
-          bsb : "",
-          account : "",
-          swift : "",
-          data: array_data,
-          applied : ""
-        };
+        }
+        else if(number == 2)
+        {
+           item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "67886",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "Brand New Company",
+            supplier_addr : "",
+            fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+          };
+
+        }
+        else
+        {
+           item_statement = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "5678905",
+            o_phone: "25151944",
+            title: template_title + " 287",
+            date: "11/04/2022",
+            invoicenumber: "",
+            refnumber: "67886",
+            pqnumber: "",
+            duedate: "",
+            paylink: "",
+            supplier_type: "Customer",
+            supplier_name : "Brand New Company",
+            supplier_addr : "",
+            fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount : "",
+            bal_due : "",
+            bsb : "",
+            account : "",
+            swift : "",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+
+
+        }
+      
 
         object_invoce.push(item_statement);
 
@@ -904,7 +2093,7 @@ Template.templatesettings.onRendered(function () {
 
     }
 
-    function showDeliveryDocket(template_title)
+    function showDeliveryDocket(template_title,number)
     {
 
       object_invoce = [];
@@ -926,39 +2115,130 @@ Template.templatesettings.onRendered(function () {
           "$0.00",
           "$0.00",
         ]);
+      let item_invoices = '';
+      if(number == 1)
+      {
+         item_invoices = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "ABN : 5678905",
+          o_phone: "Phone : 25151944",
+          title: template_title + "733",
+          date: "12/04/2022",
+          invoicenumber: "12/04/2022",
+          refnumber: "",
+          pqnumber: "",
+          duedate: "14/04/2022",
+          paylink: "Pay Now",
+          supplier_type: "Customer",
+          supplier_name : "<p>Car Wash Express</p>",
+          supplier_addr : "",
+          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+          subtotal : "$10.00",
+          gst : "$0.00",
+          total : "$10.00",
+          paid_amount : "$0.00",
+          bal_due : "$10.00",
+          bsb : "4654-454",
+          account : "16161616",
+          swift : "WPOCA5s",
+          data: array_data,
+          applied : "",
+          customfield1:'',
+          customfield2:'',
+          customfield3:'',
+          customfieldlabel1:'',
+          customfieldlabel2:'',
+          customfieldlabel3:'',
+        };
+
+      }
+      else if(number == 2)
+      {
+         item_invoices = {
+          o_url: "vs1cloud.com",
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "ABN : 5678905",
+          o_phone: "Phone : 25151944",
+          title: template_title + "733",
+          date: "12/04/2022",
+          invoicenumber: "12/04/2022",
+          refnumber: "",
+          pqnumber: "",
+          duedate: "14/04/2022",
+          paylink: "Pay Now",
+          supplier_type: "Customer",
+          supplier_name : "<p>Car Wash Express</p>",
+          supplier_addr : "",
+          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+          subtotal : "$10.00",
+          gst : "$0.00",
+          total : "$10.00",
+          paid_amount : "$0.00",
+          bal_due : "$10.00",
+          bsb : "4654-454",
+          account : "16161616",
+          swift : "WPOCA5s",
+          data: array_data,
+          applied : "",
+          customfield1:'customfield1',
+          customfield2:'customfield2',
+          customfield3:'customfield3',
+          customfieldlabel1:'customfield1 data',
+          customfieldlabel2:'customfield2 data',
+          customfieldlabel3:'customfield3 data',
+        };
+      }
+      else
+      {
+           item_invoices = {
+            o_url: "vs1cloud.com",
+            o_name: "Sample Company",
+            o_address: "123 street",
+            o_city: "Los Angeles",
+            o_state: "Califonia 12345",
+            o_reg: "",
+            o_abn: "ABN : 5678905",
+            o_phone: "Phone : 25151944",
+            title: template_title + "733",
+            date: "12/04/2022",
+            invoicenumber: "12/04/2022",
+            refnumber: "",
+            pqnumber: "",
+            duedate: "14/04/2022",
+            paylink: "Pay Now",
+            supplier_type: "Customer",
+            supplier_name : "<p>Car Wash Express</p>",
+            supplier_addr : "",
+            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+            subtotal : "$10.00",
+            gst : "$0.00",
+            total : "$10.00",
+            paid_amount : "$0.00",
+            bal_due : "$10.00",
+            bsb : "4654-454",
+            account : "16161616",
+            swift : "WPOCA5s",
+            data: array_data,
+            applied : "",
+            customfield1:'',
+            customfield2:'',
+            customfield3:'',
+            customfieldlabel1:'',
+            customfieldlabel2:'',
+            customfieldlabel3:'',
+          };
+      }
   
-  
-      let item_invoices = {
-        o_url: "vs1cloud.com",
-        o_name: "Sample Company",
-        o_address: "123 street",
-        o_city: "Los Angeles",
-        o_state: "Califonia 12345",
-        o_reg: "",
-        o_abn: "ABN : 5678905",
-        o_phone: "Phone : 25151944",
-        title: template_title + "733",
-        date: "12/04/2022",
-        invoicenumber: "12/04/2022",
-        refnumber: "",
-        pqnumber: "",
-        duedate: "14/04/2022",
-        paylink: "Pay Now",
-        supplier_type: "Customer",
-        supplier_name : "<p>Car Wash Express</p>",
-        supplier_addr : "",
-        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-        subtotal : "$10.00",
-        gst : "$0.00",
-        total : "$10.00",
-        paid_amount : "$0.00",
-        bal_due : "$10.00",
-        bsb : "4654-454",
-        account : "16161616",
-        swift : "WPOCA5s",
-        data: array_data,
-        applied : ""
-      };
+     
   
       object_invoce.push(item_invoices);
   
@@ -971,65 +2251,65 @@ Template.templatesettings.onRendered(function () {
     }
 
 
-  templateObject.generateInvoiceData = function (template_title) {
-    object_invoce = [];
-    switch (template_title) {
+     templateObject.generateInvoiceData = function (template_title,number) {
+     object_invoce = [];
+     switch (template_title) {
       case "Bills":
-        showBillData(template_title);
+        showBillData(template_title,number);
         break;
 
       case "Credits":
-        showCreditData(template_title);
+        showCreditData(template_title,number);
         break;
 
       case "Customer Payments":
-        showCustomerPayment(template_title);
+        showCustomerPayment(template_title,number);
         break;
 
       
     case "Customer Statements":
-        showCustomerStatments(template_title);
+        showCustomerStatments(template_title,number);
         break;  
 
       case "Invoices":
-        showInvoice(template_title);
+        showInvoice(template_title,number);
         break;
 
       case "Invoice Back Orders":
-        showInvoiceBack(template_title);
+        showInvoiceBack(template_title,number);
         break;
 
       case "Purchase Orders":
-        showPurchaseOrder(template_title)
+        showPurchaseOrder(template_title,number)
         break;
 
       case "Quotes":
-        showQuotes(template_title)
+        showQuotes(template_title,number)
         break;
 
       case "Refunds":
-        showRefund(template_title)
+        showRefund(template_title,number)
         break;
 
       case "Sales Orders":
-        showSealsOrder(template_title)
+        showSealsOrder(template_title,number)
         break;
 
       case "Supplier Payments":
-        showSuppliers(template_title)
+        showSuppliers(template_title,number)
         break;
       
       case "Statements": 
-        showStatements(template_title);
+        showStatements(template_title,number);
         break;
       
       case "Delivery Docket":
-        showDeliveryDocket(template_title);
+        showDeliveryDocket(template_title,number);
         break;
     }
 
-  };
-});
+     };
+  });
 
 Template.templatesettings.helpers({
   getTemplateList: function () {

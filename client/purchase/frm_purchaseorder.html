@@ -304,29 +304,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-lg-2 col-xl-2">
+                            <div class="col-12 col-md-6 col-lg-2 col-xl-3">  
                                 <div class="row">
-                                    <div class="col-6 col-md-12 col-lg-12">
-                                        <div class="one box checkbox1div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                            <div class="form-group">
-                                                <label class="lblCustomField1">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[0].label}}{{else}}CustField1{{/if}}</label>
-                                                <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{purchaseorderrecord.saleCustField1}}">
-                                            </div>
-                                        </div>
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        {{> CurrencyWidget rate="buy"}}
                                     </div>
-                                    <div class="col-6 col-md-12 col-lg-12">
-                                        <div class="two box checkbox2div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                            <div class="form-group">
-                                                <label class="lblCustomField2">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}<br></label>
-                                                <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{purchaseorderrecord.saleCustField2}}">
+                                    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="one box checkbox1div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                    <div class="form-group">
+                                                        <label class="lblCustomField1">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[0].label}}{{else}}CustField1{{/if}}</label>
+                                                        <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{purchaseorderrecord.saleCustField1}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="two box checkbox2div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                    <div class="form-group">
+                                                        <label class="lblCustomField2">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}<br></label>
+                                                        <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{purchaseorderrecord.saleCustField2}}">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-lg-2 col-xl-2">
-                                {{> CurrencyWidget rate="buy"}}
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="col-12 col-xl-2">
@@ -1654,13 +1659,9 @@
             {{> newtermspop}}
         </div>
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
-            {{> currencypop}}
-        </div>
+ 
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
-            {{> newcurrencypop}}
-        </div>
+      
 
         <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
             {{> departmentpop}}

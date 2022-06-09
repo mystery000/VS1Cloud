@@ -135,16 +135,39 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
+                    
+                
+                    {{#if isCurrencyEnable}}
+                    <div class="col-12 col-lg-2">
+                        {{> CurrencyWidget rate="buy"}}
+                    </div>
+
+                    <div class="col-12 col-lg-2">
+                        <!-- <div class="form-group"><label>Foreign Currency</label>
+                            <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignCurrency" name='ForeignCurrency'>
+                        </div> -->
+                        <div class="form-group"><label>Foreign Amount</label>
+                            <input class="form-control form-control" type="text" value="{{record.foreignAmount}}" id="edtForeignAmount" name='foreignAmount'>
+                        </div>
+                        <div class="form-group"><label>Variation</label>
+                            <input class="form-control form-control" type="text" value="{{record.variation}}" id="edtVariation" name='variation'>
+                        </div>
+                        <div class="form-group"><label>Applied</label>
+                            <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
+                        </div>
+                    </div>
+                
+                
+                    {{/if}}
+                
                     <div class="col-12 col-lg-2">
                         <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        {{> CurrencyWidget rate="buy"}}
-                    </div>
+                 
                 </div>
-                
+
                 <!-- <div class="row" style="background-color: #ededed; padding: 0px 32px;">
                     <div class="col-12 col-lg-6">
                         <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes" href="#collapse-notes" role="button">+ Comments</a>
@@ -484,7 +507,7 @@
                             <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
                                 <div class="modal-content customerListContent">
                                     <div class="modal-header">
-                                        <h4>Awaiting Supplier Payments</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <h4>Outstanding Expenses</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                     </div>
                                     <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
                                         <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>

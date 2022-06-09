@@ -788,7 +788,7 @@ getCustomersDataByName(dataSearchName) {
 
   getClientVS1() {
       let options = {
-          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount",
+          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
           select: "[Active]=true"
       };
       return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -2039,18 +2039,26 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     return this.getList(this.ERPObjects.TShippingMethod, options);
   }
 
-  getCurrencies() {
+  // getCurrencies() {
+  //
+  //   var today = new Date();
+  //   var dd = String(today.getDate()).padStart(2, '0');
+  //   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  //   var yyyy = today.getFullYear();
+  //   today = dd+'/'+mm+'/'+ yyyy;
+  //   let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
+  //   let options = {
+  //     PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
+  //     select: "[Active]=true AND [MsTimeStamp]>'"+msTimeStamp+"'",
+  //     ListType: "Detail"
+  //   };
+  //   return this.getList(this.ERPObjects.TCurrency, options);
+  // }
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = dd+'/'+mm+'/'+ yyyy;
-    let msTimeStamp = yyyy+'-'+mm+'-'+dd+' 00:00:00';
+  getCurrencies() {
     let options = {
-      PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
-      select: "[Active]=true AND [MsTimeStamp]>'"+msTimeStamp+"'",
-      ListType: "Detail"
+      ListType: "Detail",
+      select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TCurrency, options);
   }
@@ -2359,6 +2367,26 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
   }
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
+
+    getAllTReconcilationByName(dateFrom, dateTo, accountName) {
+        let options = {
+            ListType: "Detail",
+            select: "[Deleted]=false"
+            // IgnoreDates: false,
+            // AccountName: accountName,
+            // DateFrom: '"' + dateFrom + '"',
+            // DateTo: '"' + dateTo + '"'
+        };
+        return this.getList(this.ERPObjects.TReconciliation, options);
+    }
+    getAllTReconcilationList(dateFrom, dateTo) {
+        let options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"'
+        };
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
 
 
 

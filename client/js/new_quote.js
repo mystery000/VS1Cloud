@@ -2157,12 +2157,9 @@ Template.new_quote.onRendered(() => {
                         orderstatus: data.tleadstatustype[i].TypeName || ' '
 
                     };
-
                     statusList.push(leadrecordObj);
                 }
                 templateObject.statusrecords.set(statusList);
-
-
             });
         });
     };
@@ -2182,10 +2179,6 @@ Template.new_quote.onRendered(() => {
                     if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
                         added = true;
                         setCustomerByID(useData[i]);
-                        setTimeout(function () {
-                            const rowCount = $('.results tbody tr').length;
-                            $('.counter').text(rowCount + ' items');
-                        }, 500);
                     }
                 }
                 if (!added) {
@@ -2276,42 +2269,32 @@ Template.new_quote.onRendered(() => {
             if (dataObject.length == 0) {
                 salesService.getTermVS1().then(function(data) {
                     for (let i in data.ttermsvs1) {
-
                         let termrecordObj = {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
-
                         termrecords.push(termrecordObj);
                         templateObject.termrecords.set(termrecords);
-
                     }
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.ttermsvs1;
                 for (let i in useData) {
-
                     let termrecordObj = {
                         termsname: useData[i].TermsName || ' ',
                     };
-
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
-
                 }
-
             }
         }).catch(function(err) {
             salesService.getTermVS1().then(function(data) {
                 for (let i in data.ttermsvs1) {
-
                     let termrecordObj = {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
-
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
-
                 }
             });
         });
@@ -5032,22 +5015,22 @@ Template.new_quote.onRendered(() => {
     //     }, 1000);
     // });
     $(document).on("click", "#custListType tbody tr", function(e) {;
-            if(clickedInput == "one") {
-                $('#edtSaleCustField1').val($(this).find(".colFieldName").text());
-            } else if(clickedInput == "two") {
-                $('#edtSaleCustField2').val($(this).find(".colFieldName").text());
-            } else if(clickedInput == "three") {
-                $('#edtSaleCustField3').val($(this).find(".colFieldName").text());
-            }
-           // $('#sltStatus').val($(this).find(".colStatusName").text());
-            $('#customFieldList').modal('toggle');
+        if(clickedInput == "one") {
+            $('#edtSaleCustField1').val($(this).find(".colFieldName").text());
+        } else if(clickedInput == "two") {
+            $('#edtSaleCustField2').val($(this).find(".colFieldName").text());
+        } else if(clickedInput == "three") {
+            $('#edtSaleCustField3').val($(this).find(".colFieldName").text());
+        }
+       // $('#sltStatus').val($(this).find(".colStatusName").text());
+        $('#customFieldList').modal('toggle');
 
-            // $('#tblStatusPopList_filter .form-control-sm').val('');
-            // setTimeout(function () {
-            //     $('.btnRefreshStatus').trigger('click');
-            //     $('.fullScreenSpin').css('display', 'none');
-            // }, 1000);
-        });
+        // $('#tblStatusPopList_filter .form-control-sm').val('');
+        // setTimeout(function () {
+        //     $('.btnRefreshStatus').trigger('click');
+        //     $('.fullScreenSpin').css('display', 'none');
+        // }, 1000);
+    });
 
     let table;
     if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -5982,7 +5965,7 @@ Template.new_quote.onRendered(() => {
     }
 
 
-    const exportSalesToPdf = function () {
+     exportSalesToPdf = function () {
         let margins = {
             top: 0,
             bottom: 0,

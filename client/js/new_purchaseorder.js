@@ -1,48 +1,27 @@
-import {
-    SalesBoardService
-} from './sales-service';
-import {
-    PurchaseBoardService
-} from './purchase-service';
-import {
-    ReactiveVar
-} from 'meteor/reactive-var';
-import {
-    CoreService
-} from '../js/core-service';
-import {
-    DashBoardService
-} from "../Dashboard/dashboard-service";
-import {
-    UtilityService
-} from "../utility-service";
-import {
-    ProductService
-} from "../product/product-service";
+import {SalesBoardService} from './sales-service';
+import {PurchaseBoardService} from './purchase-service';
+import {ReactiveVar} from 'meteor/reactive-var';
+import {CoreService} from '../js/core-service';
+import {DashBoardService} from "../Dashboard/dashboard-service";
+import {UtilityService} from "../utility-service";
+import {ProductService} from "../product/product-service";
 import '../lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
-import {
-    Random
-} from 'meteor/random';
-import {
-    jsPDF
-} from 'jspdf';
+import {Random} from 'meteor/random';
+import {jsPDF} from 'jspdf';
 import 'jQuery.print/jQuery.print.js';
-import {
-    autoTable
-} from 'jspdf-autotable';
-import {
-    SideBarService
-} from '../js/sidebar-service';
-
+import {autoTable} from 'jspdf-autotable';
+import {SideBarService} from '../js/sidebar-service';
 import 'jquery-editable-select';
+import {ContactService} from "../contacts/contact-service";
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 var times = 0;
 let purchaseDefaultTerms = "";
-Template.purchaseordercard.onCreated(() => {
 
+Template.purchaseordercard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.CleintName = new ReactiveVar();
@@ -69,25 +48,31 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.taxraterecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
-
     templateObject.selectedsupplierpayrecords = new ReactiveVar([]);
-
     templateObject.uploadedFile = new ReactiveVar();
     templateObject.uploadedFiles = new ReactiveVar([]);
     templateObject.attachmentCount = new ReactiveVar();
-
     templateObject.address = new ReactiveVar();
     templateObject.abn = new ReactiveVar();
     templateObject.referenceNumber = new ReactiveVar();
-
     templateObject.statusrecords = new ReactiveVar([]);
-
     templateObject.includeBOnShippedQty = new ReactiveVar();
     templateObject.includeBOnShippedQty.set(true);
 });
 Template.purchaseordercard.onRendered(() => {
+    const dataListTable = [
+        ' ' || '',
+        ' ' || '',
+        0 || 0,
+        0.00 || 0.00,
+        ' ' || '',
+        0.00 || 0.00,
+        '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
+    ];
+    let currentPurchaseOrder;
+    let getso_id;
     $(window).on('load', function () {
-        var win = $(this); //this = window
+        const win = $(this); //this = window
         if (win.width() <= 1024 && win.width() >= 450) {
             $("#colBalanceDue").addClass("order-12");
         }
@@ -100,15 +85,13 @@ Template.purchaseordercard.onRendered(() => {
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
-    };
+    }
     const templateObject = Template.instance();
-    const records = [];
-    let purchaseService = new PurchaseBoardService();
-    let clientsService = new PurchaseBoardService();
-    let productsService = new PurchaseBoardService();
+    const purchaseService = new PurchaseBoardService();
+    const clientsService = new PurchaseBoardService();
+    const contactService = new ContactService();
+
     const clientList = [];
-    const productsList = [];
-    const accountsList = [];
     const deptrecords = [];
     const viarecords = [];
     const termrecords = [];
@@ -194,134 +177,55 @@ Template.purchaseordercard.onRendered(() => {
 
 
     });
-
-
     $('.fullScreenSpin').css('display', 'inline-block');
+
     templateObject.getAllClients = function() {
         getVS1Data('TSupplierVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
+            if (dataObject.length === 0) {
                 clientsService.getSupplierVS1().then(function(data) {
-                    for (let i in data.tsuppliervs1) {
-
-                        let supplierrecordObj = {
-                            supplierid: data.tsuppliervs1[i].Id || ' ',
-                            suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                            supplieremail: data.tsuppliervs1[i].Email || ' ',
-                            street: data.tsuppliervs1[i].Street || ' ',
-                            street2: data.tsuppliervs1[i].Street2 || ' ',
-                            street3: data.tsuppliervs1[i].Street3 || ' ',
-                            suburb: data.tsuppliervs1[i].Suburb || ' ',
-                            statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
-                            country: data.tsuppliervs1[i].Country || ' ',
-                            termsName: data.tsuppliervs1[i].TermsName || ''
-                        };
-                        clientList.push(supplierrecordObj);
-
-                    }
-                    templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                        if (a.suppliername == 'NA') {
-                            return 1;
-                        } else if (b.suppliername == 'NA') {
-                            return -1;
-                        }
-                        return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                    }));
-
-                    for (var i = 0; i < clientList.length; i++) {
-                        //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                    }
-                    if (FlowRouter.current().queryParams.id) {
-
-                    } else {
-                        setTimeout(function() {
-                            $('#edtSupplierName').trigger("click");
-                        }, 200);
-                    }
+                    setClientVS1(data);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.tsuppliervs1;
-                for (let i in useData) {
-
-                    let supplierrecordObj = {
-                        supplierid: useData[i].fields.ID || ' ',
-                        suppliername: useData[i].fields.ClientName || ' ',
-                        supplieremail: useData[i].fields.Email || ' ',
-                        street: useData[i].fields.Street || ' ',
-                        street2: useData[i].fields.Street2 || ' ',
-                        street3: useData[i].fields.Street3 || ' ',
-                        suburb: useData[i].fields.Suburb || ' ',
-                        statecode: useData[i].fields.State + ' ' + useData[i].fields.Postcode || ' ',
-                        country: useData[i].fields.Country || ' ',
-                        termsName: useData[i].fields.TermsName || ''
-                    };
-                    clientList.push(supplierrecordObj);
-
-                }
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                    if (a.suppliername == 'NA') {
-                        return 1;
-                    } else if (b.suppliername == 'NA') {
-                        return -1;
-                    }
-                    return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                }
-                if (FlowRouter.current().queryParams.id) {
-
-                } else {
-                    setTimeout(function() {
-                        $('#edtSupplierName').trigger("click");
-                    }, 100);
-                }
-
+                setClientVS1(data);
             }
         }).catch(function(err) {
             clientsService.getSupplierVS1().then(function(data) {
-                for (let i in data.tsuppliervs1) {
-
-                    let supplierrecordObj = {
-                        supplierid: data.tsuppliervs1[i].Id || ' ',
-                        suppliername: data.tsuppliervs1[i].ClientName || ' ',
-                        supplieremail: data.tsuppliervs1[i].Email || ' ',
-                        street: data.tsuppliervs1[i].Street || ' ',
-                        street2: data.tsuppliervs1[i].Street2 || ' ',
-                        street3: data.tsuppliervs1[i].Street3 || ' ',
-                        suburb: data.tsuppliervs1[i].Suburb || ' ',
-                        statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
-                        country: data.tsuppliervs1[i].Country || ' ',
-                        termsName: data.tsuppliervs1[i].TermsName || ''
-                    };
-                    clientList.push(supplierrecordObj);
-
-                }
-                templateObject.clientrecords.set(clientList.sort(function(a, b) {
-                    if (a.suppliername == 'NA') {
-                        return 1;
-                    } else if (b.suppliername == 'NA') {
-                        return -1;
-                    }
-                    return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
-                }));
-
-                for (var i = 0; i < clientList.length; i++) {
-                    //$('#edtSupplierName').editableSelect('add', clientList[i].suppliername);
-                }
-                if (FlowRouter.current().queryParams.id) {
-
-                } else {
-                    setTimeout(function() {
-                        $('#edtSupplierName').trigger("click");
-                    }, 200);
-                }
-
+                setClientVS1(data);
             });
         });
-
     };
+    function setClientVS1(data){
+        for (let i in data.tsuppliervs1) {
+            if (data.tsuppliervs1.hasOwnProperty(i)) {
+                let supplierrecordObj = {
+                    supplierid: data.tsuppliervs1[i].Id || ' ',
+                    suppliername: data.tsuppliervs1[i].ClientName || ' ',
+                    supplieremail: data.tsuppliervs1[i].Email || ' ',
+                    street: data.tsuppliervs1[i].Street || ' ',
+                    street2: data.tsuppliervs1[i].Street2 || ' ',
+                    street3: data.tsuppliervs1[i].Street3 || ' ',
+                    suburb: data.tsuppliervs1[i].Suburb || ' ',
+                    statecode: data.tsuppliervs1[i].State + ' ' + data.tsuppliervs1[i].Postcode || ' ',
+                    country: data.tsuppliervs1[i].Country || ' ',
+                    termsName: data.tsuppliervs1[i].TermsName || ''
+                };
+                clientList.push(supplierrecordObj);
+            }
+        }
+        templateObject.clientrecords.set(clientList);
+        for (let i = 0; i < clientList.length; i++) {
+            //$('#edtSupplierName').editableSelect('add', clientList[i].customername);
+        }
+        if (FlowRouter.current().queryParams.id || FlowRouter.current().queryParams.supplierid || FlowRouter.current().queryParams.copypoid) {
+
+        } else {
+            setTimeout(function() {
+                $('#edtSupplierName').trigger("click");
+            }, 200);
+        }
+    }
+    templateObject.getAllClients();
 
     templateObject.getAllLeadStatuss = function() {
         getVS1Data('TLeadStatusType').then(function(dataObject) {
@@ -373,8 +277,9 @@ Template.purchaseordercard.onRendered(() => {
         });
 
     };
+    templateObject.getAllLeadStatuss();
 
-        templateObject.getAllSelectPaymentData = function () {
+    templateObject.getAllSelectPaymentData = function () {
           let supplierName = $('#edtSupplierName').val() || '';
           purchaseService.getCheckPaymentDetailsByName(supplierName).then(function (data) {
               let lineItems = [];
@@ -412,15 +317,57 @@ Template.purchaseordercard.onRendered(() => {
 
           });
 
+    };
+
+    function getSupplierData(supplierID) {
+        getVS1Data('TSupplierVS1').then(function (dataObject) {
+            if (dataObject.length === 0) {
+                contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                    setSupplierByID(data);
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tsuppliervs1;
+                let added = false;
+                for (let i = 0; i < useData.length; i++) {
+                    if (parseInt(useData[i].fields.ID) === parseInt(supplierID)) {
+                        added = true;
+                        setSupplierByID(useData[i]);
+                    }
+                }
+                if (!added) {
+                    contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                        setSupplierByID(data);
+                    });
+                }
+            }
+        }).catch(function (err) {
+            contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                $('.fullScreenSpin').css('display', 'none');
+                setSupplierByID(data);
+            });
+        });
+    }
+    function setSupplierByID(data){
+        $('#edtSupplierName').val(data.fields.ClientName);
+        $('#edtSupplierName').attr("suppid", data.fields.ID);
+        $('#edtSupplierEmail').val(data.fields.Email);
+        $('#edtSupplierEmail').attr('customerid', data.fields.ID);
+        $('#edtSupplierName').attr('suppid', data.fields.ID);
+
+        let postalAddress = data.fields.Companyname + '\n' + data.fields.Street + '\n' + data.fields.Street2 + ' ' + data.fields.State + ' ' + data.fields.Postcode + '\n' + data.fields.Country;
+        $('#txabillingAddress').val(postalAddress);
+        $('#pdfSupplierAddress').html(postalAddress);
+        $('.pdfSupplierAddress').text(postalAddress);
+        $('#txaShipingInfo').val(postalAddress);
+        $('#sltTerms').val(data.fields.TermsName || purchaseDefaultTerms);
+        setSupplierInfo();
     }
 
-
-    templateObject.getAllClients();
-    templateObject.getAllLeadStatuss();
-    var url = FlowRouter.current().path;
+    const url = FlowRouter.current().path;
     if (url.indexOf('?id=') > 0) {
-        var getso_id = url.split('?id=');
-        var currentPurchaseOrder = getso_id[getso_id.length - 1];
+        getso_id = url.split('?id=');
+        currentPurchaseOrder = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
             currentPurchaseOrder = parseInt(currentPurchaseOrder);
             $('.printID').attr("id", currentPurchaseOrder);
@@ -1338,8 +1285,8 @@ Template.purchaseordercard.onRendered(() => {
         }
 
     } else if (url.indexOf('?copypoid=') > 0) {
-        var getso_id = url.split('?copypoid=');
-        var currentPurchaseOrder = getso_id[getso_id.length - 1];
+        getso_id = url.split('?copypoid=');
+        currentPurchaseOrder = getso_id[getso_id.length - 1];
         if (getso_id[1]) {
             currentPurchaseOrder = parseInt(currentPurchaseOrder);
             $('.printID').attr("id", currentPurchaseOrder);
@@ -1547,7 +1494,6 @@ Template.purchaseordercard.onRendered(() => {
         }
     } else {
         $('.fullScreenSpin').css('display', 'none');
-
         let lineItems = [];
         let lineItemsTable = [];
         let lineItemObj = {};
@@ -1570,20 +1516,10 @@ Template.purchaseordercard.onRendered(() => {
             TaxRate: 0,
 
         };
-
-        var dataListTable = [
-            ' ' || '',
-            ' ' || '',
-            0 || 0,
-            0.00 || 0.00,
-            ' ' || '',
-            0.00 || 0.00,
-            '<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 btnRemove"><i class="fa fa-remove"></i></button></span>'
-        ];
         lineItemsTable.push(dataListTable);
         lineItems.push(lineItemObj);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        const currentDate = new Date();
+        const begunDate = moment(currentDate).format("DD/MM/YYYY");
         let purchaseorderrecord = {
             id: '',
             lid: 'New Purchase Order',
@@ -1622,12 +1558,14 @@ Template.purchaseordercard.onRendered(() => {
             isPartialPaid: false
 
         };
-
-        $('#edtSupplierName').val('');
+        if (FlowRouter.current().queryParams.supplierid) {
+            getSupplierData(FlowRouter.current().queryParams.supplierid);
+        } else {
+            $('#edtSupplierName').val('');
+        }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
         }, 200);
-
         templateObject.purchaseorderrecord.set(purchaseorderrecord);
         if (templateObject.purchaseorderrecord.get()) {
             Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblPurchaseOrderLine', function(error, result) {
@@ -1659,7 +1597,6 @@ Template.purchaseordercard.onRendered(() => {
             });
         }
     }
-
 
     templateObject.getShpVias = function() {
         getVS1Data('TShippingMethod').then(function(dataObject) {
@@ -1707,7 +1644,8 @@ Template.purchaseordercard.onRendered(() => {
         });
 
 
-    }
+    };
+    templateObject.getShpVias();
 
     templateObject.getDepartments = function() {
         getVS1Data('TDeptClass').then(function(dataObject) {
@@ -1755,7 +1693,8 @@ Template.purchaseordercard.onRendered(() => {
         });
 
 
-    }
+    };
+    templateObject.getDepartments();
 
     templateObject.getTerms = function() {
         getVS1Data('TTermsVS1').then(function(dataObject) {
@@ -1813,13 +1752,8 @@ Template.purchaseordercard.onRendered(() => {
                 }
             });
         });
-
-
-    }
-    templateObject.getShpVias();
+    };
     templateObject.getTerms();
-    templateObject.getDepartments();
-
 
     let table;
     $(document).ready(function() {
@@ -1869,107 +1803,17 @@ Template.purchaseordercard.onRendered(() => {
 
 
     });
+    $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
+        $('#shipvia').val($(this).find(".colShipName ").text());
+        $('#shipViaModal').modal('toggle');
 
-    $('#shipvia').editableSelect()
-        .on('click.editable-select', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var shipvianame = e.target.value || '';
-            $('#edtShipViaID').val('');
-            $('#newShipViaMethodName').text('Add Ship Via');
-            $('#edtShipVia').attr('readonly', false);
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#shipViaModal').modal('toggle');
-                setTimeout(function() {
-                    $('#tblShipViaPopList_filter .form-control-sm').focus();
-                    $('#tblShipViaPopList_filter .form-control-sm').val('');
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblShipViaPopList').DataTable();
-                    datatable.draw();
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                }, 500);
-            } else {
-                if (shipvianame.replace(/\s/g, '') != '') {
-                    $('#newShipViaMethodName').text('Edit Ship Via');
-                    setTimeout(function() {
-                        // $('#edtShipVia').attr('readonly', true);
-                    }, 100);
-
-                    getVS1Data('TShippingMethod').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getShippingMethodData().then(function(data) {
-                                for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                    }
-                                }
-                                setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newShipViaModal').modal('toggle');
-                                }, 200);
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tshippingmethod;
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (useData[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(useData[i].Id);
-                                    $('#edtShipVia').val(useData[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getShippingMethodData().then(function(data) {
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                    $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#edtShipVia').attr('readonly', false);
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    });
-                } else {
-                    $('#shipViaModal').modal();
-                    setTimeout(function() {
-                        $('#tblShipViaPopList_filter .form-control-sm').focus();
-                        $('#tblShipViaPopList_filter .form-control-sm').val('');
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblShipViaPopList').DataTable();
-                        datatable.draw();
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
-
-        $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
-            $('#shipvia').val($(this).find(".colShipName ").text());
-            $('#shipViaModal').modal('toggle');
-
-            $('#tblShipViaPopList_filter .form-control-sm').val('');
-            setTimeout(function () {
-                $('.btnRefreshVia').trigger('click');
-                $('.fullScreenSpin').css('display', 'none');
-            }, 1000);
-        });
-
-        $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
+        $('#tblShipViaPopList_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshVia').trigger('click');
+            $('.fullScreenSpin').css('display', 'none');
+        }, 1000);
+    });
+    $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
             $('#sltCurrency').val($(this).find(".colCode").text());
             $('#currencyModal').modal('toggle');
 
@@ -1979,17 +1823,14 @@ Template.purchaseordercard.onRendered(() => {
                 $('.fullScreenSpin').css('display', 'none');
             }, 1000);
         });
-
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDept').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
     });
-
     $(document).on("click", "#termsList tbody tr", function(e) {
         $('#sltTerms').val($(this).find(".colTermName").text());
         $('#termsListModal').modal('toggle');
     });
-
     $(document).on("click", "#tblStatusPopList tbody tr", function(e) {
         $('#sltStatus').val($(this).find(".colStatusName").text());
         $('#statusPopModal').modal('toggle');
@@ -2000,7 +1841,6 @@ Template.purchaseordercard.onRendered(() => {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
-
     $(document).on("click", "#tblInventory tbody tr", function(e) {
       $(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
@@ -2150,8 +1990,6 @@ Template.purchaseordercard.onRendered(() => {
             }
         }
     });
-
-
     $(document).on("click", "#tblTaxRate tbody tr", function(e) {
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -2266,8 +2104,6 @@ Template.purchaseordercard.onRendered(() => {
             }
         }
     });
-
-
     $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         let selectLineID = $('#customerSelectLineID').val();
         var table = $(this);
@@ -2286,6 +2122,93 @@ Template.purchaseordercard.onRendered(() => {
         }
     });
 
+    $('#shipvia').editableSelect()
+        .on('click.editable-select', function(e, li) {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            var shipvianame = e.target.value || '';
+            $('#edtShipViaID').val('');
+            $('#newShipViaMethodName').text('Add Ship Via');
+            $('#edtShipVia').attr('readonly', false);
+            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                $('#shipViaModal').modal('toggle');
+                setTimeout(function() {
+                    $('#tblShipViaPopList_filter .form-control-sm').focus();
+                    $('#tblShipViaPopList_filter .form-control-sm').val('');
+                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblShipViaPopList').DataTable();
+                    datatable.draw();
+                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                }, 500);
+            } else {
+                if (shipvianame.replace(/\s/g, '') != '') {
+                    $('#newShipViaMethodName').text('Edit Ship Via');
+                    setTimeout(function() {
+                        // $('#edtShipVia').attr('readonly', true);
+                    }, 100);
+
+                    getVS1Data('TShippingMethod').then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getShippingMethodData().then(function(data) {
+                                for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                    }
+                                }
+                                setTimeout(function() {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                    $('#newShipViaModal').modal('toggle');
+                                }, 200);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tshippingmethod;
+                            for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                if (useData[i].ShippingMethod === shipvianame) {
+                                    $('#edtShipViaID').val(useData[i].Id);
+                                    $('#edtShipVia').val(useData[i].ShippingMethod);
+                                }
+                            }
+                            setTimeout(function() {
+                                $('.fullScreenSpin').css('display', 'none');
+                                $('#newShipViaModal').modal('toggle');
+                            }, 200);
+                        }
+                    }).catch(function(err) {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getShippingMethodData().then(function(data) {
+                            for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                    $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                    $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                }
+                            }
+                            setTimeout(function() {
+                                $('.fullScreenSpin').css('display', 'none');
+                                $('#edtShipVia').attr('readonly', false);
+                                $('#newShipViaModal').modal('toggle');
+                            }, 200);
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    });
+                } else {
+                    $('#shipViaModal').modal();
+                    setTimeout(function() {
+                        $('#tblShipViaPopList_filter .form-control-sm').focus();
+                        $('#tblShipViaPopList_filter .form-control-sm').val('');
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblShipViaPopList').DataTable();
+                        datatable.draw();
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                    }, 500);
+                }
+            }
+        });
     $('#sltTerms').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -2420,7 +2343,6 @@ Template.purchaseordercard.onRendered(() => {
                 }
             }
         });
-
     $('#sltDept').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -2496,7 +2418,6 @@ Template.purchaseordercard.onRendered(() => {
                 }
             }
         });
-
     $('#sltStatus').editableSelect()
         .on('click.editable-select', function(e, li) {
                     var $earch = $(this);
@@ -2572,7 +2493,6 @@ Template.purchaseordercard.onRendered(() => {
                         }
                     }
                 });
-
     $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
         var $earch = $(this);
         var offset = $earch.offset();
@@ -2972,31 +2892,30 @@ Template.purchaseordercard.onRendered(() => {
             }
         }
 
-
     });
 
     $(document).on("click", "#tblSupplierlist tbody tr", function(e) {
-        let selectLineID = $('#supplierSelectLineID').val();
-        var table = $(this);
-        let utilityService = new UtilityService();
-        let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#tblPurchaseOrderLine tbody tr");
-        var tableSupplier = $(this);
+        const tableSupplier = $(this);
         $('#edtSupplierName').val(tableSupplier.find(".colCompany").text());
         $('#edtSupplierName').attr("suppid", tableSupplier.find(".colID").text());
-
-
         $('#edtSupplierEmail').val(tableSupplier.find(".colEmail").text());
         $('#edtSupplierEmail').attr('customerid', tableSupplier.find(".colID").text());
         $('#edtSupplierName').attr('suppid', tableSupplier.find(".colID").text());
-
         let postalAddress = tableSupplier.find(".colCompany").text() + '\n' + tableSupplier.find(".colStreetAddress").text() + '\n' + tableSupplier.find(".colCity").text() + ' ' + tableSupplier.find(".colState").text() + ' ' + tableSupplier.find(".colZipCode").text() + '\n' + tableSupplier.find(".colCountry").text();
         $('#txabillingAddress').val(postalAddress);
         $('#pdfSupplierAddress').html(postalAddress);
         $('.pdfSupplierAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
-        $('#supplierListModal').modal('toggle');
+        setSupplierInfo();
+    });
+    function setSupplierInfo(){
+        if (!FlowRouter.current().queryParams.supplierid) {
+            $('#supplierListModal').modal('toggle');
+        }
+        let utilityService = new UtilityService();
+        let taxcodeList = templateObject.taxraterecords.get();
+        let $tblrows = $("#tblPurchaseOrderLine tbody tr");
 
         let lineAmount = 0;
         let subGrandTotal = 0;
@@ -3004,68 +2923,61 @@ Template.purchaseordercard.onRendered(() => {
         let taxGrandTotalPrint = 0;
 
         $tblrows.each(function(index) {
-            var $tblrow = $(this);
-            var qty = $tblrow.find(".lineQty").val() || 0;
-            var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-            var taxcode = $tblrow.find(".lineTaxCode").val() || '';
-            if($tblrow.find(".lineAccountName").val() == ''){
-              $tblrow.find(".colAccountName").addClass('boldtablealertsborder');
+            let taxTotal;
+            const $tblrow = $(this);
+            const qty = $tblrow.find(".lineQty").val() || 0;
+            const price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+            const taxcode = $tblrow.find(".lineTaxCode").val() || '';
+            if($tblrow.find(".lineAccountName").val() === ''){
+                $tblrow.find(".colAccountName").addClass('boldtablealertsborder');
             }
-            if($tblrow.find(".lineProductName").val() == ''){
-              $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+            if($tblrow.find(".lineProductName").val() === ''){
+                $tblrow.find(".colProductName").addClass('boldtablealertsborder');
             }
-            var taxrateamount = 0;
+            let taxrateamount = 0;
             if (taxcodeList) {
-                for (var i = 0; i < taxcodeList.length; i++) {
-                    if (taxcodeList[i].codename == taxcode) {
-
+                for (let i = 0; i < taxcodeList.length; i++) {
+                    if (taxcodeList[i].codename === taxcode) {
                         taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-
                     }
                 }
             }
-            var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-            if ((taxrateamount == '') || (taxrateamount == ' ')) {
-                var taxTotal = 0;
+            const subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            if ((taxrateamount === '') || (taxrateamount === ' ')) {
+                taxTotal = 0;
             } else {
-                var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+                taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
             }
             let lineTotalAmount = subTotal + taxTotal;
             $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-
             let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount)||0;
             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, ""))||0;
             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc||0;
             $tblrow.find('.colUnitPriceExChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
             $tblrow.find('.colUnitPriceIncChange').val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal));
-
             if (!isNaN(subTotal)) {
-              $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-              $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+                $tblrow.find('.colAmountEx').text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                $tblrow.find('.colAmountInc').text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
                 subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
                 document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal);
             }
-
             if (!isNaN(taxTotal)) {
                 taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
                 document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
             }
-
             if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
                 let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
                 document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
                 document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
             }
         });
-
         $('#tblSupplierlist_filter .form-control-sm').val('');
         setTimeout(function() {
             $('.btnRefreshSupplier').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
-    });
+    }
 
     exportSalesToPdf = function() {
         let id = $('.printID').attr("id");
@@ -3129,7 +3041,6 @@ Template.purchaseordercard.onRendered(() => {
         mediaQuery(x)
         x.addListener(mediaQuery)
     }, 10);
-
     setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 420px)")
@@ -3163,11 +3074,12 @@ Template.purchaseordercard.onRendered(() => {
 
             }
         }
-        mediaQuery(x)
+        mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
 
 });
+
 Template.purchaseordercard.onRendered(function() {
     let tempObj = Template.instance();
     let utilityService = new UtilityService();
@@ -3417,10 +3329,7 @@ Template.purchaseordercard.onRendered(function() {
             })
         });
     };
-
     //tempObj.getAllProducts();
-
-
 
     tempObj.getAllTaxCodes = function() {
         getVS1Data('TTaxcodeVS1').then(function(dataObject) {
@@ -3668,6 +3577,7 @@ Template.purchaseordercard.onRendered(function() {
     tempObj.getAllTaxCodes();
 
 });
+
 Template.purchaseordercard.helpers({
     isBatchSerialNoTracking: () => {
         return Session.get('CloudShowSerial') || false;
@@ -3703,6 +3613,16 @@ Template.purchaseordercard.helpers({
                 return -1;
             }
             return (a.termsname.toUpperCase() > b.termsname.toUpperCase()) ? 1 : -1;
+        });
+    },
+    clientrecords: () => {
+        return Template.instance().clientrecords.get().sort(function(a, b) {
+            if (a.suppliername == 'NA') {
+                return 1;
+            } else if (b.suppliername == 'NA') {
+                return -1;
+            }
+            return (a.suppliername.toUpperCase() > b.suppliername.toUpperCase()) ? 1 : -1;
         });
     },
     purchaseCloudPreferenceRec: () => {

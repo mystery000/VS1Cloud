@@ -227,10 +227,10 @@ Template.paymentoverview.onRendered(function() {
                             }
                         }
                     }
-                    $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                    $('#custOverdue').text(itemsOverduePaymentcount.length);
-                    $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                    $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+                    // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
+                    // $('#custOverdue').text(itemsOverduePaymentcount.length);
+                    // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+                    // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -259,10 +259,10 @@ Template.paymentoverview.onRendered(function() {
                         }
                     }
                 }
-                $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                $('#custOverdue').text(itemsOverduePaymentcount.length);
-                $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+                // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
+                // $('#custOverdue').text(itemsOverduePaymentcount.length);
+                // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+                // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
             }
         }).catch(function(err) {
             sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function(data) {
@@ -288,10 +288,10 @@ Template.paymentoverview.onRendered(function() {
                         }
                     }
                 }
-                $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-                $('#custOverdue').text(itemsOverduePaymentcount.length);
-                $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-                $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+                // $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
+                // $('#custOverdue').text(itemsOverduePaymentcount.length);
+                // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+                // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
             });
         });
     } else {
@@ -302,10 +302,10 @@ Template.paymentoverview.onRendered(function() {
         let totAmount = localStorage.getItem('VS1OutstandingInvoiceAmt_dash') || 0;
 
 
-        $('#custAwaiting').text(itemsAwaitingPaymentcount);
-        $('#custOverdue').text(itemsOverduePaymentcount);
-        $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
-        $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+        // $('#custAwaiting').text(itemsAwaitingPaymentcount);
+        // $('#custOverdue').text(itemsOverduePaymentcount);
+        // $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
+        // $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
 
     }
 
@@ -335,11 +335,11 @@ Template.paymentoverview.onRendered(function() {
                         }
 
                     }
-                    $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                    $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
+                    // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
+                    // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
 
-                    $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                    $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+                    // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
+                    // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
                     // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
                 });
             } else {
@@ -367,11 +367,11 @@ Template.paymentoverview.onRendered(function() {
                     }
 
                 }
-                $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
+                // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
+                // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
 
-                $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+                // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
+                // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
             }
         }).catch(function(err) {
             paymentService.getOverviewAPDetails().then(function(data) {
@@ -397,11 +397,11 @@ Template.paymentoverview.onRendered(function() {
                     }
 
                 }
-                $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
-                $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
+                // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount.length);
+                // $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
 
-                $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-                $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+                // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
+                // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
                 // templateObject.awaitingpaymentCount.set(itemsAwaitingPaymentcount.length);
             });
         });
@@ -414,11 +414,11 @@ Template.paymentoverview.onRendered(function() {
         let itemsSuppAwaitingPaymentcount = localStorage.getItem('VS1OutstandingPayablesQty_dash') || 0;
         let supptotAmount = localStorage.getItem('VS1OutstandingPayablesAmt_dash') || 0;
 
-        $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount);
-        $('#suppOverdue').text(itemsSuppOverduePaymentcount);
+        // $('#suppAwaiting').text(itemsSuppAwaitingPaymentcount);
+        // $('#suppOverdue').text(itemsSuppOverduePaymentcount);
 
-        $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
-        $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+        // $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
+        // $('.suppOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
 
     }
 
@@ -1510,7 +1510,7 @@ Template.paymentoverview.events({
     },
     'click .btnCurrencySettings': function(event) {
         $('.modal-backdrop').css('display', 'none');
-        FlowRouter.go('/currenciesSettings');
+        FlowRouter.go('/currenciessettings');
     },
 
     'click .customerAwaitingPayment': function(event) {

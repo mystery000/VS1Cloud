@@ -1,12 +1,9 @@
 import "../lib/global/indexdbstorage.js";
-import draggableCharts from "../js/Charts/draggableCharts";
-import ChartHandler from "../js/Charts/ChartHandler";
-import Tvs1CardPreference from "../js/Api/Model/Tvs1CardPreference";
-import Tvs1CardPreferenceFields from "../js/Api/Model/Tvs1CardPreferenceFields";
 
 import { CRMService } from "./crm-service";
+import {ContactService} from "../contacts/contact-service";
 let crmService = new CRMService();
-const _tabGroup = 9;
+
 
 Template.crmoverview.onCreated(function () {
   let templateObject = Template.instance();
@@ -17,173 +14,129 @@ Template.crmoverview.onCreated(function () {
 
 Template.crmoverview.onRendered(function () {
   const templateObject = Template.instance();
+  const contactService = new ContactService();
   let currentId = FlowRouter.current().queryParams.id;
   currentId = currentId ? currentId : "all";
   templateObject.crmtaskmitem.set(currentId);
   templateObject.currentTabID.set("allTasks-tab");
 
-  templateObject.deactivateDraggable = () => {
-    draggableCharts.disable();
-  };
-  templateObject.activateDraggable = () => {
-    draggableCharts.enable();
-  };
-
-  templateObject.setCardPositions = async () => {
-    setTimeout(async function () {
-      let Tvs1CardPref = await getVS1Data("Tvs1CardPreference");
-      const cardList = [];
-      if (Tvs1CardPref.length) {
-        let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
-        let employeeID = Session.get("mySessionEmployeeLoggedID");
-        cardList = new Tvs1CardPreference.fromList(
-          Tvs1CardPreferenceData.tvs1cardpreference
-        ).filter((card) => {
-          if (
-            parseInt(card.fields.EmployeeID) == employeeID &&
-            parseInt(card.fields.TabGroup) == _tabGroup
-          ) {
-            return card;
-          }
+  function getCustomerData(customerID) {
+    getVS1Data('TCustomerVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneCustomerDataEx(customerID).then(function (data) {
+          setCustomerByID(data);
         });
-      }
-
-      if (cardList.length) {
-        let cardcount = 0;
-        cardList.forEach((card) => {
-          $(`[card-key='${card.fields.CardKey}']`).attr(
-            "position",
-            card.fields.Position
-          );
-          $(`[card-key='${card.fields.CardKey}']`).attr(
-            "card-active",
-            card.fields.Active
-          );
-          if (card.fields.Active == false) {
-            cardcount++;
-            $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
-            $(`[card-key='${card.fields.CardKey}']`)
-              .find(".cardShowBtn .far")
-              .removeClass("fa-eye");
-            $(`[card-key='${card.fields.CardKey}']`)
-              .find(".cardShowBtn .far")
-              .addClass("fa-eye-slash");
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tcustomervs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+            added = true;
+            setCustomerByID(useData[i]);
           }
-        });
-        if (cardcount == cardList.length) {
-          $(".card-visibility").eq(0).removeClass("hideelement");
         }
-        let $chartWrappper = $(".connectedCardSortable");
-        $chartWrappper
-          .find(".card-visibility")
-          .sort(function (a, b) {
-            return +a.getAttribute("position") - +b.getAttribute("position");
-          })
-          .appendTo($chartWrappper);
+        if (!added) {
+          contactService.getOneCustomerDataEx(customerID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
       }
-    }, 100);
-  };
-  templateObject.setCardPositions();
-
-  templateObject.saveCards = async () => {
-    // Here we get that list and create and object
-    const cards = $(".connectedCardSortable .card-visibility");
-    const cardList = [];
-    let Tvs1CardPref = await getVS1Data("Tvs1CardPreference");
-    if (Tvs1CardPref.length) {
-      let Tvs1CardPreferenceData = JSON.parse(Tvs1CardPref[0].data);
-      let employeeID = Session.get("mySessionEmployeeLoggedID");
-      cardList = new Tvs1CardPreference.fromList(
-        Tvs1CardPreferenceData.tvs1cardpreference
-      ).filter((card) => {
-        if (
-          parseInt(card.fields.EmployeeID) != employeeID &&
-          parseInt(card.fields.TabGroup) != _tabGroup
-        ) {
-          return card;
-        }
+    }).catch(function (err) {
+      contactService.getOneCustomerDataEx(customerID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
       });
-    }
-    for (let i = 0; i < cards.length; i++) {
-      cardList.push(
-        new Tvs1CardPreference({
-          type: "Tvs1CardPreference",
-          fields: new Tvs1CardPreferenceFields({
-            EmployeeID: Session.get("mySessionEmployeeLoggedID"),
-            CardKey: $(cards[i]).attr("card-key"),
-            Position: $(cards[i]).attr("position"),
-            TabGroup: _tabGroup,
-            Active: $(cards[i]).attr("card-active") == "true" ? true : false,
-          }),
-        })
-      );
-    }
-    let updatedTvs1CardPreference = {
-      tvs1cardpreference: cardList,
-    };
-    await addVS1Data(
-      "Tvs1CardPreference",
-      JSON.stringify(updatedTvs1CardPreference)
-    );
-  };
+    });
+  }
+  function getSupplierData(customerID) {
+    getVS1Data('TSupplierVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneSupplierDataEx(customerID).then(function (data) {
+          setCustomerByID(data);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tsuppliervs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+            added = true;
+            setCustomerByID(useData[i]);
+          }
+        }
+        if (!added) {
+          contactService.getOneSupplierDataEx(customerID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneSupplierDataEx(customerID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
+      });
+    });
+  }
+  function getLeadData(leadID) {
+    getVS1Data('TProspectVS1').then(function (dataObject) {
+      if (dataObject.length === 0) {
+        contactService.getOneLeadDataEx(leadID).then(function (data) {
+          setCustomerByID(data);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tprospectvs1;
+        let added = false;
+        for (let i = 0; i < useData.length; i++) {
+          if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
+            added = true;
+            setCustomerByID(useData[i]);
+          }
+        }
+        if (!added) {
+          contactService.getOneLeadDataEx(leadID).then(function (data) {
+            setCustomerByID(data);
+          });
+        }
+      }
+    }).catch(function (err) {
+      contactService.getOneLeadDataEx(leadID).then(function (data) {
+        $('.fullScreenSpin').css('display', 'none');
+        setCustomerByID(data);
+      });
+    });
+  }
+  function setCustomerByID(data){
+    $('#add_task_name').val(data.fields.ClientName);
+    $("#editProjectID").val("");
+    $("#txtCrmSubTaskID").val("");
 
-  templateObject.activateDraggable();
-  $(".connectedCardSortable")
-    .sortable({
-      disabled: false,
-      connectWith: ".connectedCardSortable",
-      placeholder: "portlet-placeholder ui-corner-all",
-      stop: async (event, ui) => {
-        // Here we rebuild positions tree in html
-        ChartHandler.buildCardPositions(
-          $(".connectedCardSortable .card-visibility")
-        );
+    $(".addTaskModalProjectName").html("All Tasks");
+    $(".lblAddTaskSchedule").html("Schedule");
 
-        // Here we save card list
-        templateObject.saveCards();
-      },
-    })
-    .disableSelection();
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_3");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_2");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_1");
+    $(".taskModalActionFlagDropdown").removeClass("task_modal_priority_0");
+
+    // uncheck all labels
+    $(".chkAddLabel").prop("checked", false);
+
+    $("#newTaskModal").modal("toggle");
+  }
+  if (FlowRouter.current().queryParams.customerid) {
+    getCustomerData(FlowRouter.current().queryParams.customerid);
+  }
+  if (FlowRouter.current().queryParams.leadid) {
+    getLeadData(FlowRouter.current().queryParams.leadid);
+  }
+  if (FlowRouter.current().queryParams.supplierid) {
+    getSupplierData(FlowRouter.current().queryParams.supplierid);
+  }
 });
 
 Template.crmoverview.events({
-  "click .editCardBtn": function (e) {
-    e.preventDefault();
-    $(".card-visibility").removeClass("hideelement");
-    if ($(".editCardBtn").find("i").hasClass("fa-cog")) {
-      $(".cardShowBtn").removeClass("hideelement");
-      $(".editCardBtn").find("i").removeClass("fa-cog");
-      $(".editCardBtn").find("i").addClass("fa-save");
-    } else {
-      $(".cardShowBtn").addClass("hideelement");
-      $(".editCardBtn").find("i").removeClass("fa-save");
-      $(".editCardBtn").find("i").addClass("fa-cog");
-      let templateObject = Template.instance();
-      templateObject.setCardPositions();
-    }
-    if ($(".card-visibility").hasClass("dimmedChart")) {
-      $(".card-visibility").removeClass("dimmedChart");
-    } else {
-      $(".card-visibility").addClass("dimmedChart");
-    }
-    return false;
-  },
-
-  "click .cardShowBtn": function (e) {
-    e.preventDefault();
-    if ($(e.target).find(".far").hasClass("fa-eye")) {
-      $(e.target).find(".far").removeClass("fa-eye");
-      $(e.target).find(".far").addClass("fa-eye-slash");
-      $(e.target).parents(".card-visibility").attr("card-active", "false");
-    } else {
-      $(e.target).find(".far").removeClass("fa-eye-slash");
-      $(e.target).find(".far").addClass("fa-eye");
-      $(e.target).parents(".card-visibility").attr("card-active", "true");
-    }
-    let templateObject = Template.instance();
-    templateObject.saveCards();
-    return false;
-  },
 
   "click .menuTasklist": function (e) {
     Template.instance().crmtaskmitem.set("all");
@@ -750,12 +703,37 @@ Template.crmoverview.events({
   },
 
   "click .btnRefresh": function () {
-    Meteor._reload.reload();
+    $(".fullScreenSpin").css("display", "inline-block");
+    crmService
+      .getAllTaskList()
+      .then(function (data) {
+        addVS1Data("TCRMTaskList", JSON.stringify(data));
+        crmService
+          .getTProjectList()
+          .then(function (data) {
+            addVS1Data("TCRMProjectList", JSON.stringify(data));
+            crmService
+              .getAllLabels()
+              .then(function (data) {
+                addVS1Data("TCRMLabelList", JSON.stringify(data));
+                Meteor._reload.reload();
+              })
+              .catch(function (err) {
+                Meteor._reload.reload();
+              });
+          })
+          .catch(function (err) {
+            Meteor._reload.reload();
+          });
+      })
+      .catch(function (err) {
+        Meteor._reload.reload();
+      });
   },
 
-  "click .btnSearchCrm": function () {
-    Meteor._reload.reload();
-  },
+  // "click .btnSearchCrm": function () {
+  //   Meteor._reload.reload();
+  // },
 
   "click .btnOpenSettings": function (event) {
     let currentTabID = Template.instance().currentTabID.get();

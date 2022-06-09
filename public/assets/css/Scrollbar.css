@@ -328,7 +328,10 @@ overflow-y: auto;
     overflow-x: scroll !important;
 }
 
-.btn-sm.btn-danger { padding: 0.5px 5px !important; }
+.btn-sm.btn-danger {
+    padding: 0.5px 5px !important;
+    margin-top: 6px !important;
+}
 
 /* Steel main bert Alert */
 .bert-alert.now-success {

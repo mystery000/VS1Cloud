@@ -41,7 +41,7 @@ Template.resalescomparision.onRendered(()=>{
       //                 setTimeout(function  (){
       //                      $('#myChartCustomer').hide();
       //                 },500)
-                 
+
       //           };
 
 if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
@@ -313,7 +313,7 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
 }
 
   });
-  
+
   Template.resalescomparision.events({
   // 'click #resalehide': function () {
   //  let check = localStorage.getItem("hideresalechat") || true;

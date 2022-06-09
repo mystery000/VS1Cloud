@@ -387,32 +387,34 @@ Template.leadscard.onRendered(function () {
         let tableHeaderList = [];
         // console.log(data);
         for (let i = 0; i < data.tprojecttasks.length; i++) {
-            let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
-            let taskLabelArray = [];
-            if (taskLabel !== null) {
-                if (taskLabel.length === undefined || taskLabel.length === 0) {
-                    taskLabelArray.push(taskLabel.fields);
-                } else {
-                    for (let j = 0; j < taskLabel.length; j++) {
-                        taskLabelArray.push(taskLabel[j].fields);
+            if (data.tprojecttasks[i].fields.TaskName === leadName) {
+                let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
+                let taskLabelArray = [];
+                if (taskLabel !== null) {
+                    if (taskLabel.length === undefined || taskLabel.length === 0) {
+                        taskLabelArray.push(taskLabel.fields);
+                    } else {
+                        for (let j = 0; j < taskLabel.length; j++) {
+                            taskLabelArray.push(taskLabel[j].fields);
+                        }
                     }
                 }
+                let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
+                taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+                const dataList = {
+                    id: data.tprojecttasks[i].fields.ID || 0,
+                    priority: data.tprojecttasks[i].fields.priority || 0,
+                    date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
+                    taskName: data.tprojecttasks[i].fields.TaskName || '',
+                    projectID: data.tprojecttasks[i].fields.ProjectID || '',
+                    projectName: data.tprojecttasks[i].fields.ProjectName || '',
+                    description: taskDescription,
+                    labels: taskLabelArray
+                };
+                // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
+                dataTableList.push(dataList);
+                // }
             }
-            let taskDescription = data.tprojecttasks[i].fields.TaskDescription || '';
-            taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-            const dataList = {
-                id: data.tprojecttasks[i].fields.ID || 0,
-                priority: data.tprojecttasks[i].fields.priority || 0,
-                date: data.tprojecttasks[i].fields.due_date !== '' ? moment(data.tprojecttasks[i].fields.due_date).format("DD/MM/YYYY") : '',
-                taskName: data.tprojecttasks[i].fields.TaskName || '',
-                projectID: data.tprojecttasks[i].fields.ProjectID || '',
-                projectName: data.tprojecttasks[i].fields.ProjectName || '',
-                description: taskDescription,
-                labels: taskLabelArray
-            };
-            // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
-            dataTableList.push(dataList);
-            // }
         }
 
         templateObject.crmRecords.set(dataTableList);
@@ -637,7 +639,6 @@ Template.leadscard.events({
         let fax = $('#edtLeadFax').val();
         let skype = $('#edtSkypeID').val();
         let website = $('#edtWebsite').val();
-
         let streetAddress = $('#edtShippingAddress').val();
         let city = $('#edtShippingCity').val();
         let state = $('#edtShippingState').val();
@@ -669,25 +670,34 @@ Template.leadscard.events({
 
         let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
-
         const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
-
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-
         let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
-        let custField4 = $('#edtCustomeField4').val();
+        let custField1 = $('#edtCustomField1').val();
+        let custField2 = $('#edtCustomField2').val();
+        let custField3 = $('#edtCustomField3').val();
+        let custField4 = $('#edtCustomField4').val();
         let uploadedItems = templateObject.uploadedFiles.get();
 
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?id=');
         let currentEmployee = getemp_id[getemp_id.length - 1];
+        let TLeadID = 0;
+        if (getemp_id[1]) {
+            TLeadID = parseInt(currentEmployee);
+        } else {
+            let custdupID = 0;
+            let checkCustData = await contactService.getCheckLeadsData(employeeName)||'';
+            if (checkCustData !== ''){
+                if (checkCustData.tprospect.length) {
+                    TLeadID = checkCustData.tprospect[0].Id;
+                }
+            }
+        }
         let objDetails = {
             type: "TProspectEx",
             fields: {
-                ID: 0,
+                ID: TLeadID,
                 Title: title,
                 ClientName: employeeName,
                 FirstName: firstname,
@@ -721,23 +731,6 @@ Template.leadscard.events({
                 CUSTFLD4: custField4
             }
         };
-        if (getemp_id[1]) {
-            currentEmployee = parseInt(currentEmployee);
-            objDetails.fields.ID = currentEmployee;
-        } else {
-            let custdupID = 0;
-            let checkCustData = await contactService.getCheckLeadsData(employeeName)||'';
-            if (checkCustData !== ''){
-                if (checkCustData.tprospect.length) {
-                    custdupID = checkCustData.tprospect[0].Id;
-                    objDetails.fields.ID = custdupID;
-                } else {
-                    objDetails.fields.ID = 0;
-                }
-            } else {
-                objDetails.fields.ID = 0;
-            }
-        }
         contactService.saveProspectEx(objDetails).then(function (objDetails) {
             let customerSaveID = objDetails.fields.ID;
             if (customerSaveID) {
@@ -772,24 +765,19 @@ Template.leadscard.events({
         const searchTerm = $(".search").val();
         const listItem = $('.results tbody').children('tr');
         const searchSplit = searchTerm.replace(/ /g, "'):containsi('");
-
         $.extend($.expr[':'], {
             'containsi': function (elem, i, match, array) {
                 return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
             }
         });
-
         $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'false');
         });
-
         $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
             $(this).attr('visible', 'true');
         });
-
         const jobCount = $('.results tbody tr[visible="true"]').length;
         $('.counter').text(jobCount + ' items');
-
         if (jobCount === '0') { $('.no-result').show(); }
         else {
             $('.no-result').hide();
@@ -799,13 +787,11 @@ Template.leadscard.events({
                 $(this).attr('visible', 'true');
                 $('.no-result').hide();
             });
-
             //setTimeout(function () {
-            var rowCount = $('.results tbody tr').length;
+            const rowCount = $('.results tbody tr').length;
             $('.counter').text(rowCount + ' items');
             //}, 500);
         }
-
     },
     'click .tblLeadSideList tbody tr': function (event) {
         const leadLineID = $(event.target).attr('id');
@@ -984,7 +970,7 @@ Template.leadscard.events({
             }
         });
     },
-    'click #activeChk': function () {
+    'click #activeChk': function (event) {
         if ($(event.target).is(':checked')) {
             $('#customerInfo').css('color', '#00A3D3');
         } else {
@@ -1286,117 +1272,47 @@ Template.leadscard.events({
         }
         $('#deleteLeadModal').modal('toggle');
     },
-    'click .btnQuote': async function (event) {
+    'click .btnTask': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        const templateObject = Template.instance();
-        let contactService = new ContactService();
         let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        let customerName = $('#edtLeadEmployeeName').val()||'';
         if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(async function (data) {
-                let customerID = data.fields.ID;
-                await templateObject.saveCustomerDetails();
-                $('.fullScreenSpin').css('display','none');
-                FlowRouter.go('/quotecard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?leadid=' + customerID);
         } else {
 
         }
+    },
+    'click .btnEmail': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/crmoverview?leadid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnAppointment': function (event) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let currentId = FlowRouter.current().queryParams;
+        if (!isNaN(currentId.id)) {
+            let customerID = parseInt(currentId.id);
+            FlowRouter.go('/appointments?leadid=' + customerID);
+        } else {
+
+        }
+    },
+    'click .btnQuote': async function (event) {
+        convertToCustomer('quotecard');
     },
     'click .btnSalesOrder': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(function (data) {
-                let customerID = data.fields.ID;
-                FlowRouter.go('/salesordercard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-
-        }
+        convertToCustomer('salesordercard');
     },
     'click .btnInvoice': function (event) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let contactService = new ContactService();
-        let currentId = FlowRouter.current().queryParams;
-        let objDetails = '';
-        if (!isNaN(currentId.id)) {
-            let currentLead = parseInt(currentId.id);
-            objDetails = {
-                type: "TProspectEx",
-                fields: {
-                    ID: currentLead,
-                    IsCustomer: true
-                }
-            };
-            contactService.saveProspectEx(objDetails).then(function (data) {
-                let customerID = data.fields.ID;
-                FlowRouter.go('/invoicecard?customerid=' + customerID);
-            }).catch(function (err) {
-                swal({
-                    title: 'Oooops...',
-                    text: err,
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Try Again'
-                }).then((result) => {
-                    if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
-
-                    }
-                });
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } else {
-
-        }
+        convertToCustomer('invoicecard');
+    },
+    'click .btnRefund': function (event) {
+        convertToCustomer('refundcard');
     }
 });
 
@@ -1510,6 +1426,45 @@ function getCheckPrefDetails() {
         }
     }
     return checkPrefDetails;
+}
+function convertToCustomer(nav) {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    const templateObject = Template.instance();
+    let contactService = new ContactService();
+    let currentId = FlowRouter.current().queryParams;
+    let objDetails = '';
+    if (!isNaN(currentId.id)) {
+        let currentLead = parseInt(currentId.id);
+        objDetails = {
+            type: "TProspectEx",
+            fields: {
+                ID: currentLead,
+                IsCustomer: true
+            }
+        };
+        contactService.saveProspectEx(objDetails).then(async function (data) {
+            let customerID = data.fields.ID;
+            await templateObject.saveCustomerDetails();
+            $('.fullScreenSpin').css('display','none');
+            FlowRouter.go('/' + nav + '?customerid=' + customerID);
+        }).catch(function (err) {
+            swal({
+                title: 'Oooops...',
+                text: err,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonText: 'Try Again'
+            }).then((result) => {
+                if (result.value) {
+                } else if (result.dismiss === 'cancel') {
+
+                }
+            });
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    } else {
+
+    }
 }
 function removeAttachment(suffix, event) {
     let tempObj = Template.instance();

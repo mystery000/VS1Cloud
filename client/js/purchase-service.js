@@ -49,7 +49,7 @@ export class PurchaseBoardService extends BaseService {
 
     getSupplierVS1(){
       let options = {
-          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
+          PropertyList: "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
           select: "[Active]=true"
       };
       return this.getList(this.ERPObjects.TSupplierVS1, options);

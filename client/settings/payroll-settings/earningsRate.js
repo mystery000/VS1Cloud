@@ -919,6 +919,17 @@ Template.earningRateSettings.onRendered(function() {
 
 Template.earningRateSettings.events({
     'click .saveEarningRates': async function (event) {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let useData = [];
+        let earningSettings = await getVS1Data('TEarnings');
+        if( earningSettings.length ){
+            let TearningSettings = JSON.parse(earningSettings[0].data);
+            useData = Earning.fromList(
+                TearningSettings.tearnings
+            )
+        }
+
         let EarningsName = $('#edtEarningsName').val();
         let EarningsType = $('#edtEarningsType').val();
         let EarningsDisplayName = $('#edtDisplayName').val();
@@ -927,58 +938,10 @@ Template.earningRateSettings.events({
         let ExemptPAYG = ( $('#formCheck-ExemptPAYG').is(':checked') )? true: false;
         let ExemptSuperannuation = ( $('#formCheck-ExemptSuperannuation').is(':checked') )? true: false;
         let ExemptReportable = ( $('#formCheck-ExemptReportable').is(':checked') )? true: false;
-
-
-        let dataObject = await getVS1Data('TEarnings')
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        let useData = [];
-        let earningSettings = await getVS1Data('TEarnings');
-        if( earningSettings.length ){
-            TearningSettings = JSON.parse(earningSettings[0].data);
-            useData = EmployeePaySettings.fromList(
-                TearningSettings.tearnings
-            ).filter((item) => {
-                if ( item.fields.Employeeid !== parseInt(employeeID) ) {
-                    return item;
-                }
-            });
-        }
-
-        let TaxFileNumber = $("#edtTaxFileNumber").val();
-        let TFNExemption = $("#edtTfnExemption").val();
-        let EmploymentBasis = $("#edtEmploymentBasis").val();
-        let ResidencyStatus = $("#edtResidencyStatus").val();
-        let TaxFreeThreshold = $("#taxesTaxFreeThresholdClaimed").is(':checked') ? true : false;
-        let StudyTrainingSupportLoan = $("#taxesStudyTrainingSupportLoans").is(':checked') ? true : false;
-        let EligibleToReceiveLeaveLoading = $("#taxesEligibleReceiveLeaveLoading").is(':checked') ? true : false;
-        let OtherTaxOffsetClaimed = $("#taxesOtherTaxOffsetClaimed").is(':checked') ? true : false;
-        let UpwardvariationRequested = $("#taxesUpwardVariationRequested").is(':checked') ? true : false;
-        let SeniorandPensionersTaxOffsetClaimed = $("#taxesSeniorPensionersTaxOffsetClaimed").is(':checked') ? true : false;
-        let HasApprovedWithholdingVariation = $("#taxesHasApprovedWithholdingVariation").is(':checked') ? true : false;
-
-        employeePaySettings.fields.Employee.fields.TFN = TaxFileNumber;
-        employeePaySettings.fields.Employee.fields.TaxFreeThreshold = TaxFreeThreshold;
-        employeePaySettings.fields.Employee.fields.TFNExemption = TFNExemption;
-        employeePaySettings.fields.Employee.fields.EmploymentBasis = EmploymentBasis;
-        employeePaySettings.fields.Employee.fields.ResidencyStatus = ResidencyStatus;
-        employeePaySettings.fields.Employee.fields.StudyTrainingSupportLoan = StudyTrainingSupportLoan;
-        employeePaySettings.fields.Employee.fields.EligibleToReceiveLeaveLoading = EligibleToReceiveLeaveLoading;
-        employeePaySettings.fields.Employee.fields.OtherTaxOffsetClaimed = OtherTaxOffsetClaimed;
-        employeePaySettings.fields.Employee.fields.UpwardvariationRequested = UpwardvariationRequested;
-        employeePaySettings.fields.Employee.fields.SeniorandPensionersTaxOffsetClaimed = SeniorandPensionersTaxOffsetClaimed;
-        employeePaySettings.fields.Employee.fields.HasApprovedWithholdingVariation = HasApprovedWithholdingVariation;
-
-        useData.push(employeePaySettings);
-
         /**
-         * Saving employeePaySettings Object in localDB
+         * Saving Earning Object in localDB
         */
-
-        listEmployeePaySettings.temployeepaysettings = useData;
-        await addVS1Data('TEmployeepaysettings', JSON.stringify(listEmployeePaySettings));
-
-        earnings.push(
+        useData.push(
             new Earning({
                 type: 'TEarnings',
                 fields: new EarningFields({
@@ -994,6 +957,11 @@ Template.earningRateSettings.events({
                 })
             })
         )
+        let earningRateSettings = {
+            tearnings: useData
+        }
+        await addVS1Data('TEmployeepaysettings', JSON.stringify(earningRateSettings));
+        $('.fullScreenSpin').css('display', 'none');
     },
 });
 

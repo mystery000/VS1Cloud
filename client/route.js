@@ -937,11 +937,20 @@ authenticatedRoutes.route('/trialbalance', {
     }
 });
 
-authenticatedRoutes.route('/settings/currencies', {
-    name: 'currenciesSettings',
+// authenticatedRoutes.route('/settings/currencies', {
+//     name: 'currenciesSettings',
+//     action() {
+//         BlazeLayout.render('layout', {
+//             yield: 'currenciesSettings'
+//         });
+//     }
+// });
+
+authenticatedRoutes.route('/currenciessettings', {
+    name: 'currenciessettings',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'currenciesSettings'
+            yield: 'currenciessettings'
         });
     }
 });
@@ -1428,15 +1437,6 @@ authenticatedRoutes.route('/newbankrecon', {
     }
 });
 
-authenticatedRoutes.route('/recontransactiondetail', {
-    name: 'recontransactiondetail',
-    action() {
-        BlazeLayout.render('layout', {
-            yield: 'recontransactiondetail'
-        });
-    }
-});
-
 authenticatedRoutes.route('/depositcard', {
     name: 'depositcard',
     action() {
@@ -1748,6 +1748,24 @@ authenticatedRoutes.route('/jobsalessummary', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'jobsalessummary'
+        });
+    }
+});
+
+authenticatedRoutes.route('/supplierproductreport', {
+    name: 'supplierproductreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'supplierproductreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/fx-currency-history', {
+    name: 'FxCurrencyHistory',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'FxCurrencyHistory'
         });
     }
 });

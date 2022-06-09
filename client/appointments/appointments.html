@@ -506,8 +506,22 @@
                                     </div>
                                     <div class="col-2 colMobno" id="colMobno">
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Mobile
-                                                No.</label><input type="text" id="mobile" name="mobile" class="form-control"></div>
+                                                No.</label><input type="text" id="mobile" name="mobile" class="form-control"><span>+</span></div>
                                     </div>
+                                    <style>
+                                        #colMobno .form-group {
+                                            position: relative;
+                                        }
+                                        #colMobno .form-group input {
+                                            padding-left: 20px;
+                                        }
+                                        #colMobno .form-group span {
+                                            position: absolute;
+                                            bottom: 5px;
+                                            left: 5px;
+                                            font-size: 21px;
+                                        }
+                                    </style>
                                     <div class="col-2 colPhoneno" id="colPhoneno">
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Phone
                                                 No.</label><input type="text" id="phone" name="phone" class="form-control"></div>
@@ -735,6 +749,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
+                                            <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-primary btnStartAppointmentConfirm" id="btnStartAppointmentConfirm" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-secondary" id="btnCloseStartAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
@@ -758,6 +773,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
+                                            <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-primary btnEndActualTime" id="btnEndActualTime" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-secondary" id="btnCloseStopAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
@@ -781,6 +797,7 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
+                                            <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-primary btnSaveAppointmentSubmit" id="btnSaveAppointmentSubmit" type="submit"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-secondary" id="btnCloseSaveAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>

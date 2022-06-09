@@ -1845,7 +1845,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?id=' + supplierID);
+            FlowRouter.go('/crmoverview?supplierid=' + supplierID);
         } else {
 
         }
@@ -1855,7 +1855,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/crmoverview?id=' + supplierID);
+            FlowRouter.go('/crmoverview?supplierid=' + supplierID);
         } else {
 
         }
@@ -1865,7 +1865,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/appointments?id=' + supplierID);
+            FlowRouter.go('/appointments?supplierid=' + supplierID);
         } else {
 
         }
@@ -1875,7 +1875,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/billcard?id=' + supplierID);
+            FlowRouter.go('/billcard?supplierid=' + supplierID);
         } else {
 
         }
@@ -1885,7 +1885,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/creditcard?id=' + supplierID);
+            FlowRouter.go('/creditcard?supplierid=' + supplierID);
         } else {
 
         }
@@ -1895,7 +1895,7 @@ Template.supplierscard.events({
         let currentId = FlowRouter.current().queryParams;
         if (!isNaN(currentId.id)) {
             let supplierID = parseInt(currentId.id);
-            FlowRouter.go('/purchaseordercard?id=' + supplierID);
+            FlowRouter.go('/purchaseordercard?supplierid=' + supplierID);
         } else {
 
         }
