@@ -594,7 +594,7 @@ Template.newbankrecon.onRendered(function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let matchData = [];
         reconService.getToBeReconciledDeposit(accountId, statementDate, ignoreDate).then(function(data) {
-            console.log(data);
+            // console.log(data);
             if (data.ttobereconcileddeposit.length > 0) {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                     let reconciledepositObj = {
@@ -622,7 +622,7 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
             reconService.getToBeReconciledWithdrawal(accountId, statementDate, ignoreDate).then(function(data) {
-                console.log(data);
+                // console.log(data);
                 if (data.ttobereconciledwithdrawal.length > 0) {
                     for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
                         let reconcilewithdrawalObj = {
@@ -660,7 +660,7 @@ Template.newbankrecon.onRendered(function() {
     function setMatchTransactionData(matchData) {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
         templateObject.matchTransactionData.set(thirdaryData);
-        console.log(templateObject.matchTransactionData.get());
+        // console.log(templateObject.matchTransactionData.get());
     }
 
     templateObject.getAllReconListData = function () {
@@ -1021,10 +1021,10 @@ Template.newbankrecon.onRendered(function() {
                 openTransactionDetail(item);
             });
             $('#matchNav_'+item.YodleeLineID+' a.nav-link').on('click', function(e, li) {
-                openTransactionDetail(item);
+                openFindMatch(item);
             });
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
-                openFindMatch(item);
+                $('#matchNav_'+item.YodleeLineID+' a.nav-link').trigger('click');
             });
             $('#btnFindMatch2_'+item.YodleeLineID).on('click', function(e, li) {
                 openFindMatch(item);
@@ -1059,6 +1059,9 @@ Template.newbankrecon.onRendered(function() {
                 if (discussText.trim() !== "") {
                     saveDiscuss(discussText, item.YodleeLineID);
                 }
+            });
+            $('#chkSOR_' + item.YodleeLineID).on('click', function(e, li) {
+                $("#divLineFindMatch_"+item.YodleeLineID+" #btnGoSearch").trigger('click');
             });
         })
     }
@@ -1798,9 +1801,9 @@ Template.newbankrecon.events({
                                 AccountName: bankAccountName || '',
                             }
                         };
-                        console.log(objPaymentDetails);
+                        // console.log(objPaymentDetails);
                         paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
-                            console.log(resultPayment);
+                            // console.log(resultPayment);
                             if (resultPayment.fields.ID) {
                                 let lineReconObj = {
                                     type: "TReconciliationDepositLines",
@@ -1871,28 +1874,29 @@ Template.newbankrecon.events({
         }
     },
     'click #btnMatchCancel': function() {
-        closeFindMatch();
+        closeTransactionDetail();
     },
     'click #btnGoSearch': function(event) {
         if (selectedYodleeID) {
             $('#tblFindTransaction tbody tr').show();
             let searchName = $("#divLineFindMatch_"+selectedYodleeID+" #searchName").val();
             let searchAmount = $("#divLineFindMatch_"+selectedYodleeID+" #searchAmount").val();
-            let checked = $("#divLineFindMatch_"+selectedYodleeID+" #chkSOR:checked").val();
+            let checked = $("#chkSOR_"+selectedYodleeID+":checked").val();
             let DepOrWith = $('#DepOrWith_'+selectedYodleeID).val();
             $('.tblFindTransaction tbody tr').each(function() {
                 let found = false;
                 let nameText = $(this).find(".colName").text().toLowerCase();
+                let refText = $(this).find(".colRef").text().toLowerCase();
                 let descText = $(this).find(".colDesc").text().toLowerCase();
                 let spentAmount = Number($(this).find(".colSpentAmount").text().replace(/[^0-9.-]+/g, "")) || 0;
                 let receivedAmount = Number($(this).find(".colReceivedAmount").text().replace(/[^0-9.-]+/g, "")) || 0;
                 if (searchName !== '' && searchAmount !== '') {
-                    if ((nameText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0)
+                    if ((nameText.indexOf(searchName.toLowerCase()) >= 0 || refText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0)
                     && (parseFloat(spentAmount) === parseFloat(searchAmount) || parseFloat(receivedAmount) === parseFloat(searchAmount))) {
                         found = true;
                     }
                 } else if (searchName !== '') {
-                    if (nameText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0) {
+                    if (nameText.indexOf(searchName.toLowerCase()) >= 0 || refText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0) {
                         found = true;
                     }
                 } else if (searchAmount !== '') {
@@ -1924,16 +1928,6 @@ Template.newbankrecon.events({
         if (selectedYodleeID) {
             $("#divLineFindMatch_"+selectedYodleeID+" #searchName").val('');
             $("#divLineFindMatch_"+selectedYodleeID+" #searchAmount").val('');
-            $("#divLineFindMatch_"+selectedYodleeID+" #btnGoSearch").trigger('click');
-        }
-    },
-    'click #chkSOR': function(event) {
-        if (selectedYodleeID) {
-            if ($(event.target).is(':checked')) {
-                $("#divLineFindMatch_"+selectedYodleeID+" #chkSOR").attr('checked', true);
-            } else {
-                $("#divLineFindMatch_"+selectedYodleeID+" #chkSOR").attr('checked', false);
-            }
             $("#divLineFindMatch_"+selectedYodleeID+" #btnGoSearch").trigger('click');
         }
     },
@@ -2528,40 +2522,45 @@ function openTransactionDetail(item){
         closeTransactionDetail();
     }
     selectedYodleeID = item.YodleeLineID;
-    let who = $('#who_'+item.YodleeLineID).val();
+    let who = $('#who_'+selectedYodleeID).val();
     who = (who !== '')?who:item.YodleeDescription;
     let amount = item.YodleeAmount;
     let dateIn = item.SortDate;
     $('#DepOrWith_'+selectedYodleeID).val(item.deporwith);
 
-    $('#createNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#createNav_'+item.YodleeLineID).hide();
-    $('#transferNav_'+item.YodleeLineID).hide();
-    $('#discussNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#btnFindMatchNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#btnFindMatchNav_'+item.YodleeLineID).hide();
-    $('#matchNav_'+item.YodleeLineID+' a.nav-link').addClass('active');
+    $('#createNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#createNav_'+selectedYodleeID).hide();
+    $('#transferNav_'+selectedYodleeID).hide();
+    $('#discussNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#findMatchNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#findMatchNav_'+selectedYodleeID).hide();
+    $('#matchNav_'+selectedYodleeID+' a.nav-link').addClass('active');
 
-    $('#match_'+item.YodleeLineID).addClass('show');
-    $('#match_'+item.YodleeLineID).addClass('active');
-    $('#create_'+item.YodleeLineID).removeClass('show');
-    $('#create_'+item.YodleeLineID).removeClass('active');
-    $('#discuss_'+item.YodleeLineID).removeClass('show');
-    $('#discuss_'+item.YodleeLineID).removeClass('active');
-    $('#match_'+item.YodleeLineID+' .textFindMatch').show();
-    $('#match_'+item.YodleeLineID+' .btnFindMatch').hide();
-    $('#divLineDetail_'+item.YodleeLineID).show();
+    $('#match_'+selectedYodleeID).addClass('show');
+    $('#match_'+selectedYodleeID).addClass('active');
+    $('#create_'+selectedYodleeID).removeClass('show');
+    $('#create_'+selectedYodleeID).removeClass('active');
+    $('#discuss_'+selectedYodleeID).removeClass('show');
+    $('#discuss_'+selectedYodleeID).removeClass('active');
+    $('#match_'+selectedYodleeID+' .textFindMatch').show();
+    $('#match_'+selectedYodleeID+' .btnFindMatch').hide();
+    $('#divLineDetail_'+selectedYodleeID).show();
     setTransactionDetail(amount, dateIn, who, item.deporwith);
 }
 function closeTransactionDetail() {
     if (selectedYodleeID) {
         $('#divLineDetail_' + selectedYodleeID).hide();
         $('#divLineFindMatch_' + selectedYodleeID).hide();
-        $('#matchNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
+
         $('#createNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
+        $('#findMatchNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
+        $('#transferNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
+        $('#discussNav_' + selectedYodleeID + ' a.nav-link').removeClass('active');
         $('#createNav_' + selectedYodleeID).show();
         $('#transferNav_' + selectedYodleeID).show();
-        $('#btnFindMatchNav_' + selectedYodleeID).show();
+        $('#findMatchNav_' + selectedYodleeID).show();
+        $('#matchNav_' + selectedYodleeID + ' a.nav-link').addClass('active');
+
         $('#match_' + selectedYodleeID).addClass('show');
         $('#match_' + selectedYodleeID).addClass('active');
         $('#create_' + selectedYodleeID).removeClass('show');
@@ -2615,7 +2614,7 @@ function openFindMatch(item){
     }
     selectedYodleeID = item.YodleeLineID;
     $('#DepOrWith_'+selectedYodleeID).val(item.deporwith);
-    $('#divLineFindMatch_'+item.YodleeLineID+ ' #tblFindTransaction').DataTable({
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #tblFindTransaction').DataTable({
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         paging: false,
         filter: false,
@@ -2639,32 +2638,34 @@ function openFindMatch(item){
             $('#divLineFindMatch_'+item.YodleeLineID+ ' #tblFindTransaction').DataTable().ajax.reload();
         }
     });
-    $('#divLineFindMatch_'+item.YodleeLineID+ ' #tblFindTransaction').wrap('<div class="dataTables_scroll" />');
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #tblFindTransaction').wrap('<div class="dataTables_scroll" />');
 
-    $('#createNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#createNav_'+item.YodleeLineID).hide();
-    $('#transferNav_'+item.YodleeLineID).hide();
-    $('#discussNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#btnFindMatchNav_'+item.YodleeLineID+' a.nav-link').removeClass('active');
-    $('#btnFindMatchNav_'+item.YodleeLineID).hide();
-    $('#matchNav_'+item.YodleeLineID+' a.nav-link').addClass('active');
+    $('#createNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#createNav_'+selectedYodleeID).hide();
+    $('#transferNav_'+selectedYodleeID).hide();
+    $('#discussNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#findMatchNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
+    $('#findMatchNav_'+selectedYodleeID).hide();
+    $('#matchNav_'+selectedYodleeID+' a.nav-link').addClass('active');
 
-    $('#match_'+item.YodleeLineID).addClass('show');
-    $('#match_'+item.YodleeLineID).addClass('active');
-    $('#create_'+item.YodleeLineID).removeClass('show');
-    $('#create_'+item.YodleeLineID).removeClass('active');
-    $('#discuss_'+item.YodleeLineID).removeClass('show');
-    $('#discuss_'+item.YodleeLineID).removeClass('active');
-    $('#match_'+item.YodleeLineID+' .textFindMatch').show();
-    $('#match_'+item.YodleeLineID+' .btnFindMatch').hide();
+    $('#create_'+selectedYodleeID).removeClass('show');
+    $('#create_'+selectedYodleeID).removeClass('active');
+    $('#transfer_'+selectedYodleeID).removeClass('show');
+    $('#transfer_'+selectedYodleeID).removeClass('active');
+    $('#discuss_'+selectedYodleeID).removeClass('show');
+    $('#discuss_'+selectedYodleeID).removeClass('active');
+    $('#match_'+selectedYodleeID).addClass('show');
+    $('#match_'+selectedYodleeID).addClass('active');
+    $('#match_'+selectedYodleeID+' .textFindMatch').show();
+    $('#match_'+selectedYodleeID+' .btnFindMatch').hide();
     if (item.deporwith === 'spent') {
-        $('#divLineFindMatch_'+item.YodleeLineID+ ' #labelChkSOR').text("Show Received Items");
+        $('#divLineFindMatch_'+selectedYodleeID+ ' #labelChkSOR').text("Show Received Items");
     } else {
-        $('#divLineFindMatch_'+item.YodleeLineID+ ' #labelChkSOR').text("Show Spent Items");
+        $('#divLineFindMatch_'+selectedYodleeID+ ' #labelChkSOR').text("Show Spent Items");
     }
-    $('#divLineFindMatch_'+item.YodleeLineID+ ' #matchTotal').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
-    $('#divLineFindMatch_'+item.YodleeLineID+ ' #matchTotal2').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
-    $('#divLineFindMatch_'+item.YodleeLineID).show();
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #matchTotal').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #matchTotal2').text((utilityService.modifynegativeCurrencyFormat(item.YodleeAmount)));
+    $('#divLineFindMatch_'+selectedYodleeID).show();
     setCalculated2();
 }
 

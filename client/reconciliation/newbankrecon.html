@@ -322,8 +322,8 @@
                                     <li class="nav-item" id="discussNav_{{ itemTransaction.YodleeLineID }}">
                                         <a class="nav-link" data-toggle="tab" href="#discuss_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="discuss">Discuss</a>
                                     </li>
-                                    <li class="nav-item" id="btnFindMatchNav_{{ itemTransaction.YodleeLineID }}">
-                                        <a class="nav-link" data-toggle="tab" id="btnFindMatch_{{ itemTransaction.YodleeLineID }}" role="tab" aria-controls="btnFindMatch" style="font-weight: 700; color: #00a3d3; cursor: pointer;">Find & Match</a>
+                                    <li class="nav-item" id="findMatchNav_{{ itemTransaction.YodleeLineID }}">
+                                        <a class="nav-link" id="btnFindMatch_{{ itemTransaction.YodleeLineID }}" style="font-weight: 700; color: #00a3d3; cursor: pointer;">Find & Match</a>
                                     </li>
                                 </ul>
                             </div>
@@ -413,8 +413,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="card-footer">
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -723,8 +721,8 @@
                                 <div class="col-7 d-xl-flex justify-content-xl-end align-items-xl-start">
                                     <div class="form-group">
                                         <div class="custom-control custom-switch" style="padding-top: 30px;">
-                                            <input type="checkbox" class="custom-control-input" id="chkSOR" checked style="cursor: pointer;"/>
-                                            <label style="position: relative !important; cursor: pointer;" class="custom-control-label" for="chkSOR" id="labelChkSOR">Show Spent Items</label>
+                                            <input type="checkbox" class="custom-control-input" id="chkSOR_{{ itemTransaction.YodleeLineID }}" style="cursor: pointer;" checked/>
+                                            <label style="position: relative !important; cursor: pointer;" class="custom-control-label" for="chkSOR_{{ itemTransaction.YodleeLineID }}" id="labelChkSOR">Show Spent Items</label>
                                         </div>
                                     </div>
                                     <div class="form-group" style="margin-left: 20px;">
@@ -769,13 +767,13 @@
                                                                 <label class="custom-control-label" for="formCheck_{{item.ID}}"></label>
                                                             </div>
                                                         </td>
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn depositClick">{{item.SortDate}}</td>
-                                                        <td class="colDate" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
-                                                        <td class="colName" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
-                                                        <td class="colRef" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
-                                                        <td class="colDesc depositClick" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
-                                                        <td class="text-right colSpentAmount" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
-                                                        <td class="text-right colReceivedAmount" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
+                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.SortDate}}</td>
+                                                        <td class="colDate">{{item.VS1Date}}</td>
+                                                        <td class="colName">{{item.CompanyName}}</td>
+                                                        <td class="colRef">{{item.ReferenceNo}}</td>
+                                                        <td class="colDesc">{{item.PaymentType}}</td>
+                                                        <td class="text-right colSpentAmount">{{item.spentVS1Amount}}</td>
+                                                        <td class="text-right colReceivedAmount">{{item.receivedVS1Amount}}</td>
                                                     </tr>
                                                 {{/each}}
                                             {{/if}}
@@ -829,13 +827,13 @@
                                                                 <label class="custom-control-label" for="formCheck_{{item.ID}}"></label>
                                                             </div>
                                                         </td>
-                                                        <td contenteditable="false" class="colSortDate hiddenColumn depositClick">{{item.SortDate}}</td>
-                                                        <td class="colDate" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
-                                                        <td class="colName" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
-                                                        <td class="colDesc" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
-                                                        <td class="colPaymentType" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
-                                                        <td class="colSpentAmount text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
-                                                        <td class="colReceivedAmount text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
+                                                        <td contenteditable="false" class="colSortDate hiddenColumn">{{item.SortDate}}</td>
+                                                        <td class="colDate">{{item.VS1Date}}</td>
+                                                        <td class="colName">{{item.CompanyName}}</td>
+                                                        <td class="colRef">{{item.ReferenceNo}}</td>
+                                                        <td class="colDesc">{{item.PaymentType}}</td>
+                                                        <td class="colSpentAmount text-right">{{item.spentVS1Amount}}</td>
+                                                        <td class="colReceivedAmount text-right">{{item.receivedVS1Amount}}</td>
                                                     </tr>
                                                 {{/each}}
                                             </tbody>
