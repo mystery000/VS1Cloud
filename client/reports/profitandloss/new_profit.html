@@ -1963,20 +1963,18 @@
 
                                             <!-- <div class="sortableAccount">
                                                 {{#each item in profitlosslayoutrecords }}
-                                                    {{#if item.IsRoot}}
-                                                        <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
-                                                            <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
-                                                            <div class="group-items">
-                                                                {{#each acItem in item.subAccounts }}
-                                                                    {{#if acItem.IsAccount}}
-                                                                        <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
-                                                                    {{else}}    
-                                                                        <h2 class="handel sortItem disableCursor" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h2>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                            </div>
+                                                    <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
+                                                        <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
+                                                        <div class="group-items">
+                                                            {{#each acItem in item.subAccounts }}
+                                                                {{#if acItem.AccountID }}
+                                                                    <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
+                                                                {{else}}    
+                                                                    <h2 class="handel sortItem disableCursor" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h2>
+                                                                {{/if}}
+                                                            {{/each}}
                                                         </div>
-                                                    {{/if}}
+                                                    </div>
                                                 {{/each}}
                                             </div>  -->
                                         </div>
