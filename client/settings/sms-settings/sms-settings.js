@@ -54,6 +54,7 @@ Template.smssettings.onRendered(function () {
     twilioAccountId: "",
     twilioAccountToken: "",
     twilioTelephoneNumber: "",
+    headerAppointmentSMSMessage: "Sent from [Company Name]",
     startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
     saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
     stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -67,6 +68,7 @@ Template.smssettings.onRendered(function () {
           case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountId; break;
           case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue || smsSettings.twilioAccountToken; break;
           case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue || smsSettings.twilioTelephoneNumber; break;
+          case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.headerAppointmentSMSMessage; break;
           case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.saveAppointmentSMSMessage; break;
           case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.startAppointmentSMSMessage; break;
           case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue !== ""? result.terppreference[i].Fieldvalue : smsSettings.stopAppointmentSMSMessage;
@@ -77,6 +79,7 @@ Template.smssettings.onRendered(function () {
     $('#twilioAccountId').val(smsSettings.twilioAccountId);
     $('#twilioAccountToken').val(smsSettings.twilioAccountToken);
     $('#twilioTelephoneNumber').val(smsSettings.twilioTelephoneNumber);
+    $('#headerAppointmentSMS').val(smsSettings.headerAppointmentSMSMessage);
     $('#saveAppointmentSMS').val(smsSettings.saveAppointmentSMSMessage);
     $('#startAppointmentSMS').val(smsSettings.startAppointmentSMSMessage);
     $('#stopAppointmentSMS').val(smsSettings.stopAppointmentSMSMessage);
@@ -96,7 +99,7 @@ Template.smssettings.events({
     const templateObject = Template.instance();
 
     //TODO: Save SMS Settings with API
-    const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];
+    const allKeys = ["VS1SMSID", "VS1SMSToken", "VS1SMSPhone", "VS1HEADERSMSMSG", "VS1SAVESMSMSG", "VS1STARTSMSMSG", "VS1STOPSMSMSG"];
     for (const eKey of allKeys) {
       let value = '';
       let tag = '';
@@ -104,6 +107,7 @@ Template.smssettings.events({
         case "VS1SMSID": value = $('#twilioAccountId').val(); tag = "sid,twilliotoken,phone"; break;
         case "VS1SMSToken": value = $('#twilioAccountToken').val(); tag = "sid,twilliotoken,phone"; break;
         case "VS1SMSPhone": value = $('#twilioTelephoneNumber').val(); tag = "sid,twilliotoken,phone"; break;
+        case "VS1HEADERSMSMSG": value = $('#headerAppointmentSMS').val(); break;
         case "VS1SAVESMSMSG": value = $('#saveAppointmentSMS').val(); break;
         case "VS1STARTSMSMSG": value = $('#startAppointmentSMS').val(); break;
         case "VS1STOPSMSMSG": value = $('#stopAppointmentSMS').val();
