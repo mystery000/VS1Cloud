@@ -94,6 +94,8 @@ Template.supplierpaymentcard.onRendered(() => {
         });
     }, 500);
 
+    $('.currency-container label').text('Foreign currency');
+
     $('#edtSupplierName').attr('readonly', true);
     $('#edtSupplierName').css('background-color', '#eaecf4');
     $("#date-input,#dtPaymentDate").datepicker({
@@ -5508,6 +5510,14 @@ Template.supplierpaymentcard.events({
     // 'click #sltDepartment': function(event) {
     //     $('#departmentModal').modal('toggle');
     // },
+    'change #exchange_rate': (e) => {
+        console.log(e);
+        const paymentAmount = parseInt($('#edtPaymentAmount').val());
+        const exchangeRate = parseInt($(e.currentTarget).val());
+        const appliedAmount = paymentAmount * exchangeRate;
+
+        console.log(paymentAmount, exchangeRate, appliedAmount);
+    },
     'click .btnSave': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();

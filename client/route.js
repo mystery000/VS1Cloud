@@ -1760,3 +1760,12 @@ authenticatedRoutes.route('/supplierproductreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/fx-currency-history', {
+    name: 'FxCurrencyHistory',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'FxCurrencyHistory'
+        });
+    }
+});

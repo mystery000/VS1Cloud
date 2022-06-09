@@ -314,6 +314,14 @@ export class TaxRateService extends BaseService {
         return this.getList(this.ERPObjects.TCurrency, options);
     }
 
+    getCurrencyHistory() {
+        let options = {
+            PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",
+            select: "[Active]=true",
+        };
+        return this.getList(this.ERPObjects.TCurrencyRateHistory, options);
+    }
+
     getCurrenciesVS1() {
         let options = {
             PropertyList: "ID, Code, CurrencyDesc, Currency, BuyRate, SellRate,Active, CurrencySymbol,Country,RateLastModified",

@@ -1448,13 +1448,13 @@
                                             <div class="d-xl-flex justify-content-between align-items-xl-center" style="margin: 16px 0px 0px 0px;">
                                                 <button class="btn btn-success btnSave" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                                                 <div>
-                                                    <button class="btn btn-info btnCustomerTask" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Task</button>
-                                                    <button class="btn btn-info btnCustomerEmail" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Email</button>
-                                                    <button class="btn btn-info btnCustomerAppointment" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Appointment</button>
+                                                    <button class="btn btn-warning btnCustomerTask" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Task</button>
+                                                    <button class="btn btn-primary btnCustomerEmail" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Email</button>
+                                                    <button class="btn btn-success btnCustomerAppointment" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Appointment</button>
                                                     <button class="btn btn-info btnCustomerQuote" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Quote</button>
-                                                    <button class="btn btn-info btnCustomerSalesOrder" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Sales Order</button>
-                                                    <button class="btn btn-info btnCustomerInvoice" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Invoice</button>
-                                                    <button class="btn btn-info btnCustomerRefund" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Refund</button>
+                                                    <button class="btn btn-warning btnCustomerSalesOrder" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Sales Order</button>
+                                                    <button class="btn btn-primary btnCustomerInvoice" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Invoice</button>
+                                                    <button class="btn btn-success btnCustomerRefund" type="button"><i class="fas fa-plus" style="margin-right: 5px;"></i>Refund</button>
                                                 </div>
                                                 <div>
                                                     <a class="btn btn-danger" role="button" data-toggle="modal" href="#deleteCustomerModal"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i> Delete</a>
@@ -2572,11 +2572,39 @@
                                                         input[type=number]::-webkit-outer-spin-button {
                                                             opacity: 1;
                                                         }
+                                                        .task_priority_0 {
+                                                            color: #1cc88a;
+                                                            background: #1cc88a;
+                                                        }
+
+                                                        .task_priority_1 {
+                                                            color: #00a3d3;
+                                                            background: #00a3d3;
+                                                        }
+
+                                                        .task_priority_2 {
+                                                            color: #f6c23e;
+                                                            background: #f6c23e;
+                                                        }
+
+                                                        .task_priority_3 {
+                                                            color: #e74a3b;
+                                                            background: #e74a3b;
+                                                        }
+                                                        .taskTag {
+                                                            margin: 4px;
+                                                            /* font-size: 12px; */
+                                                        }
+                                                        .taganchor {
+                                                            color: #858796 !important;
+                                                            text-decoration: none;
+                                                        }
                                                     </style>
                                                     <table id="tblCrmList" style="width:100%" class="dataTable table table-striped table-bordered tblCrmList">
                                                         <thead>
                                                         <tr class="dnd-moved">
                                                             <th class="th colTaskId hiddenColumn"></th>
+                                                            <th class="th colCompleteTask" style="width: 2%;"></th>
                                                             <th class="th colDate" style="width:100px;">Date</th>
                                                             <th class="th colTaskName" style="width:150px;">Task</th>
                                                             <th class="th colTaskDesc" style="width:300px;">Description</th>
@@ -2588,10 +2616,25 @@
                                                             {{#each item in crmRecords}}
                                                                 <tr class="dnd-moved" style="cursor: pointer;" id="{{item.id}}">
                                                                     <td contenteditable="false" class="colTaskId hiddenColumn" >{{item.id}}</td>
+                                                                    <td contenteditable="false" class="th colCompleteTask" style="width: 2%;">
+                                                                        <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_{{item.priority}}"
+                                                                             style="width:15px;">
+                                                                        </div>
+                                                                    </td>
                                                                     <td contenteditable="false" class="colDate">{{item.date}}</td>
                                                                     <td contenteditable="false" class="colTaskName">{{item.taskName}}</td>
                                                                     <td contenteditable="false" class="colTaskDesc" style="white-space:pre-wrap;">{{item.description}}</td>
-                                                                    <td contenteditable="false" class="colTaskLabels">{{item.labels}}</td>
+                                                                    <td contenteditable="false" class="colTaskLabels">
+                                                                        {{#if item.labels}}
+                                                                            {{#each label in item.labels}}
+                                                                                <span class="taskTag">
+                                                                                    <a class="taganchor filterByLabel" href="">
+                                                                                        <i class="fas fa-tag" style="margin-right: 5px;"></i>{{label.TaskLabelName}}
+                                                                                    </a>
+                                                                                </span>
+                                                                            {{/each}}
+                                                                        {{/if}}
+                                                                    </td>
                                                                 </tr>
                                                             {{/each}}
                                                         {{/if}}
