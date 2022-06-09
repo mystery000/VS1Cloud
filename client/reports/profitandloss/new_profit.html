@@ -359,34 +359,10 @@
                                 <div class="dropdown float-left" style="margin: 8px;">
                                     <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
                                 </div>
-
-
-                                <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 8px;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="fxRate" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        FX Rate
-                                    </button>
-                                    <div class="dropdown-menu accountingBasisDropdown"
-                                        aria-labelledby="fxRate" style="width: 250px;">
-                                        <span>Show</span>
-                                        <hr class="periodSelectorLine" />
-                                       
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input aud" id="aud" name="checkbox">
-                                            <label class="custom-control-label" for="aud">AUD</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input gbp" id="gbp" name="checkbox">
-                                            <label class="custom-control-label" for="gbp">GBP</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input usd" id="usd" name="checkbox">
-                                            <label class="custom-control-label" for="usd">USD</label>
-                                        </span>
-                                        
-                                    </div>
+                                <div class="dropdown float-left" style="margin: 8px;">
+                                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalFXRates">FX Rates</a>
                                 </div>
+
                             </div>
                             <div class="col-12 col-md-2">
                                 <style>
@@ -953,6 +929,33 @@
                     <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input aud" id="aud" name="checkbox">
+                        <label class="custom-control-label" for="aud">AUD</label>
+                    </span>
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input gbp" id="gbp" name="checkbox">
+                        <label class="custom-control-label" for="gbp">GBP</label>
+                    </span>
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input usd" id="usd" name="checkbox">
+                        <label class="custom-control-label" for="usd">USD</label>
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
         </div>
@@ -1967,7 +1970,7 @@
                                                             </div>
                                                             <ol class="ddllkk">
                                                                 {{#each acItem in item.subAccounts }}
-                                                                    {{#if acItem.AccountID}}
+                                                                    {{#if isAccount acItem }}
                                                                         <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
@@ -3138,9 +3141,7 @@
                         <div class="p-1 m-1">
                             <select class="form-control" id="nplPlaceInMoveSelection">
                                 {{#each item in profitlosslayoutrecords }}
-                                    {{#if item.IsRoot }}
-                                        <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
-                                    {{/if}}
+                                    <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
                                 {{/each}}
                             </select>
                         </div>

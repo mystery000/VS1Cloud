@@ -608,12 +608,13 @@ templateObject.getProfitLossLayout = async function() {
           subAccounts: subAccounts
         }) 
     });   
+    console.log( newprofitLossLayouts );
     templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
 
     // handle Dragging and sorting
     setTimeout(function () {
     
-      console.log('chdsdsdsdal sdsdsd');
+      // console.log('chdsdsdsdal sdsdsd');
       var oldContainer;
       $("ol.nested_with_switch").sortable({
           group: 'nested_with_switch',
@@ -1863,6 +1864,12 @@ Template.newprofitandloss.events({
 });
 
 Template.newprofitandloss.helpers({
+  isAccount( layout ){
+    if( layout.AccountID > 1 ){
+      return true;
+    }
+    return false
+  },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
