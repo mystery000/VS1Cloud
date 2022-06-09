@@ -1476,7 +1476,7 @@ Template.newbankrecon.events({
     'click #addLine': function() {
         if (selectedYodleeID) {
             const rowData = $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice tbody>tr:last").clone(true);
-            let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+            let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).val("");
@@ -1514,7 +1514,7 @@ Template.newbankrecon.events({
             }
             let employeeID = Session.get('mySessionEmployeeLoggedID');
             let employeename = Session.get('mySessionEmployee');
-            let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+            let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
             let clientID = $("#whatID_"+selectedYodleeID).val();
             let clientName = $("#whatDetail_"+selectedYodleeID).val();
             let reconNote = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val();
@@ -1944,14 +1944,21 @@ Template.newbankrecon.events({
             let viewTransactionData = templateObject.viewTransactionData.get();
             let lineID = event.target.id;
             lineID = lineID.split("_").pop();
-            let unselectedData = matchTransactionData.filter(function(obj) {
-                return obj.ID !== lineID;
-            });
-            let selectedData = matchTransactionData.filter(function(obj) {
-                return obj.ID === lineID;
-            });
-            viewTransactionData.push(selectedData[0]);
-            templateObject.viewTransactionData.set(viewTransactionData);
+            if ($(event.target).is(':checked')) {
+                let unselectedData = matchTransactionData.filter(function (obj) {
+                    return obj.ID !== lineID;
+                });
+                let selectedData = matchTransactionData.filter(function (obj) {
+                    return obj.ID === lineID;
+                });
+                viewTransactionData.push(selectedData[0]);
+                templateObject.viewTransactionData.set(viewTransactionData);
+            } else {
+                let unselectedData = viewTransactionData.filter(function (obj) {
+                    return obj.ID !== lineID;
+                });
+                templateObject.viewTransactionData.set(unselectedData);
+            }
             setTimeout(function () {
                 setCalculated2();
             }, 100);
@@ -1970,7 +1977,6 @@ Template.newbankrecon.events({
             let selectedData = viewTransactionData.filter(function(obj) {
                 return obj.ID === lineID;
             });
-            matchTransactionData.push(selectedData[0]);
             templateObject.viewTransactionData.set(unselectedData);
             setTimeout(function () {
                 setCalculated2();
@@ -2371,7 +2377,7 @@ function setCalculated() {
         let discountTotal = 0;
         let taxTotal = 0;
         let grandTotal = 0;
-        let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+        let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let discountRate = 0;
         if (DepOrWith === "spent") {
             let customerName = $('#whatDetail_' + selectedYodleeID).val();
@@ -2570,7 +2576,7 @@ function setCalculated2() {
     if (selectedYodleeID) {
         let $tblrows = $('#divLineFindMatch_' + selectedYodleeID + ' #tblViewTransaction tbody tr');
         let subTotal = 0;
-        let DepOrWith = $("#divLineDetail_"+selectedYodleeID+" #DepOrWith").val();
+        let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let matchTotal = $("#divLineFindMatch_"+selectedYodleeID+" #matchTotal").text();
         matchTotal = Number(matchTotal.replace(/[^0-9.-]+/g, "")) || 0;
 
