@@ -1,9 +1,8 @@
 import "../lib/global/indexdbstorage.js";
 
 import { CRMService } from "./crm-service";
-import {ContactService} from "../contacts/contact-service";
+import { ContactService } from "../contacts/contact-service";
 let crmService = new CRMService();
-
 
 Template.crmoverview.onCreated(function () {
   let templateObject = Template.instance();
@@ -21,94 +20,104 @@ Template.crmoverview.onRendered(function () {
   templateObject.currentTabID.set("allTasks-tab");
 
   function getCustomerData(customerID) {
-    getVS1Data('TCustomerVS1').then(function (dataObject) {
-      if (dataObject.length === 0) {
-        contactService.getOneCustomerDataEx(customerID).then(function (data) {
-          setCustomerByID(data);
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        let useData = data.tcustomervs1;
-        let added = false;
-        for (let i = 0; i < useData.length; i++) {
-          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
-            added = true;
-            setCustomerByID(useData[i]);
-          }
-        }
-        if (!added) {
+    getVS1Data("TCustomerVS1")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
           contactService.getOneCustomerDataEx(customerID).then(function (data) {
             setCustomerByID(data);
           });
-        }
-      }
-    }).catch(function (err) {
-      contactService.getOneCustomerDataEx(customerID).then(function (data) {
-        $('.fullScreenSpin').css('display', 'none');
-        setCustomerByID(data);
-      });
-    });
-  }
-  function getSupplierData(customerID) {
-    getVS1Data('TSupplierVS1').then(function (dataObject) {
-      if (dataObject.length === 0) {
-        contactService.getOneSupplierDataEx(customerID).then(function (data) {
-          setCustomerByID(data);
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        let useData = data.tsuppliervs1;
-        let added = false;
-        for (let i = 0; i < useData.length; i++) {
-          if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
-            added = true;
-            setCustomerByID(useData[i]);
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tcustomervs1;
+          let added = false;
+          for (let i = 0; i < useData.length; i++) {
+            if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+              added = true;
+              setCustomerByID(useData[i]);
+            }
+          }
+          if (!added) {
+            contactService
+              .getOneCustomerDataEx(customerID)
+              .then(function (data) {
+                setCustomerByID(data);
+              });
           }
         }
-        if (!added) {
+      })
+      .catch(function (err) {
+        contactService.getOneCustomerDataEx(customerID).then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          setCustomerByID(data);
+        });
+      });
+  }
+  function getSupplierData(customerID) {
+    getVS1Data("TSupplierVS1")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
           contactService.getOneSupplierDataEx(customerID).then(function (data) {
             setCustomerByID(data);
           });
-        }
-      }
-    }).catch(function (err) {
-      contactService.getOneSupplierDataEx(customerID).then(function (data) {
-        $('.fullScreenSpin').css('display', 'none');
-        setCustomerByID(data);
-      });
-    });
-  }
-  function getLeadData(leadID) {
-    getVS1Data('TProspectVS1').then(function (dataObject) {
-      if (dataObject.length === 0) {
-        contactService.getOneLeadDataEx(leadID).then(function (data) {
-          setCustomerByID(data);
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        let useData = data.tprospectvs1;
-        let added = false;
-        for (let i = 0; i < useData.length; i++) {
-          if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
-            added = true;
-            setCustomerByID(useData[i]);
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tsuppliervs1;
+          let added = false;
+          for (let i = 0; i < useData.length; i++) {
+            if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+              added = true;
+              setCustomerByID(useData[i]);
+            }
+          }
+          if (!added) {
+            contactService
+              .getOneSupplierDataEx(customerID)
+              .then(function (data) {
+                setCustomerByID(data);
+              });
           }
         }
-        if (!added) {
+      })
+      .catch(function (err) {
+        contactService.getOneSupplierDataEx(customerID).then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          setCustomerByID(data);
+        });
+      });
+  }
+  function getLeadData(leadID) {
+    getVS1Data("TProspectVS1")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
           contactService.getOneLeadDataEx(leadID).then(function (data) {
             setCustomerByID(data);
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tprospectvs1;
+          let added = false;
+          for (let i = 0; i < useData.length; i++) {
+            if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
+              added = true;
+              setCustomerByID(useData[i]);
+            }
+          }
+          if (!added) {
+            contactService.getOneLeadDataEx(leadID).then(function (data) {
+              setCustomerByID(data);
+            });
+          }
         }
-      }
-    }).catch(function (err) {
-      contactService.getOneLeadDataEx(leadID).then(function (data) {
-        $('.fullScreenSpin').css('display', 'none');
-        setCustomerByID(data);
+      })
+      .catch(function (err) {
+        contactService.getOneLeadDataEx(leadID).then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          setCustomerByID(data);
+        });
       });
-    });
   }
-  function setCustomerByID(data){
-    $('#add_task_name').val(data.fields.ClientName);
+  function setCustomerByID(data) {
+    $("#add_task_name").val(data.fields.ClientName);
     $("#editProjectID").val("");
     $("#txtCrmSubTaskID").val("");
 
@@ -137,7 +146,6 @@ Template.crmoverview.onRendered(function () {
 });
 
 Template.crmoverview.events({
-
   "click .menuTasklist": function (e) {
     Template.instance().crmtaskmitem.set("all");
   },
@@ -206,18 +214,27 @@ Template.crmoverview.events({
               selected_record.TaskDescription
             );
 
+            let projectName =
+              selected_record.ProjectName == "Default"
+                ? "All Tasks"
+                : selected_record.ProjectName;
+
             let catg = "";
             let today = moment().format("YYYY-MM-DD");
             if (selected_record.due_date) {
               if (selected_record.due_date.substring(0, 10) == today) {
                 catg =
                   `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
-                  "<span class='text-primary'>Today</span>";
+                  "<span class='text-primary'>" +
+                  projectName +
+                  "</span>";
                 $(".taskDueDate").css("color", "#00a3d3");
               } else if (selected_record.due_date.substring(0, 10) > today) {
                 catg =
                   `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
-                  "<span class='text-danger'>Upcoming</span>";
+                  "<span class='text-danger'>" +
+                  projectName +
+                  "</span>";
                 $(".taskDueDate").css("color", "#1cc88a");
               } else if (selected_record.due_date.substring(0, 10) < today) {
                 // catg =
@@ -226,18 +243,24 @@ Template.crmoverview.events({
                 // $(".taskDueDate").css("color", "#e74a3b");
                 catg =
                   `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                  "<span class='text-success'>All Tasks</span>";
+                  "<span class='text-success'>" +
+                  projectName +
+                  "</span>";
                 $(".taskDueDate").css("color", "#1cc88a");
               } else {
                 catg =
                   `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                  "<span class='text-success'>All Tasks</span>";
+                  "<span class='text-success'>" +
+                  projectName +
+                  "</span>";
                 $(".taskDueDate").css("color", "#1cc88a");
               }
             } else {
               catg =
                 `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                "<span class='text-success'>All Tasks</span>";
+                "<span class='text-success'>" +
+                projectName +
+                "</span>";
               $(".taskDueDate").css("color", "#1cc88a");
             }
 
