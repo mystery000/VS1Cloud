@@ -134,7 +134,9 @@ Template.CurrencyWidget.events({
         : $(e.currentTarget).find(".colSellRate").text();
 
     $("#sltCurrency").val(currencyCode);
+    $("#sltCurrency").trigger("change");
     $("#exchange_rate").val(currencyRate);
+    $("#exchange_rate").trigger("change");
     $("#currencyModal").modal("toggle");
 
     $("#tblCurrencyPopList_filter .form-control-sm").val("");
