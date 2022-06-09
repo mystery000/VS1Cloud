@@ -58,94 +58,52 @@
                 <!-- Start {{> optionNavSalesOverview}} -->
                 <div class="d-xl-flex justify-content-xl-end">
                    
-                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                        <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
-                            <style>
-                                .btn-daterange::after {
-                                    display: none;
-                                }
-                            </style>
-                            <style>
-                                th {
-                                    background-color: #ededed;
-                                }
-
-                                .table-striped tbody tr:nth-of-type(odd) {
-                                    background-color: white !important;
-                                }
-
-                                .table-striped tbody tr:nth-of-type(even) {
-                                    background-color: #0000000d !important;
-                                }
-
-                                .JColResizer>tbody>tr>td,
-                                .JColResizer>tbody>tr>th {
-                                    padding: .75rem !important;
-                                }
-
-                                .hiddenColumn {
-                                    display: none;
-                                }
-
-                                .showColumn {
-                                    display: table-cell;
-                                    padding: .75rem;
-                                    vertical-align: top;
-                                }
-
-                                input[type=number]::-webkit-inner-spin-button,
-                                input[type=number]::-webkit-outer-spin-button {
-                                    opacity: 1;
-                                }
-
-                                .text-deleted {
-                                    background-color: #e74a3b !important;
-                                    color: #fff;
-                                }
-                            </style>
-                            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
+                    <div
+                    class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                    <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
+                        <style>
+                            .btn-daterange::after {
+                                display: none;
+                            }
+                        </style>
+                        <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
                             aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu" role="menu">
-                                <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                <a class="dropdown-item today" id="today" role="presentation" href="#">Today</a>
-                                <a class="dropdown-item lastweek" id="lastweek" role="presentation" href="#">Last
-                                    Week</a>
-                                <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last
-                                    Month</a>
-                                <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last
-                                    Quarter</a>
-                                <a class="dropdown-item last12Months" id="last12Months" role="presentation"
-                                    href="#">Last 12
-                                    Months</a>
-                                <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore
-                                    Date</a>
-                            </div>
+                        <div class="dropdown-menu" role="menu">
+                            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
+                            <a class="dropdown-item today" id="today" role="presentation" href="#">Today</a>
+                            <a class="dropdown-item lastweek" id="lastweek" role="presentation" href="#">Last
+                                Week</a>
+                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last
+                                Month</a>
+                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation"
+                                href="#">Last Quarter</a>
+                            <a class="dropdown-item last12Months" id="last12Months" role="presentation"
+                                href="#">Last 12 Months</a>
+                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation"
+                                href="#">Ignore Date</a>
                         </div>
-                        
-                        <div class="form-group dateSelectMobile" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group dateSelectMobile"
-                            style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                      
-
                     </div>
+                    <div class="form-group dateSelectMobile"
+                        style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                        <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                        <div class="input-group date" style="width: 160px;">
+                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group dateSelectMobile"
+                        style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                        <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                        <div class="input-group date" style="width: 160px;">
+                            <input type="text" class="form-control" id="dateTo" name="dateTo">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                     <div>
                         <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i
                                 class="icon ion-android-more-horizontal"></i></a>
