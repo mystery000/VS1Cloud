@@ -1364,7 +1364,6 @@ Template.vs1login.onRendered(function () {
                                                                                         }
                                                                                     }
                                                                                 }
-                                                                                console.log(smsSettings);
                                                                                 $.ajax(
                                                                                     {
                                                                                         method: 'GET',
@@ -1379,9 +1378,7 @@ Template.vs1login.onRendered(function () {
                                                                                         success: function(data) {
                                                                                             // TODO: Add indexdb function to save sms messaging logs
                                                                                             if (!data.sms_messages) {
-                                                                                                addVS1Data('TVS1SMSLogs', data).then((res) => {
-                                                                                                    console.log(res);
-                                                                                                }).then(error => console.log(error));
+                                                                                                addVS1Data('TVS1SMSLogs', data);
                                                                                             }
                                                                                         },
                                                                                         error: function(e) {
@@ -1646,26 +1643,6 @@ Template.vs1login.onRendered(function () {
                                         oReqCheckActive.onreadystatechange = function () {
                                             if (oReqCheckActive.readyState == 4 && oReqCheckActive.status == 200) {
                                                 var dataDBActive = JSON.parse(oReqCheckActive.responseText);
-
-                                                //TODO: Email scheduling for reports when login
-                                                let values = [];
-                                                let basedOnTypeStorages = Object.keys(localStorage);
-                                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                                                    let employeeId = storage.split('_')[2];
-                                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
-                                                });
-                                                let i = basedOnTypeStorages.length;
-                                                if (i > 0) {
-                                                    while (i--) {
-                                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                                                    }
-                                                }
-                                                values.forEach(value => {
-                                                    let reportData = JSON.parse(value);
-                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                                                    if (reportData.BasedOnType === "E" && !reportData.ISEmpty)
-                                                        Meteor.call('sendNormalEmail', reportData);
-                                                });
 
                                                 if (dataDBActive.tvs1_clients_simple[0].EmailVarified) {
 
@@ -1975,6 +1952,26 @@ Template.vs1login.onRendered(function () {
                                                         return false;
 
                                                     };
+                                            
+                                                    //TODO: Email scheduling for reports when login
+                                                    let values = [];
+                                                    let basedOnTypeStorages = Object.keys(localStorage);
+                                                    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                                        let employeeId = storage.split('_')[2];
+                                                        return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                    });
+                                                    let i = basedOnTypeStorages.length;
+                                                    if (i > 0) {
+                                                        while (i--) {
+                                                            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                                        }
+                                                    }
+                                                    values.forEach(value => {
+                                                        let reportData = JSON.parse(value);
+                                                        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                                        if (reportData.BasedOnType.includes("EN"))
+                                                            Meteor.call('sendNormalEmail', reportData);
+                                                    });
 
                                                     dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                                     dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
@@ -2622,6 +2619,26 @@ Template.vs1login.onRendered(function () {
 
                                 };
 
+                                //TODO: Email scheduling for reports when login
+                                let values = [];
+                                let basedOnTypeStorages = Object.keys(localStorage);
+                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                    let employeeId = storage.split('_')[2];
+                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                });
+                                let i = basedOnTypeStorages.length;
+                                if (i > 0) {
+                                    while (i--) {
+                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                    }
+                                }
+                                values.forEach(value => {
+                                    let reportData = JSON.parse(value);
+                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                    if (reportData.BasedOnType.includes("EN"))
+                                        Meteor.call('sendNormalEmail', reportData);
+                                });
+
                                 Session.setPersistent('mycloudLogonUsername', ERPuserName);
                                 Session.setPersistent('mycloudLogonUserEmail', ERPuserName);
 
@@ -3130,6 +3147,26 @@ Template.vs1login.onRendered(function () {
                                                     return false;
 
                                                 };
+                                            
+                                                //TODO: Email scheduling for reports when login
+                                                let values = [];
+                                                let basedOnTypeStorages = Object.keys(localStorage);
+                                                basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                                    let employeeId = storage.split('_')[2];
+                                                    return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                                });
+                                                let i = basedOnTypeStorages.length;
+                                                if (i > 0) {
+                                                    while (i--) {
+                                                        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                                    }
+                                                }
+                                                values.forEach(value => {
+                                                    let reportData = JSON.parse(value);
+                                                    reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                                    if (reportData.BasedOnType.includes("EN"))
+                                                        Meteor.call('sendNormalEmail', reportData);
+                                                });
 
                                                 dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                                 dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
@@ -3841,6 +3878,26 @@ Template.vs1login.onRendered(function () {
 
                                             };
 
+                                            //TODO: Email scheduling for reports when login
+                                            let values = [];
+                                            let basedOnTypeStorages = Object.keys(localStorage);
+                                            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                                let employeeId = storage.split('_')[2];
+                                                return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                            });
+                                            let i = basedOnTypeStorages.length;
+                                            if (i > 0) {
+                                                while (i--) {
+                                                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                                }
+                                            }
+                                            values.forEach(value => {
+                                                let reportData = JSON.parse(value);
+                                                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                                if (reportData.BasedOnType.includes("EN"))
+                                                    Meteor.call('sendNormalEmail', reportData);
+                                            });
+
                                             dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                             dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;
                                             Session.setPersistent('mycloudLogonUsername', ERPuserName);
@@ -4512,6 +4569,26 @@ Template.vs1login.onRendered(function () {
                                             return false;
 
                                         };
+                                        
+                                        //TODO: Email scheduling for reports when login
+                                        let values = [];
+                                        let basedOnTypeStorages = Object.keys(localStorage);
+                                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                                            let employeeId = storage.split('_')[2];
+                                            return storage.includes('BasedOnType_') && employeeId == dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.EmployeeId
+                                        });
+                                        let i = basedOnTypeStorages.length;
+                                        if (i > 0) {
+                                            while (i--) {
+                                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                                            }
+                                        }
+                                        values.forEach(value => {
+                                            let reportData = JSON.parse(value);
+                                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                                            if (reportData.BasedOnType.includes("EN"))
+                                                Meteor.call('sendNormalEmail', reportData);
+                                        });
 
                                         dataReturnRes.ProcessLog.VS1AdminPassword = hashUserLoginPassword;
                                         dataReturnRes.ProcessLog.VS1UserName = userLoginEmail;

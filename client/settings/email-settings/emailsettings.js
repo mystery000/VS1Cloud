@@ -446,14 +446,17 @@ Template.emailsettings.onRendered(function () {
                         //TODO: Getting BasedOnType from localstorage
                         let basedOnTypeData = localStorage.getItem(`BasedOnType_${n.id}_${empData[i].fields.EmployeeId}`);
                         let basedOnType = basedOnTypeData ? JSON.parse(basedOnTypeData).BasedOnType : '';
-                        let isInOut = basedOnTypeData ? JSON.parse(basedOnTypeData).ISEmpty : false;
-                        if (basedOnType == "P") basedOnType = "On Print";
-                        else if (basedOnType == "S") basedOnType = "On Save";
-                        else if (basedOnType == "T") basedOnType = "On Transaction Date";
-                        else if (basedOnType == "D") basedOnType = "On Due Date";
-                        else if (basedOnType == "O") basedOnType = "If Outstanding";
-                        else if (basedOnType == "E") basedOnType = "On Event";
-                        else basedOnType = '';
+                        let basedOnTypeText = '';
+                        if (basedOnType.split(',').includes('P')) basedOnTypeText += 'On Print, ';
+                        if (basedOnType.split(',').includes('S')) basedOnTypeText += 'On Save, ';
+                        if (basedOnType.split(',').includes('T')) basedOnTypeText += 'On Transaction Date, ';
+                        if (basedOnType.split(',').includes('D')) basedOnTypeText += 'On Due Date, ';
+                        if (basedOnType.split(',').includes('O')) basedOnTypeText += 'If Outstanding, ';
+                        if (basedOnType.split(',').includes('EN') || basedOnType.split(',').includes('EU')) {
+                            if (basedOnType.split(',').includes('EN')) basedOnTypeText += 'On Event(On Logon), ';
+                            if (basedOnType.split(',').includes('EU')) basedOnTypeText += 'On Event(On Logout), ';
+                        }
+                        if (basedOnTypeText != '') basedOnTypeText = ', ' + basedOnTypeText.slice(0, -2);
 
                         empDataCurr = {
                             employeeid: recipientIds.join('; ') || '',
@@ -462,7 +465,7 @@ Template.emailsettings.onRendered(function () {
                             employeeEmailID: recipients.join('; ') || '',
                             formname: n.name || '',
                             basedOnType: basedOnType,
-                            isEmpty: isInOut,
+                            basedOnTypeText: basedOnTypeText,
                             frequency: empData[i].fields.Frequency || '',
                             id: empData[i].fields.ID || '',
                             monthDays: empData[i].fields.MonthDays || '',
@@ -498,7 +501,7 @@ Template.emailsettings.onRendered(function () {
                     beginFromOption: '',
                     formIDs: '',
                     basedOnType: '',
-                    isEmpty: false
+                    basedOnTypeText: '',
                 }
 
                 let found = employeeScheduledRecord.some(checkdata => checkdata.formID == n.id);
@@ -711,20 +714,7 @@ Template.emailsettings.onRendered(function () {
                     let recipientIds = $(setting).find('input.edtRecipients').attr('data-ids');
                     let recipients = $(setting).find('input.edtRecipients').val();
                     // Check if this setting has got recipients
-                    const basedOnTypeText = sendEl.text();
-                    let basedOnType = '';
-                    let isEmpty = false;
-                    if (basedOnTypeText == "On Print") basedOnType = "P";
-                    else if (basedOnTypeText == "On Save") basedOnType = "S";
-                    else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
-                    else if (basedOnTypeText == "On Due Date") basedOnType = "D";
-                    else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
-                    else if (basedOnTypeText == "On Event") {
-                        basedOnType = "E";
-                        const eventRadios = $('#basedOnModal input[type="radio"]:checked').attr('id');
-                        if (eventRadios == "settingsOnLogon") isEmpty = false;
-                        else isEmpty = true;
-                    }
+                    let basedOnType = frequencyEl.attr('data-basedontype');
                     if (!!recipients) {
                         recipientIds = recipientIds.split('; ');
                         recipients = recipients.split('; ');
@@ -734,7 +724,7 @@ Template.emailsettings.onRendered(function () {
                             const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
                             const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
 
-                            const frequencyName = frequencyEl.text();
+                            const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
                             let objDetail = {
                                 type: "TReportSchedules",
                                 fields: {
@@ -804,24 +794,9 @@ Template.emailsettings.onRendered(function () {
                                 objDetail.fields.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://localhost:3000';
 
                                 //TODO: Set basedon type here
-                                const basedOnTypeText = sendEl.text();
-                                let basedOnType = '';
-                                let isEmpty = false;
-                                if (basedOnTypeText == "On Print") basedOnType = "P";
-                                else if (basedOnTypeText == "On Save") basedOnType = "S";
-                                else if (basedOnTypeText == "On Transaction Date") basedOnType = "T";
-                                else if (basedOnTypeText == "On Due Date") basedOnType = "D";
-                                else if (basedOnTypeText == "If Outstanding") basedOnType = "O";
-                                else if (basedOnTypeText == "On Event") {
-                                    basedOnType = "E";
-                                    const eventRadios = $('#basedOnModal input[name="settingsOnEvents"]:checked').attr('id');
-                                    if (eventRadios == "settingsOnLogon") isEmpty = false;
-                                    else isEmpty = true;
-                                }
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
-                                    ISEmpty: isEmpty
                                 }));
 
                                 objDetail.fields.Offset = new Date().getTimezoneOffset();
@@ -859,7 +834,6 @@ Template.emailsettings.onRendered(function () {
                                 localStorage.setItem(`BasedOnType_${objDetail.fields.FormID}_${objDetail.fields.EmployeeId}`, JSON.stringify({
                                     ...objDetail.fields,
                                     BasedOnType: basedOnType,
-                                    ISEmpty: isEmpty
                                 }));
 
                                 // Add synced cron job here
@@ -921,7 +895,7 @@ Template.emailsettings.onRendered(function () {
                     const convertedStartDate = startdate ? startdate.split('/')[2] + '-' + startdate.split('/')[1] + '-' + startdate.split('/')[0] : '';
                     const sDate = startdate ? moment( convertedStartDate + ' ' + starttime).format("YYYY-MM-DD HH:mm") : moment().format("YYYY-MM-DD HH:mm");
 
-                    const frequencyName = frequencyEl.text();
+                    const frequencyName = frequencyEl.text() != '' ? frequencyEl.text().split(',')[0] : '';
                     let objDetail = {
                         type: "TReportSchedules",
                         fields: {
@@ -1081,8 +1055,32 @@ Template.emailsettings.events({
         // let weekDay = 0;
         // let id = $('#frequencyid').val() || '';
         // let employeeID = Session.get('mySessionEmployeeLoggedID');
+
+        // TODO: BasedOnType saving on frequency modal
+        const basedOnTypes = $('#basedOnSettings input.basedOnSettings');
+        let basedOnTypeTexts = '';
+        let basedOnTypeAttr = '';
+        basedOnTypes.each(function() {
+            if ($(this).prop('checked')) {
+                const selectedType = $(this).attr('id');
+                if (selectedType === "basedOnPrint") { basedOnTypeTexts += 'On Print, '; basedOnTypeAttr += 'P,'; }
+                if (selectedType === "basedOnSave") { basedOnTypeTexts += 'On Save, '; basedOnTypeAttr += 'S,'; }
+                if (selectedType === "basedOnTransactionDate") { basedOnTypeTexts += 'On Transaction Date, '; basedOnTypeAttr += 'T,'; }
+                if (selectedType === "basedOnDueDate") { basedOnTypeTexts += 'On Due Date, '; basedOnTypeAttr += 'D,'; }
+                if (selectedType === "basedOnOutstanding") { basedOnTypeTexts += 'If Outstanding, '; basedOnTypeAttr += 'O,'; }
+                if (selectedType === "basedOnEvent") {
+                    if ($('#settingsOnEvents').prop('checked')) { basedOnTypeTexts += 'On Event(On Logon), '; basedOnTypeAttr += 'EN,'; }
+                    if ($('#settingsOnLogout').prop('checked')) { basedOnTypeTexts += 'On Event(On Logout), '; basedOnTypeAttr += 'EU,'; }
+                }
+            }
+        });
+        if (basedOnTypeTexts != '') basedOnTypeTexts = basedOnTypeTexts.slice(0, -2);
+        if (basedOnTypeAttr != '') basedOnTypeAttr = basedOnTypeAttr.slice(0, -1);
+
         let formId = parseInt($("#formid").val());
         let radioFrequency = $('input[type=radio][name=frequencyRadio]:checked').attr('id');
+
+        $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-basedontype', basedOnTypeAttr);
 
         if (radioFrequency == "frequencyMonthly") {
             const monthDate = $("#sltDay").val().replace('day', '');
@@ -1096,7 +1094,8 @@ Template.emailsettings.events({
             const startDate = $('#edtMonthlyStartDate').val();
 
             setTimeout(function () {
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly");
+                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly, " + basedOnTypeTexts);
+                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Monthly");
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-monthDate', monthDate);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-ofMonths', ofMonths);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
@@ -1114,7 +1113,8 @@ Template.emailsettings.events({
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everyWeeks', everyWeeks);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly");
+                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly, " + basedOnTypeTexts);
+                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Weekly");
                 $("#frequencyModal").modal('toggle');
             }, 100);
         } else if (radioFrequency == "frequencyDaily") {
@@ -1123,7 +1123,8 @@ Template.emailsettings.events({
             const startTime = $('#edtDailyStartTime').val();
             const startDate = $('#edtDailyStartDate').val();
             setTimeout(function () {
-                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily");
+                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily, " + basedOnTypeTexts);
+                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("Daily");
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-dailyRadioOption', dailyRadioOption);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-everydays', everyDays);
                 $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
@@ -1137,7 +1138,8 @@ Template.emailsettings.events({
                 $('#edtOneTimeOnlyTimeError').css('display', 'none');
                 $('#edtOneTimeOnlyDateError').css('display', 'none');
                 setTimeout(function () {
-                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
+                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only, " + basedOnTypeTexts);
+                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
                     $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
                     $("#frequencyModal").modal('toggle');
@@ -1307,6 +1309,26 @@ Template.emailsettings.events({
             $('#monthlySettings').css('display', 'block');
         }
 
+        // Set basedontype checkboxes with attr - data-basedontype
+        const basedOnTypeData = $(event.target).attr('data-basedontype');
+        if (basedOnTypeData && basedOnTypeData != '') {
+            const values = basedOnTypeData.split(',');
+            $('#onEventSettings').css('display', 'none');
+            if (values.includes('P')) $('#basedOnPrint').prop('checked', true);
+            if (values.includes('S')) $('#basedOnSave').prop('checked', true);
+            if (values.includes('T')) $('#basedOnTransactionDate').prop('checked', true);
+            if (values.includes('D')) $('#basedOnDueDate').prop('checked', true);
+            if (values.includes('O')) $('#basedOnOutstanding').prop('checked', true);
+            if (values.includes('EN') || values.includes('EU')) {
+                $('#basedOnEvent').prop('checked', true);
+                $('#onEventSettings').css('display', 'block');
+                if (values.includes('EN')) $('#settingsOnEvents').prop('checked', true);
+                if (values.includes('EU')) $('#settingsOnLogout').prop('checked', true);
+            }
+        } else {
+            $('#basedOnSettings input').prop('checked', false);
+        }
+
         $("#frequencyModal").modal('toggle');
     },
     'click #blncSheets #edtFrequency': function () {
@@ -1412,25 +1434,17 @@ Template.emailsettings.events({
         }
         $("#basedOnModal").modal('toggle');
     },
-    'click input[name="basedOnRadio"]': function () {
-        if (event.target.id == "basedOnPrint") {
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnSave") {
-            // $('#edtBasedOnDate').attr('disabled', true);
-            // $('#edtBasedOnDate').attr('required', false);
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnTransactionDate") {
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnDueDate") {
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnDate") {
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnOutstanding") {
-            $('#onEventSettings').css('display', 'none');
-        } else if (event.target.id == "basedOnEvent") {
-            $('#onEventSettings').css('display', 'block');
-        } else {
-            $("#basedOnModal").modal('toggle');
+    'click input.basedOnSettings': function (event) {
+        if (event.target.id == "basedOnEvent") {
+            const value = $(event.target).prop('checked');
+            if (value) {
+                $('#onEventSettings').css('display', 'block');
+                $('#settingsOnEvents').prop('checked', true);
+            } else {
+                $('#onEventSettings').css('display', 'none');
+                $('#settingsOnEvents').prop('checked', false);
+                $('#settingsOnLogout').prop('checked', false);
+            }
         }
     },
     'click .btnSaveBasedOn': function () {

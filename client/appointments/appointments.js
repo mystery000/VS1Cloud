@@ -66,8 +66,8 @@ Template.appointments.onCreated(function () {
         thursday: 0,
         friday: 0
     };
-    templateObject.repeatDays.set(dayObj)
-
+    templateObject.repeatDays.set(dayObj);
+    templateObject.itl = new ReactiveVar();
 });
 
 Template.appointments.onRendered(function () {
@@ -90,6 +90,15 @@ Template.appointments.onRendered(function () {
     let globalSet = {};
     let launchAllocations = Session.get('CloudAppointmentAllocationLaunch');
 
+    var input = document.querySelector("#mobile");
+    var itl = window.intlTelInput(input, {
+        autoPlaceholder: "polite",
+        separateDialCode: true,
+        utilsScript: window.location.origin + "assets/js/utils.js",
+        formatOnDisplay: true,
+    });
+    templateObject.itl.set(itl);
+
     let currentId = FlowRouter.current().context.hash;
     if ((currentId === "allocationModal")) {
         setTimeout(function () {
@@ -107,6 +116,15 @@ Template.appointments.onRendered(function () {
 
     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
         $("#btnHold").prop("disabled", true);
+    }
+
+    templateObject.setPhoneNumber = function(phoneNumber) {
+        const itl = templateObject.itl.get();
+        if (phoneNumber) itl.setNumber(phoneNumber)
+        else {
+            itl.setCountry('au');
+            document.getElementById("mobile").value = '';
+        }
     }
 
     getVS1Data('TERPPreference').then(function (dataObject) {
@@ -625,7 +643,8 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -1070,7 +1089,8 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -2282,7 +2302,8 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -3180,7 +3201,8 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -3791,7 +3813,8 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -5521,7 +5544,8 @@ Template.appointments.onRendered(function () {
         let getEmployeeID = templateObject.empID.get() || '';
         document.getElementById("customer").value = $(this).find(".colCompany").text();
         document.getElementById("phone").value = $(this).find(".colPhone").text();
-        document.getElementById("mobile").value = $(this).find(".colMobile").text();
+        // document.getElementById("mobile").value = $(this).find(".colMobile").text();
+        templateObject.setPhoneNumber($(this).find(".colMobile").text());
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
@@ -5839,7 +5863,8 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -6272,6 +6297,7 @@ Template.appointments.onRendered(function () {
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
         twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
+        headerAppointmentSMSMessage: "Sent from [Company Name]",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6283,6 +6309,7 @@ Template.appointments.onRendered(function () {
                 case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
@@ -6296,7 +6323,8 @@ Template.appointments.onRendered(function () {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            const message = $(`#${type}AppointmentSMSMessage`).val();
+            const companyName = Session.get('vs1companyName');
+            const message = smsSettings.headerAppointmentSMSMessage.replace('[Company Name]', companyName) + " - " + $(`#${type}AppointmentSMSMessage`).val();
             const sendSMSResult = await new Promise((res, rej) => {
                 Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
                     if (error) rej(error);
@@ -6638,7 +6666,8 @@ Template.appointments.events({
             document.getElementById("appID").value = result[0].id;
             document.getElementById("customer").value = result[0].accountname;
             document.getElementById("phone").value = result[0].phone;
-            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+            // document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+            templateObject.setPhoneNumber(result[0].mobile || result[0].phone);
             document.getElementById("state").value = result[0].state || ''
             document.getElementById("address").value = result[0].street || ''
             if (Session.get('CloudAppointmentNotes') == true) {
@@ -8368,13 +8397,13 @@ Template.appointments.events({
                                             $('.fullScreenSpin').css('display', 'none');
 
                                             //TODO: Start Appointment SMS sent here
-                                            const customerPhone = $('#mobile').val();
+                                            const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
                                             const smsCustomer = $('#chkSMSCustomer').is(':checked');
                                             const smsUser = $('#chkSMSUser').is(':checked');
                                             const smsSettings = templateObject.defaultSMSSettings.get();
                                             let sendSMSRes = true;
                                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                                 if (!sendSMSRes.success) {
                                                     swal({
                                                         title: 'Oops...',
@@ -8455,13 +8484,13 @@ Template.appointments.events({
                                         $('.fullScreenSpin').css('display', 'none');
 
                                         //TODO: Start Appointment SMS sent here
-                                        const customerPhone = $('#mobile').val();
+                                        const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
                                         const smsCustomer = $('#chkSMSCustomer').is(':checked');
                                         const smsUser = $('#chkSMSUser').is(':checked');
                                         const smsSettings = templateObject.defaultSMSSettings.get();
                                         let sendSMSRes = true;
                                         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                             if (!sendSMSRes.success) {
                                                 swal({
                                                     title: 'Oops...',
@@ -8599,13 +8628,13 @@ Template.appointments.events({
                                 $('.fullScreenSpin').css('display', 'none');
 
                                 //TODO: Start Appointment SMS sent here
-                                const customerPhone = $('#mobile').val();
+                                const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
                                 const smsCustomer = $('#chkSMSCustomer').is(':checked');
                                 const smsUser = $('#chkSMSUser').is(':checked');
                                 const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
                                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                     if (!sendSMSRes.success) {
                                         swal({
                                             title: 'Oops...',
@@ -8695,13 +8724,13 @@ Template.appointments.events({
 
             } else {
                 //TODO: Start Appointment SMS sent here
-                const customerPhone = $('#mobile').val();
+                const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
                 const smsCustomer = $('#chkSMSCustomer').is(':checked');
                 const smsUser = $('#chkSMSUser').is(':checked');
                 const smsSettings = templateObject.defaultSMSSettings.get();
                 let sendSMSRes = true;
                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                     if (!sendSMSRes.success) {
                         swal({
                             title: 'Oops...',
@@ -8751,13 +8780,13 @@ Template.appointments.events({
                 return false;
             };
 
-            const customerPhone = $('#mobile').val();
+            const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
             const smsCustomer = $('#chkSMSCustomer').is(':checked');
             const smsUser = $('#chkSMSUser').is(':checked');
             const smsSettings = templateObject.defaultSMSSettings.get();
             let sendSMSRes = true;
             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                 if (!sendSMSRes.success) {
                     swal({
                         title: 'Oops...',
@@ -8797,7 +8826,7 @@ Template.appointments.events({
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
-        const customerPhone = $('#mobile').val();
+        const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
@@ -8860,7 +8889,7 @@ Template.appointments.events({
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
-        const customerPhone = $('#mobile').val();
+        const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
@@ -8920,7 +8949,7 @@ Template.appointments.events({
         templateObject.checkSMSSettings();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
-        const customerPhone = $('#mobile').val();
+        const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
         if (customerPhone === "" || customerPhone === "0") {
             if (smsCustomer || smsUser) {
                 swal({
@@ -8994,7 +9023,7 @@ Template.appointments.events({
         const templateObject = Template.instance();
         const smsCustomer = $('#chkSMSCustomer').is(':checked');
         const smsUser = $('#chkSMSUser').is(':checked');
-        const customerPhone = $('#mobile').val();
+        const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
         const smsSettings = templateObject.defaultSMSSettings.get();
         let sendSMSRes = true;
         if (createAppointment == false) {
@@ -9014,7 +9043,7 @@ Template.appointments.events({
         };
 
         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone);
+            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ''));
             if (!sendSMSRes.success) {
                 swal({
                     title: 'Oops...',
@@ -9101,13 +9130,13 @@ Template.appointments.events({
                             document.getElementById('txtActualHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
 
                             //TODO: Stop Appointment SMS sent here
-                            const customerPhone = $('#mobile').val();
+                            const customerPhone = $(".iti__selected-dial-code").text() + $('#mobile').val();
                             const smsCustomer = $('#chkSMSCustomer').is(':checked');
                             const smsUser = $('#chkSMSUser').is(':checked');
                             const smsSettings = templateObject.defaultSMSSettings.get();
                             let sendSMSRes = true;
                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone);
+                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone.replace('+', ''));
                                 if (!sendSMSRes.success) {
                                     swal({
                                         title: 'Oops...',
@@ -9927,7 +9956,9 @@ Template.appointments.events({
         let aEndDate = '';
         let savedStartDate = $('#aStartDate').val() || moment().format("YYYY-MM-DD");
         let clientname = formData.get('customer') || '';
-        let clientmobile = formData.get('mobile') || '0';
+        const itl = templateObject.itl.get();
+        let clientmobile = $('#mobile').val() ? $(".iti__selected-dial-code").text() + $('#mobile').val() : '0';
+        // let clientmobile = formData.get('mobile') || '0';
         let contact = formData.get('phone') || '0';
         let startTime = $('#startTime').val() + ':00' || '';
         let endTime = $('#endTime').val() + ':00' || '';

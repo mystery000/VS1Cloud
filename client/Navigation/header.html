@@ -321,7 +321,7 @@
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                    if (reportData.BasedOnType === "E" && reportData.ISEmpty)
+                    if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
                 window.open('/vs1greentracklogin', '_self');
@@ -352,7 +352,7 @@
                 values.forEach(value => {
                     let reportData = JSON.parse(value);
                     reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-                    if (reportData.BasedOnType === "E" && reportData.ISEmpty)
+                    if (reportData.BasedOnType.includes("EU"))
                         Meteor.call('sendNormalEmail', reportData);
                 });
                 window.open('/', '_self');
