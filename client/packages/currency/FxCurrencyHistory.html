@@ -307,7 +307,7 @@
                                 <!-- <th class="th colCountry" style="width:100px">Country</th> -->
                                 <th class="th colRateLastModified">Created at</th>
                                 <!-- <th class="th colDescription">Description</th> -->
-                                <th class="th colDelete" style="width:20px;"></th>
+                                <!-- <th class="th colDelete" style="width:20px;"></th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -323,9 +323,13 @@
                                 <td contenteditable="false" class="colRateLastModified ">
                                     {{item.createdAt}}</td>
                                 <!-- <td contenteditable="false" class="colDescription">{{item.description}}</td> -->
-                                <td contenteditable="false" class="colDelete"><span class="table-remove"><button
-                                            type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i
-                                                class="fa fa-remove"></i></button></span></td>
+                                <!-- <td contenteditable="false" class="colDelete">
+                                    <span class="table-remove">
+                                        <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                                            <i class="fa fa-remove"></i>
+                                        </button>
+                                    </span>
+                                </td> -->
                             </tr>
                             {{/each}}
                             {{/if}}
