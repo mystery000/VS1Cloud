@@ -5513,6 +5513,8 @@ Template.supplierpaymentcard.events({
     "change #sltCurrency": (e) => {
         if($('#sltCurrency').val() && $('#sltCurrency').val() != "AUD") {
             $('.foreign-currency-js').css('display', 'block');
+        }else {
+            $('.foreign-currency-js').css('display', 'none');
         }
        
     },
