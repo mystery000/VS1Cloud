@@ -5520,11 +5520,13 @@ Template.supplierpaymentcard.events({
     },
     'change #exchange_rate': (e) => {
         console.log(e);
-        const paymentAmount = parseInt($('#edtPaymentAmount').val());
-        const exchangeRate = parseInt($(e.currentTarget).val());
+        const paymentAmount = $('#edtPaymentAmount').val().substring(1);
+        const exchangeRate = $("#exchange_rate").val();
         const appliedAmount = paymentAmount * exchangeRate;
 
-        console.log(paymentAmount, exchangeRate, appliedAmount);
+        $('#edtApplied').val(appliedAmount);
+        $('#edtApplied').trigger("change");
+        // console.log(paymentAmount, exchangeRate, appliedAmount);
     },
     'click .btnSave': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
