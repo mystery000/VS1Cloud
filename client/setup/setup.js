@@ -13,6 +13,9 @@ import {
 import {
     SideBarService
 } from '../js/sidebar-service';
+import { 
+    UtilityService
+} from "../utility-service";
 
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
@@ -115,11 +118,13 @@ Template.setup.onRendered(function () {
         $('.first-page').css('display', 'none');
         $('.main-setup').css('display', 'flex');
         $('.setup-step').css('display', 'none');
+        let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
         for (let i = 0; i < currentStep; i++) {
-            $(`.setup-stepper li:nth-child(${(i + 1)})`).addClass('current');
+            if (confirmedSteps.includes(i + 1)) $(`.setup-stepper li:nth-child(${(i + 1)})`).addClass('completed');
         }
         if (currentStep !== 9) {
             $('.setup-step-' + currentStep).css('display', 'block');
+            $(`.setup-stepper li:nth-child(${currentStep})`).addClass('current');
         } else {
             $('.setup-complete').css('display', 'block');
         }
@@ -1501,7 +1506,11 @@ Template.setup.onRendered(function () {
                 }).then((result) => {
                     $('.setup-step').css('display', 'none');
                     $(`.setup-stepper li:nth-child(4)`).addClass('current');
+                    $(`.setup-stepper li:nth-child(3)`).removeClass('current');
+                    $(`.setup-stepper li:nth-child(3)`).addClass('completed');
                     $('.setup-step-4').css('display', 'block');
+                    let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                    localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '3,');
                     localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
                 });
             }).catch(function (err) {
@@ -1515,7 +1524,11 @@ Template.setup.onRendered(function () {
                 }).then((result) => {
                     $('.setup-step').css('display', 'none');
                     $(`.setup-stepper li:nth-child(4)`).addClass('current');
+                    $(`.setup-stepper li:nth-child(3)`).removeClass('current');
+                    $(`.setup-stepper li:nth-child(3)`).addClass('completed');
                     $('.setup-step-4').css('display', 'block');
+                    let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                    localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '3,');
                     localStorage.setItem("VS1Cloud_SETUP_STEP", 4);
                 });
             });
@@ -3160,11 +3173,15 @@ Template.setup.events({
         stepId = parseInt(stepId) + 1;
         $('.setup-step').css('display', 'none');
         $(`.setup-stepper li:nth-child(${stepId})`).addClass('current');
+        $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass('current');
+        $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass('completed');
         if (stepId !== 9) {
             $('.setup-step-' + stepId).css('display', 'block');
         } else {
             $('.setup-complete').css('display', 'block');
         }
+        let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+        localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + (stepId - 1) + ',');
         localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
     },
     'click .btnBack': function (event) {
@@ -3172,6 +3189,7 @@ Template.setup.events({
         stepId = parseInt(stepId) + 1;
         $('.setup-step').css('display', 'none');
         $(`.setup-stepper li:nth-child(${stepId})`).addClass('current');
+        $(`.setup-stepper li:nth-child(${(stepId - 1)})`).removeClass('current');
         if (stepId !== 9) {
             $('.setup-step-' + stepId).css('display', 'block');
         } else {
@@ -3303,14 +3321,18 @@ Template.setup.events({
             }).then((result) => {
                 $('.setup-step').css('display', 'none');
                 $(`.setup-stepper li:nth-child(2)`).addClass('current');
+                $(`.setup-stepper li:nth-child(1)`).removeClass('current');
+                $(`.setup-stepper li:nth-child(1)`).addClass('completed');
                 $('.setup-step-2').css('display', 'block');
+                let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '1,');
                 localStorage.setItem("VS1Cloud_SETUP_STEP", 2);
             });
         }).catch(function (err) {
             $('.fullScreenSpin').css('display', 'none');
             swal({
                 title: 'Oooops...',
-                text: err,
+                text: 'All fields are required.',
                 type: 'error',
                 showCancelButton: false,
                 confirmButtonText: 'Try Again'
@@ -3659,7 +3681,11 @@ Template.setup.events({
                         }).then((result) => {
                             $('.setup-step').css('display', 'none');
                             $(`.setup-stepper li:nth-child(3)`).addClass('current');
+                            $(`.setup-stepper li:nth-child(2)`).removeClass('current');
+                            $(`.setup-stepper li:nth-child(2)`).addClass('completed');
                             $('.setup-step-3').css('display', 'block');
+                            let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                            localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '2,');
                             localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                         });
 
@@ -3674,7 +3700,11 @@ Template.setup.events({
                         }).then((result) => {
                             $('.setup-step').css('display', 'none');
                             $(`.setup-stepper li:nth-child(3)`).addClass('current');
+                            $(`.setup-stepper li:nth-child(2)`).removeClass('current');
+                            $(`.setup-stepper li:nth-child(2)`).addClass('completed');
                             $('.setup-step-3').css('display', 'block');
+                            let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                            localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '2,');
                             localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                         });
                     });
@@ -3691,7 +3721,11 @@ Template.setup.events({
                     }).then((result) => {
                         $('.setup-step').css('display', 'none');
                         $(`.setup-stepper li:nth-child(3)`).addClass('current');
+                        $(`.setup-stepper li:nth-child(2)`).removeClass('current');
+                        $(`.setup-stepper li:nth-child(2)`).addClass('completed');
                         $('.setup-step-3').css('display', 'block');
+                        let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                        localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '2,');
                         localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
                     });
                 }
@@ -3707,7 +3741,11 @@ Template.setup.events({
             }).then((result) => {
                 $('.setup-step').css('display', 'none');
                 $(`.setup-stepper li:nth-child(3)`).addClass('current');
+                $(`.setup-stepper li:nth-child(2)`).removeClass('current');
+                $(`.setup-stepper li:nth-child(2)`).addClass('completed');
                 $('.setup-step-3').css('display', 'block');
+                let confirmedSteps = localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || '';
+                localStorage.setItem("VS1Cloud_SETUP_CONFIRMED_STEPS", confirmedSteps + '2,');
                 localStorage.setItem("VS1Cloud_SETUP_STEP", 3);
             });
         });
