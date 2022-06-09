@@ -49,8 +49,7 @@
                 <button class="btn btn-primary printConfirm" type="button"
                     style="margin: 16px;margin-top: 0px; background-color: #00A3D3; border-color: #00A3D3; "><i
                         class="fa fa-print" style="margin-right: 8px;"></i>Print</button>
-                        <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i
-                            class="icon ion-android-more-horizontal"></i></a>
+                       
             </div>
         </div>
         <div style="padding: 0px 16px;">
@@ -60,28 +59,6 @@
                 <div class="d-xl-flex justify-content-xl-end">
                    
                     <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                        
-                        <div class="form-group dateSelectMobile" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group dateSelectMobile"
-                            style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                            <div class="input-group date" style="width: 160px;">
-                                <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
                         <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
                             <style>
                                 .btn-daterange::after {
@@ -127,7 +104,7 @@
                                 }
                             </style>
                             <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
-                                aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                            aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu" role="menu">
                                 <h6 class="dropdown-header" role="presentation">Date ranges</h6>
                                 <a class="dropdown-item today" id="today" role="presentation" href="#">Today</a>
@@ -144,11 +121,34 @@
                                     Date</a>
                             </div>
                         </div>
+                        
+                        <div class="form-group dateSelectMobile" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group dateSelectMobile"
+                            style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                            <div class="input-group date" style="width: 160px;">
+                                <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                      
 
                     </div>
                     <div>
-                        <!-- <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i
-                                class="icon ion-android-more-horizontal"></i></a> -->
+                        <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i
+                                class="icon ion-android-more-horizontal"></i></a>
                         <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                 <div class="modal-content">
