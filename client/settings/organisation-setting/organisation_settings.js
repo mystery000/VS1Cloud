@@ -157,7 +157,7 @@ Template.organisationsettings.onRendered(function () {
                 $('#show_address_data').css("display","none");
           }else{
             $('#chksameaddress').removeAttr("checked");
-            $('#show_address_data').css("display","block");
+            $('#show_address_data').css("display","inline-flex");
           }
             if(mainData.TrackEmails){
               templateObject.iscompanyemail.set(true);
@@ -248,7 +248,7 @@ Template.organisationsettings.events({
     'click #chkIsDefailtEmail': function(event){
       let templateObj = Template.instance();
         if($(event.target).is(':checked')){
-          
+
             templateObj.iscompanyemail.set(true);
         }else{
           //alert("not checked");
@@ -390,7 +390,7 @@ Template.organisationsettings.events({
             document.getElementById('show_address_data').style.display = 'none';
         }
         else {
-            document.getElementById('show_address_data').style.display = 'block';
+            document.getElementById('show_address_data').style.display = 'inline-flex';
         }
     },
     'click #saveCompanyInfo': function (event) {

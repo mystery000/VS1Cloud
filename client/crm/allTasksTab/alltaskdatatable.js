@@ -1080,15 +1080,27 @@ Template.alltaskdatatable.onRendered(function () {
         {
           targets: 0,
           className: "colLabelCreatedDate",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).closest("tr").attr("data-id", rowData[3]);
+            $(td).attr("data-id", rowData[3]);
+          },
         },
         {
           targets: 1,
           className: "colLabel",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[3]);
+          },
+          width: "100%",
         },
         {
           orderable: false,
           targets: 2,
           className: "colLabelActions",
+          createdCell: function (td, cellData, rowData, row, col) {
+            $(td).attr("data-id", rowData[3]);
+          },
+          width: "50px",
         },
       ],
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1165,17 +1177,13 @@ Template.alltaskdatatable.onRendered(function () {
     task_array.forEach((item) => {
       td0 = moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
       td1 = item.fields.TaskLabelName;
-      td2 = `
-        <div class="dropdown btnLabelActions" title="Edit Label">
-            <button type="button" class="btn btn-primary btnEditLabel" data-id="${item.fields.ID}"><i
-                class="far fa-edit" style="width: 16px;" data-id="${item.fields.ID}"></i></button>
-          </div>
+      td2 = ` 
           <div class="dropdown btnLabelActions" title="Delete Label">
             <button type="button" class="btn btn-danger btnDeleteLabel" data-id="${item.fields.ID}"><i
                 class="far fa-trash-alt" style="width: 16px;" data-id="${item.fields.ID}"></i>
             </button>
         </div>`;
-      taskRows.push([td0, td1, td2]);
+      taskRows.push([td0, td1, td2, item.fields.ID]);
     });
     return taskRows;
   };
@@ -2814,6 +2822,24 @@ Template.alltaskdatatable.events({
 
   // labels tab ---------------
   "click .btnEditLabel": function (e) {
+    let id = e.target.dataset.id;
+    if (id) {
+      $("#editLabelID").val(id);
+
+      $(".fullScreenSpin").css("display", "inline-block");
+      let templateObject = Template.instance();
+      crmService.getOneLabel(id).then(function (obj) {
+        $("#editLabelName").val(obj.fields.TaskLabelName);
+        // $('#editLabelColor').val();
+
+        $("#editLabelModal").modal("toggle");
+
+        $(".fullScreenSpin").css("display", "none");
+      });
+    }
+  },
+
+  "click #tblLabels tbody tr": function (e) {
     let id = e.target.dataset.id;
     if (id) {
       $("#editLabelID").val(id);

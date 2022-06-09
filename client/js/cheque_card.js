@@ -203,17 +203,19 @@ Template.chequecard.onRendered(() => {
   });
 
   // tempcode= custom field
-  $(document).on("click", "#custListType tbody tr", function (e) {
-    let clickedInput = $("#clickedControl").val();
+  $(document).on("click", "#customFieldDropdownTable1 tbody tr", function (e) {
+    $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
+    $("#customFieldDropdownListModal1").modal("toggle");
+  });
 
-    if (clickedInput == "one") {
-      $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
-    } else if (clickedInput == "two") {
-      $("#edtSaleCustField2").val($(this).find(".colFieldName").text());
-    } else if (clickedInput == "three") {
-      $("#edtSaleCustField3").val($(this).find(".colFieldName").text());
-    }
-    $("#customFieldList").modal("toggle");
+  $(document).on("click", "#customFieldDropdownTable2 tbody tr", function (e) {
+    $("#edtSaleCustField2").val($(this).find(".colFieldName").text());
+    $("#customFieldDropdownListModal2").modal("toggle");
+  });
+
+  $(document).on("click", "#customFieldDropdownTable3 tbody tr", function (e) {
+    $("#edtSaleCustField3").val($(this).find(".colFieldName").text());
+    $("#customFieldDropdownListModal3").modal("toggle");
   });
 
   $(".fullScreenSpin").css("display", "inline-block");
@@ -4283,86 +4285,29 @@ Template.chequecard.onRendered(function () {
               "></select></div>"
           );
           $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftString");
-          var splashArrayCustomFieldList = new Array();
-          if (custField.dropdown != null) {
-            if (custField.dropdown.length > 0) {
-              for (let x = 0; x < custField.dropdown.length; x++) {
-                var dataList = [
-                  custField.dropdown[x].fields.ID || "",
-                  custField.dropdown[x].fields.Text || "",
-                ];
+          // var splashArrayCustomFieldList = new Array();
+          // if (custField.dropdown != null) {
+          //   if (custField.dropdown.length > 0) {
+          //     for (let x = 0; x < custField.dropdown.length; x++) {
+          //       var dataList = [
+          //         custField.dropdown[x].fields.ID || "",
+          //         custField.dropdown[x].fields.Text || "",
+          //       ];
 
-                splashArrayCustomFieldList.push(dataList);
-              }
-            } else {
-              var dataList = [
-                custField.dropdown.fields.ID || "",
-                custField.dropdown.fields.Text || "",
-              ];
+          //       splashArrayCustomFieldList.push(dataList);
+          //     }
+          //   } else {
+          //     var dataList = [
+          //       custField.dropdown.fields.ID || "",
+          //       custField.dropdown.fields.Text || "",
+          //     ];
 
-              splashArrayCustomFieldList.push(dataList);
-            }
-          } else {
-            var dataList = ["", ""];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-          setTimeout(function () {
-            $("#custListType")
-              .DataTable({
-                data: splashArrayCustomFieldList,
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: true,
-                aaSorting: [],
-                orderMulti: true,
-                columnDefs: [
-                  {
-                    orderable: false,
-                    targets: -1,
-                  },
-                  {
-                    className: "colCustField",
-                    targets: [0],
-                  },
-                  {
-                    className: "colFieldName pointer",
-                    targets: [1],
-                  },
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                fnInitComplete: function () {
-                  $(
-                    "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-                  ).insertAfter("#custListType_filter");
-                  $(
-                    "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                  ).insertAfter("#custListType_filter");
-                },
-              })
-              .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {})
-              .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              });
-            $(".fullScreenSpin").css("display", "none");
-          }, 10);
+          //     splashArrayCustomFieldList.push(dataList);
+          //   }
+          // } else {
+          //   var dataList = ["", ""];
+          //   splashArrayCustomFieldList.push(dataList);
+          // }
         }
       }
 
@@ -4436,7 +4381,6 @@ Template.chequecard.onRendered(function () {
                 $("#selectCustFieldID").val(fieldDataID);
                 if (e.pageX > offset.left + $earch.width() - 8) {
                   // X button 16px wide?
-                  $("#customFieldList").modal("toggle");
                 } else {
                   if (fieldDataName.replace(/\s/g, "") != "") {
                     $("#newStatusHeader" + custFieldNo).text(
@@ -4514,10 +4458,72 @@ Template.chequecard.onRendered(function () {
                           });
                       });
                   } else {
-                    $("#customFieldList").modal("toggle");
+                    // $("#customFieldDropdownListModal" + custFieldNo).modal(
+                    //   "toggle"
+                    // );
                   }
                 }
               });
+
+            // init customfielddropdowntable
+            $("#customFieldDropdownTable" + custFieldNo)
+              .DataTable({
+                data: splashArrayCustomFieldList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                paging: true,
+                aaSorting: [],
+                orderMulti: true,
+                columnDefs: [
+                  {
+                    orderable: false,
+                    targets: -1,
+                  },
+                  {
+                    className: "colCustField",
+                    targets: [0],
+                  },
+                  {
+                    className: "colFieldName pointer",
+                    targets: [1],
+                  },
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                  [initialDatatableLoad, -1],
+                  [initialDatatableLoad, "All"],
+                ],
+                info: true,
+                responsive: true,
+                fnInitComplete: function () {
+                  $(
+                    "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                  ).insertAfter(
+                    "#customFieldDropdownTable" + custFieldNo + "_filter"
+                  );
+                  $(
+                    "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                  ).insertAfter(
+                    "#customFieldDropdownTable" + custFieldNo + "_filter"
+                  );
+                },
+              })
+              .on("page", function () {
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+              })
+              .on("column-reorder", function () {})
+              .on("length.dt", function (e, settings, len) {
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
+              });
+            // init customfielddropdowntable
           }
         }
       }, 1500);
@@ -6950,14 +6956,17 @@ Template.chequecard.events({
 
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
+    $("#customFieldDropdownListModal1").modal("toggle");
   },
 
   "click #edtSaleCustField2": function (e) {
     $("#clickedControl").val("two");
+    $("#customFieldDropdownListModal2").modal("toggle");
   },
 
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
+    $("#customFieldDropdownListModal3").modal("toggle");
   },
 });
 
