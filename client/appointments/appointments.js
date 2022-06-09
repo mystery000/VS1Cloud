@@ -102,6 +102,7 @@ Template.appointments.onRendered(function () {
     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
         $("#btnHold").prop("disabled", true);
     }
+
     getVS1Data('TERPPreference').then(function (dataObject) {
         if (dataObject.length == 0) {
             appointmentService.getGlobalSettings().then(function (data) {
@@ -607,7 +608,7 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -1048,7 +1049,7 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -2260,7 +2261,7 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -3158,7 +3159,7 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -3771,7 +3772,7 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -5502,7 +5503,7 @@ Template.appointments.onRendered(function () {
         let getEmployeeID = templateObject.empID.get() || '';
         document.getElementById("customer").value = $(this).find(".colCompany").text();
         document.getElementById("phone").value = $(this).find(".colPhone").text();
-        document.getElementById("mobile").value = $(this).find(".colMobile").text();
+        document.getElementById("mobile").value = $(this).find(".colMobile").text().replace("+", "");
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
@@ -5820,7 +5821,7 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -6251,6 +6252,7 @@ Template.appointments.onRendered(function () {
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
         twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
+        headerAppointmentSMSMessage: "Sent from [Company Name]",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6262,6 +6264,7 @@ Template.appointments.onRendered(function () {
                 case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
@@ -6275,7 +6278,8 @@ Template.appointments.onRendered(function () {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            const message = $(`#${type}AppointmentSMSMessage`).val();
+            const companyName = Session.get('vs1companyName');
+            const message = smsSettings.headerAppointmentSMSMessage.replace('[Company Name]', companyName) + " - " + $(`#${type}AppointmentSMSMessage`).val();
             const sendSMSResult = await new Promise((res, rej) => {
                 Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
                     if (error) rej(error);
@@ -6621,9 +6625,9 @@ Template.appointments.events({
             document.getElementById("appID").value = result[0].id;
             document.getElementById("customer").value = result[0].accountname;
             document.getElementById("phone").value = result[0].phone;
-            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
-            document.getElementById("state").value = result[0].state || '';
-            document.getElementById("address").value = result[0].street || '';
+            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
+            document.getElementById("state").value = result[0].state || ''
+            document.getElementById("address").value = result[0].street || ''
             if (Session.get('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = result[0].notes;
             }
@@ -8364,7 +8368,7 @@ Template.appointments.events({
                                             const smsSettings = templateObject.defaultSMSSettings.get();
                                             let sendSMSRes = true;
                                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                                 if (!sendSMSRes.success) {
                                                     swal({
                                                         title: 'Oops...',
@@ -8464,7 +8468,7 @@ Template.appointments.events({
                                         const smsSettings = templateObject.defaultSMSSettings.get();
                                         let sendSMSRes = true;
                                         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                             if (!sendSMSRes.success) {
                                                 swal({
                                                     title: 'Oops...',
@@ -8617,7 +8621,7 @@ Template.appointments.events({
                                 const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
                                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                     if (!sendSMSRes.success) {
                                         swal({
                                             title: 'Oops...',
@@ -8725,7 +8729,7 @@ Template.appointments.events({
                 const smsSettings = templateObject.defaultSMSSettings.get();
                 let sendSMSRes = true;
                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                     if (!sendSMSRes.success) {
                         swal({
                             title: 'Oops...',
@@ -8782,7 +8786,7 @@ Template.appointments.events({
             const smsSettings = templateObject.defaultSMSSettings.get();
             let sendSMSRes = true;
             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                 if (!sendSMSRes.success) {
                     swal({
                         title: 'Oops...',
@@ -9055,7 +9059,7 @@ Template.appointments.events({
         };*/
 
         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone);
+            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ''));
             if (!sendSMSRes.success) {
                 swal({
                     title: 'Oops...',
@@ -9148,7 +9152,7 @@ Template.appointments.events({
                             const smsSettings = templateObject.defaultSMSSettings.get();
                             let sendSMSRes = true;
                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone);
+                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone.replace('+', ''));
                                 if (!sendSMSRes.success) {
                                     swal({
                                         title: 'Oops...',
@@ -9972,7 +9976,9 @@ Template.appointments.events({
         let aEndDate = '';
         let savedStartDate = $('#aStartDate').val() || moment().format("YYYY-MM-DD");
         let clientname = formData.get('customer') || '';
-        let clientmobile = formData.get('mobile') || '0';
+        const itl = templateObject.itl.get();
+        let clientmobile = $('#mobile').val() ? $('#mobile').val() : '0';
+        // let clientmobile = formData.get('mobile') || '0';
         let contact = formData.get('phone') || '0';
         let startTime = $('#startTime').val() + ':00' || '';
         let endTime = $('#endTime').val() + ':00' || '';
