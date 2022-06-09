@@ -5506,6 +5506,18 @@ Template.supplierpaymentcard.helpers({
     }
 });
 
+function calulateApplied() {
+    const exchangeRate = $("#exchange_rate").val();
+
+    const paymentAmount = $('#edtPaymentAmount').val().substring(1);
+    const variation = $('#edtVariation').val().substring(1);
+
+    const appliedAmount = (paymentAmount - variation) * exchangeRate;
+
+    $('#edtApplied').val(appliedAmount);
+    $('#edtApplied').trigger("change");
+}
+
 Template.supplierpaymentcard.events({
     // 'click #sltDepartment': function(event) {
     //     $('#departmentModal').modal('toggle');
@@ -5519,14 +5531,19 @@ Template.supplierpaymentcard.events({
        
     },
     'change #exchange_rate': (e) => {
-        console.log(e);
-        const paymentAmount = $('#edtPaymentAmount').val().substring(1);
         const exchangeRate = $("#exchange_rate").val();
-        const appliedAmount = paymentAmount * exchangeRate;
+        const paymentAmount = $('#edtPaymentAmount').val().substring(1);
+        const foreignAmount = exchangeRate * paymentAmount;
 
-        $('#edtApplied').val(appliedAmount);
-        $('#edtApplied').trigger("change");
-        // console.log(paymentAmount, exchangeRate, appliedAmount);
+        $('#edtForeignAmount').val('$' + foreignAmount);
+
+        calulateApplied();
+    },
+    'change #edtForeignAmount': (e) => {
+        calulateApplied();
+    },
+    'change #edtVariation': (e) => {
+        calulateApplied();
     },
     'click .btnSave': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
