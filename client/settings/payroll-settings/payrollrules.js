@@ -9491,8 +9491,8 @@ Template.payrollrules.onRendered(function() {
                     else{
                        $('#swtShowEmploymentBasis').removeAttr('checked');
                     }
-    
-                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+                    $('#uploadedImage').attr('src', src);
                     $('#uploadedImage').attr('width','100%');
                     $('#uploadedImage').attr('height','100%');
                     $('#removeLogo').show();
@@ -9538,8 +9538,9 @@ Template.payrollrules.onRendered(function() {
                 else{
                    $('#swtShowEmploymentBasis').removeAttr('checked');
                 }
-
-                $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+                $('#uploadedImage').attr('src', src);
+                //$('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
                 $('#uploadedImage').attr('width','100%');
                 $('#uploadedImage').attr('height','100%');
                 $('#removeLogo').show();
@@ -9589,7 +9590,9 @@ Template.payrollrules.onRendered(function() {
                     $('#swtShowEmploymentBasis').removeAttr('checked');
                     }
 
-                    $('#uploadedImage').attr('src', data.tpayrollorganization[i].fields.attachment);
+                    let src  =  'data:image/jpeg;base64,'+data.tpayrollorganization[i].fields.attachment;
+                    $('#uploadedImage').attr('src', src);
+                   
                     $('#uploadedImage').attr('width','100%');
                     $('#uploadedImage').attr('height','100%');
                     $('#removeLogo').show();

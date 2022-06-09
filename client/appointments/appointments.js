@@ -102,6 +102,7 @@ Template.appointments.onRendered(function () {
     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
         $("#btnHold").prop("disabled", true);
     }
+
     getVS1Data('TERPPreference').then(function (dataObject) {
         if (dataObject.length == 0) {
             appointmentService.getGlobalSettings().then(function (data) {
@@ -607,7 +608,7 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -1048,7 +1049,7 @@ Template.appointments.onRendered(function () {
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                     document.getElementById("state").value = result[0].state || '';
                     document.getElementById("address").value = result[0].street || '';
                     if (Session.get('CloudAppointmentNotes') == true) {
@@ -1396,6 +1397,26 @@ Template.appointments.onRendered(function () {
             $("#allocationTabletbody tr td." + dayOfWeek.toLocaleLowerCase()).css('background-color', '#fff');
 
         }
+        setTimeout(function () {
+          if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+            $('.draggable').addClass('cardWeeekend');
+            $('.draggable').removeClass('cardHiddenWeekend');
+            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+          }
+
+          if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+            $('.draggable').removeClass('cardWeeekend');
+            $('.draggable').addClass('cardHiddenWeekend');
+            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+          }
+
+          if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+            $('.draggable').removeClass('cardWeeekend');
+            $('.draggable').removeClass('cardHiddenWeekend');
+            $('.draggable').addClass('cardHiddenSundayOrSaturday');
+          }
+        }, 100);
+
     };
 
     templateObject.dateFormat = function (date) {
@@ -2260,7 +2281,7 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -2744,6 +2765,24 @@ Template.appointments.onRendered(function () {
                         templateObject.resourceJobs.set(resourceJob);
                         templateObject.resourceDates.set(days);
                         $('.fullScreenSpin').css('display', 'none');
+
+                          if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                            $('.draggable').addClass('cardWeeekend');
+                            $('.draggable').removeClass('cardHiddenWeekend');
+                            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                          }
+
+                          if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                            $('.draggable').removeClass('cardWeeekend');
+                            $('.draggable').addClass('cardHiddenWeekend');
+                            $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                          }
+
+                          if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                            $('.draggable').removeClass('cardWeeekend');
+                            $('.draggable').removeClass('cardHiddenWeekend');
+                            $('.draggable').addClass('cardHiddenSundayOrSaturday');
+                          }
                     }, 500);
 
                 }).catch(function (err) {
@@ -3158,7 +3197,7 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -3211,8 +3250,9 @@ Template.appointments.onRendered(function () {
                 templateObject.renderNormalCalendar();
                 var currentDate = moment();
                 var dateCurrent = new Date();
-                var weekStart = currentDate.clone().startOf('isoWeek').format("YYYY-MM-DD");
-                var weekEnd = currentDate.clone().endOf('isoWeek').format("YYYY-MM-DD");
+                var weekStart = currentDate.clone().startOf('week').format("YYYY-MM-DD");
+                var weekEnd = currentDate.clone().endOf('week').format("YYYY-MM-DD");
+
                 var days = [];
 
                 let weeksOfCurrentMonth = getWeeksInMonth(dateCurrent.getFullYear(), dateCurrent.getMonth());
@@ -3246,36 +3286,56 @@ Template.appointments.onRendered(function () {
 
                 }
                 $('#here_table').append('</tr ></thead >');
+
                 for (i = 0; i <= weekResults[0].dates.length; i++) {
                     days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
                 }
+                //$(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
 
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
+                if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                  $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[6]).format('DD') + ', ' + moment().format('YYYY'));
+                }
 
-                $('.sunday').attr('id', moment(weekStart).subtract(1, 'days').format("YYYY-MM-DD"));
-                $('.monday').attr('id', moment(weekStart).add(0, 'days').format("YYYY-MM-DD"));
-                $('.tuesday').attr('id', moment(weekStart).add(1, 'days').format("YYYY-MM-DD"));
-                $('.wednesday').attr('id', moment(weekStart).add(2, 'days').format("YYYY-MM-DD"));
-                $('.thursday').attr('id', moment(weekStart).add(3, 'days').format("YYYY-MM-DD"));
-                $('.friday').attr('id', moment(weekStart).add(4, 'days').format("YYYY-MM-DD"));
-                $('.saturday').attr('id', moment(weekStart).add(5, 'days').format("YYYY-MM-DD"));
+                if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                  $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[1]).format('DD') + ' - ' + moment(days[5]).format('DD') + ', ' + moment().format('YYYY'));
+                }
+
+                if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)){
+                  $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[5]).format('DD') + ', ' + moment().format('YYYY'));
+                }
+
+                if(($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                  $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[1]).format('DD') + ' - ' + moment(days[6]).format('DD') + ', ' + moment().format('YYYY'));
+                }
+
+
+                //$('.sunday').attr('id', moment(weekStart).subtract(1, 'days').format("YYYY-MM-DD"));
+                $('.sunday').attr('id', moment(weekStart).add(0, 'days').format("YYYY-MM-DD"));
+                $('.monday').attr('id', moment(weekStart).add(1, 'days').format("YYYY-MM-DD"));
+                $('.tuesday').attr('id', moment(weekStart).add(2, 'days').format("YYYY-MM-DD"));
+                $('.wednesday').attr('id', moment(weekStart).add(3, 'days').format("YYYY-MM-DD"));
+                $('.thursday').attr('id', moment(weekStart).add(4, 'days').format("YYYY-MM-DD"));
+                $('.friday').attr('id', moment(weekStart).add(5, 'days').format("YYYY-MM-DD"));
+                $('.saturday').attr('id', moment(weekStart).add(6, 'days').format("YYYY-MM-DD"));
 
                 if (LoggedCountry == "United States") {
                     $(".dateMon").text(moment(weekStart).add(0, 'days').format("MM/DD"));
-                    $(".dateTue").text(moment(weekStart).add(1, 'days').format("MM/DD"));
-                    $(".dateWed").text(moment(weekStart).add(2, 'days').format("MM/DD"));
-                    $(".dateThu").text(moment(weekStart).add(3, 'days').format("MM/DD"));
-                    $(".dateFri").text(moment(weekStart).add(4, 'days').format("MM/DD"));
-                    $(".dateSat").text(moment(weekStart).add(5, 'days').format("MM/DD"));
-                    $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
+                    $(".dateMon").text(moment(weekStart).add(1, 'days').format("MM/DD"));
+                    $(".dateTue").text(moment(weekStart).add(2, 'days').format("MM/DD"));
+                    $(".dateWed").text(moment(weekStart).add(3, 'days').format("MM/DD"));
+                    $(".dateThu").text(moment(weekStart).add(4, 'days').format("MM/DD"));
+                    $(".dateFri").text(moment(weekStart).add(5, 'days').format("MM/DD"));
+                    $(".dateSat").text(moment(weekStart).add(6, 'days').format("MM/DD"));
+                    //$(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
                 } else {
                     $(".dateMon").text(moment(weekStart).add(0, 'days').format("DD/MM"));
-                    $(".dateTue").text(moment(weekStart).add(1, 'days').format("DD/MM"));
-                    $(".dateWed").text(moment(weekStart).add(2, 'days').format("DD/MM"));
-                    $(".dateThu").text(moment(weekStart).add(3, 'days').format("DD/MM"));
-                    $(".dateFri").text(moment(weekStart).add(4, 'days').format("DD/MM"));
-                    $(".dateSat").text(moment(weekStart).add(5, 'days').format("DD/MM"));
-                    $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
+                    $(".dateMon").text(moment(weekStart).add(1, 'days').format("DD/MM"));
+                    $(".dateTue").text(moment(weekStart).add(2, 'days').format("DD/MM"));
+                    $(".dateWed").text(moment(weekStart).add(3, 'days').format("DD/MM"));
+                    $(".dateThu").text(moment(weekStart).add(4, 'days').format("DD/MM"));
+                    $(".dateFri").text(moment(weekStart).add(5, 'days').format("DD/MM"));
+                    $(".dateSat").text(moment(weekStart).add(6, 'days').format("DD/MM"));
+                    //$(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
                 }
 
                 if (currentDay == "Monday" && moment().format('DD') == moment($('thead tr th.monday').attr('id')).format('DD')) {
@@ -3632,6 +3692,24 @@ Template.appointments.onRendered(function () {
                     templateObject.resourceAllocation.set(resourceChat);
                     templateObject.resourceJobs.set(resourceJob);
                     templateObject.resourceDates.set(days);
+
+                    if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                      $('.draggable').addClass('cardWeeekend');
+                      $('.draggable').removeClass('cardHiddenWeekend');
+                      $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                    }
+
+                    if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                      $('.draggable').removeClass('cardWeeekend');
+                      $('.draggable').addClass('cardHiddenWeekend');
+                      $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                    }
+
+                    if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                      $('.draggable').removeClass('cardWeeekend');
+                      $('.draggable').removeClass('cardHiddenWeekend');
+                      $('.draggable').addClass('cardHiddenSundayOrSaturday');
+                    }
                     $('.fullScreenSpin').css('display', 'none');
                 }, 0);
 
@@ -3771,7 +3849,7 @@ Template.appointments.onRendered(function () {
                         document.getElementById("appID").value = result[0].id;
                         document.getElementById("customer").value = result[0].accountname;
                         document.getElementById("phone").value = result[0].phone;
-                        document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                        document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                         document.getElementById("state").value = result[0].state;
                         document.getElementById("address").value = result[0].street;
                         if (Session.get('CloudAppointmentNotes') == true) {
@@ -4247,6 +4325,23 @@ Template.appointments.onRendered(function () {
                     templateObject.resourceAllocation.set(resourceChat);
                     templateObject.resourceJobs.set(resourceJob);
                     templateObject.resourceDates.set(days);
+                    if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                      $('.draggable').addClass('cardWeeekend');
+                      $('.draggable').removeClass('cardHiddenWeekend');
+                      $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                    }
+
+                    if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                      $('.draggable').removeClass('cardWeeekend');
+                      $('.draggable').addClass('cardHiddenWeekend');
+                      $('.draggable').removeClass('cardHiddenSundayOrSaturday');
+                    }
+
+                    if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true) || ($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                      $('.draggable').removeClass('cardWeeekend');
+                      $('.draggable').removeClass('cardHiddenWeekend');
+                      $('.draggable').addClass('cardHiddenSundayOrSaturday');
+                    }
                     $('.fullScreenSpin').css('display', 'none');
                 }, 500);
 
@@ -5502,7 +5597,7 @@ Template.appointments.onRendered(function () {
         let getEmployeeID = templateObject.empID.get() || '';
         document.getElementById("customer").value = $(this).find(".colCompany").text();
         document.getElementById("phone").value = $(this).find(".colPhone").text();
-        document.getElementById("mobile").value = $(this).find(".colMobile").text();
+        document.getElementById("mobile").value = $(this).find(".colMobile").text().replace("+", "");
         document.getElementById("state").value = $(this).find(".colState").text();
         document.getElementById("country").value = $(this).find(".colCountry").text();
         document.getElementById("address").value = $(this).find(".colStreetAddress").text().replace(/(?:\r\n|\r|\n)/g, ', ');
@@ -5820,7 +5915,7 @@ Template.appointments.onRendered(function () {
                             document.getElementById("appID").value = result[0].id;
                             document.getElementById("customer").value = result[0].accountname;
                             document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
+                            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
                             document.getElementById("state").value = result[0].state;
                             document.getElementById("address").value = result[0].street;
                             if (Session.get('CloudAppointmentNotes') == true) {
@@ -6251,6 +6346,7 @@ Template.appointments.onRendered(function () {
         twilioAccountToken: "",
         twilioTelephoneNumber: "",
         twilioMessagingServiceSid: "MGc1d8e049d83e164a6f206fbe73ce0e2f",
+        headerAppointmentSMSMessage: "Sent from [Company Name]",
         startAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we are on site and doing the following service [Product/Service].",
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service]."
@@ -6262,6 +6358,7 @@ Template.appointments.onRendered(function () {
                 case "VS1SMSID": smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSToken": smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue; break;
                 case "VS1SMSPhone": smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue; break;
+                case "VS1HEADERSMSMSG": smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1SAVESMSMSG": smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STARTSMSMSG": smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue; break;
                 case "VS1STOPSMSMSG": smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
@@ -6275,7 +6372,8 @@ Template.appointments.onRendered(function () {
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async (resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
-            const message = $(`#${type}AppointmentSMSMessage`).val();
+            const companyName = Session.get('vs1companyName');
+            const message = smsSettings.headerAppointmentSMSMessage.replace('[Company Name]', companyName) + " - " + $(`#${type}AppointmentSMSMessage`).val();
             const sendSMSResult = await new Promise((res, rej) => {
                 Meteor.call('sendSMS', smsSettings.twilioAccountId, smsSettings.twilioAccountToken, smsSettings.twilioTelephoneNumber, phoneNumber, message, function(error, result) {
                     if (error) rej(error);
@@ -6621,9 +6719,9 @@ Template.appointments.events({
             document.getElementById("appID").value = result[0].id;
             document.getElementById("customer").value = result[0].accountname;
             document.getElementById("phone").value = result[0].phone;
-            document.getElementById("mobile").value = result[0].mobile || result[0].phone || '';
-            document.getElementById("state").value = result[0].state || '';
-            document.getElementById("address").value = result[0].street || '';
+            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || '';
+            document.getElementById("state").value = result[0].state || ''
+            document.getElementById("address").value = result[0].street || ''
             if (Session.get('CloudAppointmentNotes') == true) {
                 document.getElementById("txtNotes").value = result[0].notes;
             }
@@ -7450,7 +7548,6 @@ Template.appointments.events({
 
         //get weeks of the month from a template object
         let weeksOfThisMonth = templateObject.weeksOfMonth.get();
-
         //Since we have all weeks of the month we query the weeks of the month object for data to get current week
         var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
             return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
@@ -7471,6 +7568,7 @@ Template.appointments.events({
         } else {
             $('.btnNext').removeAttr('disabled');
             let dayOfWeek = weeksOfThisMonth[index - 1].dates[0];
+
             let dayOfWeekEnd = weeksOfThisMonth[index - 1].dates[weeksOfThisMonth[index - 1].dates.length - 1];
             if (dayOfWeek < 10) {
                 dayOfWeek = '0' + dayOfWeek;
@@ -7494,25 +7592,32 @@ Template.appointments.events({
             }
 
             let weekendStart = moment(getDate.getFullYear() + '-' + ("0" + (getDate.getMonth() + 1)).slice(-2) + '-' + dayOfWeek).format('YYYY-MM-DD');
-            let startWeek = new Date(weekendStart);
-            if (index == 1 && moment(weekendStart).format("DD") != "01") {
-                startWeek = new Date(weekendStartListener);
+
+
+
+            if(index == 1 && dayOfWeek > dayOfWeekEnd){
+              weekendStart = moment(getDate.getFullYear() + '-' + ("0" + (getDate.getMonth())).slice(-2) + '-' + dayOfWeek).format('YYYY-MM-DD');
             }
+            let startWeek = new Date(weekendStart);
+            // if (index == 1 && moment(weekendStart).format("DD") != "01") {
+            //     startWeek = new Date(weekendStartListener);
+            // }
             let weekendEnd = moment(getDate.getFullYear() + '-' + ("0" + (getDate.getMonth() + 1)).slice(-2) + '-' + dayOfWeekEnd).format('YYYY-MM-DD');
 
             for (let i = 0; i <= weeksOfThisMonth[index - 1].dates.length; i++) {
-                if (index == 1 && moment(weekendStart).format("DD") != "01") {
-                    for (let t = 0; t < weeksOfThisMonth[index - 1].dates.length; t++) {
-                        if (weeksOfThisMonth[index - 1].dates[0] != 1) {
-                            dayPrev.push(moment(weekendStartListener).add(t, 'days').format("YYYY-MM-DD"));
-                        } else {
-                            dayPrev.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
-                        }
-                    }
-                    i = weeksOfThisMonth[index - 1].dates.length;
-                } else {
+                // if (index == 1 && moment(weekendStart).format("DD") != "01") {
+                //     for (let t = 0; t < weeksOfThisMonth[index - 1].dates.length; t++) {
+                //         if (weeksOfThisMonth[index - 1].dates[0] != 1) {
+                //             dayPrev.push(moment(weekendStartListener).add(t, 'days').format("YYYY-MM-DD"));
+                //         } else {
+                //             dayPrev.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
+                //         }
+                //     }
+                //     i = weeksOfThisMonth[index - 1].dates.length;
+                // } else {
+
                     dayPrev.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
-                }
+                //}
 
             }
             let currentDay = moment().format('YYYY-MM-DD');
@@ -7853,9 +7958,25 @@ Template.appointments.events({
             if((getDate.getMonth() - 1) == -1 && dayOfWeek != 1 && index == 0) {
                 $(".allocationHeaderDate h2").text(Jan + ' ' + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
             } else {
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
-            }
 
+              if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+                $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + ' ' + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
+              }
+
+              if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+                $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + ' ' + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
+              }
+
+              if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)){
+                $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + ' ' + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
+              }
+
+              if(($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+                $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + ' ' + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
+              }
+
+
+            }
             let day = moment().format('dddd');
             let resourceDate = $('thead tr th.' + day.toLowerCase()).attr('id');
             await changeColumnColor(resourceDate);
@@ -8252,7 +8373,24 @@ Template.appointments.events({
             $(".dateFri").text(moment(dayNext[5]).format("MM/DD"));
             $(".dateSat").text(moment(dayNext[6]).format("MM/DD"));
             $(".dateSun").text(moment(dayNext[0]).format("MM/DD"));
-            $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+
+            if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+              $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
+            }
+
+            if($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false){
+              $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+            }
+
+            if(($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)){
+              $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+            }
+
+            if(($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)){
+              $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
+            }
+
+            // $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
 
             let day = moment().format('dddd');
             let resourceDate = $('thead tr th.' + day.toLowerCase()).attr('id');
@@ -8364,7 +8502,7 @@ Template.appointments.events({
                                             const smsSettings = templateObject.defaultSMSSettings.get();
                                             let sendSMSRes = true;
                                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                                 if (!sendSMSRes.success) {
                                                     swal({
                                                         title: 'Oops...',
@@ -8464,7 +8602,7 @@ Template.appointments.events({
                                         const smsSettings = templateObject.defaultSMSSettings.get();
                                         let sendSMSRes = true;
                                         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                            sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                             if (!sendSMSRes.success) {
                                                 swal({
                                                     title: 'Oops...',
@@ -8617,7 +8755,7 @@ Template.appointments.events({
                                 const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
                                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                                     if (!sendSMSRes.success) {
                                         swal({
                                             title: 'Oops...',
@@ -8725,7 +8863,7 @@ Template.appointments.events({
                 const smsSettings = templateObject.defaultSMSSettings.get();
                 let sendSMSRes = true;
                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                    sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                     if (!sendSMSRes.success) {
                         swal({
                             title: 'Oops...',
@@ -8782,7 +8920,7 @@ Template.appointments.events({
             const smsSettings = templateObject.defaultSMSSettings.get();
             let sendSMSRes = true;
             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone);
+                sendSMSRes = await templateObject.sendSMSMessage('start', '+' + customerPhone.replace('+', ''));
                 if (!sendSMSRes.success) {
                     swal({
                         title: 'Oops...',
@@ -9055,7 +9193,7 @@ Template.appointments.events({
         };*/
 
         if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone);
+            sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ''));
             if (!sendSMSRes.success) {
                 swal({
                     title: 'Oops...',
@@ -9148,7 +9286,7 @@ Template.appointments.events({
                             const smsSettings = templateObject.defaultSMSSettings.get();
                             let sendSMSRes = true;
                             if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone);
+                                sendSMSRes = await templateObject.sendSMSMessage('stop', '+' + customerPhone.replace('+', ''));
                                 if (!sendSMSRes.success) {
                                     swal({
                                         title: 'Oops...',
@@ -9972,7 +10110,9 @@ Template.appointments.events({
         let aEndDate = '';
         let savedStartDate = $('#aStartDate').val() || moment().format("YYYY-MM-DD");
         let clientname = formData.get('customer') || '';
-        let clientmobile = formData.get('mobile') || '0';
+        // const itl = templateObject.itl.get();
+        let clientmobile = $('#mobile').val() ? $('#mobile').val() : '0';
+        // let clientmobile = formData.get('mobile') || '0';
         let contact = formData.get('phone') || '0';
         let startTime = $('#startTime').val() + ':00' || '';
         let endTime = $('#endTime').val() + ':00' || '';

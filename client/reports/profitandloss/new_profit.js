@@ -7,6 +7,9 @@ import { ProductService } from "../../product/product-service";
 import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
+// import jqueryScrollable from "../../js/jquery-sortable"
+
+
 let utilityService = new UtilityService();
 let reportService = new ReportService();
 const templateObject = Template.instance();
@@ -22,6 +25,24 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
 });
+
+function formatFields( fields, searchkey ){
+  const groupBy = (array, key) => {
+    // Return the end result
+    return array.reduce((result, currentValue) => {
+        // If an array already present for key, push it to the array. Else create an array and push the object
+        (result[currentValue.fields[key]] = result[currentValue.fields[key]] || []).push(
+            currentValue.fields
+        );
+        // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+        return result;
+    }, {}); // empty object is the initial value for result object
+  };
+
+  // Group by color as key to the person array
+  return groupBy(fields, searchkey );
+}
+
 
 function buildPositions() {
   const sortfields = $(".sortItem");
@@ -556,87 +577,102 @@ templateObject.getProfitLossLayout = async function() {
     // Save default list
     templateObject.profitlosslayoutfields.set( profitLossLists );
 
-    // console.log('profitLossLists', profitLossLists)
-    // Filter Total Group and Root Group
     profitLossLayouts = profitLossLists.filter((item) => {
-      if( item.fields.IsRoot == true ){
+      if( item.fields.Level0Order != 0 && item.fields.Level1Order == 0 && item.fields.Level2Order == 0 && item.fields.Level3Order == 0 ){
         return item;
       }
     });
-    // profitLossLayouts = profitLossLists.filter((item) => {
-    //   let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-    //   let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-    //   let AccountName =  item.fields.AccountName.replace(/\s/g, '')
-    //   if( ( level0GroupName == AccountName || AccountName == level1GroupName ) && item.fields.IsRoot == false ){
-    //     return item;
-    //   }
-    // });
     // console.log(profitLossLayouts, parentprofitLossLayouts);
     let newprofitLossLayouts = [];
     // Fetch Subchilds According to the Above grouping
     profitLossLayouts.forEach(function(item){
-        let level1Childs = []
-        let level0GroupName =  item.fields.AccountLevel0GroupName.replace(/\s/g, '')
-        let level1GroupName =  item.fields.AccountLevel1GroupName.replace(/\s/g, '')
-        let level2GroupName =  item.fields.AccountLevel2GroupName.replace(/\s/g, '')
-        let AccountName =  item.fields.AccountName.replace(/\s/g, '')
-        
+        let subAccounts = []
+        let Level0Order =  item.fields.Level0Order
+        let ID =  item.fields.ID
+
         profitLossLists.filter((subitem) => {
-          let sublevel0GroupName =  subitem.fields.AccountLevel0GroupName.replace(/\s/g, '')
-          let sublevel1GroupName =  subitem.fields.AccountLevel1GroupName.replace(/\s/g, '')
-          let sublevel2GroupName =  subitem.fields.AccountLevel2GroupName.replace(/\s/g, '')
-          let subAccountName =  subitem.fields.AccountName.replace(/\s/g, '')
+          let subLevel0Order =  subitem.fields.Level0Order
+          let subID =  subitem.fields.ID
           let subposition = subitem.fields.Pos.match(/.{1,2}/g);
-          if( level0GroupName == sublevel0GroupName && level1GroupName == sublevel1GroupName && level2GroupName == sublevel2GroupName && AccountName != subAccountName){
+          if( subLevel0Order == Level0Order && ID != subID){
             subitem.fields.Position = parseInt(subposition[1]) || 0;
-            level1Childs.push(subitem.fields)
-          }
-          if( ( sublevel0GroupName == subAccountName || subAccountName == sublevel1GroupName ) && subitem.fields.IsRoot == false && AccountName == sublevel0GroupName ){
-            subitem.fields.Position = parseInt(subposition[0]) || 0;
-            level1Childs.push(subitem.fields)
+            subAccounts.push(subitem.fields)
           }
         });
 
         let position = item.fields.Pos.match(/.{1,2}/g);
         item.fields.Position = parseInt(position[0]) || 0;
-        let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
+        // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
         newprofitLossLayouts.push({
           ...item.fields,
-          subAccounts: sortedAccounts
+          subAccounts: subAccounts
         }) 
     });   
+    console.log( newprofitLossLayouts );
     templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
 
     // handle Dragging and sorting
     setTimeout(function () {
-      // let $chartWrappper = $(".sortableAccount");
-      // $chartWrappper
-      // .find(".setParentPosition")
-      // .sort(function (a, b) {
-      //   return +a.getAttribute("position") - +b.getAttribute("position");
-      // })
-      // .appendTo($chartWrappper);
-      $(".sortableAccount").sortable({
-        containment: "parent",
-        items: "> div",
-        handle: ".handel",
-        tolerance: "pointer",
-        cursor: "move",
-        opacity: 0.7,
-        revert: 300,
-        delay: 150,
-        dropOnEmpty: true,
-        placeholder: "movable-placeholder",
-        start: function(e, ui) {
-            ui.placeholder.height(ui.helper.outerHeight());
-        }
-      });
-      $(".group-items").sortable({
-          containment: "document",
-          items: ".group-item",
-          placeholder: "item-placeholder",
-          connectWith: '.group-items'
-      });      
+    
+      // console.log('chdsdsdsdal sdsdsd');
+      var oldContainer;
+      $("ol.nested_with_switch").sortable({
+          group: 'nested_with_switch',
+          containment: "parent",
+          nested: true,
+          exclude: '.noDrag',
+          onDrag: function ($item, position, _super, event) {
+            $item.parents('.vertical').find('.selected').removeClass('selected');
+            $item.parents('.vertical').find('.selected').removeClass('dragged');
+            $item.addClass('selected');
+          },
+          // onDrop:function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected, dragged');
+          //   $item.addClass('selected');
+          // },
+          serialize: function ($parent, $children, parentIsContainer) {
+            var result = $.extend({}, $parent.data())
+              if(parentIsContainer)
+              return [$children]
+              else if ($children[0]){
+              result.children = $children
+            }
+          },
+          isValidTarget: function($item, container) {
+            if (container.el.hasClass("noDrag")) {
+              return false;
+            } else {
+              return true;
+            }
+          },
+          afterMove: function (placeholder, container) {
+            if(oldContainer != container){
+              if(oldContainer)
+                oldContainer.el.removeClass("active");
+                container.el.addClass("active");
+              oldContainer = container;
+            }
+          },
+         
+          // onDrop: function ($item, container, _super) {
+
+          //   var data = group.sortable("serialize").get();
+
+          //   var jsonString = JSON.stringify(data, null, ' ');
+          //   console.log(jsonString);
+          //   $('#serialize_output').val(jsonString);
+
+          //   container.el.removeClass("active");
+          //   _super($item, container);
+          // }
+        });
+       
+        $('.collepsDiv').click(function(){
+          $(this).parents('.mainHeadingDiv').toggleClass('collapsTogls');
+        });
+        // $('.subChild, .mainHeading').mouseout(function(){
+        //   $('.subChild, .mainHeading').removeClass('selected');
+        // });
     }, 1000);    
     
   }
@@ -1828,6 +1864,12 @@ Template.newprofitandloss.events({
 });
 
 Template.newprofitandloss.helpers({
+  isAccount( layout ){
+    if( layout.AccountID > 1 ){
+      return true;
+    }
+    return false
+  },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },

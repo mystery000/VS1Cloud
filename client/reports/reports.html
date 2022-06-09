@@ -324,6 +324,20 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isJobSalesSummary}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/jobsalessummary">Job Sales Summary</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkJobSalesSummary" type="checkbox" id="formCheck-JobSalesSummaryFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-JobSalesSummaryFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                             {{#if isJournalEntryList}}
                                                 <div class="row">
                                                     <hr style="width: 100%;margin: 4px;">
@@ -1221,21 +1235,21 @@
                                         <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
-                                        <div class="row reportComingSoon">
-                                            <div class="col flex-grow-1"><a href="#">Job Product Sales Summary *</a></div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/jobsalessummary">Job Sales Summary</a></div>
                                             <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input favCheckBox chkJobProductSalesSummary" type="checkbox" id="formCheck-JobProductSalesSummary" disabled>
-                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-JobProductSalesSummary"></label>
+                                                    <input class="custom-control-input favCheckBox chkJobSalesSummary" type="checkbox" id="formCheck-JobSalesSummary">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-JobSalesSummary"></label>
                                                 </div>
                                             </div>
-                                            {{#if isJobProductSalesSummary}}
+                                            {{#if isJobSalesSummary}}
                                                 <script>
-                                                    $('.chkJobProductSalesSummary').prop("checked", true);
+                                                    $('.chkJobSalesSummary').prop("checked", true);
                                                 </script>
                                             {{else}}
                                                 <script>
-                                                    $('.chkJobProductSalesSummary').prop("checked", false);
+                                                    $('.chkJobSalesSummary').prop("checked", false);
                                                 </script>
                                             {{/if}}
                                         </div>
@@ -1260,7 +1274,7 @@
                                                 </script>
                                             {{/if}}
                                         </div>
-                                        <div class="row">
+                                        <!-- <div class="row">
                                             <hr style="width: 100%;margin: 4px;">
                                         </div>
                                         <div class="row reportComingSoon">
@@ -1280,7 +1294,7 @@
                                                     $('.chkTaxDetails').prop("checked", false);
                                                 </script>
                                             {{/if}}
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1925,8 +1939,9 @@
                                         <div class="row">
                                             <div class="col flex-grow-1"><a href="/productsalesreport">Product Sales Report</a></div>
                                             <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
-                                                <div class="custom-control custom-checkbox"><input class="custom-control-input favCheckBox chkProductSalesReport" type="checkbox" id="formCheck-12ProductSales"><label style="cursor: pointer;"
-                                                        class="custom-control-label" for="formCheck-12ProductSales"></label></div>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkProductSalesReport" type="checkbox" id="formCheck-12ProductSales">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-12ProductSales"></label></div>
                                             </div>
                                         </div>
                                         {{#if isProductSalesReport}}

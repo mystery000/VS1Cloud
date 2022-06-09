@@ -12,7 +12,11 @@
     </header>
 
     <!-- All Cards List -->
-    {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
+    <div class="container-fluid">
+      <div style="padding: 0 8px;">
+        {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
+      </div>
+    </div>
     {{> crm_top_menu}}
 
     {{> alltaskdatatable}}
@@ -671,7 +675,11 @@
     }
 
     .colLabelActions {
-      width: 8%;
+      width: 50px;
+    }
+
+    .colLabel {
+      width: 95%;
     }
 
     .btnLabelActions {

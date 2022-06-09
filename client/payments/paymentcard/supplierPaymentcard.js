@@ -5506,17 +5506,44 @@ Template.supplierpaymentcard.helpers({
     }
 });
 
+function calulateApplied() {
+    const exchangeRate = $("#exchange_rate").val();
+
+    const paymentAmount = $('#edtPaymentAmount').val().includes("$") ? $('#edtPaymentAmount').val().substring(1) : $('#edtPaymentAmount').val();
+    const variation =  $('#edtVariation').val().includes("$") ? $('#edtVariation').val().substring(1) : $('#edtVariation').val();
+
+    const appliedAmount = (paymentAmount - variation) * exchangeRate;
+
+    $('#edtApplied').val(appliedAmount);
+    $('#edtApplied').trigger("change");
+}
+
 Template.supplierpaymentcard.events({
     // 'click #sltDepartment': function(event) {
     //     $('#departmentModal').modal('toggle');
     // },
+    "change #sltCurrency": (e) => {
+        if($('#sltCurrency').val() && $('#sltCurrency').val() != "AUD") {
+            $('.foreign-currency-js').css('display', 'block');
+        }else {
+            $('.foreign-currency-js').css('display', 'none');
+        }
+       
+    },
     'change #exchange_rate': (e) => {
-        console.log(e);
-        const paymentAmount = parseInt($('#edtPaymentAmount').val());
-        const exchangeRate = parseInt($(e.currentTarget).val());
-        const appliedAmount = paymentAmount * exchangeRate;
+        const exchangeRate = $("#exchange_rate").val();
+        const paymentAmount = $('#edtPaymentAmount').val().includes("$") ? $('#edtPaymentAmount').val().substring(1) : $('#edtPaymentAmount').val();
+        const foreignAmount = exchangeRate * paymentAmount;
 
-        console.log(paymentAmount, exchangeRate, appliedAmount);
+        $('#edtForeignAmount').val('$' + foreignAmount);
+
+        calulateApplied();
+    },
+    'change #edtForeignAmount': (e) => {
+        calulateApplied();
+    },
+    'change #edtVariation': (e) => {
+        calulateApplied();
     },
     'click .btnSave': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

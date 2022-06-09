@@ -105,24 +105,24 @@
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="arrow" id="{{#if equals item.formID 1}}groupedReports{{/if}}" data-ids="{{item.formIDs}}">{{item.formname}}</td>
                                                     {{#if equals item.frequency "M"}}
-                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly</td>
+                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
+                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly{{item.basedOnTypeText}}</td>
                                                     {{else}}
                                                         {{#if equals item.frequency "W"}}
-                                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
+                                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                 data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
-                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly</td>
+                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly{{item.basedOnTypeText}}</td>
                                                         {{else}}
                                                             {{#if equals item.frequency "D"}}
-                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
+                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                     data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
-                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily</td>
+                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily{{item.basedOnTypeText}}</td>
                                                             {{else}}
                                                                 {{#unless equals item.startDate ""}}
-                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only</td>
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
+                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only{{item.basedOnTypeText}}</td>
                                                                 {{else}}
-                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"></td>
                                                                 {{/unless}}
                                                             {{/if}}
                                                         {{/if}}
@@ -282,24 +282,24 @@
                                                 <tr class="dnd-moved" id="automated{{item.formID}}" data-id="{{item.formID}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="arrow">{{item.formname}}</td>
                                                     {{#if equals item.frequency "M"}}
-                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly</td>
+                                                        <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
+                                                            data-monthdate="{{item.monthDays}}" data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Monthly{{item.basedOnTypeText}}</td>
                                                     {{else}}
                                                         {{#if equals item.frequency "W"}}
-                                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
+                                                            <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                 data-selectdays="{{item.weekDay}}" data-everyweeks="{{item.every}}"
-                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly</td>
+                                                                data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Weekly{{item.basedOnTypeText}}</td>
                                                         {{else}}
                                                             {{#if equals item.frequency "D"}}
-                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
+                                                                <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
                                                                     data-sataction="{{item.satAction}}" data-sunaction="{{item.sunAction}}" data-everydays="{{item.every}}"
-                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily</td>
+                                                                    data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">Daily{{item.basedOnTypeText}}</td>
                                                             {{else}}
                                                                 {{#unless equals item.startDate ""}}
-                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"
-                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only</td>
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"
+                                                                        data-starttime="{{item.startTime}}" data-startdate="{{item.startDate}}">One Time Only{{item.basedOnTypeText}}</td>
                                                                 {{else}}
-                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency"></td>
+                                                                    <td contenteditable="false" class="colFrequency s-input" id="edtFrequency" data-basedontype="{{item.basedOnType}}"></td>
                                                                 {{/unless}}
                                                             {{/if}}
                                                         {{/if}}
@@ -994,88 +994,82 @@
                                                     </div>
                                                 </div>
                                                 <div style="border-top: 1px solid #e3e6f0; padding: 1rem 1rem 0.5rem 1rem; margin: 0 -1rem"><h5 style="margin: 0;">Based On</h5></div>
-                                                <div class="row">
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                name="basedOnPrint" id="basedOnPrint" checked>
-                                                            <label class="form-check-label" for="basedOnPrint">
+                                                <div class="row px-3" id="basedOnSettings">
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
+                                                                name="basedOnPrint" id="basedOnPrint">
+                                                            <label class="custom-control-label" for="basedOnPrint">
                                                                 On Print
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
                                                                 name="basedOnSave" id="basedOnSave">
-                                                            <label class="form-check-label" for="basedOnSave">
+                                                            <label class="custom-control-label" for="basedOnSave">
                                                                 On Save
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
                                                                 name="basedOnTransactionDate" id="basedOnTransactionDate">
-                                                            <label class="form-check-label"
-                                                                for="basedOnTransactionDate">
+                                                            <label class="custom-control-label" for="basedOnTransactionDate">
                                                                 On Transaction Date
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
                                                                 name="basedOnDueDate" id="basedOnDueDate">
-                                                            <label class="form-check-label" for="basedOnDueDate">
+                                                            <label class="custom-control-label" for="basedOnDueDate">
                                                                 On Due Date
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
                                                                 name="basedOnOutstanding" id="basedOnOutstanding">
-                                                            <label class="form-check-label" for="basedOnOutstanding">
+                                                            <label class="custom-control-label" for="basedOnOutstanding">
                                                                 If Outstanding
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-6">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox"
+                                                    <div class="col-12 col-lg-6 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                        <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                            <input class="custom-control-input basedOnSettings" type="checkbox"
                                                                 name="basedOnEvent" id="basedOnEvent">
-                                                            <label class="form-check-label" for="basedOnEvent">
+                                                            <label class="custom-control-label" for="basedOnEvent">
                                                                 On Event
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-lg-7" id="onEventSettings" style="display: none;">
+                                                    <div class="col-12 col-lg-7 mt-3" id="onEventSettings" style="display: none;">
                                                         <div class="row">
-                                                            <div class="col-12">
-                                                                <h5 style="margin-bottom: 8px;">Settings</h5>
-                                                            </div>
+                                                            <h5 style="margin-bottom: 8px;">Settings</h5>
                                                         </div>
-                                                        <div class="row" style="margin-bottom: 8px;">
-                                                            <div class="col-12">
-                                                                <div class="form-check" style="margin-top: 2px;">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="settingsOnEvents" id="settingsOnLogon"
-                                                                        checked>
-                                                                    <label class="form-check-label"
-                                                                        for="settingsOnLogon">
+                                                        <div class="row">
+                                                            <div class="col-12 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                                <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                                    <input class="custom-control-input onEventSettings" type="checkbox"
+                                                                        name="settingsOnEvents" id="settingsOnEvents">
+                                                                    <label class="custom-control-label" for="settingsOnEvents">
                                                                         On Logon
                                                                     </label>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row" style="margin-bottom: 8px;">
-                                                            <div class="col-12">
-                                                                <div class="form-check" style="margin-top: 2px;">
-                                                                    <input class="form-check-input" type="radio"
-                                                                        name="settingsOnEvents" id="settingsOnLogout">
-                                                                    <label class="form-check-label"
-                                                                        for="settingsOnLogout">
+                                                        <div class="row">
+                                                            <div class="col-12 custom-control custom-switch d-xl-flex align-items-xl-center">
+                                                                <div class="form-group d-xl-flex justify-content-xl-start align-items-xl-center" style="margin: 0; Width:50%;">
+                                                                    <input class="custom-control-input onEventSettings" type="checkbox"
+                                                                        name="settingsOnLogout" id="settingsOnLogout">
+                                                                    <label class="custom-control-label" for="settingsOnLogout">
                                                                         On Logout
                                                                     </label>
                                                                 </div>
@@ -1147,7 +1141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal fade" id="basedOnModal" tabindex="-1" role="dialog"
+                                <!-- <div class="modal fade" id="basedOnModal" tabindex="-1" role="dialog"
                                     aria-labelledby="basedOnModal" aria-hidden="true">
                                     <div class="modal-dialog modal modal-dialog-centered" role="document">
                                         <div class="modal-content">
@@ -1238,8 +1232,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="row"> -->
-                                                    <!-- <div class="col-6 col-lg-5">
+                                                <div class="row">
+                                                    <div class="col-6 col-lg-5">
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio"
                                                                 name="basedOnRadio" id="basedOnDate">
@@ -1247,8 +1241,8 @@
                                                                 Time
                                                             </label>
                                                         </div>
-                                                    </div> -->
-                                                    <!-- <div class="col-6 col-lg-7">
+                                                    </div>
+                                                    <div class="col-6 col-lg-7">
                                                         <div class="form-group" style="margin-bottom: 0px !important;">
                                                             <input type="time" class="form-control" id="edtBasedOnDate"
                                                                 name="edtBasedOnDate"
@@ -1258,8 +1252,8 @@
                                                                 This field is rquired.
                                                             </p>
                                                         </div>
-                                                    </div> -->
-                                                <!-- </div> -->
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-success btnSaveBasedOn"><i
@@ -1270,7 +1264,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="row no-gutters">

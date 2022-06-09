@@ -777,6 +777,24 @@ overflow-y: scroll !important;
     {{#if isGreenTrack}}
     <script>
         function logOutFunc() {
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                if (reportData.BasedOnType.includes("EU"))
+                    Meteor.call('sendNormalEmail', reportData);
+            });
             window.open('/vs1greentracklogin','_self');
             CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
         };
@@ -784,6 +802,24 @@ overflow-y: scroll !important;
     {{else}}
     <script>
         function logOutFunc() {
+            let values = [];
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            values.forEach(value => {
+                let reportData = JSON.parse(value);
+                reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                if (reportData.BasedOnType.includes("EU"))
+                    Meteor.call('sendNormalEmail', reportData);
+            });
             window.open('/','_self');
             CloudUser.update({_id: Session.get('mycloudLogonID')},{ $set: {userMultiLogon: false}});
         };
