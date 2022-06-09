@@ -10,6 +10,8 @@ import { TaxRateService } from "../../settings/settings-service";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
+const currentUrl = new URL(window.location.href);
+
 Template.FxCurrencyHistory.onCreated(function () {
   const templateInstance = Template.instance();
   templateInstance.datatablerecords = new ReactiveVar([]);
@@ -32,7 +34,7 @@ Template.FxCurrencyHistory.onRendered(function () {
 
   var today = moment().format("DD/MM/YYYY");
   var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
   let fromDateMonth = currentDate.getMonth() + 1;
   let fromDateDay = currentDate.getDate();
   if (currentDate.getMonth() + 1 < 10) {
@@ -42,8 +44,14 @@ Template.FxCurrencyHistory.onRendered(function () {
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }
-  var fromDate =
-    fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
+
+  let begunDate = currentUrl.searchParams.has("dateTo")
+    ? currentUrl.searchParams.get("dateTo").replaceAll("-", "/")
+    : moment(currentDate).format("DD/MM/YYYY");
+
+  let fromDate = currentUrl.searchParams.has("dateFrom")
+    ? currentUrl.searchParams.get("dateFrom").replaceAll("-", "/")
+    : fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
 
   $("#date-input,#dateTo,#dateFrom").datepicker({
     showOn: "button",
@@ -83,6 +91,21 @@ Template.FxCurrencyHistory.onRendered(function () {
     });
   }
 
+  /**
+   *
+   * @param {string} urlDate
+   * @returns {Date}
+   */
+  function formatFromUrl(urlDate) {
+    const _date = urlDate.split("/");
+
+    console.log(_date);
+
+    const finalDate = new Date(_date[2], _date[1], _date[0]);
+
+    return finalDate;
+  }
+
   templateInstance.getTaxRates = function () {
     taxRateService
       .getCurrencyHistory()
@@ -104,19 +127,34 @@ Template.FxCurrencyHistory.onRendered(function () {
             country: data[i].Country || "-",
             description: data[i].CurrencyDesc || "-",
             ratelastmodified: data[i].RateLastModified || "-",
-            createdAt: data[i].MsTimeStamp || "-",
+            createdAt: new Date(data[i].MsTimeStamp) || "-",
           };
 
           dataTableList.push(dataList);
           //}
         }
-         // console.log(dataTableList);
+        console.log(dataTableList);
 
-        if(urlParams.get("currency")) {
+        if (urlParams.get("currency")) {
           // Filter by currency
           dataTableList = dataTableList.filter((value, index) => {
             //console.log(value);
             return value.code == urlParams.get("currency");
+          });
+        }
+
+        if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
+          console.log(begunDate);
+          const _dateFrom = formatFromUrl(begunDate);
+          const _dateTo = formatFromUrl(fromDate);
+          console.log(_dateFrom);
+          console.log(_dateTo);
+
+          dataTableList = dataTableList.filter((value, index) => {
+            if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
+              return true;
+            }
+            return false;
           });
         }
 
@@ -310,7 +348,82 @@ Template.FxCurrencyHistory.onRendered(function () {
   $(".fullScreenSpin").css("display", "none");
 });
 
+/**
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatDateToUrl(date) {
+  console.log(date.getMonth().toString.length);
+  let formatDateFrom =
+    (date.getDate().toString.length == 1
+      ? "0" + date.getDate()
+      : date.getDate()) +
+    "-" +
+    (date.getMonth().toString.length == 1
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1) +
+    "-" +
+    date.getFullYear();
+
+  // debugger;
+  return formatDateFrom;
+}
+
 Template.FxCurrencyHistory.events({
+  "change #dateTo": function () {
+    let templateObject = Template.instance();
+    // $(".fullScreenSpin").css("display", "inline-block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+
+    let dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    let dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    let formatDateFrom = formatDateToUrl(dateFrom);
+    let formatDateTo = formatDateToUrl(dateTo);
+
+    const myUrl = new URL(currentUrl.origin + currentUrl.pathname);
+    if (currentUrl.searchParams.has("currency"))
+      myUrl.searchParams.append(
+        "currency",
+        currentUrl.searchParams.get("currency")
+      );
+    myUrl.searchParams.append("dateFrom", formatDateFrom);
+    myUrl.searchParams.append("dateTo", formatDateTo);
+
+    window.location.href = myUrl;
+
+    // console.log(formatDateFrom);
+    // console.log(formatDateTo);
+  },
+  "change #dateFrom": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+
+    let dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    let dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    let formatDateFrom = formatDateToUrl(dateFrom);
+    let formatDateTo = formatDateToUrl(dateTo);
+
+    const myUrl = new URL(currentUrl.origin + currentUrl.pathname);
+    if (currentUrl.searchParams.has("currency"))
+      myUrl.searchParams.append(
+        "currency",
+        currentUrl.searchParams.get("currency")
+      );
+    myUrl.searchParams.append("dateFrom", formatDateFrom);
+    myUrl.searchParams.append("dateTo", formatDateTo);
+
+    window.location.href = myUrl;
+
+    // console.log(formatDateFrom);
+    // console.log(formatDateTo);
+  },
   "click .chkDatatable": function (event) {
     var columns = $("#tblFxCurrencyHistory th");
     let columnDataValue = $(event.target)
