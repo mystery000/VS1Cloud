@@ -2368,11 +2368,14 @@ getAllTSalesBackOrderReportData(dateFrom, dateTo, ignoreDate, limitcount, limitf
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
 
-    getAllTReconcilation(dateFrom, dateTo) {
+    getAllTReconcilationByName(dateFrom, dateTo, accountName) {
         let options = {
-            IgnoreDates: false,
-            DateFrom: '"' + dateFrom + '"',
-            DateTo: '"' + dateTo + '"'
+            ListType: "Detail",
+            select: "[Deleted]=false"
+            // IgnoreDates: false,
+            // AccountName: accountName,
+            // DateFrom: '"' + dateFrom + '"',
+            // DateTo: '"' + dateTo + '"'
         };
         return this.getList(this.ERPObjects.TReconciliation, options);
     }
