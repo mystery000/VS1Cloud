@@ -1091,6 +1091,7 @@ Template.alltaskdatatable.onRendered(function () {
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[3]);
           },
+          width: "100%",
         },
         {
           orderable: false,
@@ -1099,6 +1100,7 @@ Template.alltaskdatatable.onRendered(function () {
           createdCell: function (td, cellData, rowData, row, col) {
             $(td).attr("data-id", rowData[3]);
           },
+          width: "50px",
         },
       ],
       sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",

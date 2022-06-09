@@ -257,7 +257,7 @@ Template.customfieldpop.onRendered(() => {
     templateObject.getSalesCustomFieldsList();
   }, 500);
 
-  templateObject.drawDropDownListTable = function (customfield) {
+  templateObject.drawDropDownListTable = function (customfield, data_id) {
     let fieldsData = templateObject.custfields.get();
     splashArrayClientTypeList1 = [];
     let lineItems = [];
@@ -266,16 +266,6 @@ Template.customfieldpop.onRendered(() => {
 
     if (fieldsData.length > 0) {
       for (let i = 0; i < fieldsData.length; i++) {
-        // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-        // var dataList = {
-        //     id: data.tclienttype[i].Id || '',
-        //     typeName: data.tclienttype[i].TypeName || '-',
-        //     description: data.tclienttype[i].TypeDescription || '-',
-        //     status: data.tclienttype[i].Active || 'false',
-        //
-        // };
-
-        //dataTableList.push(dataList);
         if (Array.isArray(fieldsData[i].dropdown)) {
           if (fieldsData[i].dropdown.length > 0) {
             if (fieldsData[i].custfieldlabel == customfield) {
@@ -310,7 +300,7 @@ Template.customfieldpop.onRendered(() => {
 
     $(".fullScreenSpin").css("display", "none");
     setTimeout(function () {
-      $("#custListType")
+      $("#customFieldDropdownTable" + data_id)
         .DataTable({
           data: splashArrayClientTypeList1,
           sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -330,10 +320,6 @@ Template.customfieldpop.onRendered(() => {
               className: "colFieldName pointer",
               targets: [1],
             },
-            // , {
-            //     className: "colDeleteCustomField pointer",
-            //     "targets": [2]
-            // }
           ],
           select: true,
           destroy: true,
@@ -347,11 +333,19 @@ Template.customfieldpop.onRendered(() => {
           responsive: true,
           fnInitComplete: function () {
             $(
-              "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-            ).insertAfter("#custListType_filter");
+              "<button class='btn btn-primary btnAddNewCustField' data-id='" +
+                data_id +
+                "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' data-id='" +
+                data_id +
+                "'></i></button>"
+            ).insertAfter("#customFieldDropdownTable" + data_id + "_filter");
             $(
-              "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#custListType_filter");
+              "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' data-id='" +
+                data_id +
+                "' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" +
+                data_id +
+                "' style='margin-right: 5px'></i>Search</button>"
+            ).insertAfter("#customFieldDropdownTable" + data_id + "_filter");
           },
         })
         .on("page", function () {
@@ -610,7 +604,7 @@ Template.customfieldpop.events({
     $(".dropDownSection").show();
     $("#newStatus" + data_id).val($("#customFieldText" + data_id).val());
     $("#newCustomFieldPop").modal("toggle");
-    templateObject.drawDropDownListTable(custfield1);
+    templateObject.drawDropDownListTable(custfield1, data_id);
     $(".checkbox" + data_id + "div").append(
       '<div class="form-group"><label class="lblCustomField' +
         data_id +
