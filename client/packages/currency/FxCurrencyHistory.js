@@ -99,7 +99,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   function formatFromUrl(urlDate) {
     const _date = urlDate.split("/");
 
-    console.log(_date);
+    // console.log(_date);
 
     const finalDate = new Date(_date[2], _date[1], _date[0]);
 
@@ -133,7 +133,7 @@ Template.FxCurrencyHistory.onRendered(function () {
           dataTableList.push(dataList);
           //}
         }
-        console.log(dataTableList);
+        // console.log(dataTableList);
 
         if (urlParams.get("currency")) {
           // Filter by currency
@@ -144,11 +144,11 @@ Template.FxCurrencyHistory.onRendered(function () {
         }
 
         if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
-          console.log(begunDate);
+          // console.log(begunDate);
           const _dateFrom = formatFromUrl(begunDate);
           const _dateTo = formatFromUrl(fromDate);
-          console.log(_dateFrom);
-          console.log(_dateTo);
+          // console.log(_dateFrom);
+          // console.log(_dateTo);
 
           dataTableList = dataTableList.filter((value, index) => {
             if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
@@ -354,7 +354,7 @@ Template.FxCurrencyHistory.onRendered(function () {
  * @returns {string}
  */
 function formatDateToUrl(date) {
-  console.log(date.getMonth().toString.length);
+  // console.log(date.getMonth().toString.length);
   let formatDateFrom =
     (date.getDate().toString.length == 1
       ? "0" + date.getDate()
