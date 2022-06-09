@@ -5509,8 +5509,8 @@ Template.supplierpaymentcard.helpers({
 function calulateApplied() {
     const exchangeRate = $("#exchange_rate").val();
 
-    const paymentAmount = $('#edtPaymentAmount').val().substring(1);
-    const variation = $('#edtVariation').val().substring(1);
+    const paymentAmount = $('#edtPaymentAmount').val().includes("$") ? $('#edtPaymentAmount').val().substring(1) : $('#edtPaymentAmount').val();
+    const variation =  $('#edtVariation').val().includes("$") ? $('#edtVariation').val().substring(1) : $('#edtVariation').val();
 
     const appliedAmount = (paymentAmount - variation) * exchangeRate;
 
@@ -5532,7 +5532,7 @@ Template.supplierpaymentcard.events({
     },
     'change #exchange_rate': (e) => {
         const exchangeRate = $("#exchange_rate").val();
-        const paymentAmount = $('#edtPaymentAmount').val().substring(1);
+        const paymentAmount = $('#edtPaymentAmount').val().includes("$") ? $('#edtPaymentAmount').val().substring(1) : $('#edtPaymentAmount').val();
         const foreignAmount = exchangeRate * paymentAmount;
 
         $('#edtForeignAmount').val('$' + foreignAmount);
