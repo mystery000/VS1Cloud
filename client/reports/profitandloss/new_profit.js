@@ -7,6 +7,9 @@ import { ProductService } from "../../product/product-service";
 import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
+// import jqueryScrollable from "../../js/jquery-sortable"
+
+
 let utilityService = new UtilityService();
 let reportService = new ReportService();
 const templateObject = Template.instance();
@@ -636,7 +639,65 @@ templateObject.getProfitLossLayout = async function() {
           items: ".group-item",
           placeholder: "item-placeholder",
           connectWith: '.group-items'
-      });      
+      }); 
+      console.log('chal pdaa');
+      var oldContainer;
+      $("ol.nested_with_switch").sortable({
+          group: 'nested_with_switch',
+          containment: "parent",
+          nested: true,
+          exclude: '.noDrag',
+          onDrag: function ($item, position, _super, event) {
+            $item.parents('.vertical').find('.selected').removeClass('selected');
+            $item.addClass('selected');
+          },
+          // onDrop:function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected, dragged');
+          //   $item.addClass('selected');
+          // },
+          serialize: function ($parent, $children, parentIsContainer) {
+            var result = $.extend({}, $parent.data())
+             if(parentIsContainer)
+              return [$children]
+            else if ($children[0]){
+              result.children = $children
+            }
+          },
+          isValidTarget: function($item, container) {
+            if (container.el.hasClass("noDrag")) {
+              return false;
+            } else {
+              return true;
+            }
+          },
+          afterMove: function (placeholder, container) {
+            if(oldContainer != container){
+              if(oldContainer)
+                oldContainer.el.removeClass("active");
+                container.el.addClass("active");
+              oldContainer = container;
+            }
+          },
+         
+          // onDrop: function ($item, container, _super) {
+
+          //   var data = group.sortable("serialize").get();
+
+          //   var jsonString = JSON.stringify(data, null, ' ');
+          //   console.log(jsonString);
+          //   $('#serialize_output').val(jsonString);
+
+          //   container.el.removeClass("active");
+          //   _super($item, container);
+          // }
+        });
+       
+        $('.collepsDiv').click(function(){
+          $(this).parents('.mainHeadingDiv').toggleClass('collapsTogls');
+        });
+        // $('.subChild, .mainHeading').mouseout(function(){
+        //   $('.subChild, .mainHeading').removeClass('selected');
+        // });
     }, 1000);    
     
   }
