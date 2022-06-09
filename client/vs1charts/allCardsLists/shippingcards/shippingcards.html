@@ -1,82 +1,6 @@
 <template name="shippingcards">
-    <div class="col-lg-6 col-xl-4 card-visibility" position="0" chartgroup="ShippingOverview" card-active="true" card-key="shipping-barcode">
-        <div class="card shadow customCardMainDiv border-left-primary py-2 mb-4" style="height: 102px;">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
-                <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
-            </div>
-            <div class="card-body">
-                <div class="row align-items-center no-gutters" style="margin-top:4px;">
-                    <div class="input-group">
-                        <input class="form-control" id="barcodeScanInput" name="barcodeScanInput" type="text" placeholder="Enter the barcode">
-                        <style>
-                            .btnDesktopSearch {
-                                color: #fff;
-                            }
-                        </style>
-                        <div class="input-group-append">
-                            <a class="btn btn-success btnDesktopSearch" href="" id="btnDesktopSearch" role="button" style="border-top-right-radius: 0.35rem; border-bottom-right-radius: 0.35rem;"><i class="fas fa-search"></i></a>
-                        </div>
-                        <a class="btn btn-success scanBarcode" href="" id="scanBarcode" role="button" style="margin-left: 8px;"><i class="fas fa-camera"></i></a>
-                        <button type="button" class="btn btn-success" id="btnMobileBarcodeScan" data-toggle="modal" data-target="#scanBarcodeModalShippingOverview" style="margin-left: 8px; display: none;"><i class="fas fa-camera"></i></button>
-                        <!-- IDEA: Scan will open the scanning modal UNLESS you type in a valid barcode, then it will open the corresponding Shipping Docket -->
-                    </div>
-                    <!-- <style>
-                        @media screen and (max-width: 450px) {
-                            #mobileBarcodeScan {
-                                display: block !important;
-                            }
-                            #scanBarcode {
-                                display: none;
-                            }
-                        }
-                    </style> -->
-
-                    <div class="modal fade" role="dialog" tabindex="-1" id="scanBarcodeModalShippingOverview">
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Barcode Scanner</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                </div>
-                                <div class="modal-body">
-                                    <style>
-                                        #qr-readershippingoverview>div:first-of-type {
-                                            display: none !important;
-                                        }
-
-                                        #qr-readershippingoverview__dashboard_section_swaplink {
-                                            display: none !important;
-                                        }
-
-                                        #qr-readershippingoverview__dashboard_section_csr>div>button:first-of-type {
-                                            color: #fff !important;
-                                            background-color: #00a3d3 !important;
-                                            border-color: #00a3d3 !important;
-                                            border: 1px solid transparent;
-                                            display: inline-block !important;
-                                            font-weight: 400 !important;
-                                            text-align: center !important;
-                                            vertical-align: middle !important;
-                                            padding: .375rem .75rem !important;
-                                            font-size: 1rem !important;
-                                            line-height: 1.5 !important;
-                                            border-radius: .35rem !important;
-                                            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-                                        }
-                                    </style>
-                                    <!-- <div id="reader" style="width: 100%"></div> -->
-                                    <div id="qr-readershippingoverview" style="width:100%"></div>
-                                </div>
-                                <div class="modal-footer"><button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-xl-4 card-visibility" position="0" chartgroup="ShippingOverview" card-active="true" card-key="shipping-active-inventory">
+    
+    <div class="col-lg-3 col-xl-4 hideelement card-visibility" position="0" chartgroup="ShippingOverview" card-active="true" card-key="shipping-active-inventory">
         <div class="card shadow customCardMainDiv border-left-primary py-2 mb-4">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
@@ -93,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3 col-xl-4 card-visibility" position="0" chartgroup="ShippingOverview" card-active="true" card-key="shipping-outgoing-packages">
+    <div class="col-lg-3 col-xl-4 hideelement card-visibility" position="0" chartgroup="ShippingOverview" card-active="true" card-key="shipping-outgoing-packages">
         <div class="card shadow customCardMainDiv border-left-success py-2 mb-4">
             <div class="hideShowDiv">
                 <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
