@@ -261,6 +261,7 @@
             {{#each itemTransaction in bankTransactionData}}
                 <input type="hidden" id="reconID_{{ itemTransaction.YodleeLineID }}" value="">
                 <input type="hidden" id="paymentID_{{ itemTransaction.YodleeLineID }}" value="">
+                <input type="hidden" id="DepOrWith_{{ itemTransaction.YodleeLineID }}" value="">
                 <div class="row justify-content-center mb-1" id="divLine_{{ itemTransaction.YodleeLineID }}">
                     <div class="col-12 col-md-5">
                         <div class="card shadow" style="border: 1px solid #00a3d3;">
@@ -463,7 +464,6 @@
                                         <div class="form-group" style="margin-left: 20px;">
                                             <label for="">Reference</label>
                                             <input type="text" class="form-control" id="reference" value="">
-                                            <input type="hidden" id="DepOrWith" value="">
                                         </div>
                                     </div>
                                     <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
@@ -749,12 +749,7 @@
                                         <table id="tblFindTransaction" style="width:100%;" class="table table-striped table-bordered tblFindTransaction">
                                             <thead>
                                                 <tr class="dnd-moved">
-                                                    <th class="no-sort" style="width:15px;">
-                                                        <div class="custom-control custom-checkbox" id="" style="width:15px;">
-                                                            <input type="checkbox" class="custom-control-input" id="checkallrecondep">
-                                                            <label class="custom-control-label" for="checkallrecondep"></label>
-                                                        </div>
-                                                    </th>
+                                                    <th class="no-sort" style="width:15px;"></th>
                                                     <th class="th colSortDate hiddenColumn">id</th>
                                                     <th style="width:80px;">Date</th>
                                                     <th style="width:200px;">Name</th>
@@ -770,17 +765,17 @@
                                                     <tr class="dnd-moved" id="checkboxtable_{{item.ID}}" depositID="{{item.ID}}">
                                                         <td style="width:15px;">
                                                             <div class="custom-control custom-checkbox pointer" id="checkboxtable_{{item.ID}}" style="width:15px;">
-                                                                <input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheck_{{item.ID}}" />
+                                                                <input type="checkbox" class="custom-control-input selectMatchRow" id="formCheck_{{item.ID}}" />
                                                                 <label class="custom-control-label" for="formCheck_{{item.ID}}"></label>
                                                             </div>
                                                         </td>
                                                         <td contenteditable="false" class="colSortDate hiddenColumn depositClick">{{item.SortDate}}</td>
-                                                        <td class="depositClick" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
-                                                        <td class="depositClick" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
-                                                        <td class="depositClick" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
-                                                        <td class="colPaymentType depositClick" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
-                                                        <td class="text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
-                                                        <td class="text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
+                                                        <td class="colDate" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
+                                                        <td class="colName" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
+                                                        <td class="colRef" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
+                                                        <td class="colDesc depositClick" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
+                                                        <td class="text-right colSpentAmount" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
+                                                        <td class="text-right colReceivedAmount" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
                                                     </tr>
                                                 {{/each}}
                                             {{/if}}
@@ -792,10 +787,10 @@
                         </div>
                         <div class="card">
                             <div class="card d-xl-flex flex-row justify-content-xl-center">
-                                <div class="col-5 d-xl-flex float-left flex-grow-1" style="padding: 20px 10px;">
+                                <div class="col-8 d-xl-flex float-left flex-grow-1" style="padding: 20px 10px;">
                                     <h4>2. View your selected transactions. Add new transactions, as needed.</h4>
                                 </div>
-                                <div class="col-7 d-xl-flex justify-content-xl-end align-items-xl-start">
+                                <div class="col-4 d-xl-flex justify-content-xl-end align-items-xl-start">
                                     <div class="btn-group" style="margin-top:20px; margin-right:20px;">
                                         <button type="button" class="btn btn-primary" id="NewTransactionOption">New Transaction</button>
                                         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -815,12 +810,7 @@
                                         <table id="tblViewTransaction" style="width:100%" class="table table-striped table-bordered tblViewTransaction">
                                             <thead>
                                                 <tr class="dnd-moved">
-                                                    <th class="no-sort" style="width:15px;">
-                                                        <div class="custom-control custom-checkbox" id="" style="width:15px;">
-                                                            <input type="checkbox" class="custom-control-input" id="checkallrecondep">
-                                                            <label class="custom-control-label" for="checkallrecondep"></label>
-                                                        </div>
-                                                    </th>
+                                                    <th class="no-sort" style="width:15px;"></th>
                                                     <th class="th colSortDate hiddenColumn">id</th>
                                                     <th style="width:80px;">Date</th>
                                                     <th style="width:200px;">Name</th>
@@ -835,17 +825,17 @@
                                                     <tr class="dnd-moved" id="checkboxtable_{{item.ID}}" depositID="{{item.ID}}">
                                                         <td style="width:15px;">
                                                             <div class="custom-control custom-checkbox pointer" id="checkboxtable_{{item.ID}}" style="width:15px;">
-                                                                <input type="checkbox" class="custom-control-input reconchkboxdep" id="formCheck_{{item.ID}}" />
+                                                                <input type="checkbox" class="custom-control-input selectViewRow" id="formCheck_{{item.ID}}" />
                                                                 <label class="custom-control-label" for="formCheck_{{item.ID}}"></label>
                                                             </div>
                                                         </td>
                                                         <td contenteditable="false" class="colSortDate hiddenColumn depositClick">{{item.SortDate}}</td>
-                                                        <td class="depositClick" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
-                                                        <td class="depositClick" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
-                                                        <td class="depositClick" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
-                                                        <td class="colPaymentType depositClick" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
-                                                        <td class="text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
-                                                        <td class="text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
+                                                        <td class="colDate" id="vs1recondate_{{item.ID}}" recondate="{{item.VS1Date}}"><span style="display:none;">{{item.SortDate}}</span>{{item.VS1Date}}</td>
+                                                        <td class="colName" id="vs1reconname_{{item.ID}}">{{item.CompanyName}}</td>
+                                                        <td class="colDesc" id="vs1reconref_{{item.ID}}">{{item.ReferenceNo}}</td>
+                                                        <td class="colPaymentType" id="vs1recondesc_{{item.ID}}">{{item.PaymentType}}</td>
+                                                        <td class="colSpentAmount text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.spentVS1Amount}}</td>
+                                                        <td class="colReceivedAmount text-right depositClick" id="vs1reconamount_{{item.ID}}" name="vs1reconamount_{{item.ID}}">{{item.receivedVS1Amount}}</td>
                                                     </tr>
                                                 {{/each}}
                                             </tbody>
@@ -885,8 +875,8 @@
                                     </div>
                                 </div>
                                 <div class="col-3" style="padding-top:63px; padding-left:20px;">
-                                    <p id="textOutBy" style="color:red; text-color:red;"><i class="fa fa-info-circle" style="margin-right: 5px;"></i>Total is out by: <span id="matchOutBy"></span></p>
-                                    <p id="textMatched" style="color:green; text-color:green;"><i class="fa fa-check-circle" style="margin-right: 5px;"></i>Totals Match</p>
+                                    <p id="textOutBy" style="display:none; color:red; text-color:red;"><i class="fa fa-info-circle" style="margin-right: 5px;"></i>Total is out by: <span id="matchOutBy"></span></p>
+                                    <p id="textMatched" style="display:none; color:green; text-color:green;"><i class="fa fa-check-circle" style="margin-right: 5px;"></i>Totals Match</p>
                                 </div>
                             </div>
                             <div class="row no-gutters" style="padding: 0 20px;">
