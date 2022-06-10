@@ -260,13 +260,14 @@
                         class="dataTable table table-hover table-striped table-bordered currencyLists">
                         <thead>
                             <tr class="dnd-moved">
+                                <th class="th colRateLastModified">Created at</th>
+
                                 <th class="th colCode" style="width:50px">Code</th>
                                 <!-- <th class="th colCurrency" style="width:100px;">Currency</th>
                                 <th class="th colSymbol" style="width:100px">Symbol</th> -->
                                 <th class="th colBuyRate" style="width:100px">Buy Rate</th>
                                 <th class="th colSellRate" style="width:100px">Sell Rate</th>
                                 <!-- <th class="th colCountry" style="width:100px">Country</th> -->
-                                <th class="th colRateLastModified">Created at</th>
                                 <!-- <th class="th colDescription">Description</th> -->
                                 <!-- <th class="th colDelete" style="width:20px;"></th> -->
                             </tr>
@@ -275,14 +276,15 @@
                             {{#if datatablerecords}}
                             {{#each item in datatablerecords}}
                             <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                <td contenteditable="false" class="colRateLastModified ">
+                                    {{item.createdAt}}</td>
                                 <td contenteditable="false" class="colCode">{{item.code}}</td>
                                 <!-- <td contenteditable="false" class="colCurrency">{{item.currency}}</td> -->
                                 <!-- <td contenteditable="false" class="colSymbol">{{item.symbol}}</td> -->
                                 <td contenteditable="false" class="colBuyRate text-right">{{item.buyrate}}</td>
                                 <td contenteditable="false" class="colSellRate text-right">{{item.sellrate}}</td>
                                 <!-- <td contenteditable="false" class="colCountry">{{item.country}}</td> -->
-                                <td contenteditable="false" class="colRateLastModified ">
-                                    {{item.createdAt}}</td>
+                            
                                 <!-- <td contenteditable="false" class="colDescription">{{item.description}}</td> -->
                                 <!-- <td contenteditable="false" class="colDelete">
                                     <span class="table-remove">
