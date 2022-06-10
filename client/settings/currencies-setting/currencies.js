@@ -202,7 +202,7 @@ Template.currenciessettings.onRendered(function () {
 
                 // $('#currencyLists').DataTable().column( 0 ).visible( true );
                 $(".fullScreenSpin").css("display", "none");
-              }, 0);
+              }, 300);
 
               var columns = $("#currencyLists th");
               let sTible = "";
