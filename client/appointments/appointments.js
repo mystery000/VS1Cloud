@@ -8413,6 +8413,7 @@ Template.appointments.events({
         }
     },
     'click #btnStartAppointmentConfirm': async function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
         let toUpdateID = "";
         const templateObject = Template.instance();
         var appointmentData = templateObject.appointmentrecords.get();
@@ -10112,7 +10113,6 @@ Template.appointments.events({
         let aEndDate = '';
         let savedStartDate = $('#aStartDate').val() || moment().format("YYYY-MM-DD");
         let clientname = formData.get('customer') || '';
-        // const itl = templateObject.itl.get();
         let clientmobile = $('#mobile').val() ? $('#mobile').val() : '0';
         // let clientmobile = formData.get('mobile') || '0';
         let contact = formData.get('phone') || '0';
