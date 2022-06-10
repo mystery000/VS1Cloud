@@ -113,6 +113,7 @@ Template.FxCurrencyHistory.onRendered(function () {
             description: data[i].CurrencyDesc || "-",
             ratelastmodified: data[i].RateLastModified || "-",
             createdAt: new Date(data[i].MsTimeStamp) || "-",
+            formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
           };
 
           dataTableList.push(dataList);
@@ -142,6 +143,10 @@ Template.FxCurrencyHistory.onRendered(function () {
             return false;
           });
         }
+
+        // Sort by created at
+        dataTableList = dataTableList.sort(sortById);
+        dataTableList.reverse();
 
         templateInstance.datatablerecords.set(dataTableList);
 
@@ -225,12 +230,12 @@ Template.FxCurrencyHistory.onRendered(function () {
               },
               // bStateSave: true,
               // rowId: 0,
-              paging: false,
+              paging: true,
               //                    "scrollY": "400px",
               //                    "scrollCollapse": true,
               info: true,
               responsive: true,
-              order: [[0, "asc"]],
+              order: [[0, "desc"]],
               action: function () {
                 $("#currencyLists").DataTable().ajax.reload();
               },
@@ -706,6 +711,7 @@ Template.FxCurrencyHistory.helpers({
     return Template.instance()
       .datatablerecords.get()
       .sort(function (a, b) {
+        // console.log(a, b);
         if (a.code == "NA") {
           return 1;
         } else if (b.code == "NA") {
@@ -713,10 +719,14 @@ Template.FxCurrencyHistory.helpers({
         }
         return a.code.toUpperCase() > b.code.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-      });
+      }).sort(sortById);
+      // .sort(sortByDate);
+    // .sort((a, b) => a.createdAt - b.createdAt);
   },
   tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
+    let data = Template.instance().tableheaderrecords.get();
+    console.log(data);
+    return data;
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
@@ -731,6 +741,21 @@ Template.FxCurrencyHistory.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
+
+
+function sortById(a, b) {
+  return a.id - b.id;
+}
+
+/**
+ *
+ * @param {Date} a
+ * @param {Date} b
+ * @returns
+ */
+function sortByDate(a, b) {
+  return a - b;
+}
 
 /**
  *
