@@ -3291,7 +3291,7 @@ Template.appointments.onRendered(function () {
                     days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
                 }
                 //$(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
-
+                console.log(days);
                 if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
                   $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[6]).format('DD') + ', ' + moment().format('YYYY'));
                 }
@@ -3319,7 +3319,7 @@ Template.appointments.onRendered(function () {
                 $('.saturday').attr('id', moment(weekStart).add(6, 'days').format("YYYY-MM-DD"));
 
                 if (LoggedCountry == "United States") {
-                    $(".dateMon").text(moment(weekStart).add(0, 'days').format("MM/DD"));
+                    $(".dateSun").text(moment(weekStart).add(0, 'days').format("MM/DD"));
                     $(".dateMon").text(moment(weekStart).add(1, 'days').format("MM/DD"));
                     $(".dateTue").text(moment(weekStart).add(2, 'days').format("MM/DD"));
                     $(".dateWed").text(moment(weekStart).add(3, 'days').format("MM/DD"));
@@ -3328,7 +3328,7 @@ Template.appointments.onRendered(function () {
                     $(".dateSat").text(moment(weekStart).add(6, 'days').format("MM/DD"));
                     //$(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
                 } else {
-                    $(".dateMon").text(moment(weekStart).add(0, 'days').format("DD/MM"));
+                    $(".dateSun").text(moment(weekStart).add(0, 'days').format("DD/MM"));
                     $(".dateMon").text(moment(weekStart).add(1, 'days').format("DD/MM"));
                     $(".dateTue").text(moment(weekStart).add(2, 'days').format("DD/MM"));
                     $(".dateWed").text(moment(weekStart).add(3, 'days').format("DD/MM"));
@@ -3950,21 +3950,23 @@ Template.appointments.onRendered(function () {
                 $('.saturday').attr('id', moment(weekStart).add(5, 'days').format("YYYY-MM-DD"));
 
                 if (LoggedCountry == "United States") {
-                    $(".dateMon").text(moment(weekStart).add(0, 'days').format("MM/DD"));
-                    $(".dateTue").text(moment(weekStart).add(1, 'days').format("MM/DD"));
-                    $(".dateWed").text(moment(weekStart).add(2, 'days').format("MM/DD"));
-                    $(".dateThu").text(moment(weekStart).add(3, 'days').format("MM/DD"));
-                    $(".dateFri").text(moment(weekStart).add(4, 'days').format("MM/DD"));
-                    $(".dateSat").text(moment(weekStart).add(5, 'days').format("MM/DD"));
-                    $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
+                    $(".dateSun").text(moment(weekStart).add(0, 'days').format("MM/DD"));
+                    $(".dateMon").text(moment(weekStart).add(1, 'days').format("MM/DD"));
+                    $(".dateTue").text(moment(weekStart).add(2, 'days').format("MM/DD"));
+                    $(".dateWed").text(moment(weekStart).add(3, 'days').format("MM/DD"));
+                    $(".dateThu").text(moment(weekStart).add(4, 'days').format("MM/DD"));
+                    $(".dateFri").text(moment(weekStart).add(5, 'days').format("MM/DD"));
+                    $(".dateSat").text(moment(weekStart).add(6, 'days').format("MM/DD"));
+                    // $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
                 } else {
-                    $(".dateMon").text(moment(weekStart).add(0, 'days').format("DD/MM"));
-                    $(".dateTue").text(moment(weekStart).add(1, 'days').format("DD/MM"));
-                    $(".dateWed").text(moment(weekStart).add(2, 'days').format("DD/MM"));
-                    $(".dateThu").text(moment(weekStart).add(3, 'days').format("DD/MM"));
-                    $(".dateFri").text(moment(weekStart).add(4, 'days').format("DD/MM"));
-                    $(".dateSat").text(moment(weekStart).add(5, 'days').format("DD/MM"));
-                    $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
+                    $(".dateSun").text(moment(weekStart).add(0, 'days').format("DD/MM"));
+                    $(".dateMon").text(moment(weekStart).add(1, 'days').format("DD/MM"));
+                    $(".dateTue").text(moment(weekStart).add(2, 'days').format("DD/MM"));
+                    $(".dateWed").text(moment(weekStart).add(3, 'days').format("DD/MM"));
+                    $(".dateThu").text(moment(weekStart).add(4, 'days').format("DD/MM"));
+                    $(".dateFri").text(moment(weekStart).add(5, 'days').format("DD/MM"));
+                    $(".dateSat").text(moment(weekStart).add(6, 'days').format("DD/MM"));
+                    //$(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
                 }
 
                 if (currentDay == "Monday" && moment().format('DD') == moment($('thead tr th.monday').attr('id')).format('DD')) {

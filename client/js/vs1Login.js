@@ -1952,7 +1952,7 @@ Template.vs1login.onRendered(function () {
                                                         return false;
 
                                                     };
-                                            
+
                                                     //TODO: Email scheduling for reports when login
                                                     let values = [];
                                                     let basedOnTypeStorages = Object.keys(localStorage);
@@ -3147,7 +3147,7 @@ Template.vs1login.onRendered(function () {
                                                     return false;
 
                                                 };
-                                            
+
                                                 //TODO: Email scheduling for reports when login
                                                 let values = [];
                                                 let basedOnTypeStorages = Object.keys(localStorage);
@@ -4569,7 +4569,7 @@ Template.vs1login.onRendered(function () {
                                             return false;
 
                                         };
-                                        
+
                                         //TODO: Email scheduling for reports when login
                                         let values = [];
                                         let basedOnTypeStorages = Object.keys(localStorage);
