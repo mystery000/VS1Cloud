@@ -45,8 +45,8 @@
   ERPDatabaseIPAdderess = "sandboxdb.vs1cloud.com"; //www.login.vs1cloud.com
   ReplicaERPDatabaseIPAdderess = "replica.vs1cloud.com"+ ':' + '4434' + '/' + 'erpapi' + '/'; //www.login.vs1cloud.com
 
-  //stripeGlobalURL= "https://www.depot.vs1cloud.com/stripe/";
-  stripeGlobalURL= "https://www.depot.vs1cloud.com/stripe-sandbox/";
+  stripeGlobalURL= "https://www.depot.vs1cloud.com/stripe/";
+  //stripeGlobalURL= "https://www.depot.vs1cloud.com/stripe-sandbox/";
   //vs1loggedDatatbase = 'vs1_sandbox_license'; //Normal databaseName
 
   /* VS1 Production Details */
