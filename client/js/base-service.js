@@ -1,5 +1,5 @@
 /**
- * @author : Shankar.
+ * @author : Ariyibi.
  * this is main service class. Any other service class will extend this class.
  * this provides wrapper for headers, response handler. it acts like interceptor.
  */
@@ -43,15 +43,6 @@ export class BaseService {
           return content;
         } catch (e) {}
       }else if (response.statusCode === 401) {
-
-        window.indexedDB.databases().then((r) => {
-            for (var i = 0; i < r.length; i++) {
-                window.indexedDB.deleteDatabase(r[i].name);
-            }
-
-        }).then(() => {
-           window.open('/', '_self');
-        });
 
       } else {
         return response.headers.errormessage;

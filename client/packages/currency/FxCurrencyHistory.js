@@ -10,6 +10,8 @@ import { TaxRateService } from "../../settings/settings-service";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
+const currentUrl = new URL(window.location.href);
+
 Template.FxCurrencyHistory.onCreated(function () {
   const templateInstance = Template.instance();
   templateInstance.datatablerecords = new ReactiveVar([]);
@@ -32,7 +34,7 @@ Template.FxCurrencyHistory.onRendered(function () {
 
   var today = moment().format("DD/MM/YYYY");
   var currentDate = new Date();
-  var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
   let fromDateMonth = currentDate.getMonth() + 1;
   let fromDateDay = currentDate.getDate();
   if (currentDate.getMonth() + 1 < 10) {
@@ -42,8 +44,14 @@ Template.FxCurrencyHistory.onRendered(function () {
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }
-  var fromDate =
-    fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
+
+  let begunDate = currentUrl.searchParams.has("dateTo")
+    ? currentUrl.searchParams.get("dateTo").replaceAll("-", "/")
+    : moment(currentDate).format("DD/MM/YYYY");
+
+  let fromDate = currentUrl.searchParams.has("dateFrom")
+    ? currentUrl.searchParams.get("dateFrom").replaceAll("-", "/")
+    : fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
 
   $("#date-input,#dateTo,#dateFrom").datepicker({
     showOn: "button",
@@ -104,21 +112,41 @@ Template.FxCurrencyHistory.onRendered(function () {
             country: data[i].Country || "-",
             description: data[i].CurrencyDesc || "-",
             ratelastmodified: data[i].RateLastModified || "-",
-            createdAt: data[i].MsTimeStamp || "-",
+            createdAt: new Date(data[i].MsTimeStamp) || "-",
+            formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
           };
 
           dataTableList.push(dataList);
           //}
         }
-         // console.log(dataTableList);
+        // console.log(dataTableList);
 
-        if(urlParams.get("currency")) {
+        if (urlParams.get("currency")) {
           // Filter by currency
           dataTableList = dataTableList.filter((value, index) => {
             //console.log(value);
             return value.code == urlParams.get("currency");
           });
         }
+
+        if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
+          // console.log(begunDate);
+          const _dateFrom = formatDateFromUrl(begunDate);
+          const _dateTo = formatDateFromUrl(fromDate);
+          // console.log(_dateFrom);
+          // console.log(_dateTo);
+
+          dataTableList = dataTableList.filter((value, index) => {
+            if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
+              return true;
+            }
+            return false;
+          });
+        }
+
+        // Sort by created at
+        dataTableList = dataTableList.sort(sortById);
+        dataTableList.reverse();
 
         templateInstance.datatablerecords.set(dataTableList);
 
@@ -202,12 +230,12 @@ Template.FxCurrencyHistory.onRendered(function () {
               },
               // bStateSave: true,
               // rowId: 0,
-              paging: false,
+              paging: true,
               //                    "scrollY": "400px",
               //                    "scrollCollapse": true,
               info: true,
               responsive: true,
-              order: [[0, "asc"]],
+              order: [[0, "desc"]],
               action: function () {
                 $("#currencyLists").DataTable().ajax.reload();
               },
@@ -311,6 +339,156 @@ Template.FxCurrencyHistory.onRendered(function () {
 });
 
 Template.FxCurrencyHistory.events({
+  "click #ignoreDate": (e) => {
+    const myUrl = new URL(currentUrl.origin + currentUrl.pathname);
+    if (currentUrl.searchParams.has("currency"))
+      myUrl.searchParams.append(
+        "currency",
+        currentUrl.searchParams.get("currency")
+      );
+    window.location.href = myUrl;
+  },
+  "click #last12Months": (e) => {
+    // https://stackoverflow.com/questions/19021117/last-12-months-in-javascript
+
+    const d = new Date();
+
+    // last 12 months
+    for (i = 0; i <= 11; i++) {
+      d.setMonth(d.getMonth() - 1);
+    }
+
+    const formatDateFrom = formatDateToString(d);
+    const formatDateTo = formatDateToString(new Date());
+
+    $("#dateTo").val(formatDateTo);
+    $("#dateFrom").val(formatDateFrom);
+    $("#dateTo").trigger("change");
+    $("#dateFrom").trigger("change");
+  },
+  "click #lastQuarter": (e) => {
+    // https://stackoverflow.com/questions/9840512/get-dates-for-last-quarter-and-this-quarter-through-javascript
+
+    const today = new Date();
+    const quarter = Math.floor(today.getMonth() / 3);
+
+    // Previous quarter
+    const startFullQuarter = new Date(today.getFullYear(), quarter * 3 - 3, 1);
+    const endFullQuarter = new Date(
+      startFullQuarter.getFullYear(),
+      startFullQuarter.getMonth() + 3,
+      0
+    );
+
+    const formatDateFrom = formatDateToString(startFullQuarter);
+    const formatDateTo = formatDateToString(endFullQuarter);
+
+    $("#dateTo").val(formatDateTo);
+    $("#dateFrom").val(formatDateFrom);
+    $("#dateTo").trigger("change");
+    $("#dateFrom").trigger("change");
+  },
+  "click #lastMonth": (e) => {
+    // https://stackoverflow.com/questions/13571700/get-first-and-last-date-of-current-month-with-javascript-or-jquery
+    const d = new Date();
+
+    var y = d.getFullYear();
+    var m = d.getMonth();
+
+    var firstDay = new Date(y, m, 1);
+    var lastDay = new Date(y, m + 1, 0);
+
+    const formatDateFrom = formatDateToString(firstDay);
+    const formatDateTo = formatDateToString(lastDay);
+    // console.log(formatDateTo);
+    // console.log(formatDateFrom);
+
+    // debugger;
+
+    $("#dateTo").val(formatDateTo);
+    $("#dateFrom").val(formatDateFrom);
+    $("#dateTo").trigger("change");
+    $("#dateFrom").trigger("change");
+  },
+  "click #lastweek": (e) => {
+    // https://stackoverflow.com/questions/11431259/get-start-date-and-last-date-of-last-week-javascript
+    const d = new Date();
+
+    var to = d.setTime(
+      d.getTime() - (d.getDay() ? d.getDay() : 7) * 24 * 60 * 60 * 1000
+    );
+    var from = d.setTime(d.getTime() - 6 * 24 * 60 * 60 * 1000);
+    const formatDateFrom = formatDateToString(new Date(from));
+    const formatDateTo = formatDateToString(new Date(to));
+
+    $("#dateTo").val(formatDateTo);
+    $("#dateFrom").val(formatDateFrom);
+    $("#dateTo").trigger("change");
+    $("#dateFrom").trigger("change");
+  },
+  "click #today": (e) => {
+    const _currenctDate = new Date();
+    const formatDateFrom = formatDateToString(_currenctDate);
+    const formatDateTo = formatDateToString(_currenctDate);
+
+    $("#dateTo").val(formatDateTo);
+    $("#dateFrom").val(formatDateFrom);
+    $("#dateTo").trigger("change");
+    $("#dateFrom").trigger("change");
+  },
+  "change #dateTo": function () {
+    let templateObject = Template.instance();
+    // $(".fullScreenSpin").css("display", "inline-block");
+    $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+
+    let dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    let dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    let formatDateFrom = formatDateToUrl(dateFrom);
+    let formatDateTo = formatDateToUrl(dateTo);
+
+    const myUrl = new URL(currentUrl.origin + currentUrl.pathname);
+    if (currentUrl.searchParams.has("currency"))
+      myUrl.searchParams.append(
+        "currency",
+        currentUrl.searchParams.get("currency")
+      );
+    myUrl.searchParams.append("dateFrom", formatDateFrom);
+    myUrl.searchParams.append("dateTo", formatDateTo);
+
+    window.location.href = myUrl;
+
+    // console.log(formatDateFrom);
+    // console.log(formatDateTo);
+  },
+  "change #dateFrom": function () {
+    let templateObject = Template.instance();
+    $(".fullScreenSpin").css("display", "inline-block");
+    $("#dateFrom").attr("readonly", false);
+    $("#dateTo").attr("readonly", false);
+
+    let dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    let dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    let formatDateFrom = formatDateToUrl(dateFrom);
+    let formatDateTo = formatDateToUrl(dateTo);
+
+    const myUrl = new URL(currentUrl.origin + currentUrl.pathname);
+    if (currentUrl.searchParams.has("currency"))
+      myUrl.searchParams.append(
+        "currency",
+        currentUrl.searchParams.get("currency")
+      );
+    myUrl.searchParams.append("dateFrom", formatDateFrom);
+    myUrl.searchParams.append("dateTo", formatDateTo);
+
+    window.location.href = myUrl;
+
+    // console.log(formatDateFrom);
+    // console.log(formatDateTo);
+  },
   "click .chkDatatable": function (event) {
     var columns = $("#tblFxCurrencyHistory th");
     let columnDataValue = $(event.target)
@@ -533,6 +711,7 @@ Template.FxCurrencyHistory.helpers({
     return Template.instance()
       .datatablerecords.get()
       .sort(function (a, b) {
+        // console.log(a, b);
         if (a.code == "NA") {
           return 1;
         } else if (b.code == "NA") {
@@ -540,10 +719,14 @@ Template.FxCurrencyHistory.helpers({
         }
         return a.code.toUpperCase() > b.code.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-      });
+      }).sort(sortById);
+      // .sort(sortByDate);
+    // .sort((a, b) => a.createdAt - b.createdAt);
   },
   tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
+    let data = Template.instance().tableheaderrecords.get();
+    console.log(data);
+    return data;
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
@@ -558,3 +741,58 @@ Template.FxCurrencyHistory.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
+
+
+function sortById(a, b) {
+  return a.id - b.id;
+}
+
+/**
+ *
+ * @param {Date} a
+ * @param {Date} b
+ * @returns
+ */
+function sortByDate(a, b) {
+  return a - b;
+}
+
+/**
+ *
+ * @param {string} urlDate
+ * @returns {Date}
+ */
+function formatDateFromUrl(urlDate) {
+  const _date = urlDate.split("/");
+
+  // console.log(_date);
+
+  const finalDate = new Date(_date[2], _date[1], _date[0]);
+
+  return finalDate;
+}
+
+/**
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatDateToUrl(date) {
+  let _date = formatDateToString(date);
+  _date = _date.replaceAll("/", "-");
+  return _date;
+}
+
+/**
+ *
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatDateToString(date) {
+  let _date = date.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return _date;
+}

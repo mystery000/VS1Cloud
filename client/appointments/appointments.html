@@ -8,8 +8,10 @@
             Appointment Overview
 
             <a role="button" data-toggle="modal" href="#helpViewModal" class=""><label class="lblplay">Help</label><i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-
+            {{#if equals accessStartStopOnly true}}
+            {{else}}
             <a style="margin-right: 8px;" class="btn float-right btnoptionsmodal" role="button" href="#settingsModal"><i class="icon ion-android-more-horizontal"></i></a>
+            {{/if}}
         </h3>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
