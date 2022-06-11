@@ -474,18 +474,7 @@
                                 <div class="table-responsive customProfitLossTable p-2">
                                     <table class="table table-hover table-sm pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
                                         <thead class="tblAvoid">
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                <th class="text-left" rowspan="2"></th>
-                                                <th class="text-left" rowspan="2"></th>
-                                                {{#if reportOptions.threcords}}
-                                                    {{#each item in reportOptions.threcords}}
-                                                        <th  class="text-center" colspan="3">{{ item }}</th>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#if reportOptions.showtotal}}
-                                                    <th rowspan="2" class="tglTotal text-right">Total</th>
-                                                {{/if}}
-                                            </tr> -->
+                                           
                                             <tr class="table-active tblAvoid" style="background-color: #dadada;">
                                                 <th></th>
                                                 <!-- <th></th> -->
@@ -498,11 +487,7 @@
                                                     <th class="tglTotal text-right">Total</th>
                                                 {{/if}}
                                             </tr>
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                <th class="text-center">AUD</th>
-                                                <th class="text-center">GBP</th>
-                                                <th class="text-center">USD</th>
-                                            </tr>
+                                          
                                         </thead>
                                         
                                         <tbody>
@@ -1677,6 +1662,9 @@
                                         </div>
                                     </div> -->
                                     <style>
+                                        ol {
+                                            list-style: none !important;
+                                        }
                                         ol.vertical {
                                             display: inline-block;
                                             width: 100%;
