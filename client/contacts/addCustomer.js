@@ -1258,10 +1258,12 @@ Template.customerscard.onRendered(function () {
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
-            $('#tblTransactionlist').DataTable();
             setTab();
+            $('#tblJoblist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            $('#tblTransactionlist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            $('#tblCrmList').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
             $('.fullScreenSpin').css('display', 'none');
-        }, 500);
+        }, 100);
         // setTimeout(function () {
         //     $('.termsSelect').val(templateObject.defaultsaleterm.get()||'');
         // }, 2000);
@@ -1358,7 +1360,6 @@ Template.customerscard.onRendered(function () {
 
     $(document).ready(function () {
         setTimeout(function () {
-
             $('#sltTerms').editableSelect();
             $('#sltTerms').editableSelect().on('click.editable-select', function (e, li) {
                 $('#selectLineID').val('sltTerms');
@@ -1366,7 +1367,6 @@ Template.customerscard.onRendered(function () {
                 let offset = $each.offset();
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
-
             });
             function setTermsVS1(data, termsDataName) {
                 for (let i in data.ttermsvs1) {
@@ -1726,6 +1726,12 @@ Template.customerscard.events({
         var listData = $(event.target).closest('tr').attr('id');
         if (listData) {
             window.open('/customerscard?jobid=' + listData, '_self');
+        }
+    },
+    'click .tblCrmList tbody tr': function (event) {
+        const taskID = $(event.target).parent().attr('id');
+        if (taskID !== undefined) {
+            FlowRouter.go('/crmoverview?taskid=' + taskID);
         }
     },
     'click .openBalance': function (event) {

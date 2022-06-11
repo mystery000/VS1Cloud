@@ -797,6 +797,12 @@ Template.leadscard.events({
         const leadLineID = $(event.target).attr('id');
         window.open('/leadscard?id=' + leadLineID, '_self');
     },
+    'click .tblCrmList tbody tr': function (event) {
+        const taskID = $(event.target).parent().attr('id');
+        if (taskID !== undefined) {
+            FlowRouter.go('/crmoverview?taskid=' + taskID);
+        }
+    },
     'click .chkDatatable': function (event) {
         const columns = $('#tblTransactionlist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
