@@ -203,6 +203,7 @@ Template.vs1login.onRendered(function () {
     setTimeout(function () {
         needsToSeePrompt();
     }, 500);
+
     const templateObject = Template.instance();
     const arrayformid = [];
     const arrayformdet = [];
@@ -574,7 +575,7 @@ Template.vs1login.onRendered(function () {
                     }
                     return (a.description.toLowerCase() > b.description.toLowerCase()) ? 1 : -1;
                 });
-                // myVS1Video.pause();
+                // pausevideo();
                 $('.myVS1Video').css('display', 'none');
                 $('.myVS1VideoLogin').css('display', 'none');
 
@@ -597,6 +598,18 @@ Template.vs1login.onRendered(function () {
          localStorage.clear();
          sessionStorage.clear();
     }
+
+    function pausevideo() {
+      var myVS1Video = document.getElementById("myVS1Video");
+      var myVS1VideoLogin = document.getElementById("myVS1VideoLogin");
+
+       if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+       }else{
+         myVS1Video.pause();
+	       myVS1VideoLogin.pause();
+       };
+  };
 
     /* ERP Licence Info */
     function getERPLicenceInfo(erpdbname) {
@@ -1158,7 +1171,7 @@ Template.vs1login.onRendered(function () {
             }
 
         } else {
-            myVS1Video.pause();
+            pausevideo();
             $('.myVS1Video').css('display', 'none');
             $('.myVS1VideoLogin').css('display', 'none');
             $('.loginSpinner').css('display', 'none');
@@ -1391,7 +1404,7 @@ Template.vs1login.onRendered(function () {
                                                                         } else {
 
                                                                             swal('Oops...', 'VS1 User Name is already logged in. Select "Sign me out of all devices" to login', 'info');
-                                                                            myVS1Video.pause();
+                                                                            pausevideo();
                                                                             $('.myVS1Video').css('display', 'none');
                                                                             $('.myVS1VideoLogin').css('display', 'none');
                                                                             $('.loginSpinner').css('display', 'none');
@@ -1418,7 +1431,7 @@ Template.vs1login.onRendered(function () {
                                                     Meteor._reload.reload();
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.loginSpinner').css('display', 'none');
@@ -1435,7 +1448,7 @@ Template.vs1login.onRendered(function () {
                                                     Meteor._reload.reload();
                                                 } else if (result.dismiss === 'cancel') {}
                                             });
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.loginSpinner').css('display', 'none');
@@ -1451,7 +1464,7 @@ Template.vs1login.onRendered(function () {
                                 } else {
 
                                     swal('Invalid VS1 Password', 'The entered user password is not correct, please re-enter your password and try again!', 'error');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -1575,10 +1588,14 @@ Template.vs1login.onRendered(function () {
                 if (data == true) {
                     var dataRes = getLoginData(userLoginEmail).then(function (dataObject) {
                         if (dataObject.length == 0) {
+                          if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+                          }else{
                             $('.myVS1Video').css('display', 'inline-block');
                             //$('.fullScreenSpin').css('display','inline-block');
                             myVS1Video.currentTime = 0;
                             myVS1Video.play();
+                          };
                             var serverTest = URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/erpapi/Vs1_Logon?Vs1UserName="' + userLoginEmail + '"&vs1Password="' + userLoginPassword + '"';
 
                             var oReq = new XMLHttpRequest();
@@ -1597,13 +1614,13 @@ Template.vs1login.onRendered(function () {
                                     var dataReturnRes = JSON.parse(oReq.responseText);
 
                                     if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
-                                        myVS1Video.pause();
+                                        pausevideo();
                                         $('.myVS1Video').css('display', 'none');
                                         $('.myVS1VideoLogin').css('display', 'none');
                                         if (dataReturnRes.ProcessLog.ResponseStatus == "Payment is Due") {
                                             $('.loginSpinner').css('display', 'none');
                                             $('.fullScreenSpin').css('display', 'none');
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
 
@@ -1624,7 +1641,7 @@ Template.vs1login.onRendered(function () {
 
                                         } else {
                                             swal(dataReturnRes.ProcessLog.ResponseStatus, dataReturnRes.ProcessLog.ResponseStatus, 'error');
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.loginSpinner').css('display', 'none');
@@ -1933,7 +1950,7 @@ Template.vs1login.onRendered(function () {
 
                                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined) {
                                                         swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                                        myVS1Video.pause();
+                                                        pausevideo();
                                                         $('.myVS1Video').css('display', 'none');
                                                         $('.myVS1VideoLogin').css('display', 'none');
                                                         $('.fullScreenSpin').css('display', 'none');
@@ -1944,7 +1961,7 @@ Template.vs1login.onRendered(function () {
 
                                                     if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail.ResponseNo == 401) {
                                                         swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                                        myVS1Video.pause();
+                                                        pausevideo();
                                                         $('.myVS1Video').css('display', 'none');
                                                         $('.myVS1VideoLogin').css('display', 'none');
                                                         $('.fullScreenSpin').css('display', 'none');
@@ -2095,7 +2112,7 @@ Template.vs1login.onRendered(function () {
 
                                                     //End Code Here
                                                 } else {
-                                                    myVS1Video.pause();
+                                                    pausevideo();
                                                     $('.myVS1Video').css('display', 'none');
                                                     $('.myVS1VideoLogin').css('display', 'none');
                                                     $('#emEmail').html(userLoginEmail);
@@ -2132,7 +2149,7 @@ Template.vs1login.onRendered(function () {
                                                             // FlowRouter.go('/employeescard?addvs1user=true');
                                                         }
                                                     });
-                                                    myVS1Video.pause();
+                                                    pausevideo();
                                                     $('.myVS1Video').css('display', 'none');
                                                     $('.myVS1VideoLogin').css('display', 'none');
                                                     $('.fullScreenSpin').css('display', 'none');
@@ -2158,7 +2175,7 @@ Template.vs1login.onRendered(function () {
                                             Meteor._reload.reload();
                                         } else if (result.dismiss === 'cancel') {}
                                     });
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2176,7 +2193,7 @@ Template.vs1login.onRendered(function () {
                                             Meteor._reload.reload();
                                         } else if (result.dismiss === 'cancel') {}
                                     });
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2193,7 +2210,7 @@ Template.vs1login.onRendered(function () {
                                             Meteor._reload.reload();
                                         } else if (result.dismiss === 'cancel') {}
                                     });
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2225,7 +2242,7 @@ Template.vs1login.onRendered(function () {
                                             } else if (result.dismiss === 'cancel') {}
                                         });
                                     }
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2257,7 +2274,7 @@ Template.vs1login.onRendered(function () {
                                             } else if (result.dismiss === 'cancel') {}
                                         });
                                     }
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2265,13 +2282,17 @@ Template.vs1login.onRendered(function () {
                                 } else {}
                             }
                         } else {
+                          if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+                          }else{
                             $('.myVS1VideoLogin').css('display', 'inline-block');
                             myVS1VideoLogin.currentTime = 0;
                             myVS1VideoLogin.play();
+                          };
                             let dataReturnRes = dataObject[0].data;
                             if (dataReturnRes.ProcessLog.VS1AdminPassword) {
                                 if (($("#erppassword").val() != dataReturnRes.ProcessLog.VS1AdminPassword) && (hashUserLoginPassword != dataReturnRes.ProcessLog.VS1AdminPassword)) {
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2287,7 +2308,7 @@ Template.vs1login.onRendered(function () {
                                 if (dataReturnRes.ProcessLog.ResponseStatus == "Payment is Due") {
                                     $('.loginSpinner').css('display', 'none');
                                     $('.fullScreenSpin').css('display', 'none');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     swal({
@@ -2307,7 +2328,7 @@ Template.vs1login.onRendered(function () {
 
                                 } else {
                                     swal(dataReturnRes.ProcessLog.ResponseStatus, dataReturnRes.ProcessLog.ResponseStatus, 'error');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -2599,7 +2620,7 @@ Template.vs1login.onRendered(function () {
 
                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined) {
                                     swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.fullScreenSpin').css('display', 'none');
@@ -2610,7 +2631,7 @@ Template.vs1login.onRendered(function () {
 
                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail.ResponseNo == 401) {
                                     swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.fullScreenSpin').css('display', 'none');
@@ -2773,9 +2794,13 @@ Template.vs1login.onRendered(function () {
                             }
                         }
                     }).catch(function (err) {
+                      if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+                      }else{
                         $('.myVS1Video').css('display', 'inline-block');
                         myVS1Video.currentTime = 0;
                         myVS1Video.play();
+                      };
                         var serverTest = URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/erpapi/Vs1_Logon?Vs1UserName="' + userLoginEmail + '"&vs1Password="' + userLoginPassword + '"';
 
                         var oReq = new XMLHttpRequest();
@@ -2793,13 +2818,13 @@ Template.vs1login.onRendered(function () {
 
                                 var dataReturnRes = JSON.parse(oReq.responseText);
                                 if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     if (dataReturnRes.ProcessLog.ResponseStatus == "Payment is Due") {
                                         $('.loginSpinner').css('display', 'none');
                                         $('.fullScreenSpin').css('display', 'none');
-                                        myVS1Video.pause();
+                                        pausevideo();
                                         $('.myVS1Video').css('display', 'none');
                                         $('.myVS1VideoLogin').css('display', 'none');
                                         swal({
@@ -2819,7 +2844,7 @@ Template.vs1login.onRendered(function () {
 
                                     } else {
                                         swal(dataReturnRes.ProcessLog.ResponseStatus, dataReturnRes.ProcessLog.ResponseStatus, 'error');
-                                        myVS1Video.pause();
+                                        pausevideo();
                                         $('.myVS1Video').css('display', 'none');
                                         $('.myVS1VideoLogin').css('display', 'none');
                                         $('.loginSpinner').css('display', 'none');
@@ -3128,7 +3153,7 @@ Template.vs1login.onRendered(function () {
 
                                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined) {
                                                     swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                                    myVS1Video.pause();
+                                                    pausevideo();
                                                     $('.myVS1Video').css('display', 'none');
                                                     $('.myVS1VideoLogin').css('display', 'none');
                                                     $('.fullScreenSpin').css('display', 'none');
@@ -3139,7 +3164,7 @@ Template.vs1login.onRendered(function () {
 
                                                 if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail.ResponseNo == 401) {
                                                     swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                                    myVS1Video.pause();
+                                                    pausevideo();
                                                     $('.myVS1Video').css('display', 'none');
                                                     $('.myVS1VideoLogin').css('display', 'none');
                                                     $('.fullScreenSpin').css('display', 'none');
@@ -3291,7 +3316,7 @@ Template.vs1login.onRendered(function () {
 
                                                 //End Code Here
                                             } else {
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 $('#emEmail').html(userLoginEmail);
@@ -3328,7 +3353,7 @@ Template.vs1login.onRendered(function () {
                                                         // FlowRouter.go('/employeescard?addvs1user=true');
                                                     }
                                                 });
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -3355,7 +3380,7 @@ Template.vs1login.onRendered(function () {
                                         Meteor._reload.reload();
                                     } else if (result.dismiss === 'cancel') {}
                                 });
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -3372,7 +3397,7 @@ Template.vs1login.onRendered(function () {
                                         Meteor._reload.reload();
                                     } else if (result.dismiss === 'cancel') {}
                                 });
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -3389,7 +3414,7 @@ Template.vs1login.onRendered(function () {
                                         Meteor._reload.reload();
                                     } else if (result.dismiss === 'cancel') {}
                                 });
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -3421,7 +3446,7 @@ Template.vs1login.onRendered(function () {
                                         } else if (result.dismiss === 'cancel') {}
                                     });
                                 }
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -3453,7 +3478,7 @@ Template.vs1login.onRendered(function () {
                                         } else if (result.dismiss === 'cancel') {}
                                     });
                                 }
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -3463,10 +3488,14 @@ Template.vs1login.onRendered(function () {
                     });
 
                 } else {
+                  if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+                  }else{
                     $('.myVS1Video').css('display', 'inline-block');
                     //$('.fullScreenSpin').css('display','inline-block');
                     myVS1Video.currentTime = 0;
                     myVS1Video.play();
+                  };
                     var serverTest = URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/erpapi/Vs1_Logon?Vs1UserName="' + userLoginEmail + '"&vs1Password="' + userLoginPassword + '"';
                     var oReq = new XMLHttpRequest();
                     oReq.open("GET", serverTest, true);
@@ -3484,11 +3513,11 @@ Template.vs1login.onRendered(function () {
                             var dataReturnRes = JSON.parse(oReq.responseText);
 
                             if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 if (dataReturnRes.ProcessLog.ResponseStatus == "Payment is Due") {
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -3511,7 +3540,7 @@ Template.vs1login.onRendered(function () {
 
                                 } else {
                                     swal(dataReturnRes.ProcessLog.ResponseStatus, dataReturnRes.ProcessLog.ResponseStatus, 'error');
-                                    myVS1Video.pause();
+                                    pausevideo();
                                     $('.myVS1Video').css('display', 'none');
                                     $('.myVS1VideoLogin').css('display', 'none');
                                     $('.loginSpinner').css('display', 'none');
@@ -3819,7 +3848,7 @@ Template.vs1login.onRendered(function () {
                                             Session.setPersistent('CloudAppointmentSchedulingLicence', isAppointmentSchedulingLicence);
                                             /* End Remove licence */
                                             if (dataReturnRes.ProcessLog.ClientDetails == undefined) {
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 swal({
@@ -3838,7 +3867,7 @@ Template.vs1login.onRendered(function () {
                                                 return false;
                                             }
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog == undefined) {
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
@@ -3847,7 +3876,7 @@ Template.vs1login.onRendered(function () {
                                                 return false;
                                             }
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser == undefined) {
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
@@ -3857,7 +3886,7 @@ Template.vs1login.onRendered(function () {
 
                                             };
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined) {
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
@@ -3869,7 +3898,7 @@ Template.vs1login.onRendered(function () {
 
                                             if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail.ResponseNo == 401) {
                                                 swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                                myVS1Video.pause();
+                                                pausevideo();
                                                 $('.myVS1Video').css('display', 'none');
                                                 $('.myVS1VideoLogin').css('display', 'none');
                                                 $('.fullScreenSpin').css('display', 'none');
@@ -4020,7 +4049,7 @@ Template.vs1login.onRendered(function () {
 
                                             //End Code Here
                                         } else {
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('#emEmail').html(userLoginEmail);
@@ -4057,7 +4086,7 @@ Template.vs1login.onRendered(function () {
                                                     // FlowRouter.go('/employeescard?addvs1user=true');
                                                 }
                                             });
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.fullScreenSpin').css('display', 'none');
@@ -4084,7 +4113,7 @@ Template.vs1login.onRendered(function () {
                                     Meteor._reload.reload();
                                 } else if (result.dismiss === 'cancel') {}
                             });
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             $('.loginSpinner').css('display', 'none');
@@ -4101,7 +4130,7 @@ Template.vs1login.onRendered(function () {
                                     Meteor._reload.reload();
                                 } else if (result.dismiss === 'cancel') {}
                             });
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             $('.loginSpinner').css('display', 'none');
@@ -4118,7 +4147,7 @@ Template.vs1login.onRendered(function () {
                                     Meteor._reload.reload();
                                 } else if (result.dismiss === 'cancel') {}
                             });
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             $('.loginSpinner').css('display', 'none');
@@ -4150,7 +4179,7 @@ Template.vs1login.onRendered(function () {
                                     } else if (result.dismiss === 'cancel') {}
                                 });
                             }
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             $('.loginSpinner').css('display', 'none');
@@ -4182,7 +4211,7 @@ Template.vs1login.onRendered(function () {
                                     } else if (result.dismiss === 'cancel') {}
                                 });
                             }
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             $('.loginSpinner').css('display', 'none');
@@ -4192,10 +4221,14 @@ Template.vs1login.onRendered(function () {
                 }
 
             }).catch(function (err) {
+              if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
+
+              }else{
                 $('.myVS1Video').css('display', 'inline-block');
                 //$('.fullScreenSpin').css('display','inline-block');
                 myVS1Video.currentTime = 0;
                 myVS1Video.play();
+              };
                 var serverTest = URLRequest + licenceIPAddress + ':' + checkSSLPorts + '/erpapi/Vs1_Logon?Vs1UserName="' + userLoginEmail + '"&vs1Password="' + userLoginPassword + '"';
 
                 var oReq = new XMLHttpRequest();
@@ -4214,11 +4247,11 @@ Template.vs1login.onRendered(function () {
                         var dataReturnRes = JSON.parse(oReq.responseText);
 
                         if (dataReturnRes.ProcessLog.ResponseStatus != "OK") {
-                            myVS1Video.pause();
+                            pausevideo();
                             $('.myVS1Video').css('display', 'none');
                             $('.myVS1VideoLogin').css('display', 'none');
                             if (dataReturnRes.ProcessLog.ResponseStatus == "Payment is Due") {
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -4241,7 +4274,7 @@ Template.vs1login.onRendered(function () {
 
                             } else {
                                 swal(dataReturnRes.ProcessLog.ResponseStatus, dataReturnRes.ProcessLog.ResponseStatus, 'error');
-                                myVS1Video.pause();
+                                pausevideo();
                                 $('.myVS1Video').css('display', 'none');
                                 $('.myVS1VideoLogin').css('display', 'none');
                                 $('.loginSpinner').css('display', 'none');
@@ -4550,7 +4583,7 @@ Template.vs1login.onRendered(function () {
 
                                         if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail == undefined) {
                                             swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.fullScreenSpin').css('display', 'none');
@@ -4561,7 +4594,7 @@ Template.vs1login.onRendered(function () {
 
                                         if (dataReturnRes.ProcessLog.ClientDetails.ProcessLog.TUser.TEmployeeFormAccessDetail.ResponseNo == 401) {
                                             swal('Sorry, You do not have access to any VS1 Modules!', '', 'error');
-                                            myVS1Video.pause();
+                                            pausevideo();
                                             $('.myVS1Video').css('display', 'none');
                                             $('.myVS1VideoLogin').css('display', 'none');
                                             $('.fullScreenSpin').css('display', 'none');
@@ -4714,7 +4747,7 @@ Template.vs1login.onRendered(function () {
 
                                         //End Code Here
                                     } else {
-                                        myVS1Video.pause();
+                                        pausevideo();
                                         $('.myVS1Video').css('display', 'none');
                                         $('.myVS1VideoLogin').css('display', 'none');
                                         $('#emEmail').html(userLoginEmail);
@@ -4751,7 +4784,7 @@ Template.vs1login.onRendered(function () {
                                                 // FlowRouter.go('/employeescard?addvs1user=true');
                                             }
                                         });
-                                        myVS1Video.pause();
+                                        pausevideo();
                                         $('.myVS1Video').css('display', 'none');
                                         $('.myVS1VideoLogin').css('display', 'none');
                                         $('.fullScreenSpin').css('display', 'none');
@@ -4778,7 +4811,7 @@ Template.vs1login.onRendered(function () {
                                 Meteor._reload.reload();
                             } else if (result.dismiss === 'cancel') {}
                         });
-                        myVS1Video.pause();
+                        pausevideo();
                         $('.myVS1Video').css('display', 'none');
                         $('.myVS1VideoLogin').css('display', 'none');
                         $('.loginSpinner').css('display', 'none');
@@ -4795,7 +4828,7 @@ Template.vs1login.onRendered(function () {
                                 Meteor._reload.reload();
                             } else if (result.dismiss === 'cancel') {}
                         });
-                        myVS1Video.pause();
+                        pausevideo();
                         $('.myVS1Video').css('display', 'none');
                         $('.myVS1VideoLogin').css('display', 'none');
                         $('.loginSpinner').css('display', 'none');
@@ -4812,7 +4845,7 @@ Template.vs1login.onRendered(function () {
                                 Meteor._reload.reload();
                             } else if (result.dismiss === 'cancel') {}
                         });
-                        myVS1Video.pause();
+                        pausevideo();
                         $('.myVS1Video').css('display', 'none');
                         $('.myVS1VideoLogin').css('display', 'none');
                         $('.loginSpinner').css('display', 'none');
@@ -4844,7 +4877,7 @@ Template.vs1login.onRendered(function () {
                                 } else if (result.dismiss === 'cancel') {}
                             });
                         }
-                        myVS1Video.pause();
+                        pausevideo();
                         $('.myVS1Video').css('display', 'none');
                         $('.myVS1VideoLogin').css('display', 'none');
                         $('.loginSpinner').css('display', 'none');
@@ -4876,7 +4909,7 @@ Template.vs1login.onRendered(function () {
                                 } else if (result.dismiss === 'cancel') {}
                             });
                         }
-                        myVS1Video.pause();
+                        pausevideo();
                         $('.myVS1Video').css('display', 'none');
                         $('.myVS1VideoLogin').css('display', 'none');
                         $('.loginSpinner').css('display', 'none');
