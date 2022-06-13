@@ -846,6 +846,36 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+
+    let values = [];
+    let basedOnTypeStorages = Object.keys(localStorage);
+    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+        let employeeId = storage.split('_')[2];
+        return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+    });
+    let i = basedOnTypeStorages.length;
+    if (i > 0) {
+        while (i--) {
+            values.push(localStorage.getItem(basedOnTypeStorages[i]));
+        }
+    }
+    values.forEach(value => {
+        let reportData = JSON.parse(value);
+        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+        if (reportData.BasedOnType.includes("P")) {
+            if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(',');
+                if (formIds.includes("129")) {
+                    reportData.FormID = 129;
+                    Meteor.call('sendNormalEmail', reportData);
+                }
+            } else {
+                if (reportData.FormID == 129)
+                    Meteor.call('sendNormalEmail', reportData);
+            }
+        }
+    });
+
     document.title = 'Profit and Loss Report';
     $(".printReport").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
