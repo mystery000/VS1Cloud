@@ -1185,6 +1185,42 @@ getAllContactCombineVS1(limitcount, limitfrom) {
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
+  getAllPurchasesList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  let options = '';
+
+  if(ignoreDate == true){
+    options = {
+      IgnoreDates:true,
+      OrderBy:"PurchaseOrderID desc",
+      IsPO: true,
+      IsBill: true,
+      IsCredit: true,
+      IsCheque:false,
+      IsRA:false,
+      Search:"IsPO = true or IsBill = true or IsCredit = true",
+      LimitCount:'"'+limitcount+'"',
+      LimitFrom:'"'+limitfrom+'"'
+      };
+     }else{
+       options = {
+         OrderBy:"PurchaseOrderID desc",
+         IsPO: true,
+         IsBill: true,
+         IsCredit: true,
+         IsCheque:false,
+         IsRA:false,
+         Search:"IsPO = true or IsBill = true or IsCredit = true",
+         IgnoreDates:false,
+         DateFrom:'"'+dateFrom+'"',
+         DateTo:'"'+dateTo+'"',
+         LimitCount:'"'+limitcount+'"',
+         LimitFrom:'"'+limitfrom+'"'
+     };
+    }
+      return this.getList(this.ERPObjects.TBillList, options);
+    }
+
+
   getAllAwaitingSupplierPayment(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
     let options = '';
     if(ignoreDate == true){
@@ -1380,7 +1416,7 @@ getAllContactCombineVS1(limitcount, limitfrom) {
       };
      }else{
        options = {
-         oOrderBy:"PurchaseOrderID desc",
+         OrderBy:"PurchaseOrderID desc",
          IsBill: true,
          Search:"IsBill = true",
          IgnoreDates:false,

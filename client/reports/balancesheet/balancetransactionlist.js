@@ -687,6 +687,7 @@ Template.balancetransactionlist.onRendered(function() {
           $('.fullScreenSpin').css('display','none');
       });
     }else if(FlowRouter.current().queryParams.accountName){
+      let balanceTotal = 0;
       reportService.getBalanceSheetRedirectClientData(urlParameters).then(function (data) {
         //localStorage.setItem('VS1BalanceTrans_Report', JSON.stringify(data)||'');
         for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
@@ -698,6 +699,8 @@ Template.balancetransactionlist.onRendered(function() {
           let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
           let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
           let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
+            balanceTotal += childArray.Balance;
+            console.log(balanceTotal);
           let transactionNo = '';
           if((childArray.Type === "Bill") || (childArray.Type === "Cheque")
           ||(childArray.Type === "Credit")||(childArray.Type === "PO")||(childArray.Type === "Un-Invoiced PO")){

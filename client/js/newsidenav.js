@@ -139,7 +139,7 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
     var countObjectTimes = 0;
-    let allDataToLoad = 70;
+    let allDataToLoad = 71;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -2289,6 +2289,42 @@ Template.newsidenav.onRendered(function() {
             //localStorage.setItem('VS1TbillReport', JSON.stringify(data) || '');
             addVS1Data('TbillReport', JSON.stringify(data));
             $("<span class='process'>Bill Reports Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+
+        sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          //$(".progressBarInner").text("Bill Report "+Math.round(progressPercentage)+"%");
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Purchase Overview ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            //localStorage.setItem('VS1TbillReport', JSON.stringify(data) || '');
+            addVS1Data('TPurchasesList', JSON.stringify(data));
+            $("<span class='process'>Purchase Overview Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
 
         });

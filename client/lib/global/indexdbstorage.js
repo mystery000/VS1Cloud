@@ -68,6 +68,7 @@ openDb = function (dbName) {
       db.createObjectStore("TpurchaseOrderNonBackOrder", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TpurchaseOrderBackOrder", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSalesList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TPurchasesList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TEmployee", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TQuote", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductClassQuantity", { keyPath: "EmployeeEmail" });

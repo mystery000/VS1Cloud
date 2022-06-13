@@ -108,15 +108,16 @@ Template.purchasesoverview.onRendered(function () {
   }
 
   function MakeNegative() {
-    $("td").each(function () {
-      if (
-        $(this)
-          .text()
-          .indexOf("-" + Currency) >= 0
-      )
-        $(this).addClass("text-danger");
-    });
-  }
+      $('td').each(function() {
+          if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+      });
+      $('td.colStatus').each(function() {
+          if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
+          if ($(this).text() == "Reconciled") $(this).addClass('text-reconciled');
+          if ($(this).text() == "Paid") $(this).addClass('text-fullyPaid');
+          if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
+      });
+  };
 
   Meteor.call(
     "readPrefMethod",
@@ -166,128 +167,87 @@ Template.purchasesoverview.onRendered(function () {
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
 
-    getVS1Data("TbillReport")
-      .then(function (dataObject) {
+    getVS1Data("TPurchasesList").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService
-            .getAllPurchaseOrderListAll(
-              prevMonth11Date,
-              toDate,
-              false,
-              initialReportLoad,
-              0
-            )
-            .then(function (data) {
+          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+              addVS1Data("TPurchasesList", JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
-              addVS1Data("TbillReport", JSON.stringify(data));
+
               let totalExpense = 0;
               let totalBill = 0;
               let totalCredit = 0;
               let totalPO = 0;
 
-              for (let i = 0; i < data.tbillreport.length; i++) {
-                let orderType = data.tbillreport[i].Type;
-                totalExpense += Number(
-                  data.tbillreport[i]["Total Amount (Inc)"]
-                );
-                if (data.tbillreport[i].Type == "Credit") {
+              for (let i = 0; i < data.tbilllist.length; i++) {
+                let orderType = "PO";
+                totalExpense += Number(data.tbilllist[i].TotalAmountInc);
+                if (data.tbilllist[i].IsCredit == true) {
                   totCreditCount++;
-                  totalCredit += Number(
-                    data.tbillreport[i]["Total Amount (Inc)"]
-                  );
+                  orderType = "Credit";
+                  totalCredit += Number(data.tbilllist[i].TotalAmountInc);
                 }
 
-                if (data.tbillreport[i].Type == "Bill") {
+                if (data.tbilllist[i].IsBill == true) {
                   totBillCount++;
-                  totalBill += Number(
-                    data.tbillreport[i]["Total Amount (Inc)"]
-                  );
+                  orderType = "Bill";
+                  totalBill += Number(data.tbilllist[i].TotalAmountInc);
                 }
 
-                if (data.tbillreport[i].Type == "Purchase Order") {
+                if (data.tbilllist[i].IsPO == true) {
                   totPOCount++;
                   orderType = "PO";
-                  totalPO += Number(data.tbillreport[i]["Total Amount (Inc)"]);
+                  totalPO += Number(data.tbilllist[i].TotalAmountInc);
                 }
-                let totalAmountEx =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tbillreport[i]["Total Amount (Ex)"]
-                  ) || 0.0;
-                let totalTax =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tbillreport[i]["Total Tax"]
-                  ) || 0.0;
-                let totalAmount =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tbillreport[i]["Total Amount (Inc)"]
-                  ) || 0.0;
-                let amountPaidCalc =
-                  data.tbillreport[i]["Total Amount (Inc)"] -
-                  data.tbillreport[i].Balance;
-                let totalPaid =
-                  utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||
-                  0.0;
-                let totalOutstanding =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tbillreport[i].Balance
-                  ) || 0.0;
+                let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmount) || 0.0;
+                let totalTax = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalTax) || 0.0;
+                let totalAmount =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmountInc) || 0.0;
+                let amountPaidCalc =data.tbilllist[i].Payment||0.0;
+                let totalPaid =utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||0.0;
+                let totalOutstanding =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].Balance) || 0.0;
+                let orderstatus = data.tbilllist[i].OrderStatus || '';
+                if(data.tbilllist[i].Deleted == true){
+                  orderstatus = "Deleted";
+                }else if(data.tbilllist[i].SupplierName == ''){
+                  orderstatus = "Deleted";
+                };
                 var dataList = {
-                  id: data.tbillreport[i].PurchaseOrderID || "",
-                  employee: data.tbillreport[i].Contact || "",
-                  sortdate:
-                    data.tbillreport[i].OrderDate != ""
-                      ? moment(data.tbillreport[i].OrderDate).format(
-                          "YYYY/MM/DD"
-                        )
-                      : data.tbillreport[i].OrderDate,
-                  orderdate:
-                    data.tbillreport[i].OrderDate != ""
-                      ? moment(data.tbillreport[i].OrderDate).format(
-                          "DD/MM/YYYY"
-                        )
-                      : data.tbillreport[i].OrderDate,
-                  suppliername: data.tbillreport[i].Company || "",
+                  id: data.tbilllist[i].PurchaseOrderID || "",
+                  employee: data.tbilllist[i].EmployeeName || "",
+                  sortdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("YYYY/MM/DD"): data.tbilllist[i].OrderDate,
+                  orderdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("DD/MM/YYYY"): data.tbilllist[i].OrderDate,
+                  suppliername: data.tbilllist[i].SupplierName || "",
                   totalamountex: totalAmountEx || 0.0,
                   totaltax: totalTax || 0.0,
                   totalamount: totalAmount || 0.0,
                   totalpaid: totalPaid || 0.0,
                   totaloustanding: totalOutstanding || 0.0,
-                  // orderstatus: data.tbillreport[i].OrderStatus || '',
                   type: orderType || "",
-                  custfield1: data.tbillreport[i].Phone || "",
-                  custfield2: data.tbillreport[i].InvoiceNumber || "",
-                  comments: data.tbillreport[i].Comments || "",
+                  orderstatus: orderstatus || "",
+                  custfield1: data.tbilllist[i].Phone || "",
+                  custfield2: data.tbilllist[i].InvoiceNumber || "",
+                  comments: data.tbilllist[i].Comments || "",
                 };
-                if (data.tbillreport[i].Deleted === false) {
+                //if (data.tbilllist[i].Deleted == false) {
                   dataTableList.push(dataList);
-                  if (data.tbillreport[i].Balance != 0) {
-                    if (data.tbillreport[i].Type == "Purchase Order") {
-                      totAmount += Number(data.tbillreport[i].Balance);
+                  if (data.tbilllist[i].Balance != 0) {
+                    if (data.tbilllist[i].IsPO == true) {
+                      totAmount += Number(data.tbilllist[i].Balance);
                     }
-                    if (data.tbillreport[i].Type == "Bill") {
-                      totAmountBill += Number(data.tbillreport[i].Balance);
+                    if (data.tbilllist[i].IsBill == true) {
+                      totAmountBill += Number(data.tbilllist[i].Balance);
                     }
-                    if (data.tbillreport[i].Type == "Credit") {
-                      totAmountCredit += Number(data.tbillreport[i].Balance);
+                    if (data.tbilllist[i].IsCredit == true) {
+                      totAmountCredit += Number(data.tbilllist[i].Balance);
                     }
                   }
-                }
-                $(".suppAwaitingAmt").text(
-                  utilityService.modifynegativeCurrencyFormat(totAmount)
-                );
-                $(".billAmt").text(
-                  utilityService.modifynegativeCurrencyFormat(totAmountBill)
-                );
-                $(".creditAmt").text(
-                  utilityService.modifynegativeCurrencyFormat(totAmountCredit)
-                );
-                // splashArray.push(dataList);
                 //}
+                $(".suppAwaitingAmt").text(utilityService.modifynegativeCurrencyFormat(totAmount));
+                $(".billAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountBill));
+                $(".creditAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountCredit));
               }
 
-              var totalPerc =
-                Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
+              var totalPerc = Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
 
               var xwidth = (Math.abs(totalCredit) / totalPerc) * 100;
               var ywidth = (Math.abs(totalBill) / totalPerc) * 100;
@@ -298,56 +258,23 @@ Template.purchasesoverview.onRendered(function () {
               templateObject.popercTotal.set(Math.round(zwidth));
 
               templateObject.datatablerecords.set(dataTableList);
-              $(".spExpenseTotal").text(
-                utilityService.modifynegativeCurrencyFormat(totalExpense)
-              );
+              $(".spExpenseTotal").text(utilityService.modifynegativeCurrencyFormat(totalExpense));
 
               if (templateObject.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "tblPurchaseOverview",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
 
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
-                  }
-                );
 
                 function MakeNegative() {
-                  $("td").each(function () {
-                    if (
-                      $(this)
-                        .text()
-                        .indexOf("-" + Currency) >= 0
-                    )
-                      $(this).addClass("text-danger");
-                  });
-                }
-
+                    $('td').each(function() {
+                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                    });
+                    $('td.colStatus').each(function() {
+                        if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
+                        if ($(this).text() == "Reconciled") $(this).addClass('text-reconciled');
+                        if ($(this).text() == "Paid") $(this).addClass('text-fullyPaid');
+                        if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
+                    });
+                };
+                setTimeout(function () {
                 var myChart = new Chart(ctx, {
                   type: "pie",
                   data: {
@@ -361,12 +288,7 @@ Template.purchasesoverview.onRendered(function () {
                           "#1cc88a",
                           "#36b9cc",
                         ],
-                        borderColor: [
-                          "#ffffff",
-                          "#ffffff",
-                          "#ffffff",
-                          "#ffffff",
-                        ],
+                        borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
                         data: [totCreditCount, totBillCount, totPOCount],
                       },
                     ],
@@ -383,18 +305,13 @@ Template.purchasesoverview.onRendered(function () {
                     },
                   },
                 });
-                setTimeout(function () {
+
                   MakeNegative();
                 }, 100);
               }
-              // $('#tblPurchaseOverview').DataTable().destroy();
-              // $('#tblPurchaseOverview tbody').empty();
               setTimeout(function () {
                 $(".fullScreenSpin").css("display", "none");
-
-                //$.fn.dataTable.moment('DD/MM/YY');
-                $("#tblPurchaseOverview")
-                  .DataTable({
+                $("#tblPurchaseOverview").DataTable({
                     columnDefs: [
                       {
                         type: "date",
@@ -408,8 +325,7 @@ Template.purchasesoverview.onRendered(function () {
                         text: "",
                         download: "open",
                         className: "btntabletocsv hiddenColumn",
-                        filename:
-                          "Purchase Overview List - " + moment().format(),
+                        filename: "Purchase Overview List - " + moment().format(),
                         orientation: "portrait",
                         exportOptions: {
                           columns: ":visible",
@@ -420,7 +336,7 @@ Template.purchasesoverview.onRendered(function () {
                                 data = res[1];
                               }
 
-                              return column === 1
+                              return column == 1
                                 ? data.replace(/<.*?>/gi, "")
                                 : data;
                             },
@@ -433,8 +349,7 @@ Template.purchasesoverview.onRendered(function () {
                         className: "btntabletopdf hiddenColumn",
                         text: "",
                         title: "Purchase Overview",
-                        filename:
-                          "Purchase Overview List - " + moment().format(),
+                        filename: "Purchase Overview List - " + moment().format(),
                         exportOptions: {
                           columns: ":visible",
                           stripHtml: false,
@@ -444,29 +359,18 @@ Template.purchasesoverview.onRendered(function () {
                     select: true,
                     destroy: true,
                     colReorder: true,
-                    // bStateSave: true,
-                    // rowId: 0,
                     pageLength: initialDatatableLoad,
                     bLengthChange: false,
-                    lengthMenu: [
-                      [initialDatatableLoad, -1],
-                      [initialDatatableLoad, "All"],
-                    ],
+                    lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                     info: true,
                     responsive: true,
-                    order: [
-                      [0, "desc"],
-                      [2, "desc"],
-                    ],
+                    order: [[0, "desc"],[2, "desc"],],
                     action: function () {
                       $("#tblPurchaseOverview").DataTable().ajax.reload();
                     },
                     fnDrawCallback: function (oSettings) {
                       let checkurlIgnoreDate =
                         FlowRouter.current().queryParams.ignoredate;
-                      //if(checkurlIgnoreDate == 'true'){
-
-                      //}else{
                       $(".paginate_button.page-item").removeClass("disabled");
                       $("#tblPurchaseOverview_ellipsis").addClass("disabled");
 
@@ -482,138 +386,63 @@ Template.purchasesoverview.onRendered(function () {
                       } else {
                       }
                       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                        $(".paginate_button.page-item.next").addClass(
-                          "disabled"
-                        );
+                        $(".paginate_button.page-item.next").addClass("disabled");
                       }
-                      $(
-                        ".paginate_button.next:not(.disabled)",
-                        this.api().table().container()
-                      ).on("click", function () {
+                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
                         $(".fullScreenSpin").css("display", "inline-block");
                         let dataLenght = oSettings._iDisplayLength;
 
                         var dateFrom = new Date(
                           $("#dateFrom").datepicker("getDate")
                         );
-                        var dateTo = new Date(
-                          $("#dateTo").datepicker("getDate")
-                        );
+                        var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                        let formatDateFrom =
-                          dateFrom.getFullYear() +
-                          "-" +
-                          (dateFrom.getMonth() + 1) +
-                          "-" +
-                          dateFrom.getDate();
-                        let formatDateTo =
-                          dateTo.getFullYear() +
-                          "-" +
-                          (dateTo.getMonth() + 1) +
-                          "-" +
-                          dateTo.getDate();
+                        let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
+                        let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
                         if (checkurlIgnoreDate == "true") {
-                          sideBarService
-                            .getAllPurchaseOrderListAll(
-                              formatDateFrom,
-                              formatDateTo,
-                              true,
-                              initialDatatableLoad,
-                              oSettings.fnRecordsDisplay()
-                            )
-                            .then(function (dataObjectnew) {
-                              getVS1Data("TbillReport")
-                                .then(function (dataObjectold) {
+                          sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                              getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                   if (dataObjectold.length == 0) {
                                   } else {
-                                    let dataOld = JSON.parse(
-                                      dataObjectold[0].data
-                                    );
-                                    var thirdaryData = $.merge(
-                                      $.merge([], dataObjectnew.tbillreport),
-                                      dataOld.tbillreport
-                                    );
+                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                     let objCombineData = {
                                       Params: dataOld.Params,
-                                      tbillreport: thirdaryData,
+                                      tbilllist: thirdaryData,
                                     };
 
-                                    addVS1Data(
-                                      "TbillReport",
-                                      JSON.stringify(objCombineData)
-                                    )
-                                      .then(function (datareturn) {
-                                        templateObject.resetData(
-                                          objCombineData
-                                        );
-                                        $(".fullScreenSpin").css(
-                                          "display",
-                                          "none"
-                                        );
-                                      })
-                                      .catch(function (err) {
-                                        $(".fullScreenSpin").css(
-                                          "display",
-                                          "none"
-                                        );
+                                    addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                        templateObject.resetData(objCombineData);
+                                        $(".fullScreenSpin").css("display","none");
+                                      }).catch(function (err) {
+                                        $(".fullScreenSpin").css("display","none");
                                       });
                                   }
-                                })
-                                .catch(function (err) {});
-                            })
-                            .catch(function (err) {
+                                }).catch(function (err) {});
+                            }).catch(function (err) {
                               $(".fullScreenSpin").css("display", "none");
                             });
                         } else {
-                          sideBarService
-                            .getAllPurchaseOrderListAll(
-                              formatDateFrom,
-                              formatDateTo,
-                              false,
-                              initialDatatableLoad,
-                              oSettings.fnRecordsDisplay()
-                            )
-                            .then(function (dataObjectnew) {
-                              getVS1Data("TbillReport")
-                                .then(function (dataObjectold) {
+                          sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,false,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                              getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                   if (dataObjectold.length == 0) {
                                   } else {
-                                    let dataOld = JSON.parse(
-                                      dataObjectold[0].data
-                                    );
-                                    var thirdaryData = $.merge(
-                                      $.merge([], dataObjectnew.tbillreport),
-                                      dataOld.tbillreport
-                                    );
+                                    let dataOld = JSON.parse(dataObjectold[0].data);
+                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                     let objCombineData = {
                                       Params: dataOld.Params,
-                                      tbillreport: thirdaryData,
+                                      tbilllist: thirdaryData,
                                     };
 
-                                    addVS1Data(
-                                      "TbillReport",
-                                      JSON.stringify(objCombineData)
-                                    )
-                                      .then(function (datareturn) {
-                                        templateObject.resetData(
-                                          objCombineData
-                                        );
-                                        $(".fullScreenSpin").css(
-                                          "display",
-                                          "none"
-                                        );
-                                      })
-                                      .catch(function (err) {
-                                        $(".fullScreenSpin").css(
-                                          "display",
-                                          "none"
-                                        );
+                                    addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                        templateObject.resetData(objCombineData);
+                                        $(".fullScreenSpin").css("display","none");
+                                      }).catch(function (err) {
+                                        $(".fullScreenSpin").css("display","none");
                                       });
                                   }
-                                })
-                                .catch(function (err) {});
-                            })
-                            .catch(function (err) {
+                                }).catch(function (err) {});
+                            }).catch(function (err) {
                               $(".fullScreenSpin").css("display", "none");
                             });
                         }
@@ -639,27 +468,11 @@ Template.purchasesoverview.onRendered(function () {
 
                       $(".myvarFilterForm").appendTo(".colDateFilter");
                     },
-                    fnInfoCallback: function (
-                      oSettings,
-                      iStart,
-                      iEnd,
-                      iMax,
-                      iTotal,
-                      sPre
-                    ) {
+                    fnInfoCallback: function (oSettings,iStart,iEnd,iMax,iTotal,sPre) {
                       let countTableData = data.Params.Count || 0; //get count from API data
-
-                      return (
-                        "Showing " +
-                        iStart +
-                        " to " +
-                        iEnd +
-                        " of " +
-                        countTableData
-                      );
+                      return ("Showing " +iStart +" to " +iEnd +" of " +countTableData);
                     },
-                  })
-                  .on("page", function () {
+                  }).on("page", function () {
                     setTimeout(function () {
                       MakeNegative();
                     }, 100);
@@ -697,36 +510,28 @@ Template.purchasesoverview.onRendered(function () {
                 tableHeaderList.push(datatablerecordObj);
               });
               templateObject.tableheaderrecords.set(tableHeaderList);
-              $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-              );
+              $("div.dataTables_filter input").addClass("form-control form-control-sm");
               $("#tblPurchaseOverview tbody").on("click", "tr", function () {
                 var listData = $(this).closest("tr").attr("id");
-                var transactiontype = $(event.target)
-                  .closest("tr")
-                  .find(".colType")
-                  .text();
+                var transactiontype = $(event.target).closest("tr").find(".colType").text();
                 if (listData && transactiontype) {
-                  if (transactiontype === "Purchase Order") {
+                  if (transactiontype == "Purchase Order") {
                     FlowRouter.go("/purchaseordercard?id=" + listData);
-                  } else if (transactiontype === "Bill") {
+                  } else if (transactiontype == "Bill") {
                     FlowRouter.go("/billcard?id=" + listData);
-                  } else if (transactiontype === "Credit") {
+                  } else if (transactiontype == "Credit") {
                     FlowRouter.go("/creditcard?id=" + listData);
-                  } else if (transactiontype === "PO") {
+                  } else if (transactiontype == "PO") {
                     FlowRouter.go("/purchaseordercard?id=" + listData);
                   } else {
                     //FlowRouter.go('/purchaseordercard?id=' + listData);
                   }
                 }
 
-                // if(listData){
-                //   FlowRouter.go('/purchaseordercard?id=' + listData);
-                // }
               });
 
-              let filterData = _.filter(data.tbillreport, function (data) {
-                return data.Company;
+              let filterData = _.filter(data.tbilllist, function (data) {
+                return data.SupplierName;
               });
 
               let graphData = _.orderBy(filterData, "OrderDate");
@@ -734,167 +539,101 @@ Template.purchasesoverview.onRendered(function () {
               let daysDataArray = [];
               let currentDateNow = new Date();
 
-              let initialData = _.filter(
-                graphData,
-                (obj) =>
-                  moment(obj.OrderDate).format("YYYY-MM-DD") ===
-                  moment(currentDateNow).format("YYYY-MM-DD")
-              );
+              let initialData = _.filter(graphData,(obj) =>moment(obj.OrderDate).format("YYYY-MM-DD") ==moment(currentDateNow).format("YYYY-MM-DD"));
               let groupData = _.omit(_.groupBy(initialData, "OrderDate"), [""]);
-            })
-            .catch(function (err) {
-              var myChart = new Chart(ctx, {
-                type: "pie",
-                data: {
-                  labels: ["Credit", "Bill", "Purchase Order"],
-                  datasets: [
-                    {
-                      label: "Credit",
-                      backgroundColor: [
-                        "#e74a3b",
-                        "#f6c23e",
-                        "#1cc88a",
-                        "#36b9cc",
-                      ],
-                      borderColor: ["#ffffff", "#ffffff", "#ffffff", "#ffffff"],
-                      data: ["7", "20", "73"],
-                    },
-                  ],
-                },
-                options: {
-                  maintainAspectRatio: true,
-                  legend: {
-                    display: true,
-                    position: "right",
-                    reverse: false,
-                  },
-                  title: {
-                    display: false,
-                  },
-                },
-              });
+            }).catch(function (err) {
+              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
               $(".fullScreenSpin").css("display", "none");
               // Meteor._reload.reload();
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          let useData = data.tbillreport;
+          let useData = data.tbilllist;
           let lineItems = [];
           let lineItemObj = {};
-
           if (data.Params.IgnoreDates == true) {
             $("#dateFrom").attr("readonly", true);
             $("#dateTo").attr("readonly", true);
             FlowRouter.go("/purchasesoverview?ignoredate=true");
           } else {
-            $("#dateFrom").val(
-              data.Params.DateFrom != ""
-                ? moment(data.Params.DateFrom).format("DD/MM/YYYY")
-                : data.Params.DateFrom
-            );
-            $("#dateTo").val(
-              data.Params.DateTo != ""
-                ? moment(data.Params.DateTo).format("DD/MM/YYYY")
-                : data.Params.DateTo
-            );
+            $("#dateFrom").val(data.Params.DateFrom != ""? moment(data.Params.DateFrom).format("DD/MM/YYYY"): data.Params.DateFrom);
+            $("#dateTo").val(data.Params.DateTo != ""? moment(data.Params.DateTo).format("DD/MM/YYYY"): data.Params.DateTo);
           }
           let totalExpense = 0;
           let totalBill = 0;
           let totalCredit = 0;
           let totalPO = 0;
           $(".fullScreenSpin").css("display", "none");
-          for (let i = 0; i < useData.length; i++) {
-            totalExpense += Number(useData[i]["Total Amount (Inc)"]);
-            let orderType = useData[i].Type;
-            if (useData[i].Type == "Credit") {
+
+          for (let i = 0; i < data.tbilllist.length; i++) {
+            let orderType = "PO";
+            totalExpense += Number(data.tbilllist[i].TotalAmountInc);
+            if (data.tbilllist[i].IsCredit == true) {
               totCreditCount++;
-              totalCredit += Number(useData[i]["Total Amount (Inc)"]);
+              orderType = "Credit";
+              totalCredit += Number(data.tbilllist[i].TotalAmountInc);
             }
 
-            if (useData[i].Type == "Bill") {
+            if (data.tbilllist[i].IsBill == true) {
               totBillCount++;
-              totalBill += Number(useData[i]["Total Amount (Inc)"]);
+              orderType = "Bill";
+              totalBill += Number(data.tbilllist[i].TotalAmountInc);
             }
 
-            if (useData[i].Type == "Purchase Order") {
+            if (data.tbilllist[i].IsPO == true) {
               totPOCount++;
               orderType = "PO";
-              totalPO += Number(useData[i]["Total Amount (Inc)"]);
+              totalPO += Number(data.tbilllist[i].TotalAmountInc);
             }
-            let totalAmountEx =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i]["Total Amount (Ex)"]
-              ) || 0.0;
-            let totalTax =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i]["Total Tax"]
-              ) || 0.0;
-            let totalAmount =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i]["Total Amount (Inc)"]
-              ) || 0.0;
-            let amountPaidCalc =
-              useData[i]["Total Amount (Inc)"] - useData[i].Balance;
-            let totalPaid =
-              utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||
-              0.0;
-            let totalOutstanding =
-              utilityService.modifynegativeCurrencyFormat(useData[i].Balance) ||
-              0.0;
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmount) || 0.0;
+            let totalTax = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalTax) || 0.0;
+            let totalAmount =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmountInc) || 0.0;
+            let amountPaidCalc =data.tbilllist[i].Payment||0.0;
+            let totalPaid =utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||0.0;
+            let totalOutstanding =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].Balance) || 0.0;
+            let orderstatus = data.tbilllist[i].OrderStatus || '';
+            if(data.tbilllist[i].Deleted == true){
+              orderstatus = "Deleted";
+            }else if(data.tbilllist[i].SupplierName == ''){
+              orderstatus = "Deleted";
+            };
             var dataList = {
-              id: useData[i].PurchaseOrderID || "",
-              employee: useData[i].Contact || "",
-              sortdate:
-                useData[i].OrderDate != ""
-                  ? moment(useData[i].OrderDate).format("YYYY/MM/DD")
-                  : useData[i].OrderDate,
-              orderdate:
-                useData[i].OrderDate != ""
-                  ? moment(useData[i].OrderDate).format("DD/MM/YYYY")
-                  : useData[i].OrderDate,
-              suppliername: useData[i].Company || "",
+              id: data.tbilllist[i].PurchaseOrderID || "",
+              employee: data.tbilllist[i].EmployeeName || "",
+              sortdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("YYYY/MM/DD"): data.tbilllist[i].OrderDate,
+              orderdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("DD/MM/YYYY"): data.tbilllist[i].OrderDate,
+              suppliername: data.tbilllist[i].SupplierName || "",
               totalamountex: totalAmountEx || 0.0,
               totaltax: totalTax || 0.0,
               totalamount: totalAmount || 0.0,
               totalpaid: totalPaid || 0.0,
               totaloustanding: totalOutstanding || 0.0,
-              // orderstatus: useData[i].OrderStatus || '',
               type: orderType || "",
-              custfield1: useData[i].Phone || "",
-              custfield2: useData[i].InvoiceNumber || "",
-              comments: useData[i].Comments || "",
+              orderstatus: orderstatus || "",
+              custfield1: data.tbilllist[i].Phone || "",
+              custfield2: data.tbilllist[i].InvoiceNumber || "",
+              comments: data.tbilllist[i].Comments || "",
             };
-            //if (useData[i].Deleted === false) {
-            dataTableList.push(dataList);
-            //if (useData[i].Balance != 0) {
-            if (useData[i].Type == "Purchase Order") {
-              totAmount += Number(useData[i].Balance);
-            }
-
-            if (useData[i].Type == "Bill") {
-              totAmountBill += Number(useData[i].Balance);
-            }
-
-            if (useData[i].Type == "Credit") {
-              totAmountCredit += Number(useData[i].Balance);
-            }
+            //if (data.tbilllist[i].Deleted == false) {
+              dataTableList.push(dataList);
+              if (data.tbilllist[i].Balance != 0) {
+                if (data.tbilllist[i].IsPO == true) {
+                  totAmount += Number(data.tbilllist[i].Balance);
+                }
+                if (data.tbilllist[i].IsBill == true) {
+                  totAmountBill += Number(data.tbilllist[i].Balance);
+                }
+                if (data.tbilllist[i].IsCredit == true) {
+                  totAmountCredit += Number(data.tbilllist[i].Balance);
+                }
+              }
             //}
-            //}
-            $(".suppAwaitingAmt").text(
-              utilityService.modifynegativeCurrencyFormat(totAmount)
-            );
-            $(".billAmt").text(
-              utilityService.modifynegativeCurrencyFormat(totAmountBill)
-            );
-            $(".creditAmt").text(
-              utilityService.modifynegativeCurrencyFormat(totAmountCredit)
-            );
-            // splashArray.push(dataList);
-            //}
+            $(".suppAwaitingAmt").text(utilityService.modifynegativeCurrencyFormat(totAmount));
+            $(".billAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountBill));
+            $(".creditAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountCredit));
           }
 
-          var totalPerc =
-            Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
+          var totalPerc = Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
 
           var xwidth = (Math.abs(totalCredit) / totalPerc) * 100;
           var ywidth = (Math.abs(totalBill) / totalPerc) * 100;
@@ -905,55 +644,23 @@ Template.purchasesoverview.onRendered(function () {
           templateObject.popercTotal.set(Math.round(zwidth));
 
           templateObject.datatablerecords.set(dataTableList);
-          $(".spExpenseTotal").text(
-            utilityService.modifynegativeCurrencyFormat(totalExpense)
-          );
+          $(".spExpenseTotal").text(utilityService.modifynegativeCurrencyFormat(totalExpense));
 
           if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "tblPurchaseOverview",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
 
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
 
             function MakeNegative() {
-              $("td").each(function () {
-                if (
-                  $(this)
-                    .text()
-                    .indexOf("-" + Currency) >= 0
-                )
-                  $(this).addClass("text-danger");
-              });
-            }
-
+                $('td').each(function() {
+                    if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                });
+                $('td.colStatus').each(function() {
+                    if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
+                    if ($(this).text() == "Reconciled") $(this).addClass('text-reconciled');
+                    if ($(this).text() == "Paid") $(this).addClass('text-fullyPaid');
+                    if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
+                });
+            };
+            setTimeout(function () {
             var myChart = new Chart(ctx, {
               type: "pie",
               data: {
@@ -985,18 +692,12 @@ Template.purchasesoverview.onRendered(function () {
               },
             });
 
-            setTimeout(function () {
               MakeNegative();
             }, 100);
           }
-          // $('#tblPurchaseOverview').DataTable().destroy();
-          // $('#tblPurchaseOverview tbody').empty();
           setTimeout(function () {
             $(".fullScreenSpin").css("display", "none");
-
-            //$.fn.dataTable.moment('DD/MM/YY');
-            $("#tblPurchaseOverview")
-              .DataTable({
+            $("#tblPurchaseOverview").DataTable({
                 columnDefs: [
                   {
                     type: "date",
@@ -1021,7 +722,7 @@ Template.purchasesoverview.onRendered(function () {
                             data = res[1];
                           }
 
-                          return column === 1
+                          return column == 1
                             ? data.replace(/<.*?>/gi, "")
                             : data;
                         },
@@ -1044,29 +745,18 @@ Template.purchasesoverview.onRendered(function () {
                 select: true,
                 destroy: true,
                 colReorder: true,
-                // bStateSave: true,
-                // rowId: 0,
                 pageLength: initialDatatableLoad,
                 bLengthChange: false,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
+                lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
                 responsive: true,
-                order: [
-                  [0, "desc"],
-                  [2, "desc"],
-                ],
+                order: [[0, "desc"],[2, "desc"],],
                 action: function () {
                   $("#tblPurchaseOverview").DataTable().ajax.reload();
                 },
                 fnDrawCallback: function (oSettings) {
                   let checkurlIgnoreDate =
                     FlowRouter.current().queryParams.ignoredate;
-                  //if(checkurlIgnoreDate == 'true'){
-
-                  //}else{
                   $(".paginate_button.page-item").removeClass("disabled");
                   $("#tblPurchaseOverview_ellipsis").addClass("disabled");
 
@@ -1075,17 +765,16 @@ Template.purchasesoverview.onRendered(function () {
                       $(".paginate_button.page-item.previous").addClass(
                         "disabled"
                       );
-                      $(".paginate_button.page-item.next").addClass("disabled");
+                      $(".paginate_button.page-item.next").addClass(
+                        "disabled"
+                      );
                     }
                   } else {
                   }
                   if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                     $(".paginate_button.page-item.next").addClass("disabled");
                   }
-                  $(
-                    ".paginate_button.next:not(.disabled)",
-                    this.api().table().container()
-                  ).on("click", function () {
+                  $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let dataLenght = oSettings._iDisplayLength;
 
@@ -1094,100 +783,52 @@ Template.purchasesoverview.onRendered(function () {
                     );
                     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                    let formatDateFrom =
-                      dateFrom.getFullYear() +
-                      "-" +
-                      (dateFrom.getMonth() + 1) +
-                      "-" +
-                      dateFrom.getDate();
-                    let formatDateTo =
-                      dateTo.getFullYear() +
-                      "-" +
-                      (dateTo.getMonth() + 1) +
-                      "-" +
-                      dateTo.getDate();
+                    let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
+                    let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
                     if (checkurlIgnoreDate == "true") {
-                      sideBarService
-                        .getAllPurchaseOrderListAll(
-                          formatDateFrom,
-                          formatDateTo,
-                          true,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay()
-                        )
-                        .then(function (dataObjectnew) {
-                          getVS1Data("TbillReport")
-                            .then(function (dataObjectold) {
+                      sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                          getVS1Data("TPurchasesList").then(function (dataObjectold) {
                               if (dataObjectold.length == 0) {
                               } else {
                                 let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.tbillreport),
-                                  dataOld.tbillreport
-                                );
+                                var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                 let objCombineData = {
                                   Params: dataOld.Params,
-                                  tbillreport: thirdaryData,
+                                  tbilllist: thirdaryData,
                                 };
 
-                                addVS1Data(
-                                  "TbillReport",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
+                                addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                     templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
+                                    $(".fullScreenSpin").css("display","none");
+                                  }).catch(function (err) {
+                                    $(".fullScreenSpin").css("display","none");
                                   });
                               }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
+                            }).catch(function (err) {});
+                        }).catch(function (err) {
                           $(".fullScreenSpin").css("display", "none");
                         });
                     } else {
-                      sideBarService
-                        .getAllPurchaseOrderListAll(
-                          formatDateFrom,
-                          formatDateTo,
-                          false,
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay()
-                        )
-                        .then(function (dataObjectnew) {
-                          getVS1Data("TbillReport")
-                            .then(function (dataObjectold) {
+                      sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,false,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                          getVS1Data("TPurchasesList").then(function (dataObjectold) {
                               if (dataObjectold.length == 0) {
                               } else {
                                 let dataOld = JSON.parse(dataObjectold[0].data);
-                                var thirdaryData = $.merge(
-                                  $.merge([], dataObjectnew.tbillreport),
-                                  dataOld.tbillreport
-                                );
+                                var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                 let objCombineData = {
                                   Params: dataOld.Params,
-                                  tbillreport: thirdaryData,
+                                  tbilllist: thirdaryData,
                                 };
 
-                                addVS1Data(
-                                  "TbillReport",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
+                                addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                     templateObject.resetData(objCombineData);
-                                    $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
-                                    $(".fullScreenSpin").css("display", "none");
+                                    $(".fullScreenSpin").css("display","none");
+                                  }).catch(function (err) {
+                                    $(".fullScreenSpin").css("display","none");
                                   });
                               }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
+                            }).catch(function (err) {});
+                        }).catch(function (err) {
                           $(".fullScreenSpin").css("display", "none");
                         });
                     }
@@ -1199,7 +840,8 @@ Template.purchasesoverview.onRendered(function () {
                   }, 100);
                 },
                 fnInitComplete: function () {
-                  let urlParametersPage = FlowRouter.current().queryParams.page;
+                  let urlParametersPage =
+                    FlowRouter.current().queryParams.page;
                   if (
                     urlParametersPage ||
                     FlowRouter.current().queryParams.ignoredate
@@ -1212,32 +854,15 @@ Template.purchasesoverview.onRendered(function () {
 
                   $(".myvarFilterForm").appendTo(".colDateFilter");
                 },
-                fnInfoCallback: function (
-                  oSettings,
-                  iStart,
-                  iEnd,
-                  iMax,
-                  iTotal,
-                  sPre
-                ) {
+                fnInfoCallback: function (oSettings,iStart,iEnd,iMax,iTotal,sPre) {
                   let countTableData = data.Params.Count || 0; //get count from API data
-
-                  return (
-                    "Showing " +
-                    iStart +
-                    " to " +
-                    iEnd +
-                    " of " +
-                    countTableData
-                  );
+                  return ("Showing " +iStart +" to " +iEnd +" of " +countTableData);
                 },
-              })
-              .on("page", function () {
+              }).on("page", function () {
                 setTimeout(function () {
                   MakeNegative();
                 }, 100);
-              })
-              .on("column-reorder", function () {});
+              }).on("column-reorder", function () {});
             $(".fullScreenSpin").css("display", "none");
             $("div.dataTables_filter input").addClass(
               "form-control form-control-sm"
@@ -1280,13 +905,13 @@ Template.purchasesoverview.onRendered(function () {
               .find(".colType")
               .text();
             if (listData && transactiontype) {
-              if (transactiontype === "Purchase Order") {
+              if (transactiontype == "Purchase Order") {
                 FlowRouter.go("/purchaseordercard?id=" + listData);
-              } else if (transactiontype === "Bill") {
+              } else if (transactiontype == "Bill") {
                 FlowRouter.go("/billcard?id=" + listData);
-              } else if (transactiontype === "Credit") {
+              } else if (transactiontype == "Credit") {
                 FlowRouter.go("/creditcard?id=" + listData);
-              } else if (transactiontype === "PO") {
+              } else if (transactiontype == "PO") {
                 FlowRouter.go("/purchaseordercard?id=" + listData);
               } else {
                 //FlowRouter.go('/purchaseordercard?id=' + listData);
@@ -1299,7 +924,7 @@ Template.purchasesoverview.onRendered(function () {
           });
 
           let filterData = _.filter(useData, function (data) {
-            return data.Company;
+            return data.SupplierName;
           });
 
           let graphData = _.orderBy(filterData, "OrderDate");
@@ -1307,26 +932,12 @@ Template.purchasesoverview.onRendered(function () {
           let daysDataArray = [];
           let currentDateNow = new Date();
 
-          let initialData = _.filter(
-            graphData,
-            (obj) =>
-              moment(obj.OrderDate).format("YYYY-MM-DD") ===
-              moment(currentDateNow).format("YYYY-MM-DD")
-          );
+          let initialData = _.filter(graphData,(obj) => moment(obj.OrderDate).format("YYYY-MM-DD") == moment(currentDateNow).format("YYYY-MM-DD"));
           let groupData = _.omit(_.groupBy(initialData, "OrderDate"), [""]);
         }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllPurchaseOrderListAll(
-            prevMonth11Date,
-            toDate,
-            false,
-            initialReportLoad,
-            0
-          )
-          .then(function (data) {
-            addVS1Data("TbillReport", JSON.stringify(data));
+      }).catch(function (err) {
+        sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+            addVS1Data("TPurchasesList", JSON.stringify(data));
             let lineItems = [];
             let lineItemObj = {};
 
@@ -1335,100 +946,75 @@ Template.purchasesoverview.onRendered(function () {
             let totalCredit = 0;
             let totalPO = 0;
 
-            for (let i = 0; i < data.tbillreport.length; i++) {
-              let orderType = data.tbillreport[i].Type;
-              totalExpense += Number(data.tbillreport[i]["Total Amount (Inc)"]);
-              if (data.tbillreport[i].Type == "Credit") {
+            for (let i = 0; i < data.tbilllist.length; i++) {
+              let orderType = "PO";
+              totalExpense += Number(data.tbilllist[i].TotalAmountInc);
+              if (data.tbilllist[i].IsCredit == true) {
                 totCreditCount++;
-                totalCredit += Number(
-                  data.tbillreport[i]["Total Amount (Inc)"]
-                );
+                orderType = "Credit";
+                totalCredit += Number(data.tbilllist[i].TotalAmountInc);
               }
 
-              if (data.tbillreport[i].Type == "Bill") {
+              if (data.tbilllist[i].IsBill == true) {
                 totBillCount++;
-                totalBill += Number(data.tbillreport[i]["Total Amount (Inc)"]);
+                orderType = "Bill";
+                totalBill += Number(data.tbilllist[i].TotalAmountInc);
               }
 
-              if (data.tbillreport[i].Type == "Purchase Order") {
+              if (data.tbilllist[i].IsPO == true) {
                 totPOCount++;
                 orderType = "PO";
-                totalPO += Number(data.tbillreport[i]["Total Amount (Inc)"]);
+                totalPO += Number(data.tbilllist[i].TotalAmountInc);
               }
-              let totalAmountEx =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tbillreport[i]["Total Amount (Ex)"]
-                ) || 0.0;
-              let totalTax =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tbillreport[i]["Total Tax"]
-                ) || 0.0;
-              let totalAmount =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tbillreport[i]["Total Amount (Inc)"]
-                ) || 0.0;
-              let amountPaidCalc =
-                data.tbillreport[i]["Total Amount (Inc)"] -
-                data.tbillreport[i].Balance;
-              let totalPaid =
-                utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||
-                0.0;
-              let totalOutstanding =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tbillreport[i].Balance
-                ) || 0.0;
+              let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmount) || 0.0;
+              let totalTax = utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalTax) || 0.0;
+              let totalAmount =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].TotalAmountInc) || 0.0;
+              let amountPaidCalc =data.tbilllist[i].Payment||0.0;
+              let totalPaid =utilityService.modifynegativeCurrencyFormat(amountPaidCalc) ||0.0;
+              let totalOutstanding =utilityService.modifynegativeCurrencyFormat(data.tbilllist[i].Balance) || 0.0;
+              let orderstatus = data.tbilllist[i].OrderStatus || '';
+              if(data.tbilllist[i].Deleted == true){
+                orderstatus = "Deleted";
+              }else if(data.tbilllist[i].SupplierName == ''){
+                orderstatus = "Deleted";
+              };
               var dataList = {
-                id: data.tbillreport[i].PurchaseOrderID || "",
-                employee: data.tbillreport[i].Contact || "",
-                sortdate:
-                  data.tbillreport[i].OrderDate != ""
-                    ? moment(data.tbillreport[i].OrderDate).format("YYYY/MM/DD")
-                    : data.tbillreport[i].OrderDate,
-                orderdate:
-                  data.tbillreport[i].OrderDate != ""
-                    ? moment(data.tbillreport[i].OrderDate).format("DD/MM/YYYY")
-                    : data.tbillreport[i].OrderDate,
-                suppliername: data.tbillreport[i].Company || "",
+                id: data.tbilllist[i].PurchaseOrderID || "",
+                employee: data.tbilllist[i].EmployeeName || "",
+                sortdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("YYYY/MM/DD"): data.tbilllist[i].OrderDate,
+                orderdate:data.tbilllist[i].OrderDate != "" ? moment(data.tbilllist[i].OrderDate).format("DD/MM/YYYY"): data.tbilllist[i].OrderDate,
+                suppliername: data.tbilllist[i].SupplierName || "",
                 totalamountex: totalAmountEx || 0.0,
                 totaltax: totalTax || 0.0,
                 totalamount: totalAmount || 0.0,
                 totalpaid: totalPaid || 0.0,
                 totaloustanding: totalOutstanding || 0.0,
-                // orderstatus: data.tbillreport[i].OrderStatus || '',
                 type: orderType || "",
-                custfield1: data.tbillreport[i].Phone || "",
-                custfield2: data.tbillreport[i].InvoiceNumber || "",
-                comments: data.tbillreport[i].Comments || "",
+                orderstatus: orderstatus || "",
+                custfield1: data.tbilllist[i].Phone || "",
+                custfield2: data.tbilllist[i].InvoiceNumber || "",
+                comments: data.tbilllist[i].Comments || "",
               };
-              if (data.tbillreport[i].Deleted === false) {
+              //if (data.tbilllist[i].Deleted == false) {
                 dataTableList.push(dataList);
-                if (data.tbillreport[i].Balance != 0) {
-                  if (data.tbillreport[i].Type == "Purchase Order") {
-                    totAmount += Number(data.tbillreport[i].Balance);
+                if (data.tbilllist[i].Balance != 0) {
+                  if (data.tbilllist[i].IsPO == true) {
+                    totAmount += Number(data.tbilllist[i].Balance);
                   }
-                  if (data.tbillreport[i].Type == "Bill") {
-                    totAmountBill += Number(data.tbillreport[i].Balance);
+                  if (data.tbilllist[i].IsBill == true) {
+                    totAmountBill += Number(data.tbilllist[i].Balance);
                   }
-                  if (data.tbillreport[i].Type == "Credit") {
-                    totAmountCredit += Number(data.tbillreport[i].Balance);
+                  if (data.tbilllist[i].IsCredit == true) {
+                    totAmountCredit += Number(data.tbilllist[i].Balance);
                   }
                 }
-              }
-              $(".suppAwaitingAmt").text(
-                utilityService.modifynegativeCurrencyFormat(totAmount)
-              );
-              $(".billAmt").text(
-                utilityService.modifynegativeCurrencyFormat(totAmountBill)
-              );
-              $(".creditAmt").text(
-                utilityService.modifynegativeCurrencyFormat(totAmountCredit)
-              );
-              // splashArray.push(dataList);
               //}
+              $(".suppAwaitingAmt").text(utilityService.modifynegativeCurrencyFormat(totAmount));
+              $(".billAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountBill));
+              $(".creditAmt").text(utilityService.modifynegativeCurrencyFormat(totAmountCredit));
             }
 
-            var totalPerc =
-              Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
+            var totalPerc = Math.abs(totalCredit) + Math.abs(totalBill) + Math.abs(totalPO);
 
             var xwidth = (Math.abs(totalCredit) / totalPerc) * 100;
             var ywidth = (Math.abs(totalBill) / totalPerc) * 100;
@@ -1439,55 +1025,23 @@ Template.purchasesoverview.onRendered(function () {
             templateObject.popercTotal.set(Math.round(zwidth));
 
             templateObject.datatablerecords.set(dataTableList);
-            $(".spExpenseTotal").text(
-              utilityService.modifynegativeCurrencyFormat(totalExpense)
-            );
+            $(".spExpenseTotal").text(utilityService.modifynegativeCurrencyFormat(totalExpense));
 
             if (templateObject.datatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "tblPurchaseOverview",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
 
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
 
               function MakeNegative() {
-                $("td").each(function () {
-                  if (
-                    $(this)
-                      .text()
-                      .indexOf("-" + Currency) >= 0
-                  )
-                    $(this).addClass("text-danger");
-                });
-              }
-
+                  $('td').each(function() {
+                      if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+                  });
+                  $('td.colStatus').each(function() {
+                      if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
+                      if ($(this).text() == "Reconciled") $(this).addClass('text-reconciled');
+                      if ($(this).text() == "Paid") $(this).addClass('text-fullyPaid');
+                      if ($(this).text() == "Partial Paid") $(this).addClass('text-partialPaid');
+                  });
+              };
+              setTimeout(function () {
               var myChart = new Chart(ctx, {
                 type: "pie",
                 data: {
@@ -1518,18 +1072,13 @@ Template.purchasesoverview.onRendered(function () {
                   },
                 },
               });
-              setTimeout(function () {
+
                 MakeNegative();
               }, 100);
             }
-            // $('#tblPurchaseOverview').DataTable().destroy();
-            // $('#tblPurchaseOverview tbody').empty();
             setTimeout(function () {
               $(".fullScreenSpin").css("display", "none");
-
-              //$.fn.dataTable.moment('DD/MM/YY');
-              $("#tblPurchaseOverview")
-                .DataTable({
+              $("#tblPurchaseOverview").DataTable({
                   columnDefs: [
                     {
                       type: "date",
@@ -1554,7 +1103,7 @@ Template.purchasesoverview.onRendered(function () {
                               data = res[1];
                             }
 
-                            return column === 1
+                            return column == 1
                               ? data.replace(/<.*?>/gi, "")
                               : data;
                           },
@@ -1577,29 +1126,18 @@ Template.purchasesoverview.onRendered(function () {
                   select: true,
                   destroy: true,
                   colReorder: true,
-                  // bStateSave: true,
-                  // rowId: 0,
                   pageLength: initialDatatableLoad,
                   bLengthChange: false,
-                  lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"],
-                  ],
+                  lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                   info: true,
                   responsive: true,
-                  order: [
-                    [0, "desc"],
-                    [2, "desc"],
-                  ],
+                  order: [[0, "desc"],[2, "desc"],],
                   action: function () {
                     $("#tblPurchaseOverview").DataTable().ajax.reload();
                   },
                   fnDrawCallback: function (oSettings) {
                     let checkurlIgnoreDate =
                       FlowRouter.current().queryParams.ignoredate;
-                    //if(checkurlIgnoreDate == 'true'){
-
-                    //}else{
                     $(".paginate_button.page-item").removeClass("disabled");
                     $("#tblPurchaseOverview_ellipsis").addClass("disabled");
 
@@ -1617,10 +1155,7 @@ Template.purchasesoverview.onRendered(function () {
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                       $(".paginate_button.page-item.next").addClass("disabled");
                     }
-                    $(
-                      ".paginate_button.next:not(.disabled)",
-                      this.api().table().container()
-                    ).on("click", function () {
+                    $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
                       $(".fullScreenSpin").css("display", "inline-block");
                       let dataLenght = oSettings._iDisplayLength;
 
@@ -1629,116 +1164,52 @@ Template.purchasesoverview.onRendered(function () {
                       );
                       var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-                      let formatDateFrom =
-                        dateFrom.getFullYear() +
-                        "-" +
-                        (dateFrom.getMonth() + 1) +
-                        "-" +
-                        dateFrom.getDate();
-                      let formatDateTo =
-                        dateTo.getFullYear() +
-                        "-" +
-                        (dateTo.getMonth() + 1) +
-                        "-" +
-                        dateTo.getDate();
+                      let formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
+                      let formatDateTo =dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
                       if (checkurlIgnoreDate == "true") {
-                        sideBarService
-                          .getAllPurchaseOrderListAll(
-                            formatDateFrom,
-                            formatDateTo,
-                            true,
-                            initialDatatableLoad,
-                            oSettings.fnRecordsDisplay()
-                          )
-                          .then(function (dataObjectnew) {
-                            getVS1Data("TbillReport")
-                              .then(function (dataObjectold) {
+                        sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,true,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                            getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
                                 } else {
-                                  let dataOld = JSON.parse(
-                                    dataObjectold[0].data
-                                  );
-                                  var thirdaryData = $.merge(
-                                    $.merge([], dataObjectnew.tbillreport),
-                                    dataOld.tbillreport
-                                  );
+                                  let dataOld = JSON.parse(dataObjectold[0].data);
+                                  var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                   let objCombineData = {
                                     Params: dataOld.Params,
-                                    tbillreport: thirdaryData,
+                                    tbilllist: thirdaryData,
                                   };
 
-                                  addVS1Data(
-                                    "TbillReport",
-                                    JSON.stringify(objCombineData)
-                                  )
-                                    .then(function (datareturn) {
+                                  addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                       templateObject.resetData(objCombineData);
-                                      $(".fullScreenSpin").css(
-                                        "display",
-                                        "none"
-                                      );
-                                    })
-                                    .catch(function (err) {
-                                      $(".fullScreenSpin").css(
-                                        "display",
-                                        "none"
-                                      );
+                                      $(".fullScreenSpin").css("display","none");
+                                    }).catch(function (err) {
+                                      $(".fullScreenSpin").css("display","none");
                                     });
                                 }
-                              })
-                              .catch(function (err) {});
-                          })
-                          .catch(function (err) {
+                              }).catch(function (err) {});
+                          }).catch(function (err) {
                             $(".fullScreenSpin").css("display", "none");
                           });
                       } else {
-                        sideBarService
-                          .getAllPurchaseOrderListAll(
-                            formatDateFrom,
-                            formatDateTo,
-                            false,
-                            initialDatatableLoad,
-                            oSettings.fnRecordsDisplay()
-                          )
-                          .then(function (dataObjectnew) {
-                            getVS1Data("TbillReport")
-                              .then(function (dataObjectold) {
+                        sideBarService.getAllPurchasesList(formatDateFrom,formatDateTo,false,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                            getVS1Data("TPurchasesList").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
                                 } else {
-                                  let dataOld = JSON.parse(
-                                    dataObjectold[0].data
-                                  );
-                                  var thirdaryData = $.merge(
-                                    $.merge([], dataObjectnew.tbillreport),
-                                    dataOld.tbillreport
-                                  );
+                                  let dataOld = JSON.parse(dataObjectold[0].data);
+                                  var thirdaryData = $.merge($.merge([], dataObjectnew.tbilllist),dataOld.tbilllist);
                                   let objCombineData = {
                                     Params: dataOld.Params,
-                                    tbillreport: thirdaryData,
+                                    tbilllist: thirdaryData,
                                   };
 
-                                  addVS1Data(
-                                    "TbillReport",
-                                    JSON.stringify(objCombineData)
-                                  )
-                                    .then(function (datareturn) {
+                                  addVS1Data("TPurchasesList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                       templateObject.resetData(objCombineData);
-                                      $(".fullScreenSpin").css(
-                                        "display",
-                                        "none"
-                                      );
-                                    })
-                                    .catch(function (err) {
-                                      $(".fullScreenSpin").css(
-                                        "display",
-                                        "none"
-                                      );
+                                      $(".fullScreenSpin").css("display","none");
+                                    }).catch(function (err) {
+                                      $(".fullScreenSpin").css("display","none");
                                     });
                                 }
-                              })
-                              .catch(function (err) {});
-                          })
-                          .catch(function (err) {
+                              }).catch(function (err) {});
+                          }).catch(function (err) {
                             $(".fullScreenSpin").css("display", "none");
                           });
                       }
@@ -1832,13 +1303,13 @@ Template.purchasesoverview.onRendered(function () {
                 .find(".colType")
                 .text();
               if (listData && transactiontype) {
-                if (transactiontype === "Purchase Order") {
+                if (transactiontype == "Purchase Order") {
                   FlowRouter.go("/purchaseordercard?id=" + listData);
-                } else if (transactiontype === "Bill") {
+                } else if (transactiontype == "Bill") {
                   FlowRouter.go("/billcard?id=" + listData);
-                } else if (transactiontype === "Credit") {
+                } else if (transactiontype == "Credit") {
                   FlowRouter.go("/creditcard?id=" + listData);
-                } else if (transactiontype === "PO") {
+                } else if (transactiontype == "PO") {
                   FlowRouter.go("/purchaseordercard?id=" + listData);
                 } else {
                   //FlowRouter.go('/purchaseordercard?id=' + listData);
@@ -1850,8 +1321,8 @@ Template.purchasesoverview.onRendered(function () {
               // }
             });
 
-            let filterData = _.filter(data.tbillreport, function (data) {
-              return data.Company;
+            let filterData = _.filter(data.tbilllist, function (data) {
+              return data.SupplierName;
             });
 
             let graphData = _.orderBy(filterData, "OrderDate");
@@ -1862,12 +1333,11 @@ Template.purchasesoverview.onRendered(function () {
             let initialData = _.filter(
               graphData,
               (obj) =>
-                moment(obj.OrderDate).format("YYYY-MM-DD") ===
+                moment(obj.OrderDate).format("YYYY-MM-DD") ==
                 moment(currentDateNow).format("YYYY-MM-DD")
             );
             let groupData = _.omit(_.groupBy(initialData, "OrderDate"), [""]);
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $(".fullScreenSpin").css("display", "none");
             // Meteor._reload.reload();
@@ -1881,32 +1351,19 @@ Template.purchasesoverview.onRendered(function () {
     toDate,
     ignoreDate
   ) {
-    sideBarService
-      .getAllPurchaseOrderListAll(
+    sideBarService.getAllPurchasesList(
         fromDate,
         toDate,
         ignoreDate,
         initialReportLoad,
         0
-      )
-      .then(function (data) {
-        addVS1Data("TbillReport", JSON.stringify(data))
-          .then(function (datareturn) {
-            window.open(
-              "/purchasesoverview?toDate=" +
-                toDate +
-                "&fromDate=" +
-                fromDate +
-                "&ignoredate=" +
-                ignoreDate,
-              "_self"
-            );
-          })
-          .catch(function (err) {
+      ).then(function (data) {
+        addVS1Data("TPurchasesList", JSON.stringify(data)).then(function (datareturn) {
+            window.open("/purchasesoverview?toDate=" +toDate +"&fromDate=" +fromDate +"&ignoredate=" +ignoreDate,"_self");
+          }).catch(function (err) {
             location.reload();
           });
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         var myChart = new Chart(ctx, {
           type: "pie",
           data: {
@@ -2012,8 +1469,42 @@ Template.purchasesoverview.events({
       .subtract(reportsloadMonths, "months")
       .format("YYYY-MM-DD");
 
-    sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
-        addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
+      sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (data) {
+          addVS1Data("TbillReport", JSON.stringify(data)).then(function (datareturn) {
+            sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                    window.open("/purchasesoverview", "_self");
+                  }).catch(function (err) {
+                    window.open("/purchasesoverview", "_self");
+                  });
+              }).catch(function (err) {
+                window.open("/purchasesoverview", "_self");
+              });
+            }).catch(function (err) {
+              sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+                  addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                      window.open("/purchasesoverview", "_self");
+                    }).catch(function (err) {
+                      window.open("/purchasesoverview", "_self");
+                    });
+                }).catch(function (err) {
+                  window.open("/purchasesoverview", "_self");
+                });
+            });
+        }).catch(function (err) {
+          sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+              addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
+                  window.open("/purchasesoverview", "_self");
+                }).catch(function (err) {
+                  window.open("/purchasesoverview", "_self");
+                });
+            }).catch(function (err) {
+              window.open("/purchasesoverview", "_self");
+            });
+        });
+    /*
+    sideBarService.getAllPurchasesList(prevMonth11Date,toDate,false,initialReportLoad,0).then(function (dataPList) {
+        addVS1Data("TPurchasesList", JSON.stringify(dataPList)).then(function (datareturnPlist) {
             window.open("/purchasesoverview", "_self");
           }).catch(function (err) {
             window.open("/purchasesoverview", "_self");
@@ -2021,6 +1512,8 @@ Template.purchasesoverview.events({
       }).catch(function (err) {
         window.open("/purchasesoverview", "_self");
       });
+*/
+
   },
   "change #dateTo": function () {
     let templateObject = Template.instance();
@@ -2320,7 +1813,7 @@ Template.purchasesoverview.events({
       currentDate2.getDate();
     templateObject.getAllFilterPurchasesData(getDateFrom, getLoadDate, false);
   },
-  
+
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
