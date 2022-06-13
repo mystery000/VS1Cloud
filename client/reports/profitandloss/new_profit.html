@@ -390,34 +390,34 @@
                                                 }
                                             </style>
                                             <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="thisMonth">This month
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisMonth">This month
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrMonth"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="thisQuarter">This quarter
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">This quarter
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrQuarter">
                                                     </div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="thisFinYear">This financial year
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">This financial year
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYear"></div>
                                                 </a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="lastMonth">Last month
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastMonth">Last month
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevMonth"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="lastQuarter">Last quarter
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">Last quarter
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispLastQuarter"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="lastFinYear">Last financial year
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">Last financial year
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevFiscYear"></div>
                                                 </a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="monthToDate">Month to date
+                                                <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">Month to date
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="monthStartDisp"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="quarterToDate">Quarter to date
+                                                <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">Quarter to date
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="quarterToDateDisp"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" style="width: ;" id="finYearToDate">Year to date
+                                                <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">Year to date
                                                     <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYearToDate"></div>
                                                 </a>
                                             </div>
@@ -464,22 +464,17 @@
                                     <p class="text-center tglAccBasis" style="margin-bottom: 8px; display:none;"></p>
                                 </div>
                             </div>
-                            <div class="row no-gutters">
+                            <style>
+                                .customProfitLossTable .customDoubleTableHeading th {
+                                    padding-top: 0px !important;
+                                    padding-bottom: 0px !important;
+                                }
+                            </style>
+                            <div class="row no-gutters p-1">
                                 <div class="table-responsive customProfitLossTable p-2">
                                     <table class="table table-hover table-sm pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
                                         <thead class="tblAvoid">
-                                            <!-- <tr class="table-active tblAvoid">
-                                                <th style="width: 300px; min-width: 250px;"></th>
-                                                <th style="width: 300px;"></th>
-                                                {{#if reportOptions.threcords}}
-                                                    {{#each item in reportOptions.threcords}}
-                                                        <th style="width: 300px; min-width: 100px;" class="text-right">{{ item }}</th>
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#if reportOptions.showtotal}}
-                                                    <th class="tglTotal text-right" style="width: 300px;">Total</th>
-                                                {{/if}}
-                                            </tr> -->
+                                           
                                             <tr class="table-active tblAvoid" style="background-color: #dadada;">
                                                 <th></th>
                                                 <!-- <th></th> -->
@@ -492,7 +487,9 @@
                                                     <th class="tglTotal text-right">Total</th>
                                                 {{/if}}
                                             </tr>
+                                          
                                         </thead>
+                                        
                                         <tbody>
                                             {{#if records}}
                                                 {{#each item in records}}
@@ -1665,6 +1662,9 @@
                                         </div>
                                     </div> -->
                                     <style>
+                                        ol {
+                                            list-style: none !important;
+                                        }
                                         ol.vertical {
                                             display: inline-block;
                                             width: 100%;
@@ -1673,11 +1673,11 @@
                                         }
 
                                         ol.vertical li {
-                                            display: inline-block;
                                             margin: 0;
                                             color: #202020;
                                             font-size: 1rem;
-                                            width: 100%;
+                                            width: 100% !important;
+                                            height: unset !important;
                                             float: left;
                                         }
 
@@ -1699,6 +1699,7 @@
                                             width: 100%;
                                             align-items: center;
                                             float: left;
+                                            cursor: pointer;
                                         }
 
                                         .selectedEffect {
@@ -1712,9 +1713,11 @@
                                         }
 
                                         ol.vertical .subChild {
-                                            width: 100%;
+                                            width: 100% !important;
+                                            height: unset !important;
                                             float: left;
                                             /* position: relative; */
+                                            cursor: pointer;
                                         }
 
                                         .subChild .childInner {
@@ -1730,11 +1733,15 @@
                                             align-items: center;
                                             float: left;
                                         }
-
-                                        .subChild .childInner strong {
-                                            color: #858796;
-                                        }
-
+                                       .subChild .childInner strong {
+                                        color: #858796;
+                                       }
+                                       .subChild.selected.noDrag .childInner {
+                                        cursor: not-allowed !important;
+                                       }
+                                       .subChild.selected .childInner strong {
+                                           color: #fff;
+                                       }   
                                         ol.vertical li.placeholder {
                                             position: relative;
                                             margin: 0;
@@ -1742,18 +1749,18 @@
                                             border: none;
                                             width: 100%;
                                             display: inline-block;
-                                            height: 2px;
+                                            height: 2px !important;
                                             float: left;
                                             background: #028dde;
-                                        }
-
-                                        .selected>.childInner,
-                                        .selected h1 {
+                                        } 
+                                        
+                                        .selected > .childInner,
+                                        .selected > .mainHeadingDiv h1 {
                                             background: #028dde !important;
                                             border: 1px solid #028dde !important;
                                             color: #fff !important;
-                                        }
-
+                                            cursor: grab !important;
+                                        } 
                                         .subChild.dragged .childInner,
                                         /* .dragged, */
                                         ol.vertical li.dragged .childInner,
@@ -1765,7 +1772,10 @@
                                             color: #fff !important;
                                             /* position: absolute; */
                                         }
-
+                                        .dragged .childInner strong {
+                                            color: #fff !important;
+                                        }
+                                        
                                         .collepsDiv {
                                             display: inline-flex;
                                             width: 32px;
@@ -1785,12 +1795,10 @@
                                         .collapsTogls>h1 .collepsDiv::after {
                                             content: "";
                                         }
-
-                                        .collapsTogls~ol.ddllkk {
+                                        .collapsTogls ~ ol.groupedListNew {
                                             display: none;
                                         }
-
-                                        .vertical>li>ol>li>.mainHeadingDiv>.mainHeading>.collepsDiv {
+                                        .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv {
                                             pointer-events: unset !important;
                                             cursor: pointer;
                                             opacity: 1;
@@ -1804,11 +1812,11 @@
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="5" data-name='Christiano Ronaldo'>
+                                                        <li data-id="5" class="mainList">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
-                                                            <ol class="ddllkk">
+                                                            <ol class="groupedListNew">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
                                                                         <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>

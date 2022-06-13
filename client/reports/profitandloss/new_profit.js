@@ -608,7 +608,7 @@ templateObject.getProfitLossLayout = async function() {
           subAccounts: subAccounts
         }) 
     });   
-    console.log( newprofitLossLayouts );
+    // console.log( newprofitLossLayouts ); 
     templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
 
     // handle Dragging and sorting
@@ -616,35 +616,62 @@ templateObject.getProfitLossLayout = async function() {
     
       // console.log('chdsdsdsdal sdsdsd');
       var oldContainer;
+      var mainHeading = $('.mainHeadingDiv');
+      var dragHeadingItems = $('.childInner, .mainHeadingDiv');
       $("ol.nested_with_switch").sortable({
           group: 'nested_with_switch',
           containment: "parent",
           nested: true,
           exclude: '.noDrag',
-          onDrag: function ($item, position, _super, event) {
-            $item.parents('.vertical').find('.selected').removeClass('selected');
-            $item.parents('.vertical').find('.selected').removeClass('dragged');
-            $item.addClass('selected');
+          
+          // onMousedown: function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected');
+          //   $item.addClass('selected');
+          // },
+          // onDrag: function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected');
+          //   $item.parents('.vertical').find('.selected').removeClass('dragged');
+          //   $item.addClass('selected');
+           
+          // },
+          onDrop: function ($item) {
+            if($item.parents().hasClass('groupedListNew')) {
+              
+              // $item.parents('.dragged').removeClass('dragged');
+            }else {
+              $item.find('.mainHeadingDiv').removeClass('collapsTogls');
+              console.log($item.find('.mainHeadingDiv').html());
+              // mainHeading.removeClass('collapsTogls');
+            }
+            
+            $item.removeClass('dragged');
+            
           },
+          // onDragStart: 	
+          // function ($item, container, _super, event) {
+          //   $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+          //   $("body").removeClass(container.group.options.bodyClass)
+          // },
           // onDrop:function ($item, position, _super, event) {
           //   $item.parents('.vertical').find('.selected').removeClass('selected, dragged');
           //   $item.addClass('selected');
           // },
-          serialize: function ($parent, $children, parentIsContainer) {
-            var result = $.extend({}, $parent.data())
-              if(parentIsContainer)
-              return [$children]
-              else if ($children[0]){
-              result.children = $children
-            }
-          },
-          isValidTarget: function($item, container) {
-            if (container.el.hasClass("noDrag")) {
-              return false;
-            } else {
-              return true;
-            }
-          },
+          // serialize: function ($parent, $children, parentIsContainer) {
+          //   var result = $.extend({}, $parent.data())
+          //     if(parentIsContainer)
+          //     return [$children]
+          //     else if ($children[0]){
+          //     result.children = $children
+          //   }
+          // },
+          // isValidTarget: function($item, container) {
+          //   if (container.el.hasClass("noDrag")) {
+          //     return false;
+          //   } else {
+          //     return true;
+          //   }
+          // },
+          
           afterMove: function (placeholder, container) {
             if(oldContainer != container){
               if(oldContainer)
@@ -670,6 +697,17 @@ templateObject.getProfitLossLayout = async function() {
         $('.collepsDiv').click(function(){
           $(this).parents('.mainHeadingDiv').toggleClass('collapsTogls');
         });
+        $('.childInner, .mainHeadingDiv').mousedown(function(){
+          $(this).parents('.vertical').find('.selected').removeClass('selected');
+          $(this).parents('.vertical').find('.selected').removeClass('dragged');
+          $(this).parent().addClass('selected');
+        });
+        
+        // $(this).mouseup(function(){
+        //   $(this).parents('.vertical').find('.selected').removeClass('selected');
+        //   $(this).parents('.vertical').find('.selected').removeClass('dragged');
+        //   $(this).parent().addClass('selected');
+        // });
         // $('.subChild, .mainHeading').mouseout(function(){
         //   $('.subChild, .mainHeading').removeClass('selected');
         // });
