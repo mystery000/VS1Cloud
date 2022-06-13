@@ -1644,11 +1644,11 @@ authenticatedRoutes.route('/serialnumberreport', {
     }
 });
 
-authenticatedRoutes.route('/payrollleaveaccruedreport', {
-    name: 'payrollleaveaccruedreport',
+authenticatedRoutes.route('/leaveaccruedreport', {
+    name: 'leaveaccruedreport',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'payrollleaveaccruedreport'
+            yield: 'leaveaccruedreport'
         });
     }
 });
