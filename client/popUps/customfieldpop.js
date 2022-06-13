@@ -708,6 +708,138 @@ Template.customfieldpop.events({
     }, 1500);
   },
 
+  "click .btnCustomFieldResetSettings": function (event) {
+    var url = FlowRouter.current().path;
+    let organisationService = new OrganisationService();
+    var url = FlowRouter.current().path;
+    let fieldData = [];
+    let checkChckBox = false;
+
+    $("#formCheck-customOne").prop("checked", false);
+    $(".checkbox1div").css("display", "none");
+    $("#formCheck-customTwo").prop("checked", false);
+    $(".checkbox2div").css("display", "none");
+    $("#formCheck-customThree").prop("checked", false);
+    $(".checkbox3div").css("display", "none");
+
+    $(".custField1Text").css("display", "block");
+    $(".custField1Date").css("display", "none");
+    $(".custField1Dropdown").css("display", "none");
+
+    $(".custField2Text").css("display", "block");
+    $(".custField2Date").css("display", "none");
+    $(".custField2Dropdown").css("display", "none");
+
+    $(".custField3Text").css("display", "block");
+    $(".custField3Date").css("display", "none");
+    $(".custField3Dropdown").css("display", "none");
+
+    let field_no = 1;
+    $(".customfieldcommon").each(function () {
+      dropObj = {
+        active: checkChckBox,
+        id: $(this).attr("custid") || "",
+        name: "Custom Field" + field_no,
+        datatype: "ftString",
+      };
+      fieldData.push(dropObj);
+      field_no++;
+    });
+
+    let listType = "";
+    let objDetails1 = "";
+    $(".fullScreenSpin").css("display", "inline-block");
+    if (
+      url.includes("/invoicecard") ||
+      url.includes("/salesordercard") ||
+      url.includes("/quotecard") ||
+      url.includes("/refundcard")
+    ) {
+      listType = "ltSales";
+    } else if (url.includes("/chequecard")) {
+      // customfield tempcode
+      listType = "ltOrderLines";
+    }
+
+    for (let i = 0; i < fieldData.length; i++) {
+      let fieldID = fieldData[i].id || 0;
+      let name = fieldData[i].name || "";
+
+      if (fieldID == "") {
+        if (i == 0) {
+          $(".lblCustomField1").text("Text Field");
+          $("#customFieldText1").val("Custom Field1");
+        }
+
+        if (i == 1) {
+          $(".lblCustomField2").text("Text Field");
+          $("#customFieldText2").val("Custom Field2");
+        }
+
+        if (i == 2) {
+          $(".lblCustomField3").text("Text Field");
+          $("#customFieldText3").val("Custom Field3");
+          $("#myModal4").modal("toggle");
+          $(".fullScreenSpin").css("display", "none");
+        }
+      } else {
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            Active: false,
+            ID: fieldID,
+            DataType: "ftString",
+            Description: name,
+            ListType: listType,
+            IsCombo: "false",
+          },
+        };
+
+        organisationService
+          .saveCustomField(objDetails1)
+          .then(function (objDetails) {
+            if (i == 0) {
+              $(".lblCustomField1").text("Text Field");
+              $("#customFieldText1").val(fieldData[i].name);
+            }
+
+            if (i == 1) {
+              $(".lblCustomField2").text("Text Field");
+              $("#customFieldText2").val(fieldData[i].name);
+            }
+
+            if (i == 2) {
+              $(".lblCustomField3").text("Text Field");
+              $("#customFieldText3").val(fieldData[i].name);
+              $("#myModal4").modal("toggle");
+              $(".fullScreenSpin").css("display", "none");
+            }
+          })
+          .catch(function (err) {
+            swal({
+              title: "Oooops...",
+              text: err,
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "Try Again",
+            }).then((result) => {
+              if (result.value) {
+                $(".fullScreenSpin").css("display", "none");
+              } else if (result.dismiss === "cancel") {
+              }
+            });
+            $(".fullScreenSpin").css("display", "none");
+          });
+      }
+    }
+
+    setTimeout(function () {
+      sideBarService.getAllCustomFields().then(function (data) {
+        addVS1Data("TCustomFieldList", JSON.stringify(data));
+      });
+    }, 1500);
+  },
+
   "click .btnCustomFieldSaveSettings": function (event) {
     var url = FlowRouter.current().path;
     let organisationService = new OrganisationService();
@@ -782,19 +914,16 @@ Template.customfieldpop.events({
           .then(function (objDetails) {
             if (i == 0) {
               $(".lblCustomField1").text(fieldData[i].name);
-              //$('#edtSaleCustField1').val(fieldData[i].name);
               $("#customFieldText1").val(fieldData[i].name);
             }
 
             if (i == 1) {
               $(".lblCustomField2").text(fieldData[i].name);
-              //$('#edtSaleCustField2').val(fieldData[i].name);
               $("#customFieldText2").val(fieldData[i].name);
             }
 
             if (i == 2) {
               $(".lblCustomField3").text(fieldData[i].name);
-              //$('#edtSaleCustField3').val(fieldData[i].name);
               $("#customFieldText3").val(fieldData[i].name);
               $("#myModal4").modal("toggle");
               $(".fullScreenSpin").css("display", "none");
@@ -847,19 +976,16 @@ Template.customfieldpop.events({
           .then(function (objDetails) {
             if (i == 0) {
               $(".lblCustomField1").text(fieldData[i].name);
-              //$('#edtSaleCustField1').val(fieldData[i].name);
               $("#customFieldText1").val(fieldData[i].name);
             }
 
             if (i == 1) {
               $(".lblCustomField2").text(fieldData[i].name);
-              //$('#edtSaleCustField2').val(fieldData[i].name);
               $("#customFieldText2").val(fieldData[i].name);
             }
 
             if (i == 2) {
               $(".lblCustomField3").text(fieldData[i].name);
-              //$('#edtSaleCustField3').val(fieldData[i].name);
               $("#customFieldText3").val(fieldData[i].name);
               $("#myModal4").modal("toggle");
               $(".fullScreenSpin").css("display", "none");

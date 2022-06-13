@@ -176,43 +176,44 @@ Template.chequecard.onRendered(() => {
   });
 
   $(document).ready(function () {
-    $("#formCheck-one").click(function () {
-      if ($(event.target).is(":checked")) {
-        $(".checkbox1div").css("display", "block");
-      } else {
-        $(".checkbox1div").css("display", "none");
-      }
-    });
-    $("#formCheck-two").click(function () {
-      if ($(event.target).is(":checked")) {
-        $(".checkbox2div").css("display", "block");
-      } else {
-        $(".checkbox2div").css("display", "none");
-      }
-    });
-
-    $(".customField1Text").blur(function () {
-      var inputValue1 = $(".customField1Text").text();
-      $(".lblCustomField1").text(inputValue1);
-    });
-
-    $(".customField2Text").blur(function () {
-      var inputValue2 = $(".customField2Text").text();
-      $(".lblCustomField2").text(inputValue2);
-    });
+    // $("#formCheck-one").click(function () {
+    //   if ($(event.target).is(":checked")) {
+    //     $(".checkbox1div").css("display", "block");
+    //   } else {
+    //     $(".checkbox1div").css("display", "none");
+    //   }
+    // });
+    // $("#formCheck-two").click(function () {
+    //   if ($(event.target).is(":checked")) {
+    //     $(".checkbox2div").css("display", "block");
+    //   } else {
+    //     $(".checkbox2div").css("display", "none");
+    //   }
+    // });
+    // $(".customField1Text").blur(function () {
+    //   var inputValue1 = $(".customField1Text").text();
+    //   $(".lblCustomField1").text(inputValue1);
+    // });
+    // $(".customField2Text").blur(function () {
+    //   var inputValue2 = $(".customField2Text").text();
+    //   $(".lblCustomField2").text(inputValue2);
+    // });
   });
 
   // tempcode= custom field
+  // add to custom field
   $(document).on("click", "#customFieldDropdownTable1 tbody tr", function (e) {
     $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
     $("#customFieldDropdownListModal1").modal("toggle");
   });
 
+  // add to custom field
   $(document).on("click", "#customFieldDropdownTable2 tbody tr", function (e) {
     $("#edtSaleCustField2").val($(this).find(".colFieldName").text());
     $("#customFieldDropdownListModal2").modal("toggle");
   });
 
+  // add to custom field
   $(document).on("click", "#customFieldDropdownTable3 tbody tr", function (e) {
     $("#edtSaleCustField3").val($(this).find(".colFieldName").text());
     $("#customFieldDropdownListModal3").modal("toggle");
@@ -4094,6 +4095,7 @@ Template.chequecard.onRendered(function () {
   tempObj.getAllTaxCodes();
 
   // customfield tempcode
+  // add to custom field
   const templateObject = Template.instance();
   templateObject.getChequeCustomFieldsList = function () {
     getVS1Data("TCustomFieldList")
@@ -4125,6 +4127,7 @@ Template.chequecard.onRendered(function () {
   }, 500);
 
   /////////
+  // add to custom field
   templateObject.initCustomFieldsList = function (data) {
     let custFields = [];
     let listType = "ltOrderLines"; // customfield tempcode
@@ -4183,6 +4186,10 @@ Template.chequecard.onRendered(function () {
       $("#customFieldText1").val(custFields[0].custfieldlabel);
       $("#customFieldText2").val(custFields[1].custfieldlabel);
       $("#customFieldText3").val(custFields[2].custfieldlabel);
+
+      $("#isdropDown1").val(custFields[0].iscombo);
+      $("#isdropDown2").val(custFields[1].iscombo);
+      $("#isdropDown3").val(custFields[2].iscombo);
 
       let custFieldNo = 0;
       for (
@@ -6954,19 +6961,43 @@ Template.chequecard.events({
     );
   },
 
+  // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
-    $("#customFieldDropdownListModal1").modal("toggle");
+    let custfields = Template.instance().custfields.get();
+    if (
+      custfields[0] &&
+      custfields[0].datatype == "ftString" &&
+      custfields[0].iscombo
+    ) {
+      $("#customFieldDropdownListModal1").modal("toggle");
+    }
   },
 
+  // add to custom field
   "click #edtSaleCustField2": function (e) {
     $("#clickedControl").val("two");
-    $("#customFieldDropdownListModal2").modal("toggle");
+    let custfields = Template.instance().custfields.get();
+    if (
+      custfields[1] &&
+      custfields[1].datatype == "ftString" &&
+      custfields[1].iscombo
+    ) {
+      $("#customFieldDropdownListModal2").modal("toggle");
+    }
   },
 
+  // add to custom field
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
-    $("#customFieldDropdownListModal3").modal("toggle");
+    let custfields = Template.instance().custfields.get();
+    if (
+      custfields[2] &&
+      custfields[2].datatype == "ftString" &&
+      custfields[2].iscombo
+    ) {
+      $("#customFieldDropdownListModal3").modal("toggle");
+    }
   },
 });
 
