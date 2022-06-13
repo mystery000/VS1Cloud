@@ -69,7 +69,7 @@ Template.purchasesaleschart.onRendered(()=>{
 
             }
             $('#custAwaiting').text(itemsAwaitingPaymentcount.length);
-            $('.custOverdue').text(itemsOverduePaymentcount.length);
+            $('.oustandingInvQty').text(itemsOverduePaymentcount.length);
             if (!isNaN(totAmount)) {
                 $('.custAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(totAmount));
             }else{
@@ -77,9 +77,9 @@ Template.purchasesaleschart.onRendered(()=>{
             }
 
             if (!isNaN(totAmountOverDue)) {
-                $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
+                $('.oustandaingInvAmt').text(utilityService.modifynegativeCurrencyFormat(totAmountOverDue));
             }else{
-                $('.custOverdueAmt').text(Currency+'0.00');
+                $('.oustandaingInvAmt').text(Currency+'0.00');
             }
 
 
@@ -117,9 +117,9 @@ Template.purchasesaleschart.onRendered(()=>{
             $('#suppOverdue').text(itemsSuppOverduePaymentcount.length);
 
             if (!isNaN(supptotAmount)) {
-                $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
+                $('.suppAwaitingAmtdash').text(utilityService.modifynegativeCurrencyFormat(supptotAmount));
             }else{
-                $('.suppAwaitingAmt').text(Currency+'0.00');
+                $('.suppAwaitingAmtdash').text(Currency+'0.00');
             }
 
             if (!isNaN(supptotAmountOverDue)) {
@@ -138,17 +138,17 @@ Template.purchasesaleschart.onRendered(()=>{
         let supptotQty = localStorage.getItem('VS1OutstandingPayablesQty_dash')||0;
         let supptotAmountOverDue = localStorage.getItem('VS1OutstandingPayablesAmt_dash')||0;
 
-        $('.custOverdue').text(totInvQty);
+        $('.oustandingInvQty').text(totInvQty);
         if (!isNaN(totInvAmountOverDue)) {
-            $('.custOverdueAmt').text(utilityService.modifynegativeCurrencyFormat(totInvAmountOverDue));
+            $('.oustandaingInvAmt').text(utilityService.modifynegativeCurrencyFormat(totInvAmountOverDue));
         }else{
-            $('.custOverdueAmt').text(Currency+'0.00');
+            $('.oustandaingInvAmt').text(Currency+'0.00');
         }
         $('.suppAwaiting').text(supptotQty);
         if (!isNaN(supptotAmountOverDue)) {
-            $('.suppAwaitingAmt').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
+            $('.suppAwaitingAmtdash').text(utilityService.modifynegativeCurrencyFormat(supptotAmountOverDue));
         }else{
-            $('.suppAwaitingAmt').text(Currency+'0.00');
+            $('.suppAwaitingAmtdash').text(Currency+'0.00');
         }
 
 

@@ -196,9 +196,11 @@ Template.inventorylist.onRendered(function() {
                             for (let i = 0; i < data.tproductvs1.length; i++) {
                                     let availableQty = 0;
                                     let onBOOrder = 0;
+                                    if(data.tproductvs1[i].fields.ProductClass != null){
                                     for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
                                         availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                                     };
+                                  };
                                     if(data.tproductvs1[i].fields.SNTracking == true){
                                       checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                                     }else if(data.tproductvs1[i].fields.Batch == true){
@@ -300,15 +302,15 @@ Template.inventorylist.onRendered(function() {
                                               targets: [11],
                                           },
                                           {
-                                              className: "colSerialNo  text-center",
+                                              className: "colSerialNo  text-center hiddenColumn",
                                               targets: [12],
                                           },
                                           {
-                                              className: "colBarcode",
+                                              className: "colBarcode hiddenColumn",
                                               targets: [13],
                                           },
                                           {
-                                              className: "colDepartment",
+                                              className: "colDepartment hiddenColumn",
                                               targets: [14],
                                           },
                                           {
@@ -390,9 +392,11 @@ Template.inventorylist.onRendered(function() {
                                                       for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
                                                         let availableQty = 0;
                                                         let onBOOrder = 0;
+                                                        if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
                                                         for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
                                                              availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                                                          };
+                                                       };
                                                          if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
                                                             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                                                           }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
@@ -473,6 +477,7 @@ Template.inventorylist.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
+                    console.log(data);
                     let useData = data.tproductvs1;
                     let lineItems = [];
                     let lineItemObj = {};
@@ -491,9 +496,11 @@ Template.inventorylist.onRendered(function() {
                     for (let i = 0; i < data.tproductvs1.length; i++) {
                       let availableQty = 0;
                       let onBOOrder = 0;
+                      if(data.tproductvs1[i].fields.ProductClass != null){
                       for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
                           availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                       };
+                    };
                       if(data.tproductvs1[i].fields.SNTracking == true){
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                       }else if(data.tproductvs1[i].fields.Batch == true){
@@ -594,15 +601,15 @@ Template.inventorylist.onRendered(function() {
                                         targets: [11],
                                     },
                                     {
-                                        className: "colSerialNo  text-center",
+                                        className: "colSerialNo  text-center hiddenColumn",
                                         targets: [12],
                                     },
                                     {
-                                        className: "colBarcode",
+                                        className: "colBarcode hiddenColumn",
                                         targets: [13],
                                     },
                                     {
-                                        className: "colDepartment",
+                                        className: "colDepartment hiddenColumn",
                                         targets: [14],
                                     },
                                     {
@@ -684,9 +691,11 @@ Template.inventorylist.onRendered(function() {
                                                 for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
                                                   let availableQty = 0;
                                                   let onBOOrder = 0;
+                                                  if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
                                                   for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
                                                        availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                                                    };
+                                                 };
                                                    if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
                                                       checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                                                     }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
@@ -762,6 +771,7 @@ Template.inventorylist.onRendered(function() {
                     }, 0);
                 }
             }).catch(function(err) {
+              console.log(err);
                 sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) {
                         addVS1Data("TProductVS1", JSON.stringify(data));
                         // addVS1Data('TProductVS1',JSON.stringify(data));
@@ -781,9 +791,11 @@ Template.inventorylist.onRendered(function() {
                         for (let i = 0; i < data.tproductvs1.length; i++) {
                       let availableQty = 0;
                       let onBOOrder = 0;
+                      if(data.tproductvs1[i].fields.ProductClass != null){
                       for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
                           availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                       };
+                    };
                       if(data.tproductvs1[i].fields.SNTracking == true){
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                       }else if(data.tproductvs1[i].fields.Batch == true){
@@ -884,15 +896,15 @@ Template.inventorylist.onRendered(function() {
                                           targets: [11],
                                       },
                                       {
-                                          className: "colSerialNo  text-center",
+                                          className: "colSerialNo  text-center hiddenColumn",
                                           targets: [12],
                                       },
                                       {
-                                          className: "colBarcode",
+                                          className: "colBarcode hiddenColumn",
                                           targets: [13],
                                       },
                                       {
-                                          className: "colDepartment",
+                                          className: "colDepartment hiddenColumn",
                                           targets: [14],
                                       },
                                       {
@@ -974,9 +986,11 @@ Template.inventorylist.onRendered(function() {
                                                   for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
                                                     let availableQty = 0;
                                                     let onBOOrder = 0;
+                                                    if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
                                                     for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
                                                          availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                                                      };
+                                                   };
                                                      if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
                                                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                                                       }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
@@ -1596,9 +1610,11 @@ Template.inventorylist.events({
                         for (let i = 0; i < data.tproductvs1.length; i++) {
                           let availableQty = 0;
                           let onBOOrder = 0;
+                          if(data.tproductvs1[i].fields.ProductClass != null){
                           for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
                               availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                           };
+                        };
                           if(data.tproductvs1[i].fields.SNTracking == true){
                             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                           }else if(data.tproductvs1[i].fields.Batch == true){
@@ -1669,9 +1685,11 @@ Template.inventorylist.events({
                     for (let i = 0; i < data.tproductvs1.length; i++) {
                       let availableQty = 0;
                       let onBOOrder = 0;
+                      if(data.tproductvs1[i].fields.ProductClass != null){
                       for (let a = 0; a < data.tproductvs1[i].fields.ProductClass.length; a++) {
                           availableQty += data.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
                       };
+                    };
                       if(data.tproductvs1[i].fields.SNTracking == true){
                         checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
                       }else if(data.tproductvs1[i].fields.Batch == true){
