@@ -640,24 +640,23 @@
                                                     
                                                 {{/each}}
                                                 {{/if}}
-                                                {{#if reportOptions.showtotal}}
 
-                                                {{#if currencyList}}
-                                                {{#each c in currencyList }}
-                                                    {{# if c.active}}
-                                                 
-                                                        <td lass="fgr fgrblue text-center tglTotal 55555">
-                                                            {{#if reportOptions.showDecimal }}
-                                                            {{convertAmount item.totalamountex c}}
-                                                            {{else}}
-                                                            {{convertAmount item.totalroundamountex c}}
-                                                            {{/if}}
-                                                        </td>
+                                                {{#if reportOptions.showtotal}}
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
                                                         
+                                                                <td lass="fgr fgrblue text-center tglTotal 55555">
+                                                                    {{#if reportOptions.showDecimal }}
+                                                                        {{convertAmount item.totalamountex c}}
+                                                                    {{else}}
+                                                                        {{convertAmount item.totalroundamountex c}}
+                                                                    {{/if}}
+                                                                </td>
+                                                                
+                                                            {{/if}}
+                                                        {{/each}}
                                                     {{/if}}
-                                                {{/each}}
-                                                {{/if}}
-                                                
                                                 {{/if}}
                                                 {{/if}}
                                                 {{/if}}

@@ -821,7 +821,42 @@ $('.tblAvoid').each(function(){
     });
 
   templateObject.loadCurrency(); 
+
+
+  templateObject.loadCurrencyHistory = () => {
+    taxRateService
+  .getCurrencyHistory()
+  .then((result) => {
+    //console.log(result);
+    const data = result.tcurrencyratehistory;
+    console.log(data);
+    console.log("Currency list: ",data);
+
+    templateObject.tcurrencyratehistory.set(data);
+  })
+  .catch(function (err) {
+    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    $(".fullScreenSpin").css("display", "none");
+    // Meteor._reload.reload();
+  });
+  }
+
+  templateObject.loadCurrencyHistory();
+
+
+  $(".fullScreenSpin").css("display", "none");
 });
+
+/**
+ *
+ * @param {Date} a
+ * @param {Date} b
+ * @returns
+ */
+ function sortByDate(a, b) {
+  return a - b;
+}
+
 
 Template.newprofitandloss.events({
   "change input[type='checkbox']": (event) => {
@@ -2106,21 +2141,41 @@ Template.newprofitandloss.helpers({
   companyname: () => {
     return loggedCompany;
   },
-  convertAmount: (amount = 0.0, currencyData) => {
-    amount = isNaN(amount) ? 0.00 : Number.isInteger(amount) ? amount : amount.substring(1);
-    console.log(amount);
-    console.log(currencyData);
+  convertAmount: (amount, currencyData) => {
+    if(!amount) {
+      return "";
+    }
     if (currencyData.currency == "AUD") {
       return amount;
     }
+    amount = isNaN(amount) ? 0.00 : Number.isInteger(amount) ? amount : amount.substring(1);
+    // console.log(amount);
+    // console.log(currencyData);
+
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
-    const d = $("#dateTo").val();
-    console.log(d);
 
-    let rate = currencyData.buyrate; // Must used from tcurrecyhistory
+    currencyList = currencyList.filter(a => a.Code == currencyData.currency);
+
+    currencyList = currencyList.sort((a, b) => {
+      const adate= new Date(a.MsTimeStamp);
+      const bdate = new Date(b.MsTimeStamp);
+
+      if(adate > bdate) {
+        return 1;
+      }
+      return -1;
+    });
+
+    console.log("Currency list: ", currencyList);
+
+
+    const d = $("#dateTo").val();
+    //console.log(d);
+
+    let rate = currencyData.buyrate || 1; // Must used from tcurrecyhistory
     let convertedAmount = `${currencyData.symbol} ${amount * rate}`;
-    console.log(convertedAmount);
+    //console.log(convertedAmount);
 
     return convertedAmount;
   },
