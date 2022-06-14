@@ -5371,26 +5371,14 @@ Template.payrolloverview.events({
     if (clockList.length > 0) {
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
-        latestTimeLogId =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.ID || "";
-        checkStartTime =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.StartDatetime || "";
-        checkEndTime =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.EndDatetime || "";
+        latestTimeLogId = clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.ID || "";
+        checkStartTime =clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.StartDatetime || "";
+        checkEndTime =clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.EndDatetime || "";
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
-        latestTimeLogId =
-          clockList[clockList.length - 1].timelog.fields.ID || "";
-        checkStartTime =
-          clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
-        checkEndTime =
-          clockList[clockList.length - 1].timelog.fields.EndDatetime || "";
+        latestTimeLogId = clockList[clockList.length - 1].timelog.fields.ID || "";
+        checkStartTime = clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
+        checkEndTime = clockList[clockList.length - 1].timelog.fields.EndDatetime || "";
       }
     }
 
