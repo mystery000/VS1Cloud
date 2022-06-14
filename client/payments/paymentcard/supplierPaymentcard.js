@@ -118,19 +118,26 @@ Template.supplierpaymentcard.onRendered(() => {
     const deptrecords = [];
     const paymentmethodrecords = [];
     const accountnamerecords = [];
-
+    let newPaymentId = '';
     templateObject.getLastPaymentData = function() {
       let lastBankAccount = "Bank";
       let lastDepartment = Session.get('department') || "";
         paymentService.getAllSupplierPaymentData1().then(function(data) {
+          let latestPaymentId;
             if(data.tsupplierpayment.length > 0){
                 lastCheque = data.tsupplierpayment[data.tsupplierpayment.length - 1]
                 lastBankAccount = lastCheque.AccountName;
                 lastDepartment = lastCheque.DeptClassName;
+                latestPaymentId = (lastCheque.Id);
             } else{
-
+              latestPaymentId = 0;
             }
+            newPaymentId = (latestPaymentId + 1);
             setTimeout(function(){
+                  if (FlowRouter.current().queryParams.id) {
+                  }else{
+                  $(".heading").html("New Supplier Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                  };
                   $('#edtSelectBankAccountName').val(lastBankAccount);
                   $('#sltDepartment').val(lastDepartment);
             },50);
@@ -5528,7 +5535,7 @@ Template.supplierpaymentcard.events({
         }else {
             $('.foreign-currency-js').css('display', 'none');
         }
-       
+
     },
     'change #exchange_rate': (e) => {
         const exchangeRate = $("#exchange_rate").val();
