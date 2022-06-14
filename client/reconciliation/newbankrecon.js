@@ -26,6 +26,7 @@ let selectedCustomerFlag = '';
 let customerList = [];
 let supplierList = [];
 let taxcodeList = [];
+let VS1TransactionList = [];
 
 Template.newbankrecon.onCreated(function() {
     const templateObject = Template.instance();
@@ -562,6 +563,12 @@ Template.newbankrecon.onRendered(function() {
         // console.log(templateObject.bankTransactionData.get());
         if (templateObject.bankTransactionData.get().length > 0) {
             setTimeout(function() {
+                if (parseInt(page_number) === 1) {
+                    $(".btnPagePrev").prop("disabled", true);
+                }
+                if (parseInt(page_number) === page_cnt) {
+                    $(".btnPageNext").prop("disabled", true);
+                }
                 defineTabpanelEvent();
                 $('.fullScreenSpin').css('display', 'none');
             }, 500);
@@ -659,6 +666,7 @@ Template.newbankrecon.onRendered(function() {
     };
     function setMatchTransactionData(matchData) {
         let thirdaryData = sortTransactionData(matchData, 'SortDate');
+        VS1TransactionList = thirdaryData;
         templateObject.matchTransactionData.set(thirdaryData);
         // console.log(templateObject.matchTransactionData.get());
     }
@@ -1021,13 +1029,19 @@ Template.newbankrecon.onRendered(function() {
                 openTransactionDetail(item);
             });
             $('#matchNav_'+item.YodleeLineID+' a.nav-link').on('click', function(e, li) {
-                openFindMatch(item);
+                if (!item.matched) {
+                    initVS1Transaction();
+                    openFindMatch(item);
+                }
             });
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
                 $('#matchNav_'+item.YodleeLineID+' a.nav-link').trigger('click');
             });
             $('#btnFindMatch2_'+item.YodleeLineID).on('click', function(e, li) {
-                openFindMatch(item);
+                if (!item.matched) {
+                    initVS1Transaction();
+                    openFindMatch(item);
+                }
             });
             $('#btnMoreDetail_'+item.YodleeLineID).on('click', function(e, li) {
                 $('#mdTransactionDate').text(item.YodleeTransactionDate);
@@ -1132,6 +1146,10 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
         }
+    }
+    function initVS1Transaction() {
+        templateObject.matchTransactionData.set(VS1TransactionList);
+        templateObject.viewTransactionData.set([]);
     }
 
     $(document).on("click", ".newbankrecon #tblAccount tbody tr", function(e) {
@@ -1454,18 +1472,14 @@ Template.newbankrecon.events({
     },
     'change .lineUnitPrice': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
-        let inputUnitPrice = 0;
-        if (!isNaN($(event.target).val())) {
-            inputUnitPrice = parseFloat($(event.target).val()) || 0;
-            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-        } else {
-            inputUnitPrice = Number($(event.target).val().replace(/[^0-9.-]+/g, "")) || 0;
-            $(event.target).val(utilityService.modifynegativeCurrencyFormat(inputUnitPrice));
-        }
+        setCurrencyFormatForInput(event.target);
         setCalculated();
     },
     'change #taxOption': function (event) {
         setCalculated();
+    },
+    'change #TotalAmount': function (event) {
+        setCurrencyFormatForInput(event.target);
     },
     'click .btnRemove': function (event) {
         selectedLineID = null;
@@ -1508,7 +1522,7 @@ Template.newbankrecon.events({
             let purchaseService = new PurchaseBoardService();
             let paymentService = new PaymentsService();
             let salesService = new SalesBoardService();
-            let match_total = parseFloat($("#divLineDetail_"+selectedYodleeID+" #TotalAmount").val());
+            let match_total = Number($("#divLineDetail_"+selectedYodleeID+" #TotalAmount").val().replace(/[^0-9.-]+/g, "")) || 0;
             let grand_total = Number($("#divLineDetail_"+selectedYodleeID+" .grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
             if (match_total !== grand_total) {
                 swal('The totals do not match.', '', 'error');
@@ -1939,6 +1953,8 @@ Template.newbankrecon.events({
             let lineID = event.target.id;
             lineID = lineID.split("_").pop();
             if ($(event.target).is(':checked')) {
+                $(event.target).parent().parent().parent().addClass("matchedRow");
+                // $(event.target).parent().parent().parent().css("background-color", "rgba(23, 166, 115, 0.5) !important");
                 let unselectedData = matchTransactionData.filter(function (obj) {
                     return obj.ID !== lineID;
                 });
@@ -1948,6 +1964,8 @@ Template.newbankrecon.events({
                 viewTransactionData.push(selectedData[0]);
                 templateObject.viewTransactionData.set(viewTransactionData);
             } else {
+                $(event.target).parent().parent().parent().removeClass("matchedRow");
+                // $(event.target).parent().parent().parent().css("background-color", "white !important");
                 let unselectedData = viewTransactionData.filter(function (obj) {
                     return obj.ID !== lineID;
                 });
@@ -2488,7 +2506,7 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith==='spent'?'Spent as':'Received as');
         $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith==='spent'?'To':'From');
         $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
-        $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(Amount);
+        $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith==='spent'?'spent - Spent':'received - Received');
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom1').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom2').text(utilityService.modifynegativeCurrencyFormat(Amount));
@@ -2618,7 +2636,6 @@ function openFindMatch(item){
         sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         paging: false,
         filter: false,
-        height: "400px",
         scrollCollapse: true,
         colReorder: {
             fixedColumnsLeft: 1
@@ -2639,6 +2656,31 @@ function openFindMatch(item){
         }
     });
     $('#divLineFindMatch_'+selectedYodleeID+ ' #tblFindTransaction').wrap('<div class="dataTables_scroll" />');
+
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #tblViewTransaction').DataTable({
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        paging: false,
+        filter: false,
+        scrollCollapse: true,
+        colReorder: {
+            fixedColumnsLeft: 1
+        },
+        select: true,
+        destroy: true,
+        lengthMenu: [
+            [initialDatatableLoad, -1],
+            [initialDatatableLoad, "All"]
+        ],
+        info: true,
+        responsive: true,
+        order: [
+            [1, "desc"]
+        ],
+        action: function() {
+            $('#divLineFindMatch_'+item.YodleeLineID+ ' #tblViewTransaction').DataTable().ajax.reload();
+        }
+    });
+    $('#divLineFindMatch_'+selectedYodleeID+ ' #tblViewTransaction').wrap('<div class="dataTables_scroll" />');
 
     $('#createNav_'+selectedYodleeID+' a.nav-link').removeClass('active');
     $('#createNav_'+selectedYodleeID).hide();
@@ -2728,6 +2770,16 @@ function openFindMatchAfterSave(savedReconID) {
     if (selectedYodleeID) {
         $("#reconID_"+selectedYodleeID).val(savedReconID);
         $('#btnFindMatch_'+selectedYodleeID).trigger("click");
+    }
+}
+function setCurrencyFormatForInput(target) {
+    let input = 0;
+    if (!isNaN($(target).val())) {
+        input = parseFloat($(target).val()) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
+    } else {
+        input = Number($(target).val().replace(/[^0-9.-]+/g, "")) || 0;
+        $(target).val(utilityService.modifynegativeCurrencyFormat(input));
     }
 }
 

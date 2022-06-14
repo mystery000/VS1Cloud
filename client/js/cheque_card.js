@@ -4265,6 +4265,10 @@ Template.chequecard.onRendered(function () {
               yearRange: "-90:+10",
             });
           }, 1500);
+          // should set init value
+          $("#edtSaleCustField" + custFieldNo).val(
+            moment().format("DD/MM/YYYY")
+          );
         } else if (
           custField.datatype == "ftString" &&
           custField.iscombo == true
@@ -4319,7 +4323,7 @@ Template.chequecard.onRendered(function () {
       }
 
       setTimeout(function () {
-        let custFieldNo = 0;
+        custFieldNo = 0;
         for (
           let customfield_number = 0;
           customfield_number < customFieldCount;
@@ -4374,103 +4378,6 @@ Template.chequecard.onRendered(function () {
               var dataList = ["", ""];
               splashArrayCustomFieldList.push(dataList);
             }
-
-            $("#edtSaleCustField" + custFieldNo).editableSelect();
-            $("#edtSaleCustField" + custFieldNo)
-              .editableSelect()
-              .on("click.editable-select", function (e, li) {
-                var $earch = $(this);
-                var offset = $earch.offset();
-                var fieldDataName = e.target.value || "";
-                var fieldDataID =
-                  $("#edtSaleCustField" + custFieldNo).attr("custfieldid") ||
-                  "";
-                $("#selectCustFieldID").val(fieldDataID);
-                if (e.pageX > offset.left + $earch.width() - 8) {
-                  // X button 16px wide?
-                } else {
-                  if (fieldDataName.replace(/\s/g, "") != "") {
-                    $("#newStatusHeader" + custFieldNo).text(
-                      "Edit " + custField.custfieldlabel
-                    );
-                    getVS1Data("TCustomFieldList")
-                      .then(function (dataObject) {
-                        //edit to test indexdb
-                        if (dataObject.length == 0) {
-                          $(".fullScreenSpin").css("display", "inline-block");
-                          sideBarService
-                            .getAllCustomFields()
-                            .then(function (data) {
-                              for (let i in data.tcustomfieldlist) {
-                                if (
-                                  data.tcustomfieldlist[i].fields
-                                    .Description === fieldDataName
-                                ) {
-                                  $("#statusId").val(
-                                    data.tcustomfieldlist[i].fields.ID
-                                  );
-                                  $("#newStatus").val(
-                                    data.tcustomfieldlist[i].fields.Description
-                                  );
-                                }
-                              }
-                              setTimeout(function () {
-                                $(".fullScreenSpin").css("display", "none");
-                                $("#newCustomFieldPop").modal("toggle");
-                              }, 200);
-                            });
-                        } else {
-                          let data = JSON.parse(dataObject[0].data);
-                          for (let i in data.tcustomfieldlist) {
-                            if (
-                              data.tcustomfieldlist[i].fields.Description ===
-                              fieldDataName
-                            ) {
-                              $("#statusId").val(
-                                data.tcustomfieldlist[i].fields.ID
-                              );
-                              $("#newStatus").val(
-                                data.tcustomfieldlist[i].fields.Description
-                              );
-                            }
-                          }
-                          setTimeout(function () {
-                            $(".fullScreenSpin").css("display", "none");
-                            $("#newCustomFieldPop").modal("newCustomFieldPop");
-                          }, 200);
-                        }
-                      })
-                      .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "inline-block");
-                        sideBarService
-                          .getAllCustomFields()
-                          .then(function (data) {
-                            for (let i in data.tcustomfieldlist) {
-                              if (
-                                data.tcustomfieldlist[i].fields.Description ===
-                                fieldDataName
-                              ) {
-                                $("#statusId" + custFieldNo).val(
-                                  data.tcustomfieldlist[i].fields.ID
-                                );
-                                $("#newStatus" + custFieldNo).val(
-                                  data.tcustomfieldlist[i].fields.Description
-                                );
-                              }
-                            }
-                            setTimeout(function () {
-                              $(".fullScreenSpin").css("display", "none");
-                              $("#newCustomFieldPop").modal("toggle");
-                            }, 200);
-                          });
-                      });
-                  } else {
-                    // $("#customFieldDropdownListModal" + custFieldNo).modal(
-                    //   "toggle"
-                    // );
-                  }
-                }
-              });
 
             // init customfielddropdowntable
             $("#customFieldDropdownTable" + custFieldNo)
@@ -4534,6 +4441,427 @@ Template.chequecard.onRendered(function () {
           }
         }
       }, 1500);
+
+      // initialize custom field dropdown/////////////////
+      setTimeout(function () {
+        custFieldNo = 0;
+        let custField = custFields[0];
+        if (
+          custFields[0].datatype == "ftString" &&
+          custFields[0].iscombo == true
+        ) {
+          // Dropdown
+          $(".custField1Text").css("display", "none");
+          $(".custField1Date").css("display", "none");
+          $(".custField1Dropdown").css("display", "block");
+
+          $(".checkbox1div").empty();
+          $(".checkbox1div").append(
+            '<div class="form-group"><label class="lblCustomField1">' +
+              custFields[0].custfieldlabel +
+              "<br></label>" +
+              ' <select type="search" class="form-control pointer customField1" id="edtSaleCustField1" name="edtSaleCustField1" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
+              custFields[0].id +
+              "></select></div>"
+          );
+          $("#edtSaleCustField1").attr("datatype", "ftString");
+          var splashArrayCustomFieldList = new Array();
+          if (custFields[0].dropdown != null) {
+            if (custFields[0].dropdown.length > 0) {
+              for (let x = 0; x < custFields[0].dropdown.length; x++) {
+                var dataList = [
+                  custFields[0].dropdown[x].fields.ID || "",
+                  custFields[0].dropdown[x].fields.Text || "",
+                ];
+
+                splashArrayCustomFieldList.push(dataList);
+              }
+            } else {
+              var dataList = [
+                custFields[0].dropdown.fields.ID || "",
+                custFields[0].dropdown.fields.Text || "",
+              ];
+
+              splashArrayCustomFieldList.push(dataList);
+            }
+          } else {
+            var dataList = ["", ""];
+            splashArrayCustomFieldList.push(dataList);
+          }
+
+          // console.log("edtSaleCustField select trigger", 1);
+          $("#edtSaleCustField1").editableSelect();
+
+          $("#edtSaleCustField1")
+            .editableSelect()
+            .on("click.editable-select", function (e, li) {
+              // console.log("edtSaleCustField select", 1);
+              var $earch = $(this);
+              var offset = $earch.offset();
+              var fieldDataName = e.target.value || "";
+              var fieldDataID =
+                $("#edtSaleCustField1").attr("custfieldid") || "";
+              $("#selectCustFieldID").val(fieldDataID);
+
+              // console.log(fieldDataID, fieldDataName);
+              if (e.pageX > offset.left + $earch.width() - 8) {
+                // X button 16px wide?
+                $("#customFieldDropdownListModal1").modal("toggle");
+              } else {
+                if (fieldDataName.replace(/\s/g, "") != "") {
+                  // console.log(
+                  //   "edit custom field dropdown field",
+                  //   custFields[0]
+                  // );
+                  $("#newCustomFieldDropdownHeader").text(
+                    "Edit " + custFields[0].custfieldlabel
+                  );
+
+                  if (custFields[0].dropdown) {
+                    for (let i in custFields[0].dropdown) {
+                      if (
+                        custFields[0].dropdown[i].fields.Text === fieldDataName
+                      ) {
+                        $("#customFieldDropdownId").val(
+                          custFields[0].dropdown[i].fields.ID
+                        );
+                        $("#newCustomFieldDropdownName").val(
+                          custFields[0].dropdown[i].fields.Text
+                        );
+                      }
+                    }
+                    setTimeout(function () {
+                      $(".fullScreenSpin").css("display", "none");
+                      $("#newCustomFieldDropdownModal").modal("toggle");
+                    }, 200);
+                  } else {
+                    $("#customFieldDropdownId").val(fieldDataID);
+                    $("#newCustomFieldDropdownName").val(fieldDataName);
+
+                    setTimeout(function () {
+                      $(".fullScreenSpin").css("display", "none");
+                      $("#newCustomFieldDropdownModal").modal("toggle");
+                    }, 200);
+                  }
+                } else {
+                  $("#customFieldDropdownListModal1").modal();
+                  // setTimeout(function () {
+                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
+                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  //   var datatable = $("#tblStatusPopList").DataTable();
+
+                  //   datatable.draw();
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  // }, 500);
+                }
+              }
+            });
+        }
+
+        custField = custFields[1];
+        if (
+          custFields[1].datatype == "ftString" &&
+          custFields[1].iscombo == true
+        ) {
+          // Dropdown
+          $(".custField2Text").css("display", "none");
+          $(".custField2Date").css("display", "none");
+          $(".custField2Dropdown").css("display", "block");
+
+          $(".checkbox2div").empty();
+          $(".checkbox2div").append(
+            '<div class="form-group"><label class="lblCustomField2">' +
+              custFields[1].custfieldlabel +
+              "<br></label>" +
+              ' <select type="search" class="form-control pointer customField2" id="edtSaleCustField2" name="edtSaleCustField2" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
+              custFields[1].id +
+              "></select></div>"
+          );
+          $("#edtSaleCustField2").attr("datatype", "ftString");
+          var splashArrayCustomFieldList = new Array();
+          if (custFields[1].dropdown != null) {
+            if (custFields[1].dropdown.length > 0) {
+              for (let x = 0; x < custFields[1].dropdown.length; x++) {
+                var dataList = [
+                  custFields[1].dropdown[x].fields.ID || "",
+                  custFields[1].dropdown[x].fields.Text || "",
+                ];
+
+                splashArrayCustomFieldList.push(dataList);
+              }
+            } else {
+              var dataList = [
+                custFields[1].dropdown.fields.ID || "",
+                custFields[1].dropdown.fields.Text || "",
+              ];
+
+              splashArrayCustomFieldList.push(dataList);
+            }
+          } else {
+            var dataList = ["", ""];
+            splashArrayCustomFieldList.push(dataList);
+          }
+
+          // console.log("edtSaleCustField select trigger", 2);
+          $("#edtSaleCustField2").editableSelect();
+
+          $("#edtSaleCustField2")
+            .editableSelect()
+            .on("click.editable-select", function (e, li) {
+              // console.log("edtSaleCustField select", 2);
+              var $earch = $(this);
+              var offset = $earch.offset();
+              var fieldDataName = e.target.value || "";
+              var fieldDataID =
+                $("#edtSaleCustField2").attr("custfieldid") || "";
+              $("#selectCustFieldID").val(fieldDataID);
+              if (e.pageX > offset.left + $earch.width() - 8) {
+                // X button 16px wide?
+                $("#customFieldDropdownListModal2").modal("toggle");
+              } else {
+                if (fieldDataName.replace(/\s/g, "") != "") {
+                  // console.log("edit custom field dropdown field");
+                  $("#newStatusHeader2").text(
+                    "Edit " + custFields[1].custfieldlabel
+                  );
+                  getVS1Data("TCustomFieldList")
+                    .then(function (dataObject) {
+                      //edit to test indexdb
+                      if (dataObject.length == 0) {
+                        $(".fullScreenSpin").css("display", "inline-block");
+                        sideBarService
+                          .getAllCustomFields()
+                          .then(function (data) {
+                            for (let i in data.tcustomfieldlist) {
+                              if (
+                                data.tcustomfieldlist[i].fields.Description ===
+                                fieldDataName
+                              ) {
+                                $("#statusId").val(
+                                  data.tcustomfieldlist[i].fields.ID
+                                );
+                                $("#newStatus").val(
+                                  data.tcustomfieldlist[i].fields.Description
+                                );
+                              }
+                            }
+                            // setTimeout(function () {
+                            $(".fullScreenSpin").css("display", "none");
+                            $("#newCustomFieldPop").modal("toggle");
+                            // }, 200);
+                          });
+                      } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        for (let i in data.tcustomfieldlist) {
+                          if (
+                            data.tcustomfieldlist[i].fields.Description ===
+                            fieldDataName
+                          ) {
+                            $("#statusId").val(
+                              data.tcustomfieldlist[i].fields.ID
+                            );
+                            $("#newStatus").val(
+                              data.tcustomfieldlist[i].fields.Description
+                            );
+                          }
+                        }
+                        // setTimeout(function () {
+                        $(".fullScreenSpin").css("display", "none");
+                        $("#newCustomFieldPop").modal("newCustomFieldPop");
+                        // }, 200);
+                      }
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "inline-block");
+                      sideBarService.getAllCustomFields().then(function (data) {
+                        for (let i in data.tcustomfieldlist) {
+                          if (
+                            data.tcustomfieldlist[i].fields.Description ===
+                            fieldDataName
+                          ) {
+                            $("#statusId2").val(
+                              data.tcustomfieldlist[i].fields.ID
+                            );
+                            $("#newStatus2").val(
+                              data.tcustomfieldlist[i].fields.Description
+                            );
+                          }
+                        }
+                        // setTimeout(function () {
+                        $(".fullScreenSpin").css("display", "none");
+                        $("#newCustomFieldPop").modal("toggle");
+                        // }, 200);
+                      });
+                    });
+                } else {
+                  $("#customFieldDropdownListModal").modal();
+                  // setTimeout(function () {
+                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
+                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  //   var datatable = $("#tblStatusPopList").DataTable();
+
+                  //   datatable.draw();
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  // }, 500);
+                }
+              }
+            });
+        }
+
+        custField = custFields[2];
+        if (
+          custFields[2].datatype == "ftString" &&
+          custFields[2].iscombo == true
+        ) {
+          // Dropdown
+          $(".custField3Text").css("display", "none");
+          $(".custField3Date").css("display", "none");
+          $(".custField3Dropdown").css("display", "block");
+
+          $(".checkbox3div").empty();
+          $(".checkbox3div").append(
+            '<div class="form-group"><label class="lblCustomField3">' +
+              custFields[2].custfieldlabel +
+              "<br></label>" +
+              ' <select type="search" class="form-control pointer customField3" id="edtSaleCustField3" name="edtSaleCustField3" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
+              custFields[2].id +
+              "></select></div>"
+          );
+          $("#edtSaleCustField3").attr("datatype", "ftString");
+          var splashArrayCustomFieldList = new Array();
+          if (custFields[2].dropdown != null) {
+            if (custFields[2].dropdown.length > 0) {
+              for (let x = 0; x < custFields[2].dropdown.length; x++) {
+                var dataList = [
+                  custFields[2].dropdown[x].fields.ID || "",
+                  custFields[2].dropdown[x].fields.Text || "",
+                ];
+
+                splashArrayCustomFieldList.push(dataList);
+              }
+            } else {
+              var dataList = [
+                custFields[2].dropdown.fields.ID || "",
+                custFields[2].dropdown.fields.Text || "",
+              ];
+
+              splashArrayCustomFieldList.push(dataList);
+            }
+          } else {
+            var dataList = ["", ""];
+            splashArrayCustomFieldList.push(dataList);
+          }
+
+          // console.log("edtSaleCustField select trigger", 3);
+          $("#edtSaleCustField3").editableSelect();
+
+          $("#edtSaleCustField3")
+            .editableSelect()
+            .on("click.editable-select", function (e, li) {
+              // console.log("edtSaleCustField select", 3);
+              var $earch = $(this);
+              var offset = $earch.offset();
+              var fieldDataName = e.target.value || "";
+              var fieldDataID =
+                $("#edtSaleCustField3").attr("custfieldid") || "";
+              $("#selectCustFieldID").val(fieldDataID);
+              if (e.pageX > offset.left + $earch.width() - 8) {
+                // X button 16px wide?
+                $("#customFieldDropdownListModal3").modal("toggle");
+              } else {
+                if (fieldDataName.replace(/\s/g, "") != "") {
+                  // console.log("edit custom field dropdown field");
+                  $("#newStatusHeader3").text(
+                    "Edit " + custFields[2].custfieldlabel
+                  );
+                  getVS1Data("TCustomFieldList")
+                    .then(function (dataObject) {
+                      //edit to test indexdb
+                      if (dataObject.length == 0) {
+                        $(".fullScreenSpin").css("display", "inline-block");
+                        sideBarService
+                          .getAllCustomFields()
+                          .then(function (data) {
+                            for (let i in data.tcustomfieldlist) {
+                              if (
+                                data.tcustomfieldlist[i].fields.Description ===
+                                fieldDataName
+                              ) {
+                                $("#statusId").val(
+                                  data.tcustomfieldlist[i].fields.ID
+                                );
+                                $("#newStatus").val(
+                                  data.tcustomfieldlist[i].fields.Description
+                                );
+                              }
+                            }
+                            // setTimeout(function () {
+                            $(".fullScreenSpin").css("display", "none");
+                            $("#newCustomFieldPop").modal("toggle");
+                            // }, 200);
+                          });
+                      } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        for (let i in data.tcustomfieldlist) {
+                          if (
+                            data.tcustomfieldlist[i].fields.Description ===
+                            fieldDataName
+                          ) {
+                            $("#statusId").val(
+                              data.tcustomfieldlist[i].fields.ID
+                            );
+                            $("#newStatus").val(
+                              data.tcustomfieldlist[i].fields.Description
+                            );
+                          }
+                        }
+                        // setTimeout(function () {
+                        $(".fullScreenSpin").css("display", "none");
+                        $("#newCustomFieldPop").modal("newCustomFieldPop");
+                        // }, 200);
+                      }
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "inline-block");
+                      sideBarService.getAllCustomFields().then(function (data) {
+                        for (let i in data.tcustomfieldlist) {
+                          if (
+                            data.tcustomfieldlist[i].fields.Description ===
+                            fieldDataName
+                          ) {
+                            $("#statusId3").val(
+                              data.tcustomfieldlist[i].fields.ID
+                            );
+                            $("#newStatus3").val(
+                              data.tcustomfieldlist[i].fields.Description
+                            );
+                          }
+                        }
+                        // setTimeout(function () {
+                        $(".fullScreenSpin").css("display", "none");
+                        $("#newCustomFieldPop").modal("toggle");
+                        // }, 200);
+                      });
+                    });
+                } else {
+                  $("#customFieldDropdownListModal").modal();
+                  // setTimeout(function () {
+                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
+                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  //   var datatable = $("#tblStatusPopList").DataTable();
+
+                  //   datatable.draw();
+                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+                  // }, 500);
+                }
+              }
+            });
+        }
+      }, 2000);
+      ////////////////////
     }
   };
   ///////
@@ -6964,40 +7292,43 @@ Template.chequecard.events({
   // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
-    let custfields = Template.instance().custfields.get();
-    if (
-      custfields[0] &&
-      custfields[0].datatype == "ftString" &&
-      custfields[0].iscombo
-    ) {
-      $("#customFieldDropdownListModal1").modal("toggle");
-    }
+    // let custfields = Template.instance().custfields.get();
+    // // console.log("custfields---", custfields);
+    // if (
+    //   custfields[0] &&
+    //   custfields[0].datatype == "ftString" &&
+    //   custfields[0].iscombo
+    // ) {
+    //   $("#customFieldDropdownListModal1").modal("toggle");
+    // }
   },
 
   // add to custom field
   "click #edtSaleCustField2": function (e) {
     $("#clickedControl").val("two");
-    let custfields = Template.instance().custfields.get();
-    if (
-      custfields[1] &&
-      custfields[1].datatype == "ftString" &&
-      custfields[1].iscombo
-    ) {
-      $("#customFieldDropdownListModal2").modal("toggle");
-    }
+    // let custfields = Template.instance().custfields.get();
+    // // console.log("custfields---", custfields);
+    // if (
+    //   custfields[1] &&
+    //   custfields[1].datatype == "ftString" &&
+    //   custfields[1].iscombo
+    // ) {
+    //   $("#customFieldDropdownListModal2").modal("toggle");
+    // }
   },
 
   // add to custom field
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
-    let custfields = Template.instance().custfields.get();
-    if (
-      custfields[2] &&
-      custfields[2].datatype == "ftString" &&
-      custfields[2].iscombo
-    ) {
-      $("#customFieldDropdownListModal3").modal("toggle");
-    }
+    // let custfields = Template.instance().custfields.get();
+    // // console.log("custfields---", custfields);
+    // if (
+    //   custfields[2] &&
+    //   custfields[2].datatype == "ftString" &&
+    //   custfields[2].iscombo
+    // ) {
+    //   $("#customFieldDropdownListModal3").modal("toggle");
+    // }
   },
 });
 
