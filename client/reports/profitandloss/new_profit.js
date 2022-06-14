@@ -500,17 +500,19 @@ Template.newprofitandloss.onRendered(function () {
     url = new URL(window.location.href);
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
-    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);  
+    templateObject.setReportOptions(0, getDateFrom, getLoadDate);  
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      currentDate2.getFullYear() +
-      "-" +
-      currentDate2.getMonth() +
-      "-" +
-      currentDate2.getDate();
-      templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+
+    // // last 2 months
+    // for (i = 0; i <= 2; i++) {
+    //   currentDate2.setMonth(currentDate2.getMonth() - 1);
+    // }
+
+    let getDateFrom =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    //console.log(getDateFrom);
+    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
 
 templateObject.getDepartments = function() {
