@@ -614,8 +614,6 @@
                                                                                             <span>{{convertAmount itemamount.roundAmt c}}</span>  
                                                                                         {{/if}}
                                                                                     </td>
-                                                                            
-                                                                                
                                                                                 
                                                                             {{/if}}
                                                                         {{/each}}
@@ -639,7 +637,7 @@
                                                     {{#if containsequals item.accounttype "Total"}}
                                                         <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
                                                             {{item.accounttype}}</td>
-                                                        <td>f</td>
+                                                        <td></td>
                                                         {{#if item.periodAmounts }}
                                                             {{#each itemamount in item.periodAmounts}}
                                                                 <td class="fgr fgrtotal text-right">
@@ -661,7 +659,7 @@
                                                             </td>
                                                         {{/if}}
                                                     {{else}}
-                                                        <td class="fgrtotal fgrtotalName">j{{item.accounttype}}</td>
+                                                        <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
                                                         <td></td>
                                                         {{#if item.periodAmounts }}
                                                             {{#each itemamount in item.periodAmounts}}
