@@ -1178,6 +1178,35 @@ Template.purchaseorderlistBO.events({
     },
     'click .printConfirm' : function(event){
 
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+        });
+        let i = basedOnTypeStorages.length;
+        if (i > 0) {
+            while (i--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+        }
+        values.forEach(value => {
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            if (reportData.BasedOnType.includes("P")) {
+                if (reportData.FormID == 1) {
+                    let formIds = reportData.FormIDs.split(',');
+                    if (formIds.includes("69")) {
+                        reportData.FormID = 69;
+                        Meteor.call('sendNormalEmail', reportData);
+                    }
+                } else {
+                    if (reportData.FormID == 69)
+                        Meteor.call('sendNormalEmail', reportData);
+                }
+            }
+        });
+
         $('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblpurchaseorderlistBO_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display','none');
@@ -1227,8 +1256,8 @@ Template.purchaseorderlistBO.events({
             window.open('/purchaseorderlistBO','_self');
         });
 
-        sideBarService.getAllPurchaseOrderListAll(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
-            addVS1Data('TbillReport',JSON.stringify(data)).then(function (datareturn) {
+        sideBarService.getAllPurchasesList(prevMonth11Date,toDate, false,initialReportLoad,0).then(function(data) {
+            addVS1Data('TPurchasesList',JSON.stringify(data)).then(function (datareturn) {
 
             }).catch(function (err) {
 

@@ -7,15 +7,12 @@ import { ProductService } from "../../product/product-service";
 import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout";
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields";
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
-import { TaxRateService } from "../../settings/settings-service";
-import { isInt } from "@fullcalendar/core";
 // import jqueryScrollable from "../../js/jquery-sortable"
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
-const defaultPeriod = 2;
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -26,9 +23,6 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
-  templateObject.currencyList = new ReactiveVar([]);
-  templateObject.activeCurrencyList = new ReactiveVar([]);
-  templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 function formatFields(fields, searchkey) {
@@ -59,7 +53,6 @@ function buildPositions() {
 
 Template.newprofitandloss.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
-  let taxRateService = new TaxRateService();
   const templateObject = Template.instance();
   const deptrecords = [];
 
@@ -570,24 +563,17 @@ Template.newprofitandloss.onRendered(function () {
     url = new URL(window.location.href);
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
-    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+    templateObject.setReportOptions(0, getDateFrom, getLoadDate);
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-
-    // // last 2 months
-    // for (i = 0; i <= 2; i++) {
-    //   currentDate2.setMonth(currentDate2.getMonth() - 1);
-    // }
-
     let getDateFrom =
       currentDate2.getFullYear() +
       "-" +
       currentDate2.getMonth() +
       "-" +
       currentDate2.getDate();
-
-    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
+    templateObject.setReportOptions(0, getDateFrom, getLoadDate);
   }
 
   templateObject.getDepartments = function () {
@@ -694,44 +680,67 @@ Template.newprofitandloss.onRendered(function () {
           subAccounts: subAccounts,
         });
       });
-      console.log(newprofitLossLayouts);
+      // console.log( newprofitLossLayouts );
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
       // handle Dragging and sorting
       setTimeout(function () {
         // console.log('chdsdsdsdal sdsdsd');
         var oldContainer;
+        var mainHeading = $(".mainHeadingDiv");
+        var dragHeadingItems = $(".childInner, .mainHeadingDiv");
         $("ol.nested_with_switch").sortable({
           group: "nested_with_switch",
           containment: "parent",
           nested: true,
           exclude: ".noDrag",
-          onDrag: function ($item, position, _super, event) {
-            $item
-              .parents(".vertical")
-              .find(".selected")
-              .removeClass("selected");
-            $item.parents(".vertical").find(".selected").removeClass("dragged");
-            $item.addClass("selected");
+
+          // onMousedown: function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected');
+          //   $item.addClass('selected');
+          // },
+          // onDrag: function ($item, position, _super, event) {
+          //   $item.parents('.vertical').find('.selected').removeClass('selected');
+          //   $item.parents('.vertical').find('.selected').removeClass('dragged');
+          //   $item.addClass('selected');
+
+          // },
+          onDrop: function ($item) {
+            if ($item.parents().hasClass("groupedListNew")) {
+              // $item.parents('.dragged').removeClass('dragged');
+            } else {
+              $item.find(".mainHeadingDiv").removeClass("collapsTogls");
+              console.log($item.find(".mainHeadingDiv").html());
+              // mainHeading.removeClass('collapsTogls');
+            }
+
+            $item.removeClass("dragged");
           },
+          // onDragStart:
+          // function ($item, container, _super, event) {
+          //   $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+          //   $("body").removeClass(container.group.options.bodyClass)
+          // },
           // onDrop:function ($item, position, _super, event) {
           //   $item.parents('.vertical').find('.selected').removeClass('selected, dragged');
           //   $item.addClass('selected');
           // },
-          serialize: function ($parent, $children, parentIsContainer) {
-            var result = $.extend({}, $parent.data());
-            if (parentIsContainer) return [$children];
-            else if ($children[0]) {
-              result.children = $children;
-            }
-          },
-          isValidTarget: function ($item, container) {
-            if (container.el.hasClass("noDrag")) {
-              return false;
-            } else {
-              return true;
-            }
-          },
+          // serialize: function ($parent, $children, parentIsContainer) {
+          //   var result = $.extend({}, $parent.data())
+          //     if(parentIsContainer)
+          //     return [$children]
+          //     else if ($children[0]){
+          //     result.children = $children
+          //   }
+          // },
+          // isValidTarget: function($item, container) {
+          //   if (container.el.hasClass("noDrag")) {
+          //     return false;
+          //   } else {
+          //     return true;
+          //   }
+          // },
+
           afterMove: function (placeholder, container) {
             if (oldContainer != container) {
               if (oldContainer) oldContainer.el.removeClass("active");
@@ -756,6 +765,20 @@ Template.newprofitandloss.onRendered(function () {
         $(".collepsDiv").click(function () {
           $(this).parents(".mainHeadingDiv").toggleClass("collapsTogls");
         });
+        $(".childInner, .mainHeadingDiv").mousedown(function () {
+          $(this)
+            .parents(".vertical")
+            .find(".selected")
+            .removeClass("selected");
+          $(this).parents(".vertical").find(".selected").removeClass("dragged");
+          $(this).parent().addClass("selected");
+        });
+
+        // $(this).mouseup(function(){
+        //   $(this).parents('.vertical').find('.selected').removeClass('selected');
+        //   $(this).parents('.vertical').find('.selected').removeClass('dragged');
+        //   $(this).parent().addClass('selected');
+        // });
         // $('.subChild, .mainHeading').mouseout(function(){
         //   $('.subChild, .mainHeading').removeClass('selected');
         // });
@@ -823,394 +846,9 @@ $('.tblAvoid').each(function(){
   //                });
   //            };
   //            sortArray(eLayScreenArr, pnlTblArr);
-
-  /**
-   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
-   * So we have a showable list of currencies to toggle
-   */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "-",
-          symbol: data[i].CurrencySymbol || "-",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "-",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Currency == "AUD" ? true : false, // By default if AUD then true
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
-
-        _currencyList.push(dataList);
-        //}
-      }
-
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-    });
-
-  templateObject.loadCurrency();
-
-  let toggledCurrency = [];
-
-  /**
-   * Step 2 : We need to get the currency history so we can then calculate the amount earned for a date range
-   * The last day of the range will be used from the history
-   */
-
-  templateInstance.loadCurrencyHistory = function () {
-    taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        // console.log(result);
-        const data = result.tcurrencyratehistory;
-        // console.log(data);
-        let lineItems = [];
-        let lineItemObj = {};
-        for (let i = 0; i < data.length; i++) {
-          // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-          var dataList = {
-            id: data[i].Id || "",
-            code: data[i].Code || "-",
-            currency: data[i].Currency || "-",
-            symbol: data[i].CurrencySymbol || "-",
-            buyrate: data[i].BuyRate || "-",
-            sellrate: data[i].SellRate || "-",
-            country: data[i].Country || "-",
-            description: data[i].CurrencyDesc || "-",
-            ratelastmodified: data[i].RateLastModified || "-",
-            createdAt: new Date(data[i].MsTimeStamp) || "-",
-            formatedCreatedAt: formatDateToString(
-              new Date(data[i].MsTimeStamp)
-            ),
-          };
-
-          dataTableList.push(dataList);
-          //}
-        }
-        // console.log(dataTableList);
-
-        if (urlParams.get("currency")) {
-          // Filter by currency
-          dataTableList = dataTableList.filter((value, index) => {
-            //console.log(value);
-            return value.code == urlParams.get("currency");
-          });
-        }
-
-        if (urlParams.get("dateFrom") && urlParams.get("dateTo")) {
-          // console.log(begunDate);
-          const _dateFrom = formatDateFromUrl(begunDate);
-          const _dateTo = formatDateFromUrl(fromDate);
-          // console.log(_dateFrom);
-          // console.log(_dateTo);
-
-          dataTableList = dataTableList.filter((value, index) => {
-            if (_dateFrom > value.createdAt && _dateTo < value.createdAt) {
-              return true;
-            }
-            return false;
-          });
-        }
-
-        // Sort by created at
-        dataTableList = dataTableList.sort(sortById);
-        dataTableList.reverse();
-
-        templateInstance.tcurrencyratehistory.set(dataTableList);
-
-        if (templateInstance.tcurrencyratehistory.get()) {
-          Meteor.call(
-            "readPrefMethod",
-            Session.get("mycloudLogonID"),
-            "currencyLists",
-            function (error, result) {
-              if (error) {
-              } else {
-                if (result) {
-                  for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(
-                      / /g,
-                      "."
-                    );
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split(".")[1];
-                    let columnWidth = customcolumn[i].width;
-                    let columnindex = customcolumn[i].index + 1;
-
-                    if (hiddenColumn == true) {
-                      $("." + columnClass + "").addClass("hiddenColumn");
-                      $("." + columnClass + "").removeClass("showColumn");
-                    } else if (hiddenColumn == false) {
-                      $("." + columnClass + "").removeClass("hiddenColumn");
-                      $("." + columnClass + "").addClass("showColumn");
-                    }
-                  }
-                }
-              }
-            }
-          );
-
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        }
-
-        $(".fullScreenSpin").css("display", "none");
-        setTimeout(function () {
-          $("#currencyLists")
-            .DataTable({
-              columnDefs: [
-                { type: "date", targets: 0 },
-                { orderable: false, targets: -1 },
-              ],
-              sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-              buttons: [
-                {
-                  extend: "excelHtml5",
-                  text: "",
-                  download: "open",
-                  className: "btntabletocsv hiddenColumn",
-                  filename: "currencylist_" + moment().format(),
-                  orientation: "portrait",
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-                {
-                  extend: "print",
-                  download: "open",
-                  className: "btntabletopdf hiddenColumn",
-                  text: "",
-                  title: "Currency List",
-                  filename: "currencylist_" + moment().format(),
-                  exportOptions: {
-                    columns: ":visible",
-                  },
-                },
-              ],
-              select: true,
-              destroy: true,
-              colReorder: true,
-              colReorder: {
-                fixedColumnsRight: 1,
-              },
-              // bStateSave: true,
-              // rowId: 0,
-              paging: true,
-              //                    "scrollY": "400px",
-              //                    "scrollCollapse": true,
-              info: true,
-              responsive: true,
-              order: [[0, "desc"]],
-              action: function () {
-                $("#currencyLists").DataTable().ajax.reload();
-              },
-              fnDrawCallback: function (oSettings) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              },
-            })
-            .on("page", function () {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-              let draftRecord = templateInstance.tcurrencyratehistory.get();
-              templateInstance.tcurrencyratehistory.set(draftRecord);
-            })
-            .on("column-reorder", function () {})
-            .on("length.dt", function (e, settings, len) {
-              setTimeout(function () {
-                MakeNegative();
-              }, 100);
-            });
-
-          // $('#currencyLists').DataTable().column( 0 ).visible( true );
-          $(".fullScreenSpin").css("display", "none");
-        }, 0);
-
-        var columns = $("#currencyLists th");
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-          if (v.hidden == false) {
-            columVisible = true;
-          }
-          if (v.className.includes("hiddenColumn")) {
-            columVisible = false;
-          }
-          sWidth = v.style.width.replace("px", "");
-
-          let datatablerecordObj = {
-            sTitle: v.innerText || "",
-            sWidth: sWidth || "",
-            sIndex: v.cellIndex || "",
-            sVisible: columVisible || false,
-            sClass: v.className || "",
-          };
-          tableHeaderList.push(datatablerecordObj);
-        });
-        templateInstance.tableheaderrecords.set(tableHeaderList);
-        $("div.dataTables_filter input").addClass(
-          "form-control form-control-sm"
-        );
-      })
-      .catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
-        // Meteor._reload.reload();
-      });
-  };
-
-  templateInstance.loadCurrencyHistory();
-
-  /**
-   * Step 3 : We need
-   */
 });
 
-/**
- *
- * @param {string} currencyCode
- * @returns {Boolean}
- */
-function isCurrencyActive(currencyCode) {
-  let currencySelected = $(".currency-selector-js:checked");
-
-  $.each(currencySelected, (i, element) => {
-    //console.log($(element).attr("currency"), "=", currencyCode, $(element).attr("currency") == currencyCode);
-    if ($(element).attr("currency") == currencyCode) {
-      return true;
-    }
-  });
-  return false;
-}
-
-function otherCurrency(currencyCode, rate, amount) {
-  return {
-    currency: currencyCode,
-    amount: rate * amount,
-  };
-}
-
-function buildCurrencyList(currencies, amount) {
-  let _amounts = [];
-
-  currencies.forEach((currency, i) => {
-    _amounts.push(otherCurrency(currency.currency));
-  });
-}
-
-/**
- *
- * This will return one single currency row for the table
- *
- * @param {string} currencyCode
- * @param {float} rate
- * @param {float} mainAmount
- * @returns {{currencyCode: string, amount: float}}
- */
-function getSingleCurrencyRow(currencyCode, rate, mainAmount) {
-  return {
-    currencyCode: currencyCode,
-    amount: rate * mainAmount,
-  };
-}
-
 Template.newprofitandloss.events({
-  "change input[type='checkbox']": (event) => {
-    // This should be global
-    $(event.currentTarget).attr(
-      "checked",
-      $(event.currentTarget).prop("checked")
-    );
-  },
-  "click .currency-modal-save": (e) => {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let templateObject = Template.instance();
-
-    // Get all currency list
-    let _currencyList = templateObject.currencyList.get();
-
-    // Get all selected currencies
-    const currencySelected = $(".currency-selector-js:checked");
-    let _currencySelectedList = [];
-    $.each(currencySelected, (index, e) => {
-      const sellRate = $(e).attr("sell-rate");
-      const buyRate = $(e).attr("buy-rate");
-      const currencyCode = $(e).attr("currency");
-      const currencyId = $(e).attr("currency-id");
-      let _currency = _currencyList.find((c) => c.id == currencyId);
-      _currency.active = true;
-      _currencySelectedList.push(_currency);
-    });
-    console.log("Selected currency list", _currencySelectedList);
-
-    _currencyList.forEach((value, index) => {
-      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
-        _currencyList[index].active = _currencySelectedList.find(
-          (c) => c.id == _currencyList[index].id
-        ).active;
-      } else {
-        _currencyList[index].active = false;
-      }
-    });
-
-    _currencyList = _currencyList.sort((a, b) => {
-      if (a.currency == "AUD") {
-        return -1;
-      }
-      return 1;
-    });
-
-    // templateObject.activeCurrencyList.set(_activeCurrencyList);
-    templateObject.currencyList.set(_currencyList);
-    $(".fullScreenSpin").css("display", "none");
-  },
-  // "change .currency-selector-js": (e) => {
-  //   //console.log($(e.currentTarget));
-  //   //toggleAttribute(e);
-  //   let templateObject = Template.instance();
-  //   const sellRate = $(e.currentTarget).attr("sell-rate");
-  //   const buyRate = $(e.currentTarget).attr("buy-rate");
-  //   const currencyCode = $(e.currentTarget).attr("currency");
-
-  //   let currencySelected = $(".currency-selector-js:checked");
-  //   let _currencyList = templateObject.currencyList.get();
-
-  //   _currencyList.forEach((currencydata, index) => {
-  //     if (isCurrencyActive(currencyCode) == true) {
-  //       _currencyList[index].active = true;
-  //     } else {
-  //       _currencyList[index].active = false;
-  //     }
-  //   });
-
-  //   templateObject.currencyList.set(_currencyList);
-
-  //   console.log(_currencyList);
-  //   console.log(currencySelected);
-  //   console.log("buy rate", buyRate);
-  //   console.log("sell rate", sellRate);
-  // },
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -1269,7 +907,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    templateObject.setReportOptions(2, dateFrom, dateTo);
+    templateObject.setReportOptions(0, dateFrom, dateTo);
   },
 
   "click .btnRefresh": function () {
@@ -1278,6 +916,40 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
+    let values = [];
+    let basedOnTypeStorages = Object.keys(localStorage);
+    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+      let employeeId = storage.split("_")[2];
+      return (
+        storage.includes("BasedOnType_") &&
+        employeeId == Session.get("mySessionEmployeeLoggedID")
+      );
+    });
+    let i = basedOnTypeStorages.length;
+    if (i > 0) {
+      while (i--) {
+        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+      }
+    }
+    values.forEach((value) => {
+      let reportData = JSON.parse(value);
+      reportData.HostURL = $(location).attr("protocal")
+        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+        : "http://" + $(location).attr("hostname");
+      if (reportData.BasedOnType.includes("P")) {
+        if (reportData.FormID == 1) {
+          let formIds = reportData.FormIDs.split(",");
+          if (formIds.includes("129")) {
+            reportData.FormID = 129;
+            Meteor.call("sendNormalEmail", reportData);
+          }
+        } else {
+          if (reportData.FormID == 129)
+            Meteor.call("sendNormalEmail", reportData);
+        }
+      }
+    });
+
     document.title = "Profit and Loss Report";
     $(".printReport").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
@@ -1363,7 +1035,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("month").format("YYYY-MM-DD");
     let endDate = moment().endOf("month").format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #thisQuarter": function () {
@@ -1371,7 +1043,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().endOf("Q").format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #thisFinYear": function () {
@@ -1394,7 +1066,7 @@ Template.newprofitandloss.events({
         .format("YYYY-MM-DD");
       endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #lastMonth": function () {
@@ -1408,7 +1080,7 @@ Template.newprofitandloss.events({
       .subtract(1, "months")
       .endOf("month")
       .format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #lastQuarter": function () {
@@ -1416,7 +1088,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #lastFinYear": function () {
@@ -1443,7 +1115,7 @@ Template.newprofitandloss.events({
         .endOf("month")
         .format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #monthToDate": function () {
@@ -1451,7 +1123,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("M").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #quarterToDate": function () {
@@ -1459,7 +1131,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #finYearToDate": function () {
@@ -1470,7 +1142,7 @@ Template.newprofitandloss.events({
       .startOf("month")
       .format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate);
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click .btnDepartmentSelect": async function () {
@@ -2374,35 +2046,6 @@ Template.newprofitandloss.events({
 });
 
 Template.newprofitandloss.helpers({
-  convertAmount: (amount = 0.0, currencyData) => {
-    console.log(amount);
-    amount = isNaN(amount) ? 0.00 : Number.isInteger(amount) ? amount : amount.substring(1);
-    console.log(amount);
-    console.log(currencyData);
-    if (currencyData.currency == "AUD") {
-      return amount;
-    }
-    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
-    const d = $("#dateTo").val();
-    console.log(d);
-
-    let rate = currencyData.buyrate; // Must used from tcurrecyhistory
-    let convertedAmount = `${currencyData.symbol} ${amount * rate}`;
-    console.log(convertedAmount);
-
-    return convertedAmount;
-  },
-  count: (array) => {
-    return array.length;
-  },
-  countActive: (array) => {
-    let activeArray = array.filter((c) => c.active == true);
-    return activeArray.length;
-  },
-  currencyList: () => {
-    return Template.instance().currencyList.get();
-  },
   isAccount(layout) {
     if (layout.AccountID > 1) {
       return true;
@@ -2455,10 +2098,6 @@ Template.newprofitandloss.helpers({
         return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       });
   },
-});
-
-Template.registerHelper("count", function (array) {
-  return array.length;
 });
 
 Template.registerHelper("equals", function (a, b) {

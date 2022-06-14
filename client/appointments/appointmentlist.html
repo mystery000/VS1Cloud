@@ -302,23 +302,20 @@
                                 </tr>
                             </thead>
                             <tbody>
+                              <!--
                                 {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                     <td>
-                                        <!--<input class="notevent chkBox pointer" type="checkbox" id="{{item.id}}" name="{{item.id}}">-->
-
                                         <div class="custom-control custom-checkbox pointer" style="width:15px;">
                                             <input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-{{item.id}}" name="{{item.id}}">
                                             <label class="custom-control-label" for="f-{{item.id}}"></label>
                                         </div>
                                     </td>
-                                    <!-- <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td> -->
                                     <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
                                     <td contenteditable="false" class="colID">
                                         {{item.id}}</td>
-                                    <td contenteditable="false" class="colDate"><span
-                                                                                      style="display:none;">{{item.sortdate}}</span>{{item.appointmentdate}}</td>
+                                    <td contenteditable="false" class="colDate"><span style="display:none;">{{item.sortdate}}</span>{{item.appointmentdate}}</td>
                                     <td contenteditable="false" class="colAccountName" id="colAccountName{{item.id}}">
                                         {{item.accountname}}</td>
                                     <td contenteditable="false" class="colStatementNo">{{item.statementno}}</td>
@@ -346,6 +343,7 @@
                                 </tr>
                                 {{/each}}
                                 {{/if}}
+                          -->
                             </tbody>
                         </table>
 

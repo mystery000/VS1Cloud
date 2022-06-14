@@ -146,17 +146,21 @@
                 border-top: 1px solid #e3e6f0 !important;
                 border-top: unset;
             }
+
             .customProfitLossTable .table-sm td.fgrSubtotal,
             .customProfitLossTable .table-sm td.fgrtotal {
                 font-weight: 800 !important;
                 color: #858796;
             }
-            .customProfitLossTable .table-sm td, .customProfitLossTable .table-sm th {
+
+            .customProfitLossTable .table-sm td,
+            .customProfitLossTable .table-sm th {
                 padding: 7px 15px !important;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
                 color: #858796;
             }
+
             .pnlTable td {
                 border-top: unset;
             }
@@ -165,26 +169,31 @@
                 display: inline-flex;
                 width: 100%;
                 padding: 5px 10px;
-                border-top: 1px solid rgba(0,0,0,0.1);
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
                 align-items: center;
                 margin: 0px !important;
             }
+
             .customCheckBox label {
                 margin: 0px;
                 display: inline-flex;
                 width: 100%;
                 align-items: center;
             }
+
             .customCheckBox label input {
                 margin-right: 6px
             }
+
             .customCheckBox:first-child {
                 border: none !important;
             }
+
             .customSortableDiv {
                 display: inline-block;
                 width: 100%;
             }
+
             .customSortableDiv h1 {
                 display: inline-block;
                 width: 100%;
@@ -194,9 +203,10 @@
                 font-weight: 800;
                 background: whitesmoke;
                 padding: 7px 10px;
-                border: 1px solid rgba(0,0,0,0.1);
+                border: 1px solid rgba(0, 0, 0, 0.1);
                 cursor: move;
             }
+
             .customSortableDiv h2 {
                 display: inline-block;
                 width: calc(100% - 30px);
@@ -207,8 +217,9 @@
                 font-weight: 800;
                 background: whitesmoke;
                 padding: 7px 10px;
-                border: 1px solid rgba(0,0,0,0.1);
+                border: 1px solid rgba(0, 0, 0, 0.1);
             }
+
             .customSortableDiv h3 {
                 display: inline-block;
                 width: calc(100% - 30px);
@@ -219,8 +230,9 @@
                 font-weight: 800;
                 background: whitesmoke;
                 padding: 7px 10px;
-                border: 1px solid rgba(0,0,0,0.1);
+                border: 1px solid rgba(0, 0, 0, 0.1);
             }
+
             .customSortableDiv p {
                 display: inline-block;
                 margin: 0 0 0 30px;
@@ -229,139 +241,166 @@
                 font-weight: 400;
                 background: whitesmoke;
                 padding: 7px 10px;
-                border: 1px solid rgba(0,0,0,0.1);
+                border: 1px solid rgba(0, 0, 0, 0.1);
                 cursor: move;
             }
-            
+
             .customSortableDiv p.g0 {
                 width: calc(100% - 30px);
                 margin-left: 30px !important;
             }
+
             .customSortableDiv p.g1 {
                 width: calc(100% - 60px);
                 margin-left: 60px !important;
             }
+
             .customSortableDiv p.g2 {
                 width: calc(100% - 90px);
                 margin-left: 90px !important;
             }
-            .disableCursor{
+
+            .disableCursor {
                 pointer-events: none;
                 cursor: not-allowed !important;
             }
+
             .item-placeholder {
                 background: #ccc;
-                float:  left;
+                float: left;
                 border-style: dashed;
                 border-width: 1px;
-                border-color: rgba(0,0,0,0.3);
+                border-color: rgba(0, 0, 0, 0.3);
                 min-height: 38px;
                 width: calc(100% - 30px);
                 margin-left: 30px;
             }
+
             .movable-placeholder {
                 background: #e8e8e8;
                 width: 100%;
-                float:  left;
+                float: left;
                 border-style: dashed;
                 border-width: 1px;
-                border-color: rgba(0,0,0,0.3);
+                border-color: rgba(0, 0, 0, 0.3);
                 height: 38px !important;
                 max-height: unset !important;
                 min-height: unset !important;
             }
+
             .ui-sortable-helper.setParentPosition {
                 height: 38px !important;
                 overflow: hidden;
             }
-            .ui-sortable-helper.setParentPosition .group-items.ui-sortable{
+
+            .ui-sortable-helper.setParentPosition .group-items.ui-sortable {
                 display: none !important;
-            } 
+            }
         </style>
-        <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3"
-            style="width: 100%;">
-            <div class="col-auto col-10">
-                <div class="card shadow flex-grow-1 mb-3"
-                    style="margin-top: 16px;margin-right: 16px;margin-left: 16px;">
+        <!-- <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
+            <div class="col-auto col-10"> -->
+        <div class="row no-gutters justify-content-center" style="padding: 32px;">
+            <div class="col-12 col-md-8">
+                <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
                         <p class="text-primary m-0 font-weight-bold">Profit and Loss</p>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-5" style="padding-top: 32px;">
-                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Update</button>
-                                
-                                <div class="dropdown btnNav periodSelector float-left scnd" style="margin: 8px;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        More
-                                    </button>
-                                    <div class="dropdown-menu accountingBasisDropdown"
-                                        aria-labelledby="dropdownMenuButton" style="width: 250px;">
-                                        <span>Accounting basis</span>
-                                        <br />
-                                        <div class="form-check form-check-inline" style="margin-top: 8px;">
-                                            <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
-                                            <label class="form-check-label" for="mddItem1">Accrual</label>
+
+                                <div class="row no-gutters">
+                                    <button class="btn btn-primary text-nowrap btnRefresh" type="button"
+                                        style="margin: 8px;"><i class="la la-lightbulb-o"
+                                            style="margin-right: 5px;"></i>Refresh</button>
+
+                                    <div class="dropdown periodSelector scnd" style="margin: 8px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">More </button>
+                                        <div class="dropdown-menu accountingBasisDropdown"
+                                            aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                            <span>Accounting basis</span>
+                                            <br />
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbAccrual" type="radio" name="radio"
+                                                    id="mddItem1" value="accrual">
+                                                <label class="form-check-label" for="mddItem1">Accrual</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="margin-top: 8px;">
+                                                <input class="form-check-input rbCash" type="radio" name="radio"
+                                                    id="mddItem2" value="cash">
+                                                <label class="form-check-label" for="mddItem2">Cash</label>
+                                            </div>
+                                            <hr class="periodSelectorLine"
+                                                style="margin-top: 8px; margin-bottom: 8px;" />
+                                            <span>Show</span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkAccBasis"
+                                                    id="mddItem3" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem3">Accounting
+                                                    basis</label>
+                                            </span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkAccCodes"
+                                                    id="mddItem4" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem4">Account codes</label>
+                                            </span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkDecimals"
+                                                    checked="" id="mddItem5" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem5">Decimals</label>
+                                            </span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkPercIncome"
+                                                    checked="" id="mddItem6" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem6">Percentage of trading
+                                                    income</label>
+                                            </span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" checked class="custom-control-input chkTotal"
+                                                    id="mddItem7" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem7">Total</label>
+                                            </span>
+                                            <span class="dropdown-item custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input chkYTDate"
+                                                    id="mddItem8" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem8">Year to date</label>
+                                            </span>
                                         </div>
-                                        <div class="form-check form-check-inline" style="margin-top: 8px;">
-                                            <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
-                                            <label class="form-check-label" for="mddItem2">Cash</label>
+                                    </div>
+
+                                    <button class="btn btn-primary" role="button" data-toggle="modal"
+                                        data-target="#myModalFXRates" style="margin: 8px;"><i
+                                            class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX
+                                        Rates</button>
+                                </div>
+                                <div class="row no-gutters">
+                                    <div class="dropdown periodSelector" style="margin: 8px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">Comparison Period</button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item nonePeriod selPeriod" data-period="0"
+                                                role="presentation" href="#">None</a>
+                                            <hr class="periodSelectorLine" />
+                                            <a class="dropdown-item onePeriod selPeriod" data-period="1"
+                                                role="presentation" href="#">1 Period</a>
+                                            <a class="dropdown-item twoPeriods selPeriod" data-period="2"
+                                                role="presentation" href="#">2 Periods</a>
+                                            <a class="dropdown-item threePeriods selPeriod" data-period="3"
+                                                role="presentation" href="#">3 Periods</a>
+                                            <a class="dropdown-item fourPeriods selPeriod" data-period="4"
+                                                role="presentation" href="#">4 Periods</a>
+                                            <hr class="periodSelectorLine" />
+                                            <a class="dropdown-item PSother pointer" style="color:#3a3b45;"
+                                                data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
                                         </div>
-                                        <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;" />
-                                        <span>Show</span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem3">Accounting basis</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input chkAccCodes" id="mddItem4" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem4">Account codes</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input chkDecimals" checked="" id="mddItem5" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem5">Decimals</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input chkPercIncome" checked="" id="mddItem6" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem6">Percentage of trading
-                                                income</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" checked class="custom-control-input chkTotal" id="mddItem7" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem7">Total</label>
-                                        </span>
-                                        <span class="dropdown-item custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input chkYTDate" id="mddItem8" name="checkbox">
-                                            <label class="custom-control-label" for="mddItem8">Year to date</label>
-                                        </span>
                                     </div>
-                                </div>
-                                
-                                <div class="dropdown float-left" style="margin: 8px;">
-                                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalFXRates">FX Rates</a>
-                                </div>
-                                <div class="dropdown btnNav periodSelector float-left" style="margin: 8px;">
-                                    <button class="btn btn-primary dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        Comparison Period
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item nonePeriod selPeriod" data-period="0" role="presentation" href="#">None</a>
-                                        <hr class="periodSelectorLine" />
-                                        <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Period</a>
-                                        <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Periods</a>
-                                        <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Periods</a>
-                                        <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Periods</a>
-                                        <hr class="periodSelectorLine" />
-                                        <a class="dropdown-item PSother pointer" style="color:#3a3b45;"
-                                            data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
-                                    </div>
-                                </div>
-                                <div class="dropdown float-left" style="margin: 8px;">
-                                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
+
+                                    <button class="btn btn-primary" role="button" data-toggle="modal"
+                                        data-target="#myModalDepartment" style="margin: 8px;"><i
+                                            class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
                                 </div>
 
                             </div>
@@ -371,174 +410,120 @@
                                         margin: 0 auto !important;
                                     }
                                 </style>
-                                <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
+                                <img class="imageUpload img-fluid" id="uploadedImage" style="margin-top: 32px;"
+                                    src="assets/img/VS1.png">
                             </div>
                             <div class="col-12 col-md-5">
-                                <div class="form-group float-right" style="margin: 8px;">
-                                    <label>To</label>
-                                    <div class="input-group date" style="width: 145px;">
-                                        <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo" value="{{ formatDate reportOptions.toDate }}">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
+                                <div class="row no-gutters justify-content-end">
+
+                                    <div class="form-group"
+                                        style="margin: 8px; display: inline-flex; margin-top: 40px;">
+                                        <input type="text" class="form-control" id="selectedDateRange"
+                                            aria-describedby="basic-addon2"
+                                            style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;"
+                                            readonly>
+                                        <div class="input-group-append">
+                                            <button type=" button" class="btn btn-link dropdown-toggle"
+                                                id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                            <style>
+                                                .dropdown-toggle::after {
+                                                    display: none;
+                                                }
+                                            </style>
+                                            <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisMonth">This month
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrMonth"></div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">This
+                                                    quarter
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrQuarter">
+                                                    </div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">This
+                                                    financial year
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrFiscYear"></div>
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastMonth">Last month
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispPrevMonth"></div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">Last
+                                                    quarter
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispLastQuarter"></div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">Last
+                                                    financial year
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispPrevFiscYear"></div>
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">Month to
+                                                    date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="monthStartDisp"></div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">Quarter
+                                                    to date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="quarterToDateDisp"></div>
+                                                </a>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">Year to
+                                                    date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrFiscYearToDate"></div>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group float-right" style="margin: 8px;">
-                                    <label>From</label>
-                                    <div class="input-group date" style="width: 145px;">
-                                        <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>From</label>
+                                        <div class="input-group date" style="width: 145px;">
+                                            <input type="text" class="form-control edtReportDates" id="dateFrom"
+                                                name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <style>
-                                    .selectedDateRangeBtnMod {
-                                        border-top-left-radius: 0px !important;
-                                        border-bottom-left-radius: 0px !important;
-                                    }
-                                </style>
-                                <div class="form-group float-right"
-                                    style="margin: 16px; display: inline-flex; margin-top: 40px;">
-                                    <input type="text" class="form-control" id="selectedDateRange"
-                                        aria-describedby="basic-addon2"
-                                        style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;"
-                                        readonly>
-                                    <div class="input-group-append">
-                                        <button type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
-                                                class="fas fa-ellipsis-v"></i></button>
-                                        <style>
-                                            .dropdown-toggle::after {
-                                                display: none;
-                                            }
-                                        </style>
-                                        <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="thisMonth">This month
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispCurrMonth"></div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;" 
-                                                id="thisQuarter">This quarter
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispCurrQuarter">
-                                                </div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="thisFinYear">This financial year
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispCurrFiscYear"></div>
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="lastMonth">Last month
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispPrevMonth"></div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="lastQuarter">Last quarter
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispLastQuarter"></div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="lastFinYear">Last financial year
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispPrevFiscYear"></div>
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="monthToDate">Month to date
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="monthStartDisp"></div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="quarterToDate">Quarter to date
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="quarterToDateDisp"></div>
-                                            </a>
-                                            <a class="dropdown-item mnuDateRng" href="#" style="width: ;"
-                                                id="finYearToDate">Year to date
-                                                <div class="float-right"
-                                                    style="width: 50%; text-align: end; color: #858796;"
-                                                    id="dispCurrFiscYearToDate"></div>
-                                            </a>
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>To</label>
+                                        <div class="input-group date" style="width: 145px;">
+                                            <input type="text" class="form-control edtReportDates" id="dateTo"
+                                                name="dateTo" value="{{ formatDate reportOptions.toDate }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- <div class="btn-group float-right" style="margin: 16px; margin-top: 48px;">
-                                    <button type=" button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                     <style>
-                                        .dropdown-toggle::after {
-                                            display: none;
+                                        .selectedDateRangeBtnMod {
+                                            border-top-left-radius: 0px !important;
+                                            border-bottom-left-radius: 0px !important;
                                         }
                                     </style>
-                                    <div class="dropdown-menu" style="width: 350px;">
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">This month
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">Jan 2022</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">This quarter
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jan - 31 Mar 2022</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">This financial year
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jul 2021 - 30 Jun 2022</div>
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Last month
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">Dec 2021</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Last quarter
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Oct - 31 Dec 2021</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Last financial year
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jul 2020 - 30 Jun 2021</div>
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Month to date
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jan - 26 Jan 2022</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Quarter to date
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jan - 26 Jan 2022</div>
-                                        </a>
-                                        <a class="dropdown-item" href="#" style="width: ;" id="">Year to date
-                                            <div class="float-right" style="width: 50%; text-align: end; color: #858796;">1 Jul 2021 - 26 Jan 2022</div>
-                                        </a>
-                                    </div>
-                                </div> -->
-                                <!-- <div class="dropdown float-right" style="margin: 16px; margin-top: 48px;">
-                                    <style>
-                                        .dropdown-toggle::after {
-                                            display: none;
-                                        }
-                                    </style>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" title="Select Date Range"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                        <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                        <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                        <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                        <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                                    </div>
-                                </div> -->
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <button class="btn btn-primary btnPrintReport float-right" type="button"
-                                    style="margin: 8px;"><i class="fa fa-print"
-                                        style="margin-right: 5px;"></i>Print</button>
-                                <button class="btn btn-primary float-left btnExportReportProfit float-right"
-                                    type="button" style="margin: 8px;"><i class="fas fa-file-export"
-                                        style="margin-right: 5px;"></i>Export</button>
-                                
+                                </div>
+                                <div class="row no-gutters justify-content-end">
+                                    <button class="btn btn-primary btnExportReportProfit" type="button"
+                                        style="margin: 8px;"><i class="fas fa-file-export"
+                                            style="margin-right: 5px;"></i>Export</button>
+                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i
+                                            class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                                </div>
                             </div>
                         </div>
                         <div class="printReport">
@@ -559,37 +544,25 @@
                             </style>
                             <div class="row no-gutters p-1">
                                 <div class="table-responsive customProfitLossTable p-2">
-                                    <table class="table table-hover table-sm pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
+                                    <table class="table table-hover table-sm pnlTable dragTable" id="tableExport"
+                                        name="tableExport" style="display: none;">
                                         <thead class="tblAvoid">
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                <th class="text-left" rowspan="2"></th>
-                                                <th class="text-left" rowspan="2"></th>
+
+                                            <tr class="table-active tblAvoid" style="background-color: #dadada;">
+                                                <th></th>
+                                                <!-- <th></th> -->
                                                 {{#if reportOptions.threcords}}
-                                                    {{#each item in reportOptions.threcords}}
-                                                        <th  class="text-center" colspan="3">{{ item }}
-
-                                                            <tr class="table-active tblAvoid" style="display: flex; justify-content: space-evenly;">
-
-                                                                {{#if currencyList}}
-                                                                {{#each c in currencyList }}
-                                                                    {{# if c.active}}
-                                                                        <th class="text-center" colspan="{{countActive currencyList }}" active="{{ c.active }}">{{ c.currency }}</th>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                            {{/if}}
-                                                               
-                                                            
-                                                            </tr>
-                                                        </th>
-                                                    {{/each}}
+                                                {{#each item in reportOptions.threcords}}
+                                                <th class="text-right">{{ item }}</th>
+                                                {{/each}}
                                                 {{/if}}
                                                 {{#if reportOptions.showtotal}}
-                                                    <th rowspan="2" class="tglTotal text-right">Total</th>
+                                                <th class="tglTotal text-right">Total</th>
                                                 {{/if}}
                                             </tr>
-                                           
+
                                         </thead>
-                                        
+
                                         <tbody>
                                             {{#if records}}
                                             {{#each item in records}}
@@ -624,15 +597,18 @@
                                                         
                                                         {{/each}}
                                                     {{/if}}
-                                                    {{#if reportOptions.showtotal}}
-                                                        <td class="fgr fgrblue text-right tglTotal">
-                                                            {{#if reportOptions.showDecimal }}
-                                                                <span>{{item.totalamountex}}</span>                                                                                                                      
-                                                            {{else}}
-                                                                <span>{{ item.totalroundamountex }}</span>  
-                                                            {{/if}}
-                                                        </td>
+                                                </td>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{#if reportOptions.showtotal}}
+                                                <td class="fgr fgrblue text-right tglTotal">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{item.totalamountex}}</span>
+                                                    {{else}}
+                                                    <span>{{ item.totalroundamountex }}</span>
                                                     {{/if}}
+                                                </td>
+                                                {{/if}}
                                                 {{else}}
                                                     {{#if containsequals item.accounttype "Total"}}
                                                         <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
@@ -685,6 +661,19 @@
                                                         {{/if}}
                                                         <td></td>
                                                     {{/if}}
+                                                </td>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{#if reportOptions.showtotal}}
+                                                <td class="fgr fgrblue text-right tglTotal">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{item.totalamountex}}</span>
+                                                    {{else}}
+                                                    <span>{{ item.totalroundamountex }}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/if}}
+                                                {{/if}}
                                                 {{/if}}
                                             </tr>
                                             {{/each}}
@@ -899,7 +888,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <!-- <div class="dropdown btnNav nplLayoutSelector float-left" style="margin: 16px;">
+                                <!-- <div class="dropdown  nplLayoutSelector float-left" style="margin: 16px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Layout Options
                                     </button>
@@ -908,7 +897,7 @@
                                         <a class="dropdown-item" role="presentation" data-toggle="modal" href="#nplLayoutCreationScreen" onclick="$('.lytAccountToggle').removeAttr('checked'); return false;">Create New Layout</a>
                                     </div>
                                 </div> -->
-                                <!-- <div class="btn-group btnNav nplLayoutSelector" style="margin: 16px;">
+                                <!-- <div class="btn-group  nplLayoutSelector" style="margin: 16px;">
                                     <button class="btn btn-primary btnAll" type="button" data-toggle="dropdown">Layout Options</button>
                                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                                     <div class="dropdown-menu" role="menu">
@@ -916,7 +905,7 @@
                                         <a class="dropdown-item" role="presentation" data-toggle="modal" href="#nplLayoutCreationScreen" onclick="$('.lytAccountToggle').removeAttr('checked'); return false;">Create New Layout</a>
                                     </div>
                                 </div> -->
-                                <div class="btn-group btnNav nplLayoutSelector" style="margin: 16px;">
+                                <div class="btn-group  nplLayoutSelector" style="margin: 16px;">
                                     <button class="btn btn-primary text-nowrap nplLayoutEditorBtn" role="presentation"
                                         data-toggle="modal" href="#nplEditLayoutScreen" type="button">Edit
                                         Layout</button>
@@ -952,53 +941,57 @@
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     {{#each item in deptrecords}}
-                        <div class="custom-control custom-switch" style="margin: 8px;">
-                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                        </div>
+                    <div class="custom-control custom-switch" style="margin: 8px;">
+                        <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}"
+                            name="chkDepartment" value="{{item.department}}">
+                        <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                    </div>
                     {{/each}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save"
+                            style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                            style="margin-right: 8px;"></i>Close</button>
 
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
-        <style>
-            .modal-body {
-                max-height: 50vh;
-                overflow: auto;
-            }
-        </style>
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    {{#if currencyList}}
-                        {{#each c in currencyList}}
-                            <span class="dropdown-item custom-control custom-switch">
-                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.currency}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.currency}}" name="checkbox">
-                                <label class="custom-control-label" for="currency_{{c.currency}}">{{c.currency}}</label>
-                            </span>
-                        {{/each}}
-                    {{/if}}
-                 
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input aud" id="aud" name="checkbox">
+                        <label class="custom-control-label" for="aud">AUD</label>
+                    </span>
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input gbp" id="gbp" name="checkbox">
+                        <label class="custom-control-label" for="gbp">GBP</label>
+                    </span>
+                    <span class="dropdown-item custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input usd" id="usd" name="checkbox">
+                        <label class="custom-control-label" for="usd">USD</label>
+                    </span>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary currency-modal-save" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save"
+                            style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                            style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
         </div>
@@ -1468,7 +1461,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Comparison Period(s)</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
@@ -1881,25 +1875,32 @@
                                         </div>
                                     </div> -->
                                     <style>
+                                        ol {
+                                            list-style: none !important;
+                                        }
+
                                         ol.vertical {
                                             display: inline-block;
                                             width: 100%;
                                             padding: 0;
                                             background: transparent;
                                         }
+
                                         ol.vertical li {
-                                            display: inline-block;
                                             margin: 0;
                                             color: #202020;
                                             font-size: 1rem;
-                                            width: 100%;
+                                            width: 100% !important;
+                                            height: unset !important;
                                             float: left;
                                         }
+
                                         .mainHeadingDiv {
                                             float: left;
                                             width: 100%;
                                             /* position: relative; */
                                         }
+
                                         ol.vertical li h1 {
                                             padding: 0;
                                             border: 1px solid #e7e7e7;
@@ -1914,7 +1915,7 @@
                                             float: left;
                                             cursor: pointer;
                                         }
-                                       
+
                                         .selectedEffect {
                                             position: absolute;
                                             top: 0;
@@ -1924,13 +1925,16 @@
                                             opacity: 0;
                                             z-index: 1;
                                         }
+
                                         ol.vertical .subChild {
-                                            width: 100%;
+                                            width: 100% !important;
+                                            height: unset !important;
                                             float: left;
                                             /* position: relative; */
                                             cursor: pointer;
                                         }
-                                       .subChild .childInner {
+
+                                        .subChild .childInner {
                                             padding: 0;
                                             border: 1px solid #e7e7e7;
                                             background: #f3f3f3;
@@ -1943,15 +1947,19 @@
                                             align-items: center;
                                             float: left;
                                         }
-                                       .subChild .childInner strong {
-                                        color: #858796;
-                                       }
-                                       .subChild.selected.noDrag .childInner {
-                                        cursor: not-allowed !important;
-                                       }
-                                       .subChild.selected .childInner strong {
-                                           color: #fff;
-                                       }   
+
+                                        .subChild .childInner strong {
+                                            color: #858796;
+                                        }
+
+                                        .subChild.selected.noDrag .childInner {
+                                            cursor: not-allowed !important;
+                                        }
+
+                                        .subChild.selected .childInner strong {
+                                            color: #fff;
+                                        }
+
                                         ol.vertical li.placeholder {
                                             position: relative;
                                             margin: 0;
@@ -1959,18 +1967,19 @@
                                             border: none;
                                             width: 100%;
                                             display: inline-block;
-                                            height: 2px;
+                                            height: 2px !important;
                                             float: left;
                                             background: #028dde;
-                                        } 
-                                        
-                                        .selected > .childInner,
-                                        .selected > .mainHeadingDiv h1 {
+                                        }
+
+                                        .selected>.childInner,
+                                        .selected>.mainHeadingDiv h1 {
                                             background: #028dde !important;
                                             border: 1px solid #028dde !important;
                                             color: #fff !important;
                                             cursor: grab !important;
-                                        } 
+                                        }
+
                                         .subChild.dragged .childInner,
                                         /* .dragged, */
                                         ol.vertical li.dragged .childInner,
@@ -1982,10 +1991,11 @@
                                             color: #fff !important;
                                             /* position: absolute; */
                                         }
+
                                         .dragged .childInner strong {
                                             color: #fff !important;
                                         }
-                                        
+
                                         .collepsDiv {
                                             display: inline-flex;
                                             width: 32px;
@@ -1997,58 +2007,66 @@
                                             pointer-events: none !important;
                                             opacity: 0;
                                         }
+
                                         .collepsDiv::after {
                                             content: "";
                                         }
-                                        .collapsTogls > h1 .collepsDiv::after {
+
+                                        .collapsTogls>h1 .collepsDiv::after {
                                             content: "";
                                         }
-                                        .collapsTogls ~ ol.ddllkk {
+
+                                        .collapsTogls~ol.groupedListNew {
                                             display: none;
                                         }
-                                        .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv {
+
+                                        .vertical>li>ol>li .mainHeadingDiv>.mainHeading>.collepsDiv {
                                             pointer-events: unset !important;
                                             cursor: pointer;
                                             opacity: 1;
-                                        }  
+                                        }
                                     </style>
                                     {{#if profitlosslayoutrecords}}
-                                        <div class="customSortableDiv" >
+                                    <div class="customSortableDiv">
 
 
-                                            <form action="" name="" method="POST">
-                                                
-                                                <ol class='nested_with_switch vertical'>
-                                                    {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="5" data-name='Christiano Ronaldo'>
-                                                            <div class="mainHeadingDiv">
-                                                                <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
-                                                            </div>
-                                                            <ol class="ddllkk">
-                                                                {{#each acItem in item.subAccounts }}
-                                                                    {{#if isAccount acItem }}
-                                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
-                                                                            <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
-                                                                            </span>
-                                                                        </li>
-                                                                    {{else}}    
-                                                                        <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
-                                                                            <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
-                                                                            </span>
-                                                                        </li>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                            </ol>
+                                        <form action="" name="" method="POST">
+
+                                            <ol class='nested_with_switch vertical'>
+                                                {{#each item in profitlosslayoutrecords }}
+                                                <li data-id="5" class="mainList">
+                                                    <div class="mainHeadingDiv">
+                                                        <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{
+                                                            item.AccountName }}</h1>
+                                                    </div>
+                                                    <ol class="groupedListNew">
+                                                        {{#each acItem in item.subAccounts }}
+                                                        {{#if isAccount acItem }}
+                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
+                                                            <span class="childInner">
+                                                                <span class="collepsDiv fas"></span>{{
+                                                                acItem.AccountName }}
+                                                            </span>
                                                         </li>
-                                                    {{/each}}
-                                                </ol>
+                                                        {{else}}
+                                                        <li class="subChild noDrag" data-id="1-2"
+                                                            data-name='David Beckham'>
+                                                            <span class="childInner">
+                                                                <span class="collepsDiv fas"></span><strong>{{
+                                                                    acItem.AccountName }}</strong>
+                                                            </span>
+                                                        </li>
+                                                        {{/if}}
+                                                        {{/each}}
+                                                    </ol>
+                                                </li>
+                                                {{/each}}
+                                            </ol>
 
-                                            </form>
+                                        </form>
 
 
-                                            <!-- <div class="sortableAccount">
+                                        <!-- <div class="sortableAccount">
                                                 {{#each item in profitlosslayoutrecords }}
                                                     <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
                                                         <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
@@ -2056,7 +2074,7 @@
                                                             {{#each acItem in item.subAccounts }}
                                                                 {{#if acItem.AccountID }}
                                                                     <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
-                                                                {{else}}    
+                                                                {{else}}
                                                                     <h2 class="handel sortItem disableCursor" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h2>
                                                                 {{/if}}
                                                             {{/each}}
@@ -2064,23 +2082,26 @@
                                                     </div>
                                                 {{/each}}
                                             </div>  -->
-                                        </div>
+                                    </div>
                                     {{/if}}
                                     {{#if recordslayout}}
                                     {{#each arrayify recordslayout}}
-                                    <div class="sortableAccount" >
+                                    <div class="sortableAccount">
                                         <i account-type="{{ value.item.accounttype }}"></i>
                                         {{#each item in value}}
                                         {{#if notEquals item.accounttype ""}}
 
                                         {{#if containsequals item.accounttype "Total"}}
-                                        <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                        <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
                                             <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                            <label class="col-11 dragAcc" style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
+                                            <label class="col-11 dragAcc"
+                                                style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
                                             <!-- <label class="col-3 dragVal" style="">0.00</label> -->
                                         </div>
                                         {{else if containsequals item.accounttype "Gross Profit"}}
-                                        <div class=" avoid gP" id="gP" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                        <div class=" avoid gP" id="gP" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
                                             <label class="col-12 dragAcc" style="">
                                                 <!-- <span class="formula-icon">ƒ</span>  -->
                                                 {{item.accounttype}}
@@ -2088,7 +2109,8 @@
                                             <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
                                         </div>
                                         {{else if containsequals item.accounttype "Net Income"}}
-                                        <div class=" avoid nP" id="nP" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                        <div class=" avoid nP" id="nP" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
                                             <label class="col-12 dragAcc" style="">
                                                 <!-- <span class="formula-icon">ƒ</span> -->
                                                 {{item.accounttype}}
@@ -2096,13 +2118,15 @@
                                             <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
                                         </div>
                                         {{else}}
-                                        <div class=" avoid" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                        <div class=" avoid" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
                                             <label class="col-12 dragAcc" style="">{{item.accounttype}}</label>
                                             <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
                                         </div>
                                         {{/if}}
                                         {{else}}
-                                        <div class="draggable" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                        <div class="draggable" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
                                             <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
                                             <label class="col-11 dragAcc"
                                                 style="flex:0 0 97%;max-width:95.67%;">{{item.accountname}}</label>
@@ -3197,7 +3221,7 @@
                         <div class="p-1 m-1">
                             <select class="form-control" id="nplPlaceInMoveSelection">
                                 {{#each item in profitlosslayoutrecords }}
-                                    <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
+                                <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
                                 {{/each}}
                             </select>
                         </div>
@@ -3248,7 +3272,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button" autocomplete="off">
+                        <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button"
+                            autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
                         <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"

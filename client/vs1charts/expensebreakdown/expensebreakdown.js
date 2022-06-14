@@ -31,7 +31,7 @@ Template.expensebreakdown.onRendered(function() {
   templateObject.displayExpenseChart = async (e) => {
     var myChart = new Chart(ctx, {
       type: "pie",
-      
+
       data: {
         labels: ["Credit", "Bill", "Purchase Order"],
         datasets: [
@@ -71,7 +71,7 @@ Template.expensebreakdown.onRendered(function() {
     let totalExpense = 0;
     let useData = [];
     setTimeout( async function () {
-      let billReportObj = await getVS1Data("TbillReport");
+      let billReportObj = await getVS1Data("TPurchasesList");
       if (billReportObj.length == 0) {
         var currentBeginDate = new Date();
         let fromDateMonth = currentBeginDate.getMonth() + 1;
@@ -87,23 +87,23 @@ Template.expensebreakdown.onRendered(function() {
         }
         var toDate = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
         let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
-        let data = await sideBarService.getAllPurchaseOrderListAll(prevMonth11Date, toDate, false, initialReportLoad, 0 )
-        useData = data.tbillreport;
+        let data = await sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false, initialReportLoad, 0 )
+        useData = data.tbilllist;
       }else{
         let data = JSON.parse(billReportObj[0].data);
-        useData = data.tbillreport;
+        useData = data.tbilllist;
       }
       // get common data from both request
       if( useData.length ){
         for (let i = 0; i < useData.length; i++) {
-          totalExpense += Number(useData[i]["Total Amount (Inc)"]);
-          if (useData[i].Type == "Credit") {
+          totalExpense += Number(useData[i].TotalAmountInc);
+          if (useData[i].IsCredit == true) {
             totCreditCount++;
           }
-          if (useData[i].Type == "Bill") {
+          if (useData[i].IsBill == true) {
             totBillCount++;
           }
-          if (useData[i].Type == "Purchase Order") {
+          if (useData[i].IsPO == true) {
             totPOCount++;
           }
         }
