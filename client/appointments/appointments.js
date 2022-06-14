@@ -3291,7 +3291,7 @@ Template.appointments.onRendered(function () {
                     days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
                 }
                 //$(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
-                console.log(days);
+
                 if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
                   $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[6]).format('DD') + ', ' + moment().format('YYYY'));
                 }
