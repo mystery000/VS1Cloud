@@ -580,13 +580,7 @@ Template.newprofitandloss.onRendered(function () {
     //   currentDate2.setMonth(currentDate2.getMonth() - 1);
     // }
 
-    let getDateFrom =
-      currentDate2.getFullYear() +
-      "-" +
-      currentDate2.getMonth() +
-      "-" +
-      currentDate2.getDate();
-
+    let getDateFrom =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
     templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
 
@@ -681,20 +675,21 @@ Template.newprofitandloss.onRendered(function () {
           let subID = subitem.fields.ID;
           let subposition = subitem.fields.Pos.match(/.{1,2}/g);
           if (subLevel0Order == Level0Order && ID != subID) {
-            subitem.fields.Position = parseInt(subposition[1]) || 0;
+            subitem.fields.subAccounts = [];
+            // subitem.fields.PositsubAccountsion = parseInt(subposition[1]) || 0;
             subAccounts.push(subitem.fields);
           }
         });
 
         let position = item.fields.Pos.match(/.{1,2}/g);
-        item.fields.Position = parseInt(position[0]) || 0;
+        // item.fields.Position = parseInt(position[0]) || 0;
         // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
         newprofitLossLayouts.push({
           ...item.fields,
           subAccounts: subAccounts,
         });
       });
-      console.log(newprofitLossLayouts);
+      console.log('newprofitLossLayouts', newprofitLossLayouts);
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
       // handle Dragging and sorting
@@ -2252,44 +2247,86 @@ Template.newprofitandloss.events({
     let accountName = $("#nplPlaceInMoveSelection").val();
     let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
     if (profitlosslayoutfields) {
-      let updateLayouts = profitlosslayoutfields.filter(function (item, index) {
-        if (item.AccountName == accountName) {
-          item.subAccounts.push({
-            Account: "",
-            AccountID: 0,
-            AccountLevel0GroupName: item.AccountName,
-            AccountLevel1GroupName: groupName,
-            AccountLevel2GroupName: "",
-            AccountName: groupName,
-            Direction: "",
-            GlobalRef: "DEF1",
-            Group: "",
-            ID: 0,
-            ISEmpty: false,
-            IsAccount: false,
-            IsRoot: false,
-            KeyStringFieldName: "",
-            KeyValue: "",
-            LayoutID: 1,
-            LayoutToUse: "",
-            Level: "",
-            Level1Group: "",
-            Level1Order: 0,
-            Level2Order: 0,
-            Level3Order: 0,
-            MsTimeStamp: "2022-04-06 16:00:23",
-            MsUpdateSiteCode: "DEF",
-            Parent: item.ID,
-            Pos: "0",
-            Position: 0,
-            Recno: 3,
-            Up: false,
-          });
-        }
-        return item;
-      });
-      $("#newGroupName").val("");
-      templateObject.profitlosslayoutrecords.set(updateLayouts);
+      if( accountName == 'none' ){
+        profitlosslayoutfields.push({
+          Account: "",
+          AccountID: 0,
+          AccountLevel0GroupName: groupName,
+          AccountLevel1GroupName: "",
+          AccountLevel2GroupName: "",
+          AccountName: groupName,
+          Direction: "",
+          GlobalRef: "DEF1",
+          Group: "",
+          ID: 0,
+          ISEmpty: false,
+          IsAccount: false,
+          IsRoot: false,
+          KeyStringFieldName: "",
+          KeyValue: "",
+          LayoutID: 1,
+          LayoutToUse: "",
+          Level: "",
+          Level0Group: '',
+          Level1Group: '',
+          Level2Group: '',
+          Level1Order: 1,
+          Level2Order: 0,
+          Level3Order: 0,
+          MsTimeStamp: "2022-04-06 16:00:23",
+          MsUpdateSiteCode: "DEF",
+          Parent: 0,
+          Pos: "0",
+          Position: 0,
+          Recno: 3,
+          Up: false,
+          subAccounts: []
+        });
+        $("#newGroupName").val("");
+        templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+      }else{
+        let updateLayouts = profitlosslayoutfields.filter(function (item, index) {
+          if (item.AccountName == accountName) {
+            item.subAccounts.push({
+              Account: "",
+              AccountID: 0,
+              AccountLevel0GroupName: item.AccountName,
+              AccountLevel1GroupName: groupName,
+              AccountLevel2GroupName: "",
+              AccountName: groupName,
+              Direction: "",
+              GlobalRef: "DEF1",
+              Group: "",
+              ID: 0,
+              ISEmpty: false,
+              IsAccount: false,
+              IsRoot: false,
+              KeyStringFieldName: "",
+              KeyValue: "",
+              LayoutID: 1,
+              LayoutToUse: "",
+              Level: "",
+              Level0Group: '',
+              Level1Group: '',
+              Level2Group: '',
+              Level1Order: 0,
+              Level2Order: 0,
+              Level3Order: 0,
+              MsTimeStamp: "2022-04-06 16:00:23",
+              MsUpdateSiteCode: "DEF",
+              Parent: item.ID,
+              Pos: "0",
+              Position: 0,
+              Recno: 3,
+              Up: false,
+            });
+          }
+          return item;
+        });
+        $("#newGroupName").val("");
+        templateObject.profitlosslayoutrecords.set(updateLayouts);
+      }
+      
       $("#nplAddGroupScreen").modal("hide");
     }
   },

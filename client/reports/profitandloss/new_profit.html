@@ -605,18 +605,14 @@
                                                                 <tr class="fgr fgrtotal text-center" style="display: flex; justify-content: space-evenly;">
                                                                     {{#if currencyList}}
                                                                         {{#each c in currencyList }}
-                                                                            {{# if c.active}}
-                                                                            
-                                                                                    <td class="fgr fgrtotal text-center {{c.currency}}">
-                                                                                        {{#if reportOptions.showDecimal }}
-                                                                                        <span>{{convertAmount itemamount.decimalAmt c}}</span>                                                                                                                      
-                                                                                        {{else}}
-                                                                                            <span>{{convertAmount itemamount.roundAmt c}}</span>  
-                                                                                        {{/if}}
-                                                                                    </td>
-                                                                            
-                                                                                
-                                                                                
+                                                                            {{# if c.active}}                                                                            
+                                                                                <td class="fgr fgrtotal text-center {{c.currency}}">
+                                                                                    {{#if reportOptions.showDecimal }}
+                                                                                    <span>{{convertAmount itemamount.decimalAmt c}}</span>                                                                                                                      
+                                                                                    {{else}}
+                                                                                        <span>{{convertAmount itemamount.roundAmt c}}</span>  
+                                                                                    {{/if}}
+                                                                                </td>
                                                                             {{/if}}
                                                                         {{/each}}
                                                                     {{/if}}
@@ -2039,6 +2035,7 @@
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
                                                                             </span>
+                                                                            <ol class="ddllkk"></ol>
                                                                         </li>
                                                                     {{/if}}
                                                                 {{/each}}
@@ -3198,6 +3195,7 @@
                         </div>
                         <div class="p-1 m-1">
                             <select class="form-control" id="nplPlaceInMoveSelection">
+                                <option value="none">None</option>
                                 {{#each item in profitlosslayoutrecords }}
                                     <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
                                 {{/each}}
