@@ -59,6 +59,8 @@ Template.new_quote.onCreated(() => {
     templateObject.referenceNumber = new ReactiveVar();
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.productextrasellrecords = new ReactiveVar([]);
+
+    templateObject.defaultsaleterm = new ReactiveVar();
 });
 
 Template.new_quote.onRendered(() => {
@@ -2211,7 +2213,7 @@ Template.new_quote.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(data.fields.TermsName || '');
+        $('#sltTerms').val(data.fields.TermsName || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = data.fields.TaxCodeName || 'E';
         setCustomerInfo(selectedTaxCodeName);
     }
@@ -2264,37 +2266,57 @@ Template.new_quote.onRendered(() => {
     };
     templateObject.getDepartments();
 
-    templateObject.getTerms = function() {
-        getVS1Data('TTermsVS1').then(function(dataObject) {
+    templateObject.getTerms = function () {
+        getVS1Data('TTermsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTermVS1().then(function(data) {
+                salesService.getTermVS1().then(function (data) {
                     for (let i in data.ttermsvs1) {
+
                         let termrecordObj = {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
+
+                        if (data.ttermsvs1[i].isSalesdefault == true) {
+                            templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
+                        }
+
                         termrecords.push(termrecordObj);
                         templateObject.termrecords.set(termrecords);
+
                     }
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.ttermsvs1;
                 for (let i in useData) {
+
                     let termrecordObj = {
                         termsname: useData[i].TermsName || ' ',
                     };
+                    if (useData[i].isSalesdefault == true) {
+                        templateObject.defaultsaleterm.set(useData[i].TermsName);
+                    }
+
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
+
                 }
+
             }
-        }).catch(function(err) {
-            salesService.getTermVS1().then(function(data) {
+        }).catch(function (err) {
+
+            salesService.getTermVS1().then(function (data) {
                 for (let i in data.ttermsvs1) {
+
                     let termrecordObj = {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
+                    if (data.ttermsvs1[i].isSalesdefault == true) {
+                        templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
+                    }
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
+
                 }
             });
         });
@@ -4924,7 +4946,7 @@ Template.new_quote.onRendered(() => {
             socustomer: '',
             salesOrderto: '',
             shipto: '',
-            department: '',
+            department: defaultDept||'',
             docnumber: '',
             custPONumber: '',
             saledate: begunDate,
@@ -4942,7 +4964,7 @@ Template.new_quote.onRendered(() => {
             branding: '',
             invoiceToDesc: '',
             shipToDesc: '',
-            termsName: '',
+            termsName: templateObject.defaultsaleterm.get() || '',
             Total: Currency + '' + 0.00,
             TotalDiscount: Currency + '' + 0.00,
             LineItems: lineItems,
@@ -4961,6 +4983,7 @@ Template.new_quote.onRendered(() => {
         }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
+            $('#sltTerms').val(quoterecord.termsName|| templateObject.defaultsaleterm.get() ||'');
         }, 200);
         templateObject.quoterecord.set(quoterecord);
         if (templateObject.quoterecord.get()) {
@@ -5460,7 +5483,7 @@ Template.new_quote.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || '');
+        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || 'E';
         setCustomerInfo(selectedTaxCodeName);
     });
@@ -5491,7 +5514,7 @@ Template.new_quote.onRendered(() => {
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    $('#sltTerms').val(clientList[i].termsName || '');
+                    $('#sltTerms').val(clientList[i].termsName ||templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }

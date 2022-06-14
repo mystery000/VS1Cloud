@@ -10,7 +10,7 @@
             {{/if}}
             <form>
                 <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;">
+                    <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">
                         Supplier Payment {{record.lid}}
 
                         <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
@@ -137,8 +137,8 @@
                         </div>
 
                     </div>
-                    
-                
+
+
                     {{#if isCurrencyEnable}}
                     <div class="col-12 col-lg-2">
                         {{> CurrencyWidget rate="buy"}}
@@ -158,14 +158,14 @@
                             <input class="form-control form-control" type="text" value="{{record.applied}}" id="edtApplied" name='applied'>
                         </div>
                     </div>
-                
-                
+
+
                     {{/if}}
-                
+
                     <div class="col-12 col-lg-2">
                         <div class="form-group"><label style="color: #858796;">Comments</label><textarea class="form-control" rows="4" id="txaNotes" name="txaNotes" style="height: 125px;">{{record.notes}}</textarea></div>
                     </div>
-                 
+
                 </div>
 
                 <!-- <div class="row" style="background-color: #ededed; padding: 0px 32px;">

@@ -142,7 +142,7 @@ if(currentStockAdjustId !== 'newstockadjust') {
             productID:'',
             id:'',
             description: '',
-            department: '',
+            department: defaultDept||'',
             uom: '',
             instock: '',
             available: '',

@@ -111,21 +111,30 @@ Template.paymentcard.onRendered(() => {
     const deptrecords = [];
     const paymentmethodrecords = [];
     const accountnamerecords = [];
-
+    let newPaymentId = '';
     templateObject.getLastPaymentData = function() {
         let lastBankAccount = "Bank";
         let lastDepartment = Session.get('department') || "";
         paymentService.getAllCustomerPaymentData1().then(function(data) {
+          let latestPaymentId;
             if (data.tcustomerpayment.length > 0) {
                 lastCheque = data.tcustomerpayment[data.tcustomerpayment.length - 1]
                 lastBankAccount = lastCheque.AccountName;
                 lastDepartment = lastCheque.DeptClassName;
+                latestPaymentId = (lastCheque.Id);
             } else {
-
+              latestPaymentId = 0;
             }
+            newPaymentId = (latestPaymentId + 1);
             setTimeout(function() {
+                $('#edtEnrtyNo').val(newPaymentId);
                 $('#edtSelectBankAccountName').val(lastBankAccount);
                 $('#sltDept').val(lastDepartment);
+                if (FlowRouter.current().queryParams.id) {
+
+                }else{
+                $(".heading").html("New Customer Payment " +newPaymentId +'<a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>');
+                };
             }, 50);
         }).catch(function(err) {
             if (Session.get('bankaccount')) {
@@ -3732,7 +3741,7 @@ Template.paymentcard.onRendered(() => {
             branding: '',
             invoiceToDesc: '',
             shipToDesc: '',
-            termsName: '',
+            termsName: templateObject.defaultsaleterm.get() || '',
             Total: Currency + '' + 0.00,
             LineItems: lineItems,
             isReconciled: false,
@@ -3994,7 +4003,7 @@ Template.paymentcard.events({
 
         const exchangeRate = $('#exchange_rate').val();
         const currency = $('#sltCurrency').val();
-        
+
         Session.setPersistent('paymentmethod', payMethod);
         Session.setPersistent('bankaccount', bankAccount);
         Session.setPersistent('department', department);
