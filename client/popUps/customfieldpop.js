@@ -257,18 +257,18 @@ Template.customfieldpop.onRendered(() => {
     templateObject.getSalesCustomFieldsList();
   }, 500);
 
-  templateObject.drawDropDownListTable = function (customfield, data_id) {
+  templateObject.drawDropDownListTable = function (data_id) {
     let fieldsData = templateObject.custfields.get();
     splashArrayClientTypeList1 = [];
-    let lineItems = [];
-    let lineItemObj = {};
-    let setISCOD = false;
+
+    // console.log("drawDropDownListTable---", data_id, fieldsData);
+    $("#isdropDown" + data_id).val(true);
 
     if (fieldsData.length > 0) {
       for (let i = 0; i < fieldsData.length; i++) {
         if (Array.isArray(fieldsData[i].dropdown)) {
           if (fieldsData[i].dropdown.length > 0) {
-            if (fieldsData[i].custfieldlabel == customfield) {
+            if (data_id - 1 == i) {
               for (let x = 0; x < fieldsData[i].dropdown.length; x++) {
                 var dataList = [
                   fieldsData[i].dropdown[x].fields.ID || "",
@@ -285,7 +285,7 @@ Template.customfieldpop.onRendered(() => {
           !Array.isArray(fieldsData[i].dropdown) &&
           Object.keys(fieldsData[i].dropdown).length > 0
         ) {
-          if (fieldsData[i].custfieldlabel == customfield) {
+          if (data_id - 1 == i) {
             var dataList = [
               fieldsData[i].dropdown.fields.ID || "",
               fieldsData[i].dropdown.fields.Text || "",
@@ -350,7 +350,7 @@ Template.customfieldpop.onRendered(() => {
         })
         .on("page", function () {
           setTimeout(function () {
-            MakeNegative();
+            // MakeNegative();
           }, 100);
           let draftRecord = templateObject.datatablerecords.get();
           templateObject.datatablerecords.set(draftRecord);
@@ -358,11 +358,115 @@ Template.customfieldpop.onRendered(() => {
         .on("column-reorder", function () {})
         .on("length.dt", function (e, settings, len) {
           setTimeout(function () {
-            MakeNegative();
+            // MakeNegative();
           }, 100);
         });
       $(".fullScreenSpin").css("display", "none");
     }, 10);
+
+    setTimeout(() => {
+      let custFieldNo = data_id;
+      let custField = fieldsData[data_id - 1];
+      $("#edtSaleCustField" + custFieldNo).editableSelect();
+      $("#edtSaleCustField" + custFieldNo)
+        .editableSelect()
+        .on("click.editable-select", function (e, li) {
+          // console.log("EDIT => edtSaleCustField select", custFieldNo);
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var fieldDataName = e.target.value || "";
+          var fieldDataID =
+            $("#edtSaleCustField" + custFieldNo).attr("custfieldid") || "";
+          $("#selectCustFieldID").val(fieldDataID);
+          if (e.pageX > offset.left + $earch.width() - 8) {
+            // X button 16px wide?
+            $("#customFieldDropdownListModal" + custFieldNo).modal("toggle");
+          } else {
+            if (fieldDataName.replace(/\s/g, "") != "") {
+              // console.log("edit custom field dropdown field");
+              $("#newStatusHeader" + custFieldNo).text(
+                "Edit " + custField.custfieldlabel
+              );
+              getVS1Data("TCustomFieldList")
+                .then(function (dataObject) {
+                  //edit to test indexdb
+                  if (dataObject.length == 0) {
+                    $(".fullScreenSpin").css("display", "inline-block");
+                    sideBarService.getAllCustomFields().then(function (data) {
+                      for (let i in data.tcustomfieldlist) {
+                        if (
+                          data.tcustomfieldlist[i].fields.Description ===
+                          fieldDataName
+                        ) {
+                          $("#statusId").val(
+                            data.tcustomfieldlist[i].fields.ID
+                          );
+                          $("#newStatus").val(
+                            data.tcustomfieldlist[i].fields.Description
+                          );
+                        }
+                      }
+                      // setTimeout(function () {
+                      $(".fullScreenSpin").css("display", "none");
+                      $("#newCustomFieldPop").modal("toggle");
+                      // }, 200);
+                    });
+                  } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    for (let i in data.tcustomfieldlist) {
+                      if (
+                        data.tcustomfieldlist[i].fields.Description ===
+                        fieldDataName
+                      ) {
+                        $("#statusId").val(data.tcustomfieldlist[i].fields.ID);
+                        $("#newStatus").val(
+                          data.tcustomfieldlist[i].fields.Description
+                        );
+                      }
+                    }
+                    // setTimeout(function () {
+                    $(".fullScreenSpin").css("display", "none");
+                    $("#newCustomFieldPop").modal("newCustomFieldPop");
+                    // }, 200);
+                  }
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  sideBarService.getAllCustomFields().then(function (data) {
+                    for (let i in data.tcustomfieldlist) {
+                      if (
+                        data.tcustomfieldlist[i].fields.Description ===
+                        fieldDataName
+                      ) {
+                        $("#statusId" + custFieldNo).val(
+                          data.tcustomfieldlist[i].fields.ID
+                        );
+                        $("#newStatus" + custFieldNo).val(
+                          data.tcustomfieldlist[i].fields.Description
+                        );
+                      }
+                    }
+                    // setTimeout(function () {
+                    $(".fullScreenSpin").css("display", "none");
+                    $("#newCustomFieldPop").modal("toggle");
+                    // }, 200);
+                  });
+                });
+            } else {
+              $("#customFieldDropdownListModal").modal();
+              // setTimeout(function () {
+              //   $("#tblStatusPopList_filter .form-control-sm").focus();
+              //   $("#tblStatusPopList_filter .form-control-sm").val("");
+              //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+              //   var datatable = $("#tblStatusPopList").DataTable();
+
+              //   datatable.draw();
+              //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+              // }, 500);
+            }
+          }
+        });
+    }, 500);
   };
 
   // templateObject.tableheaderrecords.set(tableHeaderList);
@@ -370,6 +474,237 @@ Template.customfieldpop.onRendered(() => {
 });
 
 Template.customfieldpop.events({
+  "click .btnSaveCustomField": function () {
+    // console.log("btnSaveCustomField-");
+    const templateObject = Template.instance();
+
+    let data_id = $("#currentCustomField").val();
+
+    let organisationService = new OrganisationService();
+    var url = FlowRouter.current().path;
+    let fieldID = parseInt($("#statusId" + data_id).val()) || "";
+    let termsName = $("#newStatus" + data_id).val() || "";
+    let clickedInput = $("#clickedControl").val();
+    let dropDownStatus = $("#isdropDown" + data_id).val();
+    let dropDownData = [];
+    let dropObj = "";
+    let listType = "";
+    let objDetails1 = "";
+    $(".fullScreenSpin").css("display", "inline-block");
+    if (
+      url.includes("/invoicecard") ||
+      url.includes("/salesordercard") ||
+      url.includes("/quotecard") ||
+      url.includes("/refundcard")
+    ) {
+      listType = "ltSales";
+    } else if (url.includes("/chequecard")) {
+      // customfield tempcode
+      listType = "ltOrderLines";
+    }
+
+    if (fieldID == "") {
+      // taxRateService.checkTermByName(termsName).then(function(data) {
+      if (dropDownStatus == "true") {
+        let countCustom = 0;
+        $(".customText").each(function () {
+          countCustom++;
+          if ($(this).val()) {
+            dropObj = {
+              type: "TCustomFieldListDropDown",
+              fields: {
+                //Recno: parseInt(countCustom) || 0,
+                Text: $(this).val(),
+              },
+            };
+            dropDownData.push(dropObj);
+          }
+        });
+
+        if (termsName !== "") {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: true,
+              DataType: "ftString",
+              Description: termsName,
+              Dropdown: dropDownData,
+              IsCombo: true,
+              ListType: listType,
+            },
+          };
+        } else {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              Active: true,
+              DataType: "ftString",
+              //Description: termsName,
+              Dropdown: dropDownData,
+              IsCombo: true,
+              ListType: listType,
+            },
+          };
+        }
+      } else {
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            DataType: "ftString",
+            Description: termsName,
+            Dropdown: null,
+            IsCombo: false,
+            ListType: listType,
+          },
+        };
+      }
+      organisationService
+        .saveCustomField(objDetails1)
+        .then(function (objDetails) {
+          sideBarService.getAllCustomFields().then(function (data) {
+            addVS1Data("TCustomFieldList", JSON.stringify(data));
+          });
+          if (clickedInput == "one") {
+            $(".lblCustomField1").text(termsName);
+            // $('#edtSaleCustField1').val(termsName);
+            $("#customFieldText1").val(termsName);
+          } else if (clickedInput == "two") {
+            $(".lblCustomField2").text(termsName);
+            // $('#edtSaleCustField2').val(termsName);
+            $("#customFieldText2").val(termsName);
+          } else if (clickedInput == "three") {
+            $(".lblCustomField3").text(termsName);
+            // $('#edtSaleCustField3').val(termsName);
+            $("#customFieldText3").val(termsName);
+          }
+          // addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+          $("#newCustomFieldPop").modal("toggle");
+          $("#myModal4").modal("toggle");
+          $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              $(".fullScreenSpin").css("display", "none");
+            } else if (result.dismiss === "cancel") {
+            }
+          });
+          $(".fullScreenSpin").css("display", "none");
+        });
+    } else {
+      if (dropDownStatus == "true") {
+        let countCustom = 0;
+        $(".customText").each(function () {
+          countCustom++;
+          if ($(this).val()) {
+            dropObj = {
+              type: "TCustomFieldListDropDown",
+              fields: {
+                ID: parseInt($(this).attr("token")) || 0,
+                Text: $(this).val() || "",
+              },
+            };
+            dropDownData.push(dropObj);
+          }
+        });
+
+        if (termsName !== "") {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              DataType: "ftString",
+              Description: termsName,
+              Dropdown: dropDownData,
+              ID: fieldID,
+              IsCombo: true,
+              ListType: listType,
+            },
+          };
+        } else {
+          objDetails1 = {
+            type: "TCustomFieldList",
+            fields: {
+              DataType: "ftString",
+              //Description: termsName,
+              Dropdown: dropDownData,
+              ID: fieldID,
+              IsCombo: true,
+              ListType: listType,
+            },
+          };
+        }
+      } else {
+        objDetails1 = {
+          type: "TCustomFieldList",
+          fields: {
+            DataType: "ftString",
+            Description: termsName,
+            ID: fieldID,
+            Dropdown: null,
+            IsCombo: false,
+            ListType: listType,
+          },
+        };
+      }
+
+      organisationService
+        .saveCustomField(objDetails1)
+        .then(function (objDetails) {
+          // sideBarService.getTermsVS1().then(function(dataReload) {
+          sideBarService.getAllCustomFields().then(function (data) {
+            addVS1Data("TCustomFieldList", JSON.stringify(data));
+          });
+          if (clickedInput == "one") {
+            $(".lblCustomField1").text(termsName);
+            // $('#edtSaleCustField1').val(termsName);
+            $("#customFieldText1").val(termsName);
+          } else if (clickedInput == "two") {
+            $(".lblCustomField2").text(termsName);
+            // $('#edtSaleCustField2').val(termsName);
+            $("#customFieldText2").val(termsName);
+          } else if (clickedInput == "three") {
+            $(".lblCustomField3").text(termsName);
+            // $('#edtSaleCustField3').val(termsName);
+            $("#customFieldText3").val(termsName);
+          }
+          templateObject.drawDropDownListTable(data_id);
+          // addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+          $("#newCustomFieldPop").modal("toggle");
+          $("#myModal4").modal("toggle");
+          $(".fullScreenSpin").css("display", "none");
+          // }).catch(function(err) {
+          //     $('#newTermsModal').modal('toggle');
+          //     $('.fullScreenSpin').css('display', 'none');
+          // });
+          // }).catch(function(err) {
+          //     $('#newTermsModal').modal('toggle');
+          //     $('.fullScreenSpin').css('display', 'none');
+          // });
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              $(".fullScreenSpin").css("display", "none");
+            } else if (result.dismiss === "cancel") {
+            }
+          });
+          $(".fullScreenSpin").css("display", "none");
+        });
+    }
+  },
+
   "click .btnRefreshCustomField": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     sideBarService
@@ -394,6 +729,8 @@ Template.customfieldpop.events({
   "click .btnCustomFieldToggleText": function (e) {
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
+    $("#isdropDown" + data_id).val(false);
+
     let custfieldarr = templateObject.custfields.get();
     let selected_data = custfieldarr[data_id - 1];
     if (data_id == 1) {
@@ -448,6 +785,8 @@ Template.customfieldpop.events({
   "click .btnCustomFieldToggleDate": function (e) {
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
+    $("#isdropDown" + data_id).val(false);
+
     let custfieldarr = templateObject.custfields.get();
     let selected_data = custfieldarr[data_id - 1];
     $("#currentCustomField").val(data_id);
@@ -527,6 +866,14 @@ Template.customfieldpop.events({
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
     let custfieldarr = templateObject.custfields.get();
+
+    // console.log("custfieldarr-->", custfieldarr);
+    custfieldarr[data_id - 1].datatype = "ftString";
+    custfieldarr[data_id - 1].isCombo = true;
+
+    // console.log("custfieldarr custfields-->", custfieldarr);
+    templateObject.custfields.set(custfieldarr);
+
     let selected_data = custfieldarr[data_id - 1];
     isDropdown = true;
     $("#isdropDown" + data_id).val(isDropdown);
@@ -604,7 +951,8 @@ Template.customfieldpop.events({
     $(".dropDownSection").show();
     $("#newStatus" + data_id).val($("#customFieldText" + data_id).val());
     $("#newCustomFieldPop").modal("toggle");
-    templateObject.drawDropDownListTable(custfield1, data_id);
+    templateObject.drawDropDownListTable(data_id);
+
     $(".checkbox" + data_id + "div").append(
       '<div class="form-group"><label class="lblCustomField' +
         data_id +
@@ -1014,6 +1362,22 @@ Template.customfieldpop.events({
         addVS1Data("TCustomFieldList", JSON.stringify(data));
       });
     }, 1500);
+  },
+
+  "click .btnAddNewTextBox": function (event) {
+    var textBoxData = $("#textBoxSection:last").clone(true);
+    let tokenid = Random.id();
+    textBoxData.find("input:text").val("");
+    textBoxData.find("input:text").attr("token", "0");
+    $(".dropDownSection").append(textBoxData);
+  },
+
+  "click .btnRemoveDropOptions": function (event) {
+    if ($(".textBoxSection").length > 1) {
+      $(event.target).closest(".textBoxSection").remove();
+    } else {
+      $("input[name='customText']").val("");
+    }
   },
 });
 

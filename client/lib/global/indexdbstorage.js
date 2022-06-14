@@ -180,6 +180,7 @@ openDb = function (dbName) {
       db.createObjectStore("TAwaitingSupplierPayment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAwaitingCustomerPayment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomFieldList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TCustomFieldListDropDown", { keyPath: "EmployeeEmail" }); 
       db.createObjectStore("TReportSchedules", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TPayRun", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAllowance", { keyPath: "EmployeeEmail" });
