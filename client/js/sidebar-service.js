@@ -1937,19 +1937,12 @@ export class SideBarService extends BaseService {
   }
   getTProjectTasks(msTimeStamp) {
     let options = "";
-    if (msTimeStamp) {
+
       options = {
         ListType: "Detail",
         select: "[Active]=true",
-        LimitCount: '"' + initialReportLoad + '"',
+        // LimitCount: '"' + initialReportLoad + '"',
       };
-    } else {
-      options = {
-        ListType: "Detail",
-        select: "[Active]=true",
-        LimitCount: '"' + initialReportLoad + '"',
-      };
-    }
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 

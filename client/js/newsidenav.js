@@ -2293,6 +2293,10 @@ Template.newsidenav.onRendered(function() {
 
         });
 
+    }
+
+    templateObject.getAllPurchasesData = function() {
+
 
         sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
           countObjectTimes++;
@@ -4319,6 +4323,14 @@ Template.newsidenav.onRendered(function() {
                     } else {}
                 }).catch(function(err) {
                     templateObject.getAllTbillReportData();
+                });
+
+                getVS1Data('TPurchasesList').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        templateObject.getAllPurchasesData();
+                    } else {}
+                }).catch(function(err) {
+                    templateObject.getAllPurchasesData();
                 });
                 getVS1Data('TBillEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
