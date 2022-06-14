@@ -1,16 +1,23 @@
-import { ReportService } from "../report-service";
+import {
+    ReportService
+} from "../report-service";
 import 'jQuery.print/jQuery.print.js';
-import { UtilityService } from "../../utility-service";
+import {
+    UtilityService
+} from "../../utility-service";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
 
 Template.customerdetailsreport.onCreated(() => {
     const templateObject = Template.instance();
+
     templateObject.dateAsAt = new ReactiveVar();
 });
 
 Template.customerdetailsreport.onRendered(() => {
+
+    const templateObject = Template.instance();
 
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
@@ -18,7 +25,25 @@ Template.customerdetailsreport.onRendered(() => {
         $('#uploadedImage').attr('width', '50%');
     }
 
+    var today = moment().format('DD/MM/YYYY');
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    let fromDateMonth = (currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+
+    if ((currentDate.getMonth() + 1) < 10) {
+        fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+
+    if (currentDate.getDate() < 10) {
+        fromDateDay = "0" + currentDate.getDate();
+    }
+    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+
     templateObject.dateAsAt.set(begunDate);
+
+    const dataTableList = [];
+    const deptrecords = [];
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
@@ -45,10 +70,61 @@ Template.customerdetailsreport.events({
     'click #btnSummary': function() {
         FlowRouter.go('/customersummaryreport');
     },
+    'click .btnExportReport': function() {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let utilityService = new UtilityService();
+        let templateObject = Template.instance();
+        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+        const filename = loggedCompany + '- Customer Details Report' + '.csv';
+        utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
+        let rows = [];
+    },
+    'click .btnPrintReport': function(event) {
+
+        let values = [];
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+        });
+        let i = basedOnTypeStorages.length;
+        if (i > 0) {
+            while (i--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+        }
+        values.forEach(value => {
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+            if (reportData.BasedOnType.includes("P")) {
+                if (reportData.FormID == 1) {
+                    let formIds = reportData.FormIDs.split(',');
+                    if (formIds.includes("225")) {
+                        reportData.FormID = 225;
+                        Meteor.call('sendNormalEmail', reportData);
+                    }
+                } else {
+                    if (reportData.FormID == 225)
+                        Meteor.call('sendNormalEmail', reportData);
+                }
+            }
+        });
+
+        document.title = 'Customer Details Report';
+        $(".printReport").print({
+            title: "Customer Details Report | " + loggedCompany,
+            noPrintSelector: ".addSummaryEditor"
+        })
+    },
 });
 
 Template.customerdetailsreport.helpers({
-    dateAsAt: () =>{
+    dateAsAt: () => {
         return Template.instance().dateAsAt.get() || '-';
     },
 });
