@@ -340,7 +340,7 @@
                                 </div>
                                 
                                 <div class="dropdown float-left" style="margin: 8px;">
-                                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalFXRates">FX Rates</a>
+                                    <a class="btn btnNav btn-primary float-right" role="button" data-toggle="modal" href="#myModalFXRates"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i> FX Rates</a>
                                 </div>
                                 <div class="dropdown btnNav periodSelector float-left" style="margin: 8px;">
                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -602,17 +602,18 @@
                                                     {{#if item.periodAmounts }}
                                                         {{#each itemamount in item.periodAmounts}}
                                                             <td colspan="{{count item.periodAmounts}}" class="fgr fgrtotal text-center ">
-                                                                <tr class="fgr fgrtotal text-center" style="display: flex; justify-content: space-evenly;">
+                                                                <tr class="fgr fgrtotal text-center">
                                                                     {{#if currencyList}}
                                                                         {{#each c in currencyList }}
-                                                                            {{# if c.active}}                                                                            
-                                                                                <td class="fgr fgrtotal text-center {{c.currency}}">
-                                                                                    {{#if reportOptions.showDecimal }}
-                                                                                    <span>{{convertAmount itemamount.decimalAmt c}}</span>                                                                                                                      
-                                                                                    {{else}}
-                                                                                        <span>{{convertAmount itemamount.roundAmt c}}</span>  
-                                                                                    {{/if}}
-                                                                                </td>
+                                                                            {{# if c.active}}
+                                                                            
+                                                                                    <td class="fgr fgrtotal text-center {{c.currency}}">
+                                                                                        {{#if reportOptions.showDecimal }}
+                                                                                        <span>{{convertAmount itemamount.decimalAmt c}}</span>                                                                                                                      
+                                                                                        {{else}}
+                                                                                            <span>{{convertAmount itemamount.roundAmt c}}</span>  
+                                                                                        {{/if}}
+                                                                                    </td>
                                                                             {{/if}}
                                                                         {{/each}}
                                                                     {{/if}}
@@ -635,7 +636,7 @@
                                                     {{#if containsequals item.accounttype "Total"}}
                                                         <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
                                                             {{item.accounttype}}</td>
-                                                        <td>f</td>
+                                                        <td></td>
                                                         {{#if item.periodAmounts }}
                                                             {{#each itemamount in item.periodAmounts}}
                                                                 <td class="fgr fgrtotal text-right">
@@ -657,7 +658,7 @@
                                                             </td>
                                                         {{/if}}
                                                     {{else}}
-                                                        <td class="fgrtotal fgrtotalName">j{{item.accounttype}}</td>
+                                                        <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
                                                         <td></td>
                                                         {{#if item.periodAmounts }}
                                                             {{#each itemamount in item.periodAmounts}}
