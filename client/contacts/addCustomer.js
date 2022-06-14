@@ -105,7 +105,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getOverviewARData = function (CustomerName) {
         getVS1Data('TARReport').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 paymentService.getOverviewARDetails().then(function (data) {
                     setOverviewARDetails(data, CustomerName);
                 });
@@ -129,7 +129,7 @@ Template.customerscard.onRendered(function () {
             // dataListAwaitingCust = {
             // id: data.tinvoice[i].Id || '',
             // };
-            if ((data.tarreport[i].AmountDue !== 0) && (CustomerName.replace(/\s/g, '') === data.tarreport[i].Printname.replace(/\s/g, ''))) {
+            if ((data.tarreport[i].AmountDue !== 0) && (CustomerName.replace(/\s/g, '') == data.tarreport[i].Printname.replace(/\s/g, ''))) {
                 // itemsAwaitingPaymentcount.push(dataListAwaitingCust);
                 totAmount += Number(data.tarreport[i].AmountDue);
                 let date = new Date(data.tarreport[i].DueDate);
@@ -204,7 +204,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getAllProductRecentTransactions = function (customerName) {
         getVS1Data('TTransactionListReport').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 sideBarService.getTTransactionListReport().then(function (data) {
                     setAllProductRecentTransactions(data, customerName);
                 }).catch(function (err) {
@@ -242,27 +242,27 @@ Template.customerscard.onRendered(function () {
             let totalAmount = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].DEBITSINC) || 0.00;
             let totalPaid = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].CREDITSEX) || 0.00;
             let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.ttransactionlistreport[i].EXDiff) || 0.00;
-            if (data.ttransactionlistreport[i].TYPE === "Bill") {
+            if (data.ttransactionlistreport[i].TYPE == "Bill") {
                 transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Credit") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Credit") {
                 transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-            } else if (data.ttransactionlistreport[i].TYPE === "PO") {
+            } else if (data.ttransactionlistreport[i].TYPE == "PO") {
                 transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Supplier Payment") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Supplier Payment") {
                 transID = data.ttransactionlistreport[i].PAYMENTID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Cheque") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Cheque") {
                 transID = data.ttransactionlistreport[i].PURCHASEORDERID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Journal Entry") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Journal Entry") {
                 transID = data.ttransactionlistreport[i].SALEID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Customer Payment") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Customer Payment") {
                 transID = data.ttransactionlistreport[i].PAYMENTID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Refund") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Refund") {
                 transID = data.ttransactionlistreport[i].SALEID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Invoice") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Invoice") {
                 transID = data.ttransactionlistreport[i].SALEID;
-            } else if (data.ttransactionlistreport[i].TYPE === "UnInvoiced SO") {
+            } else if (data.ttransactionlistreport[i].TYPE == "UnInvoiced SO") {
                 transID = data.ttransactionlistreport[i].SALEID;
-            } else if (data.ttransactionlistreport[i].TYPE === "Quote") {
+            } else if (data.ttransactionlistreport[i].TYPE == "Quote") {
                 transID = data.ttransactionlistreport[i].SALEID;
             }
             const dataList = {
@@ -282,7 +282,7 @@ Template.customerscard.onRendered(function () {
                 custfield2: '',
                 comments: data.ttransactionlistreport[i].Memo || '',
             };
-            if (data.ttransactionlistreport[i].CLIENTNAME === customerName) {
+            if (data.ttransactionlistreport[i].CLIENTNAME == customerName) {
                 dataTableList.push(dataList);
             }
         }
@@ -304,10 +304,10 @@ Template.customerscard.onRendered(function () {
                             let columnWidth = customcolumn[i].width;
                             let columnindex = customcolumn[i].index + 1;
 
-                            if (hiddenColumn === true) {
+                            if (hiddenColumn == true) {
                                 $("." + columnClass + "").addClass('hiddenColumn');
                                 $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn === false) {
+                            } else if (hiddenColumn == false) {
                                 $("." + columnClass + "").removeClass('hiddenColumn');
                                 $("." + columnClass + "").addClass('showColumn');
                             }
@@ -403,7 +403,7 @@ Template.customerscard.onRendered(function () {
         let columVisible = false;
         let sClass = "";
         $.each(columns, function (i, v) {
-            if (v.hidden === false) {
+            if (v.hidden == false) {
                 columVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
@@ -427,29 +427,29 @@ Template.customerscard.onRendered(function () {
             const listData = $(this).closest('tr').attr('id');
             const transactiontype = $(event.target).closest("tr").find(".colType").text();
             if ((listData) && (transactiontype)) {
-                if (transactiontype === 'Bill') {
+                if (transactiontype == 'Bill') {
                     FlowRouter.go('/billcard?id=' + listData);
-                } else if (transactiontype === 'Credit') {
+                } else if (transactiontype == 'Credit') {
                     FlowRouter.go('/creditcard?id=' + listData);
-                } else if (transactiontype === 'PO') {
+                } else if (transactiontype == 'PO') {
                     FlowRouter.go('/purchaseordercard?id=' + listData);
-                } else if (transactiontype === 'Supplier Payment') {
+                } else if (transactiontype == 'Supplier Payment') {
                     FlowRouter.go('/supplierpaymentcard?id=' + listData);
-                } else if (transactiontype === 'Customer Payment') {
+                } else if (transactiontype == 'Customer Payment') {
                     FlowRouter.go('/paymentcard?id=' + listData);
-                } else if (transactiontype === 'Cheque') {
+                } else if (transactiontype == 'Cheque') {
                     FlowRouter.go('/chequecard?id=' + listData);
-                } else if (transactiontype === 'Journal Entry') {
+                } else if (transactiontype == 'Journal Entry') {
                     FlowRouter.go('/journalentrycard?id=' + listData);
-                } else if (transactiontype === 'Refund') {
+                } else if (transactiontype == 'Refund') {
                     FlowRouter.go('/invoicecard?id=' + listData);
-                } else if (transactiontype === 'Invoice') {
+                } else if (transactiontype == 'Invoice') {
                     FlowRouter.go('/invoicecard?id=' + listData);
-                } else if (transactiontype === 'Sales Order' || transactiontype === 'SO') {
+                } else if (transactiontype == 'Sales Order' || transactiontype == 'SO') {
                     FlowRouter.go('/salesordercard?id=' + listData);
-                } else if (transactiontype === 'Quote') {
+                } else if (transactiontype == 'Quote') {
                     FlowRouter.go('/quotecard?id=' + listData);
-                } else if (transactiontype === 'UnInvoiced SO') {
+                } else if (transactiontype == 'UnInvoiced SO') {
                     FlowRouter.go('/salesordercard?id=' + listData);
                 }
             }
@@ -458,7 +458,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getAllCustomerJobs = function (customerName) {
         getVS1Data('TJobVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getAllJobListByCustomer(customerName).then(function (data) {
                     setAllJobListByCustomer(data, customerName);
                 }).catch(function (err) {
@@ -508,7 +508,7 @@ Template.customerscard.onRendered(function () {
                 notes: data.tjob[i].Notes || '',
                 country: data.tjob[i].Country || LoggedCountry
             };
-            if (customerName === data.tjob[i].ParentCustomerName) {
+            if (customerName == data.tjob[i].ParentCustomerName) {
                 dataTableListJob.push(dataListJob);
             }
         }
@@ -529,10 +529,10 @@ Template.customerscard.onRendered(function () {
                             let columnWidth = customcolumn[i].width;
                             let columnindex = customcolumn[i].index + 1;
 
-                            if (hiddenColumn === true) {
+                            if (hiddenColumn == true) {
                                 $("." + columnClass + "").addClass('hiddenColumn');
                                 $("." + columnClass + "").removeClass('showColumn');
-                            } else if (hiddenColumn === false) {
+                            } else if (hiddenColumn == false) {
                                 $("." + columnClass + "").removeClass('hiddenColumn');
                                 $("." + columnClass + "").addClass('showColumn');
                             }
@@ -628,7 +628,7 @@ Template.customerscard.onRendered(function () {
         let columVisible = false;
         let sClass = "";
         $.each(columns, function (i, v) {
-            if (v.hidden === false) {
+            if (v.hidden == false) {
                 columVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
@@ -657,7 +657,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getAllCrm = function (customerName) {
         crmService.getAllTaskList().then(function (dataObject) {
-            if (dataObject.tprojecttasks.length === 0) {
+            if (dataObject.tprojecttasks.length == 0) {
                 sideBarService.getTProjectTasks().then(function (data) {
                     setCrmProjectTasks(data, customerName);
                 }).catch(function (err) {
@@ -682,11 +682,11 @@ Template.customerscard.onRendered(function () {
         let dataTableList = [];
         let tableHeaderList = [];
         for (let i = 0; i < data.tprojecttasks.length; i++) {
-            if (data.tprojecttasks[i].fields.TaskName === customerName) {
+            if (data.tprojecttasks[i].fields.TaskName == customerName) {
                 let taskLabel = data.tprojecttasks[i].fields.TaskLabel;
                 let taskLabelArray = [];
                 if (taskLabel !== null) {
-                    if (taskLabel.length === undefined || taskLabel.length === 0) {
+                    if (taskLabel.length == undefined || taskLabel.length == 0) {
                         taskLabelArray.push(taskLabel.fields);
                     } else {
                         for (let j = 0; j < taskLabel.length; j++) {
@@ -706,7 +706,7 @@ Template.customerscard.onRendered(function () {
                     description: taskDescription,
                     labels: taskLabelArray
                 };
-                // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy === leadName) {
+                // if (data.tprojecttasks[i].fields.TaskLabel && data.tprojecttasks[i].fields.TaskLabel.fields.EnteredBy == leadName) {
                 dataTableList.push(dataList);
                 // }
             }
@@ -797,7 +797,7 @@ Template.customerscard.onRendered(function () {
         let sWidth = "";
         let columVisible = false;
         $.each(columns, function (i, v) {
-            if (v.hidden === false) {
+            if (v.hidden == false) {
                 columVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
@@ -822,7 +822,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getCountryData = function () {
         getVS1Data('TCountries').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 countryService.getCountry().then((data) => {
                     setCountry(data);
                 });
@@ -847,7 +847,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getPreferredPaymentList = function () {
         getVS1Data('TPaymentMethod').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getPaymentMethodDataVS1().then((data) => {
                     setPreferredPaymentList(data);
                 });
@@ -872,7 +872,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getTermsList = function () {
         getVS1Data('TTermsVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getTermDataVS1().then((data) => {
                     setTermsDataVS1(data);
                 });
@@ -889,7 +889,7 @@ Template.customerscard.onRendered(function () {
     function setTermsDataVS1(data) {
         for (let i = 0; i < data.ttermsvs1.length; i++) {
             terms.push(data.ttermsvs1[i].TermsName);
-            if(data.ttermsvs1[i].isSalesdefault === true){
+            if(data.ttermsvs1[i].isSalesdefault == true){
                 templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
             }
         }
@@ -900,7 +900,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getDeliveryMethodList = function () {
         getVS1Data('TShippingMethod').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getShippingMethodData().then((data) => {
                     setShippingMethodData(data);
                 });
@@ -925,7 +925,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getClientTypeData = function () {
         getVS1Data('TClientType').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 sideBarService.getClientTypeData().then((data) => {
                     setClientTypeList(data);
                 });
@@ -954,7 +954,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getTaxCodesList = function () {
         getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getTaxCodesVS1().then(function (data) {
                     setTaxCodesList(data);
                 })
@@ -1024,7 +1024,7 @@ Template.customerscard.onRendered(function () {
 
     templateObject.getEmployeeData = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getOneCustomerDataEx(customerID).then(function (data) {
                     setOneCustomerDataEx(data);
                 });
@@ -1033,7 +1033,7 @@ Template.customerscard.onRendered(function () {
                 let useData = data.tcustomervs1;
                 let added = false;
                 for (let i = 0; i < useData.length; i++) {
-                    if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+                    if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
                         added = true;
                         setOneCustomerDataEx(useData[i]);
                         setTimeout(function () {
@@ -1057,7 +1057,7 @@ Template.customerscard.onRendered(function () {
     };
     templateObject.getEmployeeDataByName = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getOneCustomerDataExByName(customerID).then(function (data) {
                     setOneCustomerDataEx(data.tcustomer[0]);
                 });
@@ -1066,7 +1066,7 @@ Template.customerscard.onRendered(function () {
                 let useData = data.tcustomervs1;
                 let added = false;
                 for (let i = 0; i < useData.length; i++) {
-                    if (parseInt(useData[i].fields.ClientName) === parseInt(customerID)) {
+                    if (parseInt(useData[i].fields.ClientName) == parseInt(customerID)) {
                         added = true;
                         setOneCustomerDataEx(useData[i]);
                         setTimeout(function () {
@@ -1172,9 +1172,9 @@ Template.customerscard.onRendered(function () {
 
         };
 
-        if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2)
-            && (data.fields.State === data.fields.BillState) && (data.fields.Postcode === data.fields.Postcode)
-            && (data.fields.Country === data.fields.Billcountry)) {
+        if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2)
+            && (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.Postcode)
+            && (data.fields.Country == data.fields.Billcountry)) {
             templateObject.isSameAddress.set(true);
             templateObject.isJobSameAddress.set(true);
         }
@@ -1258,10 +1258,12 @@ Template.customerscard.onRendered(function () {
         templateObject.isSameAddress.set(true);
         templateObject.records.set(lineItemObj);
         setTimeout(function () {
-            $('#tblTransactionlist').DataTable();
             setTab();
+            $('#tblJoblist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            $('#tblTransactionlist').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
+            $('#tblCrmList').DataTable({"dom": '<"pull-left"f><"pull-right"l>tip'});
             $('.fullScreenSpin').css('display', 'none');
-        }, 500);
+        }, 100);
         // setTimeout(function () {
         //     $('.termsSelect').val(templateObject.defaultsaleterm.get()||'');
         // }, 2000);
@@ -1272,13 +1274,13 @@ Template.customerscard.onRendered(function () {
         // }, 500);
     }
     function setTab() {
-        if (currentId.transTab === 'active') {
+        if (currentId.transTab == 'active') {
             $('.customerTab').removeClass('active');
             $('.transactionTab').trigger('click');
-        } else if (currentId.transTab === 'crm') {
+        } else if (currentId.transTab == 'crm') {
             $('.customerTab').removeClass('active');
             $('.crmTab').trigger('click');
-        } else if (currentId.transTab === 'job') {
+        } else if (currentId.transTab == 'job') {
             $('.customerTab').removeClass('active');
             $('.jobTab').trigger('click');
         } else {
@@ -1287,7 +1289,7 @@ Template.customerscard.onRendered(function () {
         }
     }
 
-    if (currentId.id === "undefined") {
+    if (currentId.id == "undefined") {
         setInitialForEmptyCurrentID();
     } else {
         if (!isNaN(currentId.id)) {
@@ -1305,7 +1307,7 @@ Template.customerscard.onRendered(function () {
     }
     templateObject.getCustomersList = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 contactService.getAllCustomerSideDataVS1().then(function (data) {
                     setAllCustomerSideDataVS1(data);
                 }).catch(function (err) {
@@ -1331,12 +1333,12 @@ Template.customerscard.onRendered(function () {
         for (let i = 0; i < data.tcustomervs1.length; i++) {
             let classname = '';
             if (!isNaN(currentId.id)) {
-                if (data.tcustomervs1[i].fields.ID === parseInt(currentId.id)) {
+                if (data.tcustomervs1[i].fields.ID == parseInt(currentId.id)) {
                     classname = 'currentSelect';
                 }
             }
             if (!isNaN(currentId.jobid)) {
-                if (data.tcustomervs1[i].fields.ID === parseInt(currentId.jobid)) {
+                if (data.tcustomervs1[i].fields.ID == parseInt(currentId.jobid)) {
                     classname = 'currentSelect';
                 }
             }
@@ -1358,7 +1360,6 @@ Template.customerscard.onRendered(function () {
 
     $(document).ready(function () {
         setTimeout(function () {
-
             $('#sltTerms').editableSelect();
             $('#sltTerms').editableSelect().on('click.editable-select', function (e, li) {
                 $('#selectLineID').val('sltTerms');
@@ -1366,32 +1367,31 @@ Template.customerscard.onRendered(function () {
                 let offset = $each.offset();
                 const termsDataName = e.target.value || '';
                 editableTerms(e, $each, offset, termsDataName);
-
             });
             function setTermsVS1(data, termsDataName) {
                 for (let i in data.ttermsvs1) {
                     if (data.ttermsvs1.hasOwnProperty(i)) {
-                        if (data.ttermsvs1[i].TermsName === termsDataName) {
+                        if (data.ttermsvs1[i].TermsName == termsDataName) {
                             $('#edtTermsID').val(data.ttermsvs1[i].Id);
                             $('#edtDays').val(data.ttermsvs1[i].Days);
                             $('#edtName').val(data.ttermsvs1[i].TermsName);
                             $('#edtDesc').val(data.ttermsvs1[i].Description);
-                            if (data.ttermsvs1[i].IsEOM === true) {
+                            if (data.ttermsvs1[i].IsEOM == true) {
                                 $('#isEOM').prop('checked', true);
                             } else {
                                 $('#isEOM').prop('checked', false);
                             }
-                            if (data.ttermsvs1[i].IsEOMPlus === true) {
+                            if (data.ttermsvs1[i].IsEOMPlus == true) {
                                 $('#isEOMPlus').prop('checked', true);
                             } else {
                                 $('#isEOMPlus').prop('checked', false);
                             }
-                            if (data.ttermsvs1[i].isSalesdefault === true) {
+                            if (data.ttermsvs1[i].isSalesdefault == true) {
                                 $('#chkCustomerDef').prop('checked', true);
                             } else {
                                 $('#chkCustomerDef').prop('checked', false);
                             }
-                            if (data.ttermsvs1[i].isPurchasedefault === true) {
+                            if (data.ttermsvs1[i].isPurchasedefault == true) {
                                 $('#chkSupplierDef').prop('checked', true);
                             } else {
                                 $('#chkSupplierDef').prop('checked', false);
@@ -1412,7 +1412,7 @@ Template.customerscard.onRendered(function () {
                     if (termsDataName.replace(/\s/g, '') !== '') {
                         $('#termModalHeader').text('Edit Terms');
                         getVS1Data('TTermsVS1').then(function (dataObject) { //edit to test indexdb
-                            if (dataObject.length === 0) {
+                            if (dataObject.length == 0) {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 sideBarService.getTermsVS1().then(function (data) {
                                     setTermsVS1(data, termsDataName);
@@ -1460,10 +1460,10 @@ Template.customerscard.onRendered(function () {
             });
             function setPaymentMethodDataVS1(data, paymentDataName) {
                 for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
+                    if (data.tpaymentmethodvs1[i].fields.PaymentMethodName == paymentDataName) {
                         $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
                         $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                        if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
+                        if (data.tpaymentmethodvs1[i].fields.IsCreditCard == true) {
                             $('#isformcreditcard').prop('checked', true);
                         } else {
                             $('#isformcreditcard').prop('checked', false);
@@ -1484,7 +1484,7 @@ Template.customerscard.onRendered(function () {
                         $('#paymentMethodHeader').text('Edit Payment Method');
 
                         getVS1Data('TPaymentMethod').then(function(dataObject) {
-                            if (dataObject.length === 0) {
+                            if (dataObject.length == 0) {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 sideBarService.getPaymentMethodDataVS1().then(function(data) {
                                     setPaymentMethodDataVS1(data, paymentDataName);
@@ -1534,7 +1534,7 @@ Template.customerscard.onRendered(function () {
             function setClientType(data, clientTypeDataName) {
                 for (let i in data.tclienttype) {
                     if (data.tclienttype.hasOwnProperty(i)) {
-                        if (data.tclienttype[i].TypeName === clientTypeDataName) {
+                        if (data.tclienttype[i].TypeName == clientTypeDataName) {
                             $('#edtClientTypeID').val(data.tclienttype[i].Id);
                             $('#edtClientTypeName').val(data.tclienttype[i].TypeName);
                             $('#txaDescription').val(data.tclienttype[i].TypeDescription);
@@ -1557,7 +1557,7 @@ Template.customerscard.onRendered(function () {
                     if (clientTypeDataName.replace(/\s/g, '') !== '') {
                         $('#add-clienttype-title').text('Edit Customer Type');
                         getVS1Data('TClientType').then(function (dataObject) { //edit to test indexdb
-                            if (dataObject.length === 0) {
+                            if (dataObject.length == 0) {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 contactService.getClientType().then(function (data) {
                                     setClientType(data, clientTypeDataName);
@@ -1608,7 +1608,7 @@ Template.customerscard.onRendered(function () {
                 let lineItems = [];
                 let lineItemObj = {};
                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                    if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+                    if (data.ttaxcodevs1[i].CodeName == taxRateDataName) {
                         $("#edtTaxNamePop").attr("readonly", true);
                         let taxRate = (
                             data.ttaxcodevs1[i].Rate * 100
@@ -1651,7 +1651,7 @@ Template.customerscard.onRendered(function () {
                     if (taxRateDataName.replace(/\s/g, '') !== '') {
                         $('.taxcodepopheader').text('Edit Tax Rate');
                         getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-                            if(dataObject.length === 0){
+                            if(dataObject.length == 0){
                                 sideBarService.getTaxCodesVS1().then(function (data) {
                                     setTaxRateData(data, taxRateDataName);
                                 }).catch(function (err) {
@@ -1728,6 +1728,12 @@ Template.customerscard.events({
             window.open('/customerscard?jobid=' + listData, '_self');
         }
     },
+    'click .tblCrmList tbody tr': function (event) {
+        const taskID = $(event.target).parent().attr('id');
+        if (taskID !== undefined) {
+            FlowRouter.go('/crmoverview?taskid=' + taskID);
+        }
+    },
     'click .openBalance': function (event) {
         let customerName = $('#edtCustomerCompany').val() || $('#edtJobCustomerCompany').val() || '';
         if(customerName !== "") {
@@ -1759,7 +1765,7 @@ Template.customerscard.events({
         //let headerDept = $('#sltDepartment').val();
         let custType = $('#edtClientTypeName').val();
         let typeDesc = $('#txaDescription').val() || '';
-        if (custType === '') {
+        if (custType == '') {
             swal('Client Type name cannot be blank!', '', 'warning');
             $('.fullScreenSpin').css('display', 'none');
             e.preventDefault();
@@ -1793,7 +1799,7 @@ Template.customerscard.events({
                 }).then((result) => {
                     if (result.value) {
                         // Meteor._reload.reload();
-                    } else if (result.dismiss === 'cancel') {
+                    } else if (result.dismiss == 'cancel') {
 
                     }
                 });
@@ -1830,7 +1836,7 @@ Template.customerscard.events({
         //             }).then((result) => {
         //                 if (result.value) {
         //                     // Meteor._reload.reload();
-        //                 } else if (result.dismiss === 'cancel') {
+        //                 } else if (result.dismiss == 'cancel') {
 
         //                 }
         //             });
@@ -1861,7 +1867,7 @@ Template.customerscard.events({
         //             }).then((result) => {
         //                 if (result.value) {
         //                     // Meteor._reload.reload();
-        //                 } else if (result.dismiss === 'cancel') {
+        //                 } else if (result.dismiss == 'cancel') {
 
         //                 }
         //             });
@@ -1895,7 +1901,7 @@ Template.customerscard.events({
         //         }).then((result) => {
         //             if (result.value) {
         //                 // Meteor._reload.reload();
-        //             } else if (result.dismiss === 'cancel') {
+        //             } else if (result.dismiss == 'cancel') {
 
         //             }
         //         });
@@ -1929,24 +1935,24 @@ Template.customerscard.events({
         let templateObject = Template.instance();
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
-        let company = $('#edtCustomerCompany').val();
-        let email = $('#edtCustomerEmail').val();
-        let title = $('#edtTitle').val();
-        let firstname = $('#edtFirstName').val();
-        let middlename = $('#edtMiddleName').val();
-        let lastname = $('#edtLastName').val();
+        let company = $('#edtCustomerCompany').val()||'';
+        let email = $('#edtCustomerEmail').val()||'';
+        let title = $('#edtTitle').val()||'';
+        let firstname = $('#edtFirstName').val()||'';
+        let middlename = $('#edtMiddleName').val()||'';
+        let lastname = $('#edtLastName').val()||'';
         // let suffix = $('#edtSuffix').val();
-        let phone = $('#edtCustomerPhone').val();
-        let mobile = $('#edtCustomerMobile').val();
-        let fax = $('#edtCustomerFax').val();
-        let accountno = $('#edtClientNo').val();
-        let skype = $('#edtCustomerSkypeID').val();
-        let website = $('#edtCustomerWebsite').val();
-        let streetAddress = $('#edtCustomerShippingAddress').val();
-        let city = $('#edtCustomerShippingCity').val();
-        let state = $('#edtCustomerShippingState').val();
-        let postalcode = $('#edtCustomerShippingZIP').val();
-        let country = $('#sedtCountry').val();
+        let phone = $('#edtCustomerPhone').val()||'';
+        let mobile = $('#edtCustomerMobile').val()||'';
+        let fax = $('#edtCustomerFax').val()||'';
+        let accountno = $('#edtClientNo').val()||'';
+        let skype = $('#edtCustomerSkypeID').val()||'';
+        let website = $('#edtCustomerWebsite').val()||'';
+        let streetAddress = $('#edtCustomerShippingAddress').val()||'';
+        let city = $('#edtCustomerShippingCity').val()||'';
+        let state = $('#edtCustomerShippingState').val()||'';
+        let postalcode = $('#edtCustomerShippingZIP').val()||'';
+        let country = $('#sedtCountry').val()||'';
         let bstreetAddress = '';
         let bcity = '';
         let bstate = '';
@@ -1960,17 +1966,17 @@ Template.customerscard.events({
             bzipcode = postalcode;
             bcountry = country;
         } else {
-            bstreetAddress = $('#edtCustomerBillingAddress').val();
-            bcity = $('#edtCustomerBillingCity').val();
-            bstate = $('#edtCustomerBillingState').val();
-            bzipcode = $('#edtCustomerBillingZIP').val();
-            bcountry = $('#bedtCountry').val();
+            bstreetAddress = $('#edtCustomerBillingAddress').val()||'';
+            bcity = $('#edtCustomerBillingCity').val()||'';
+            bstate = $('#edtCustomerBillingState').val()||'';
+            bzipcode = $('#edtCustomerBillingZIP').val()||'';
+            bcountry = $('#bedtCountry').val()||'';
         }
         let permanentDiscount = $('#edtCustomerCardDiscount').val()||0;
-        let sltPaymentMethodName = $('#sltPreferredPayment').val();
-        let sltTermsName = $('#sltTerms').val();
+        let sltPaymentMethodName = $('#sltPreferredPayment').val()||'';
+        let sltTermsName = $('#sltTerms').val()||'';
         let sltShippingMethodName = '';
-        let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
+        let rewardPointsOpeningBalance = $('#custOpeningBalance').val()||'';
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
         const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
@@ -1979,13 +1985,13 @@ Template.customerscard.events({
         if (isChecked) {
             sltTaxCodeName = "NT";
         } else {
-            sltTaxCodeName = $('#sltTaxCode').val();
+            sltTaxCodeName = $('#sltTaxCode').val()||'';
         }
-        let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomField1').val();
-        let custField2 = $('#edtCustomField2').val();
-        let custField3 = $('#edtCustomField3').val();
-        let custField4 = $('#edtCustomField4').val();
+        let notes = $('#txaNotes').val()||'';
+        let custField1 = $('#edtCustomField1').val()||'';
+        let custField2 = $('#edtCustomField2').val()||'';
+        let custField3 = $('#edtCustomField3').val()||'';
+        let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
 
@@ -2076,7 +2082,7 @@ Template.customerscard.events({
             }).then((result) => {
                 if (result.value) {
                     // Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {
+                } else if (result.dismiss == 'cancel') {
 
                 }
             });
@@ -2088,27 +2094,27 @@ Template.customerscard.events({
         let contactService = new ContactService();
         $('.fullScreenSpin').css('display', 'inline-block');
 
-        let companyJob = $('#edtJobCustomerCompany').val();
-        let companyParent = $('#edtParentJobCustomerCompany').val();
+        let companyJob = $('#edtJobCustomerCompany').val()||'';
+        let companyParent = $('#edtParentJobCustomerCompany').val()||'';
 
         let addressValid = false;
-        let emailJob = $('#edtJobCustomerEmail').val();
-        let titleJob = $('#edtJobTitle').val();
-        let firstnameJob = $('#edtJobFirstName').val();
-        let middlenameJob = $('#edtJobMiddleName').val();
-        let lastnameJob = $('#edtJobLastName').val();
+        let emailJob = $('#edtJobCustomerEmail').val()||'';
+        let titleJob = $('#edtJobTitle').val()||'';
+        let firstnameJob = $('#edtJobFirstName').val()||'';
+        let middlenameJob = $('#edtJobMiddleName').val()||'';
+        let lastnameJob = $('#edtJobLastName').val()||'';
         // let suffixJob = $('#edtSuffix').val();
-        let phoneJob = $('#edtJobCustomerPhone').val();
-        let mobileJob = $('#edtJobCustomerMobile').val();
-        let faxJob = $('#edtJobCustomerFax').val();
+        let phoneJob = $('#edtJobCustomerPhone').val()||'';
+        let mobileJob = $('#edtJobCustomerMobile').val()||'';
+        let faxJob = $('#edtJobCustomerFax').val()||'';
         // let accountnoJob = $('#edtClientNo').val();
-        let skypeJob = $('#edtJobCustomerSkypeID').val();
-        let websiteJob = $('#edtJobCustomerWebsite').val();
+        let skypeJob = $('#edtJobCustomerSkypeID').val()||'';
+        let websiteJob = $('#edtJobCustomerWebsite').val()||'';
 
-        let jobTitle = $('#edtJob_Title').val();
-        let jobName = $('#edtJobName').val();
-        let jobNumber = $('#edtJobNumber').val();
-        let jobReg = $('#edtJobReg').val();
+        let jobTitle = $('#edtJob_Title').val()||'';
+        let jobName = $('#edtJobName').val()||'';
+        let jobNumber = $('#edtJobNumber').val()||'';
+        let jobReg = $('#edtJobReg').val()||'';
         let bstreetAddressJob = '';
         let bcityJob = '';
         let bstateJob = '';
@@ -2153,13 +2159,13 @@ Template.customerscard.events({
         }
 
         let sltPaymentMethodNameJob = $('#sltJobPreferredPayment').val() || 'Cash';
-        let sltTermsNameJob = $('#sltJobTerms').val();
+        let sltTermsNameJob = $('#sltJobTerms').val()||'';
         let sltShippingMethodNameJob = '';//$('#sltJobDeliveryMethod').val();
-        let rewardPointsOpeningBalanceJob = $('#custJobOpeningBalance').val();
+        let rewardPointsOpeningBalanceJob = $('#custJobOpeningBalance').val()||'';
 
-        var sltRewardPointsOpeningDateJob = new Date($("#dtJobAsOf").datepicker("getDate"));
+        var sltRewardPointsOpeningDateJob = new Date($("#dtJobAsOf").datepicker("getDate"))||'';
 
-        let openingDateJob = sltRewardPointsOpeningDateJob.getFullYear() + "-" + (sltRewardPointsOpeningDateJob.getMonth() + 1) + "-" + sltRewardPointsOpeningDateJob.getDate();
+        let openingDateJob = sltRewardPointsOpeningDateJob.getFullYear() + "-" + (sltRewardPointsOpeningDateJob.getMonth() + 1) + "-" + sltRewardPointsOpeningDateJob.getDate()||'';
 
         // let sltTaxCodeNameJob =  $('#sltJobTaxCode').val();
         let uploadedItemsJob = templateObject.uploadedFilesJob.get();
@@ -2169,24 +2175,25 @@ Template.customerscard.events({
         if (isChecked) {
             sltTaxCodeNameJob = "NT";
         } else {
-            sltTaxCodeNameJob = $('#sltJobTaxCode').val();
+            sltTaxCodeNameJob = $('#sltJobTaxCode').val()||'';
         }
 
-        let notesJob = $('#txaJobNotes').val();
-        let customerTypeJob = $('#sltJobCustomerType').val();
+        let notesJob = $('#txaJobNotes').val()||'';
+        let customerTypeJob = $('#sltJobCustomerType').val()||'';
         const url = FlowRouter.current().path;
         const getemp_id = url.split('?jobid=');
         const currentEmployeeJob = getemp_id[getemp_id.length - 1];
+        let currentId = FlowRouter.current().queryParams;
         let objDetails = '';
         if (getemp_id[1]) {
             objDetails = {
                 type: "TJobEx",
                 fields: {
-                    ID: currentEmployeeJob,
+                    ID: parseInt(currentId.jobid),
                     Title: $('.jobTabEdit #edtJobTitle').val() || '',
                     //clientName:companyJob,
-                    ParentClientName: $('.jobTabEdit #edtParentJobCustomerCompany').val() || '',
-                    ParentCustomerName: $('.jobTabEdit #edtParentJobCustomerCompany').val() || '',
+                    // ParentClientName: $('.jobTabEdit #edtParentJobCustomerCompany').val() || '',
+                    // ParentCustomerName: $('.jobTabEdit #edtParentJobCustomerCompany').val() || '',
                     FirstName: $('.jobTabEdit #edtJobFirstName').val() || '',
                     MiddleName: $('.jobTabEdit #edtJobMiddleName').val() || '',
                     LastName: $('.jobTabEdit #edtJobLastName').val() || '',
@@ -2198,27 +2205,27 @@ Template.customerscard.events({
                     Street2: cityJob,
                     State: stateJob,
                     PostCode: postalcodeJob,
-                    Country: $('.tab-Job4 #sedtJobCountry').val(),
+                    Country: $('.tab-Job4 #sedtJobCountry').val()||'',
                     BillStreet: bstreetAddressJob,
                     BillStreet2: bcityJob,
                     BillState: bstateJob,
                     BillPostCode: bzipcodeJob,
                     Billcountry: bcountryJob,
-                    Notes: $('.tab-Job5 #txaJobNotes').val(),
+                    Notes: $('.tab-Job5 #txaJobNotes').val()||'',
                     CUSTFLD9: $('.jobTabEdit #edtJobCustomerWebsite').val() || '',
-                    PaymentMethodName: sltPaymentMethodNameJob,
-                    TermsName: sltTermsNameJob,
-                    ClientTypeName: customerTypeJob,
-                    ShippingMethodName: sltShippingMethodNameJob,
+                    PaymentMethodName: sltPaymentMethodNameJob||'',
+                    TermsName: sltTermsNameJob||'',
+                    ClientTypeName: customerTypeJob||'',
+                    ShippingMethodName: sltShippingMethodNameJob||'',
                     // RewardPointsOpeningBalance:parseInt(rewardPointsOpeningBalanceJob),
                     // RewardPointsOpeningDate:openingDateJob,
-                    TaxCodeName: sltTaxCodeNameJob,
+                    TaxCodeName: sltTaxCodeNameJob||'',
                     // JobName:$('.jobTabEdit #edtJobName').val() || '',
                     Faxnumber: $('.jobTabEdit #edtJobCustomerFax').val() || '',
                     JobNumber: parseInt($('.jobTabEdit #edtJobNumber').val()) || 0,
                     // JobRegistration:$('.jobTabEdit #edtJobReg').val() || '',
                     // JobTitle:$('.jobTabEdit #edtJob_Title').val() || '',
-                    Attachments: uploadedItemsJobNoPOP
+                    Attachments: uploadedItemsJobNoPOP||''
 
                 }
             };
@@ -2305,7 +2312,7 @@ Template.customerscard.events({
             }).then((result) => {
                 if (result.value) {
                     //Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {
+                } else if (result.dismiss == 'cancel') {
 
                 }
             });
@@ -2334,11 +2341,11 @@ Template.customerscard.events({
         const jobCount = $('.results tbody tr[visible="true"]').length;
         $('.counter').text(jobCount + ' items');
 
-        if (jobCount === '0') { $('.no-result').show(); }
+        if (jobCount == '0') { $('.no-result').show(); }
         else {
             $('.no-result').hide();
         }
-        if (searchTerm === "") {
+        if (searchTerm == "") {
             $(".results tbody tr").each(function (e) {
                 $(this).attr('visible', 'true');
                 $('.no-result').hide();
@@ -2355,7 +2362,7 @@ Template.customerscard.events({
         const custLineID = $(event.target).attr('id');
         const custLineClass = $(event.target).attr('class');
         if (custLineID) {
-            if (custLineClass === 'true') {
+            if (custLineClass == 'true') {
                 window.open('/customerscard?jobid=' + custLineID, '_self');
             } else {
                 window.open('/customerscard?id=' + custLineID, '_self');
@@ -2368,7 +2375,7 @@ Template.customerscard.events({
         $.each(columns, function (i, v) {
             let className = v.classList;
             let replaceClass = className[1];
-            if (v.innerText === columnDataValue) {
+            if (v.innerText == columnDataValue) {
                 if ($(event.target).is(':checked')) {
                     $("." + replaceClass + "").css('display', 'table-cell');
                     $("." + replaceClass + "").css('padding', '.75rem');
@@ -2472,7 +2479,7 @@ Template.customerscard.events({
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
         const datable = $('#tblTransactionlist th');
         $.each(datable, function (i, v) {
-            if (v.innerText === columnDataValue) {
+            if (v.innerText == columnDataValue) {
                 let className = v.className;
                 let replaceClass = className.replace(/ /g, ".");
                 $("." + replaceClass + "").css('width', range + 'px');
@@ -2491,7 +2498,7 @@ Template.customerscard.events({
         let columVisible = false;
         let sClass = "";
         $.each(columns, function (i, v) {
-            if (v.hidden === false) {
+            if (v.hidden == false) {
                 columVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
@@ -2516,7 +2523,7 @@ Template.customerscard.events({
         let sWidth = "";
         let columVisible = false;
         $.each(columns, function (i, v) {
-            if (v.hidden === false) {
+            if (v.hidden == false) {
                 columVisible = true;
             }
             if ((v.className.includes("hiddenColumn"))) {
@@ -2678,7 +2685,7 @@ Template.customerscard.events({
     },
     'click #btnNewProject': function (event) {
         var x2 = document.getElementById("newProject");
-        if (x2.style.display === "none") {
+        if (x2.style.display == "none") {
             x2.style.display = "block";
         } else {
             x2.style.display = "none";
@@ -2687,20 +2694,20 @@ Template.customerscard.events({
     'keydown #custOpeningBalance, keydown #edtJobNumber, keydown #edtCustomerCardDiscount': function (event) {
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
             // Allow: Ctrl+A, Command+A
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode == 65 && (event.ctrlKey == true || event.metaKey == true)) ||
             // Allow: home, end, left, right, down, up
             (event.keyCode >= 35 && event.keyCode <= 40)) {
             // let it happen, don't do anything
             return;
         }
-        if (event.shiftKey === true) {
+        if (event.shiftKey == true) {
             event.preventDefault();
         }
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode === 8 || event.keyCode === 9 ||
-            event.keyCode === 37 || event.keyCode === 39 ||
-            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189) {
+            event.keyCode == 8 || event.keyCode == 9 ||
+            event.keyCode == 37 || event.keyCode == 39 ||
+            event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189) {
         } else {
             event.preventDefault();
         }
@@ -2925,7 +2932,7 @@ Template.customerscard.events({
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFiles.set(uploadedArray);
         attachmentCount--;
-        if (attachmentCount === 0) {
+        if (attachmentCount == 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
             $('#file-display').html(elementToAdd);
         }
@@ -2992,7 +2999,7 @@ Template.customerscard.events({
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFilesJob.set(uploadedArray);
         attachmentCount--;
-        if (attachmentCount === 0) {
+        if (attachmentCount == 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
             $('#file-displayJobPOP').html(elementToAdd);
         }
@@ -3058,7 +3065,7 @@ Template.customerscard.events({
         uploadedArray.splice(attachmentID, 1);
         tempObj.uploadedFilesJobNoPOP.set(uploadedArray);
         attachmentCount--;
-        if (attachmentCount === 0) {
+        if (attachmentCount == 0) {
             let elementToAdd = '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
             $('#file-displayJobNoPOP').html(elementToAdd);
         }
@@ -3082,7 +3089,7 @@ Template.customerscard.events({
     },
     'change .customerTypeSelect': function (event) {
         const custName = $('.customerTypeSelect').children("option:selected").val();
-        if (custName === "newCust") {
+        if (custName == "newCust") {
             $('#myModalClientType').modal();
             $(this).prop("selected", false);
         }
@@ -3099,7 +3106,7 @@ Template.customerscard.events({
         const btnHide = document.getElementById("btnHide");
         const displayList = document.getElementById("displayList");
         const displayInfo = document.getElementById("displayInfo");
-        if (displayList.style.display === "none") {
+        if (displayList.style.display == "none") {
             displayList.style.display = "flex";
             $("#displayInfo").removeClass("col-12");
             $("#displayInfo").addClass("col-9");
@@ -3138,7 +3145,7 @@ Template.customerscard.events({
                     confirmButtonText: 'Try Again'
                 }).then((result) => {
                     if (result.value) {
-                    } else if (result.dismiss === 'cancel') {
+                    } else if (result.dismiss == 'cancel') {
 
                     }
                 });
@@ -3300,10 +3307,10 @@ Template.customerscard.helpers({
     },
     customerrecords: () => {
         return Template.instance().customerrecords.get().sort(function (a, b) {
-            if (a.company === 'NA') {
+            if (a.company == 'NA') {
                 return 1;
             }
-            else if (b.company === 'NA') {
+            else if (b.company == 'NA') {
                 return -1;
             }
             return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
@@ -3311,10 +3318,10 @@ Template.customerscard.helpers({
     },
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
-            if (a.saledate === 'NA') {
+            if (a.saledate == 'NA') {
                 return 1;
             }
-            else if (b.saledate === 'NA') {
+            else if (b.saledate == 'NA') {
                 return -1;
             }
             return (a.saledate.toUpperCase() > b.saledate.toUpperCase()) ? 1 : -1;
@@ -3322,10 +3329,10 @@ Template.customerscard.helpers({
     },
     datatablerecordsjob: () => {
         return Template.instance().datatablerecordsjob.get().sort(function (a, b) {
-            if (a.company === 'NA') {
+            if (a.company == 'NA') {
                 return 1;
             }
-            else if (b.company === 'NA') {
+            else if (b.company == 'NA') {
                 return -1;
             }
             return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
@@ -3339,10 +3346,10 @@ Template.customerscard.helpers({
     },
     crmRecords: () => {
         return Template.instance().crmRecords.get().sort(function (a, b) {
-            if (a.id === 'NA') {
+            if (a.id == 'NA') {
                 return 1;
             }
-            else if (b.id === 'NA') {
+            else if (b.id == 'NA') {
                 return -1;
             }
             return (a.id > b.id) ? 1 : -1;
@@ -3372,10 +3379,10 @@ Template.customerscard.helpers({
     },
     clienttypeList: () => {
         return Template.instance().clienttypeList.get().sort(function (a, b) {
-            if (a === 'NA') {
+            if (a == 'NA') {
                 return 1;
             }
-            else if (b === 'NA') {
+            else if (b == 'NA') {
                 return -1;
             }
             return (a.toUpperCase() > b.toUpperCase()) ? 1 : -1;
@@ -3441,27 +3448,27 @@ function getPreviewFile(uploadedFiles, attachmentID) {
     previewFile.link = 'data:' + input + ';base64,' + uploadedFiles[attachmentID].fields.Attachment;
     previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
     let type = uploadedFiles[attachmentID].fields.Description;
-    if (type === 'application/pdf') {
+    if (type == 'application/pdf') {
         previewFile.class = 'pdf-class';
-    } else if (type === 'application/msword' || type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    } else if (type == 'application/msword' || type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
         previewFile.class = 'docx-class';
     }
-    else if (type === 'application/vnd.ms-excel' || type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    else if (type == 'application/vnd.ms-excel' || type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         previewFile.class = 'excel-class';
     }
-    else if (type === 'application/vnd.ms-powerpoint' || type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+    else if (type == 'application/vnd.ms-powerpoint' || type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
         previewFile.class = 'ppt-class';
     }
-    else if (type === 'application/vnd.oasis.opendocument.formula' || type === 'text/csv' || type === 'text/plain' || type === 'text/rtf') {
+    else if (type == 'application/vnd.oasis.opendocument.formula' || type == 'text/csv' || type == 'text/plain' || type == 'text/rtf') {
         previewFile.class = 'txt-class';
     }
-    else if (type === 'application/zip' || type === 'application/rar' || type === 'application/x-zip-compressed' || type === 'application/x-zip,application/x-7z-compressed') {
+    else if (type == 'application/zip' || type == 'application/rar' || type == 'application/x-zip-compressed' || type == 'application/x-zip,application/x-7z-compressed') {
         previewFile.class = 'zip-class';
     }
     else {
         previewFile.class = 'default-class';
     }
-    previewFile.image = type.split('/')[0] === 'image';
+    previewFile.image = type.split('/')[0] == 'image';
     return previewFile;
 }
 function getCheckPrefDetails() {

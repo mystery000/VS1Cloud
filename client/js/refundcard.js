@@ -2243,10 +2243,10 @@ Template.refundcard.onRendered(() => {
     };
     templateObject.getDepartments();
 
-    templateObject.getTerms = function() {
-        getVS1Data('TTermsVS1').then(function(dataObject) {
+    templateObject.getTerms = function () {
+        getVS1Data('TTermsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTermVS1().then(function(data) {
+                salesService.getTermVS1().then(function (data) {
                     for (let i in data.ttermsvs1) {
 
                         let termrecordObj = {
@@ -2280,8 +2280,9 @@ Template.refundcard.onRendered(() => {
                 }
 
             }
-        }).catch(function(err) {
-            salesService.getTermVS1().then(function(data) {
+        }).catch(function (err) {
+
+            salesService.getTermVS1().then(function (data) {
                 for (let i in data.ttermsvs1) {
 
                     let termrecordObj = {
@@ -2292,9 +2293,11 @@ Template.refundcard.onRendered(() => {
                     }
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
+
                 }
             });
         });
+
     };
     templateObject.getTerms();
 
@@ -2344,7 +2347,7 @@ Template.refundcard.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(data.fields.TermsName || '');
+        $('#sltTerms').val(data.fields.TermsName || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = data.fields.TaxCodeName || 'E';
         setCustomerInfo(selectedTaxCodeName);
     }
@@ -3652,7 +3655,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             socustomer: '',
             salesOrderto: '',
             shipto: '',
-            department: '',
+            department: defaultDept||'',
             docnumber: '',
             custPONumber: '',
             saledate: begunDate,
@@ -3670,7 +3673,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             branding: '',
             invoiceToDesc: '',
             shipToDesc: '',
-            termsName: '',
+            termsName: templateObject.defaultsaleterm.get() || '',
             Total: Currency + '' + 0.00,
             TotalDiscount: Currency + '' + 0.00,
             LineItems: lineItems,
@@ -3691,7 +3694,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
             $('#sltPaymentMethod').val(getPaymentMethodVal);
-            $('#sltTerms').val(templateObject.defaultsaleterm.get());
+            $('#sltTerms').val(invoicerecord.termsName|| templateObject.defaultsaleterm.get() ||'');
         }, 200);
         templateObject.invoicerecord.set(invoicerecord);
         if (templateObject.invoicerecord.get()) {
@@ -4185,7 +4188,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || '');
+        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || 'E';
         setCustomerInfo(selectedTaxCodeName);
     });
@@ -4216,7 +4219,7 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    $('#sltTerms').val(clientList[i].termsName || '');
+                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }

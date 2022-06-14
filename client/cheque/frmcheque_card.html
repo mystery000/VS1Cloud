@@ -50,63 +50,9 @@
 
       </div>
       <!-- Start {{> optionCustomFiled}} -->
-      <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
-        {{> customfieldpop}}
-
-        <!-- <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4>Field Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                            </div>
-                            <div class="modal-body">
-                                <div>
-                                    <form class="d-xl-flex align-items-xl-center">
-                                        <div class="flex-grow-1">
-                                            <div class="custom-control custom-switch" style="margin: 8px;">
-                                                <input class="custom-control-input" type="checkbox" id="formCheck-one" value="one">
-                                                {{#if purchaseCloudPreferenceRec}}
-                                                    {{#if equals purchaseCloudPreferenceRec.customFields.[0].hidden false}}
-                                                        <script>
-                                                            $('#formCheck-one').attr("checked", "checked");
-                                                        </script>
-                                                    {{else}}
-                                                        <script>
-                                                            $('#formCheck-one').removeAttr("checked");
-                                                        </script>
-                                                    {{/if}}
-                                                {{/if}}
-                                                <label class="custom-control-label" style="position: absolute;" for="formCheck-one"></label>
-                                                <div contenteditable="true" class="groove customField1Text">{{#if purchaseCloudPreferenceRec}}{{purchaseCloudPreferenceRec.customFields.[0].label}}{{else}}CustField1{{/if}}</div>
-                                            </div>
-
-                                            <div class="custom-control custom-switch" style="margin: 8px;">
-                                                <input class="custom-control-input" type="checkbox" id="formCheck-two" value="two">
-                                                {{#if purchaseCloudPreferenceRec}}
-                                                    {{#if equals purchaseCloudPreferenceRec.customFields.[1].hidden false}}
-                                                        <script>
-                                                            $('#formCheck-two').attr("checked", "checked");
-                                                        </script>
-                                                    {{else}}
-                                                        <script>
-                                                            $('#formCheck-two').removeAttr("checked");
-                                                        </script>
-                                                    {{/if}}
-                                                {{/if}}
-                                                <label class="custom-control-label" style="position: absolute;" for="formCheck-two"></label>
-                                                <div contenteditable="true" class="groove customField2Text">{{#if purchaseCloudPreferenceRec}}{{purchaseCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}</div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-success btnSaveSettings" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                <button class="btn btn-warning btnResetSettings closeModal" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                                <button class="btn btn-secondary closeModal" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                            </div>
-                        </div>
-                    </div> -->
-      </div>
+      <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4"> -->
+      {{> customfieldpop}}
+      <!-- </div> -->
       <!-- END  -->
 
       <!-- Start Attachemt -->
@@ -199,7 +145,7 @@
       <!-- End View File attachment -->
 
       <div class="row" style="background-color: #ededed; padding: 16px 32px;">
-        <div class="col-12 col-mg-12 col-lg-12 col-xl-12">
+        <div class="col-12 col-xl-8">
           <div class="row">
             <div class="col-12 col-md-3">
               <div class="form-group"><label>Supplier</label>
@@ -343,9 +289,9 @@
         </div>
       </div>
 
-      <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
+      <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
         {{> customfieldformpop}}
-      </div>
+      </div> -->
       {{> customfieldDroppop}}
 
       <div>

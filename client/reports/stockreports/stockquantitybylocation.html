@@ -52,20 +52,20 @@
                 }
             }
         </style>
-        <div class="row no-gutters justify-content-center mb-3">
-            <div class="col-12 col-md-10">
-                <div class="card shadow" style="margin: 16px;">
+        <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
+            <div class="col-12 col-md-8">
+                <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
                         <p class="text-primary m-0 font-weight-bold">Stock Quantity by Location Report</p>
                     </div>
                     <div class="card-body">
-                        <div class="row no-gutters justify-content-between">
+                        <div class="row">
                             <div class="col-12 col-md-5">
-                                <div class="form-group" style="margin: 16px;margin-left: 8px; width: 215.5px;">
-                                    <label>Search:</label>
-                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
-                                </div>
-                                <div>
+                                <div class="row no-gutters">
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>Search:</label>
+                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
+                                    </div>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
@@ -88,6 +88,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row no-gutters">
+                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                </div>
                             </div>
                             <div class="col-12 col-md-2">
                                 <style>
@@ -98,49 +101,45 @@
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
                             </div>
-                            <div class="col-12 col-md-5 justify-content-end" style="display: inline-flex;">
-                                <div class="dropdown" style="margin: 16px;">
-                                    <style>
-                                        .dropdown-toggle::after {
-                                            display: none;
-                                        }
-                                    </style>
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                        <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
-                                        <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                        <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                        <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                            <div class="col-12 col-md-5">
+                                <div class="row no-gutters justify-content-end">
+                                    <div class="dropdown" style="margin: 8px;">
+                                        <style>
+                                            .dropdown-toggle::after {
+                                                display: none;
+                                            }
+                                        </style>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button" style="margin-top: 32px;"><i class="fas fa-ellipsis-v"></i></button>
+                                        <div class="dropdown-menu" role="menu">
+                                            <h6 class="dropdown-header" role="presentation">Date ranges</h6>
+                                            <a class="dropdown-item lastMonth" id="lastMonth" role="presentation" href="#">Last Month</a>
+                                            <a class="dropdown-item lastQuarter" id="lastQuarter" role="presentation" href="#">Last Quarter</a>
+                                            <a class="dropdown-item last12Months" id="last12Months" role="presentation" href="#">Last 12 Months</a>
+                                            <a class="dropdown-item ignoreDate" id="ignoreDate" role="presentation" href="#">Ignore Date</a>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group" style="margin: 16px;">
-                                    <label>From</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateFrom" name="dateFrom">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>From</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>To</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin: 16px;"><label>To</label>
-                                    <div class="input-group date" style="width: 160px;">
-                                        <input type="text" class="form-control" id="dateTo" name="dateTo">
-                                        <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-th"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                            </div>
-                            <div class="col d-sm-flex justify-content-sm-end align-items-sm-center">
-                                <div class="col d-xl-flex justify-content-xl-end">
-                                    <button class="btn btn-primary float-left btnExportReport" type="button" style="margin: 16px;width: 97px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 16px;width: 97px; margin-right:0px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                                <div class="row no-gutters justify-content-end">
+                                    <button class="btn btn-primary btnExportReport" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                                 </div>
                             </div>
                         </div>
@@ -182,9 +181,9 @@
                                                 <th>Manufacture</th>
                                                 <th>Product Type</th>
                                                 <th>Product Dept</th>
-                                                <th>Cost</th>
-                                                <th>Value</th>
-                                                <th>Qty</th>
+                                                <th class="text-right">Cost</th>
+                                                <th class="text-right">Value</th>
+                                                <th class="text-right">Qty</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -201,7 +200,7 @@
                                                 <td>Kitchen</td>
                                                 <td class="text-right text-success">$ 50.00</td>
                                                 <td class="text-right text-success">$ 500.00</td>
-                                                <td>10</td>
+                                                <td class="text-right">10</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
@@ -213,7 +212,7 @@
                                                 <td></td>
                                                 <td class="text-right text-success">$ 40.00</td>
                                                 <td class="text-right text-success">$ 400.00</td>
-                                                <td>36</td>
+                                                <td class="text-right">36</td>
                                             </tr>
                                             <tr>
                                                 <td></td>
@@ -225,7 +224,7 @@
                                                 <td></td>
                                                 <td class="text-right text-success">$ 13.00</td>
                                                 <td class="text-right text-success">$ 2756.00</td>
-                                                <td>0</td>
+                                                <td class="text-right">0</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: 800;">Burleigh Totals</td>
@@ -252,7 +251,7 @@
                                                 <td></td>
                                                 <td class="text-right text-success">$ 30.00</td>
                                                 <td class="text-right text-success">$ 300.00</td>
-                                                <td>12</td>
+                                                <td class="text-right">12</td>
                                             </tr>
                                             <tr>
                                                 <td style="font-weight: 800;">Default Totals</td>

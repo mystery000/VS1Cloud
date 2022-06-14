@@ -59,6 +59,7 @@ Template.new_salesorder.onCreated(() => {
     templateObject.statusrecords = new ReactiveVar([]);
     templateObject.record = new ReactiveVar({});
     templateObject.productextrasellrecords = new ReactiveVar([]);
+    templateObject.defaultsaleterm = new ReactiveVar();
 });
 
 Template.new_salesorder.onRendered(() => {
@@ -2219,7 +2220,7 @@ Template.new_salesorder.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(data.fields.TermsName || salesDefaultTerms);
+        $('#sltTerms').val(data.fields.TermsName || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = data.fields.TaxCodeName || 'E';
         setCustomerInfo(selectedTaxCodeName);
     }
@@ -4732,7 +4733,7 @@ Template.new_salesorder.onRendered(() => {
             socustomer: '',
             salesOrderto: '',
             shipto: '',
-            department: '',
+            department: defaultDept||'',
             docnumber: '',
             custPONumber: '',
             saledate: begunDate,
@@ -4750,7 +4751,7 @@ Template.new_salesorder.onRendered(() => {
             branding: '',
             invoiceToDesc: '',
             shipToDesc: '',
-            termsName: '',
+            termsName: templateObject.defaultsaleterm.get() || '',
             Total: Currency + '' + 0.00,
             TotalDiscount: Currency + '' + 0.00,
             LineItems: lineItems,
@@ -4769,6 +4770,7 @@ Template.new_salesorder.onRendered(() => {
         }
         setTimeout(function() {
             $('#sltDept').val(defaultDept);
+            $('#sltTerms').val(salesorderrecord.termsName);
         }, 200);
 
         templateObject.salesorderrecord.set(salesorderrecord);
@@ -4851,18 +4853,18 @@ Template.new_salesorder.onRendered(() => {
     };
     templateObject.getDepartments();
 
-    templateObject.getTerms = function() {
-        getVS1Data('TTermsVS1').then(function(dataObject) {
+    templateObject.getTerms = function () {
+        getVS1Data('TTermsVS1').then(function (dataObject) {
             if (dataObject.length == 0) {
-                salesService.getTermVS1().then(function(data) {
+                salesService.getTermVS1().then(function (data) {
                     for (let i in data.ttermsvs1) {
 
                         let termrecordObj = {
                             termsname: data.ttermsvs1[i].TermsName || ' ',
                         };
 
-                        if(data.ttermsvs1[i].isSalesdefault == true){
-                        salesDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
+                        if (data.ttermsvs1[i].isSalesdefault == true) {
+                            templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
                         termrecords.push(termrecordObj);
@@ -4878,10 +4880,8 @@ Template.new_salesorder.onRendered(() => {
                     let termrecordObj = {
                         termsname: useData[i].TermsName || ' ',
                     };
-
-
-                    if(useData[i].isSalesdefault == true){
-                        salesDefaultTerms = useData[i].TermsName || ' ';
+                    if (useData[i].isSalesdefault == true) {
+                        templateObject.defaultsaleterm.set(useData[i].TermsName);
                     }
 
                     termrecords.push(termrecordObj);
@@ -4890,18 +4890,17 @@ Template.new_salesorder.onRendered(() => {
                 }
 
             }
-        }).catch(function(err) {
-            salesService.getTermVS1().then(function(data) {
+        }).catch(function (err) {
+
+            salesService.getTermVS1().then(function (data) {
                 for (let i in data.ttermsvs1) {
 
                     let termrecordObj = {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
-
-                    if( data.ttermsvs1[i].isSalesdefault == true){
-                        salesDefaultTerms = data.ttermsvs1[i].TermsName || ' ';
+                    if (data.ttermsvs1[i].isSalesdefault == true) {
+                        templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
-
                     termrecords.push(termrecordObj);
                     templateObject.termrecords.set(termrecords);
 
@@ -5398,7 +5397,7 @@ Template.new_salesorder.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || salesDefaultTerms);
+        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || templateObject.defaultsaleterm.get() ||'');
         let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || 'E';
         setCustomerInfo(selectedTaxCodeName);
     });
@@ -5429,7 +5428,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#pdfCustomerAddress').html(postalAddress);
                     $('.pdfCustomerAddress').text(postalAddress);
                     $('#txaShipingInfo').val(postalAddress);
-                    $('#sltTerms').val(clientList[i].termsName || salesDefaultTerms);
+                    $('#sltTerms').val(clientList[i].termsName || templateObject.defaultsaleterm.get() ||'');
                 }
             }
         }
@@ -8952,6 +8951,35 @@ Template.new_salesorder.events({
                             }
                         });
 
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("77")) {
+                                        reportData.FormID = 77;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 77)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+
                     } else if (($('.chkEmailCopy').is(':checked'))) {
                         Meteor.call('sendEmail', {
                             from: "" + mailFromName + " <" + mailFrom + ">",
@@ -8984,6 +9012,35 @@ Template.new_salesorder.events({
                             }
                         });
 
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("77")) {
+                                        reportData.FormID = 77;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 77)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
+                            }
+                        });
+
                     } else if (($('.chkEmailRep').is(':checked'))) {
                         Meteor.call('sendEmail', {
                             from: "" + mailFromName + " <" + mailFrom + ">",
@@ -9012,6 +9069,35 @@ Template.new_salesorder.events({
                                 });
 
                                 $('.fullScreenSpin').css('display', 'none');
+                            }
+                        });
+
+                        let values = [];
+                        let basedOnTypeStorages = Object.keys(localStorage);
+                        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                            let employeeId = storage.split('_')[2];
+                            return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+                        });
+                        let i = basedOnTypeStorages.length;
+                        if (i > 0) {
+                            while (i--) {
+                                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                            }
+                        }
+                        values.forEach(value => {
+                            let reportData = JSON.parse(value);
+                            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+                            if (reportData.BasedOnType.includes("S")) {
+                                if (reportData.FormID == 1) {
+                                    let formIds = reportData.FormIDs.split(',');
+                                    if (formIds.includes("77")) {
+                                        reportData.FormID = 77;
+                                        Meteor.call('sendNormalEmail', reportData);
+                                    }
+                                } else {
+                                    if (reportData.FormID == 77)
+                                        Meteor.call('sendNormalEmail', reportData);
+                                }
                             }
                         });
 
