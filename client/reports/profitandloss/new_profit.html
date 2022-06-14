@@ -4,23 +4,30 @@
             <div class="spinner"></div>
         </div>
         <header style="padding: 16px;">
-            <h2 style="margin: 16px;">Profit and Loss <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+            <h2 style="margin: 16px;">Profit and Loss <a role="button" data-toggle="modal" href="#helpViewModal"
+                    style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
             </h2>
         </header>
         <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="padding-bottom: 8px;">
-                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">×</span></button>
                     </div>
                     <div class="modal-body">
-                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
-                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=42" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                        <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal"
+                                class="btn btn-primary helpModal">View Help Video</a></p>
+                        <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=42"
+                                target="_blank" class="btn btn-primary">Download Help File</a></p>
                         <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ
                                 Advisor</button></p>
-                        <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                        <p class="text-center text-muted" style="margin: 0px;"><a
+                                href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
+                                target="_blank" class="btn btn-primary">Go To Forum</a></p>
                     </div>
-                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                            type="button">Close</button></div>
                 </div>
             </div>
         </div>
@@ -303,69 +310,97 @@
                             <div class="col-12 col-md-5" style="padding-top: 32px;">
 
                                 <div class="row no-gutters">
-                                    <button class="btn btn-primary text-nowrap btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary text-nowrap btnRefresh" type="button"
+                                        style="margin: 8px;"><i class="la la-lightbulb-o"
+                                            style="margin-right: 5px;"></i>Refresh</button>
 
                                     <div class="dropdown periodSelector scnd" style="margin: 8px;">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More </button>
-                                        <div class="dropdown-menu accountingBasisDropdown" aria-labelledby="dropdownMenuButton" style="width: 250px;">
+                                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">More </button>
+                                        <div class="dropdown-menu accountingBasisDropdown"
+                                            aria-labelledby="dropdownMenuButton" style="width: 250px;">
                                             <span>Accounting basis</span>
                                             <br />
                                             <div class="form-check form-check-inline" style="margin-top: 8px;">
-                                                <input class="form-check-input rbAccrual" type="radio" name="radio" id="mddItem1" value="accrual">
+                                                <input class="form-check-input rbAccrual" type="radio" name="radio"
+                                                    id="mddItem1" value="accrual">
                                                 <label class="form-check-label" for="mddItem1">Accrual</label>
                                             </div>
                                             <div class="form-check form-check-inline" style="margin-top: 8px;">
-                                                <input class="form-check-input rbCash" type="radio" name="radio" id="mddItem2" value="cash">
+                                                <input class="form-check-input rbCash" type="radio" name="radio"
+                                                    id="mddItem2" value="cash">
                                                 <label class="form-check-label" for="mddItem2">Cash</label>
                                             </div>
-                                            <hr class="periodSelectorLine" style="margin-top: 8px; margin-bottom: 8px;" />
+                                            <hr class="periodSelectorLine"
+                                                style="margin-top: 8px; margin-bottom: 8px;" />
                                             <span>Show</span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input chkAccBasis" id="mddItem3" name="checkbox">
-                                                <label class="custom-control-label" for="mddItem3">Accounting basis</label>
+                                                <input type="checkbox" class="custom-control-input chkAccBasis"
+                                                    id="mddItem3" name="checkbox">
+                                                <label class="custom-control-label" for="mddItem3">Accounting
+                                                    basis</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input chkAccCodes" id="mddItem4" name="checkbox">
+                                                <input type="checkbox" class="custom-control-input chkAccCodes"
+                                                    id="mddItem4" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem4">Account codes</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input chkDecimals" checked="" id="mddItem5" name="checkbox">
+                                                <input type="checkbox" class="custom-control-input chkDecimals"
+                                                    checked="" id="mddItem5" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem5">Decimals</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input chkPercIncome" checked="" id="mddItem6" name="checkbox">
+                                                <input type="checkbox" class="custom-control-input chkPercIncome"
+                                                    checked="" id="mddItem6" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem6">Percentage of trading
                                                     income</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" checked class="custom-control-input chkTotal" id="mddItem7" name="checkbox">
+                                                <input type="checkbox" checked class="custom-control-input chkTotal"
+                                                    id="mddItem7" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem7">Total</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input chkYTDate" id="mddItem8" name="checkbox">
+                                                <input type="checkbox" class="custom-control-input chkYTDate"
+                                                    id="mddItem8" name="checkbox">
                                                 <label class="custom-control-label" for="mddItem8">Year to date</label>
                                             </span>
                                         </div>
                                     </div>
 
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX Rates</button>
+                                    <button class="btn btn-primary" role="button" data-toggle="modal"
+                                        data-target="#myModalFXRates" style="margin: 8px;"><i
+                                            class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX
+                                        Rates</button>
                                 </div>
                                 <div class="row no-gutters">
                                     <div class="dropdown periodSelector" style="margin: 8px;">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comparison Period</button>
+                                        <button class="btn btn-primary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">Comparison Period</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item nonePeriod selPeriod" data-period="0" role="presentation" href="#">None</a>
+                                            <a class="dropdown-item nonePeriod selPeriod" data-period="0"
+                                                role="presentation" href="#">None</a>
                                             <hr class="periodSelectorLine" />
-                                            <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Period</a>
-                                            <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Periods</a>
-                                            <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Periods</a>
-                                            <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Periods</a>
+                                            <a class="dropdown-item onePeriod selPeriod" data-period="1"
+                                                role="presentation" href="#">1 Period</a>
+                                            <a class="dropdown-item twoPeriods selPeriod" data-period="2"
+                                                role="presentation" href="#">2 Periods</a>
+                                            <a class="dropdown-item threePeriods selPeriod" data-period="3"
+                                                role="presentation" href="#">3 Periods</a>
+                                            <a class="dropdown-item fourPeriods selPeriod" data-period="4"
+                                                role="presentation" href="#">4 Periods</a>
                                             <hr class="periodSelectorLine" />
-                                            <a class="dropdown-item PSother pointer" style="color:#3a3b45;" data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
+                                            <a class="dropdown-item PSother pointer" style="color:#3a3b45;"
+                                                data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
                                         </div>
                                     </div>
 
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalDepartment" style="margin: 8px;"><i class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
+                                    <button class="btn btn-primary" role="button" data-toggle="modal"
+                                        data-target="#myModalDepartment" style="margin: 8px;"><i
+                                            class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
                                 </div>
 
                             </div>
@@ -375,15 +410,22 @@
                                         margin: 0 auto !important;
                                     }
                                 </style>
-                                <img class="imageUpload img-fluid" id="uploadedImage" style="margin-top: 32px;" src="assets/img/VS1.png">
+                                <img class="imageUpload img-fluid" id="uploadedImage" style="margin-top: 32px;"
+                                    src="assets/img/VS1.png">
                             </div>
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters justify-content-end">
 
-                                    <div class="form-group" style="margin: 8px; display: inline-flex; margin-top: 40px;">
-                                        <input type="text" class="form-control" id="selectedDateRange" aria-describedby="basic-addon2" style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;" readonly>
+                                    <div class="form-group"
+                                        style="margin: 8px; display: inline-flex; margin-top: 40px;">
+                                        <input type="text" class="form-control" id="selectedDateRange"
+                                            aria-describedby="basic-addon2"
+                                            style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;"
+                                            readonly>
                                         <div class="input-group-append">
-                                            <button type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                            <button type=" button" class="btn btn-link dropdown-toggle"
+                                                id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                             <style>
                                                 .dropdown-toggle::after {
                                                     display: none;
@@ -391,34 +433,59 @@
                                             </style>
                                             <div class="dropdown-menu" id="dropdownDateRang" style="width: 350px;">
                                                 <a class="dropdown-item mnuDateRng" href="#" id="thisMonth">This month
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrMonth"></div>
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrMonth"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">This quarter
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrQuarter">
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisQuarter">This
+                                                    quarter
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrQuarter">
                                                     </div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">This financial year
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYear"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="thisFinYear">This
+                                                    financial year
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrFiscYear"></div>
                                                 </a>
                                                 <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item mnuDateRng" href="#" id="lastMonth">Last month
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevMonth"></div>
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispPrevMonth"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">Last quarter
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispLastQuarter"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastQuarter">Last
+                                                    quarter
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispLastQuarter"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">Last financial year
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispPrevFiscYear"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="lastFinYear">Last
+                                                    financial year
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispPrevFiscYear"></div>
                                                 </a>
                                                 <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">Month to date
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="monthStartDisp"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="monthToDate">Month to
+                                                    date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="monthStartDisp"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">Quarter to date
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="quarterToDateDisp"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="quarterToDate">Quarter
+                                                    to date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="quarterToDateDisp"></div>
                                                 </a>
-                                                <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">Year to date
-                                                    <div class="float-right" style="width: 50%; text-align: end; color: #858796;" id="dispCurrFiscYearToDate"></div>
+                                                <a class="dropdown-item mnuDateRng" href="#" id="finYearToDate">Year to
+                                                    date
+                                                    <div class="float-right"
+                                                        style="width: 50%; text-align: end; color: #858796;"
+                                                        id="dispCurrFiscYearToDate"></div>
                                                 </a>
                                             </div>
                                         </div>
@@ -426,7 +493,8 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>From</label>
                                         <div class="input-group date" style="width: 145px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
+                                            <input type="text" class="form-control edtReportDates" id="dateFrom"
+                                                name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -435,7 +503,8 @@
                                     <div class="form-group" style="margin: 8px;">
                                         <label>To</label>
                                         <div class="input-group date" style="width: 145px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo" value="{{ formatDate reportOptions.toDate }}">
+                                            <input type="text" class="form-control edtReportDates" id="dateTo"
+                                                name="dateTo" value="{{ formatDate reportOptions.toDate }}">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div>
@@ -449,8 +518,11 @@
                                     </style>
                                 </div>
                                 <div class="row no-gutters justify-content-end">
-                                    <button class="btn btn-primary btnExportReportProfit" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                                    <button class="btn btn-primary btnExportReportProfit" type="button"
+                                        style="margin: 8px;"><i class="fas fa-file-export"
+                                            style="margin-right: 5px;"></i>Export</button>
+                                    <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i
+                                            class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                                 </div>
                             </div>
                         </div>
@@ -472,105 +544,107 @@
                             </style>
                             <div class="row no-gutters p-1">
                                 <div class="table-responsive customProfitLossTable p-2">
-                                    <table class="table table-hover table-sm pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
+                                    <table class="table table-hover table-sm pnlTable dragTable" id="tableExport"
+                                        name="tableExport" style="display: none;">
                                         <thead class="tblAvoid">
-                                           
+
                                             <tr class="table-active tblAvoid" style="background-color: #dadada;">
                                                 <th></th>
                                                 <!-- <th></th> -->
                                                 {{#if reportOptions.threcords}}
-                                                    {{#each item in reportOptions.threcords}}
-                                                        <th class="text-right">{{ item }}</th>
-                                                    {{/each}}
+                                                {{#each item in reportOptions.threcords}}
+                                                <th class="text-right">{{ item }}</th>
+                                                {{/each}}
                                                 {{/if}}
                                                 {{#if reportOptions.showtotal}}
-                                                    <th class="tglTotal text-right">Total</th>
+                                                <th class="tglTotal text-right">Total</th>
                                                 {{/if}}
                                             </tr>
-                                          
+
                                         </thead>
-                                        
+
                                         <tbody>
                                             {{#if records}}
-                                                {{#each item in records}}
-                                                    <tr class="tableInnerRow" id="item-value-{{item.name}}">
-                                                        {{#if equals item.accounttype ""}}
-                                                            <td style="padding-left: 60px !important;" class="fgr fgrblue"><span class="tglAccCodes" style="display:none;">{{ item.id }} -
-                                                                </span>{{item.accountname}}</td>
-                                                            <!-- <td></td> -->
-                                                            {{#if item.periodAmounts }}
-                                                                {{#each itemamount in item.periodAmounts}}
-                                                                    <td class="fgr fgrtotal text-right">
-                                                                        {{#if reportOptions.showDecimal }}
-                                                                            <span>{{itemamount.decimalAmt}}</span>
-                                                                        {{else}}
-                                                                            <span>{{itemamount.roundAmt}}</span>
-                                                                        {{/if}}
-                                                                    </td>
-                                                                {{/each}}
-                                                            {{/if}}
-                                                            {{#if reportOptions.showtotal}}
-                                                                <td class="fgr fgrblue text-right tglTotal">
-                                                                    {{#if reportOptions.showDecimal }}
-                                                                        <span>{{item.totalamountex}}</span>
-                                                                    {{else}}
-                                                                        <span>{{ item.totalroundamountex }}</span>
-                                                                    {{/if}}
-                                                                </td>
-                                                            {{/if}}
-                                                        {{else}}
-                                                            {{#if containsequals item.accounttype "Total"}}
-                                                                <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
-                                                                    {{item.accounttype}}
-                                                                </td>
-                                                                <!-- <td></td> -->
-                                                                {{#if item.periodAmounts }}
-                                                                    {{#each itemamount in item.periodAmounts}}
-                                                                        <td class="fgr fgrtotal text-right">
-                                                                            {{#if reportOptions.showDecimal }}
-                                                                                <span>{{itemamount.decimalAmt}}</span>
-                                                                            {{else}}
-                                                                                <span>{{itemamount.roundAmt}}</span>
-                                                                            {{/if}}
-                                                                        </td>
-                                                                    {{/each}}
-                                                                {{/if}}
-                                                                {{#if reportOptions.showtotal}}
-                                                                    <td class="fgr fgrblue text-right tglTotal">
-                                                                        {{#if reportOptions.showDecimal }}
-                                                                            <span>{{item.totalamountex}}</span>
-                                                                        {{else}}
-                                                                            <span>{{item.totalroundamountex}}</span>
-                                                                        {{/if}}
-                                                                    </td>
-                                                                {{/if}}
-                                                            {{else}}
-                                                                <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
-                                                                <!-- <td></td> -->
-                                                                {{#if item.periodAmounts }}
-                                                                    {{#each itemamount in item.periodAmounts}}
-                                                                        <td class="fgr fgrtotal text-right">
-                                                                            {{#if reportOptions.showDecimal }}
-                                                                                <span>{{itemamount.decimalAmt}}</span>
-                                                                            {{else}}
-                                                                                <span>{{itemamount.roundAmt}}</span>
-                                                                            {{/if}}
-                                                                        </td>
-                                                                    {{/each}}
-                                                                {{/if}}
-                                                                {{#if reportOptions.showtotal}}
-                                                                    <td class="fgr fgrblue text-right tglTotal">
-                                                                        {{#if reportOptions.showDecimal }}
-                                                                            <span>{{item.totalamountex}}</span>
-                                                                        {{else}}
-                                                                            <span>{{ item.totalroundamountex }}</span>
-                                                                        {{/if}}
-                                                                    </td>
-                                                                {{/if}}
-                                                            {{/if}}
-                                                        {{/if}}
-                                                    </tr>
+                                            {{#each item in records}}
+                                            <tr class="tableInnerRow" id="item-value-{{item.name}}">
+                                                {{#if equals item.accounttype ""}}
+                                                <td style="padding-left: 60px !important;" class="fgr fgrblue"><span
+                                                        class="tglAccCodes" style="display:none;">{{ item.id }} -
+                                                    </span>{{item.accountname}}</td>
+                                                <!-- <td></td> -->
+                                                {{#if item.periodAmounts }}
+                                                {{#each itemamount in item.periodAmounts}}
+                                                <td class="fgr fgrtotal text-right">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{itemamount.decimalAmt}}</span>
+                                                    {{else}}
+                                                    <span>{{itemamount.roundAmt}}</span>
+                                                    {{/if}}
+                                                </td>
                                                 {{/each}}
+                                                {{/if}}
+                                                {{#if reportOptions.showtotal}}
+                                                <td class="fgr fgrblue text-right tglTotal">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{item.totalamountex}}</span>
+                                                    {{else}}
+                                                    <span>{{ item.totalroundamountex }}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/if}}
+                                                {{else}}
+                                                {{#if containsequals item.accounttype "Total"}}
+                                                <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
+                                                    {{item.accounttype}}
+                                                </td>
+                                                <!-- <td></td> -->
+                                                {{#if item.periodAmounts }}
+                                                {{#each itemamount in item.periodAmounts}}
+                                                <td class="fgr fgrtotal text-right">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{itemamount.decimalAmt}}</span>
+                                                    {{else}}
+                                                    <span>{{itemamount.roundAmt}}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{#if reportOptions.showtotal}}
+                                                <td class="fgr fgrblue text-right tglTotal">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{item.totalamountex}}</span>
+                                                    {{else}}
+                                                    <span>{{item.totalroundamountex}}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/if}}
+                                                {{else}}
+                                                <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
+                                                <!-- <td></td> -->
+                                                {{#if item.periodAmounts }}
+                                                {{#each itemamount in item.periodAmounts}}
+                                                <td class="fgr fgrtotal text-right">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{itemamount.decimalAmt}}</span>
+                                                    {{else}}
+                                                    <span>{{itemamount.roundAmt}}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/each}}
+                                                {{/if}}
+                                                {{#if reportOptions.showtotal}}
+                                                <td class="fgr fgrblue text-right tglTotal">
+                                                    {{#if reportOptions.showDecimal }}
+                                                    <span>{{item.totalamountex}}</span>
+                                                    {{else}}
+                                                    <span>{{ item.totalroundamountex }}</span>
+                                                    {{/if}}
+                                                </td>
+                                                {{/if}}
+                                                {{/if}}
+                                                {{/if}}
+                                            </tr>
+                                            {{/each}}
                                             {{/if}}
 
                                             <!-- <tr>
@@ -800,7 +874,8 @@
                                     </div>
                                 </div> -->
                                 <div class="btn-group  nplLayoutSelector" style="margin: 16px;">
-                                    <button class="btn btn-primary text-nowrap nplLayoutEditorBtn" role="presentation" data-toggle="modal" href="#nplEditLayoutScreen" type="button">Edit
+                                    <button class="btn btn-primary text-nowrap nplLayoutEditorBtn" role="presentation"
+                                        data-toggle="modal" href="#nplEditLayoutScreen" type="button">Edit
                                         Layout</button>
                                 </div>
                             </div>
@@ -818,12 +893,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Profit and Loss Report</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
                     <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                    <video id="myVideo" width="640" height="360" controls="" name="media"
+                        style="border: solid 5px #999999f0; height: auto; outline: none;">
                         <!-- <source src="https://erphelpes.com/vs1videos/profitandlossreport.mp4" type="video/mp4"> -->
                         <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
                     </video>
@@ -835,19 +912,23 @@
         <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     {{#each item in deptrecords}}
-                        <div class="custom-control custom-switch" style="margin: 8px;">
-                            <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}">
-                            <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-                        </div>
+                    <div class="custom-control custom-switch" style="margin: 8px;">
+                        <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}"
+                            name="chkDepartment" value="{{item.department}}">
+                        <label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
+                    </div>
                     {{/each}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save"
+                            style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                            style="margin-right: 8px;"></i>Close</button>
 
                 </div>
             </div>
@@ -857,7 +938,8 @@
         <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <span class="dropdown-item custom-control custom-switch">
@@ -874,8 +956,10 @@
                     </span>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                    <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save"
+                            style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                            style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
         </div>
@@ -952,7 +1036,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Choose Layout</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="mb-10 ml-2">Choose a layout for this report</h6>
@@ -995,8 +1080,10 @@
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-primary text-nowrap btn-success" type="button" id="btnApplyLayout"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-primary text-nowrap btn-success" type="button" id="btnApplyLayout"><i
+                                class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -1010,7 +1097,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">New Profit and Loss layout</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
 
                 <div class="modal-body">
@@ -1021,9 +1109,13 @@
                                     <div class="col-sm-12 pt-2 pl-0 mb-3">
                                         <a href="#" class="btn btn-primary btnMoveAccount" role="button">Move selected
                                             accounts...</a>
-                                        <a data-toggle="modal" href="#nplAddGroupScreen" class="btn btn-primary btnAddGroup" role="button" onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
+                                        <a data-toggle="modal" href="#nplAddGroupScreen"
+                                            class="btn btn-primary btnAddGroup" role="button"
+                                            onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
                                             Group...</a>
-                                        <a data-toggle="modal" href="#nplGroupAccounts" class="btn btn-primary btnGroupAccounts" role="button" onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group
+                                        <a data-toggle="modal" href="#nplGroupAccounts"
+                                            class="btn btn-primary btnGroupAccounts" role="button"
+                                            onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group
                                             selected
                                             accounts...</a>
                                     </div>
@@ -1031,32 +1123,44 @@
                                         <h6>Income</h6>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle1" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle1">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle1" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle1">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle2" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle2">Other Revenue (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle2" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle2">Other Revenue (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle3" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle3">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle3" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle3">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle4" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle4">Less Cost of Sales</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle4" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle4">Less Cost of Sales</label>
                                                 <span>
                                                     Edit Group
                                                 </span>
@@ -1068,28 +1172,43 @@
                                                 </span>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle5" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle5">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle5" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle5">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle6" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle6">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle6" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle6">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle7" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle7">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle7" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle7">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle8" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle8">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle8" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle8">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle9" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle9">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle9" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle9">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1097,8 +1216,11 @@
                                         <h6>Less Operating Expenses</h6>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle10" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle10">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle10" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle10">Interest Income (270)</label>
                                                 <span>
                                                     Summary
                                                 </span>
@@ -1116,60 +1238,87 @@
                                                 </span>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle11" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle11">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle11" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle11">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle12" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle12">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle12" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle12">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle13" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle13">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle13" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle13">Interest Income (270)</label>
                                             </div>
                                             <div class="custom-control custom-switch ml-4">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle14" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle14">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle14" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle14">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle15" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle15">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle15" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle15">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle16" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle16">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle16" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle16">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle17" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle17">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle17" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle17">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle18" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle18">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle18" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle18">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="p-1 m-1">
                                             <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="accountToggle19" checked="">
-                                                <label style="width: 275px;" class="custom-control-label" for="accountToggle19">Interest Income (270)</label>
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="accountToggle19" checked="">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="accountToggle19">Interest Income (270)</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1187,12 +1336,16 @@
                                         <h5>Layout Details</h5>
                                         <hr>
                                         <label>Layout Name</label><br>
-                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutName" value="" placeholder="">
+                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutName"
+                                            value="" placeholder="">
                                         <label>Layout Description</label><br>
-                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutDescr" value="" placeholder="">
+                                        <input id="fullName" type="text" class="form-control" name="nplNewLayoutDescr"
+                                            value="" placeholder="">
                                         <div class="custom-control custom-switch mt-3">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="defaultSetttingPNL">
-                                            <label style="width: 275px;" class="custom-control-label" for="defaultSetttingPNL">Make this the default Profit and Loss for all
+                                            <input type="checkbox" class="custom-control-input feeOnTopInput"
+                                                id="defaultSetttingPNL">
+                                            <label style="width: 275px;" class="custom-control-label"
+                                                for="defaultSetttingPNL">Make this the default Profit and Loss for all
                                                 users</label>
                                         </div>
                                     </div>
@@ -1214,7 +1367,8 @@
                         <button class="btn btn-success saveTable " type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnCancelLayoutCreation"><i class="fa fa-close" style="margin-right: 5px;"></i>Close
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnCancelLayoutCreation"><i class="fa fa-close" style="margin-right: 5px;"></i>Close
                         </button>
                     </div>
                 </div>
@@ -1230,7 +1384,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Move Accounts</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="mb-10 ml-2">Select where you want to move these accounts to:</h6>
@@ -1259,7 +1414,8 @@
                         <button class="btn btn-success saveTable" type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -1273,11 +1429,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Comparison Period(s)</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="comparisonPeriodNum" name="comparisonPeriodNum" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control" id="comparisonPeriodNum" name="comparisonPeriodNum"
+                            aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <span class="input-group-text" id="basic-addon2">Period(s)</span>
                         </div>
@@ -1293,10 +1451,13 @@
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-success saveTable btnSaveComparisonPeriods" type="button" data-dismiss="modal" autocomplete="off">
+                        <button class="btn btn-success saveTable btnSaveComparisonPeriods" type="button"
+                            data-dismiss="modal" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap btnCloseCustomComparison" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap btnCloseCustomComparison" data-dismiss="modal"
+                            type="button" id="btnApplyLayout"><i class="fa fa-close"
+                                style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -1310,7 +1471,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Group Accounts</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="mb-10 ml-2">Choose a name and position for these accounts:</h6>
@@ -1318,7 +1480,8 @@
                     <div class="form-group-sm d-flex flex-column">
                         <div class="m-1 pr-2">
                             <label for="nplGroupName" class="p-1 mb-0">Group Name:</label>
-                            <input type="text" class="form-control m-1" id="nplGroupName" name="cnplGroupName" autocomplete="off">
+                            <input type="text" class="form-control m-1" id="nplGroupName" name="cnplGroupName"
+                                autocomplete="off">
                         </div>
                         <div class="p-1 m-1">
                             <h6>Place in:</h6>
@@ -1336,31 +1499,40 @@
                         </div>
                         <div class="p-1 m-1">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="summarySwitchGroupAccounts" checked="">
-                                <label style="width: 275px;" class="custom-control-label" for="summarySwitchGroupAccounts">Show summary only</label>
+                                <input type="checkbox" class="custom-control-input feeOnTopInput"
+                                    id="summarySwitchGroupAccounts" checked="">
+                                <label style="width: 275px;" class="custom-control-label"
+                                    for="summarySwitchGroupAccounts">Show summary only</label>
                             </div>
                         </div>
                         <div class="p-1 m-1">
                             <div class="">
-                                <a id="nplGroupAccountDefTag" href="" onclick="$('#nplGroupAccountDefTag').hide();$('#defineGrouping2').show();  return false;">
+                                <a id="nplGroupAccountDefTag" href=""
+                                    onclick="$('#nplGroupAccountDefTag').hide();$('#defineGrouping2').show();  return false;">
                                     Define how accounts are grouped </a>
                                 <div class="m-0 p-0" id="defineGrouping2" style="display:none;">
                                     <h6>Place in:</h6>
                                     <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
+                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1"
+                                            id="accCodeCheck">
                                         <label style="" class="mr-1" for="accCodeCheck">Account code begins with:
                                         </label>
-                                        <input type="text" class="form-control" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:100px;">
+                                        <input type="text" class="form-control" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:100px;">
                                     </div>
                                     <div class="p-1 m-1  d-flex form-group-sm flex-row align-items-baseline">
-                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
+                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1"
+                                            id="accCodeCheck">
                                         <label style="" class="mr-1" for="accCodeCheck">Account code is within range:
                                         </label>
-                                        <input type="text" class="form-control mr-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;"> to
-                                        <input type="text" class="form-control ml-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;">
+                                        <input type="text" class="form-control mr-1" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:50px;"> to
+                                        <input type="text" class="form-control ml-1" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:50px;">
                                     </div>
                                     <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                        <input type="radio" name="radio" checked="checked" class="mt-1 mb-1" id="accBlockAddition">
+                                        <input type="radio" name="radio" checked="checked" class="mt-1 mb-1"
+                                            id="accBlockAddition">
                                         <label style="" class="" for="accBlockAddition">Do not automatically add
                                             accounts to this group</label>
                                     </div>
@@ -1375,7 +1547,8 @@
                         <button class="btn btn-success saveTable" type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -1464,14 +1637,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">No Accounts Selected</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="mb-10 ml-2">You have not selected any accounts to move.</h6>
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -1479,16 +1654,20 @@
     </div>
     <!--End New Profit and Loss No Selection modal -->
     <!--Start New Profit and Loss Edit Layout Screen modal -->
-    <div class="modal fade nplLayoutCreationScreen nplEditLayoutScreen" id="nplEditLayoutScreen" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade nplLayoutCreationScreen nplEditLayoutScreen" id="nplEditLayoutScreen" tabindex="-1"
+        role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 75vw;">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="row" style="width: 100%;">
                         <div class="col-12">
                             <h4 class="title-header">Edit Profit and Loss Layout
-                                <a role="button" data-toggle="modal" href="#helpViewModalEdLay" style="font-size: 20px; margin-left: 8px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                                <a role="button" data-toggle="modal" href="#helpViewModalEdLay"
+                                    style="font-size: 20px; margin-left: 8px;">Help <i class="fa fa-question-circle-o"
+                                        style="font-size: 20px;"></i></a>
                             </h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0px; margin-top: -40px;"><span aria-hidden="true">×</span></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                style="padding: 0px; margin-top: -40px;"><span aria-hidden="true">×</span></button>
                         </div>
                         <style>
                             .btnLayoutAction .tooltiptext {
@@ -1511,7 +1690,9 @@
                         </style>
                         <div class="col-12">
                             <!-- <a href="#" class="btn btn-primary btnMoveAccount" role="button">Move selected accounts...</a> -->
-                            <a data-toggle="modal" href="#nplAddGroupScreen" class="btn btn-primary btnAddGroup" role="button" onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
+                            <a data-toggle="modal" href="#nplAddGroupScreen" class="btn btn-primary btnAddGroup"
+                                role="button"
+                                onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
                                 Group...</a>
                             <!-- <a data-toggle="modal" href="#nplGroupAccounts" class="btn btn-primary btnGroupAccounts" role="button" onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group selected
                                 accounts...</a> -->
@@ -1665,6 +1846,7 @@
                                         ol {
                                             list-style: none !important;
                                         }
+
                                         ol.vertical {
                                             display: inline-block;
                                             width: 100%;
@@ -1733,15 +1915,19 @@
                                             align-items: center;
                                             float: left;
                                         }
-                                       .subChild .childInner strong {
-                                        color: #858796;
-                                       }
-                                       .subChild.selected.noDrag .childInner {
-                                        cursor: not-allowed !important;
-                                       }
-                                       .subChild.selected .childInner strong {
-                                           color: #fff;
-                                       }   
+
+                                        .subChild .childInner strong {
+                                            color: #858796;
+                                        }
+
+                                        .subChild.selected.noDrag .childInner {
+                                            cursor: not-allowed !important;
+                                        }
+
+                                        .subChild.selected .childInner strong {
+                                            color: #fff;
+                                        }
+
                                         ol.vertical li.placeholder {
                                             position: relative;
                                             margin: 0;
@@ -1752,15 +1938,16 @@
                                             height: 2px !important;
                                             float: left;
                                             background: #028dde;
-                                        } 
-                                        
-                                        .selected > .childInner,
-                                        .selected > .mainHeadingDiv h1 {
+                                        }
+
+                                        .selected>.childInner,
+                                        .selected>.mainHeadingDiv h1 {
                                             background: #028dde !important;
                                             border: 1px solid #028dde !important;
                                             color: #fff !important;
                                             cursor: grab !important;
-                                        } 
+                                        }
+
                                         .subChild.dragged .childInner,
                                         /* .dragged, */
                                         ol.vertical li.dragged .childInner,
@@ -1772,10 +1959,11 @@
                                             color: #fff !important;
                                             /* position: absolute; */
                                         }
+
                                         .dragged .childInner strong {
                                             color: #fff !important;
                                         }
-                                        
+
                                         .collepsDiv {
                                             display: inline-flex;
                                             width: 32px;
@@ -1795,52 +1983,58 @@
                                         .collapsTogls>h1 .collepsDiv::after {
                                             content: "";
                                         }
-                                        .collapsTogls ~ ol.groupedListNew {
+
+                                        .collapsTogls~ol.groupedListNew {
                                             display: none;
                                         }
-                                        .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv {
+
+                                        .vertical>li>ol>li .mainHeadingDiv>.mainHeading>.collepsDiv {
                                             pointer-events: unset !important;
                                             cursor: pointer;
                                             opacity: 1;
                                         }
                                     </style>
                                     {{#if profitlosslayoutrecords}}
-                                        <div class="customSortableDiv">
+                                    <div class="customSortableDiv">
 
 
-                                            <form action="" name="" method="POST">
+                                        <form action="" name="" method="POST">
 
-                                                <ol class='nested_with_switch vertical'>
-                                                    {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="5" class="mainList">
-                                                            <div class="mainHeadingDiv">
-                                                                <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
-                                                            </div>
-                                                            <ol class="groupedListNew">
-                                                                {{#each acItem in item.subAccounts }}
-                                                                    {{#if isAccount acItem }}
-                                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
-                                                                            <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
-                                                                            </span>
-                                                                        </li>
-                                                                    {{else}}
-                                                                        <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
-                                                                            <span class="childInner">
-                                                                                <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
-                                                                            </span>
-                                                                        </li>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                            </ol>
+                                            <ol class='nested_with_switch vertical'>
+                                                {{#each item in profitlosslayoutrecords }}
+                                                <li data-id="5" class="mainList">
+                                                    <div class="mainHeadingDiv">
+                                                        <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{
+                                                            item.AccountName }}</h1>
+                                                    </div>
+                                                    <ol class="groupedListNew">
+                                                        {{#each acItem in item.subAccounts }}
+                                                        {{#if isAccount acItem }}
+                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
+                                                            <span class="childInner">
+                                                                <span class="collepsDiv fas"></span>{{
+                                                                acItem.AccountName }}
+                                                            </span>
                                                         </li>
-                                                    {{/each}}
-                                                </ol>
+                                                        {{else}}
+                                                        <li class="subChild noDrag" data-id="1-2"
+                                                            data-name='David Beckham'>
+                                                            <span class="childInner">
+                                                                <span class="collepsDiv fas"></span><strong>{{
+                                                                    acItem.AccountName }}</strong>
+                                                            </span>
+                                                        </li>
+                                                        {{/if}}
+                                                        {{/each}}
+                                                    </ol>
+                                                </li>
+                                                {{/each}}
+                                            </ol>
 
-                                            </form>
+                                        </form>
 
 
-                                            <!-- <div class="sortableAccount">
+                                        <!-- <div class="sortableAccount">
                                                 {{#each item in profitlosslayoutrecords }}
                                                     <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
                                                         <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
@@ -1856,54 +2050,61 @@
                                                     </div>
                                                 {{/each}}
                                             </div>  -->
-                                        </div>
+                                    </div>
                                     {{/if}}
                                     {{#if recordslayout}}
-                                        {{#each arrayify recordslayout}}
-                                            <div class="sortableAccount">
-                                                <i account-type="{{ value.item.accounttype }}"></i>
-                                                {{#each item in value}}
-                                                    {{#if notEquals item.accounttype ""}}
+                                    {{#each arrayify recordslayout}}
+                                    <div class="sortableAccount">
+                                        <i account-type="{{ value.item.accounttype }}"></i>
+                                        {{#each item in value}}
+                                        {{#if notEquals item.accounttype ""}}
 
-                                                        {{#if containsequals item.accounttype "Total"}}
-                                                            <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
-                                                                <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                                                <label class="col-11 dragAcc" style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
-                                                                <!-- <label class="col-3 dragVal" style="">0.00</label> -->
-                                                            </div>
-                                                        {{else if containsequals item.accounttype "Gross Profit"}}
-                                                            <div class=" avoid gP" id="gP" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
-                                                                <label class="col-12 dragAcc" style="">
-                                                                    <!-- <span class="formula-icon">ƒ</span>  -->
-                                                                    {{item.accounttype}}
-                                                                </label>
-                                                                <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                            </div>
-                                                        {{else if containsequals item.accounttype "Net Income"}}
-                                                            <div class=" avoid nP" id="nP" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
-                                                                <label class="col-12 dragAcc" style="">
-                                                                    <!-- <span class="formula-icon">ƒ</span> -->
-                                                                    {{item.accounttype}}
-                                                                </label>
-                                                                <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                            </div>
-                                                        {{else}}
-                                                            <div class=" avoid" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
-                                                                <label class="col-12 dragAcc" style="">{{item.accounttype}}</label>
-                                                                <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                            </div>
-                                                        {{/if}}
-                                                    {{else}}
-                                                        <div class="draggable" account-id="{{item.id}}" account-type="{{ item.accounttype }}">
-                                                            <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                                            <label class="col-11 dragAcc" style="flex:0 0 97%;max-width:95.67%;">{{item.accountname}}</label>
-                                                            <!-- <label class="col-11 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">{{item.accountname}}</label> -->
-                                                            <!-- <label class="col-3 dragVal" style="">0.00</label> -->
-                                                        </div>
-                                                    {{/if}}
-                                                {{/each}}
-                                            </div>
+                                        {{#if containsequals item.accounttype "Total"}}
+                                        <div class="draggable tot" style="font-weight: 600;" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
+                                            <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                            <label class="col-11 dragAcc"
+                                                style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
+                                            <!-- <label class="col-3 dragVal" style="">0.00</label> -->
+                                        </div>
+                                        {{else if containsequals item.accounttype "Gross Profit"}}
+                                        <div class=" avoid gP" id="gP" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
+                                            <label class="col-12 dragAcc" style="">
+                                                <!-- <span class="formula-icon">ƒ</span>  -->
+                                                {{item.accounttype}}
+                                            </label>
+                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                        </div>
+                                        {{else if containsequals item.accounttype "Net Income"}}
+                                        <div class=" avoid nP" id="nP" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
+                                            <label class="col-12 dragAcc" style="">
+                                                <!-- <span class="formula-icon">ƒ</span> -->
+                                                {{item.accounttype}}
+                                            </label>
+                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                        </div>
+                                        {{else}}
+                                        <div class=" avoid" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
+                                            <label class="col-12 dragAcc" style="">{{item.accounttype}}</label>
+                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                        </div>
+                                        {{/if}}
+                                        {{else}}
+                                        <div class="draggable" account-id="{{item.id}}"
+                                            account-type="{{ item.accounttype }}">
+                                            <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                            <label class="col-11 dragAcc"
+                                                style="flex:0 0 97%;max-width:95.67%;">{{item.accountname}}</label>
+                                            <!-- <label class="col-11 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">{{item.accountname}}</label> -->
+                                            <!-- <label class="col-3 dragVal" style="">0.00</label> -->
+                                        </div>
+                                        {{/if}}
                                         {{/each}}
+                                    </div>
+                                    {{/each}}
                                     {{/if}}
 
 
@@ -2144,12 +2345,16 @@
                                             <h5>Layout Details</h5>
                                             <hr>
                                             <label>Layout Name</label><br>
-                                            <input id="fullName" type="text" class="form-control" name="nplNewLayoutName" value="" placeholder="">
+                                            <input id="fullName" type="text" class="form-control"
+                                                name="nplNewLayoutName" value="" placeholder="">
                                             <label>Layout Description</label><br>
-                                            <input id="fullName" type="text" class="form-control" name="nplNewLayoutDescr" value="" placeholder="">
+                                            <input id="fullName" type="text" class="form-control"
+                                                name="nplNewLayoutDescr" value="" placeholder="">
                                             <div class="custom-control custom-switch mt-3">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="defaultSettting">
-                                                <label style="width: 275px;" class="custom-control-label" for="defaultSettting">Make this the default Profit and Loss for all
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput"
+                                                    id="defaultSettting">
+                                                <label style="width: 275px;" class="custom-control-label"
+                                                    for="defaultSettting">Make this the default Profit and Loss for all
                                                     users</label>
                                             </div>
                                         </div>
@@ -2824,7 +3029,8 @@
                         <button class="btn btn-success saveProfitLossLayouts " type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnCancelLayoutCreation"><i class="fa fa-close" style="margin-right: 5px;"></i>Close
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnCancelLayoutCreation"><i class="fa fa-close" style="margin-right: 5px;"></i>Close
                         </button>
                     </div>
                 </div>
@@ -2839,7 +3045,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Switch rule: Cost of Sales</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group-sm">
@@ -2869,7 +3076,8 @@
                         <button class="btn btn-success saveTable" type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -2881,7 +3089,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Update accounts in Untitled schedule</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group-sm">
@@ -2890,28 +3099,49 @@
                                 <div class="m-0 p-0">
                                     <div class="p-1 m-1 row form-group-sm srFormItems">
                                         <div class="col-12 mt-1">
-                                            <input id="" type="text" class="form-control" name="nplrowHeading" placeholder="">
+                                            <input id="" type="text" class="form-control" name="nplrowHeading"
+                                                placeholder="">
                                         </div>
-                                        <div class="col-12 mt-1 grpTotal-container" style="max-height:100px; overflow-y: scroll;">
-                                            <div class="custom-control custom-switch" style="display:flex;flex-direction: column;">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk1" checked="">
+                                        <div class="col-12 mt-1 grpTotal-container"
+                                            style="max-height:100px; overflow-y: scroll;">
+                                            <div class="custom-control custom-switch"
+                                                style="display:flex;flex-direction: column;">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk1" checked="">
                                                 <label class="custom-control-label" for="addAccChk1">All</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk2">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk2">
                                                 <label class="custom-control-label" for="addAccChk2">Sales</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk3">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk3">
                                                 <label class="custom-control-label" for="addAccChk3">Other
                                                     Revenue</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk4">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk4">
                                                 <label class="custom-control-label" for="addAccChk4">Interest
-                                                    Income</label> <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk5">
+                                                    Income</label> <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk5">
                                                 <label class="custom-control-label" for="addAccChk5">Cost of Goods
-                                                    Sold</label> <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk6">
+                                                    Sold</label> <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk6">
                                                 <label class="custom-control-label" for="addAccChk6">Advertising</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk7">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk7">
                                                 <label class="custom-control-label" for="addAccChk7">Bank Fees</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk8">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk8">
                                                 <label class="custom-control-label" for="addAccChk8">Cleaning</label>
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="addAccChk9">
+                                                <input type="checkbox"
+                                                    class="custom-control-input feeOnTopInput lytAccountToggle"
+                                                    id="addAccChk9">
                                                 <label class="custom-control-label" for="addAccChk9">Consulting &
                                                     Accounting</label>
                                             </div>
@@ -2928,7 +3158,8 @@
                         <button class="btn btn-success saveTable" type="button" autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -2940,7 +3171,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Group Accounts</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <h6 class="mb-10 ml-2">Choose a name and position for these accounts:</h6>
@@ -2948,7 +3180,8 @@
                     <div class="form-group-sm d-flex flex-column">
                         <div class="m-1 pr-2">
                             <label for="nplGroupName" class="p-1 mb-0">Group Name:</label>
-                            <input type="text" class="form-control m-1" id="newGroupName" name="cnplGroupName" autocomplete="off">
+                            <input type="text" class="form-control m-1" id="newGroupName" name="cnplGroupName"
+                                autocomplete="off">
                         </div>
                         <div class="p-1 m-1">
                             <h6>Place in:</h6>
@@ -2956,38 +3189,46 @@
                         <div class="p-1 m-1">
                             <select class="form-control" id="nplPlaceInMoveSelection">
                                 {{#each item in profitlosslayoutrecords }}
-                                    <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
+                                <option value="{{ item.AccountName }}">{{ item.AccountName }}</option>
                                 {{/each}}
                             </select>
                         </div>
                         <div class="p-1 m-1">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="summarySwitchAG" checked="">
+                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="summarySwitchAG"
+                                    checked="">
                                 <label style="width: 275px;" class="custom-control-label" for="summarySwitchAG">Show
                                     summary only</label>
                             </div>
                         </div>
                         <div class="p-1 m-1">
                             <div class="">
-                                <a id="nplAddGroupDefTag" href="" onclick="$('#nplAddGroupDefTag').hide();$('#defineGrouping').show();  return false;">
+                                <a id="nplAddGroupDefTag" href=""
+                                    onclick="$('#nplAddGroupDefTag').hide();$('#defineGrouping').show();  return false;">
                                     Define how accounts are grouped </a>
                                 <div class="m-0 p-0" id="defineGrouping" style="display:none;">
                                     <h6>Place in:</h6>
                                     <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
+                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1"
+                                            id="accCodeCheck">
                                         <label style="" class="mr-1" for="accCodeCheck">Account code begins with:
                                         </label>
-                                        <input type="text" class="form-control" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:100px;">
+                                        <input type="text" class="form-control" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:100px;">
                                     </div>
                                     <div class="p-1 m-1 form-group-sm d-flex flex-row align-items-baseline">
-                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accCodeCheck">
+                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1"
+                                            id="accCodeCheck">
                                         <label style="" class="mr-1" for="accCodeCheck">Account code is within range:
                                         </label>
-                                        <input type="text" class="form-control mr-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;"> to
-                                        <input type="text" class="form-control ml-1" id="comparisonPeriodNum" name="accCodeCheckInput" autocomplete="off" style="max-width:50px;">
+                                        <input type="text" class="form-control mr-1" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:50px;"> to
+                                        <input type="text" class="form-control ml-1" id="comparisonPeriodNum"
+                                            name="accCodeCheckInput" autocomplete="off" style="max-width:50px;">
                                     </div>
                                     <div class="p-1 m-1 d-flex form-group-sm flex-row align-items-baseline">
-                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1" id="accBlockAddition">
+                                        <input type="radio" checked="checked" name="radio" class="mt-1 mb-1"
+                                            id="accBlockAddition">
                                         <label style="" class="" for="accBlockAddition">Do not automatically add
                                             accounts to this group</label>
                                     </div>
@@ -2999,10 +3240,12 @@
                 </div>
                 <div class="modal-footer">
                     <div class="col-md-12 col-lg-offset-4 text-right">
-                        <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button" autocomplete="off">
+                        <button class="btn btn-success saveTable" id="savePnLFieldsLayout" type="button"
+                            autocomplete="off">
                             <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                         </button>
-                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                        <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button"
+                            id="btnApplyLayout"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                     </div>
                 </div>
             </div>
@@ -3014,16 +3257,22 @@
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="padding-bottom: 8px;">
-                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalEditLayout" class="btn btn-primary helpModal">View Help Video</a></p>
-                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=42" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalEditLayout"
+                            class="btn btn-primary helpModal">View Help Video</a></p>
+                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=42"
+                            target="_blank" class="btn btn-primary">Download Help File</a></p>
                     <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ
                             Advisor</button></p>
-                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
+                    <p class="text-center text-muted" style="margin: 0px;"><a
+                            href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}"
+                            target="_blank" class="btn btn-primary">Go To Forum</a></p>
                 </div>
-                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal"
+                        type="button">Close</button></div>
             </div>
         </div>
     </div>
@@ -3032,12 +3281,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="title-header">Profit and Loss Report - Edit Layout</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
                     <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                    <video id="myVideo" width="640" height="360" controls="" name="media"
+                        style="border: solid 5px #999999f0; height: auto; outline: none;">
                         <!-- <source src="https://erphelpes.com/vs1videos/profitandlossreport.mp4" type="video/mp4"> -->
                         <source src="https://erphelpes.com/vs1videos/comingsoon.mp4" type="video/mp4">
                     </video>
