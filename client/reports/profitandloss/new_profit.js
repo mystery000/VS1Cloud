@@ -14,6 +14,8 @@ let utilityService = new UtilityService();
 let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
+const defaultPeriod = 2;
+
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -59,7 +61,7 @@ Template.newprofitandloss.onRendered(function () {
   const templateObject = Template.instance();
   const deptrecords = [];
 
-  templateObject.setReportOptions = async function( compPeriod = 0, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function( compPeriod = 2, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
       // New Code Start here
     let fromYear = moment(formatDateFrom).format('YYYY');
     let toYear = moment(formatDateTo).format('YYYY');
@@ -502,13 +504,15 @@ Template.newprofitandloss.onRendered(function () {
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom =
-      currentDate2.getFullYear() +
-      "-" +
-      currentDate2.getMonth() +
-      "-" +
-      currentDate2.getDate();
-      templateObject.setReportOptions(0, getDateFrom, getLoadDate);
+
+    // // last 2 months
+    // for (i = 0; i <= 2; i++) {
+    //   currentDate2.setMonth(currentDate2.getMonth() - 1);
+    // }
+
+    let getDateFrom =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    //console.log(getDateFrom);
+    templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
 
 templateObject.getDepartments = function() {
@@ -837,7 +841,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    templateObject.setReportOptions(0, dateFrom, dateTo );
+    templateObject.setReportOptions(defaultPeriod, dateFrom, dateTo );
   },
 
   "click .btnRefresh": function () {
@@ -961,7 +965,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf('month').format('YYYY-MM-DD');
     let endDate   = moment().endOf('month').format('YYYY-MM-DD');
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #thisQuarter": function(){
@@ -969,7 +973,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format('YYYY-MM-DD');
     let endDate = moment().endOf("Q").format('YYYY-MM-DD');
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #thisFinYear": function(){
@@ -984,7 +988,7 @@ Template.newprofitandloss.events({
       fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
       endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
     }
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #lastMonth": function(){
@@ -992,7 +996,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD')
     let endDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD')
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
   
   "click #lastQuarter": function () {
@@ -1000,7 +1004,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #lastFinYear": function () {
@@ -1015,7 +1019,7 @@ Template.newprofitandloss.events({
       fromDate = moment().subtract(2, "year").month("July").startOf("month").format("YYYY-MM-DD");
       endDate = moment().subtract(1, "year").month("June").endOf("month").format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #monthToDate": function () {
@@ -1023,7 +1027,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("M").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #quarterToDate": function () {
@@ -1031,7 +1035,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click #finYearToDate": function () {
@@ -1039,7 +1043,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
   },
 
   "click .btnDepartmentSelect": async function(){
