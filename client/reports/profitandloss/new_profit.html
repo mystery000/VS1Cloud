@@ -499,6 +499,7 @@
                                                 {{/if}}
 
                                             </tr>
+                                            {{#if isOnlyDefaultActive equal "false" }}
                                             <tr class="table-active tblAvoid customDoubleTableHeading">
                                                 {{#if reportOptions.threcords}}
                                                     {{#each item in reportOptions.threcords}}
@@ -516,152 +517,235 @@
                                                         {{#if currencyList}}
                                                             {{#each c in currencyList }}
                                                                 {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
+                                                                    <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
                                                                 {{/if}}
                                                             {{/each}}
                                                         {{/if}}
                                                 {{/if}}
                                             </tr>
+                                            {{/if}}
                                         </thead>
                                         
                                         <tbody>
                                             {{#if records}}
-                                            {{#each item in records}}
-                                            <tr class="tableInnerRow" id="item-value-{{item.name}}">
-                                                {{#if equals item.accounttype ""}}
-                                                <td class="fgr fgrblue"><span
-                                                        class="tglAccCodes" style="display:none;">{{ item.id }} -
-                                                    </span>{{item.accountname}}
-                                                </td>                                                
-                                                {{#if item.periodAmounts }}
-                                                    {{#each itemamount in item.periodAmounts}}
-                                                        
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                {{#if reportOptions.showDecimal }}
-                                                                <td class="fgr fgrtotal text-center {{c.currency}}">{{convertAmount itemamount.decimalAmt c}}</td>                                                                                                                      
+                                                {{#each item in records}}
+                                                    <tr class="tableInnerRow 55546456" id="item-value-{{item.name}}">
+                                                        {{#if equals item.accounttype ""}}
+                                                            <td class="fgr fgrblue"><span
+                                                                    class="tglAccCodes" style="display:none;">{{ item.id }} -
+                                                                </span>{{item.accountname}}
+                                                            </td>                                                
+                                                            {{#if item.periodAmounts }}
+                                                                {{#each itemamount in item.periodAmounts}}
+
+                                                                    {{#if isOnlyDefaultActive }}
+                                                                        
+                                                                        {{#if currencyList}}
+                                                                            {{#each c in currencyList }}
+                                                                                {{# if c.active}}
+                                                                                    <td class="fgr fgrtotal text-center {{c.currency}}">
+                                                                                        {{#if reportOptions.showDecimal }}
+                                                                                            {{convertAmount itemamount.decimalAmt c}}                                                                                                                      
+                                                                                        {{else}}
+                                                                                            {{convertAmount itemamount.roundAmt c}}
+                                                                                        {{/if}}
+                                                                                    </td>  
+                                                                                {{/if}}
+                                                                            {{/each}}
+                                                                        {{/if}}
+
+                                                                    {{else}}
+
+                                                                        <td class="fgr fgrtotal text-center">
+                                                                            {{#if reportOptions.showDecimal }}
+                                                                                {{itemamount.decimalAmt}}                                                                                                                   
+                                                                            {{else}}
+                                                                                {{itemamount.roundAmt}}
+                                                                            {{/if}}
+                                                                        </td>  
+
+                                                                    {{/if}}
+
+                                                                {{/each}}
+                                                            {{/if}}
+
+                                                            {{#if reportOptions.showtotal}}
+
+                                                                {{#if isOnlyDefaultActive }}
+                                                                    {{#if currencyList}}
+                                                                        {{#each c in currencyList }}
+                                                                            {{# if c.active}}
+                                                                                <td  class="fgr fgrblue text-center tglTotal">
+                                                                                    {{#if reportOptions.showDecimal }}
+                                                                                        {{convertAmount item.totalamountex c}}
+                                                                                    {{else}}
+                                                                                        {{convertAmount item.totalroundamountex c}}
+                                                                                    {{/if}}
+                                                                                </td>
+                                                                            {{/if}}
+                                                                        {{/each}}
+                                                                    {{/if}}
                                                                 {{else}}
-                                                                    <td class="fgr fgrtotal text-center {{c.currency}}">{{convertAmount itemamount.roundAmt c}}</td>  
+                                                                    <td  class="fgr fgrblue text-center tglTotal">
+                                                                        {{#if reportOptions.showDecimal }}
+                                                                            {{item.totalamountex}}
+                                                                        {{else}}
+                                                                            {{item.totalroundamountex}}
+                                                                        {{/if}}
+                                                                    </td>
+
                                                                 {{/if}}
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-                                                {{#if reportOptions.showtotal}}
-                                                
-                                                {{#if currencyList}}
-                                                {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                        <td  class="fgr fgrblue text-center tglTotal">
-                                                            {{#if reportOptions.showDecimal }}
-                                                                {{convertAmount item.totalamountex c}}
-                                                            {{else}}
-                                                                {{convertAmount item.totalroundamountex c}}
-                                                            {{/if}}
-                                                        </td>
-                                                        {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-                                                
-                                                {{/if}}
-                                                {{else}}
-                                                {{#if containsequals item.accounttype "Total"}}
-                                                <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
-                                                    {{item.accounttype}}
-                                                </td>
-                                                <!-- <td></td> -->
-                                                {{#if item.periodAmounts }}
-                                                {{#each itemamount in item.periodAmounts}}
-
-
-                                                {{#if currencyList}}
-                                                {{#each c in currencyList }}
-                                                    {{# if c.active}}
-                                                    
-                                                    <td class="fgr fgrtotal text-center">
-                                                        {{#if reportOptions.showDecimal }}
-                                                        {{convertAmount itemamount.decimalAmt c}}
-                                                        {{else}}
-                                                        {{convertAmount itemamount.roundAmt c}}
-                                                        {{/if}}
-                                                    </td>
-                                                        
-                                                    {{/if}}
-                                                {{/each}}
-                                                {{/if}}
-
-                                                
-                                                {{/each}}
-                                                {{/if}}
-                                                
-                                                {{#if reportOptions.showtotal}}
-
-                                                {{#if currencyList}}
-                                                {{#each c in currencyList }}
-                                                    {{# if c.active}}
-                                                 
-                                                        <td class="fgr fgrblue text-center tglTotal">
-                                                            {{#if reportOptions.showDecimal }}
-                                                            {{convertAmount item.totalamountex c}}
-                                                            {{else}}
-                                                            {{convertAmount item.totalroundamountex c}}
-                                                            {{/if}}
-                                                        </td>
-                                                        
-                                                    {{/if}}
-                                                {{/each}}
-                                                {{/if}}
-                                                
-                                                {{/if}}
-                                                {{else}}
-                                                <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
-                                                <!-- <td></td> -->
-                                                {{#if item.periodAmounts }}
-                                                {{#each itemamount in item.periodAmounts}}
-
-                                                    {{#if currencyList}}
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                     
-                                                            <td class="fgr fgrtotal text-center ">
-                                                                {{#if reportOptions.showDecimal }}
-                                                                {{convertAmount itemamount.decimalAmt c}}
-                                                                {{else}}
-                                                                {{convertAmount itemamount.roundAmt c}}
-                                                                {{/if}}
-                                                            </td>
                                                             
-                                                        {{/if}}
-                                                    {{/each}}
-                                                    {{/if}}
+                                                            {{/if}}
+                                                        {{else}}
+                                                            {{#if containsequals item.accounttype "Total"}}
+                                                                <td class="fgrSubtotal fgrSubtotalName" style="padding-left: 15px;">
+                                                                    {{item.accounttype}}
+                                                                </td>
+                                                                <!-- <td></td> -->
+                                                                {{#if item.periodAmounts }}
+                                                                {{#each itemamount in item.periodAmounts}}
 
-                                                    
-                                                {{/each}}
-                                                {{/if}}
+                                                                    {{#if isOnlyDefaultActive }}
 
-                                                {{#if reportOptions.showtotal}}
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
+                                                                        {{#if currencyList}}
+                                                                            {{#each c in currencyList }}
+                                                                                {{# if c.active}}
+                                                                                
+                                                                                    <td class="fgr fgrtotal text-center">
+                                                                                        {{#if reportOptions.showDecimal }}
+                                                                                        {{convertAmount itemamount.decimalAmt c}}
+                                                                                        {{else}}
+                                                                                        {{convertAmount itemamount.roundAmt c}}
+                                                                                        {{/if}}
+                                                                                    </td>
+                                                                                    
+                                                                                {{/if}}
+                                                                            {{/each}}
+                                                                        {{/if}}
+
+                                                                    {{else}}
+                                                                        <td class="fgr fgrtotal text-center">
+                                                                            {{#if reportOptions.showDecimal }}
+                                                                            {{itemamount.decimalAmt}}
+                                                                            {{else}}
+                                                                            {{itemamount.roundAmt}}
+                                                                            {{/if}}
+                                                                        </td>
+
+                                                                    {{/if}}
+
+                                                                {{/each}}
+                                                            {{/if}}
                                                         
+                                                            {{#if reportOptions.showtotal}}
+                                                                {{#if isOnlyDefaultActive }}
+
+                                                                    {{#if currencyList}}
+                                                                        {{#each c in currencyList }}
+                                                                            {{# if c.active}}
+                                                                                <td class="fgr fgrblue text-center tglTotal">
+                                                                                    {{#if reportOptions.showDecimal }}
+                                                                                        {{convertAmount item.totalamountex c}}
+                                                                                    {{else}}
+                                                                                        {{convertAmount item.totalroundamountex c}}
+                                                                                    {{/if}}
+                                                                                </td>
+                                                                            {{/if}}
+                                                                        {{/each}}
+                                                                    {{/if}}
+
+                                                                {{else}}
+
+                                                                    <td class="fgr fgrblue text-center tglTotal">
+                                                                        {{#if reportOptions.showDecimal }}
+                                                                            {{item.totalamountex}}
+                                                                        {{else}}
+                                                                            {{item.totalroundamountex}}
+                                                                        {{/if}}
+                                                                    </td>
+
+                                                                {{/if}}
+
+                                                        
+                                                        
+                                                            {{/if}}
+                                                        {{else}}
+                                                            <td class="fgrtotal fgrtotalName">{{item.accounttype}}</td>
+                                                            <!-- <td></td> -->
+                                                            {{#if item.periodAmounts }}
+                                                                {{#each itemamount in item.periodAmounts}}
+                                                                
+                                                                    {{#if isOnlyDefaultActive }}
+                                                                        {{#if currencyList}}
+                                                                            {{#each c in currencyList }}
+                                                                                {{# if c.active}}
+                                                                            
+                                                                                    <td class="fgr fgrtotal text-center ">
+                                                                                        {{#if reportOptions.showDecimal }}
+                                                                                        {{convertAmount itemamount.decimalAmt c}}
+                                                                                        {{else}}
+                                                                                        {{convertAmount itemamount.roundAmt c}}
+                                                                                        {{/if}}
+                                                                                    </td>
+                                                                                    
+                                                                                {{/if}}
+                                                                            {{/each}}
+                                                                        {{/if}}
+
+                                                                    {{else}}
+
+                                                                        <td class="fgr fgrtotal text-center ">
+                                                                            {{#if reportOptions.showDecimal }}
+                                                                                {{itemamount.decimalAmt}}
+                                                                            {{else}}
+                                                                                {{itemamount.roundAmt}}
+                                                                            {{/if}}
+                                                                        </td>
+
+                                                                    {{/if}}
+                                                                        
+
+                                                                
+
+                                                                    
+                                                                {{/each}}
+                                                            {{/if}}
+
+                                                        {{#if reportOptions.showtotal}}
+
+                                                            {{#if isOnlyDefaultActive }}
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList }}
+                                                                        {{# if c.active}}
+                                                                    
+                                                                            <td lass="fgr fgrblue text-center tglTotal">
+                                                                                {{#if reportOptions.showDecimal }}
+                                                                                    {{convertAmount item.totalamountex c}}
+                                                                                {{else}}
+                                                                                    {{convertAmount item.totalroundamountex c}}
+                                                                                {{/if}}
+                                                                            </td>
+                                                                            
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+                                                            {{else}}
+
                                                                 <td lass="fgr fgrblue text-center tglTotal">
                                                                     {{#if reportOptions.showDecimal }}
-                                                                        {{convertAmount item.totalamountex c}}
+                                                                        {{item.totalamountex}}
                                                                     {{else}}
-                                                                        {{convertAmount item.totalroundamountex c}}
+                                                                        {{item.totalroundamountex}}
                                                                     {{/if}}
                                                                 </td>
-                                                                
+
                                                             {{/if}}
-                                                        {{/each}}
+                                                        {{/if}}
                                                     {{/if}}
-                                                {{/if}}
-                                                {{/if}}
-                                                {{/if}}
-                                            </tr>
-                                            {{/each}}
+                                                        {{/if}}
+                                                    </tr>
+                                                {{/each}}
                                             {{/if}}
 
                                             <!-- <tr>
@@ -961,7 +1045,7 @@
                     {{/if}}
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary currency-modal-save" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
+                    <button class="btn btn-primary currency-modal-save" data-dismiss="modal" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
                     <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
                 </div>
             </div>
