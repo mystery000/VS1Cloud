@@ -17,6 +17,7 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
+let defaultCurrencyCode = "AUD";
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -750,7 +751,7 @@ $('.tblAvoid').each(function(){
           country: data[i].Country || "NA",
           description: data[i].CurrencyDesc || "-",
           ratelastmodified: data[i].RateLastModified || "-",
-           active: data[i].Currency == "AUD" ? true : false, // By default if AUD then true
+           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
           //active: false,
           // createdAt: new Date(data[i].MsTimeStamp) || "-",
           // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
@@ -835,7 +836,7 @@ Template.newprofitandloss.events({
         _currencySelectedList.push(_currency);
       });
     } else {
-      let _currency = _currencyList.find((c) => c.currency == "AUD");
+      let _currency = _currencyList.find((c) => c.currency == defaultCurrencyCode);
       _currency.active = true;
       _currencySelectedList.push(_currency);
     }
@@ -854,7 +855,7 @@ Template.newprofitandloss.events({
     });
 
     _currencyList = _currencyList.sort((a, b) => {
-      if (a.currency == "AUD") {
+      if (a.currency == defaultCurrencyCode) {
         return -1;
       }
       return 1;
@@ -2075,7 +2076,7 @@ Template.newprofitandloss.helpers({
 
     if(activeArray.length == 1) {
       console.log(activeArray[0].currency);
-      if(activeArray[0].currency == "AUD") {
+      if(activeArray[0].currency == defaultCurrencyCode) {
         return !true;
       } else {
         return !false;
@@ -2137,7 +2138,7 @@ Template.newprofitandloss.helpers({
     if(!amount) {
       return "";
     }
-    if (currencyData.currency == "AUD") {
+    if (currencyData.currency == defaultCurrencyCode) {
       // default currency
       return amount;
     }
@@ -2146,7 +2147,7 @@ Template.newprofitandloss.helpers({
     if(isMinus == true) amount = amount.replace('-', '');
 
     // get default currency symbol
-    let _defaultCurrency = currencyList.filter(a => a.Code == "AUD")[0];
+    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
     //console.log("default: ",_defaultCurrency);
     amount = amount.replace(_defaultCurrency.symbol, '');
     // console.log("Is nan", amount, isNaN(amount));
