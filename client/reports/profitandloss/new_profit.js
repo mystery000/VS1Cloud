@@ -863,7 +863,7 @@ Template.newprofitandloss.events({
 
     // templateObject.activeCurrencyList.set(_activeCurrencyList);
     templateObject.currencyList.set(_currencyList);
-    minusAmountsStyle();
+    
     LoadingOverlay.Hide();
   },
   "click #dropdownDateRang": function (e) {
@@ -2071,6 +2071,18 @@ function timestampToDate(timestamp) {
 
 
 Template.newprofitandloss.helpers({
+  /**
+   * 
+   * @param {Number} amount 
+   * @returns {boolean}
+   */
+  isNegativeAmount(amount) {
+    
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
     let activeArray = array.filter((c) => c.active == true);
@@ -2267,21 +2279,21 @@ Template.registerHelper("noDecimal", function (a) {
 });
 
 
-/**
- * This function will check each minus and add text-danger to that th
- */
-function minusAmountsStyle() {
+// /**
+//  * This function will check each minus and add text-danger to that th
+//  */
+// function minusAmountsStyle() {
  
-  setTimeout(() => {
-    const elements = document.querySelectorAll(".fgr");
+//   setTimeout(() => {
+//     const elements = document.querySelectorAll(".fgr");
 
-    elements.forEach((element) => {
-      console.log(element.innerHTML);
-      if(element.innerHTML.includes('-')) {
-        element.classList.add('text-danger');
-      }
-    });
+//     elements.forEach((element) => {
+//       console.log(element.innerHTML);
+//       if(element.innerHTML.includes('-')) {
+//         element.classList.add('text-danger');
+//       }
+//     });
 
-  }, 3000);
+//   }, 3000);
   
-}
+// }
