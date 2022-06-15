@@ -17,7 +17,7 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
-let defaultCurrencyCode = "AUD";
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -2075,7 +2075,7 @@ Template.newprofitandloss.helpers({
     let activeArray = array.filter((c) => c.active == true);
 
     if(activeArray.length == 1) {
-      console.log(activeArray[0].currency);
+      //console.log(activeArray[0].currency);
       if(activeArray[0].currency == defaultCurrencyCode) {
         return !true;
       } else {
