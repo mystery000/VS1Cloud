@@ -2100,6 +2100,18 @@ Template.newprofitandloss.events({
   }
 });
 
+
+/**
+ * 
+ * @param {string} timestamp 
+ * @returns {Date}
+ */
+function timestampToDate(timestamp) {
+  const date = new Date(timestamp);
+  return date;
+}
+
+
 Template.newprofitandloss.helpers({
   isAccount( layout ){
     if( layout.AccountID > 1 ){
@@ -2142,39 +2154,75 @@ Template.newprofitandloss.helpers({
     return loggedCompany;
   },
   convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    // console.log("Amount to covert", amount);
     if(!amount) {
       return "";
     }
     if (currencyData.currency == "AUD") {
+      // default currency
       return amount;
     }
-    amount = isNaN(amount) ? 0.00 : Number.isInteger(amount) ? amount : amount.substring(1);
-    // console.log(amount);
-    // console.log(currencyData);
+    // Lets remove the minus character
+    const isMinus = amount.indexOf('-') > -1;
+    if(isMinus == true) amount = amount.replace('-', '');
 
-    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+    // get default currency symbol
+    let _defaultCurrency = currencyList.filter(a => a.Code == "AUD")[0];
+    console.log("default: ",_defaultCurrency);
+    amount = amount.replace(_defaultCurrency.symbol, '');
+     console.log("Is nan", amount, isNaN(amount));
+    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // console.log("Amount to convert", amount);
+    // console.log("currency to convert to", currencyData);
 
 
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split('/')[0];
+    const m = dateTo.split('/')[1];
+    const y = dateTo.split('/')[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+    // console.log('date to', dateTo);
+
+    // Filter by currency code
     currencyList = currencyList.filter(a => a.Code == currencyData.currency);
 
+    // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
-      const adate= new Date(a.MsTimeStamp);
-      const bdate = new Date(b.MsTimeStamp);
+      a = timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
 
-      if(adate > bdate) {
-        return 1;
-      }
-      return -1;
+      b = timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
     });
 
-    console.log("Currency list: ", currencyList);
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+    // console.log("Closests currency", firstElem);
+    // console.log("Currency list: ", currencyList);
 
-
-    const d = $("#dateTo").val();
-    //console.log(d);
-
-    let rate = currencyData.buyrate || 1; // Must used from tcurrecyhistory
-    let convertedAmount = `${currencyData.symbol} ${amount * rate}`;
+    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    console.log("final amount", amount);
+    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
     return convertedAmount;
