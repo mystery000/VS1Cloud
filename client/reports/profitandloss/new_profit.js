@@ -863,6 +863,7 @@ Template.newprofitandloss.events({
 
     // templateObject.activeCurrencyList.set(_activeCurrencyList);
     templateObject.currencyList.set(_currencyList);
+    minusAmountsStyle();
     LoadingOverlay.Hide();
   },
   "click #dropdownDateRang": function (e) {
@@ -2264,3 +2265,23 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
+
+
+/**
+ * This function will check each minus and add text-danger to that th
+ */
+function minusAmountsStyle() {
+ 
+  setTimeout(() => {
+    const elements = document.querySelectorAll(".fgr");
+
+    elements.forEach((element) => {
+      console.log(element.innerHTML);
+      if(element.innerHTML.includes('-')) {
+        element.classList.add('text-danger');
+      }
+    });
+
+  }, 3000);
+  
+}
