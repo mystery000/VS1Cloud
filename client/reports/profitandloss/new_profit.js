@@ -772,8 +772,8 @@ $('.tblAvoid').each(function(){
   .then((result) => {
     //console.log(result);
     const data = result.tcurrencyratehistory;
-    console.log(data);
-    console.log("Currency list: ",data);
+    // console.log(data);
+    // console.log("Currency list: ",data);
 
     templateObject.tcurrencyratehistory.set(data);
   })
@@ -828,7 +828,7 @@ Template.newprofitandloss.events({
       _currency.active = true;
       _currencySelectedList.push(_currency);
     });
-    console.log("Selected currency list", _currencySelectedList);
+    //console.log("Selected currency list", _currencySelectedList);
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -2113,9 +2113,9 @@ Template.newprofitandloss.helpers({
 
     // get default currency symbol
     let _defaultCurrency = currencyList.filter(a => a.Code == "AUD")[0];
-    console.log("default: ",_defaultCurrency);
+    //console.log("default: ",_defaultCurrency);
     amount = amount.replace(_defaultCurrency.symbol, '');
-     console.log("Is nan", amount, isNaN(amount));
+    // console.log("Is nan", amount, isNaN(amount));
     amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
@@ -2164,7 +2164,7 @@ Template.newprofitandloss.helpers({
 
     let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
-    console.log("final amount", amount);
+    //console.log("final amount", amount);
     let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
