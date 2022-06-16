@@ -345,7 +345,7 @@ Template.sidenav.onRendered(function() {
                 $('#sidenavpayroll .nav-link').removeClass('active');
             } else if ((currentLoc == "/allreports") ||
                        (currentLoc == "/balancesheetreport") || (currentLoc == "/balancetransactionlist") ||
-                       (currentLoc == "/cashsummaryreport") || (currentLoc == "/profitlossreport") ||
+                       (currentLoc == "/cashsummaryreport") || (currentLoc == "/newprofitandloss") ||
                        (currentLoc == "/agedreceivables") || (currentLoc == "/agedpayables") ||
                        (currentLoc == "/trialbalancereport") || (currentLoc == "/1099report") ||
                        (currentLoc == "/agedreceivablessummary") || (currentLoc == "/salesreport") ||
@@ -3043,7 +3043,7 @@ Template.sidenav.events({
     'click #sidenavprofitlossreport': function(event) {
 
         event.preventDefault();
-        FlowRouter.go('/profitlossreport');
+        FlowRouter.go('/newprofitandloss');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

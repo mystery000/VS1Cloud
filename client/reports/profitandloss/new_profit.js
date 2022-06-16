@@ -8,6 +8,7 @@ import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 import { TaxRateService } from "../../settings/settings-service";
+import LoadingOverlay from "../../LoadingOverlay";
 // import jqueryScrollable from "../../js/jquery-sortable"
 
 
@@ -16,6 +17,7 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -742,14 +744,15 @@ $('.tblAvoid').each(function(){
         var dataList = {
           id: data[i].Id || "",
           code: data[i].Code || "-",
-          currency: data[i].Currency || "-",
-          symbol: data[i].CurrencySymbol || "-",
+          currency: data[i].Currency || "NA",
+          symbol: data[i].CurrencySymbol || "NA",
           buyrate: data[i].BuyRate || "-",
           sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "-",
+          country: data[i].Country || "NA",
           description: data[i].CurrencyDesc || "-",
           ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Currency == "AUD" ? true : false, // By default if AUD then true
+           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+          //active: false,
           // createdAt: new Date(data[i].MsTimeStamp) || "-",
           // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
         };
@@ -772,8 +775,8 @@ $('.tblAvoid').each(function(){
   .then((result) => {
     //console.log(result);
     const data = result.tcurrencyratehistory;
-    console.log(data);
-    console.log("Currency list: ",data);
+    // console.log(data);
+    // console.log("Currency list: ",data);
 
     templateObject.tcurrencyratehistory.set(data);
   })
@@ -810,7 +813,10 @@ Template.newprofitandloss.events({
     );
   },
   "click .currency-modal-save": (e) => {
-    $(".fullScreenSpin").css("display", "inline-block");
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+    
+
     let templateObject = Template.instance();
 
     // Get all currency list
@@ -819,16 +825,24 @@ Template.newprofitandloss.events({
     // Get all selected currencies
     const currencySelected = $(".currency-selector-js:checked");
     let _currencySelectedList = [];
-    $.each(currencySelected, (index, e) => {
-      const sellRate = $(e).attr("sell-rate");
-      const buyRate = $(e).attr("buy-rate");
-      const currencyCode = $(e).attr("currency");
-      const currencyId = $(e).attr("currency-id");
-      let _currency = _currencyList.find((c) => c.id == currencyId);
+    if(currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find((c) => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find((c) => c.currency == defaultCurrencyCode);
       _currency.active = true;
       _currencySelectedList.push(_currency);
-    });
-    console.log("Selected currency list", _currencySelectedList);
+    }
+    
+    
+    //console.log("Selected currency list", _currencySelectedList);
 
     _currencyList.forEach((value, index) => {
       if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
@@ -841,7 +855,7 @@ Template.newprofitandloss.events({
     });
 
     _currencyList = _currencyList.sort((a, b) => {
-      if (a.currency == "AUD") {
+      if (a.currency == defaultCurrencyCode) {
         return -1;
       }
       return 1;
@@ -849,7 +863,8 @@ Template.newprofitandloss.events({
 
     // templateObject.activeCurrencyList.set(_activeCurrencyList);
     templateObject.currencyList.set(_currencyList);
-    $(".fullScreenSpin").css("display", "none");
+    
+    LoadingOverlay.Hide();
   },
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
@@ -2043,7 +2058,52 @@ Template.newprofitandloss.events({
   }
 });
 
+
+/**
+ * 
+ * @param {string} timestamp 
+ * @returns {Date}
+ */
+function timestampToDate(timestamp) {
+  const date = new Date(timestamp);
+  return date;
+}
+
+
 Template.newprofitandloss.helpers({
+  /**
+   * 
+   * @param {Number} amount 
+   * @returns {boolean}
+   */
+  isNegativeAmount(amount) {
+    
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    if(activeArray.length == 1) {
+      //console.log(activeArray[0].currency);
+      if(activeArray[0].currency == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
   isAccount( layout ){
     if( layout.AccountID > 1 ){
       return true;
@@ -2085,39 +2145,75 @@ Template.newprofitandloss.helpers({
     return loggedCompany;
   },
   convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    // console.log("Amount to covert", amount);
     if(!amount) {
       return "";
     }
-    if (currencyData.currency == "AUD") {
+    if (currencyData.currency == defaultCurrencyCode) {
+      // default currency
       return amount;
     }
-    amount = isNaN(amount) ? 0.00 : Number.isInteger(amount) ? amount : amount.substring(1);
-    // console.log(amount);
-    // console.log(currencyData);
+    // Lets remove the minus character
+    const isMinus = amount.indexOf('-') > -1;
+    if(isMinus == true) amount = amount.replace('-', '');
 
-    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+    // get default currency symbol
+    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
+    //console.log("default: ",_defaultCurrency);
+    amount = amount.replace(_defaultCurrency.symbol, '');
+    // console.log("Is nan", amount, isNaN(amount));
+    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // console.log("Amount to convert", amount);
+    // console.log("currency to convert to", currencyData);
 
 
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split('/')[0];
+    const m = dateTo.split('/')[1];
+    const y = dateTo.split('/')[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+    // console.log('date to', dateTo);
+
+    // Filter by currency code
     currencyList = currencyList.filter(a => a.Code == currencyData.currency);
 
+    // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
-      const adate= new Date(a.MsTimeStamp);
-      const bdate = new Date(b.MsTimeStamp);
+      a = timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
 
-      if(adate > bdate) {
-        return 1;
-      }
-      return -1;
+      b = timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
     });
 
-    console.log("Currency list: ", currencyList);
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+    // console.log("Closests currency", firstElem);
+    // console.log("Currency list: ", currencyList);
 
-
-    const d = $("#dateTo").val();
-    //console.log(d);
-
-    let rate = currencyData.buyrate || 1; // Must used from tcurrecyhistory
-    let convertedAmount = `${currencyData.symbol} ${amount * rate}`;
+    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    //console.log("final amount", amount);
+    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
     return convertedAmount;
@@ -2144,6 +2240,10 @@ Template.newprofitandloss.helpers({
         return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       });
   },
+});
+
+Template.registerHelper("equal", function (a, b) {
+  return a == b;
 });
 
 Template.registerHelper("equals", function (a, b) {
@@ -2177,3 +2277,23 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
+
+
+// /**
+//  * This function will check each minus and add text-danger to that th
+//  */
+// function minusAmountsStyle() {
+ 
+//   setTimeout(() => {
+//     const elements = document.querySelectorAll(".fgr");
+
+//     elements.forEach((element) => {
+//       console.log(element.innerHTML);
+//       if(element.innerHTML.includes('-')) {
+//         element.classList.add('text-danger');
+//       }
+//     });
+
+//   }, 3000);
+  
+// }

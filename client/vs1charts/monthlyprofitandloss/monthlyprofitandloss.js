@@ -48,7 +48,7 @@ Template.monthlyprofitandloss.onRendered(() => {
   function chartClickEvent(event, array) {
     if (array[0] != undefined) {
       var activePoints = array[0]["_model"].label;
-      FlowRouter.go("/profitlossreport?month=" + activePoints);
+      FlowRouter.go("/newprofitandloss?month=" + activePoints);
     }
   }
 
@@ -163,18 +163,18 @@ Template.monthlyprofitandloss.onRendered(() => {
         ("0" + dateFrom.getDate()).slice(-2);
       $("#profitloss").attr(
         "href",
-        "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
       );
       $("#lastmonth").attr(
         "href",
-        "/profitlossreport?dateFrom=" +
+        "/newprofitandloss?dateFrom=" +
           lastMonthStartDate +
           "&dateTo=" +
           lastMonthEndDate
       );
       $("#currentmonth").attr(
         "href",
-        "/profitlossreport?dateFrom=" +
+        "/newprofitandloss?dateFrom=" +
           currentMonthStartDate +
           "&dateTo=" +
           currentMonthEndDate
@@ -539,18 +539,18 @@ Template.monthlyprofitandloss.onRendered(() => {
       ("0" + dateFrom.getDate()).slice(-2);
     $("#profitloss").attr(
       "href",
-      "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+      "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
     );
     $("#lastmonth").attr(
       "href",
-      "/profitlossreport?dateFrom=" +
+      "/newprofitandloss?dateFrom=" +
         lastMonthStartDate +
         "&dateTo=" +
         lastMonthEndDate
     );
     $("#currentmonth").attr(
       "href",
-      "/profitlossreport?dateFrom=" +
+      "/newprofitandloss?dateFrom=" +
         currentMonthStartDate +
         "&dateTo=" +
         currentMonthEndDate
@@ -616,7 +616,7 @@ Template.monthlyprofitandloss.onRendered(() => {
     let total_month_5_net = 0;
     let total_month_6_net = 0;
     let total_month_7_net = 0;
-    setTimeout(function () {  
+    setTimeout(function () {
       for (let l = 0; l < data.length; l++) {
         if (
           data[l].fields.AccountTypeDesc.replace(/\s/g, "") == "TotalExpenses"
@@ -910,18 +910,18 @@ Template.monthlyprofitandloss.onRendered(() => {
           ("0" + dateFrom.getDate()).slice(-2);
         $("#profitloss").attr(
           "href",
-          "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+          "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
         );
         $("#lastmonth").attr(
           "href",
-          "/profitlossreport?dateFrom=" +
+          "/newprofitandloss?dateFrom=" +
             lastMonthStartDate +
             "&dateTo=" +
             lastMonthEndDate
         );
         $("#currentmonth").attr(
           "href",
-          "/profitlossreport?dateFrom=" +
+          "/newprofitandloss?dateFrom=" +
             currentMonthStartDate +
             "&dateTo=" +
             currentMonthEndDate
@@ -1293,18 +1293,18 @@ Template.monthlyprofitandloss.onRendered(() => {
         ("0" + dateFrom.getDate()).slice(-2);
       $("#profitloss").attr(
         "href",
-        "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
       );
       $("#lastmonth").attr(
         "href",
-        "/profitlossreport?dateFrom=" +
+        "/newprofitandloss?dateFrom=" +
           lastMonthStartDate +
           "&dateTo=" +
           lastMonthEndDate
       );
       $("#currentmonth").attr(
         "href",
-        "/profitlossreport?dateFrom=" +
+        "/newprofitandloss?dateFrom=" +
           currentMonthStartDate +
           "&dateTo=" +
           currentMonthEndDate

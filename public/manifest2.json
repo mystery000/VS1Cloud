@@ -1,8 +1,11 @@
 {
+  "theme_color": "#fff",
+  "background_color": "#00a3d3",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
   "short_name": "VS1Cloud",
   "name": "VS1Cloud",
-  "start_url": "/",
-  "display": "standalone",
   "icons": [
     {
       "src": "/images/icons-192.png",
@@ -16,8 +19,5 @@
       "sizes": "512x512",
       "purpose": "any maskable"
     }
-  ],
-  "background_color": "#00a3d3",
-  "scope": "/",
-  "theme_color": "#FFFFFF"
+  ]
 }

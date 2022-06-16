@@ -28,7 +28,7 @@ Template.accountrevenuestreams.onRendered(() => {
   function chartClickEvent(event, array) {
     if (array[0] != undefined) {
       var activePoints = array[0]["_model"].label;
-      FlowRouter.go("/profitlossreport?month=" + activePoints);
+      FlowRouter.go("/newprofitandloss?month=" + activePoints);
     }
   }
 
@@ -104,7 +104,7 @@ Template.accountrevenuestreams.onRendered(() => {
         ("0" + dateFrom.getDate()).slice(-2);
       $("#profitloss2").attr(
         "href",
-        "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
       );
       let currentMonth = moment().format("MMMM").substring(0, 3);
       let prevMonth = moment()
@@ -426,7 +426,7 @@ Template.accountrevenuestreams.onRendered(() => {
         ("0" + dateFrom.getDate()).slice(-2);
       $("#profitloss2").attr(
         "href",
-        "/profitlossreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
       );
       let month_1 = data[0].fields.DateDesc_1 || "";
       let month_2 = data[0].fields.DateDesc_2 || "";

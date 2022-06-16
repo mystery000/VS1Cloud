@@ -428,7 +428,7 @@ Template.newsidenav.onRendered(function() {
                 $('.collapse').collapse('hide');
             } else if ((currentLoc == "/allreports") ||
                 (currentLoc == "/balancesheetreport") || (currentLoc == "/balancetransactionlist") ||
-                (currentLoc == "/cashsummaryreport") || (currentLoc == "/profitlossreport") ||
+                (currentLoc == "/cashsummaryreport") || (currentLoc == "/newprofitandloss") ||
                 (currentLoc == "/agedreceivables") || (currentLoc == "/agedpayables") ||
                 (currentLoc == "/trialbalancereport") || (currentLoc == "/1099report") ||
                 (currentLoc == "/agedreceivablessummary") || (currentLoc == "/salesreport") ||
@@ -6895,7 +6895,7 @@ Template.newsidenav.events({
     'click #sidenavprofitlossreport': function(event) {
 
         event.preventDefault();
-        FlowRouter.go('/profitlossreport');
+        FlowRouter.go('/newprofitandloss');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },
