@@ -2071,79 +2071,6 @@ function timestampToDate(timestamp) {
 
 
 Template.newprofitandloss.helpers({
-  /**
-   * 
-   * @param {Number} amount 
-   * @returns {boolean}
-   */
-  isNegativeAmount(amount) {
-    
-    if (Math.sign(amount) === -1) {
-      return true;
-    }
-    return false;
-  },
-  isOnlyDefaultActive() {
-    const array = Template.instance().currencyList.get();
-    let activeArray = array.filter((c) => c.active == true);
-
-    if(activeArray.length == 1) {
-      //console.log(activeArray[0].currency);
-      if(activeArray[0].currency == defaultCurrencyCode) {
-        return !true;
-      } else {
-        return !false;
-      }
-    } else {
-      return !false;
-    }
-  },
-  isCurrencyListActive() {
-    const array = Template.instance().currencyList.get();
-    let activeArray = array.filter((c) => c.active == true);
-
-    return activeArray.length > 0;
-  },
-  isAccount( layout ){
-    if( layout.AccountID > 1 ){
-      return true;
-    }
-    return false
-  },
-  loggedCompany: () => {
-    return localStorage.getItem("mySession") || "";
-  },
-  reportOptions:() => {    
-    return Template.instance().reportOptions.get();
-  },
-  formatDate( currentDate ){
-    return moment(currentDate).format("DD/MM/YYYY");
-  },
-  profitlosslayoutrecords(){
-    return Template.instance().profitlosslayoutrecords.get();
-  },
-  records: () => {
-    return Template.instance().records.get();
-    //   .sort(function(a, b){
-    //     if (a.accounttype == 'NA') {
-    //   return 1;
-    //       }
-    //   else if (b.accounttype == 'NA') {
-    //     return -1;
-    //   }
-    // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
-    // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-    // });
-  },
-  recordslayout: () => {
-    return Template.instance().recordslayout.get();
-  },
-  dateAsAt: () => {
-    return Template.instance().dateAsAt.get() || "-";
-  },
-  companyname: () => {
-    return loggedCompany;
-  },
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
@@ -2228,6 +2155,75 @@ Template.newprofitandloss.helpers({
   currencyList: () => {
     return Template.instance().currencyList.get();
   },
+  isNegativeAmount(amount) {
+    
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    if(activeArray.length == 1) {
+      //console.log(activeArray[0].currency);
+      if(activeArray[0].currency == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  isAccount( layout ){
+    if( layout.AccountID > 1 ){
+      return true;
+    }
+    return false
+  },
+  loggedCompany: () => {
+    return localStorage.getItem("mySession") || "";
+  },
+  reportOptions:() => {    
+    return Template.instance().reportOptions.get();
+  },
+  formatDate( currentDate ){
+    return moment(currentDate).format("DD/MM/YYYY");
+  },
+  profitlosslayoutrecords(){
+    return Template.instance().profitlosslayoutrecords.get();
+  },
+  records: () => {
+    return Template.instance().records.get();
+    //   .sort(function(a, b){
+    //     if (a.accounttype == 'NA') {
+    //   return 1;
+    //       }
+    //   else if (b.accounttype == 'NA') {
+    //     return -1;
+    //   }
+    // return (a.accounttype.toUpperCase() > b.accounttype.toUpperCase()) ? 1 : -1;
+    // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
+    // });
+  },
+  recordslayout: () => {
+    return Template.instance().recordslayout.get();
+  },
+  dateAsAt: () => {
+    return Template.instance().dateAsAt.get() || "-";
+  },
+  companyname: () => {
+    return loggedCompany;
+  },
+  
   deptrecords: () => {
     return Template.instance()
       .deptrecords.get()
