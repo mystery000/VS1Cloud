@@ -1905,20 +1905,20 @@
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="5" class="mainList">
+                                                        <li data-id="{{ item.ID }}" data-group="{{ item.AccountName }}" data-position="{{ item.Level0Order }}-{{ item.Level1Order }}-{{ item.Level2Order }}-{{ item.Level3Order }}" class="mainList">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
                                                             <ol class="groupedListNew">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
-                                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
+                                                                        <li class="subChild" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
                                                                             </span>
                                                                         </li>
                                                                     {{else}}
-                                                                        <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
+                                                                        <li class="subChild noDrag" data-group="{{ acItem.AccountName }}" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
                                                                             </span>

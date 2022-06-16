@@ -583,7 +583,7 @@ templateObject.getProfitLossLayout = async function() {
     const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
     // Save default list
     templateObject.profitlosslayoutfields.set( profitLossLists );
-
+    
     profitLossLayouts = profitLossLists.filter((item) => {
       if( item.fields.Level0Order != 0 && item.fields.Level1Order == 0 && item.fields.Level2Order == 0 && item.fields.Level3Order == 0 ){
         return item;
@@ -645,11 +645,11 @@ templateObject.getProfitLossLayout = async function() {
             $item.removeClass('dragged');
 
             // for array
-            var data = group.sortable("serialize").get();
-            var jsonString = JSON.stringify(data, null, ' ');
-            console.log(jsonString);
-            container.el.removeClass("active");
-            _super($item, container);
+            // var data = group.sortable("serialize").get();
+            // var jsonString = JSON.stringify(data, null, ' ');
+            // console.log(jsonString);
+            // container.el.removeClass("active");
+            // _super($item, container);
           }
         });
        
