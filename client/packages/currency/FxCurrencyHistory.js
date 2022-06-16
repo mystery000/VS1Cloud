@@ -624,7 +624,7 @@ Template.FxCurrencyHistory.events({
         }
       }
     }
-    LoadingOverlay.Hide();
+    LoadingOverlay.hide();
   },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).text();
