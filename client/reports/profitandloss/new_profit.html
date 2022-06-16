@@ -2004,10 +2004,27 @@
                                                                         </li>
                                                                     {{else}}
                                                                         <li class="subChild noDrag" data-group="{{ acItem.AccountName }}" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
+                                                                            <ol class="ddllkk">
+                                                                                {{#each subacItem in acItem.subAccounts }}
+                                                                                    {{#if isAccount subacItem }}
+                                                                                        <li class="subChild" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                            <span class="childInner">
+                                                                                                <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
+                                                                                            </span>
+                                                                                        </li>
+                                                                                    {{else}}
+                                                                                        <li class="subChild noDrag" data-group="{{ subacItem.AccountName }}" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                            <ol class="ddllkk"></ol>
+                                                                                            <span class="childInner">
+                                                                                                <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
+                                                                                            </span>
+                                                                                        </li>
+                                                                                    {{/if}}    
+                                                                                {{/each}}
+                                                                            </ol>
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
                                                                             </span>
-                                                                            <ol class="ddllkk"></ol>
                                                                         </li>
                                                                     {{/if}}
                                                                 {{/each}}
