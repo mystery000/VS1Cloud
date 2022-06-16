@@ -2,7 +2,7 @@ export default class FxApi {
   static ApiID = "webinfy166640657";
   static ApiKey = "peorsc7t96poaf2k8t1segj0u2";
   static encodedApiKey =
-    "d2ViaW5meTY0MTY4MjM4Mzo5N3F0MWVsaG90aW1jdGs2bzhidDRkZm44aAo=";
+    "d2ViaW5meTY0MTY4MjM4Mzo5N3F0MWVsaG90aW1jdGs2bzhidDRkZm44aA==";
 
   constructor() {
     console.log("Fx Api Loaded");
