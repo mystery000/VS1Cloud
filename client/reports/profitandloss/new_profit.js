@@ -39,8 +39,8 @@ function formatFields( fields, searchkey ){
     // Return the end result
     return array.reduce((result, currentValue) => {
         // If an array already present for key, push it to the array. Else create an array and push the object
-        (result[currentValue.fields[key]] = result[currentValue.fields[key]] || []).push(
-            currentValue.fields
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+            currentValue
         );
         // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
         return result;
@@ -586,10 +586,10 @@ templateObject.getProfitLossLayout = async function() {
     const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
     // Save default list
     templateObject.profitlosslayoutfields.set( profitLossLists );
-
-    profitLossLayouts = profitLossLists.filter((item) => {
+    
+    profitLossLists.filter((item) => {
       if( item.fields.Level0Order != 0 && item.fields.Level1Order == 0 && item.fields.Level2Order == 0 && item.fields.Level3Order == 0 ){
-        return item;
+        profitLossLayouts.push(item.fields)
       }
     });
     // console.log(profitLossLayouts, parentprofitLossLayouts);
@@ -597,26 +597,42 @@ templateObject.getProfitLossLayout = async function() {
     // Fetch Subchilds According to the Above grouping
     profitLossLayouts.forEach(function(item){
         let subAccounts = []
-        let Level0Order =  item.fields.Level0Order
-        let ID =  item.fields.ID
-
+        let childAccounts = []
+        let Level0Order =  item.Level0Order
+        let ID =  item.ID
         profitLossLists.filter((subitem) => {
           let subLevel0Order =  subitem.fields.Level0Order
           let subID =  subitem.fields.ID
-          let subposition = subitem.fields.Pos.match(/.{1,2}/g);
-          if (subLevel0Order == Level0Order && ID != subID) {
-            subitem.fields.subAccounts = [];
-            // subitem.fields.PositsubAccountsion = parseInt(subposition[1]) || 0;
+          if (subLevel0Order == Level0Order && ID != subID ) {
+            subitem.subAccounts = [];
             subAccounts.push(subitem.fields);
           }
         });
 
-        let position = item.fields.Pos.match(/.{1,2}/g);
+        childAccounts = subAccounts.filter(( item ) => {
+          let sLevel0Order =  item.Level0Order
+          let sLevel1Order =  item.Level1Order
+          let subLevel2Order =  item.Level2Order
+          let sID =  item.ID
+          if (sLevel1Order != 0 && sLevel0Order == Level0Order && subLevel2Order == 0 ) {
+            let subSubAccounts = subAccounts.filter(( subitem ) => {
+              let subID =  subitem.ID
+              let subLevel0Order =  subitem.Level0Order
+              let subLevel1Order =  subitem.Level1Order
+              if( sLevel1Order === subLevel1Order && subLevel0Order == Level0Order && sID != subID ){
+                return subitem;
+              }
+            })
+            item.subAccounts = subSubAccounts;
+            return item;
+          }
+        });
+        // let position = item.Pos.match(/.{1,2}/g);
         // item.fields.Position = parseInt(position[0]) || 0;
         // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
         newprofitLossLayouts.push({
-          ...item.fields,
-          subAccounts: subAccounts,
+          ...item,
+          subAccounts: childAccounts,
         });
       });
       console.log('newprofitLossLayouts', newprofitLossLayouts);
@@ -648,11 +664,11 @@ templateObject.getProfitLossLayout = async function() {
             $item.removeClass('dragged');
 
             // for array
-            var data = group.sortable("serialize").get();
-            var jsonString = JSON.stringify(data, null, ' ');
-            console.log(jsonString);
-            container.el.removeClass("active");
-            _super($item, container);
+            // var data = group.sortable("serialize").get();
+            // var jsonString = JSON.stringify(data, null, ' ');
+            // console.log(jsonString);
+            // container.el.removeClass("active");
+            // _super($item, container);
           }
         });
        

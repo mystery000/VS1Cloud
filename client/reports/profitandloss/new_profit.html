@@ -1990,24 +1990,41 @@
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="5" class="mainList">
+                                                        <li data-id="{{ item.ID }}" data-group="{{ item.AccountName }}" data-position="{{ item.Level0Order }}-{{ item.Level1Order }}-{{ item.Level2Order }}-{{ item.Level3Order }}" class="mainList">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
                                                             <ol class="groupedListNew">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
-                                                                        <li class="subChild" data-id="1-1" data-name='Valentino Rossi'>
+                                                                        <li class="subChild" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
                                                                             </span>
                                                                         </li>
                                                                     {{else}}
-                                                                        <li class="subChild noDrag" data-id="1-2" data-name='David Beckham'>
+                                                                        <li class="subChild noDrag" data-group="{{ acItem.AccountName }}" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
+                                                                            <ol class="ddllkk">
+                                                                                {{#each subacItem in acItem.subAccounts }}
+                                                                                    {{#if isAccount subacItem }}
+                                                                                        <li class="subChild" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                            <span class="childInner">
+                                                                                                <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
+                                                                                            </span>
+                                                                                        </li>
+                                                                                    {{else}}
+                                                                                        <li class="subChild noDrag" data-group="{{ subacItem.AccountName }}" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                            <ol class="ddllkk"></ol>
+                                                                                            <span class="childInner">
+                                                                                                <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
+                                                                                            </span>
+                                                                                        </li>
+                                                                                    {{/if}}    
+                                                                                {{/each}}
+                                                                            </ol>
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
                                                                             </span>
-                                                                            <ol class="ddllkk"></ol>
                                                                         </li>
                                                                     {{/if}}
                                                                 {{/each}}
