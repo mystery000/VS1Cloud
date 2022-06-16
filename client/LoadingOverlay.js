@@ -14,7 +14,7 @@ class LoadingOverlay {
    * 
    * @param {number} timeout 
    */
-  Hide(timeout = 1000) {
+  hide(timeout = 1000) {
     setTimeout(() => {
       $(".fullScreenSpin").css("display", "none");
       console.log("Hiding loading overlay");
