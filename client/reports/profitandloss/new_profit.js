@@ -9,6 +9,7 @@ import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
+import GlobalFunctions from "../../GlobalFunctions";
 // import jqueryScrollable from "../../js/jquery-sortable"
 
 
@@ -2110,12 +2111,12 @@ Template.newprofitandloss.helpers({
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
-      a = timestampToDate(a.MsTimeStamp);
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
       a.setHours(0);
       a.setMinutes(0);
       a.setSeconds(0);
 
-      b = timestampToDate(b.MsTimeStamp);
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
       b.setHours(0);
       b.setMinutes(0);
       b.setSeconds(0);
