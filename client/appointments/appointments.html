@@ -644,8 +644,11 @@
                                                     <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" class="form-control" readonly>
                                                 </div>
                                             </div>
-                                            <div class="col-1 flex justify-content-center align-items-center d-none" id="smsConfirmedFlag" style="padding-right: .3rem; padding-top: 40px;">
-                                                <i class="fa fa-check-circle text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                            <div class="col-1 flex justify-content-center align-items-center" id="smsConfirmedFlag" style="padding-right: .3rem; padding-top: 40px;">
+                                                <i class="fas fa-minus-circle text-info d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>
+                                                <i class="fa fa-check-circle text-success d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                                <i class="fa fa-close text-danger d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>
+                                                <i class="fa fa-question text-warning d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>
                                             </div>
                                         </div>
                                         <div class="row" style="padding: 0px 8px;">
