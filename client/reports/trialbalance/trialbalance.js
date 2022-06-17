@@ -1,20 +1,33 @@
 import { ReportService } from "../report-service";
 import "jQuery.print/jQuery.print.js";
 import { UtilityService } from "../../utility-service";
+import { TaxRateService } from "../../settings/settings-service";
+import LoadingOverlay from "../../LoadingOverlay";
+import GlobalFunctions from "../../GlobalFunctions";
+
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
+
 Template.trialbalance.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
   templateObject.grandrecords = new ReactiveVar();
   templateObject.dateAsAt = new ReactiveVar();
   templateObject.deptrecords = new ReactiveVar();
+
+  templateObject.currencyList = new ReactiveVar([]);
+  templateObject.activeCurrencyList = new ReactiveVar([]);
+  templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 Template.trialbalance.onRendered(() => {
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   const templateObject = Template.instance();
+
+ 
   let utilityService = new UtilityService();
   let salesOrderTable;
   var splashArray = new Array();
@@ -240,7 +253,7 @@ Template.trialbalance.onRendered(() => {
                     $(this).addClass("text-right");
                 });
 
-                $(".fullScreenSpin").css("display", "none");
+                LoadingOverlay.hide();
               }, 100);
             }
           } else {
@@ -265,12 +278,12 @@ Template.trialbalance.onRendered(() => {
             records.push(recordObj);
             templateObject.records.set(records);
             templateObject.grandrecords.set("");
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           }
         })
         .catch(function (err) {
           //Bert.alert('<strong>' + err + '</strong>!', 'danger');
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         });
     } else {
       let data = JSON.parse(localStorage.getItem("VS1TrialBalance_Report"));
@@ -300,12 +313,19 @@ Template.trialbalance.onRendered(() => {
             "",
             data.ttrialbalancereport[i].AccountNumber,
             data.ttrialbalancereport[i].Account,
-            utilityService.modifynegativeCurrencyFormat(
-              data.ttrialbalancereport[i].CreditsEx
-            ) || "-",
-            utilityService.modifynegativeCurrencyFormat(
-              data.ttrialbalancereport[i].DebitsEx
-            ) || "-",
+            {
+              type: 'amount',
+              value: utilityService.modifynegativeCurrencyFormat(
+                data.ttrialbalancereport[i].CreditsEx
+              ) || "-",
+            },
+            {
+              type: 'amount',
+              value: utilityService.modifynegativeCurrencyFormat(
+                data.ttrialbalancereport[i].DebitsEx
+              ) || "-",
+            },
+            
           ];
 
           records.push(recordObj);
@@ -332,21 +352,26 @@ Template.trialbalance.onRendered(() => {
             creditEx =
               creditEx +
               utilityService.convertSubstringParseFloat(
-                allRecords[i][1].data[k].dataArr[3]
+                allRecords[i][1].data[k].dataArr[3].value
               );
             debitEx =
               debitEx +
               utilityService.convertSubstringParseFloat(
-                allRecords[i][1].data[k].dataArr[4]
+                allRecords[i][1].data[k].dataArr[4].value
               );
           }
           let val = [
             "Total " + allRecords[i][0].key + "",
             "",
             "",
-
-            utilityService.modifynegativeCurrencyFormat(creditEx),
-            utilityService.modifynegativeCurrencyFormat(debitEx),
+            {
+              type: 'amount',
+              value: utilityService.modifynegativeCurrencyFormat(creditEx),
+            },
+            {
+              type: 'amount',
+              value: utilityService.modifynegativeCurrencyFormat(debitEx),
+            },
           ];
           current.push(val);
         }
@@ -367,18 +392,24 @@ Template.trialbalance.onRendered(() => {
 
           grandCreditEx =
             grandCreditEx +
-            utilityService.convertSubstringParseFloat(current[n][3]);
+            utilityService.convertSubstringParseFloat(current[n][3].value);
           grandDebitEx =
             grandDebitEx +
-            utilityService.convertSubstringParseFloat(current[n][4]);
+            utilityService.convertSubstringParseFloat(current[n][4].value);
         }
 
         let grandval = [
           "Grand Total " + "",
           "",
           "",
-          utilityService.modifynegativeCurrencyFormat(grandCreditEx),
-          utilityService.modifynegativeCurrencyFormat(grandDebitEx),
+          {
+            type: "amount",
+            value: utilityService.modifynegativeCurrencyFormat(grandCreditEx),
+          },
+          {
+            type: "amount",
+            value: utilityService.modifynegativeCurrencyFormat(grandDebitEx),
+          }
         ];
 
         for (let key in records) {
@@ -432,7 +463,7 @@ Template.trialbalance.onRendered(() => {
                 $(this).addClass("text-right");
             });
 
-            $(".fullScreenSpin").css("display", "none");
+            LoadingOverlay.hide();
           }, 100);
         }
       } else {
@@ -446,7 +477,7 @@ Template.trialbalance.onRendered(() => {
         records.push(recordObj);
         templateObject.records.set(records);
         templateObject.grandrecords.set("");
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }
     }
   };
@@ -478,9 +509,129 @@ Template.trialbalance.onRendered(() => {
   };
   // templateObject.getAllProductData();
   templateObject.getDepartments();
+
+  /**
+   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+   * So we have a showable list of currencies to toggle
+   */
+   let _currencyList = [];
+   templateObject.loadCurrency = () =>
+     taxRateService.getCurrencies().then((result) => {
+       // console.log(result);
+       const data = result.tcurrency;
+       //console.log(data);
+       for (let i = 0; i < data.length; i++) {
+         // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+         var dataList = {
+           id: data[i].Id || "",
+           code: data[i].Code || "-",
+           currency: data[i].Currency || "NA",
+           symbol: data[i].CurrencySymbol || "NA",
+           buyrate: data[i].BuyRate || "-",
+           sellrate: data[i].SellRate || "-",
+           country: data[i].Country || "NA",
+           description: data[i].CurrencyDesc || "-",
+           ratelastmodified: data[i].RateLastModified || "-",
+           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+           //active: false,
+           // createdAt: new Date(data[i].MsTimeStamp) || "-",
+           // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+         };
+ 
+         _currencyList.push(dataList);
+         //}
+       }
+ 
+       // console.log(_currencyList);
+ 
+       templateObject.currencyList.set(_currencyList);
+     });
+ 
+   templateObject.loadCurrency();
+ 
+   templateObject.loadCurrencyHistory = () => {
+     taxRateService
+       .getCurrencyHistory()
+       .then((result) => {
+         //console.log(result);
+         const data = result.tcurrencyratehistory;
+         // console.log(data);
+         // console.log("Currency list: ",data);
+ 
+         templateObject.tcurrencyratehistory.set(data);
+       })
+       .catch(function (err) {
+         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+         LoadingOverlay.hide();
+         // Meteor._reload.reload();
+       });
+   };
+ 
+   templateObject.loadCurrencyHistory();
 });
 
 Template.trialbalance.events({
+  "change input[type='checkbox']": (event) => {
+    // This should be global
+    $(event.currentTarget).attr(
+      "checked",
+      $(event.currentTarget).prop("checked")
+    );
+  },
+  "click .currency-modal-save": (e) => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+
+    // Get all selected currencies
+    const currencySelected = $(".currency-selector-js:checked");
+    let _currencySelectedList = [];
+    if (currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find((c) => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find(
+        (c) => c.currency == defaultCurrencyCode
+      );
+      _currency.active = true;
+      _currencySelectedList.push(_currency);
+    }
+
+    //console.log("Selected currency list", _currencySelectedList);
+
+    _currencyList.forEach((value, index) => {
+      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
+        _currencyList[index].active = _currencySelectedList.find(
+          (c) => c.id == _currencyList[index].id
+        ).active;
+      } else {
+        _currencyList[index].active = false;
+      }
+    });
+
+    _currencyList = _currencyList.sort((a, b) => {
+      if (a.currency == defaultCurrencyCode) {
+        return -1;
+      }
+      return 1;
+    });
+
+    // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    templateObject.currencyList.set(_currencyList);
+
+    LoadingOverlay.hide();
+  },
   "click td a": function (event) {
     let id = $(event.target).closest("tr").attr("id").split("item-value-");
     var accountName = $(event.target).closest("tr").attr("class");
@@ -504,7 +655,7 @@ Template.trialbalance.events({
   },
   "change #dateTo": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     templateObject.records.set("");
@@ -551,7 +702,7 @@ Template.trialbalance.events({
   },
   "change #dateFrom": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
     templateObject.records.set("");
@@ -597,7 +748,7 @@ Template.trialbalance.events({
     }, 500);
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1TrialBalance_Report", "");
     Meteor._reload.reload();
   },
@@ -642,7 +793,7 @@ Template.trialbalance.events({
     });
   },
   "click .btnExportReport": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -686,7 +837,7 @@ Template.trialbalance.events({
   },
   "click #lastMonth": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1Sales_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -739,7 +890,7 @@ Template.trialbalance.events({
   },
   "click #lastQuarter": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1Sales_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -781,7 +932,7 @@ Template.trialbalance.events({
   },
   "click #last12Months": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1Sales_Report", "");
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
@@ -819,7 +970,7 @@ Template.trialbalance.events({
   },
   "click #ignoreDate": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1Sales_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
@@ -871,7 +1022,129 @@ Template.trialbalance.events({
     }
   },
 });
+
 Template.trialbalance.helpers({
+  convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    // console.log("Amount to covert", amount);
+    if (!amount) {
+      return "";
+    }
+    if (currencyData.currency == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
+    // Lets remove the minus character
+    const isMinus = amount.indexOf("-") > -1;
+    if (isMinus == true) amount = amount.replace("-", "");
+
+    // get default currency symbol
+    let _defaultCurrency = currencyList.filter(
+      (a) => a.Code == defaultCurrencyCode
+    )[0];
+    //console.log("default: ",_defaultCurrency);
+    amount = amount.replace(_defaultCurrency.symbol, "");
+    // console.log("Is nan", amount, isNaN(amount));
+    amount =
+      isNaN(amount) == true
+        ? parseFloat(amount.substring(1))
+        : parseFloat(amount);
+    // console.log("Amount to convert", amount);
+    // console.log("currency to convert to", currencyData);
+
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+    // console.log('date to', dateTo);
+
+    // Filter by currency code
+    currencyList = currencyList.filter((a) => a.Code == currencyData.currency);
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
+    });
+
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+    // console.log("Closests currency", firstElem);
+    // console.log("Currency list: ", currencyList);
+
+    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    //console.log("final amount", amount);
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
+    //console.log(convertedAmount);
+
+    return convertedAmount;
+  },
+  count: (array) => {
+    return array.length;
+  },
+  countActive: (array) => {
+    let activeArray = array.filter((c) => c.active == true);
+    return activeArray.length;
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isNegativeAmount(amount) {
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    if (activeArray.length == 1) {
+      //console.log(activeArray[0].currency);
+      if (activeArray[0].currency == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
+  isObject(variable) {
+    return (typeof variable === 'object' && variable !== null);
+  },
   records: () => {
     return Template.instance().records.get();
   },
