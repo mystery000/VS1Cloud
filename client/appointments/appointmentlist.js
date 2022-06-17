@@ -38,6 +38,8 @@ Template.appointmentlist.onRendered(async function () {
     const tableHeaderList = [];
     const clientList = [];
 
+    var splashArrayAppointmentList = new Array();
+
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
@@ -489,6 +491,10 @@ Template.appointmentlist.onRendered(async function () {
                           finished: appStatus || '',
                           notes: data.tappointmentlist[i].Notes || '',
                           color: color,
+                          actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                          actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                          booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                          booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                           custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                           custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
                       };
@@ -559,6 +565,37 @@ Template.appointmentlist.onRendered(async function () {
                     dataTableList.push(dataList);
                   }
 
+                  let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                  for (let p = 0; p < dataTableList.length; p++) {
+                        if(dataTableList[p].custFld13 == "Yes"){
+                          if(dataTableList[p].custFld11 == "Yes"){
+                            confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                          }else if(dataTableList[p].custFld11 == "No"){
+                            confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                          }else{
+                            confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                          }
+                        }else{
+                          confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                        }
+                      var dataListAppointmentList = [
+                          '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-'+dataTableList[p].id+'" name="'+dataTableList[p].id+'"> <label class="custom-control-label" for="f-'+dataTableList[p].id+'"></label></div>' || '',
+                          dataTableList[p].sortdate || '',
+                          dataTableList[p].id || '',
+                          '<span style="display:none;">'+dataTableList[p].sortdate+'</span> '+dataTableList[p].appointmentdate || '',
+                          dataTableList[p].accountname || '',
+                          dataTableList[p].statementno || '',
+                          dataTableList[p].frmDate || '',
+                          dataTableList[p].toDate || '',
+                          dataTableList[p].timeStart || '',
+                          dataTableList[p].timeEnd || '',
+                          dataTableList[p].finished || '',
+                          confirmedColumn,
+                          dataTableList[p].notes || '',
+                      ];
+                      splashArrayAppointmentList.push(dataListAppointmentList);
+                  };
+
                   templateObject.datatablerecords.set(dataTableList);
                   if (templateObject.datatablerecords.get()) {
 
@@ -601,9 +638,74 @@ Template.appointmentlist.onRendered(async function () {
                       $('.fullScreenSpin').css('display', 'none');
                       //$.fn.dataTable.moment('DD/MM/YY');
                       $('#tblappointmentlist').DataTable({
-                          columnDefs: [
-                              { "orderable": false, "targets": 0 },
-                              { type: 'date', targets: 1 }
+                          data: splashArrayAppointmentList,
+                          columnDefs: [{
+                                  "orderable": false,
+                                  targets: 0,
+                                  createdCell: function (td, cellData, rowData, row, col) {
+                                    $(td).closest("tr").attr("id", rowData[2]);
+                                  }
+                              }, {
+                                  className: "colSortDate hiddenColumn",
+                                  contenteditable:"false",
+                                  type: 'date',
+                                  targets: 1
+                              }, {
+                                  className: "colID",
+                                  contenteditable:"false",
+                                  targets: 2
+                              }, {
+                                  className: "colDate",
+                                  contenteditable:"false",
+                                  targets: 3
+                              }, {
+                                  className: "colAccountName",
+                                  contenteditable:"false",
+                                  targets: 4,
+                                  createdCell: function (td, cellData, rowData, row, col) {
+                                    $(td).attr("id", 'colAccountName'+rowData[2]);
+                                  }
+                              }, {
+                                  className: "colStatementNo",
+                                  targets: 5
+                              }, {
+                                  className: "colDepartment",
+                                  targets: 6
+                              }, {
+                                  className: "colCloseBalance",
+                                  targets: 7
+                              }, {
+                                  className: "colOpenBalance",
+                                  targets: 8
+                              }, {
+                                  className: "colEmployee",
+                                  targets: 9
+                              }, {
+                                  className: "colStatus",
+                                  targets: 10,
+                                  createdCell: function (td, cellData, rowData, row, col) {
+                                    if(rowData[10] == "Converted" || rowData[10] == "Completed"){
+                                      $(td).css('background-color','#1cc88a');
+                                      $(td).css('color','#fff');
+                                    }else if(rowData[10] == "Not Converted"){
+                                      $(td).css('background-color','#f6c23e');
+                                      $(td).css('color','#fff');
+                                    }else if(rowData[10] == "Deleted"){
+                                      $(td).css('background-color','#e74a3b');
+                                      $(td).css('color','#fff');
+                                    }else{
+                                      $(td).css('background-color','#f6c23e');
+                                      $(td).css('color','#fff');
+                                    }
+                                  }
+                              }, {
+                                  "orderable": false,
+                                  className: "colConfirm text-center",
+                                  targets: 11
+                              }, {
+                                  className: "colNotes hiddenColumn",
+                                  targets: 12
+                              }
                           ],
                           "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                           buttons: [
@@ -671,6 +773,8 @@ Template.appointmentlist.onRendered(async function () {
 
                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+
                                if(checkurlIgnoreDate == 'true'){
                                  sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                    getVS1Data('TAppointmentList').then(function (dataObjectold) {
@@ -687,8 +791,7 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                          addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                           templateObject.resetData(objCombineData);
-                                         $('.fullScreenSpin').css('display','none');
+
                                          }).catch(function (err) {
                                          $('.fullScreenSpin').css('display','none');
                                          });
@@ -717,8 +820,8 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                        addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                         templateObject.resetData(objCombineData);
-                                       $('.fullScreenSpin').css('display','none');
+                                       //   templateObject.resetData(objCombineData);
+                                       // $('.fullScreenSpin').css('display','none');
                                        }).catch(function (err) {
                                        $('.fullScreenSpin').css('display','none');
                                        });
@@ -732,7 +835,29 @@ Template.appointmentlist.onRendered(async function () {
                                  $('.fullScreenSpin').css('display','none');
                                });
                               }
+                              sideBarService.getAllAppointmentList(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnewApp) {
+                                  getVS1Data("TAppointment").then(function (dataObjectoldApp) {
+                                      if (dataObjectoldApp.length == 0) {
+                                      } else {
+                                        let dataOldApp = JSON.parse(dataObjectoldApp[0].data);
 
+                                        var thirdaryDataApp = $.merge($.merge([],dataObjectnewApp.tappointmentex),dataOldApp.tappointmentex);
+                                        let objCombineDataApp = {
+                                          tappointmentex: thirdaryDataApp,
+                                        };
+                                        addVS1Data("TAppointment",JSON.stringify(objCombineDataApp)).then(function (datareturnApp) {
+                                          templateObject.resetData(objCombineDataApp);
+                                          $('.fullScreenSpin').css('display','none');
+                                          }).catch(function (err) {
+                                            $('.fullScreenSpin').css('display','none');
+                                          });
+                                      }
+                                    }).catch(function (err) {
+                                      $('.fullScreenSpin').css('display','none');
+                                    });
+                                }).catch(function (err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                                });
 
                              });
 
@@ -863,6 +988,10 @@ Template.appointmentlist.onRendered(async function () {
                         finished: appStatus || '',
                         notes: data.tappointmentlist[i].Notes || '',
                         color: color,
+                        actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                        actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                        booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                        booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                         msRef: data.tappointmentlist[i].MSRef || '',
                         custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
                         custFld13: data.tappointmentlist[i].CUSTFLD13 || ''
@@ -932,8 +1061,37 @@ Template.appointmentlist.onRendered(async function () {
                     }
                   }
                     dataTableList.push(dataList);
-
                 }
+                let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                for (let p = 0; p < dataTableList.length; p++) {
+                      if(dataTableList[p].custFld13 == "Yes"){
+                        if(dataTableList[p].custFld11 == "Yes"){
+                          confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                        }else if(dataTableList[p].custFld11 == "No"){
+                          confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                        }else{
+                          confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                        }
+                      }else{
+                        confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                      }
+                    var dataListAppointmentList = [
+                        '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-'+dataTableList[p].id+'" name="'+dataTableList[p].id+'"> <label class="custom-control-label" for="f-'+dataTableList[p].id+'"></label></div>' || '',
+                        dataTableList[p].sortdate || '',
+                        dataTableList[p].id || '',
+                        '<span style="display:none;">'+dataTableList[p].sortdate+'</span> '+dataTableList[p].appointmentdate || '',
+                        dataTableList[p].accountname || '',
+                        dataTableList[p].statementno || '',
+                        dataTableList[p].frmDate || '',
+                        dataTableList[p].toDate || '',
+                        dataTableList[p].timeStart || '',
+                        dataTableList[p].timeEnd || '',
+                        dataTableList[p].finished || '',
+                        confirmedColumn,
+                        dataTableList[p].notes || '',
+                    ];
+                    splashArrayAppointmentList.push(dataListAppointmentList);
+                };
 
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
@@ -977,9 +1135,74 @@ Template.appointmentlist.onRendered(async function () {
                     $('.fullScreenSpin').css('display', 'none');
                     //$.fn.dataTable.moment('DD/MM/YY');
                     $('#tblappointmentlist').DataTable({
-                        columnDefs: [
-                            { "orderable": false, "targets": 0 },
-                            { type: 'date', targets: 1 }
+                        data: splashArrayAppointmentList,
+                        columnDefs: [{
+                                "orderable": false,
+                                targets: 0,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  $(td).closest("tr").attr("id", rowData[2]);
+                                }
+                            }, {
+                                className: "colSortDate hiddenColumn",
+                                contenteditable:"false",
+                                type: 'date',
+                                targets: 1
+                            }, {
+                                className: "colID",
+                                contenteditable:"false",
+                                targets: 2
+                            }, {
+                                className: "colDate",
+                                contenteditable:"false",
+                                targets: 3
+                            }, {
+                                className: "colAccountName",
+                                contenteditable:"false",
+                                targets: 4,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  $(td).attr("id", 'colAccountName'+rowData[2]);
+                                }
+                            }, {
+                                className: "colStatementNo",
+                                targets: 5
+                            }, {
+                                className: "colDepartment",
+                                targets: 6
+                            }, {
+                                className: "colCloseBalance",
+                                targets: 7
+                            }, {
+                                className: "colOpenBalance",
+                                targets: 8
+                            }, {
+                                className: "colEmployee",
+                                targets: 9
+                            }, {
+                                className: "colStatus",
+                                targets: 10,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  if(rowData[10] == "Converted" || rowData[10] == "Completed"){
+                                    $(td).css('background-color','#1cc88a');
+                                    $(td).css('color','#fff');
+                                  }else if(rowData[10] == "Not Converted"){
+                                    $(td).css('background-color','#f6c23e');
+                                    $(td).css('color','#fff');
+                                  }else if(rowData[10] == "Deleted"){
+                                    $(td).css('background-color','#e74a3b');
+                                    $(td).css('color','#fff');
+                                  }else{
+                                    $(td).css('background-color','#f6c23e');
+                                    $(td).css('color','#fff');
+                                  }
+                                }
+                            }, {
+                                "orderable": false,
+                                className: "colConfirm text-center",
+                                targets: 11
+                            }, {
+                                className: "colNotes hiddenColumn",
+                                targets: 12
+                            }
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [
@@ -1258,11 +1481,46 @@ Template.appointmentlist.onRendered(async function () {
                         finished: appStatus || '',
                         notes: data.tappointmentlist[i].Notes || '',
                         color: color,
+                        actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                        actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                        booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                        booked_endtime: data.tappointmentlist[i].ENDTIME || '',
                         msRef: data.tappointmentlist[i].MSRef || ''
                     };
                     dataTableList.push(dataList);
 
                 }
+
+                let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                for (let p = 0; p < dataTableList.length; p++) {
+                      if(dataTableList[p].custFld13 == "Yes"){
+                        if(dataTableList[p].custFld11 == "Yes"){
+                          confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                        }else if(dataTableList[p].custFld11 == "No"){
+                          confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                        }else{
+                          confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                        }
+                      }else{
+                        confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                      }
+                    var dataListAppointmentList = [
+                        '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-'+dataTableList[p].id+'" name="'+dataTableList[p].id+'"> <label class="custom-control-label" for="f-'+dataTableList[p].id+'"></label></div>' || '',
+                        dataTableList[p].sortdate || '',
+                        dataTableList[p].id || '',
+                        '<span style="display:none;">'+dataTableList[p].sortdate+'</span> '+dataTableList[p].appointmentdate || '',
+                        dataTableList[p].accountname || '',
+                        dataTableList[p].statementno || '',
+                        dataTableList[p].frmDate || '',
+                        dataTableList[p].toDate || '',
+                        dataTableList[p].timeStart || '',
+                        dataTableList[p].timeEnd || '',
+                        dataTableList[p].finished || '',
+                        confirmedColumn,
+                        dataTableList[p].notes || '',
+                    ];
+                    splashArrayAppointmentList.push(dataListAppointmentList);
+                };
 
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
@@ -1306,9 +1564,74 @@ Template.appointmentlist.onRendered(async function () {
                     $('.fullScreenSpin').css('display', 'none');
                     //$.fn.dataTable.moment('DD/MM/YY');
                     $('#tblappointmentlist').DataTable({
-                        columnDefs: [
-                            { "orderable": false, "targets": 0 },
-                            { type: 'date', targets: 1 }
+                        data: splashArrayAppointmentList,
+                        columnDefs: [{
+                                "orderable": false,
+                                targets: 0,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  $(td).closest("tr").attr("id", rowData[2]);
+                                }
+                            }, {
+                                className: "colSortDate hiddenColumn",
+                                contenteditable:"false",
+                                type: 'date',
+                                targets: 1
+                            }, {
+                                className: "colID",
+                                contenteditable:"false",
+                                targets: 2
+                            }, {
+                                className: "colDate",
+                                contenteditable:"false",
+                                targets: 3
+                            }, {
+                                className: "colAccountName",
+                                contenteditable:"false",
+                                targets: 4,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  $(td).attr("id", 'colAccountName'+rowData[2]);
+                                }
+                            }, {
+                                className: "colStatementNo",
+                                targets: 5
+                            }, {
+                                className: "colDepartment",
+                                targets: 6
+                            }, {
+                                className: "colCloseBalance",
+                                targets: 7
+                            }, {
+                                className: "colOpenBalance",
+                                targets: 8
+                            }, {
+                                className: "colEmployee",
+                                targets: 9
+                            }, {
+                                className: "colStatus",
+                                targets: 10,
+                                createdCell: function (td, cellData, rowData, row, col) {
+                                  if(rowData[10] == "Converted" || rowData[10] == "Completed"){
+                                    $(td).css('background-color','#1cc88a');
+                                    $(td).css('color','#fff');
+                                  }else if(rowData[10] == "Not Converted"){
+                                    $(td).css('background-color','#f6c23e');
+                                    $(td).css('color','#fff');
+                                  }else if(rowData[10] == "Deleted"){
+                                    $(td).css('background-color','#e74a3b');
+                                    $(td).css('color','#fff');
+                                  }else{
+                                    $(td).css('background-color','#f6c23e');
+                                    $(td).css('color','#fff');
+                                  }
+                                }
+                            }, {
+                                "orderable": false,
+                                className: "colConfirm text-center",
+                                targets: 11
+                            }, {
+                                className: "colNotes hiddenColumn",
+                                targets: 12
+                            }
                         ],
                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                         buttons: [
@@ -1344,7 +1667,6 @@ Template.appointmentlist.onRendered(async function () {
                         pageLength: initialDatatableLoad,
                         "bLengthChange": false,
                         info: true,
-                        info: true,
                         responsive: true,
                         "order": [[1, "desc"],[ 2, "desc" ]],
                         action: function () {
@@ -1377,6 +1699,8 @@ Template.appointmentlist.onRendered(async function () {
 
                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+
                              if(checkurlIgnoreDate == 'true'){
                                sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TAppointmentList').then(function (dataObjectold) {
@@ -1393,8 +1717,7 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                        addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                         templateObject.resetData(objCombineData);
-                                       $('.fullScreenSpin').css('display','none');
+
                                        }).catch(function (err) {
                                        $('.fullScreenSpin').css('display','none');
                                        });
@@ -1423,8 +1746,8 @@ Template.appointmentlist.onRendered(async function () {
 
 
                                      addVS1Data('TAppointmentList',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
+                                     //   templateObject.resetData(objCombineData);
+                                     // $('.fullScreenSpin').css('display','none');
                                      }).catch(function (err) {
                                      $('.fullScreenSpin').css('display','none');
                                      });
@@ -1438,6 +1761,30 @@ Template.appointmentlist.onRendered(async function () {
                                $('.fullScreenSpin').css('display','none');
                              });
                             }
+                            sideBarService.getAllAppointmentList(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnewApp) {
+                                getVS1Data("TAppointment").then(function (dataObjectoldApp) {
+                                    if (dataObjectoldApp.length == 0) {
+                                    } else {
+                                      let dataOldApp = JSON.parse(dataObjectoldApp[0].data);
+
+                                      var thirdaryDataApp = $.merge($.merge([],dataObjectnewApp.tappointmentex),dataOldApp.tappointmentex);
+                                      let objCombineDataApp = {
+                                        tappointmentex: thirdaryDataApp,
+                                      };
+                                      addVS1Data("TAppointment",JSON.stringify(objCombineDataApp)).then(function (datareturnApp) {
+                                        templateObject.resetData(objCombineDataApp);
+                                        $('.fullScreenSpin').css('display','none');
+                                        }).catch(function (err) {
+                                          $('.fullScreenSpin').css('display','none');
+                                        });
+                                    }
+                                  }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display','none');
+                                  });
+                              }).catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+
                            });
 
                             setTimeout(function () {
@@ -1618,13 +1965,18 @@ Template.appointmentlist.events({
     'change #hideConverted': function () {
         let templateObject = Template.instance();
         let useData = templateObject.datatablerecords.get();
+        var splashArrayAppointmentListDupp = new Array();
         let dataTableList = [];
         var checkbox = document.querySelector("#hideConverted");
+
         if (checkbox.checked) {
+
             if (useData.length > 0) {
 
+                let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
                 for (let i = 0; i < useData.length; i++) {
                     if (useData[i].finished != "Converted" || useData[i].finished == "Completed") {
+
                         var dataList = {
                             id: useData[i].id || '',
                             sortdate: useData[i].sortdate,
@@ -1661,82 +2013,119 @@ Template.appointmentlist.events({
                             color: "#f6c23e",
                             msRef: useData[i].MSRef || ''
                         };
-                        dataTableList.push(dataList);
+                        if(useData[i].custFld13 == "Yes"){
+                          if(useData[i].custFld11 == "Yes"){
+                            confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                          }else if(useData[i].custFld11 == "No"){
+                            confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                          }else{
+                            confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+                          }
+                        }else{
+                          confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                        }
+                      var dataListAppointmentList = [
+                          '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-'+useData[i].id+'" name="'+useData[i].id+'"> <label class="custom-control-label" for="f-'+useData[i].id+'"></label></div>' || '',
+                          useData[i].sortdate || '',
+                          useData[i].id || '',
+                          '<span style="display:none;">'+useData[i].sortdate+'</span> '+useData[i].appointmentdate || '',
+                          useData[i].accountname || '',
+                          useData[i].statementno || '',
+                          useData[i].frmDate || '',
+                          useData[i].toDate || '',
+                          useData[i].timeStart || '',
+                          useData[i].timeEnd || '',
+                          useData[i].finished || '',
+                          confirmedColumn,
+                          useData[i].notes || '',
+                      ];
+
+                      splashArrayAppointmentListDupp.push(dataListAppointmentList);
+
                     }
                 }
-                templateObject.datatablerecords.set(dataTableList).sort(function (a, b) {
-                    if (a.appointmentdate == 'NA') {
-                        return 1;
-                    }
-                    else if (b.appointmentdate == 'NA') {
-                        return -1;
-                    }
-                    return (a.appointmentdate.toUpperCase() > b.appointmentdate.toUpperCase()) ? 1 : -1;
-                });
+
+                var datatableApp = $('#tblappointmentlist').DataTable();
+                datatableApp.clear();
+                datatableApp.rows.add(splashArrayAppointmentListDupp);
+                datatableApp.draw(false);
             }
         } else if (!checkbox.checked) {
-            let color = "";
-            getVS1Data('TAppointment').then(function (dataObject) {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tappointmentex;
-                if (useData.length > 0) {
+          let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+          for (let i = 0; i < useData.length; i++) {
+              //if (useData[i].finished != "Converted" || useData[i].finished == "Completed") {
+                  var dataList = {
+                      id: useData[i].id || '',
+                      sortdate: useData[i].sortdate,
+                      appointmentdate: useData[i].appointmentdate,
+                      accountname: useData[i].accountname || '',
+                      statementno: useData[i].statementno || '',
+                      employeename: useData[i].employeename || '',
+                      department: useData[i].department || '',
+                      phone: useData[i].phone || '',
+                      mobile: useData[i].mobile || '',
+                      suburb: useData[i].suburb || '',
+                      street: useData[i].street || '',
+                      state: useData[i].state || '',
+                      country: useData[i].country || '',
+                      zip: useData[i].zip || '',
+                      startTime: useData[i].startTime || '',
+                      timeStart: useData[i].timeStart,
+                      timeEnd: useData[i].timeEnd,
+                      totalHours: useData[i].totalHours || 0,
+                      endTime: useData[i].endTime || '',
+                      startDate: useData[i].startDate || '',
+                      endDate: useData[i].endDate || '',
+                      frmDate: useData[i].frmDate,
+                      toDate: useData[i].toDate,
+                      fromDate: useData[i].fromDate,
+                      openbalance: useData[i].openbalance || '',
+                      aStartTime: useData[i].aStartTime || '',
+                      aEndTime: useData[i].aEndTime || '',
+                      actualHours: '',
+                      closebalance: '',
+                      product: useData[i].product || '',
+                      finished: useData[i].finished || '',
+                      notes: useData[i].notes || '',
+                      color: "#f6c23e",
+                      msRef: useData[i].MSRef || ''
+                  };
 
-                    for (let i = 0; i < useData.length; i++) {
-                        if (useData[i].fields.Status == "Converted" || useData[i].fields.Status == "Completed") {
-                            color = "#1cc88a";
-                        } else {
-                            color = "#f6c23e";
-
-                        }
-                        var dataList = {
-                            id: useData[i].fields.ID || '',
-                            sortdate: useData[i].fields.CreationDate != '' ? moment(useData[i].fields.CreationDate).format("YYYY/MM/DD") : useData[i].fields.CreationDate,
-                            appointmentdate: useData[i].fields.CreationDate != '' ? moment(useData[i].fields.CreationDate).format("DD/MM/YYYY") : useData[i].fields.CreationDate,
-                            accountname: useData[i].fields.ClientName || '',
-                            statementno: useData[i].fields.TrainerName || '',
-                            employeename: useData[i].fields.TrainerName || '',
-                            department: useData[i].fields.DeptClassName || '',
-                            phone: useData[i].fields.Phone || '',
-                            mobile: useData[i].fields.ClientMobile || '',
-                            suburb: useData[i].fields.Suburb || '',
-                            street: useData[i].fields.Street || '',
-                            state: useData[i].fields.State || '',
-                            country: useData[i].fields.Country || '',
-                            zip: useData[i].fields.Postcode || '',
-                            startTime: useData[i].fields.StartTime.split(' ')[1] || '',
-                            timeStart: moment(useData[i].fields.StartTime).format('h:mm a'),
-                            timeEnd: moment(useData[i].fields.EndTime).format('h:mm a'),
-                            totalHours: useData[i].fields.TotalHours || 0,
-                            endTime: useData[i].fields.EndTime.split(' ')[1] || '',
-                            startDate: useData[i].fields.StartTime || '',
-                            endDate: useData[i].fields.EndTime || '',
-                            frmDate: moment(useData[i].fields.StartTime).format('dddd') + ', ' + moment(useData[i].fields.StartTime).format('DD'),
-                            toDate: moment(useData[i].fields.endTime).format('dddd') + ', ' + moment(useData[i].fields.endTime).format('DD'),
-                            fromDate: useData[i].fields.Actual_EndTime != '' ? moment(useData[i].fields.Actual_EndTime).format("DD/MM/YYYY") : useData[i].fields.Actual_EndTime,
-                            openbalance: useData[i].fields.Actual_EndTime || '',
-                            aStartTime: useData[i].fields.Actual_StartTime.split(' ')[1] || '',
-                            aEndTime: useData[i].fields.Actual_EndTime.split(' ')[1] || '',
-                            actualHours: '',
-                            closebalance: '',
-                            product: useData[i].fields.ProductDesc || '',
-                            finished: useData[i].fields.Status || '',
-                            notes: useData[i].fields.Notes || '',
-                            color: color,
-                            msRef: useData[i].fields.MSRef || ''
-                        };
-                        dataTableList.push(dataList);
+                  if(useData[i].custFld13 == "Yes"){
+                    if(useData[i].custFld11 == "Yes"){
+                      confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+                    }else if(useData[i].custFld11 == "No"){
+                      confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+                    }else{
+                      confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
                     }
-                    templateObject.datatablerecords.set(dataTableList).sort(function (a, b) {
-                        if (a.appointmentdate == 'NA') {
-                            return 1;
-                        }
-                        else if (b.appointmentdate == 'NA') {
-                            return -1;
-                        }
-                        return (a.appointmentdate.toUpperCase() > b.appointmentdate.toUpperCase()) ? 1 : -1;
-                    });
-                }
-            })
+                  }else{
+                    confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+                  }
+                var dataListAppointmentList = [
+                    '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-'+useData[i].id+'" name="'+useData[i].id+'"> <label class="custom-control-label" for="f-'+useData[i].id+'"></label></div>' || '',
+                    useData[i].sortdate || '',
+                    useData[i].id || '',
+                    '<span style="display:none;">'+useData[i].sortdate+'</span> '+useData[i].appointmentdate || '',
+                    useData[i].accountname || '',
+                    useData[i].statementno || '',
+                    useData[i].frmDate || '',
+                    useData[i].toDate || '',
+                    useData[i].timeStart || '',
+                    useData[i].timeEnd || '',
+                    useData[i].finished || '',
+                    confirmedColumn,
+                    useData[i].notes || '',
+                ];
+                splashArrayAppointmentListDupp.push(dataListAppointmentList);
+
+              //}
+          }
+
+          var datatableApp = $('#tblappointmentlist').DataTable();
+          datatableApp.clear();
+          datatableApp.rows.add(splashArrayAppointmentListDupp);
+          datatableApp.draw(false);
         }
     },
     'click .btnRefresh': function () {
@@ -2421,47 +2810,151 @@ Template.appointmentlist.events({
             $(".chkBox").prop("checked", false);
         }
     },
-    'click .chkBox': function () {
+    'click .chkBox': async function () {
         var listData = $(this).closest('tr').attr('id');
+        let appointmentService = new AppointmentService();
         var selectedClient = $(this.target).closest("tr").find(".colAccountName").text();
         const templateObject = Template.instance();
+        let selectAppointment = templateObject.datatablerecords.get()||'';
         const selectedAppointmentList = [];
         const selectedAppointmentCheck = [];
+
+
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+          fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
         let ids = [];
         let JsonIn = {};
         let JsonIn1 = {};
         let myStringJSON = '';
-        $('.chkBox:checkbox:checked').each(function () {
+        let objectAppData = "";
+        let updateAppointment = false;
+        $('.chkBox:checkbox:checked').each(async function () {
             var chkIdLine = $(this).closest('tr').attr('id');
+            if(selectAppointment.length > 0){
+             let checkAppointStartEnd = selectAppointment.filter((item) =>
+                    parseInt(item.id) == parseInt(chkIdLine)
+              );
+              let actuatlStartTime = checkAppointStartEnd[0].actual_starttime.split(' ')[0] ||'';
+              let actuatlStartTimeSplit = actuatlStartTime.split('-')[0] ||'';
+
+              let actuatlEndTime = checkAppointStartEnd[0].actual_starttime.split(' ')[0] ||'';
+              let actuatlEndTimeSplit = actuatlEndTime.split('-')[0] ||'';
+
+
+
+              if((actuatlStartTimeSplit == '1899' || actuatlStartTimeSplit == '')){
+                swal({
+                    title: 'Actual Time is not filled in',
+                    text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Proceed',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.value) {
+                      objectAppData = {
+                          type: "TAppointmentEx",
+                          fields: {
+                              Id: parseInt(chkIdLine),
+                              Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+                              Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+                          }
+                      };
+
+                      appointmentService.saveAppointment(objectAppData).then(async function (data) {
+                        updateAppointment = true;
+                          sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
+                            addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                          }).catch(function (err) {
+
+                          });
+
+                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataApp) {
+                            addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+                          }).catch(function (err) {
+
+                          });
+
+                      }).catch(function (err) {
+
+                      });
+                      updateAppointment = true;
+                    } else {
+                       $('#f-'+chkIdLine).prop("checked", false);
+                      updateAppointment = false;
+                    }
+                });
+              }else if((actuatlEndTimeSplit == '1899' || actuatlEndTimeSplit == '')){
+                swal({
+                    title: 'Actual Time is not filled in',
+                    text: "Can we populate it with the Booked Time? (Your Appointment will be stopped and completed if you proceed)",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Proceed',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.value) {
+                      objectAppData = {
+                          type: "TAppointmentEx",
+                          fields: {
+                              Id: parseInt(chkIdLine),
+                              // Actual_StartTime: checkAppointStartEnd[0].booked_starttime,
+                              Actual_EndTime: checkAppointStartEnd[0].booked_endtime,
+                          }
+                      };
+                      appointmentService.saveAppointment(objectAppData).then(async function (data) {
+                        updateAppointment = true;
+                          sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataUpdate) {
+                            addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                          }).catch(function (err) {
+
+                          });
+
+                          sideBarService.getTAppointmentListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataApp) {
+                            addVS1Data('TAppointmentList', JSON.stringify(dataApp));
+                          }).catch(function (err) {
+
+                          });
+
+                      }).catch(function (err) {
+
+                      });
+                      updateAppointment = true;
+                    } else {
+                        $('#f-'+chkIdLine).prop("checked", false);
+                      updateAppointment = false;
+                    }
+                });
+              }else{
+                updateAppointment = false;
+              }
+
+
+            };
+            //let checkDataSelect = await updateAppointment;
+          //  if(checkDataSelect){
             let obj = {
                 AppointID: parseInt(chkIdLine)
-            }
-            //var customername = $(this).closest('#colAccountName').text();
+            };
 
-
-
-            // JsonIn1 = {
-            //   AppointID:chkIdLine,
-            //   clientname : $('#colAccountName'+chkIdLine).text()
-            // };
-
-            //   if (selectedAppointmentCheck.length > 0) {
-            //    var checkClient = selectedAppointmentCheck.filter(slctdApt => {
-            //      return slctdApt.clientname == $('#colAccountName' + chkIdLine).text();
-            //    });
-
-
-            //    if (checkClient.length > 0) {
-            //     selectedAppointmentList.push(JsonIn);
-            //     selectedAppointmentCheck.push(JsonIn1)
-            //    } else {
-            //      swal('WARNING','You have selected multiple Customers,  a seperate invoice will be created for each', 'error');
-            //      $(this).prop("checked", false);
-            //    }
-            //  } else {
             selectedAppointmentList.push(obj);
 
             templateObject.selectedAppointmentID.set(chkIdLine);
+          //};
             // selectedAppointmentCheck.push(JsonIn1);
             // }
         });
@@ -2470,6 +2963,7 @@ Template.appointmentlist.events({
                 AppointIDs: selectedAppointmentList
             }
         };
+
         templateObject.selectedAppointment.set(JsonIn);
     },
     'click #btnInvoice': function () {

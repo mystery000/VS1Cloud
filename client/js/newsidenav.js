@@ -139,7 +139,7 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
     var countObjectTimes = 0;
-    let allDataToLoad = 70;
+    let allDataToLoad = 71;
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
@@ -428,7 +428,7 @@ Template.newsidenav.onRendered(function() {
                 $('.collapse').collapse('hide');
             } else if ((currentLoc == "/allreports") ||
                 (currentLoc == "/balancesheetreport") || (currentLoc == "/balancetransactionlist") ||
-                (currentLoc == "/cashsummaryreport") || (currentLoc == "/profitlossreport") ||
+                (currentLoc == "/cashsummaryreport") || (currentLoc == "/newprofitandloss") ||
                 (currentLoc == "/agedreceivables") || (currentLoc == "/agedpayables") ||
                 (currentLoc == "/trialbalancereport") || (currentLoc == "/1099report") ||
                 (currentLoc == "/agedreceivablessummary") || (currentLoc == "/salesreport") ||
@@ -2289,6 +2289,46 @@ Template.newsidenav.onRendered(function() {
             //localStorage.setItem('VS1TbillReport', JSON.stringify(data) || '');
             addVS1Data('TbillReport', JSON.stringify(data));
             $("<span class='process'>Bill Reports Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+        }).catch(function(err) {
+
+        });
+
+    }
+
+    templateObject.getAllPurchasesData = function() {
+
+
+        sideBarService.getAllPurchasesList(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(data) {
+          countObjectTimes++;
+          progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+          $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+          //$(".progressBarInner").text("Bill Report "+Math.round(progressPercentage)+"%");
+          $(".progressBarInner").text(Math.round(progressPercentage)+"%");
+          $(".progressName").text("Purchase Overview ");
+          if((progressPercentage > 0) && (Math.round(progressPercentage) != 100)){
+            if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }else{
+              $('.headerprogressbar').addClass('headerprogressbarShow');
+              $('.headerprogressbar').removeClass('headerprogressbarHidden');
+            }
+
+          }else if(Math.round(progressPercentage) >= 100){
+              $('.checkmarkwrapper').removeClass("hide");
+            setTimeout(function() {
+              if($('.headerprogressbar').hasClass("headerprogressbarShow")){
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }else{
+                $('.headerprogressbar').removeClass('headerprogressbarShow');
+                $('.headerprogressbar').addClass('headerprogressbarHidden');
+              }
+
+            }, 1000);
+          }
+            //localStorage.setItem('VS1TbillReport', JSON.stringify(data) || '');
+            addVS1Data('TPurchasesList', JSON.stringify(data));
+            $("<span class='process'>Purchase Overview Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
         }).catch(function(err) {
 
         });
@@ -4283,6 +4323,14 @@ Template.newsidenav.onRendered(function() {
                     } else {}
                 }).catch(function(err) {
                     templateObject.getAllTbillReportData();
+                });
+
+                getVS1Data('TPurchasesList').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        templateObject.getAllPurchasesData();
+                    } else {}
+                }).catch(function(err) {
+                    templateObject.getAllPurchasesData();
                 });
                 getVS1Data('TBillEx').then(function(dataObject) {
                     if (dataObject.length == 0) {
@@ -6847,7 +6895,7 @@ Template.newsidenav.events({
     'click #sidenavprofitlossreport': function(event) {
 
         event.preventDefault();
-        FlowRouter.go('/profitlossreport');
+        FlowRouter.go('/newprofitandloss');
         let templateObject = Template.instance();
         templateObject.getSetSideNavFocus();
     },

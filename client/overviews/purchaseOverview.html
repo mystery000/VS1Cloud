@@ -97,6 +97,10 @@
         .dimmedChart .cardSettingBtn {
             background: #fff;
         }
+
+        .text-deleted{
+          background-color: #e74a3b !important; color:#fff;
+        }
     </style>
 
     <div class="container-fluid">
@@ -401,7 +405,7 @@
                             <th class="th colAmount" style="width:80px;">Amount</th>
                             <!-- <th class="th colPaid" style="width:80px;">Paid</th> -->
                             <th class="th colBalanceOutstanding" style="width:80px;">Outstanding</th>
-                            <!-- <th class="th colStatus hiddenColumn">Status</th> -->
+                            <th class="th colStatus" style="width: 5% !important;">Status</th>
                             <th class="th colPurchaseCustField1 hiddenColumn">Phone</th>
                             <th class="th colPurchaseCustField2 hiddenColumn">Invoice No.</th>
                             <th class="th colEmployee hiddenColumn">Contact</th>
@@ -429,7 +433,7 @@
                                     </td>
                                     <!-- <td contenteditable="false" class="colPaid" style="text-align: right!important;">{{item.totalpaid}}</td> -->
                                     <td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">{{item.totaloustanding}}</td>
-                                    <!-- <td contenteditable="false" class="colStatus hiddenColumn">{{item.orderstatus}}</td> -->
+                                    <td contenteditable="false" class="colStatus">{{item.orderstatus}}</td>
                                     <td contenteditable="false" class="colPurchaseCustField1 hiddenColumn">
                                         {{item.custfield1}}
                                     </td>

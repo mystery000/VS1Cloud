@@ -146,7 +146,7 @@ Template.profitandlosschart.onRendered(()=>{
             }else{
               templateObject.expenseperc.set(totalExpensePerc);
             }
-          }, 1000)  
+          }, 1000)
 
         }
         templateObject.records.set(records);
@@ -164,7 +164,7 @@ Template.profitandlosschart.onRendered(()=>{
     let getDateFrom = Math.floor(currentDate2.getFullYear() -1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate();
     dateFrom.setMonth(dateFrom.getMonth()-6);
     dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-    $("#profitloss1").attr("href", "/profitlossreport?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+    $("#profitloss1").attr("href", "/newprofitandloss?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
 
 
        templateObject.getProfitandLossReports(getDateFrom,getLoadDate,false);
@@ -175,7 +175,7 @@ Template.profitandlosschart.onRendered(()=>{
       let getDateFrom = Math.floor(currentDate2.getFullYear() -1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate();
       dateFrom.setMonth(dateFrom.getMonth()-6);
       dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-      $("#profitloss1").attr("href", "/profitlossreport?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+      $("#profitloss1").attr("href", "/newprofitandloss?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
        let totalExpense = localStorage.getItem('VS1ProfitandLoss_ExpEx_dash') || 0;
        let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
        let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;

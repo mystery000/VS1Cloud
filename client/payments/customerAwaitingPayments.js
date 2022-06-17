@@ -165,9 +165,9 @@ Template.customerawaitingpayments.onRendered(function () {
                           paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                           notes: data.tsaleslist[i].Comments || ''
                       };
-                      if (data.tsaleslist[i].TotalBalance != 0) {
+                      //if (data.tsaleslist[i].Balance != 0) {
                           dataTableList.push(dataList);
-                      }
+                    //  }
 
                   }
                   templateObject.datatablerecords.set(dataTableList);
@@ -463,9 +463,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                         notes: data.tsaleslist[i].Comments || ''
                     };
-                    if (data.tsaleslist[i].TotalBalance != 0) {
+                    //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
-                    }
+                    //}
 
                 }
                 templateObject.datatablerecords.set(dataTableList);
@@ -756,9 +756,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                         notes: data.tsaleslist[i].Comments || ''
                     };
-                    if (data.tsaleslist[i].TotalBalance != 0) {
+                    //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
-                    }
+                    //}
 
                 }
                 templateObject.datatablerecords.set(dataTableList);
@@ -1074,9 +1074,9 @@ Template.customerawaitingpayments.onRendered(function () {
                           paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                           notes: data.tsaleslist[i].Comments || ''
                       };
-                      if (data.tsaleslist[i].TotalBalance != 0) {
+                      //if (data.tsaleslist[i].Balance != 0) {
                           dataTableList.push(dataList);
-                      }
+                      //}
 
                   }
                   templateObject.datatablerecords.set(dataTableList);
@@ -1340,9 +1340,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                         notes: data.tsaleslist[i].Comments || ''
                     };
-                    if (data.tsaleslist[i].TotalBalance != 0) {
+                    //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
-                    }
+                  //  }
 
                 }
                 templateObject.datatablerecords.set(dataTableList);
@@ -1602,9 +1602,9 @@ Template.customerawaitingpayments.onRendered(function () {
                         paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
                         notes: data.tsaleslist[i].Comments || ''
                     };
-                    if (data.tsaleslist[i].TotalBalance != 0) {
+                    //if (data.tsaleslist[i].Balance != 0) {
                         dataTableList.push(dataList);
-                    }
+                    //}
 
                 }
                 templateObject.datatablerecords.set(dataTableList);
@@ -2377,7 +2377,7 @@ Template.customerawaitingpayments.events({
                 }
             }
         });
-        
+
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblcustomerAwaitingPayment_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');

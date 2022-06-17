@@ -118,9 +118,9 @@
                                 <div class="row justify-content-center mb-3">
 
 
-                                    <div class="row">
+                                    <div class="row add_dy">
                                         {{#each title in getTemplateList}}
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-12  coltr {{title}}" id="id_{{title}}">
                                                 <div class="card shadow mb-3">
                                                     <div class="card-header py-3">
                                                         <span id="{{title}}_title" class="text-primary m-0 font-weight-bold">{{title}}</span>
@@ -132,7 +132,7 @@
                                                                     <div class="custom-control custom-switch">
 
                                                                         {{#if equals index '1'}}
-                                                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
+                                                                        <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
                                                                         {{else}}
                                                                             <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" style="cursor: pointer;">
                                                                         {{/if}}
@@ -1492,12 +1492,18 @@
 
                                 <div class="modal-body">
 
-                                    <div class="custom-control custom-checkbox">
+                                    <div class="custom-control custom-checkbox" id="print_invoice_option">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_invoice" type="checkbox" id="print_invoice" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_invoice">Print Invoice</label>
                                     </div>
+                                  
+                                        <div class="custom-control custom-checkbox" id="Invoices_back_orders_option">
+                                            <input class="custom-control-input favCheckBox chkBankingReport" name="print_Invoices_back_orders" type="checkbox" id="print_Invoices_back_orders" autocomplete="off">
+                                            <label style="cursor: pointer;" class="custom-control-label" for="print_Invoices_back_orders">Print Invoice Back Order</label>
+                                        </div>
+                              
 
-                                    <div class="custom-control custom-checkbox">
+                                    <div class="custom-control custom-checkbox" id="print_delivery_option">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_delivery_docket" type="checkbox" id="print_delivery_docket" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket">Print Delivery Docket</label>
                                     </div>

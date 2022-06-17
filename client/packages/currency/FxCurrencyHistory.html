@@ -161,47 +161,46 @@
                                                         }
                                                     </style>
                                                     {{#each item in tableheaderrecords}}
-                                                    {{#if equals item.sTitle "id"}}
-                                                    {{else}}
+                                                            {{#if equals item.sTitle "id"}}
+                                                            {{else}}
 
-                                                    <div id="{{item.sIndex}}" class="columnSettings">
-                                                        <div class="custom-control custom-switch"
-                                                            style="margin: 8px; float:left;">
-                                                            <input class="custom-control-input chkDatatable"
-                                                                type="checkbox" id="chkSalesNo-{{item.sIndex}}"
-                                                                name="chkSalesNo-{{item.sIndex}}"
-                                                                checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
-                                                                value="{{item.sTitle}}">
-                                                            <label class="custom-control-label"
-                                                                for="chkSalesNo-{{item.sIndex}}"></label>
-                                                            <div contenteditable="true" class="groove divcolumn"
-                                                                type="text" value="{{item.sTitle}}"
-                                                                valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                        </div>
-                                                        <div class="d-xl-flex align-items-xl-center divColWidth"
-                                                            style="margin: 8px;">
-                                                            <label class="text-nowrap"
-                                                                style="padding-left: 0px;margin-top: 8px;">Width:
-                                                                <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                            </label>
-                                                            <input class="custom-range rngRange" type="number"
-                                                                style="margin: 8px;" value="{{item.sWidth}}" min="0"
-                                                                max="1000">
-                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                                        </div>
-                                                    </div>
+                                                            <div id="{{item.sIndex}}" class="columnSettings">
+                                                                <div class="custom-control custom-switch"
+                                                                    style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkDatatable"
+                                                                        type="checkbox" id="chkSalesNo-{{item.sIndex}}"
+                                                                        name="chkSalesNo-{{item.sIndex}}"
+                                                                        checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
+                                                                        value="{{item.sTitle}}">
+                                                                    <label class="custom-control-label"
+                                                                        for="chkSalesNo-{{item.sIndex}}"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn"
+                                                                        type="text" value="{{item.sTitle}}"
+                                                                        valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap"
+                                                                        style="padding-left: 0px;margin-top: 8px;">Width:
+                                                                        <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
+                                                                    </label>
+                                                                    <input class="custom-range rngRange" type="number"
+                                                                        style="margin: 8px;" value="{{item.sWidth}}" min="0"
+                                                                        max="1000">
+                                                                    <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                                </div>
+                                                            </div>
 
-                                                    {{#if equals item.sVisible true}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
-                                                    </script>
-                                                    {{else}}
-                                                    <script>
-                                                        $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
-                                                    </script>
-                                                    {{/if}}
+                                                            {{#if equals item.sVisible true}}
+                                                            <script>
+                                                                $("#" + {{ item.sIndex }} + ".chkDatatable").attr("checked", "checked");
+                                                            </script>
+                                                            {{else}}
+                                                            <script>
+                                                                $("#" + {{ item.sIndex }} + ".chkDatatable").removeAttr("checked");
+                                                            </script>
+                                                            {{/if}}
 
-                                                    {{/if}}
+                                                        {{/if}}
                                                     {{/each}}
                                                 </div>
                                             </form>
@@ -209,7 +208,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save"
+                                        <button class="btn btn-primary saveTable" type="button" data-dismiss="modal"><i class="fa fa-save"
                                                 style="margin-right: 5px;"></i>Save</button>
                                         <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i
                                                 class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
@@ -256,8 +255,8 @@
                             opacity: 1;
                         }
                     </style>
-                    <table id="currencyLists" style="width:100%"
-                        class="dataTable table table-hover table-striped table-bordered currencyLists">
+                    <table id="tblFxCurrencyHistory" style="width:100%"
+                        class="dataTable table table-hover table-striped table-bordered tblFxCurrencyHistory">
                         <thead>
                             <tr class="dnd-moved">
                                 <th class="th colRateLastModified">Created at</th>

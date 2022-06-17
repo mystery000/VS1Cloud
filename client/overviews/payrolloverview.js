@@ -89,7 +89,7 @@ Template.payrolloverview.onRendered(function () {
 
   let currentId = FlowRouter.current().context.hash;
 
-  if (currentId === "clockOnOff") {
+  if (currentId == "clockOnOff") {
     setTimeout(function () {
       $("#btnClockOnOff").trigger("click");
     }, 500);
@@ -2156,7 +2156,7 @@ Template.payrolloverview.onRendered(function () {
             };
             let checkServiceArray =
               getallinvproducts.filter(function (prodData) {
-                if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                if (prodData[1] == data.trepservices[i].ServiceDesc) {
                   var prodservicedataList = [
                     prodData[0],
                     prodData[1] || "-",
@@ -2225,7 +2225,7 @@ Template.payrolloverview.onRendered(function () {
   document
     .querySelector("#barcodeScanInput")
     .addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
+      if (e.key == "Enter") {
         $("#btnDesktopSearch").trigger("click");
       }
     });
@@ -2340,7 +2340,7 @@ Template.payrolloverview.onRendered(function () {
 
                 for (let i = 0; i < data.tproductvs1.length; i++) {
                   if (
-                    data.tproductvs1[i].fields.ProductName === productDataName
+                    data.tproductvs1[i].fields.ProductName == productDataName
                   ) {
                     added = true;
                     $(".fullScreenSpin").css("display", "none");
@@ -2804,7 +2804,7 @@ Template.payrolloverview.onRendered(function () {
                 var added = false;
                 for (let i = 0; i < data.tcustomervs1.length; i++) {
                   if (
-                    data.tcustomervs1[i].fields.ClientName === customerDataName
+                    data.tcustomervs1[i].fields.ClientName == customerDataName
                   ) {
                     let lineItems = [];
                     added = true;
@@ -3781,7 +3781,7 @@ Template.payrolloverview.events({
                     }).then((result) => {
                       if (result.value) {
                         // Meteor._reload.reload();
-                      } else if (result.dismiss === "cancel") {
+                      } else if (result.dismiss == "cancel") {
                       }
                     });
                     $(".fullScreenSpin").css("display", "none");
@@ -3801,7 +3801,7 @@ Template.payrolloverview.events({
                 }).then((result) => {
                   if (result.value) {
                     // Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
+                  } else if (result.dismiss == "cancel") {
                   }
                 });
                 $(".fullScreenSpin").css("display", "none");
@@ -3817,7 +3817,7 @@ Template.payrolloverview.events({
             }).then((result) => {
               if (result.value) {
                 // Meteor._reload.reload();
-              } else if (result.dismiss === "cancel") {
+              } else if (result.dismiss == "cancel") {
               }
             });
             $(".fullScreenSpin").css("display", "none");
@@ -3911,7 +3911,7 @@ Template.payrolloverview.events({
       }).then((result) => {
         if (result.value) {
           // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
+        } else if (result.dismiss == "cancel") {
         }
       });
       $(".fullScreenSpin").css("display", "none");
@@ -4025,7 +4025,7 @@ Template.payrolloverview.events({
                       }).then((result) => {
                         if (result.value) {
                           // Meteor._reload.reload();
-                        } else if (result.dismiss === "cancel") {
+                        } else if (result.dismiss == "cancel") {
                         }
                       });
                       $(".fullScreenSpin").css("display", "none");
@@ -4045,7 +4045,7 @@ Template.payrolloverview.events({
                   }).then((result) => {
                     if (result.value) {
                       // Meteor._reload.reload();
-                    } else if (result.dismiss === "cancel") {
+                    } else if (result.dismiss == "cancel") {
                     }
                   });
                   $(".fullScreenSpin").css("display", "none");
@@ -4061,7 +4061,7 @@ Template.payrolloverview.events({
               }).then((result) => {
                 if (result.value) {
                   // Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
+                } else if (result.dismiss == "cancel") {
                 }
               });
               $(".fullScreenSpin").css("display", "none");
@@ -4252,7 +4252,7 @@ Template.payrolloverview.events({
       }).then((result) => {
         if (result.value) {
           // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
+        } else if (result.dismiss == "cancel") {
         }
       });
       return false;
@@ -4269,7 +4269,7 @@ Template.payrolloverview.events({
       }).then((result) => {
         if (result.value) {
           // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
+        } else if (result.dismiss == "cancel") {
         }
       });
       return false;
@@ -4444,7 +4444,7 @@ Template.payrolloverview.events({
           }).then((result) => {
             if (result.value) {
               // Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
+            } else if (result.dismiss == "cancel") {
             }
           });
           $(".fullScreenSpin").css("display", "none");
@@ -4567,7 +4567,7 @@ Template.payrolloverview.events({
           }).then((result) => {
             if (result.value) {
               // Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
+            } else if (result.dismiss == "cancel") {
             }
           });
           $(".fullScreenSpin").css("display", "none");
@@ -4597,7 +4597,7 @@ Template.payrolloverview.events({
       }).then((result) => {
         if (result.value) {
           // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
+        } else if (result.dismiss == "cancel") {
         }
       });
       return false;
@@ -4674,7 +4674,7 @@ Template.payrolloverview.events({
       }).then((result) => {
         if (result.value) {
           // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
+        } else if (result.dismiss == "cancel") {
         }
       });
       return false;
@@ -4835,7 +4835,7 @@ Template.payrolloverview.events({
           }).then((result) => {
             if (result.value) {
               // Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
+            } else if (result.dismiss == "cancel") {
             }
           });
           $(".fullScreenSpin").css("display", "none");
@@ -4953,7 +4953,7 @@ Template.payrolloverview.events({
           }).then((result) => {
             if (result.value) {
               // Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
+            } else if (result.dismiss == "cancel") {
             }
           });
           $(".fullScreenSpin").css("display", "none");
@@ -4993,7 +4993,7 @@ Template.payrolloverview.events({
         swal("Please select the employee from the list below.", "", "info");
         $("#employeeListModal").modal("toggle");
         // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
-      } else if (result.dismiss === "cancel") {
+      } else if (result.dismiss == "cancel") {
         FlowRouter.go("/employeescard?addvs1user=true");
       }
     });
@@ -5004,7 +5004,7 @@ Template.payrolloverview.events({
     let barcodeData = $("#barcodeScanInput").val();
     let empNo = barcodeData.replace(/^\D+/g, "");
     $(".fullScreenSpin").css("display", "inline-block");
-    if (barcodeData === "") {
+    if (barcodeData == "") {
       swal("Please enter the employee number", "", "warning");
       $(".fullScreenSpin").css("display", "none");
       e.preventDefault();
@@ -5181,7 +5181,7 @@ Template.payrolloverview.events({
           }).then((result) => {
             if (result.value) {
               // Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
+            } else if (result.dismiss == "cancel") {
             }
           });
           $(".fullScreenSpin").css("display", "none");
@@ -5338,7 +5338,7 @@ Template.payrolloverview.events({
         confirmButtonText: "Try Again",
       }).then((results) => {
         if (results.value) {
-        } else if (results.dismiss === "cancel") {
+        } else if (results.dismiss == "cancel") {
         }
       });
       $(".fullScreenSpin").css("display", "none");
@@ -5354,7 +5354,7 @@ Template.payrolloverview.events({
         confirmButtonText: "Try Again",
       }).then((results) => {
         if (results.value) {
-        } else if (results.dismiss === "cancel") {
+        } else if (results.dismiss == "cancel") {
         }
       });
       $(".fullScreenSpin").css("display", "none");
@@ -5371,26 +5371,14 @@ Template.payrolloverview.events({
     if (clockList.length > 0) {
       if (Array.isArray(clockList[clockList.length - 1].timelog)) {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
-        latestTimeLogId =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.ID || "";
-        checkStartTime =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.StartDatetime || "";
-        checkEndTime =
-          clockList[clockList.length - 1].timelog[
-            clockList[clockList.length - 1].timelog.length - 1
-          ].fields.EndDatetime || "";
+        latestTimeLogId = clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.ID || "";
+        checkStartTime =clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.StartDatetime || "";
+        checkEndTime =clockList[clockList.length - 1].timelog[clockList[clockList.length - 1].timelog.length - 1].fields.EndDatetime || "";
       } else {
         checkStatus = clockList[clockList.length - 1].isPaused || "";
-        latestTimeLogId =
-          clockList[clockList.length - 1].timelog.fields.ID || "";
-        checkStartTime =
-          clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
-        checkEndTime =
-          clockList[clockList.length - 1].timelog.fields.EndDatetime || "";
+        latestTimeLogId = clockList[clockList.length - 1].timelog.fields.ID || "";
+        checkStartTime = clockList[clockList.length - 1].timelog.fields.StartDatetime || "";
+        checkEndTime = clockList[clockList.length - 1].timelog.fields.EndDatetime || "";
       }
     }
 
@@ -5425,7 +5413,7 @@ Template.payrolloverview.events({
     //         confirmButtonText: 'Try Again'
     //     }).then((results) => {
     //         if (results.value) {}
-    //         else if (results.dismiss === 'cancel') {}
+    //         else if (results.dismiss == 'cancel') {}
     //     });
     //     $('.fullScreenSpin').css('display', 'none');
     //     return false;
@@ -5483,7 +5471,7 @@ Template.payrolloverview.events({
                 }).then((result) => {
                   if (result.value) {
                     // Meteor._reload.reload();
-                  } else if (result.dismiss === "cancel") {
+                  } else if (result.dismiss == "cancel") {
                   }
                 });
                 $(".fullScreenSpin").css("display", "none");
@@ -5499,7 +5487,7 @@ Template.payrolloverview.events({
             }).then((result) => {
               if (result.value) {
                 // Meteor._reload.reload();
-              } else if (result.dismiss === "cancel") {
+              } else if (result.dismiss == "cancel") {
               }
             });
             $(".fullScreenSpin").css("display", "none");
@@ -5519,7 +5507,7 @@ Template.payrolloverview.events({
         }).then((result) => {
           if (result.value) {
             // Meteor._reload.reload();
-          } else if (result.dismiss === "cancel") {
+          } else if (result.dismiss == "cancel") {
           }
         });
         $(".fullScreenSpin").css("display", "none");
@@ -5583,7 +5571,7 @@ Template.payrolloverview.events({
               }).then((result) => {
                 if (result.value) {
                   //Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
+                } else if (result.dismiss == "cancel") {
                 }
               });
               $(".fullScreenSpin").css("display", "none");
@@ -5660,7 +5648,7 @@ Template.payrolloverview.events({
         }).then((result) => {
           if (result.value) {
             // Meteor._reload.reload();
-          } else if (result.dismiss === "cancel") {
+          } else if (result.dismiss == "cancel") {
           }
         });
       });
@@ -5852,7 +5840,7 @@ Template.payrolloverview.events({
                 },
               };
               if (results.data[i + 1][1]) {
-                if (results.data[i + 1][1] !== "") {
+                if (results.data[i + 1][1] != "") {
                   contactService
                     .saveEmployee(objDetails)
                     .then(function (data) {
@@ -5870,7 +5858,7 @@ Template.payrolloverview.events({
                       }).then((result) => {
                         if (result.value) {
                           Meteor._reload.reload();
-                        } else if (result.dismiss === "cancel") {
+                        } else if (result.dismiss == "cancel") {
                         }
                       });
                     });
