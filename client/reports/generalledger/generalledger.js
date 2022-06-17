@@ -139,22 +139,25 @@ Template.generalledger.onRendered(() => {
                 // ) || "-",
                 {
                   type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(
-                    data.tgeneralledgerreport[i].AMOUNTINC
-                  ) || "-",
+                  value:
+                    utilityService.modifynegativeCurrencyFormat(
+                      data.tgeneralledgerreport[i].AMOUNTINC
+                    ) || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
                 {
                   type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(
-                    data.tgeneralledgerreport[i].DEBITSEX
-                  ) || "-",
+                  value:
+                    utilityService.modifynegativeCurrencyFormat(
+                      data.tgeneralledgerreport[i].DEBITSEX
+                    ) || "-",
                 },
                 {
                   type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(
-                    data.tgeneralledgerreport[i].CREDITSEX
-                  ) || "-",
+                  value:
+                    utilityService.modifynegativeCurrencyFormat(
+                      data.tgeneralledgerreport[i].CREDITSEX
+                    ) || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i][">90Days"]) || '-',
@@ -221,7 +224,8 @@ Template.generalledger.onRendered(() => {
                 // utilityService.modifynegativeCurrencyFormat(twoMonth),
                 {
                   type: "amount",
-                  value: utilityService.modifynegativeCurrencyFormat(Currenttotal),
+                  value:
+                    utilityService.modifynegativeCurrencyFormat(Currenttotal),
                 },
                 {
                   type: "amount",
@@ -273,17 +277,18 @@ Template.generalledger.onRendered(() => {
 
               {
                 type: "amount",
-                value: utilityService.modifynegativeCurrencyFormat(grandtwoMonth)
+                value:
+                  utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
               },
               {
                 type: "amount",
-                value: utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+                value:
+                  utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
               },
               {
                 type: "amount",
                 value: utilityService.modifynegativeCurrencyFormat(grandOlder),
               },
-              
             ];
 
             for (let key in records) {
@@ -409,25 +414,27 @@ Template.generalledger.onRendered(() => {
               : data.tgeneralledgerreport[i].DATE,
             {
               type: "amount",
-              value: utilityService.modifynegativeCurrencyFormat(
-                data.tgeneralledgerreport[i].AMOUNTINC
-              ) || "-",
+              value:
+                utilityService.modifynegativeCurrencyFormat(
+                  data.tgeneralledgerreport[i].AMOUNTINC
+                ) || "-",
             },
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
             {
               type: "amount",
-              value: utilityService.modifynegativeCurrencyFormat(
-                data.tgeneralledgerreport[i].DEBITSEX
-              ) || "-",
+              value:
+                utilityService.modifynegativeCurrencyFormat(
+                  data.tgeneralledgerreport[i].DEBITSEX
+                ) || "-",
             },
             {
               type: "amount",
-              value: utilityService.modifynegativeCurrencyFormat(
-                data.tgeneralledgerreport[i].CREDITSEX
-              ) || "-",
+              value:
+                utilityService.modifynegativeCurrencyFormat(
+                  data.tgeneralledgerreport[i].CREDITSEX
+                ) || "-",
             },
-            
-            
+
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i][">90Days"]) || '-',
 
@@ -500,7 +507,6 @@ Template.generalledger.onRendered(() => {
               type: "amount",
               value: utilityService.modifynegativeCurrencyFormat(twoMonth),
             },
-            
           ];
           current.push(val);
         }
@@ -540,7 +546,7 @@ Template.generalledger.onRendered(() => {
 
           {
             type: "amount",
-            value: utilityService.modifynegativeCurrencyFormat(grandtwoMonth)
+            value: utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
           },
           {
             type: "amount",
@@ -550,7 +556,6 @@ Template.generalledger.onRendered(() => {
             type: "amount",
             value: utilityService.modifynegativeCurrencyFormat(grandOlder),
           },
-
         ];
 
         for (let key in records) {
@@ -1313,7 +1318,7 @@ Template.generalledger.helpers({
     return activeArray.length > 0;
   },
   isObject(variable) {
-    return (typeof variable === 'object' && variable !== null);
+    return typeof variable === "object" && variable !== null;
   },
   records: () => {
     return Template.instance().records.get();
