@@ -116,26 +116,44 @@
                                     .last-balance :first-child {
                                         text-align: left !important;
                                     }
-                                    .linkvalue :first-child {
+                                    .linkvalue td:first-child {
                                         text-align: left !important;
                                         padding-left: 30px;
                                     }
                                     .balacesheettable :last-child {
                                         text-align: right !important;
                                     }
+                                    .tableExportDetailDiv tr {
+                                        border-top: 1px solid #e3e6f0;
+                                        border-bottom: 1px solid #e3e6f0;
+                                    }
+                                    .tableExportDetailDiv th,
+                                    .tableExportDetailDiv td {
+                                        white-space: nowrap;
+                                        text-align: center;
+                                        padding: .3rem 1rem;
+                                    }
+                                    .tableExportDetailDiv th:first-child,
+                                    .tableExportDetailDiv td:first-child {
+                                        text-align: left !important;
+                                    }
+                                    .tableExportDetailDiv th:last-child,
+                                    .tableExportDetailDiv td:last-child {
+                                        text-align: center !important;
+                                    }
                                 </style>
-                                <table class="table table-sm" id="tableExport" name="tableExport">
+                                <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                                     <thead>
                                         <tr class="table-secondary customDoubleTableHeading">
                                             <th></th>
-                                            <th  colspan="{{countActive currencyList }}" class="text-nowrap text-right" style="font-weight: 800;">Sub Totals</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right" style="font-weight: 800;">Totals</th>
+                                            <th  colspan="{{countActive currencyList }}" class="text-nowrap" style="font-weight: 800;">Sub Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap" style="font-weight: 800;">Totals</th>
                                         </tr>
                                         {{#if isOnlyDefaultActive equal "false" }}
                                             <tr class="table-active tblAvoid customDoubleTableHeading">
                                                 
                                                 {{#if currencyList}}
-                                                    <th></th>
+                                                    <th class="text-left"></th>
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
                                                             <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
@@ -158,7 +176,7 @@
                                                 <tr>                                                  
                                                     {{#each value in dataArrHeader}}
                                                         <div style="display:none;">{{item.Company}}</div>
-                                                        <td class="text-nowrap" style="font-weight: 800;">
+                                                        <td class="text-nowrap text-left" style="font-weight: 800;">
                                                             {{value}}
                                                         </td>
                                                         <td></td>
@@ -185,7 +203,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
+                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -193,7 +211,7 @@
                                                                 {{/if}}
 
                                                             {{else}}
-                                                                <td class="text-nowrap Indent1" style="text-align: right;" >
+                                                                <td class="text-nowrap Indent1">
                                                                     <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
                                                                 </td>
 
@@ -208,7 +226,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
+                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -216,7 +234,7 @@
                                                                 {{/if}}
 
                                                             {{else}}
-                                                                <td class="text-nowrap Indent1" style="text-align: right;" >
+                                                                <td class="text-nowrap Indent1">
                                                                     <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
                                                                 </td>
 

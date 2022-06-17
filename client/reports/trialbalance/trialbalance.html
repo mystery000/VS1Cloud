@@ -59,10 +59,9 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
-                                        <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
+                                        <input type="search" style="height: 38px;" class="form-control form-control-sm" placeholder="Search" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalDepartment" style="margin: 8px; margin-top: 32px;"><i class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalDepartment" style="margin: 8px;"><i class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
@@ -157,24 +156,28 @@
                             </div>
                             <div class="row no-gutters">
                                 <style>
-                                    .totalhr {
+                                    /* .totalhr {
                                         border-top: 2px #858999 solid;
                                     }
 
                                     .grandtotal {
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
+                                    } */
+                                    .tableExportDetailDiv th,
+                                    .tableExportDetailDiv td {
+                                        white-space: nowrap;
                                     }
                                 </style>
                                 <div class="table-responsive">
-                                    <table class="table table-sm" id="tableExport" name="tableExport">
+                                    <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
                                                 <th>Account Name</th>
                                                 <th>Account No.</th>
                                                 <th>Account</th>
-                                                <th colspan="{{countActive currencyList}}" class="text-right">Credit (Ex)</th>
-                                                <th colspan="{{countActive currencyList}}" class="text-right">Debit (Ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Credit (Ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center">Debit (Ex)</th>
                                                 <!--
 <th>
 <table class="">

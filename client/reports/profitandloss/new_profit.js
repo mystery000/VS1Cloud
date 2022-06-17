@@ -662,7 +662,7 @@ templateObject.getProfitLossLayout = async function() {
               $item.find('.mainHeadingDiv').removeClass('collapsTogls');
             }
             $item.removeClass('dragged');
-
+            alert("New position: " + $item.index());
             // for array
             // var data = group.sortable("serialize").get();
             // var jsonString = JSON.stringify(data, null, ' ');
