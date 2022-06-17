@@ -176,49 +176,106 @@
                                                 </tr>
                                                 <tr class="linkvalue">
                                                     
+                                                       
+                                                    {{#each value2 in dataArr2}}
                                                         {{#if isOnlyDefaultActive}}
-                                                            {{#each value2 in dataArr2}}    
+                                                            {{#if isObject value2}}
+
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
+                                                                            
                                                                             <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2 c}}</a>
+                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
-                                                            {{/each}}
 
-                                                        {{else}}
-                                                            {{#each value2 in dataArr2}}
+                                                            {{else}}
                                                                 <td class="text-nowrap Indent1" style="text-align: right;" >
                                                                     <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
                                                                 </td>
-                                                            {{/each}}
+
+                                                            {{/if}}
+
+                                                        
+                                                        {{else}}
+                                                            
+                                                            {{#if isObject value2}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
+                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
+                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap Indent1" style="text-align: right;" >
+                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                                                </td>
+
+                                                            {{/if}}
+                                                           
                                                         {{/if}}
+
+                                                    {{/each}}
+
+                                                       
                                                    
                                                     
                                                 </tr>
                                                 <tr class="balacesheettable">
-                                                
-                                                    {{#if isOnlyDefaultActive}}
-                                                        {{#if currencyList}}
+                                                    {{#each item in dataArrTotal}}
 
-                                                            {{#each value3 in dataArrTotal}}
-                                                                {{#each c in currencyList}}
-                                                                    {{#if c.active}}
+                                                        {{#if isOnlyDefaultActive }}
+                                                            {{#if isObject item}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
                                                                         <td class="text-nowrap Indent1" currency="{{c.currency}}" style="font-weight: 800;" >
-                                                                            <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value3 c}}</a>
+                                                                            <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount item.value c}}</a>
                                                                         </td>
-                                                                    {{/if}}
-                                                                {{/each}}
-                                                            {{/each}}
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap" style="font-weight: 800;">{{item}}</td>
+
+                                                            {{/if}}
+
+                                                        
+                                                        {{else}}
+                                                            
+                                                            {{#if isObject item}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
+                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount item.value c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap" style="font-weight: 800;">{{item}}</td>
+
+                                                            {{/if}}
+                                                           
                                                         {{/if}}
-                                                    {{else}}
-                                                        {{#each value3 in dataArrTotal}}
-                                                            <td class="text-nowrap" style="font-weight: 800;">{{value3}}</td>
-                                                        {{/each}}
-                                                    {{/if}}
+                                                
+                                                    {{/each}}
                                                 </tr>
                                             {{/each}}
                                         {{/if}}
