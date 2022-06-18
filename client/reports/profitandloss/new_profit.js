@@ -825,19 +825,8 @@ $('.tblAvoid').each(function(){
   templateObject.loadCurrencyHistory();
 
 
-  $(".fullScreenSpin").css("display", "none");
+  LoadingOverlay.hide();
 });
-
-/**
- *
- * @param {Date} a
- * @param {Date} b
- * @returns
- */
- function sortByDate(a, b) {
-  return a - b;
-}
-
 
 Template.newprofitandloss.events({
   "change input[type='checkbox']": (event) => {
@@ -899,7 +888,7 @@ Template.newprofitandloss.events({
     // templateObject.activeCurrencyList.set(_activeCurrencyList);
     templateObject.currencyList.set(_currencyList);
     
-    LoadingOverlay.Hide();
+    LoadingOverlay.hide();
   },
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
@@ -2110,17 +2099,6 @@ Template.newprofitandloss.events({
     await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
   }
 });
-
-
-/**
- * 
- * @param {string} timestamp 
- * @returns {Date}
- */
-function timestampToDate(timestamp) {
-  const date = new Date(timestamp);
-  return date;
-}
 
 
 Template.newprofitandloss.helpers({

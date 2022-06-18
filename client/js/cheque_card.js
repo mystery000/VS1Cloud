@@ -110,10 +110,10 @@ Template.chequecard.onRendered(() => {
         }
         $(".heading").html(
           "New " +
-            chequeSpelling +
-            " #" +
-            newChequeID +
-            '<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a><!--<button class="btn float-right" type="button" id="btnCustomFileds" name="btnCustomFileds"><i class="icon ion-android-more-horizontal"></i></button>-->'
+          chequeSpelling +
+          " #" +
+          newChequeID +
+          '<a role="button" data-toggle="modal" href="#helpViewModal"  style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px; margin-left: 8px;"></i></a>  <a class="btn" role="button" data-toggle="modal" href="#myModal4" style="float: right;"><i class="icon ion-android-more-horizontal"></i></a><!--<button class="btn float-right" type="button" id="btnCustomFileds" name="btnCustomFileds"><i class="icon ion-android-more-horizontal"></i></button>-->'
         );
         setTimeout(function () {
           $("#sltBankAccountName").val(lastBankAccount);
@@ -236,8 +236,8 @@ Template.chequecard.onRendered(() => {
                 suburb: data.tsuppliervs1[i].Suburb || " ",
                 statecode:
                   data.tsuppliervs1[i].State +
-                    " " +
-                    data.tsuppliervs1[i].Postcode || " ",
+                  " " +
+                  data.tsuppliervs1[i].Postcode || " ",
                 country: data.tsuppliervs1[i].Country || " ",
                 termsName: data.tsuppliervs1[i].TermsName || "",
               };
@@ -328,8 +328,8 @@ Template.chequecard.onRendered(() => {
               suburb: data.tsuppliervs1[i].Suburb || " ",
               statecode:
                 data.tsuppliervs1[i].State +
-                  " " +
-                  data.tsuppliervs1[i].Postcode || " ",
+                " " +
+                data.tsuppliervs1[i].Postcode || " ",
               country: data.tsuppliervs1[i].Country || " ",
               termsName: data.tsuppliervs1[i].TermsName || "",
             };
@@ -426,6 +426,7 @@ Template.chequecard.onRendered(() => {
                 .getOneChequeDataEx(currentCheque)
                 .then(function (data) {
                   $(".fullScreenSpin").css("display", "none");
+
                   let lineItems = [];
                   let lineItemObj = {};
                   let lineItemsTable = [];
@@ -453,6 +454,17 @@ Template.chequecard.onRendered(() => {
                   if (data.fields.Lines != null) {
                     if (data.fields.Lines) {
                       if (data.fields.Lines.length) {
+
+                        $("#edtSaleCustField1").val(
+                          data.fields.Lines[0].fields.CustomField1
+                        );
+                        $("#edtSaleCustField2").val(
+                          data.fields.Lines[0].fields.CustomField2
+                        );
+                        $("#edtSaleCustField3").val(
+                          data.fields.Lines[0].fields.CustomField3
+                        );
+
                         for (let i = 0; i < data.fields.Lines.length; i++) {
                           let AmountGbp = utilityService
                             .modifynegativeCurrencyFormat(
@@ -529,6 +541,17 @@ Template.chequecard.onRendered(() => {
                           lineItems.push(lineItemObj);
                         }
                       } else {
+
+                        $("#edtSaleCustField1").val(
+                          data.fields.Lines.fields.CustomField1
+                        );
+                        $("#edtSaleCustField2").val(
+                          data.fields.Lines.fields.CustomField2
+                        );
+                        $("#edtSaleCustField3").val(
+                          data.fields.Lines.fields.CustomField3
+                        );
+
                         let AmountGbp =
                           data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
                             undefined,
@@ -804,6 +827,17 @@ Template.chequecard.onRendered(() => {
                     .toLocaleString(undefined, { minimumFractionDigits: 2 });
                   if (useData[d].fields.Lines) {
                     if (useData[d].fields.Lines.length) {
+
+                      $("#edtSaleCustField1").val(
+                        useData[d].fields.Lines[0].fields.CustomField1
+                      );
+                      $("#edtSaleCustField2").val(
+                        useData[d].fields.Lines[0].fields.CustomField2
+                      );
+                      $("#edtSaleCustField3").val(
+                        useData[d].fields.Lines[0].fields.CustomField3
+                      );
+
                       for (let i = 0; i < useData[d].fields.Lines.length; i++) {
                         let AmountGbp = utilityService
                           .modifynegativeCurrencyFormat(
@@ -882,6 +916,16 @@ Template.chequecard.onRendered(() => {
                         lineItems.push(lineItemObj);
                       }
                     } else {
+                      $("#edtSaleCustField1").val(
+                        useData[d].fields.Lines.fields.CustomField1
+                      );
+                      $("#edtSaleCustField2").val(
+                        useData[d].fields.Lines.fields.CustomField2
+                      );
+                      $("#edtSaleCustField3").val(
+                        useData[d].fields.Lines.fields.CustomField3
+                      );
+
                       let AmountGbp = useData[
                         d
                       ].fields.Lines.fields.TotalLineAmountInc.toLocaleString(
@@ -1204,26 +1248,26 @@ Template.chequecard.onRendered(() => {
                                 data.fields.Lines[i].fields.UOMOrderQty || 0,
                               unitPrice:
                                 currencySymbol +
-                                  "" +
-                                  data.fields.Lines[
-                                    i
-                                  ].fields.LineCost.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                  }) || 0,
+                                "" +
+                                data.fields.Lines[
+                                  i
+                                ].fields.LineCost.toLocaleString(undefined, {
+                                  minimumFractionDigits: 2,
+                                }) || 0,
                               unitPriceInc:
                                 currencySymbol +
-                                  "" +
-                                  data.fields.Lines[
-                                    i
-                                  ].fields.LineCostInc.toFixed(2) || 0,
+                                "" +
+                                data.fields.Lines[
+                                  i
+                                ].fields.LineCostInc.toFixed(2) || 0,
                               lineCost:
                                 currencySymbol +
-                                  "" +
-                                  data.fields.Lines[
-                                    i
-                                  ].fields.LineCost.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                  }) || 0,
+                                "" +
+                                data.fields.Lines[
+                                  i
+                                ].fields.LineCost.toLocaleString(undefined, {
+                                  minimumFractionDigits: 2,
+                                }) || 0,
                               taxRate:
                                 (
                                   data.fields.Lines[i].fields.LineTaxRate * 100
@@ -1575,26 +1619,26 @@ Template.chequecard.onRendered(() => {
                             data.fields.Lines[i].fields.UOMOrderQty || 0,
                           unitPrice:
                             currencySymbol +
-                              "" +
-                              data.fields.Lines[
-                                i
-                              ].fields.LineCost.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
+                            "" +
+                            data.fields.Lines[
+                              i
+                            ].fields.LineCost.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                            }) || 0,
                           unitPriceInc:
                             currencySymbol +
-                              "" +
-                              data.fields.Lines[i].fields.LineCostInc.toFixed(
-                                2
-                              ) || 0,
+                            "" +
+                            data.fields.Lines[i].fields.LineCostInc.toFixed(
+                              2
+                            ) || 0,
                           lineCost:
                             currencySymbol +
-                              "" +
-                              data.fields.Lines[
-                                i
-                              ].fields.LineCost.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                              }) || 0,
+                            "" +
+                            data.fields.Lines[
+                              i
+                            ].fields.LineCost.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                            }) || 0,
                           taxRate:
                             (
                               data.fields.Lines[i].fields.LineTaxRate * 100
@@ -2802,15 +2846,15 @@ Template.chequecard.onRendered(() => {
 
                     if (
                       data.tsupplier[0].fields.Street ==
-                        data.tsupplier[0].fields.BillStreet &&
+                      data.tsupplier[0].fields.BillStreet &&
                       data.tsupplier[0].fields.Street2 ==
-                        data.tsupplier[0].fields.BillStreet2 &&
+                      data.tsupplier[0].fields.BillStreet2 &&
                       data.tsupplier[0].fields.State ==
-                        data.tsupplier[0].fields.BillState &&
+                      data.tsupplier[0].fields.BillState &&
                       data.tsupplier[0].fields.Postcode ==
-                        data.tsupplier[0].fields.Postcode &&
+                      data.tsupplier[0].fields.Postcode &&
                       data.tsupplier[0].fields.Country ==
-                        data.tsupplier[0].fields.Billcountry
+                      data.tsupplier[0].fields.Billcountry
                     ) {
                       //templateObject.isSameAddress.set(true);
                       $("#chkSameAsShipping").attr("checked", "checked");
@@ -2937,15 +2981,15 @@ Template.chequecard.onRendered(() => {
 
                     if (
                       data.tsuppliervs1[i].fields.Street ==
-                        data.tsuppliervs1[i].fields.BillStreet &&
+                      data.tsuppliervs1[i].fields.BillStreet &&
                       data.tsuppliervs1[i].fields.Street2 ==
-                        data.tsuppliervs1[i].fields.BillStreet2 &&
+                      data.tsuppliervs1[i].fields.BillStreet2 &&
                       data.tsuppliervs1[i].fields.State ==
-                        data.tsuppliervs1[i].fields.BillState &&
+                      data.tsuppliervs1[i].fields.BillState &&
                       data.tsuppliervs1[i].fields.Postcode ==
-                        data.tsuppliervs1[i].fields.Postcode &&
+                      data.tsuppliervs1[i].fields.Postcode &&
                       data.tsuppliervs1[i].fields.Country ==
-                        data.tsuppliervs1[i].fields.Billcountry
+                      data.tsuppliervs1[i].fields.Billcountry
                     ) {
                       //templateObject.isSameAddress.set(true);
                       $("#chkSameAsShipping").attr("checked", "checked");
@@ -3068,15 +3112,15 @@ Template.chequecard.onRendered(() => {
 
                       if (
                         data.tsupplier[0].fields.Street ==
-                          data.tsupplier[0].fields.BillStreet &&
+                        data.tsupplier[0].fields.BillStreet &&
                         data.tsupplier[0].fields.Street2 ==
-                          data.tsupplier[0].fields.BillStreet2 &&
+                        data.tsupplier[0].fields.BillStreet2 &&
                         data.tsupplier[0].fields.State ==
-                          data.tsupplier[0].fields.BillState &&
+                        data.tsupplier[0].fields.BillState &&
                         data.tsupplier[0].fields.Postcode ==
-                          data.tsupplier[0].fields.Postcode &&
+                        data.tsupplier[0].fields.Postcode &&
                         data.tsupplier[0].fields.Country ==
-                          data.tsupplier[0].fields.Billcountry
+                        data.tsupplier[0].fields.Billcountry
                       ) {
                         //templateObject.isSameAddress.set(true);
                         $("#chkSameAsShipping").attr("checked", "checked");
@@ -3195,15 +3239,15 @@ Template.chequecard.onRendered(() => {
 
                   if (
                     data.tsupplier[0].fields.Street ==
-                      data.tsupplier[0].fields.BillStreet &&
+                    data.tsupplier[0].fields.BillStreet &&
                     data.tsupplier[0].fields.Street2 ==
-                      data.tsupplier[0].fields.BillStreet2 &&
+                    data.tsupplier[0].fields.BillStreet2 &&
                     data.tsupplier[0].fields.State ==
-                      data.tsupplier[0].fields.BillState &&
+                    data.tsupplier[0].fields.BillState &&
                     data.tsupplier[0].fields.Postcode ==
-                      data.tsupplier[0].fields.Postcode &&
+                    data.tsupplier[0].fields.Postcode &&
                     data.tsupplier[0].fields.Country ==
-                      data.tsupplier[0].fields.Billcountry
+                    data.tsupplier[0].fields.Billcountry
                   ) {
                     //templateObject.isSameAddress.set(true);
                     $("#chkSameAsShipping").attr("checked", "checked");
@@ -3435,10 +3479,10 @@ Template.chequecard.onRendered(() => {
                     $("#sltAccountType").val(accounttype);
                     $("#sltAccountType").append(
                       '<option value="' +
-                        accounttype +
-                        '" selected="selected">' +
-                        accounttype +
-                        "</option>"
+                      accounttype +
+                      '" selected="selected">' +
+                      accounttype +
+                      "</option>"
                     );
                     $("#edtAccountName").val(accountname);
                     $("#edtAccountNo").val(accountno);
@@ -3544,10 +3588,10 @@ Template.chequecard.onRendered(() => {
                     $("#sltAccountType").val(accounttype);
                     $("#sltAccountType").append(
                       '<option value="' +
-                        accounttype +
-                        '" selected="selected">' +
-                        accounttype +
-                        "</option>"
+                      accounttype +
+                      '" selected="selected">' +
+                      accounttype +
+                      "</option>"
                     );
                     $("#edtAccountName").val(accountname);
                     $("#edtAccountNo").val(accountno);
@@ -3647,10 +3691,10 @@ Template.chequecard.onRendered(() => {
                       $("#sltAccountType").val(accounttype);
                       $("#sltAccountType").append(
                         '<option value="' +
-                          accounttype +
-                          '" selected="selected">' +
-                          accounttype +
-                          "</option>"
+                        accounttype +
+                        '" selected="selected">' +
+                        accounttype +
+                        "</option>"
                       );
                       $("#edtAccountName").val(accountname);
                       $("#edtAccountNo").val(accountno);
@@ -3754,10 +3798,10 @@ Template.chequecard.onRendered(() => {
                   $("#sltAccountType").val(accounttype);
                   $("#sltAccountType").append(
                     '<option value="' +
-                      accounttype +
-                      '" selected="selected">' +
-                      accounttype +
-                      "</option>"
+                    accounttype +
+                    '" selected="selected">' +
+                    accounttype +
+                    "</option>"
                   );
                   $("#edtAccountName").val(accountname);
                   $("#edtAccountNo").val(accountno);
@@ -4093,778 +4137,6 @@ Template.chequecard.onRendered(function () {
       });
   };
   tempObj.getAllTaxCodes();
-
-  // customfield tempcode
-  // add to custom field
-  const templateObject = Template.instance();
-  templateObject.getChequeCustomFieldsList = function () {
-    getVS1Data("TCustomFieldList")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllCustomFields()
-            .then(function (data) {
-              templateObject.initCustomFieldsList(data);
-            })
-            .catch(function (err) {});
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          templateObject.initCustomFieldsList(data);
-        }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllCustomFields()
-          .then(function (data) {
-            templateObject.initCustomFieldsList(data);
-          })
-          .catch(function (err) {});
-      });
-  };
-
-  setTimeout(function () {
-    templateObject.getChequeCustomFieldsList();
-  }, 500);
-
-  /////////
-  // add to custom field
-  templateObject.initCustomFieldsList = function (data) {
-    let custFields = [];
-    let listType = "ltOrderLines"; // customfield tempcode
-    let customFieldCount = 3; // customfield tempcode
-    let customData = {};
-    for (let x = 0; x < data.tcustomfieldlist.length; x++) {
-      if (data.tcustomfieldlist[x].fields.ListType == listType) {
-        customData = {
-          active: data.tcustomfieldlist[x].fields.Active || false,
-          id: data.tcustomfieldlist[x].fields.ID || 0,
-          custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
-          datatype: data.tcustomfieldlist[x].fields.DataType || "",
-          isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
-          iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
-          dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
-        };
-        custFields.push(customData);
-      }
-    }
-
-    if (custFields.length < customFieldCount) {
-      let remainder = customFieldCount - custFields.length;
-      let getRemCustomFields = parseInt(custFields.length);
-      // count = count + remainder;
-      for (let r = 0; r < remainder; r++) {
-        getRemCustomFields++;
-        customData = {
-          active: false,
-          id: "",
-          custfieldlabel: "Custom Field " + getRemCustomFields,
-          datatype: "",
-          isempty: true,
-          iscombo: false,
-        };
-        // count++;
-        custFields.push(customData);
-      }
-    }
-
-    templateObject.custfields.set(custFields);
-    if (templateObject.custfields.get()) {
-      //Custom Field 1
-      if (custFields[0].active) {
-        $(".checkbox1div").css("display", "block");
-        $("#formCheck-customOne").prop("checked", true);
-      }
-
-      if (custFields[1].active) {
-        $(".checkbox2div").css("display", "block");
-        $("#formCheck-customTwo").prop("checked", true);
-      }
-      if (custFields[2].active) {
-        $(".checkbox3div").css("display", "block");
-        $("#formCheck-customThree").prop("checked", true);
-      }
-      $("#customFieldText1").val(custFields[0].custfieldlabel);
-      $("#customFieldText2").val(custFields[1].custfieldlabel);
-      $("#customFieldText3").val(custFields[2].custfieldlabel);
-
-      $("#isdropDown1").val(custFields[0].iscombo);
-      $("#isdropDown2").val(custFields[1].iscombo);
-      $("#isdropDown3").val(custFields[2].iscombo);
-
-      let custFieldNo = 0;
-      for (
-        let customfield_number = 0;
-        customfield_number < customFieldCount;
-        customfield_number++
-      ) {
-        const custField = custFields[customfield_number];
-        custFieldNo++;
-
-        // Textfield
-        if (custField.datatype == "ftString" && custField.iscombo == false) {
-          $(".custField" + custFieldNo + "Text").css("display", "block");
-          $(".custField" + custFieldNo + "Date").css("display", "none");
-          $(".custField" + custFieldNo + "Dropdown").css("display", "none");
-
-          $(".checkbox" + custFieldNo + "div").empty();
-          $(".checkbox" + custFieldNo + "div").append(
-            '<div class="form-group"><label class="lblCustomField' +
-              custFieldNo +
-              '">' +
-              custField.custfieldlabel +
-              "</label>" +
-              '<input class="form-control form-control" type="text" id="edtSaleCustField' +
-              custFieldNo +
-              '" name="edtSaleCustField' +
-              custFieldNo +
-              '" value="" custfieldid=' +
-              custField.id +
-              "> </div>"
-          );
-          $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftString");
-        } else if (custField.datatype == "ftDateTime") {
-          $(".custField" + custFieldNo + "Text").css("display", "none");
-          $(".custField" + custFieldNo + "Date").css("display", "block");
-          $(".custField" + custFieldNo + "Dropdown").css("display", "none");
-          $("#customFieldText" + custFieldNo).attr("datatype", "ftDateTime");
-
-          $(".checkbox" + custFieldNo + "div").empty();
-          $(".checkbox" + custFieldNo + "div").append(
-            '<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField' +
-              custFieldNo +
-              '">' +
-              custField.custfieldlabel +
-              "<br></label>" +
-              '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField' +
-              custFieldNo +
-              '" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField' +
-              custFieldNo +
-              '" name="edtSaleCustField' +
-              custFieldNo +
-              '" value="" custfieldid=' +
-              custField.id +
-              ">" +
-              '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-              "</div> </div></div>"
-          );
-          $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftDateTime");
-
-          let edtSaleCustFieldName = "#edtSaleCustField" + custFieldNo;
-          setTimeout(function () {
-            $(edtSaleCustFieldName).datepicker({
-              showOn: "button",
-              buttonText: "Show Date",
-              buttonImageOnly: true,
-              buttonImage: "/img/imgCal2.png",
-              constrainInput: false,
-              dateFormat: "d/mm/yy",
-              showOtherMonths: true,
-              selectOtherMonths: true,
-              changeMonth: true,
-              changeYear: true,
-              yearRange: "-90:+10",
-            });
-          }, 1500);
-          // should set init value
-          $("#edtSaleCustField" + custFieldNo).val(
-            moment().format("DD/MM/YYYY")
-          );
-        } else if (
-          custField.datatype == "ftString" &&
-          custField.iscombo == true
-        ) {
-          // Dropdown
-          $(".custField" + custFieldNo + "Text").css("display", "none");
-          $(".custField" + custFieldNo + "Date").css("display", "none");
-          $(".custField" + custFieldNo + "Dropdown").css("display", "block");
-
-          $(".checkbox" + custFieldNo + "div").empty();
-          $(".checkbox" + custFieldNo + "div").append(
-            '<div class="form-group"><label class="lblCustomField' +
-              custFieldNo +
-              '">' +
-              custField.custfieldlabel +
-              "<br></label>" +
-              ' <select type="search" class="form-control pointer customField' +
-              custFieldNo +
-              '" id="edtSaleCustField' +
-              custFieldNo +
-              '" name="edtSaleCustField' +
-              custFieldNo +
-              '" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
-              custField.id +
-              "></select></div>"
-          );
-          $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftString");
-          // var splashArrayCustomFieldList = new Array();
-          // if (custField.dropdown != null) {
-          //   if (custField.dropdown.length > 0) {
-          //     for (let x = 0; x < custField.dropdown.length; x++) {
-          //       var dataList = [
-          //         custField.dropdown[x].fields.ID || "",
-          //         custField.dropdown[x].fields.Text || "",
-          //       ];
-
-          //       splashArrayCustomFieldList.push(dataList);
-          //     }
-          //   } else {
-          //     var dataList = [
-          //       custField.dropdown.fields.ID || "",
-          //       custField.dropdown.fields.Text || "",
-          //     ];
-
-          //     splashArrayCustomFieldList.push(dataList);
-          //   }
-          // } else {
-          //   var dataList = ["", ""];
-          //   splashArrayCustomFieldList.push(dataList);
-          // }
-        }
-      }
-
-      setTimeout(function () {
-        custFieldNo = 0;
-        for (
-          let customfield_number = 0;
-          customfield_number < customFieldCount;
-          customfield_number++
-        ) {
-          const custField = custFields[customfield_number];
-          custFieldNo++;
-          if (custField.datatype == "ftString" && custField.iscombo == true) {
-            // Dropdown
-            $(".custField" + custFieldNo + "Text").css("display", "none");
-            $(".custField" + custFieldNo + "Date").css("display", "none");
-            $(".custField" + custFieldNo + "Dropdown").css("display", "block");
-
-            $(".checkbox" + custFieldNo + "div").empty();
-            $(".checkbox" + custFieldNo + "div").append(
-              '<div class="form-group"><label class="lblCustomField' +
-                custFieldNo +
-                '">' +
-                custField.custfieldlabel +
-                "<br></label>" +
-                ' <select type="search" class="form-control pointer customField' +
-                custFieldNo +
-                '" id="edtSaleCustField' +
-                custFieldNo +
-                '" name="edtSaleCustField' +
-                custFieldNo +
-                '" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
-                custField.id +
-                "></select></div>"
-            );
-            $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftString");
-            var splashArrayCustomFieldList = new Array();
-            if (custField.dropdown != null) {
-              if (custField.dropdown.length > 0) {
-                for (let x = 0; x < custField.dropdown.length; x++) {
-                  var dataList = [
-                    custField.dropdown[x].fields.ID || "",
-                    custField.dropdown[x].fields.Text || "",
-                  ];
-
-                  splashArrayCustomFieldList.push(dataList);
-                }
-              } else {
-                var dataList = [
-                  custField.dropdown.fields.ID || "",
-                  custField.dropdown.fields.Text || "",
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-              }
-            } else {
-              var dataList = ["", ""];
-              splashArrayCustomFieldList.push(dataList);
-            }
-
-            // init customfielddropdowntable
-            $("#customFieldDropdownTable" + custFieldNo)
-              .DataTable({
-                data: splashArrayCustomFieldList,
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: true,
-                aaSorting: [],
-                orderMulti: true,
-                columnDefs: [
-                  {
-                    orderable: false,
-                    targets: -1,
-                  },
-                  {
-                    className: "colCustField",
-                    targets: [0],
-                  },
-                  {
-                    className: "colFieldName pointer",
-                    targets: [1],
-                  },
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [
-                  [initialDatatableLoad, -1],
-                  [initialDatatableLoad, "All"],
-                ],
-                info: true,
-                responsive: true,
-                fnInitComplete: function () {
-                  $(
-                    "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-                  ).insertAfter(
-                    "#customFieldDropdownTable" + custFieldNo + "_filter"
-                  );
-                  $(
-                    "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                  ).insertAfter(
-                    "#customFieldDropdownTable" + custFieldNo + "_filter"
-                  );
-                },
-              })
-              .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {})
-              .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              });
-            // init customfielddropdowntable
-          }
-        }
-      }, 1500);
-
-      // initialize custom field dropdown/////////////////
-      setTimeout(function () {
-        custFieldNo = 0;
-        let custField = custFields[0];
-        if (
-          custFields[0].datatype == "ftString" &&
-          custFields[0].iscombo == true
-        ) {
-          // Dropdown
-          $(".custField1Text").css("display", "none");
-          $(".custField1Date").css("display", "none");
-          $(".custField1Dropdown").css("display", "block");
-
-          $(".checkbox1div").empty();
-          $(".checkbox1div").append(
-            '<div class="form-group"><label class="lblCustomField1">' +
-              custFields[0].custfieldlabel +
-              "<br></label>" +
-              ' <select type="search" class="form-control pointer customField1" id="edtSaleCustField1" name="edtSaleCustField1" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
-              custFields[0].id +
-              "></select></div>"
-          );
-          $("#edtSaleCustField1").attr("datatype", "ftString");
-          var splashArrayCustomFieldList = new Array();
-          if (custFields[0].dropdown != null) {
-            if (custFields[0].dropdown.length > 0) {
-              for (let x = 0; x < custFields[0].dropdown.length; x++) {
-                var dataList = [
-                  custFields[0].dropdown[x].fields.ID || "",
-                  custFields[0].dropdown[x].fields.Text || "",
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-              }
-            } else {
-              var dataList = [
-                custFields[0].dropdown.fields.ID || "",
-                custFields[0].dropdown.fields.Text || "",
-              ];
-
-              splashArrayCustomFieldList.push(dataList);
-            }
-          } else {
-            var dataList = ["", ""];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-          // console.log("edtSaleCustField select trigger", 1);
-          $("#edtSaleCustField1").editableSelect();
-
-          $("#edtSaleCustField1")
-            .editableSelect()
-            .on("click.editable-select", function (e, li) {
-              // console.log("edtSaleCustField select", 1);
-              var $earch = $(this);
-              var offset = $earch.offset();
-              var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField1").attr("custfieldid") || "";
-              $("#selectCustFieldID").val(fieldDataID);
-
-              // console.log(fieldDataID, fieldDataName);
-              if (e.pageX > offset.left + $earch.width() - 8) {
-                // X button 16px wide?
-                $("#customFieldDropdownListModal1").modal("toggle");
-              } else {
-                if (fieldDataName.replace(/\s/g, "") != "") {
-                  // console.log(
-                  //   "edit custom field dropdown field",
-                  //   custFields[0]
-                  // );
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[0].custfieldlabel
-                  );
-
-                  if (custFields[0].dropdown) {
-                    for (let i in custFields[0].dropdown) {
-                      if (
-                        custFields[0].dropdown[i].fields.Text === fieldDataName
-                      ) {
-                        $("#customFieldDropdownId").val(
-                          custFields[0].dropdown[i].fields.ID
-                        );
-                        $("#newCustomFieldDropdownName").val(
-                          custFields[0].dropdown[i].fields.Text
-                        );
-                      }
-                    }
-                    setTimeout(function () {
-                      $(".fullScreenSpin").css("display", "none");
-                      $("#newCustomFieldDropdownModal").modal("toggle");
-                    }, 200);
-                  } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
-
-                    setTimeout(function () {
-                      $(".fullScreenSpin").css("display", "none");
-                      $("#newCustomFieldDropdownModal").modal("toggle");
-                    }, 200);
-                  }
-                } else {
-                  $("#customFieldDropdownListModal1").modal();
-                  // setTimeout(function () {
-                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
-                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  //   var datatable = $("#tblStatusPopList").DataTable();
-
-                  //   datatable.draw();
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  // }, 500);
-                }
-              }
-            });
-        }
-
-        custField = custFields[1];
-        if (
-          custFields[1].datatype == "ftString" &&
-          custFields[1].iscombo == true
-        ) {
-          // Dropdown
-          $(".custField2Text").css("display", "none");
-          $(".custField2Date").css("display", "none");
-          $(".custField2Dropdown").css("display", "block");
-
-          $(".checkbox2div").empty();
-          $(".checkbox2div").append(
-            '<div class="form-group"><label class="lblCustomField2">' +
-              custFields[1].custfieldlabel +
-              "<br></label>" +
-              ' <select type="search" class="form-control pointer customField2" id="edtSaleCustField2" name="edtSaleCustField2" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
-              custFields[1].id +
-              "></select></div>"
-          );
-          $("#edtSaleCustField2").attr("datatype", "ftString");
-          var splashArrayCustomFieldList = new Array();
-          if (custFields[1].dropdown != null) {
-            if (custFields[1].dropdown.length > 0) {
-              for (let x = 0; x < custFields[1].dropdown.length; x++) {
-                var dataList = [
-                  custFields[1].dropdown[x].fields.ID || "",
-                  custFields[1].dropdown[x].fields.Text || "",
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-              }
-            } else {
-              var dataList = [
-                custFields[1].dropdown.fields.ID || "",
-                custFields[1].dropdown.fields.Text || "",
-              ];
-
-              splashArrayCustomFieldList.push(dataList);
-            }
-          } else {
-            var dataList = ["", ""];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-          // console.log("edtSaleCustField select trigger", 2);
-          $("#edtSaleCustField2").editableSelect();
-
-          $("#edtSaleCustField2")
-            .editableSelect()
-            .on("click.editable-select", function (e, li) {
-              // console.log("edtSaleCustField select", 2);
-              var $earch = $(this);
-              var offset = $earch.offset();
-              var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField2").attr("custfieldid") || "";
-              $("#selectCustFieldID").val(fieldDataID);
-              if (e.pageX > offset.left + $earch.width() - 8) {
-                // X button 16px wide?
-                $("#customFieldDropdownListModal2").modal("toggle");
-              } else {
-                if (fieldDataName.replace(/\s/g, "") != "") {
-                  // console.log("edit custom field dropdown field");
-                  $("#newStatusHeader2").text(
-                    "Edit " + custFields[1].custfieldlabel
-                  );
-                  getVS1Data("TCustomFieldList")
-                    .then(function (dataObject) {
-                      //edit to test indexdb
-                      if (dataObject.length == 0) {
-                        $(".fullScreenSpin").css("display", "inline-block");
-                        sideBarService
-                          .getAllCustomFields()
-                          .then(function (data) {
-                            for (let i in data.tcustomfieldlist) {
-                              if (
-                                data.tcustomfieldlist[i].fields.Description ===
-                                fieldDataName
-                              ) {
-                                $("#statusId").val(
-                                  data.tcustomfieldlist[i].fields.ID
-                                );
-                                $("#newStatus").val(
-                                  data.tcustomfieldlist[i].fields.Description
-                                );
-                              }
-                            }
-                            // setTimeout(function () {
-                            $(".fullScreenSpin").css("display", "none");
-                            $("#newCustomFieldPop").modal("toggle");
-                            // }, 200);
-                          });
-                      } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        for (let i in data.tcustomfieldlist) {
-                          if (
-                            data.tcustomfieldlist[i].fields.Description ===
-                            fieldDataName
-                          ) {
-                            $("#statusId").val(
-                              data.tcustomfieldlist[i].fields.ID
-                            );
-                            $("#newStatus").val(
-                              data.tcustomfieldlist[i].fields.Description
-                            );
-                          }
-                        }
-                        // setTimeout(function () {
-                        $(".fullScreenSpin").css("display", "none");
-                        $("#newCustomFieldPop").modal("newCustomFieldPop");
-                        // }, 200);
-                      }
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "inline-block");
-                      sideBarService.getAllCustomFields().then(function (data) {
-                        for (let i in data.tcustomfieldlist) {
-                          if (
-                            data.tcustomfieldlist[i].fields.Description ===
-                            fieldDataName
-                          ) {
-                            $("#statusId2").val(
-                              data.tcustomfieldlist[i].fields.ID
-                            );
-                            $("#newStatus2").val(
-                              data.tcustomfieldlist[i].fields.Description
-                            );
-                          }
-                        }
-                        // setTimeout(function () {
-                        $(".fullScreenSpin").css("display", "none");
-                        $("#newCustomFieldPop").modal("toggle");
-                        // }, 200);
-                      });
-                    });
-                } else {
-                  $("#customFieldDropdownListModal").modal();
-                  // setTimeout(function () {
-                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
-                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  //   var datatable = $("#tblStatusPopList").DataTable();
-
-                  //   datatable.draw();
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  // }, 500);
-                }
-              }
-            });
-        }
-
-        custField = custFields[2];
-        if (
-          custFields[2].datatype == "ftString" &&
-          custFields[2].iscombo == true
-        ) {
-          // Dropdown
-          $(".custField3Text").css("display", "none");
-          $(".custField3Date").css("display", "none");
-          $(".custField3Dropdown").css("display", "block");
-
-          $(".checkbox3div").empty();
-          $(".checkbox3div").append(
-            '<div class="form-group"><label class="lblCustomField3">' +
-              custFields[2].custfieldlabel +
-              "<br></label>" +
-              ' <select type="search" class="form-control pointer customField3" id="edtSaleCustField3" name="edtSaleCustField3" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid=' +
-              custFields[2].id +
-              "></select></div>"
-          );
-          $("#edtSaleCustField3").attr("datatype", "ftString");
-          var splashArrayCustomFieldList = new Array();
-          if (custFields[2].dropdown != null) {
-            if (custFields[2].dropdown.length > 0) {
-              for (let x = 0; x < custFields[2].dropdown.length; x++) {
-                var dataList = [
-                  custFields[2].dropdown[x].fields.ID || "",
-                  custFields[2].dropdown[x].fields.Text || "",
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-              }
-            } else {
-              var dataList = [
-                custFields[2].dropdown.fields.ID || "",
-                custFields[2].dropdown.fields.Text || "",
-              ];
-
-              splashArrayCustomFieldList.push(dataList);
-            }
-          } else {
-            var dataList = ["", ""];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-          // console.log("edtSaleCustField select trigger", 3);
-          $("#edtSaleCustField3").editableSelect();
-
-          $("#edtSaleCustField3")
-            .editableSelect()
-            .on("click.editable-select", function (e, li) {
-              // console.log("edtSaleCustField select", 3);
-              var $earch = $(this);
-              var offset = $earch.offset();
-              var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField3").attr("custfieldid") || "";
-              $("#selectCustFieldID").val(fieldDataID);
-              if (e.pageX > offset.left + $earch.width() - 8) {
-                // X button 16px wide?
-                $("#customFieldDropdownListModal3").modal("toggle");
-              } else {
-                if (fieldDataName.replace(/\s/g, "") != "") {
-                  // console.log("edit custom field dropdown field");
-                  $("#newStatusHeader3").text(
-                    "Edit " + custFields[2].custfieldlabel
-                  );
-                  getVS1Data("TCustomFieldList")
-                    .then(function (dataObject) {
-                      //edit to test indexdb
-                      if (dataObject.length == 0) {
-                        $(".fullScreenSpin").css("display", "inline-block");
-                        sideBarService
-                          .getAllCustomFields()
-                          .then(function (data) {
-                            for (let i in data.tcustomfieldlist) {
-                              if (
-                                data.tcustomfieldlist[i].fields.Description ===
-                                fieldDataName
-                              ) {
-                                $("#statusId").val(
-                                  data.tcustomfieldlist[i].fields.ID
-                                );
-                                $("#newStatus").val(
-                                  data.tcustomfieldlist[i].fields.Description
-                                );
-                              }
-                            }
-                            // setTimeout(function () {
-                            $(".fullScreenSpin").css("display", "none");
-                            $("#newCustomFieldPop").modal("toggle");
-                            // }, 200);
-                          });
-                      } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        for (let i in data.tcustomfieldlist) {
-                          if (
-                            data.tcustomfieldlist[i].fields.Description ===
-                            fieldDataName
-                          ) {
-                            $("#statusId").val(
-                              data.tcustomfieldlist[i].fields.ID
-                            );
-                            $("#newStatus").val(
-                              data.tcustomfieldlist[i].fields.Description
-                            );
-                          }
-                        }
-                        // setTimeout(function () {
-                        $(".fullScreenSpin").css("display", "none");
-                        $("#newCustomFieldPop").modal("newCustomFieldPop");
-                        // }, 200);
-                      }
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "inline-block");
-                      sideBarService.getAllCustomFields().then(function (data) {
-                        for (let i in data.tcustomfieldlist) {
-                          if (
-                            data.tcustomfieldlist[i].fields.Description ===
-                            fieldDataName
-                          ) {
-                            $("#statusId3").val(
-                              data.tcustomfieldlist[i].fields.ID
-                            );
-                            $("#newStatus3").val(
-                              data.tcustomfieldlist[i].fields.Description
-                            );
-                          }
-                        }
-                        // setTimeout(function () {
-                        $(".fullScreenSpin").css("display", "none");
-                        $("#newCustomFieldPop").modal("toggle");
-                        // }, 200);
-                      });
-                    });
-                } else {
-                  $("#customFieldDropdownListModal").modal();
-                  // setTimeout(function () {
-                  //   $("#tblStatusPopList_filter .form-control-sm").focus();
-                  //   $("#tblStatusPopList_filter .form-control-sm").val("");
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  //   var datatable = $("#tblStatusPopList").DataTable();
-
-                  //   datatable.draw();
-                  //   $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-                  // }, 500);
-                }
-              }
-            });
-        }
-      }, 2000);
-      ////////////////////
-    }
-  };
-  ///////
 });
 Template.chequecard.helpers({
   chequerecord: () => {
@@ -5115,7 +4387,7 @@ Template.chequecard.events({
       var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
       var taxTotal =
         parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
-          parseFloat(taxrateamount) || 0;
+        parseFloat(taxrateamount) || 0;
       $tblrow
         .find(".lineTaxAmount")
         .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
@@ -5441,10 +4713,10 @@ Template.chequecard.events({
                     $("#sltAccountType").val(accounttype);
                     $("#sltAccountType").append(
                       '<option value="' +
-                        accounttype +
-                        '" selected="selected">' +
-                        accounttype +
-                        "</option>"
+                      accounttype +
+                      '" selected="selected">' +
+                      accounttype +
+                      "</option>"
                     );
                     $("#edtAccountName").val(accountname);
                     $("#edtAccountNo").val(accountno);
@@ -5550,10 +4822,10 @@ Template.chequecard.events({
                     $("#sltAccountType").val(accounttype);
                     $("#sltAccountType").append(
                       '<option value="' +
-                        accounttype +
-                        '" selected="selected">' +
-                        accounttype +
-                        "</option>"
+                      accounttype +
+                      '" selected="selected">' +
+                      accounttype +
+                      "</option>"
                     );
                     $("#edtAccountName").val(accountname);
                     $("#edtAccountNo").val(accountno);
@@ -5653,10 +4925,10 @@ Template.chequecard.events({
                       $("#sltAccountType").val(accounttype);
                       $("#sltAccountType").append(
                         '<option value="' +
-                          accounttype +
-                          '" selected="selected">' +
-                          accounttype +
-                          "</option>"
+                        accounttype +
+                        '" selected="selected">' +
+                        accounttype +
+                        "</option>"
                       );
                       $("#edtAccountName").val(accountname);
                       $("#edtAccountNo").val(accountno);
@@ -5760,10 +5032,10 @@ Template.chequecard.events({
                   $("#sltAccountType").val(accounttype);
                   $("#sltAccountType").append(
                     '<option value="' +
-                      accounttype +
-                      '" selected="selected">' +
-                      accounttype +
-                      "</option>"
+                    accounttype +
+                    '" selected="selected">' +
+                    accounttype +
+                    "</option>"
                   );
                   $("#edtAccountName").val(accountname);
                   $("#edtAccountNo").val(accountno);
@@ -6358,6 +5630,9 @@ Template.chequecard.events({
               ProductDescription: tddmemo || "",
               LineCost: Number(tdamount.replace(/[^0-9.-]+/g, "")) || 0,
               LineTaxCode: tdtaxCode || "",
+              CustomField1: $("#edtSaleCustField1").val() || "",
+              CustomField2: $("#edtSaleCustField2").val() || "",
+              CustomField3: $("#edtSaleCustField3").val() || "",
             },
           };
           lineItemsForm.push(lineItemObjForm);
@@ -6405,9 +5680,6 @@ Template.chequecard.events({
       let comments = $("#txaComment").val();
       let pickingInfrmation = $("#txapickmemo").val();
 
-      let saleCustField1 = $("#edtSaleCustField1").val();
-      let saleCustField2 = $("#edtSaleCustField2").val();
-      let orderStatus = $("#edtStatus").val();
       let chequeTotal = $("#grandTotal").text();
 
       var url = FlowRouter.current().path;
@@ -6467,6 +5739,7 @@ Template.chequecard.events({
       purchaseService
         .saveChequeEx(objDetails)
         .then(function (objDetails) {
+
           var supplierID = $("#edtSupplierEmail").attr("supplierid");
           localStorage.setItem("check_acc", bankAccount);
           $("#html-2-pdfwrapper").css("display", "block");
@@ -6476,6 +5749,12 @@ Template.chequecard.events({
               .val()
               .replace(/[\r\n]/g, "<br />")
           );
+
+          sideBarService.getAllChequeList(initialDataLoad, 0).then(function (data) {
+            addVS1Data('TCheque', JSON.stringify(data));
+          }).catch(function (err) {
+          });
+
           async function addAttachment() {
             let attachment = [];
             let templateObject = Template.instance();
@@ -7193,19 +6472,19 @@ Template.chequecard.events({
     } else if (
       type === "application/msword" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       previewFile.class = "docx-class";
     } else if (
       type === "application/vnd.ms-excel" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       previewFile.class = "excel-class";
     } else if (
       type === "application/vnd.ms-powerpoint" ||
       type ===
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     ) {
       previewFile.class = "ppt-class";
     } else if (
@@ -7292,43 +6571,16 @@ Template.chequecard.events({
   // add to custom field
   "click #edtSaleCustField1": function (e) {
     $("#clickedControl").val("one");
-    // let custfields = Template.instance().custfields.get();
-    // // console.log("custfields---", custfields);
-    // if (
-    //   custfields[0] &&
-    //   custfields[0].datatype == "ftString" &&
-    //   custfields[0].iscombo
-    // ) {
-    //   $("#customFieldDropdownListModal1").modal("toggle");
-    // }
   },
 
   // add to custom field
   "click #edtSaleCustField2": function (e) {
     $("#clickedControl").val("two");
-    // let custfields = Template.instance().custfields.get();
-    // // console.log("custfields---", custfields);
-    // if (
-    //   custfields[1] &&
-    //   custfields[1].datatype == "ftString" &&
-    //   custfields[1].iscombo
-    // ) {
-    //   $("#customFieldDropdownListModal2").modal("toggle");
-    // }
   },
 
   // add to custom field
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
-    // let custfields = Template.instance().custfields.get();
-    // // console.log("custfields---", custfields);
-    // if (
-    //   custfields[2] &&
-    //   custfields[2].datatype == "ftString" &&
-    //   custfields[2].iscombo
-    // ) {
-    //   $("#customFieldDropdownListModal3").modal("toggle");
-    // }
   },
 });
 
