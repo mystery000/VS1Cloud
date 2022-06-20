@@ -2106,38 +2106,48 @@ Template.newprofitandloss.helpers({
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     // console.log("Amount to covert", amount);
-    if(!amount) {
+    if (!amount || amount.trim() == "") {
       return "";
     }
-    if (currencyData.currency == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
-    // Lets remove the minus character
-    const isMinus = amount.indexOf('-') > -1;
-    if(isMinus == true) amount = amount.replace('-', '');
+    // if (currencyData.currency == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    // get default currency symbol
-    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1;
+
+
+
+    // // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
     //console.log("default: ",_defaultCurrency);
-    amount = amount.replace(_defaultCurrency.symbol, '');
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
     // console.log("Is nan", amount, isNaN(amount));
-    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
-
     // Get the selected date
     let dateTo = $("#dateTo").val();
-    const day = dateTo.split('/')[0];
-    const m = dateTo.split('/')[1];
-    const y = dateTo.split('/')[2];
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
     // console.log('date to', dateTo);
 
     // Filter by currency code
-    currencyList = currencyList.filter(a => a.Code == currencyData.currency);
+    currencyList = currencyList.filter((a) => a.Code == currencyData.currency);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -2168,10 +2178,13 @@ Template.newprofitandloss.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
     //console.log("final amount", amount);
-    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
     return convertedAmount;
