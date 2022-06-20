@@ -644,8 +644,11 @@
                                                     <label>Hours</label><input type="text" id="txtBookedHoursSpent" name="txtBookedHoursSpent" class="form-control" readonly>
                                                 </div>
                                             </div>
-                                            <div class="col-1 flex justify-content-center align-items-center d-none" id="smsConfirmedFlag" style="padding-right: .3rem; padding-top: 40px;">
-                                                <i class="fa fa-check-circle text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                            <div class="col-1 flex justify-content-center align-items-center" id="smsConfirmedFlag" style="padding-right: .3rem; padding-top: 40px;">
+                                                <i class="fas fa-minus-circle text-info d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>
+                                                <i class="fa fa-check-circle text-success d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>
+                                                <i class="fa fa-close text-danger d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>
+                                                <i class="fa fa-question text-warning d-none" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>
                                             </div>
                                         </div>
                                         <div class="row" style="padding: 0px 8px;">
@@ -753,8 +756,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnStartAppointmentConfirm" id="btnStartAppointmentConfirm" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStartAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
@@ -777,8 +781,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnEndActualTime" id="btnEndActualTime" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStopAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
@@ -801,8 +806,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnSaveAppointmentSubmit" id="btnSaveAppointmentSubmit" type="submit"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseSaveAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>

@@ -646,6 +646,21 @@ Template.appointments.onRendered(function () {
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('')
                     }
+
+                    if (result[0].custFld13 === "Yes") {
+                        if (result[0].custFld11 === "Yes") {
+                            $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                        } else {
+                            if (result[0].custFld11 === "No") {
+                                $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                            } else {
+                                $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                            }
+                        }
+                    } else {
+                        $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
+                    }
+
                     $('#event-modal').modal();
                     // this.$body.addClass('modal-open');
                 }
@@ -1088,6 +1103,19 @@ Template.appointments.onRendered(function () {
                         templateObject.attachmentCount.set('');
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('');
+                    }
+                    if (result[0].custFld13 === "Yes") {
+                        if (result[0].custFld11 === "Yes") {
+                            $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                        } else {
+                            if (result[0].custFld11 === "No") {
+                                $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                            } else {
+                                $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                            }
+                        }
+                    } else {
+                        $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                     }
                     $('#event-modal').modal();
                     // this.$body.addClass('modal-open');
@@ -2199,7 +2227,9 @@ Template.appointments.onRendered(function () {
                             notes: data.tappointmentex[i].fields.Notes || '',
                             attachments: data.tappointmentex[i].fields.Attachments || '',
                             isPaused: data.tappointmentex[i].fields.Othertxt || '',
-                            msRef: data.tappointmentex[i].fields.MsRef || ''
+                            msRef: data.tappointmentex[i].fields.MsRef || '',
+                            custFld13: data.tappointmentex[i].fields.CUSTFLD13 || '',
+                            custFld11: data.tappointmentex[i].fields.CUSTFLD11 || '',
                         };
 
                         let surbub = data.tappointmentex[i].fields.Suburb || '';
@@ -2310,7 +2340,19 @@ Template.appointments.onRendered(function () {
                             document.getElementById("tActualEndTime").value = result[0].aEndTime;
                             document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
-                            if (result[0].msRef === "Yes") document.getElementById("smsConfirmedFlag").classList.remove("d-none");
+                            if (result[0].custFld13 === "Yes") {
+                                if (result[0].custFld11 === "Yes") {
+                                    $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                                } else {
+                                    if (result[0].custFld11 === "No") {
+                                        $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                                    } else {
+                                        $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                                    }
+                                }
+                            } else {
+                                $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
+                            }
 
                             templateObject.attachmentCount.set(0);
                             if (result[0].attachments) {
@@ -3117,7 +3159,9 @@ Template.appointments.onRendered(function () {
                         attachments: useData[i].fields.Attachments || '',
                         notes: useData[i].fields.Notes || '',
                         isPaused: useData[i].fields.Othertxt || '',
-                        msRef: useData[i].fields.MsRef || ''
+                        msRef: useData[i].fields.MsRef || '',
+                        custFld13: data.tappointmentex[i].fields.CUSTFLD13 || '',
+                        custFld11: data.tappointmentex[i].fields.CUSTFLD11 || '',
                     };
 
                     let surbub = useData[i].fields.Suburb || '';
@@ -3225,7 +3269,19 @@ Template.appointments.onRendered(function () {
                         document.getElementById("tActualEndTime").value = result[0].aEndTime;
                         document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
-                        if (result[0].msRef === "Yes") document.getElementById("smsConfirmedFlag").classList.remove("d-none");
+                        if (result[0].custFld13 === "Yes") {
+                            if (result[0].custFld11 === "Yes") {
+                                $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                            } else {
+                                if (result[0].custFld11 === "No") {
+                                    $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                                } else {
+                                    $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                                }
+                            }
+                        } else {
+                            $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
+                        }
 
                         templateObject.attachmentCount.set(0);
                         if (result[0].attachments) {
@@ -3291,7 +3347,6 @@ Template.appointments.onRendered(function () {
                     days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
                 }
                 //$(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
-
                 if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
                   $(".allocationHeaderDate h2").text(moment().format('MMM') + ' ' + moment(days[0]).format('DD') + ' - ' + moment(days[6]).format('DD') + ', ' + moment().format('YYYY'));
                 }
@@ -3769,6 +3824,8 @@ Template.appointments.onRendered(function () {
                         attachments: data.tappointmentex[i].fields.Attachments || '',
                         isPaused: data.tappointmentex[i].fields.Othertxt || '',
                         msRef: data.tappointmentex[i].fields.MsRef || '',
+                        custFld13: data.tappointmentex[i].fields.CUSTFLD13 || '',
+                        custFld11: data.tappointmentex[i].fields.CUSTFLD11 || '',
                     };
 
                     let surbub = data.tappointmentex[i].fields.Suburb || '';
@@ -3875,7 +3932,19 @@ Template.appointments.onRendered(function () {
                         document.getElementById("tActualEndTime").value = result[0].aEndTime;
                         document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
-                        if (result[0].msRef === "Yes") document.getElementById("smsConfirmedFlag").classList.remove("d-none");
+                        if (result[0].custFld13 === "Yes") {
+                            if (result[0].custFld11 === "Yes") {
+                                $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                            } else {
+                                if (result[0].custFld11 === "No") {
+                                    $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                                } else {
+                                    $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                                }
+                            }
+                        } else {
+                            $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
+                        }
 
                         templateObject.attachmentCount.set(0);
                         if (result[0].attachments) {
@@ -5938,6 +6007,20 @@ Template.appointments.onRendered(function () {
                             document.getElementById("tActualEndTime").value = result[0].aEndTime;
                             document.getElementById("txtActualHoursSpent").value = hoursFormatted || '';
 
+                            if (result[0].custFld13 === "Yes") {
+                                if (result[0].custFld11 === "Yes") {
+                                    $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                                } else {
+                                    if (result[0].custFld11 === "No") {
+                                        $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                                    } else {
+                                        $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                                    }
+                                }
+                            } else {
+                                $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
+                            }
+
                             templateObject.attachmentCount.set(0);
                             if (result[0].attachments) {
                                 if (result.length) {
@@ -6752,6 +6835,20 @@ Template.appointments.events({
                 templateObject.attachmentCount.set('');
                 templateObject.uploadedFiles.set('');
                 templateObject.uploadedFile.set('')
+            }
+
+            if (result[0].custFld13 === "Yes") {
+                if (result[0].custFld11 === "Yes") {
+                    $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                } else {
+                    if (result[0].custFld11 === "No") {
+                        $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                    } else {
+                        $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                    }
+                }
+            } else {
+                $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
             }
 
             $('#event-modal').modal();
@@ -7940,7 +8037,6 @@ Template.appointments.events({
                 tableRowData.push(tableRow);
 
             }
-            //console.log(tableRowData);
             $('#here_table table').append(tableRowData);
 
             $('.sunday').attr('id', dayPrev[0]);
@@ -8974,6 +9070,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnStartAppointmentConfirm').trigger('click');
                     }
                 })
@@ -9042,6 +9140,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnEndActualTime').trigger('click');
                     }
                 })
@@ -9107,6 +9207,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnSaveAppointmentSubmit').trigger('click');
                     }
                 })
@@ -9490,55 +9592,6 @@ Template.appointments.events({
                     });
                 }
 
-        //});
-
-    },
-    'mouseenter #txtNotes': function (event) {
-      let getValue = $('#txtNotes').val() || ' ';
-      let templateObject = Template.instance();
-      templateObject.textnote.set(getValue);
-    },
-    'mouseleave #txtNotes': function (event) {
-        let appointmentService = new AppointmentService();
-        let templateObject = Template.instance();
-        let getValue = templateObject.textnote.get()||' ';
-        let notes = $('#txtNotes').val() || ' ';
-        let id = document.getElementById('updateID').value || '0';
-        if (createAppointment == false) {
-        if(getValue != notes){
-        if (Session.get('CloudAppointmentNotes') == true) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                if (id == '0' || id == null) {
-                    // $('#event-modal').modal('hide');
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                  let objectData = {
-                        type: "TAppointmentEx",
-                        fields: {
-                            Id: parseInt(id),
-                            Notes: notes,
-                        }
-                    };
-                    /*
-                    appointmentService.saveAppointment(objectData).then(function (data) {
-                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataList) {
-                            addVS1Data('TAppointment', JSON.stringify(dataList)).then(function (datareturn) {
-                                     $('.fullScreenSpin').css('display', 'none');
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            })
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        })
-
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    });
-                    */
-                }
-          }
-        };
-        }
         //});
 
     },

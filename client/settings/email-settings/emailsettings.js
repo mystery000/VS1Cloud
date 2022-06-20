@@ -1134,20 +1134,19 @@ Template.emailsettings.events({
         } else if (radioFrequency == "frequencyOnetimeonly") {
             const startTime = $('#edtOneTimeOnlyTime').val();
             const startDate = $('#edtOneTimeOnlyDate').val();
-            if (startDate && startTime) {
-                $('#edtOneTimeOnlyTimeError').css('display', 'none');
-                $('#edtOneTimeOnlyDateError').css('display', 'none');
-                setTimeout(function () {
-                    if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only, " + basedOnTypeTexts);
-                    else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
-                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
-                    $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
-                    $("#frequencyModal").modal('toggle');
-                }, 100);
-            } else {
-                $('#edtOneTimeOnlyTimeError').css('display', 'block');
-                $('#edtOneTimeOnlyDateError').css('display', 'block');
-            }
+            // if (!startTime) {
+            //     startTime = new Date();
+            // }
+            console.log(startTime, startDate);
+            $('#edtOneTimeOnlyTimeError').css('display', 'none');
+            $('#edtOneTimeOnlyDateError').css('display', 'none');
+            setTimeout(function () {
+                if (basedOnTypeTexts != '') $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only, " + basedOnTypeTexts);
+                else $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').text("One Time Only");
+                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startTime', startTime);
+                $('.dnd-moved[data-id="' + formId + '"] #edtFrequency').attr('data-startDate', startDate);
+                $("#frequencyModal").modal('toggle');
+            }, 100);
         } else {
             $("#frequencyModal").modal('toggle');
         }
