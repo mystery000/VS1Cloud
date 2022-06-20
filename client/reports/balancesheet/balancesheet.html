@@ -41,10 +41,6 @@
                         <div class="row">
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters">
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX Rates</button>
-
-                                </div>
-                                <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
                                         <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
@@ -106,10 +102,6 @@
                             </div>
                             <div class="table-responsive">
                                 <style>
-                                    .customDoubleTableHeading th {
-                                        padding-top: 0px !important;
-                                        padding-bottom: 0px !important;
-                                    }
                                     .balacesheettable :first-child {
                                         padding-left: 0px!important;
                                     }
@@ -126,159 +118,46 @@
                                 </style>
                                 <table class="table table-sm" id="tableExport" name="tableExport">
                                     <thead>
-                                        <tr class="table-secondary customDoubleTableHeading">
+                                        <tr class="table-secondary">
                                             <th></th>
-                                            <th  colspan="{{countActive currencyList }}" class="text-nowrap text-right" style="font-weight: 800;">Sub Totals</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right" style="font-weight: 800;">Totals</th>
+                                            <th class="text-nowrap text-right" style="font-weight: 800;">Sub Totals</th>
+                                            <th class="text-nowrap text-right" style="font-weight: 800;">Totals</th>
                                         </tr>
-                                        {{#if isOnlyDefaultActive equal "false" }}
-                                            <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                
-                                                {{#if currencyList}}
-                                                    <th></th>
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-
-                                                    {{#each c in currencyList }}
-                                                        {{# if c.active}}
-                                                            <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
-                                                        {{/if}}
-                                                    {{/each}}
-                                                {{/if}}
-
-                                            </tr>
-                                        {{/if}}
                                     </thead>
                                     <tbody>
-                                        {{#if records}}
-                                            {{#each records}}
-                                                <tr>                                                  
-                                                    {{#each value in dataArrHeader}}
-                                                        <div style="display:none;">{{item.Company}}</div>
-                                                        <td class="text-nowrap" style="font-weight: 800;">
-                                                            {{value}}
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    {{/each}}
-                                                </tr>
-                                                <tr>
-                                                    {{#each value in dataArrAsset}}
-                                                        <td class="text-nowrap" style="font-weight: 800;">
-                                                            {{value}}
-                                                        </td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    {{/each}}
-                                                </tr>
-                                                <tr class="linkvalue">
-                                                    
-                                                       
-                                                    {{#each value2 in dataArr2}}
-                                                        {{#if isOnlyDefaultActive}}
-                                                            {{#if isObject value2}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-                                                                            
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
-
-                                                            {{else}}
-                                                                <td class="text-nowrap Indent1" style="text-align: right;" >
-                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
-                                                                </td>
-
-                                                            {{/if}}
-
-                                                        
-                                                        {{else}}
-                                                            
-                                                            {{#if isObject value2}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-                                                                            
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="text-align: right;" >
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
-
-                                                            {{else}}
-                                                                <td class="text-nowrap Indent1" style="text-align: right;" >
-                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
-                                                                </td>
-
-                                                            {{/if}}
-                                                           
-                                                        {{/if}}
-
-                                                    {{/each}}
-
-                                                       
-                                                   
-                                                    
-                                                </tr>
-                                                <tr class="balacesheettable">
-                                                    {{#each item in dataArrTotal}}
-
-                                                        {{#if isOnlyDefaultActive }}
-                                                            {{#if isObject item}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-                                                                            
-                                                                        <td class="text-nowrap Indent1" currency="{{c.currency}}" style="font-weight: 800;" >
-                                                                            <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount item.value c}}</a>
-                                                                        </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
-
-                                                            {{else}}
-                                                                <td class="text-nowrap" style="font-weight: 800;">{{item}}</td>
-
-                                                            {{/if}}
-
-                                                        
-                                                        {{else}}
-                                                            
-                                                            {{#if isObject item}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-                                                                            
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="font-weight: 800;" >
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount item.value c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
-
-                                                            {{else}}
-                                                                <td class="text-nowrap" style="font-weight: 800;">{{item}}</td>
-
-                                                            {{/if}}
-                                                           
-                                                        {{/if}}
-                                                
-                                                    {{/each}}
-                                                </tr>
+                                        {{#each records}}
+                                        <tr>
+                                            {{#each value in dataArrHeader}}
+                                            <div style="display:none;">{{item.Company}}</div>
+                                            <td class="text-nowrap" style="font-weight: 800;">
+                                                {{value}}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
                                             {{/each}}
-                                        {{/if}}
+                                        </tr>
+                                        <tr>
+                                            {{#each value in dataArrAsset}}
+                                            <td class="text-nowrap" style="font-weight: 800;">
+                                                {{value}}
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            {{/each}}
+                                        </tr>
+                                        <tr class="linkvalue">
+                                            {{#each value2 in dataArr2}}
+                                            <td class="text-nowrap Indent1" style="text-align: right;" >
+                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                            </td>
+                                            {{/each}}
+                                        </tr>
+                                        <tr class="balacesheettable">
+                                            {{#each value3 in dataArrTotal}}
+                                            <td class="text-nowrap" style="font-weight: 800;">{{value3}}</td>
+                                            {{/each}}
+                                        </tr>
+                                        {{/each}}
                                     </tbody>
 
                                 </table>
@@ -315,37 +194,5 @@
     </div>
 
     <!-- End Help Video Modal -->
-
-    <!-- Start Currency Modal -->
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    {{#if currencyList}}
-                        {{#each c in currencyList}}
-                            <span class="dropdown-item custom-control custom-switch">
-                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.currency}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.id}}" name="checkbox">
-                                <label class="custom-control-label" for="currency_{{c.id}}">{{c.currency}} ({{c.code}} - {{c.country}})</label>
-                            </span>
-                        {{/each}}
-                    {{/if}}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary currency-modal-save" data-dismiss="modal" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-        <style>
-            .modal-body {
-                max-height: 50vh;
-                overflow: auto;
-            }
-        </style>
-    </div>
-     <!-- End Currency Modal -->
 
 </template>

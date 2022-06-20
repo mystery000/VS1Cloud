@@ -54,10 +54,6 @@
                         <div class="row">
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters">
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX Rates</button>
-
-                                </div>
-                                <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
                                         <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
@@ -173,8 +169,8 @@
                                                 <th>Account Name</th>
                                                 <th>Account No.</th>
                                                 <th>Account</th>
-                                                <th colspan="{{countActive currencyList}}" class="text-right">Credit (Ex)</th>
-                                                <th colspan="{{countActive currencyList}}" class="text-right">Debit (Ex)</th>
+                                                <th class="text-right">Credit (Ex)</th>
+                                                <th class="text-right">Debit (Ex)</th>
                                                 <!--
 <th>
 <table class="">
@@ -195,30 +191,6 @@ Debit (Ex)
 </th>
 -->
                                             </tr>
-                                            {{#if isOnlyDefaultActive equal "false" }}
-                                                <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                    <th></th>
-                                                    <th></th>
-                                                    <th></th>
-
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-
-                                                    {{#if currencyList}}
-                                                        {{#each c in currencyList }}
-                                                            {{# if c.active}}
-                                                                <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    {{/if}}
-                                                
-                                                </tr>
-                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -235,91 +207,14 @@ Debit (Ex)
                                                             <tr class="{{item.type}}" id="{{item.Id}}">
                                                                 <div style="display:none;">{{item.AccountName}}</div>
                                                                 {{#each subItem in item.dataArr}}
-
-                                                                        {{#if isOnlyDefaultActive }}
-                                                                            {{#if isObject subItem}}
-                                                                        
-                                                                                {{#if currencyList}}
-                                                                                    {{#each c in currencyList }}
-                                                                                        {{# if c.active}}
-                                                                                            <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
-                                                                                                <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
-                                                                                            </td>
-                                                                                        {{/if}}
-                                                                                    {{/each}}
-                                                                                {{/if}}
-
-                                                                            {{else}}
-                                                                            
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1">
-                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
-                                                                                </td>
-
-                                                                            {{/if}}
-
-                                                                        {{else}}
-                                                                            {{#if isObject subItem}}
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
-                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
-                                                                                </td>
-                                                                               
-                                                                            {{else}}
-                                                                                
-                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
-                                                                                </td>
-
-                                                                            {{/if}}
-
-                                                                        {{/if}}
-                                                                   
+                                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
-
                                                         {{#each total in recordItem.total}}
                                                             <tr class="TotalField">
-                                                                {{#each subItem in total.dataArr}}
-                                                                    {{#if isOnlyDefaultActive }}
-                                                                        {{#if isObject subItem}}
-                                                                    
-                                                                            {{#if currencyList}}
-                                                                                {{#each c in currencyList }}
-                                                                                    {{# if c.active}}
-                                                                                        <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
-                                                                                            <span class="table-cells"><strong>{{convertAmount subItem.value c}}</strong></span>
-                                                                                        </td>
-                                                                                    {{/if}}
-                                                                                {{/each}}
-                                                                            {{/if}}
-
-                                                                        {{else}}
-                                                                        
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                                                <span class="table-cells"><strong>{{subItem}}</strong></span>
-                                                                            </td>
-
-                                                                        {{/if}}
-
-                                                                    {{else}}
-                                                                        {{#if isObject subItem}}
-                                                                          
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
-                                                                                <span class="table-cells"><strong>{{subItem.value}}</strong></span>
-                                                                            </td>
-                                                                        
-                                                                        {{else}}
-                                                                            
-                                                                       
-                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-                                                                                <span class="table-cells"><strong>{{subItem}}</strong></span>
-                                                                            </td>
-
-
-                                                                        {{/if}}
-
-                                                                    {{/if}}
-                                                                   
+                                                                {{#each items in total.dataArr}}
+                                                                    <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
@@ -327,36 +222,8 @@ Debit (Ex)
                                                 {{/each}}
                                                 {{#if grandrecords}}
                                                     <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-                                                        {{#each subItem in grandrecords}}
-                                                        
-                                                                {{#if isOnlyDefaultActive }}
-
-                                                                        {{#if isObject subItem}}
-                                                                            {{#if currencyList}}
-                                                                                {{#each c in currencyList }}
-                                                                                    {{# if c.active}}
-                                                                                        <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}" currency="{{c.currency}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
-                                                                            
-                                                                                    {{/if}}
-                                                                                {{/each}}
-                                                                            {{/if}}
-                                                                        {{else}}
-                                                                            <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                        
-
-                                                                        {{/if}}
-
-                                                                {{else}}
-                                                                    {{#if isObject subItem}}
-                                                                        <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}">{{subItem.value}}</td>
-                                                                        
-                                                                    {{else}}
-                                                                        <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                        
-                                                                        
-                                                                    {{/if}}
-
-                                                                {{/if}}
+                                                        {{#each item in grandrecords}}
+                                                            <td>{{item}}</td>
                                                         {{/each}}
 
                                                     </tr>
@@ -402,7 +269,5 @@ Debit (Ex)
     </div>
 
     <!-- End Help Video Modal -->
-
-   {{> FxRateModal currencies=currencyList}}
 
 </template>
