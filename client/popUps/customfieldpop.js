@@ -1119,9 +1119,6 @@ Template.customfieldpop.events({
       organisationService
         .saveCustomField(objDetails1)
         .then(function (objDetails) {
-          sideBarService.getAllCustomFields().then(function (data) {
-            addVS1Data("TCustomFieldList", JSON.stringify(data));
-          });
           if (clickedInput == "one") {
             $(".lblCustomField1").text(termsName);
             $("#customFieldText1").val(termsName);
@@ -1135,6 +1132,13 @@ Template.customfieldpop.events({
           $("#newCustomFieldPop").modal("toggle");
           $("#myModal4").modal("toggle");
           $(".fullScreenSpin").css("display", "none");
+
+
+          sideBarService.getAllCustomFields().then(function (data) {
+            addVS1Data("TCustomFieldList", JSON.stringify(data));
+          });
+          templateObject.getCustomFieldsList(data_id);
+
         })
         .catch(function (err) {
           swal({
@@ -1819,8 +1823,7 @@ Template.customfieldpop.events({
               $("#myModal4").modal("toggle");
               $(".fullScreenSpin").css("display", "none");
             }
-            // templateObject.loadInitCustomFieldsList();
-            templateObject.getCustomFieldsList(selectCustFieldNumber);
+            // templateObject.getCustomFieldsList(parseInt(i) + 1);
           })
           .catch(function (err) {
             swal({
@@ -1883,8 +1886,8 @@ Template.customfieldpop.events({
               $("#myModal4").modal("toggle");
               $(".fullScreenSpin").css("display", "none");
             }
-            // templateObject.loadInitCustomFieldsList();
-            templateObject.getCustomFieldsList(selectCustFieldNumber);
+
+            // templateObject.getCustomFieldsList(parseInt(i) + 1);
           })
           .catch(function (err) {
             swal({

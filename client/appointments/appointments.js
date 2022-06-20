@@ -647,6 +647,10 @@ Template.appointments.onRendered(function () {
                         templateObject.uploadedFile.set('')
                     }
 
+                    if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                     if (result[0].custFld13 === "Yes") {
                         if (result[0].custFld11 === "Yes") {
                             $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -1104,6 +1108,10 @@ Template.appointments.onRendered(function () {
                         templateObject.uploadedFiles.set('');
                         templateObject.uploadedFile.set('');
                     }
+                    if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                    if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                     if (result[0].custFld13 === "Yes") {
                         if (result[0].custFld11 === "Yes") {
                             $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -2341,6 +2349,10 @@ Template.appointments.onRendered(function () {
                             document.getElementById("tActualEndTime").value = result[0].aEndTime;
                             document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
+                            if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                             if (result[0].custFld13 === "Yes") {
                                 if (result[0].custFld11 === "Yes") {
                                     $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -3270,6 +3282,10 @@ Template.appointments.onRendered(function () {
                         document.getElementById("tActualEndTime").value = result[0].aEndTime;
                         document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
+                        if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                         if (result[0].custFld13 === "Yes") {
                             if (result[0].custFld11 === "Yes") {
                                 $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -3934,6 +3950,10 @@ Template.appointments.onRendered(function () {
                         document.getElementById("tActualEndTime").value = result[0].aEndTime;
                         document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || '';
 
+                        if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                        if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                         if (result[0].custFld13 === "Yes") {
                             if (result[0].custFld11 === "Yes") {
                                 $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -6009,6 +6029,10 @@ Template.appointments.onRendered(function () {
                             document.getElementById("tActualEndTime").value = result[0].aEndTime;
                             document.getElementById("txtActualHoursSpent").value = hoursFormatted || '';
 
+                            if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+                            if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                             if (result[0].custFld13 === "Yes") {
                                 if (result[0].custFld11 === "Yes") {
                                     $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
@@ -6839,6 +6863,10 @@ Template.appointments.events({
                 templateObject.uploadedFile.set('')
             }
 
+            if ($("#smsConfirmedFlag i.fa-check").hasClass('d-none')) $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
+            if ($("#smsConfirmedFlag i.fa-close").hadClass('d-none')) $("#smsConfirmedFlag i.fa-close").removeClass('d-none');
+            if ($("#smsConfirmedFlag i.fa-question").hadClass('d-none')) $("#smsConfirmedFlag i.fa-question").removeClass('d-none');
+            if ($("#smsConfirmedFlag i.fa-minus-circle").hadClass('d-none')) $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
             if (result[0].custFld13 === "Yes") {
                 if (result[0].custFld11 === "Yes") {
                     $("#smsConfirmedFlag i.fa-check").removeClass('d-none');
