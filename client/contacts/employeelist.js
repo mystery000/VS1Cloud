@@ -872,24 +872,40 @@ Template.employeelist.events({
 
         $('.fullScreenSpin').css('display','inline-block');
         let templateObject = Template.instance();
-        sideBarService.getAllAppointmentPredList().then(function (data) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(data)).then(function (datareturn) {
-
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
+              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+                      window.open('/employeelist','_self');
+                  }).catch(function (err) {
+                      window.open('/employeelist','_self');
+                  });
+              }).catch(function(err) {
+                  window.open('/employeelist','_self');
+              });
             }).catch(function (err) {
-
+              sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+                  addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+                      window.open('/employeelist','_self');
+                  }).catch(function (err) {
+                      window.open('/employeelist','_self');
+                  });
+              }).catch(function(err) {
+                  window.open('/employeelist','_self');
+              });
             });
         }).catch(function (err) {
+          sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
+              addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
+                  window.open('/employeelist','_self');
+              }).catch(function (err) {
+                  window.open('/employeelist','_self');
+              });
+          }).catch(function(err) {
+              window.open('/employeelist','_self');
+          });
+        });
 
-        });
-        sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(data) {
-            addVS1Data('TEmployee',JSON.stringify(data)).then(function (datareturn) {
-                window.open('/employeelist','_self');
-            }).catch(function (err) {
-                window.open('/employeelist','_self');
-            });
-        }).catch(function(err) {
-            window.open('/employeelist','_self');
-        });
     },
     'click .printConfirm' : function(event){
 

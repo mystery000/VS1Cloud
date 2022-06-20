@@ -51,13 +51,27 @@ function formatFields( fields, searchkey ){
   return groupBy(fields, searchkey );
 }
 
-
 function buildPositions() {
-  const sortfields = $(".sortItem");
+  const sortfields = $(".pSortItems");
   // console.log('Sorting elements')
+  // Level 0 Sorting
   let counter = 1;
   for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter);
+    $(sortfields[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 1 Sorting
+  const cSortItems = $(".cSortItems");
+  counter = 1;
+  for (let i = 0; i <= cSortItems.length; i++) {
+    $(cSortItems[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 2 Sorting
+  const scSortItems = $(".scSortItems");
+  counter = 1;
+  for (let i = 0; i <= scSortItems.length; i++) {
+    $(scSortItems[i]).attr("position", counter * 10);
     counter++;
   }
 }
@@ -612,14 +626,15 @@ templateObject.getProfitLossLayout = async function() {
         childAccounts = subAccounts.filter(( item ) => {
           let sLevel0Order =  item.Level0Order
           let sLevel1Order =  item.Level1Order
-          let subLevel2Order =  item.Level2Order
+          let sLevel2Order =  item.Level2Order
           let sID =  item.ID
-          if (sLevel1Order != 0 && sLevel0Order == Level0Order && subLevel2Order == 0 ) {
+          if (sLevel1Order != 0 && sLevel0Order == Level0Order && sLevel2Order == 0 && sID != ID ) {
             let subSubAccounts = subAccounts.filter(( subitem ) => {
               let subID =  subitem.ID
               let subLevel0Order =  subitem.Level0Order
               let subLevel1Order =  subitem.Level1Order
-              if( sLevel1Order === subLevel1Order && subLevel0Order == Level0Order && sID != subID ){
+              let subLevel2Order =  subitem.Level2Order
+              if( sLevel1Order === subLevel1Order && subLevel0Order == sLevel0Order && sID != subID && subLevel2Order != 0){
                 return subitem;
               }
             })
@@ -661,7 +676,10 @@ templateObject.getProfitLossLayout = async function() {
             }else {
               $item.find('.mainHeadingDiv').removeClass('collapsTogls');
             }
-            $item.removeClass('dragged');
+            let siblingClass = $item.siblings().attr('class')
+            $item.removeClass();
+            $item.addClass(siblingClass);
+            $item.addClass('selected');
 
             // for array
             // var data = group.sortable("serialize").get();
@@ -2000,8 +2018,7 @@ Template.newprofitandloss.events({
 
   },
   "click .saveProfitLossLayouts": async function (){
-
-    return false;
+    buildPositions();
     // Under progress
     const profitLossLayoutApis = new ProfitLossLayoutApi();
 
@@ -2021,46 +2038,65 @@ Template.newprofitandloss.events({
     Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
       let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
       if( Position != undefined ){
-        // update lists with custom fields only
-        item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
-        item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
-        item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
-        item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('pSortItems') ){
+          item.fields.Level0Order = parseInt(Position)
+          item.fields.Level1Order = 0
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('cSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(Position)
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('scSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".cSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(level1OrderPos)
+          item.fields.Level2Order = parseInt(Position)
+          item.fields.Level3Order = 0
+        }
+        
       }
+      return item;
       // fieldsList.push(item);
       /**
        * Update layout fields one by one API call
        */
-      const ApiResponse = await apiEndpoint.fetch(null, {
-        method: "POST",
-        headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(item),
-      });
-      if (ApiResponse.ok == true) {
-        const jsonResponse = await ApiResponse.json();
-        console.log(jsonResponse)
-      }
+      // const ApiResponse = await apiEndpoint.fetch(null, {
+      //   method: "POST",
+      //   headers: ApiService.getPostHeaders(),
+      //   body: JSON.stringify(item),
+      // });
+      // if (ApiResponse.ok == true) {
+      //   const jsonResponse = await ApiResponse.json();
+      //   console.log(jsonResponse)
+      // }
     });
+
+    // console.log( 'profitlosslayoutfields', profitlosslayoutfields ) 
 
     /**
      * 
-     * Update all layout fields with single API call
+     * Update all layout fields index DB
      */
-
-    // let layoutLists = {
-    //   tprofitlosslayout: fieldsList
-    // }
-
-    // const ApiResponse = await apiEndpoint.fetch(null, {
-    //   method: "POST",
-    //   headers: ApiService.getPostHeaders(),
-    //   body: JSON.stringify(layoutLists),
-    // });
-    // if (ApiResponse.ok == true) {
-    //   const jsonResponse = await ApiResponse.json();
-    //   console.log(jsonResponse)
-    // }
-
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let name = $('#nplLayoutName').val();
+    let description = $('#nplLayoutDescr').val();
+    let isdefault = ( $('#npldefaultSettting').is(':checked') )? true: false;
+    let layoutLists = {
+       Name: name,
+       Description: description,
+       Isdefault: isdefault,
+       EmployeeID: employeeID,
+       LayoutLists: profitlosslayoutfields
+    }
+    await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
   }
 });
 

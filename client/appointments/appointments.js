@@ -100,7 +100,7 @@ Template.appointments.onRendered(function () {
         }
     }
     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-        $("#btnHold").prop("disabled", true);
+        //$("#btnHold").prop("disabled", true);
     }
 
     getVS1Data('TERPPreference').then(function (dataObject) {
@@ -570,7 +570,7 @@ Template.appointments.onRendered(function () {
                     }
 
                     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                        $("#btnHold").prop("disabled", true);
+                        //$("#btnHold").prop("disabled", true);
                     }
 
                     if (result[0].aEndTime != "") {
@@ -660,7 +660,7 @@ Template.appointments.onRendered(function () {
                     } else {
                         $("#smsConfirmedFlag i.fa-minus-circle").removeClass('d-none');
                     }
-                    
+
                     $('#event-modal').modal();
                     // this.$body.addClass('modal-open');
                 }
@@ -762,7 +762,7 @@ Template.appointments.onRendered(function () {
                 $("#txtActualHoursSpent").prop("disabled", false);
 
                 if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                    $("#btnHold").prop("disabled", true);
+                    //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
                 var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
@@ -1025,7 +1025,7 @@ Template.appointments.onRendered(function () {
                     }
 
                     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                        $("#btnHold").prop("disabled", true);
+                        //$("#btnHold").prop("disabled", true);
                     }
 
                     if (result[0].aEndTime != "") {
@@ -1220,7 +1220,7 @@ Template.appointments.onRendered(function () {
                 $("#txtActualHoursSpent").prop("disabled", false);
 
                 if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                    $("#btnHold").prop("disabled", true);
+                    //$("#btnHold").prop("disabled", true);
                 }
                 document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
                 var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
@@ -2207,6 +2207,7 @@ Template.appointments.onRendered(function () {
                             state: data.tappointmentex[i].fields.State || '',
                             country: data.tappointmentex[i].fields.Country || '',
                             zip: data.tappointmentex[i].fields.Postcode || '',
+                            timelog: data.tappointmentex[i].fields.AppointmentsTimeLog || '',
                             startTime: data.tappointmentex[i].fields.StartTime.split(' ')[1] || '',
                             totalHours: data.tappointmentex[i].fields.TotalHours || 0,
                             endTime: data.tappointmentex[i].fields.EndTime.split(' ')[1] || '',
@@ -3002,7 +3003,7 @@ Template.appointments.onRendered(function () {
                             $("#txtActualHoursSpent").prop("disabled", false);
 
                             if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                                $("#btnHold").prop("disabled", true);
+                                //$("#btnHold").prop("disabled", true);
                             }
                             document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
                             var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
@@ -3803,6 +3804,7 @@ Template.appointments.onRendered(function () {
                         state: data.tappointmentex[i].fields.State || '',
                         country: data.tappointmentex[i].fields.Country || '',
                         zip: data.tappointmentex[i].fields.Postcode || '',
+                        timelog: data.tappointmentex[i].fields.AppointmentsTimeLog || '',
                         startTime: data.tappointmentex[i].fields.StartTime.split(' ')[1] || '',
                         totalHours: data.tappointmentex[i].fields.TotalHours || 0,
                         endTime: data.tappointmentex[i].fields.EndTime.split(' ')[1] || '',
@@ -4590,7 +4592,7 @@ Template.appointments.onRendered(function () {
                         $("#tActualEndTime").prop("disabled", false);
                         $("#txtActualHoursSpent").prop("disabled", false);
                         if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                            $("#btnHold").prop("disabled", true);
+                            //$("#btnHold").prop("disabled", true);
                         }
                         document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
                         var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
@@ -5611,7 +5613,7 @@ Template.appointments.onRendered(function () {
     };
 
     if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-        $("#btnHold").prop("disabled", true);
+        //$("#btnHold").prop("disabled", true);
     }
 
     // BEGIN DATE CODE
@@ -5969,7 +5971,7 @@ Template.appointments.onRendered(function () {
                             }
 
                             if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                                $("#btnHold").prop("disabled", true);
+                                //$("#btnHold").prop("disabled", true);
                             }
                             if (result[0].aEndTime != "") {
                                 $("#btnHold").prop("disabled", true);
@@ -6117,7 +6119,7 @@ Template.appointments.onRendered(function () {
                         $("#tActualEndTime").prop("disabled", false);
                         $("#txtActualHoursSpent").prop("disabled", false);
                         if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                            $("#btnHold").prop("disabled", true);
+                            //$("#btnHold").prop("disabled", true);
                         }
                         document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, '');
                         var start = event.dateStr != '' ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
@@ -6529,8 +6531,8 @@ Template.appointments.onRendered(function () {
                 (chkSMSCustomer || chkSMSUser)) {
                 swal({
                     title: 'No SMS Settings',
-                    text: "SMS messages won't be sent to Customer or User",
-                    type: 'warning',
+                    text: "Do you wish to setup SMS Confirmation?",
+                    type: 'question',
                     showCancelButton: true,
                     confirmButtonText: 'Continue',
                     cancelButtonText: 'Go to SMS Settings'
@@ -6753,7 +6755,7 @@ Template.appointments.events({
             }
 
             if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-                $("#btnHold").prop("disabled", true);
+                //$("#btnHold").prop("disabled", true);
             }
 
             if (result[0].aEndTime != "") {
@@ -9070,6 +9072,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnStartAppointmentConfirm').trigger('click');
                     }
                 })
@@ -9083,8 +9087,8 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS messages won't be sent to Customer or User",
-                        type: 'warning',
+                        text: "Do you wish to setup SMS Confirmation?",
+                        type: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
                         cancelButtonText: 'Go to SMS Settings'
@@ -9138,6 +9142,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnEndActualTime').trigger('click');
                     }
                 })
@@ -9149,8 +9155,8 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS messages won't be sent to Customer or User",
-                        type: 'warning',
+                        text: "Do you wish to setup SMS Confirmation?",
+                        type: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
                         cancelButtonText: 'Go to SMS Settings'
@@ -9203,6 +9209,8 @@ Template.appointments.events({
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.value) {
+                      $('#chkSMSCustomer').prop('checked', false);
+                       $('#chkSMSUser').prop('checked', false);
                         $('#btnSaveAppointmentSubmit').trigger('click');
                     }
                 })
@@ -9216,8 +9224,10 @@ Template.appointments.events({
                 if (!smsSettings || !smsSettings.twilioAccountId) {
                     swal({
                         title: 'No SMS Settings',
-                        text: "SMS messages won't be sent to Customer or User.",
-                        type: 'warning',
+                        // text: "SMS messages won't be sent to Customer or User.",
+                        text:"Do you wish to setup SMS Confirmation?",
+                        type: 'question',
+                        // type: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Continue',
                         cancelButtonText: 'Go to SMS Settings'
@@ -9426,18 +9436,18 @@ Template.appointments.events({
             }
     },
     'click #btnHold': function (event) {
-      if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
-          swal({
-              title: 'Oops...',
-              text: 'You do not have access to put appointments "On Hold"',
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-          }).then((results) => {
-              if (results.value) {}
-              else if (results.dismiss === 'cancel') {}
-          });
-      }else{
+      // if (Session.get('CloudAppointmentStartStopAccessLevel') == true) {
+      //     swal({
+      //         title: 'Oops...',
+      //         text: 'You do not have access to put appointments "On Hold"',
+      //         type: 'error',
+      //         showCancelButton: false,
+      //         confirmButtonText: 'OK'
+      //     }).then((results) => {
+      //         if (results.value) {}
+      //         else if (results.dismiss === 'cancel') {}
+      //     });
+      // }else{
         if ($('#updateID').val() == "") {
             swal({
                 title: 'Oops...',
@@ -9449,7 +9459,7 @@ Template.appointments.events({
         } else {
             $('#frmOnHoldModal').modal();
         }
-   }
+   //}
     },
     'click #btnOptions': function (event) {
         if ($('#updateID').val() == "") {
@@ -9586,55 +9596,6 @@ Template.appointments.events({
                     });
                 }
 
-        //});
-
-    },
-    'mouseenter #txtNotes': function (event) {
-      let getValue = $('#txtNotes').val() || ' ';
-      let templateObject = Template.instance();
-      templateObject.textnote.set(getValue);
-    },
-    'mouseleave #txtNotes': function (event) {
-        let appointmentService = new AppointmentService();
-        let templateObject = Template.instance();
-        let getValue = templateObject.textnote.get()||' ';
-        let notes = $('#txtNotes').val() || ' ';
-        let id = document.getElementById('updateID').value || '0';
-        if (createAppointment == false) {
-        if(getValue != notes){
-        if (Session.get('CloudAppointmentNotes') == true) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                if (id == '0' || id == null) {
-                    // $('#event-modal').modal('hide');
-                    $('.fullScreenSpin').css('display', 'none');
-                } else {
-                  let objectData = {
-                        type: "TAppointmentEx",
-                        fields: {
-                            Id: parseInt(id),
-                            Notes: notes,
-                        }
-                    };
-                    /*
-                    appointmentService.saveAppointment(objectData).then(function (data) {
-                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (dataList) {
-                            addVS1Data('TAppointment', JSON.stringify(dataList)).then(function (datareturn) {
-                                     $('.fullScreenSpin').css('display', 'none');
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            })
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        })
-
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    });
-                    */
-                }
-          }
-        };
-        }
         //});
 
     },

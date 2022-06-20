@@ -1072,11 +1072,54 @@ Template.inventorylist.onRendered(function() {
             });
     };
 
-    $("#tblInventory tbody").on("click", "td:not(.colQuantity, .colSerialNo)", function() {
+    $("#tblInventory tbody").on("click", "td:not(.colAvailable, .colOnSO, .colOnBO, .colInStock, .colOnOrder, .colQuantity, .colSerialNo)", function() {
         var listData = $(this).closest("tr").find(".colProductID").text();
         if (listData) {
             //FlowRouter.go('/productview?id=' + listData);
             FlowRouter.go("/productview?id=" + listData);
+        }
+    });
+
+    $("#tblInventory tbody").on("click", "td.colAvailable", function() {
+        var listData = $(this).closest("tr").find(".colProductID").text();
+        if (listData) {
+            FlowRouter.go("/stockmovementreport?id=" + listData);
+            // Filter the stock movement report based on product ID
+        }
+    });
+
+    $("#tblInventory tbody").on("click", "td.colInStock", function() {
+        var listData = $(this).closest("tr").find(".colProductID").text();
+        if (listData) {
+            FlowRouter.go("/stockmovementreport?id=" + listData);
+            // Filter the stock movement report based on product ID
+        }
+    });
+
+    $("#tblInventory tbody").on("click", "td.colOnBO", function() {
+        var listData = $(this).closest("tr").find(".colProductID").text();
+        var listProductName = $(this).closest("tr").find(".colProductName").text();
+        if (listData) {
+            $('#onBackOrderPopUp').modal("show");
+            $(".productNameOnBo").text(listProductName);
+        }
+    });
+
+    $("#tblInventory tbody").on("click", "td.colOnSO", function() {
+        var listData = $(this).closest("tr").find(".colProductID").text();
+        var listProductName = $(this).closest("tr").find(".colProductName").text();
+        if (listData) {
+            $('#onSalesOrderPopUp').modal("show");
+            $(".productNameOnSO").text(listProductName);
+        }
+    });
+
+    $("#tblInventory tbody").on("click", "td.colOnOrder", function() {
+        var listData = $(this).closest("tr").find(".colProductID").text();
+        var listProductName = $(this).closest("tr").find(".colProductName").text();
+        if (listData) {
+            $('#onOrderPopUp').modal("show");
+            $(".productNameOnOrder").text(listProductName);
         }
     });
 

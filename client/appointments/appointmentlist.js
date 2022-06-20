@@ -2208,8 +2208,8 @@ Template.appointmentlist.events({
             }
         });
 
-        sideBarService.getAllAppointmentPredList().then(function (data) {
-            addVS1Data('TAppointmentPreferences', JSON.stringify(data)).then(function (datareturn) {
+        sideBarService.getAllAppointmentPredList().then(function (dataPred) {
+            addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
 
             }).catch(function (err) {
 
