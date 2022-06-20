@@ -187,6 +187,7 @@ const erpObject = {
     TSerialNumberListCurrentReport: "TSerialNumberListCurrentReport",
     TRepServices:"TRepServices",
     TCustomFieldList: "TCustomFieldList",
+    TCustomFieldListDropDown: "TCustomFieldListDropDown",
     TReportSchedules: "TReportSchedules",
     TAllowance: "TAllowance",
     TTerminationSimple: "TTerminationSimple",

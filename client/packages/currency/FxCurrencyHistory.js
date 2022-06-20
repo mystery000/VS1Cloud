@@ -7,6 +7,7 @@ import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
 import { CountryService } from "../../js/country-service";
 import { TaxRateService } from "../../settings/settings-service";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -540,6 +541,7 @@ Template.FxCurrencyHistory.events({
     }
   },
   "click .saveTable": function (event) {
+    LoadingOverlay.show();
     let lineItems = [];
     $(".columnSettings").each(function (index) {
       var $tblrow = $(this);
@@ -622,6 +624,7 @@ Template.FxCurrencyHistory.events({
         }
       }
     }
+    LoadingOverlay.hide();
   },
   "blur .divcolumn": function (event) {
     let columData = $(event.target).text();

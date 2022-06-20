@@ -7,6 +7,9 @@ import { ProductService } from "../../product/product-service";
 import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
 import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
+import { TaxRateService } from "../../settings/settings-service";
+import LoadingOverlay from "../../LoadingOverlay";
+import GlobalFunctions from "../../GlobalFunctions";
 // import jqueryScrollable from "../../js/jquery-sortable"
 
 
@@ -15,7 +18,7 @@ let reportService = new ReportService();
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
-
+let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
   const templateObject = Template.instance();
@@ -26,6 +29,9 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.recordslayout = new ReactiveVar([]);
   templateObject.profitlosslayoutrecords = new ReactiveVar([]);
   templateObject.profitlosslayoutfields = new ReactiveVar([]);
+  templateObject.currencyList = new ReactiveVar([]);
+  templateObject.activeCurrencyList = new ReactiveVar([]);
+  templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
 function formatFields( fields, searchkey ){
@@ -33,8 +39,8 @@ function formatFields( fields, searchkey ){
     // Return the end result
     return array.reduce((result, currentValue) => {
         // If an array already present for key, push it to the array. Else create an array and push the object
-        (result[currentValue.fields[key]] = result[currentValue.fields[key]] || []).push(
-            currentValue.fields
+        (result[currentValue[key]] = result[currentValue[key]] || []).push(
+            currentValue
         );
         // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
         return result;
@@ -45,23 +51,38 @@ function formatFields( fields, searchkey ){
   return groupBy(fields, searchkey );
 }
 
-
 function buildPositions() {
-  const sortfields = $(".sortItem");
+  const sortfields = $(".pSortItems");
   // console.log('Sorting elements')
+  // Level 0 Sorting
   let counter = 1;
   for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter);
+    $(sortfields[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 1 Sorting
+  const cSortItems = $(".cSortItems");
+  counter = 1;
+  for (let i = 0; i <= cSortItems.length; i++) {
+    $(cSortItems[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 2 Sorting
+  const scSortItems = $(".scSortItems");
+  counter = 1;
+  for (let i = 0; i <= scSortItems.length; i++) {
+    $(scSortItems[i]).attr("position", counter * 10);
     counter++;
   }
 }
 
 Template.newprofitandloss.onRendered(function () {
+  let taxRateService = new TaxRateService();
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
   const deptrecords = [];
 
-  templateObject.setReportOptions = async function( compPeriod = 2, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
+  templateObject.setReportOptions = async function( compPeriod = 0, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
       // New Code Start here
     let fromYear = moment(formatDateFrom).format('YYYY');
     let toYear = moment(formatDateTo).format('YYYY');
@@ -511,7 +532,6 @@ Template.newprofitandloss.onRendered(function () {
     // }
 
     let getDateFrom =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
-    //console.log(getDateFrom);
     templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
 
@@ -580,10 +600,10 @@ templateObject.getProfitLossLayout = async function() {
     const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
     // Save default list
     templateObject.profitlosslayoutfields.set( profitLossLists );
-
-    profitLossLayouts = profitLossLists.filter((item) => {
+    
+    profitLossLists.filter((item) => {
       if( item.fields.Level0Order != 0 && item.fields.Level1Order == 0 && item.fields.Level2Order == 0 && item.fields.Level3Order == 0 ){
-        return item;
+        profitLossLayouts.push(item.fields)
       }
     });
     // console.log(profitLossLayouts, parentprofitLossLayouts);
@@ -591,90 +611,55 @@ templateObject.getProfitLossLayout = async function() {
     // Fetch Subchilds According to the Above grouping
     profitLossLayouts.forEach(function(item){
         let subAccounts = []
-        let Level0Order =  item.fields.Level0Order
-        let ID =  item.fields.ID
-
+        let childAccounts = []
+        let Level0Order =  item.Level0Order
+        let ID =  item.ID
         profitLossLists.filter((subitem) => {
           let subLevel0Order =  subitem.fields.Level0Order
           let subID =  subitem.fields.ID
-          let subposition = subitem.fields.Pos.match(/.{1,2}/g);
-          if( subLevel0Order == Level0Order && ID != subID){
-            subitem.fields.Position = parseInt(subposition[1]) || 0;
-            subAccounts.push(subitem.fields)
+          if (subLevel0Order == Level0Order && ID != subID ) {
+            subitem.subAccounts = [];
+            subAccounts.push(subitem.fields);
           }
         });
 
-        let position = item.fields.Pos.match(/.{1,2}/g);
-        item.fields.Position = parseInt(position[0]) || 0;
+        childAccounts = subAccounts.filter(( item ) => {
+          let sLevel0Order =  item.Level0Order
+          let sLevel1Order =  item.Level1Order
+          let sLevel2Order =  item.Level2Order
+          let sID =  item.ID
+          if (sLevel1Order != 0 && sLevel0Order == Level0Order && sLevel2Order == 0 && sID != ID ) {
+            let subSubAccounts = subAccounts.filter(( subitem ) => {
+              let subID =  subitem.ID
+              let subLevel0Order =  subitem.Level0Order
+              let subLevel1Order =  subitem.Level1Order
+              let subLevel2Order =  subitem.Level2Order
+              if( sLevel1Order === subLevel1Order && subLevel0Order == sLevel0Order && sID != subID && subLevel2Order != 0){
+                return subitem;
+              }
+            })
+            item.subAccounts = subSubAccounts;
+            return item;
+          }
+        });
+        // let position = item.Pos.match(/.{1,2}/g);
+        // item.fields.Position = parseInt(position[0]) || 0;
         // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
         newprofitLossLayouts.push({
-          ...item.fields,
-          subAccounts: subAccounts
-        }) 
-    });   
-    // console.log( newprofitLossLayouts ); 
-    templateObject.profitlosslayoutrecords.set( newprofitLossLayouts );
+          ...item,
+          subAccounts: childAccounts,
+        });
+      });
+      console.log('newprofitLossLayouts', newprofitLossLayouts);
+      templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
     // handle Dragging and sorting
     setTimeout(function () {
     
-      // console.log('chdsdsdsdal sdsdsd');
       var oldContainer;
-      var mainHeading = $('.mainHeadingDiv');
-      var dragHeadingItems = $('.childInner, .mainHeadingDiv');
-      $("ol.nested_with_switch").sortable({
-          group: 'nested_with_switch',
-          containment: "parent",
-          nested: true,
+      var group = $("ol.nested_with_switch").sortable({
+          group: 'nested',
           exclude: '.noDrag',
-          
-          // onMousedown: function ($item, position, _super, event) {
-          //   $item.parents('.vertical').find('.selected').removeClass('selected');
-          //   $item.addClass('selected');
-          // },
-          // onDrag: function ($item, position, _super, event) {
-          //   $item.parents('.vertical').find('.selected').removeClass('selected');
-          //   $item.parents('.vertical').find('.selected').removeClass('dragged');
-          //   $item.addClass('selected');
-           
-          // },
-          onDrop: function ($item) {
-            if($item.parents().hasClass('groupedListNew')) {
-              
-              // $item.parents('.dragged').removeClass('dragged');
-            }else {
-              $item.find('.mainHeadingDiv').removeClass('collapsTogls');
-              console.log($item.find('.mainHeadingDiv').html());
-              // mainHeading.removeClass('collapsTogls');
-            }
-            
-            $item.removeClass('dragged');
-            
-          },
-          // onDragStart: 	
-          // function ($item, container, _super, event) {
-          //   $item.removeClass(container.group.options.draggedClass).removeAttr("style")
-          //   $("body").removeClass(container.group.options.bodyClass)
-          // },
-          // onDrop:function ($item, position, _super, event) {
-          //   $item.parents('.vertical').find('.selected').removeClass('selected, dragged');
-          //   $item.addClass('selected');
-          // },
-          // serialize: function ($parent, $children, parentIsContainer) {
-          //   var result = $.extend({}, $parent.data())
-          //     if(parentIsContainer)
-          //     return [$children]
-          //     else if ($children[0]){
-          //     result.children = $children
-          //   }
-          // },
-          // isValidTarget: function($item, container) {
-          //   if (container.el.hasClass("noDrag")) {
-          //     return false;
-          //   } else {
-          //     return true;
-          //   }
-          // },
           
           afterMove: function (placeholder, container) {
             if(oldContainer != container){
@@ -684,18 +669,25 @@ templateObject.getProfitLossLayout = async function() {
               oldContainer = container;
             }
           },
-         
-          // onDrop: function ($item, container, _super) {
+          onDrop: function ($item, container, _super) {
+            
+            // On drag removing the dragged classs and colleps 
+            if($item.parents().hasClass('groupedListNew')) {
+            }else {
+              $item.find('.mainHeadingDiv').removeClass('collapsTogls');
+            }
+            let siblingClass = $item.siblings().attr('class')
+            $item.removeClass();
+            $item.addClass(siblingClass);
+            $item.addClass('selected');
 
-          //   var data = group.sortable("serialize").get();
-
-          //   var jsonString = JSON.stringify(data, null, ' ');
-          //   console.log(jsonString);
-          //   $('#serialize_output').val(jsonString);
-
-          //   container.el.removeClass("active");
-          //   _super($item, container);
-          // }
+            // for array
+            // var data = group.sortable("serialize").get();
+            // var jsonString = JSON.stringify(data, null, ' ');
+            // console.log(jsonString);
+            // container.el.removeClass("active");
+            // _super($item, container);
+          }
         });
        
         $('.collepsDiv').click(function(){
@@ -706,15 +698,7 @@ templateObject.getProfitLossLayout = async function() {
           $(this).parents('.vertical').find('.selected').removeClass('dragged');
           $(this).parent().addClass('selected');
         });
-        
-        // $(this).mouseup(function(){
-        //   $(this).parents('.vertical').find('.selected').removeClass('selected');
-        //   $(this).parents('.vertical').find('.selected').removeClass('dragged');
-        //   $(this).parent().addClass('selected');
-        // });
-        // $('.subChild, .mainHeading').mouseout(function(){
-        //   $('.subChild, .mainHeading').removeClass('selected');
-        // });
+      
     }, 1000);    
     
   }
@@ -780,9 +764,132 @@ $('.tblAvoid').each(function(){
   //                });
   //            };
   //            sortArray(eLayScreenArr, pnlTblArr);
+ /**
+   * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
+   * So we have a showable list of currencies to toggle
+   */
+  let _currencyList = [];
+  templateObject.loadCurrency = () =>
+    taxRateService.getCurrencies().then((result) => {
+      // console.log(result);
+      const data = result.tcurrency;
+      //console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+        var dataList = {
+          id: data[i].Id || "",
+          code: data[i].Code || "-",
+          currency: data[i].Currency || "NA",
+          symbol: data[i].CurrencySymbol || "NA",
+          buyrate: data[i].BuyRate || "-",
+          sellrate: data[i].SellRate || "-",
+          country: data[i].Country || "NA",
+          description: data[i].CurrencyDesc || "-",
+          ratelastmodified: data[i].RateLastModified || "-",
+           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+          //active: false,
+          // createdAt: new Date(data[i].MsTimeStamp) || "-",
+          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+        };
+
+        _currencyList.push(dataList);
+        //}
+      }
+
+      // console.log(_currencyList);
+
+      templateObject.currencyList.set(_currencyList);
+    });
+
+  templateObject.loadCurrency(); 
+
+
+  templateObject.loadCurrencyHistory = () => {
+    taxRateService
+  .getCurrencyHistory()
+  .then((result) => {
+    //console.log(result);
+    const data = result.tcurrencyratehistory;
+    // console.log(data);
+    // console.log("Currency list: ",data);
+
+    templateObject.tcurrencyratehistory.set(data);
+  })
+  .catch(function (err) {
+    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    $(".fullScreenSpin").css("display", "none");
+    // Meteor._reload.reload();
+  });
+  }
+
+  templateObject.loadCurrencyHistory();
+
+
+  LoadingOverlay.hide();
 });
 
 Template.newprofitandloss.events({
+  "change input[type='checkbox']": (event) => {
+    // This should be global
+    $(event.currentTarget).attr(
+      "checked",
+      $(event.currentTarget).prop("checked")
+    );
+  },
+  "click .currency-modal-save": (e) => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
+    LoadingOverlay.show();
+    
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+
+    // Get all selected currencies
+    const currencySelected = $(".currency-selector-js:checked");
+    let _currencySelectedList = [];
+    if(currencySelected.length > 0) {
+      $.each(currencySelected, (index, e) => {
+        const sellRate = $(e).attr("sell-rate");
+        const buyRate = $(e).attr("buy-rate");
+        const currencyCode = $(e).attr("currency");
+        const currencyId = $(e).attr("currency-id");
+        let _currency = _currencyList.find((c) => c.id == currencyId);
+        _currency.active = true;
+        _currencySelectedList.push(_currency);
+      });
+    } else {
+      let _currency = _currencyList.find((c) => c.currency == defaultCurrencyCode);
+      _currency.active = true;
+      _currencySelectedList.push(_currency);
+    }
+    
+    
+    //console.log("Selected currency list", _currencySelectedList);
+
+    _currencyList.forEach((value, index) => {
+      if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
+        _currencyList[index].active = _currencySelectedList.find(
+          (c) => c.id == _currencyList[index].id
+        ).active;
+      } else {
+        _currencyList[index].active = false;
+      }
+    });
+
+    _currencyList = _currencyList.sort((a, b) => {
+      if (a.currency == defaultCurrencyCode) {
+        return -1;
+      }
+      return 1;
+    });
+
+    // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    templateObject.currencyList.set(_currencyList);
+    
+    LoadingOverlay.hide();
+  },
   "click #dropdownDateRang": function (e) {
     let dateRangeID = e.target.id;
     $("#btnSltDateRange").addClass("selectedDateRangeBtnMod");
@@ -841,7 +948,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    templateObject.setReportOptions(defaultPeriod, dateFrom, dateTo );
+    templateObject.setReportOptions(0, dateFrom, dateTo );
   },
 
   "click .btnRefresh": function () {
@@ -965,7 +1072,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf('month').format('YYYY-MM-DD');
     let endDate   = moment().endOf('month').format('YYYY-MM-DD');
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #thisQuarter": function(){
@@ -973,7 +1080,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format('YYYY-MM-DD');
     let endDate = moment().endOf("Q").format('YYYY-MM-DD');
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #thisFinYear": function(){
@@ -988,7 +1095,7 @@ Template.newprofitandloss.events({
       fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
       endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
     }
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #lastMonth": function(){
@@ -996,7 +1103,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD')
     let endDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD')
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
   
   "click #lastQuarter": function () {
@@ -1004,7 +1111,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #lastFinYear": function () {
@@ -1019,7 +1126,7 @@ Template.newprofitandloss.events({
       fromDate = moment().subtract(2, "year").month("July").startOf("month").format("YYYY-MM-DD");
       endDate = moment().subtract(1, "year").month("June").endOf("month").format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #monthToDate": function () {
@@ -1027,7 +1134,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("M").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #quarterToDate": function () {
@@ -1035,7 +1142,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click #finYearToDate": function () {
@@ -1043,7 +1150,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(defaultPeriod, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate );
   },
 
   "click .btnDepartmentSelect": async function(){
@@ -1825,54 +1932,93 @@ Template.newprofitandloss.events({
     }
     let accountName = $('#nplPlaceInMoveSelection').val();
     let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
-    if( profitlosslayoutfields ){
-      let updateLayouts = profitlosslayoutfields.filter(function( item, index ){
-        if( item.AccountName == accountName ){
-          item.subAccounts.push({
-            Account: "",
-            AccountID: 0,
-            AccountLevel0GroupName: item.AccountName,
-            AccountLevel1GroupName: groupName,
-            AccountLevel2GroupName: "",
-            AccountName: groupName,
-            Direction: "",
-            GlobalRef: "DEF1",
-            Group: "",
-            ID: 0,
-            ISEmpty: false,
-            IsAccount: false,
-            IsRoot: false,
-            KeyStringFieldName: "",
-            KeyValue: "",
-            LayoutID: 1,
-            LayoutToUse: "",
-            Level: "",
-            Level1Group: "",
-            Level1Order: 0,
-            Level2Order: 0,
-            Level3Order: 0,
-            MsTimeStamp: "2022-04-06 16:00:23",
-            MsUpdateSiteCode: "DEF",
-            Parent: item.ID,
-            Pos: "0",
-            Position: 0,
-            Recno: 3,
-            Up: false
-          })
-          
-        }
-        return item;
-       
-      });
-      $('#newGroupName').val('');
-      templateObject.profitlosslayoutrecords.set( updateLayouts );
-      $('#nplAddGroupScreen').modal('hide');
+    if (profitlosslayoutfields) {
+      if( accountName == 'none' ){
+        profitlosslayoutfields.push({
+          Account: "",
+          AccountID: 0,
+          AccountLevel0GroupName: groupName,
+          AccountLevel1GroupName: "",
+          AccountLevel2GroupName: "",
+          AccountName: groupName,
+          Direction: "",
+          GlobalRef: "DEF1",
+          Group: "",
+          ID: 0,
+          ISEmpty: false,
+          IsAccount: false,
+          IsRoot: false,
+          KeyStringFieldName: "",
+          KeyValue: "",
+          LayoutID: 1,
+          LayoutToUse: "",
+          Level: "",
+          Level0Group: '',
+          Level1Group: '',
+          Level2Group: '',
+          Level1Order: 1,
+          Level2Order: 0,
+          Level3Order: 0,
+          MsTimeStamp: "2022-04-06 16:00:23",
+          MsUpdateSiteCode: "DEF",
+          Parent: 0,
+          Pos: "0",
+          Position: 0,
+          Recno: 3,
+          Up: false,
+          subAccounts: []
+        });
+        $("#newGroupName").val("");
+        templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
+      }else{
+        let updateLayouts = profitlosslayoutfields.filter(function (item, index) {
+          if (item.AccountName == accountName) {
+            item.subAccounts.push({
+              Account: "",
+              AccountID: 0,
+              AccountLevel0GroupName: item.AccountName,
+              AccountLevel1GroupName: groupName,
+              AccountLevel2GroupName: "",
+              AccountName: groupName,
+              Direction: "",
+              GlobalRef: "DEF1",
+              Group: "",
+              ID: 0,
+              ISEmpty: false,
+              IsAccount: false,
+              IsRoot: false,
+              KeyStringFieldName: "",
+              KeyValue: "",
+              LayoutID: 1,
+              LayoutToUse: "",
+              Level: "",
+              Level0Group: '',
+              Level1Group: '',
+              Level2Group: '',
+              Level1Order: 0,
+              Level2Order: 0,
+              Level3Order: 0,
+              MsTimeStamp: "2022-04-06 16:00:23",
+              MsUpdateSiteCode: "DEF",
+              Parent: item.ID,
+              Pos: "0",
+              Position: 0,
+              Recno: 3,
+              Up: false,
+            });
+          }
+          return item;
+        });
+        $("#newGroupName").val("");
+        templateObject.profitlosslayoutrecords.set(updateLayouts);
+      }
+      
+      $("#nplAddGroupScreen").modal("hide");
     }
 
   },
   "click .saveProfitLossLayouts": async function (){
-
-    return false;
+    buildPositions();
     // Under progress
     const profitLossLayoutApis = new ProfitLossLayoutApi();
 
@@ -1892,50 +2038,182 @@ Template.newprofitandloss.events({
     Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
       let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
       if( Position != undefined ){
-        // update lists with custom fields only
-        item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
-        item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
-        item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
-        item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('pSortItems') ){
+          item.fields.Level0Order = parseInt(Position)
+          item.fields.Level1Order = 0
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('cSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(Position)
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('scSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".cSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(level1OrderPos)
+          item.fields.Level2Order = parseInt(Position)
+          item.fields.Level3Order = 0
+        }
+        
       }
+      return item;
       // fieldsList.push(item);
       /**
        * Update layout fields one by one API call
        */
-      const ApiResponse = await apiEndpoint.fetch(null, {
-        method: "POST",
-        headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(item),
-      });
-      if (ApiResponse.ok == true) {
-        const jsonResponse = await ApiResponse.json();
-        console.log(jsonResponse)
-      }
+      // const ApiResponse = await apiEndpoint.fetch(null, {
+      //   method: "POST",
+      //   headers: ApiService.getPostHeaders(),
+      //   body: JSON.stringify(item),
+      // });
+      // if (ApiResponse.ok == true) {
+      //   const jsonResponse = await ApiResponse.json();
+      //   console.log(jsonResponse)
+      // }
     });
+
+    // console.log( 'profitlosslayoutfields', profitlosslayoutfields ) 
 
     /**
      * 
-     * Update all layout fields with single API call
+     * Update all layout fields index DB
      */
-
-    // let layoutLists = {
-    //   tprofitlosslayout: fieldsList
-    // }
-
-    // const ApiResponse = await apiEndpoint.fetch(null, {
-    //   method: "POST",
-    //   headers: ApiService.getPostHeaders(),
-    //   body: JSON.stringify(layoutLists),
-    // });
-    // if (ApiResponse.ok == true) {
-    //   const jsonResponse = await ApiResponse.json();
-    //   console.log(jsonResponse)
-    // }
-
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let name = $('#nplLayoutName').val();
+    let description = $('#nplLayoutDescr').val();
+    let isdefault = ( $('#npldefaultSettting').is(':checked') )? true: false;
+    let layoutLists = {
+       Name: name,
+       Description: description,
+       Isdefault: isdefault,
+       EmployeeID: employeeID,
+       LayoutLists: profitlosslayoutfields
+    }
+    await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
   }
 });
 
+
 Template.newprofitandloss.helpers({
+  convertAmount: (amount, currencyData) => {
+    let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    // console.log("Amount to covert", amount);
+    if(!amount) {
+      return "";
+    }
+    if (currencyData.currency == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
+    // Lets remove the minus character
+    const isMinus = amount.indexOf('-') > -1;
+    if(isMinus == true) amount = amount.replace('-', '');
+
+    // get default currency symbol
+    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
+    //console.log("default: ",_defaultCurrency);
+    amount = amount.replace(_defaultCurrency.symbol, '');
+    // console.log("Is nan", amount, isNaN(amount));
+    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // console.log("Amount to convert", amount);
+    // console.log("currency to convert to", currencyData);
+
+
+    // Get the selected date
+    let dateTo = $("#dateTo").val();
+    const day = dateTo.split('/')[0];
+    const m = dateTo.split('/')[1];
+    const y = dateTo.split('/')[2];
+    dateTo = new Date(y, m, day);
+    dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
+    // console.log('date to', dateTo);
+
+    // Filter by currency code
+    currencyList = currencyList.filter(a => a.Code == currencyData.currency);
+
+    // Sort by the closest date
+    currencyList = currencyList.sort((a, b) => {
+      a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
+      a.setHours(0);
+      a.setMinutes(0);
+      a.setSeconds(0);
+
+      b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
+      b.setHours(0);
+      b.setMinutes(0);
+      b.setSeconds(0);
+
+      var distancea = Math.abs(dateTo - a);
+      var distanceb = Math.abs(dateTo - b);
+      return distancea - distanceb; // sort a before b when the distance is smaller
+
+      // const adate= new Date(a.MsTimeStamp);
+      // const bdate = new Date(b.MsTimeStamp);
+
+      // if(adate < bdate) {
+      //   return 1;
+      // }
+      // return -1;
+    });
+
+    const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
+    // console.log("Closests currency", firstElem);
+    // console.log("Currency list: ", currencyList);
+
+    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    //console.log("final amount", amount);
+    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
+    //console.log(convertedAmount);
+
+    return convertedAmount;
+  },
+  count: (array) => {
+    return array.length;
+  },
+  countActive: (array) => {
+    let activeArray = array.filter((c) => c.active == true);
+    return activeArray.length;
+  },
+  currencyList: () => {
+    return Template.instance().currencyList.get();
+  },
+  isNegativeAmount(amount) {
+    
+    if (Math.sign(amount) === -1) {
+      return true;
+    }
+    return false;
+  },
+  isOnlyDefaultActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    if(activeArray.length == 1) {
+      //console.log(activeArray[0].currency);
+      if(activeArray[0].currency == defaultCurrencyCode) {
+        return !true;
+      } else {
+        return !false;
+      }
+    } else {
+      return !false;
+    }
+  },
+  isCurrencyListActive() {
+    const array = Template.instance().currencyList.get();
+    let activeArray = array.filter((c) => c.active == true);
+
+    return activeArray.length > 0;
+  },
   isAccount( layout ){
     if( layout.AccountID > 1 ){
       return true;
@@ -1976,6 +2254,7 @@ Template.newprofitandloss.helpers({
   companyname: () => {
     return loggedCompany;
   },
+  
   deptrecords: () => {
     return Template.instance()
       .deptrecords.get()
@@ -1988,6 +2267,10 @@ Template.newprofitandloss.helpers({
         return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
       });
   },
+});
+
+Template.registerHelper("equal", function (a, b) {
+  return a == b;
 });
 
 Template.registerHelper("equals", function (a, b) {
@@ -2021,3 +2304,23 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
+
+
+// /**
+//  * This function will check each minus and add text-danger to that th
+//  */
+// function minusAmountsStyle() {
+ 
+//   setTimeout(() => {
+//     const elements = document.querySelectorAll(".fgr");
+
+//     elements.forEach((element) => {
+//       console.log(element.innerHTML);
+//       if(element.innerHTML.includes('-')) {
+//         element.classList.add('text-danger');
+//       }
+//     });
+
+//   }, 3000);
+  
+// }
