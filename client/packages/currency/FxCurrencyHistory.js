@@ -695,14 +695,66 @@ Template.FxCurrencyHistory.events({
     });
     templateInstance.tableheaderrecords.set(tableHeaderList);
   },
+  // "click .btnExportReportProfit": function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   let utilityService = new UtilityService();
+  //   let templateObject = Template.instance();
+  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+  //   let formatDateFrom =
+  //     dateFrom.getFullYear() +
+  //     "-" +
+  //     (dateFrom.getMonth() + 1) +
+  //     "-" +
+  //     dateFrom.getDate();
+  //   let formatDateTo =
+  //     dateTo.getFullYear() +
+  //     "-" +
+  //     (dateTo.getMonth() + 1) +
+  //     "-" +
+  //     dateTo.getDate();
+
+  //   const filename = loggedCompany + "-Profit and Loss" + ".csv";
+  //   utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+  //   let rows = [];
+  //   // reportService.getProfitandLoss(formatDateFrom,formatDateTo,false).then(function (data) {
+  //   //     if(data.profitandlossreport){
+  //   //         rows[0] = ['Account Type','Account Name', 'Account Number', 'Total Amount(EX)'];
+  //   //         data.profitandlossreport.forEach(function (e, i) {
+  //   //             rows.push([
+  //   //               data.profitandlossreport[i]['AccountTypeDesc'],
+  //   //               data.profitandlossreport[i].AccountName,
+  //   //               data.profitandlossreport[i].AccountNo,
+  //   //               // utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i]['Sub Account Total']),
+  //   //               utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i].TotalAmount)]);
+  //   //         });
+  //   //         setTimeout(function () {
+  //   //             utilityService.exportReportToCsv(rows, filename, 'xls');
+  //   //             $('.fullScreenSpin').css('display','none');
+  //   //         }, 1000);
+  //   //     }
+  //   //
+  //   // });
+  // },
   "click #exportbtn": function () {
     LoadingOverlay.show();
-    jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
+     jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
+    
     LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
     LoadingOverlay.show();
-    jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
+    // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
+
+    document.title = 'vs1cloud';
+    $("#tblFxCurrencyHistory").print({
+      title: document.title + " | Fx Currency History | " + loggedCompany,
+      noPrintSelector: ".addSummaryEditor, .excludeButton",
+      exportOptions: {
+        stripHtml: false,
+      },
+    });
     LoadingOverlay.hide();
   },
   "click .btnRefresh": function () {

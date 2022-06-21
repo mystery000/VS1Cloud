@@ -988,7 +988,7 @@ Template.newprofitandloss.events({
     });
 
     document.title = 'Profit and Loss Report';
-    $(".printReport").print({
+    $("#tblFxCurrencyHistory_wrapper").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor, .excludeButton",
       exportOptions: {
