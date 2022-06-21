@@ -40,10 +40,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-5">
-                                <div class="row no-gutters">
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX Rates</button>
+                                <!-- <div class="row no-gutters">
 
-                                </div>
+                                </div> -->
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
@@ -52,6 +51,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 8px"></i>FX Rates</button>
                                 </div>
 
                             </div>
@@ -116,6 +116,7 @@
                                     .last-balance :first-child {
                                         text-align: left !important;
                                     }
+                                    .linkvalue td:first-child a,
                                     .linkvalue td:first-child {
                                         text-align: left !important;
                                         padding-left: 30px;
@@ -132,7 +133,7 @@
                                         white-space: nowrap;
                                         text-align: center;
                                         padding: .3rem 1rem;
-                                    }
+                                    } 
                                     .tableExportDetailDiv th:first-child,
                                     .tableExportDetailDiv td:first-child {
                                         text-align: left !important;
@@ -141,13 +142,17 @@
                                     .tableExportDetailDiv td:last-child {
                                         text-align: center !important;
                                     }
+                                    .tableExportDetailDiv th.alighnMent1,
+                                    .tableExportDetailDiv td.alighnMent1 {
+                                        text-align: right !important;
+                                    }
                                 </style>
                                 <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                                     <thead>
                                         <tr class="table-secondary customDoubleTableHeading">
                                             <th></th>
-                                            <th  colspan="{{countActive currencyList }}" class="text-nowrap" style="font-weight: 800;">Sub Totals</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap" style="font-weight: 800;">Totals</th>
+                                            <th  colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Sub Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Totals</th>
                                         </tr>
                                         {{#if isOnlyDefaultActive equal "false" }}
                                             <tr class="table-active tblAvoid customDoubleTableHeading">
@@ -156,13 +161,13 @@
                                                     <th class="text-left"></th>
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            <th class="text-center alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.currency }}</th>
                                                         {{/if}}
                                                     {{/each}}
 
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-center" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            <th class="text-center alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.currency }}</th>
                                                         {{/if}}
                                                     {{/each}}
                                                 {{/if}}
@@ -203,7 +208,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap Indent1 alighnMent{{countActive currencyList }}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -226,7 +231,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap Indent1 alighnMent{{countActive currencyList }}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -279,8 +284,8 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap Indent1" currency="{{c.currency}}" style="font-weight: 800;" >
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount item.value c}}</a>
+                                                                            <td class="text-nowrap Indent1 alighnMent{{countActive currencyList }}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                                {{convertAmount item.value c}}
                                                                             </td>
                                                                         {{/if}}
                                                                     {{/each}}
