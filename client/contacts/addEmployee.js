@@ -58,25 +58,25 @@ Template.employeescard.onCreated(function () {
     templateObject.openingBalanceInfo = new ReactiveVar();
     templateObject.payTemplateDeductionLineInfo = new ReactiveVar();
     templateObject.payTemplateSuperannuationLineInfo = new ReactiveVar();
-    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();    
-    templateObject.currentDrpDownID = new ReactiveVar();    
+    templateObject.payTemplateReiumbursementLineInfo = new ReactiveVar();
+    templateObject.currentDrpDownID = new ReactiveVar();
     templateObject.employeePayInfos = new ReactiveVar();
     templateObject.employeePaySettings = new ReactiveVar();
     templateObject.leaveTypesDrpDown = new ReactiveVar();
     templateObject.assignLeaveTypeInfos = new ReactiveVar();
-    templateObject.payNotesInfos = new ReactiveVar();    
+    templateObject.payNotesInfos = new ReactiveVar();
     templateObject.leaveRequestInfos = new ReactiveVar();
     templateObject.bankAccList = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
     templateObject.productsdatatable = new ReactiveVar();
-    templateObject.notesrecords = new ReactiveVar();    
+    templateObject.notesrecords = new ReactiveVar();
     templateObject.empuserrecord = new ReactiveVar();
     templateObject.employeerecords = new ReactiveVar([]);
     templateObject.empPriorities = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
 
-    templateObject.datatablerecords = new ReactiveVar([]);    
-    
+    templateObject.datatablerecords = new ReactiveVar([]);
+
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.isCloudUserPass = new ReactiveVar();
@@ -135,7 +135,7 @@ Template.employeescard.onRendered(function () {
 
     let salestaxcode = '';
     let totAmount = 0;
-    let totAmountOverDue = 0;  
+    let totAmountOverDue = 0;
 
     setTimeout(function() {
         $('#tblLeaveRequests').DataTable({
@@ -2425,7 +2425,7 @@ Template.employeescard.onRendered(function () {
 
     $(document).ready(function () {
         setTimeout(function () {
-            
+
             $('#product-list').editableSelect();
 
 
@@ -2828,17 +2828,17 @@ Template.employeescard.onRendered(function () {
                     username: item.fields.UserName || '',
                     notes: item.fields.Notes || ''
                 })
-            })     
+            })
             if ( $.fn.DataTable.isDataTable('#tblEmpPayrollNotes') ) {
                 $('#tblEmpPayrollNotes').DataTable().destroy();
             }
-            templateObject.notesrecords.set(dataTableList);            
-            if( templateObject.notesrecords.get() ){ 
+            templateObject.notesrecords.set(dataTableList);
+            if( templateObject.notesrecords.get() ){
                 setTimeout(function () {
-                    $('#tblEmpPayrollNotes').DataTable({  
+                    $('#tblEmpPayrollNotes').DataTable({
                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [                              
-                        
+                        columnDefs: [
+
                         {
                             className: "colEmpPayrollNotesID hiddenColumn",
                             "targets": [0]
@@ -2846,11 +2846,11 @@ Template.employeescard.onRendered(function () {
                         {
                             className: "colEmpPayrollNotesDate",
                             "targets": [1]
-                        },  
+                        },
                         {
                             className: "colEmpPayrollNotesUser",
                             "targets": [2]
-                        },      
+                        },
                         {
                             className: "colEmpPayrollNotesDesc",
                             "targets": [3]
@@ -2872,15 +2872,15 @@ Template.employeescard.onRendered(function () {
                             $('#tblEmpPayrollNotes_ellipsis').addClass('disabled');
                             if (oSettings._iDisplayLength == -1) {
                                 if (oSettings.fnRecordsDisplay() > 150) {
-    
+
                                 }
                             } else {
-    
+
                             }
                             if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                                 $('.paginate_button.page-item.next').addClass('disabled');
                             }
-    
+
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
                                     $('.fullScreenSpin').css('display', 'inline-block');
@@ -2888,7 +2888,7 @@ Template.employeescard.onRendered(function () {
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblEmpPayrollNotes_filter input').val();
                                     // Pagination code here
-    
+
                                 });
                             setTimeout(function () {
                                 MakeNegative();
@@ -2898,7 +2898,7 @@ Template.employeescard.onRendered(function () {
                             $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
                             $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
                         }
-    
+
                     }).on('page', function () {
                         setTimeout(function () {
                             MakeNegative();
@@ -2911,10 +2911,10 @@ Template.employeescard.onRendered(function () {
                         }, 100);
                     });
                 }, 100);
-            }    
-        }  
+            }
+        }
     };
-    templateObject.getPayNotesTypes(); 
+    templateObject.getPayNotesTypes();
 
     templateObject.getAssignLeaveTypes = async () => {
         let TAssignLeaveTypes = await getVS1Data('TAssignLeaveType');
@@ -2965,7 +2965,7 @@ Template.employeescard.onRendered(function () {
             });
             // console.log(openingBalances)
             templateObject.openingBalanceInfo.set(openingBalances);
-        }        
+        }
     };
     templateObject.getOpeningBalances();
 
@@ -2974,7 +2974,7 @@ Template.employeescard.onRendered(function () {
             // EmployeePayrollApi fetch data from indexDB
             let TEmployeepaysettings = await getVS1Data('TEmployeepaysettings');
             if( TEmployeepaysettings.length ){
-                let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data); 
+                let TEmployeepaysettingData = JSON.parse(TEmployeepaysettings[0].data);
                 //console.log('TEmployeepaysettingData', TEmployeepaysettingData)
                 let useData = EmployeePaySettings.fromList(
                     TEmployeepaysettingData.temployeepaysettings
@@ -3054,7 +3054,6 @@ Template.employeescard.onRendered(function () {
 
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-            console.log('leavetypes', data.tleavetypes)
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -3144,7 +3143,7 @@ Template.employeescard.onRendered(function () {
     templateObject.setEarningLineDropDown = function(){
         setTimeout(function () {
             $('.earningLineDropDown').editableSelect();
-            $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {     
+            $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {
                 let $search = $(this);
                 let offset = $search.offset();
                 let dropDownID = $search.attr('id')
@@ -3152,12 +3151,10 @@ Template.employeescard.onRendered(function () {
                 let currencyDataName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#earningRateSettingsModal').modal('show');
-                    console.log('step 1')
                 } else {
                     // if (currencyDataName.replace(/\s/g, '') != '') {
                     //     console.log('step 2')
                     // }
-                    console.log('step 2')
                     $('#earningRateSettingsModal').modal('show');
                 }
             });
@@ -3232,7 +3229,7 @@ Template.employeescard.onRendered(function () {
         }, 500);
     }
     templateObject.setReimbursementDropDown();
-    
+
     $(document).ready(function () {
         setTimeout(function () {
             $('#leaveTypeSelect').editableSelect();
@@ -3274,7 +3271,7 @@ Template.employeescard.onRendered(function () {
             var table = $(this);
             let name = table.find(".colLeaveName").text()||'';
             let ID = table.find(".colLeaveID").text()||'';
-            let searchFilterID = templateObject.currentDrpDownID.get()            
+            let searchFilterID = templateObject.currentDrpDownID.get()
             $('#' + searchFilterID).val(name);
             $('#' + searchFilterID + 'ID').val(ID);
             $('#leaveTypeSettingsModal').modal('toggle');
@@ -3285,7 +3282,7 @@ Template.employeescard.onRendered(function () {
             let earningsName = table.find(".colEarningsNames").text()||'';
             let earningsID = table.find(".colEarningsID").text()||'';
             let account = table.find(".colEarningsAccounts").text()||'';
-            let searchFilterID = templateObject.currentDrpDownID.get()            
+            let searchFilterID = templateObject.currentDrpDownID.get()
             $('#' + searchFilterID).val(earningsName);
             $('#' + searchFilterID + 'ID').val(earningsID);
             if( searchFilterID == 'earningRateSelect'){
@@ -3311,7 +3308,7 @@ Template.employeescard.onRendered(function () {
         $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
             var table = $(this);
             let name = table.find(".colSuperannuationName").text()||'';
-            let ID = table.find(".colSuperannuationID").text()||'';            
+            let ID = table.find(".colSuperannuationID").text()||'';
             let account = table.find(".colaccountname").text()||'';
             let searchFilterID = templateObject.currentDrpDownID.get()
             $('#' + searchFilterID).val(name);
@@ -3326,7 +3323,7 @@ Template.employeescard.onRendered(function () {
             var table = $(this);
             let name = table.find(".colReimbursementName").text()||'';
             let ID = table.find(".colReimbursementID").text()||'';
-            let account = table.find(".colReimbursementAccount").text()||'';            
+            let account = table.find(".colReimbursementAccount").text()||'';
             let searchFilterID = templateObject.currentDrpDownID.get()
             $('#' + searchFilterID).val(name);
             $('#' + searchFilterID + 'ID').val(ID);
@@ -3335,7 +3332,7 @@ Template.employeescard.onRendered(function () {
             }
             $('#reimbursementSettingsModal').modal('toggle');
         });
-        
+
 
         $(document).on("click", "#tblAccount tbody tr", function (e) {
             var table = $(this);
@@ -3344,7 +3341,7 @@ Template.employeescard.onRendered(function () {
             $('#' + searchFilterID).val(name);
             $('#accountListModal').modal('toggle');
         });
-        
+
     });
 });
 Template.employeescard.events({
@@ -4227,7 +4224,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obEarningRate' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500); 
+            }, 500);
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4275,7 +4272,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obDeductionLine' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500); 
+            }, 500);
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4326,7 +4323,7 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obSuperannuationFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500); 
+            }, 500);
         }
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -4374,12 +4371,12 @@ Template.employeescard.events({
             setTimeout(function () {
                 let index = openingBalanceFilter.length - 1;
                 $('#obReimbursementFund' + index).val(openingBalanceFilter[index].fields.BalanceField);
-            }, 500); 
+            }, 500);
         }
         $('.fullScreenSpin').css('display', 'none');
     },
 
-    // Save LeaveRequest Popup   
+    // Save LeaveRequest Popup
     'click #btnSaveLeaveRequest': async function(event) {
         $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
@@ -4491,8 +4488,8 @@ Template.employeescard.events({
     },
 
     // TO DO
-    'click #savePayRollNotes': async function(){    
-        $('.fullScreenSpin').css('display', 'block');    
+    'click #savePayRollNotes': async function(){
+        $('.fullScreenSpin').css('display', 'block');
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4504,7 +4501,7 @@ Template.employeescard.events({
             paynotes = PayNotes.fromList(
                 TPayNotesData.tpaynotes
             );
-        }          
+        }
         paynotes.push(
             new PayNotes({
                 type: "TPayNotes",
@@ -4521,15 +4518,15 @@ Template.employeescard.events({
         let updatedNotes = {
             tpaynotes: paynotes,
         }
-        await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));            
-        templateObject.getPayNotesTypes(); 
-        $('#payRollNotes').val('');         
-        $('#newNoteModal').modal('hide');   
+        await addVS1Data('TPayNotes', JSON.stringify(updatedNotes));
+        templateObject.getPayNotesTypes();
+        $('#payRollNotes').val('');
+        $('#newNoteModal').modal('hide');
         $('.fullScreenSpin').css('display', 'none');
     },
 
     // Pay Template Tab
-    'click #addEarningsLine': async function(){        
+    'click #addEarningsLine': async function(){
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
@@ -4728,7 +4725,7 @@ Template.employeescard.events({
     //             $('#CalculationType3').attr('disabled', false)
     //         break;
     //     }
-    // }, 
+    // },
 
     'click .removePayTempEarning': async function(e){
         let templateObject = Template.instance();
@@ -4817,14 +4814,13 @@ Template.employeescard.events({
                         counter++
                     }else{
                         return item;
-                    }                  
+                    }
                 }else{
                     return item;
                 }
             });
         }
 
-        console.log( 'openingBalanceLines', openingBalanceLines )
 
         await templateObject.openingBalanceInfo.set(openingBalanceLines);
         let totalAmount = 0;
@@ -4841,7 +4837,7 @@ Template.employeescard.events({
                     bCounter++;
                 }
             })
-            
+
         }
         let utilityService = new UtilityService();
         let totalFomattedAmount = utilityService.modifynegativeCurrencyFormat(totalAmount)|| 0.00;
@@ -4864,13 +4860,13 @@ Template.employeescard.events({
                     if( item.fields.Type == 'DeductionLine' ){
                         item.fields.BalanceField = $('#obDeductionLine' + counter).val();
                         item.fields.Amount = $('#obDeductionAmount' + counter).val();
-                        if( parseInt( counter ) != parseInt( deleteID ) ){                            
+                        if( parseInt( counter ) != parseInt( deleteID ) ){
                             return item;
                         }
                         counter++
                     }else{
                         return item;
-                    }                  
+                    }
                 }
             });
         }
@@ -4887,7 +4883,6 @@ Template.employeescard.events({
                     totalAmount += parseFloat( amount );
                     $('#obDeductionLine' + bCounter).val(item.fields.BalanceField);
                     $('#obDeductionAmount' + bCounter).val(item.fields.Amount);
-                    console.log( bCounter )
                     bCounter++;
                 }
             })
@@ -4970,7 +4965,7 @@ Template.employeescard.events({
         let templateObject = Template.instance();
         let currentId = FlowRouter.current().queryParams;
         let employeeID = ( !isNaN(currentId.id) )? currentId.id : 0;
-        let openingBalances = []  
+        let openingBalances = []
         let TOpeningBalances = await getVS1Data('TOpeningBalances');
         if( TOpeningBalances.length ){
             let TOpeningBalancesData = JSON.parse(TOpeningBalances[0].data);
@@ -4992,7 +4987,7 @@ Template.employeescard.events({
                     return item;
                 }
             });
-        } 
+        }
 
         if( obEarningLines.length ){
             Array.prototype.forEach.call(obEarningLines, (EarningLine, index) => {
@@ -5201,7 +5196,7 @@ Template.employeescard.events({
 
             return false;
             // Old Dev Code
-            let data = [];          
+            let data = [];
 
             let employeePayrollService = new EmployeePayrollService();
 
@@ -6963,7 +6958,7 @@ Template.employeescard.helpers({
     },
     payNotesInfo: () => {
         return Template.instance().payNotesInfos.get();
-    },    
+    },
     leaveRequestInfo: () => {
         return Template.instance().leaveRequestInfos.get();
     },
@@ -6976,23 +6971,23 @@ Template.employeescard.helpers({
     obEarningLines: () => {
         const templateObject = Template.instance();
         let obEarningLines = templateObject.filterOpeningBalance('EarningLine');
-        return obEarningLines;        
+        return obEarningLines;
     },
     obDeductionLines: () => {
         const templateObject = Template.instance();
         let obEarningLines = templateObject.filterOpeningBalance('DeductionLine');
         return obEarningLines;
-    },   
+    },
     obSuperannuationLines: () => {
         const templateObject = Template.instance();
         let obEarningLines = templateObject.filterOpeningBalance('SuperannuationLine');
         return obEarningLines;
-    },   
+    },
     obReimbursementLines: () => {
         const templateObject = Template.instance();
         let obEarningLines = templateObject.filterOpeningBalance('ReimbursementLine');
         return obEarningLines;
-    },   
+    },
     payTemplateDeductionLines: () => {
         return Template.instance().payTemplateDeductionLineInfo.get();
     },
@@ -7067,7 +7062,7 @@ Template.employeescard.helpers({
     notesrecords: () => {
         return Template.instance().notesrecords.get();
     },
-    
+
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },

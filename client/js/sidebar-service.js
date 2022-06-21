@@ -822,8 +822,7 @@ export class SideBarService extends BaseService {
   getCustomersDataByName(dataSearchName) {
     var options = "";
     options = {
-      PropertyList:
-        "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount",
+      PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount",
       select: '[ClientName] = "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -831,8 +830,7 @@ export class SideBarService extends BaseService {
 
   getClientVS1() {
     let options = {
-      PropertyList:
-        "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
+      PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName,FirstName,LastName,TaxCodeName,ClientTypeName,Discount,BillStreet,BillStreet2,BillState,BillPostcode,Billcountry",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
@@ -928,15 +926,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        PropertyList:
-          "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
+        PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
         select: "[Active]=true",
       };
     } else {
       options = {
         orderby: '"ClientID desc"',
-        PropertyList:
-          "ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
+        PropertyList:"ClientName,Email,Abn,Street,Street2,Street3,Suburb,State,Postcode,Country,TermsName",
         select: "[Active]=true",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -1021,14 +1017,12 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         OrderBy: "SaleID desc",
-        PropertyList:
-          "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
       };
     } else {
       options = {
         OrderBy: "SaleID desc",
-        PropertyList:
-          "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
       };
@@ -1281,19 +1275,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
-  getAllAwaitingSupplierPayment(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         IncludePOs: true,
         IncludeBills: true,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
@@ -1305,6 +1294,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: false,
         IncludePOs: true,
         IncludeBills: true,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
@@ -1323,6 +1313,7 @@ export class SideBarService extends BaseService {
       IgnoreDates: true,
       IncludePOs: true,
       IncludeBills: true,
+      IsDetailReport: false,
       Paid: false,
       Unpaid: true,
       OrderBy: "PurchaseOrderID desc",
@@ -1339,6 +1330,7 @@ export class SideBarService extends BaseService {
       IncludeIsQuote: false,
       IncludeIsRefund: false,
       IncludeISSalesOrder: false,
+      IsDetailReport: false,
       Paid: false,
       Unpaid: true,
       OrderBy: "SaleID desc",
@@ -1354,6 +1346,7 @@ export class SideBarService extends BaseService {
         IncludePOs: true,
         IncludeBills: false,
         IncludeCredits: false,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
@@ -1366,6 +1359,7 @@ export class SideBarService extends BaseService {
         IncludePOs: false,
         IncludeBills: true,
         IncludeCredits: false,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
@@ -1377,6 +1371,7 @@ export class SideBarService extends BaseService {
         IgnoreDates: true,
         IncludePOs: true,
         IncludeBills: true,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         OrderBy: "PurchaseOrderID desc",
@@ -1388,13 +1383,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
-  getAllAwaitingCustomerPayment(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -1403,6 +1392,7 @@ export class SideBarService extends BaseService {
         IncludeIsQuote: false,
         IncludeIsRefund: true,
         IncludeISSalesOrder: false,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         Search: "Balance != 0",
@@ -1417,6 +1407,7 @@ export class SideBarService extends BaseService {
         IncludeIsQuote: false,
         IncludeIsRefund: true,
         IncludeISSalesOrder: false,
+        IsDetailReport: false,
         Paid: false,
         Unpaid: true,
         Search: "Balance != 0",
@@ -1445,6 +1436,7 @@ export class SideBarService extends BaseService {
       IncludeIsRefund: false,
       IncludeISSalesOrder: false,
       IncludeIsVoucher: false,
+      IsDetailReport: false,
       Paid: false,
       Unpaid: true,
       OrderBy: "SaleID desc",
@@ -1546,14 +1538,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TQuoteList, options);
   }
 
-  getAllTQuoteListFilterData(
-    filterData,
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTQuoteListFilterData(filterData,dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (filterData == "true") {
@@ -1681,13 +1666,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
-  getTJournalEntryListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -1950,9 +1929,7 @@ export class SideBarService extends BaseService {
 
   getAllAppointmentList(limitcount, limitfrom) {
     let options = "";
-    let checkOwnAppointment = Session.get(
-      "CloudAppointmentSeeOwnAppointmentsOnly"
-    );
+    let checkOwnAppointment = Session.get("CloudAppointmentSeeOwnAppointmentsOnly");
     let selectedEmployeeName = Session.get("mySessionEmployee");
 
     if (limitcount == "All") {
@@ -1975,8 +1952,7 @@ export class SideBarService extends BaseService {
 
   getAllAppointmentPredList(data) {
     let options = {
-      PropertyList:
-        "ID,EmployeeID,ShowApptDurationin,ShowSaturdayinApptCalendar,ShowSundayinApptCalendar,ApptStartTime,ApptEndtime,DefaultApptDuration,DefaultServiceProductID,DefaultServiceProduct",
+      PropertyList:"ID,EmployeeID,ShowApptDurationin,ShowSaturdayinApptCalendar,ShowSundayinApptCalendar,ApptStartTime,ApptEndtime,DefaultApptDuration,DefaultServiceProductID,DefaultServiceProduct",
     };
     return this.getList(this.ERPObjects.TAppointmentPreferences, options);
   }
@@ -2007,8 +1983,7 @@ export class SideBarService extends BaseService {
 
   getTaxRateVS1() {
     let options = {
-      PropertyList:
-        "ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
+      PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TTaxcodeVS1, options);
@@ -2017,8 +1992,7 @@ export class SideBarService extends BaseService {
   getTaxRateVS1ByName(dataSearchName) {
     let options = "";
     options = {
-      PropertyList:
-        "ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
+      PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
       select: '[CodeName] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TTaxcodeVS1, options);
@@ -2035,8 +2009,7 @@ export class SideBarService extends BaseService {
 
   getDepartment() {
     let options = {
-      PropertyList:
-        "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
+      PropertyList:"ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TDeptClass, options);
@@ -2044,8 +2017,7 @@ export class SideBarService extends BaseService {
 
   getTermsVS1() {
     let options = {
-      PropertyList:
-        "ID,Days,IsEOM,IsEOMPlus,TermsName,Description,IsDays,Active,isPurchasedefault,isSalesdefault",
+      PropertyList:"ID,Days,IsEOM,IsEOMPlus,TermsName,Description,IsDays,Active,isPurchasedefault,isSalesdefault",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TTermsVS1, options);
@@ -2190,8 +2162,7 @@ export class SideBarService extends BaseService {
 
   getAccountTypes() {
     let options = {
-      PropertyList:
-        "ID,AccountName,AccountTypeName,TaxCode,AccountNumber,Description",
+      PropertyList: "ID,AccountName,AccountTypeName,TaxCode,AccountNumber,Description",
       select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TAccount, options);
@@ -2225,13 +2196,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TVS1BankDeposit, options);
   }
 
-  getAllTBankDepositListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTBankDepositListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -2255,13 +2220,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBankDepositList, options);
   }
 
-  getAllBankAccountDetails(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllBankAccountDetails(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -2353,13 +2312,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TInvoiceBackOrder, options);
   }
 
-  getAllTSalesBackOrderReportData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTSalesBackOrderReportData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2390,8 +2343,7 @@ export class SideBarService extends BaseService {
 
   getAllPurchaseOrderListNonBo() {
     let options = {
-      PropertyList:
-        "ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+      PropertyList:"ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
     };
     return this.getList(this.ERPObjects.TpurchaseOrderNonBackOrder, options);
   }
@@ -2400,15 +2352,13 @@ export class SideBarService extends BaseService {
     let options = "";
     if (limitcount == "All") {
       options = {
-        PropertyList:
-          "ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        PropertyList:"ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
         select: "[Deleted]=false",
       };
     } else {
       options = {
         orderby: '"PurchaseOrderID desc"',
-        PropertyList:
-          "ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+        PropertyList:"ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
         select: "[Deleted]=false",
         LimitCount: '"' + limitcount + '"',
         LimitFrom: '"' + limitfrom + '"',
@@ -2417,13 +2367,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TpurchaseOrderBackOrder, options);
   }
 
-  getAllTPurchasesBackOrderReportData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTPurchasesBackOrderReportData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2471,13 +2415,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
 
-  getAllTReconcilationListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTReconcilationListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2536,16 +2474,14 @@ export class SideBarService extends BaseService {
 
   getCurrentLoggedUser() {
     let options = {
-      PropertyList:
-        "ID,DatabaseName,UserName,MultiLogon,EmployeeID,FirstName,LastName,LastTime",
+      PropertyList:"ID,DatabaseName,UserName,MultiLogon,EmployeeID,FirstName,LastName,LastTime",
     };
     return this.getList(this.ERPObjects.TAppUser, options);
   }
 
   getAllBillList() {
     let options = {
-      PropertyList:
-        "ID,EmployeeName,AccountName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments",
+      PropertyList:"ID,EmployeeName,AccountName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments",
       select: "[Deleted]=false and [Cancelled]=false",
     };
     return this.getList(this.ERPObjects.TBill, options);
@@ -2553,8 +2489,7 @@ export class SideBarService extends BaseService {
 
   getAllSalesOrderListNonBO() {
     let options = {
-      PropertyList:
-        "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,SaleCustField1,SaleCustField2,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
+      PropertyList:"ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,SaleCustField1,SaleCustField2,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments,Deleted",
     };
     return this.getList(this.ERPObjects.TsalesOrderNonBackOrder, options);
   }
@@ -2624,8 +2559,7 @@ export class SideBarService extends BaseService {
   getGlobalSettings() {
     let options = {
       PropertyList: "PrefName,Fieldvalue",
-      select:
-        '[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime" or [PrefName]="VS1SMSID" or [PrefName]="VS1SMSToken" or [PrefName]="VS1SMSPhone" or [PrefName]="VS1SAVESMSMSG" or [PrefName]="VS1STARTSMSMSG" or [PrefName]="VS1STOPSMSMSG"',
+      select:'[PrefName]="DefaultServiceProduct" or [PrefName]="DefaultServiceProductID" or [PrefName]="DefaultApptDuration" or [PrefName]="ApptStartTime" or [PrefName]="ApptEndtime" or [PrefName]="ShowSaturdayinApptCalendar" or [PrefName]="ShowSundayinApptCalendar" or [PrefName]="ShowApptDurationin" or [PrefName]="RoundApptDurationTo" or [PrefName]="MinimumChargeAppointmentTime" or [PrefName]="VS1SMSID" or [PrefName]="VS1SMSToken" or [PrefName]="VS1SMSPhone" or [PrefName]="VS1SAVESMSMSG" or [PrefName]="VS1STARTSMSMSG" or [PrefName]="VS1STOPSMSMSG"',
     };
     return this.getList(this.ERPObjects.TERPPreference, options);
   }
@@ -2688,16 +2622,7 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       //select: '[ID] f7like "'+dataSearchName+'"'
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" OR [GLAccountName] f7like "' +
-        dataSearchName +
-        '" OR [SupplierInvoiceNumber] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" OR [GLAccountName] f7like "' +dataSearchName +'" OR [SupplierInvoiceNumber] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TChequeEx, options);
   }
@@ -2722,13 +2647,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TRefundSale, options);
   }
 
-  getAllTRefundSaleListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTRefundSaleListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2755,12 +2674,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
       //select: '[ClientName] f7like "'+dataSearchName+'"'
     };
     return this.getList(this.ERPObjects.TRefundSale, options);
@@ -2777,10 +2691,7 @@ export class SideBarService extends BaseService {
   getEmpFormAccessDetail() {
     let options = {
       ListType: "Detail",
-      select:
-        "[TabGroup]=26 and [EmployeeId]='" +
-        Session.get("mySessionEmployeeLoggedID") +
-        "'",
+      select:"[TabGroup]=26 and [EmployeeId]='" +Session.get("mySessionEmployeeLoggedID") +"'",
     };
     return this.getList(this.ERPObjects.TEmployeeFormAccessDetail, options);
   }

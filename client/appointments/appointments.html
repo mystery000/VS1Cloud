@@ -713,15 +713,15 @@
                                     <div class="col-xl-2 col-4 colStart" id="colStart" style="padding-top: 2em;">
                                         <button class="btn btn-success" type="button" style="margin: 8px 0px; width: 100%;" id="btnStartAppointment">Start</button>
                                     </div>
-                                    {{#if equals accessOnHold false}}
+                                    <!-- {{#if equals accessOnHold false}} -->
                                         <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
                                             <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold">On Hold </button>
                                         </div>
-                                    {{else}}
+                                    <!-- {{else}}
                                      <div class="col-xl-2 col-4 colOnHold" id="colOnHold" style="padding-top: 2em;">
                                             <button class="btn btn-warning" type="button" style="margin: 8px 0px; width: 100%;" id="btnHold"><span>On Hold</span></button>
                                         </div>
-                                    {{/if}}
+                                    {{/if}} -->
                                     <div class="col-xl-2 col-4 colStop" id="colStop" style="padding-top: 2em;">
                                         <button class="btn btn-danger" type="button" style="margin: 8px 0px; width: 100%;" id="btnStopAppointment">Stop</button>
                                     </div>
@@ -756,8 +756,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnStartAppointmentConfirm" id="btnStartAppointmentConfirm" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStartAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
@@ -780,8 +781,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnEndActualTime" id="btnEndActualTime" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStopAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
@@ -804,8 +806,9 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
+
                                             <button class="btn btn-primary btnSaveAppointmentSubmit" id="btnSaveAppointmentSubmit" type="submit"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
+                                            <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseSaveAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
                                         </div>
                                     </div>
