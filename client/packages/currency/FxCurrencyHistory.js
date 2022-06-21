@@ -114,7 +114,9 @@ Template.FxCurrencyHistory.onRendered(function () {
             description: data[i].CurrencyDesc || "-",
             ratelastmodified: data[i].RateLastModified || "-",
             createdAt: new Date(data[i].MsTimeStamp) || "-",
-            formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+            formatedCreatedAt: formatDateToString(
+              new Date(data[i].MsTimeStamp)
+            ),
           };
 
           dataTableList.push(dataList);
@@ -192,7 +194,7 @@ Template.FxCurrencyHistory.onRendered(function () {
 
         $(".fullScreenSpin").css("display", "none");
         setTimeout(function () {
-          $("#currencyLists")
+          $("#tblFxCurrencyHistory")
             .DataTable({
               columnDefs: [
                 { type: "date", targets: 0 },
@@ -238,7 +240,7 @@ Template.FxCurrencyHistory.onRendered(function () {
               responsive: true,
               order: [[0, "desc"]],
               action: function () {
-                $("#currencyLists").DataTable().ajax.reload();
+                $("#tblFxCurrencyHistory").DataTable().ajax.reload();
               },
               fnDrawCallback: function (oSettings) {
                 setTimeout(function () {
@@ -260,11 +262,11 @@ Template.FxCurrencyHistory.onRendered(function () {
               }, 100);
             });
 
-          // $('#currencyLists').DataTable().column( 0 ).visible( true );
+          // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
           $(".fullScreenSpin").css("display", "none");
         }, 0);
 
-        var columns = $("#currencyLists th");
+        var columns = $("#tblFxCurrencyHistory th");
         let sTible = "";
         let sWidth = "";
         let sIndex = "";
@@ -722,8 +724,9 @@ Template.FxCurrencyHistory.helpers({
         }
         return a.code.toUpperCase() > b.code.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-      }).sort(sortById);
-      // .sort(sortByDate);
+      })
+      .sort(sortById);
+    // .sort(sortByDate);
     // .sort((a, b) => a.createdAt - b.createdAt);
   },
   tableheaderrecords: () => {
@@ -744,7 +747,6 @@ Template.FxCurrencyHistory.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
-
 
 function sortById(a, b) {
   return a.id - b.id;
