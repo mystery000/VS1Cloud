@@ -177,12 +177,7 @@ Template.payrolloverview.onRendered(function () {
 
   templateObject.dateFormat = function (date) {
     var dateParts = date.split("/");
-    var dateObject =
-      dateParts[2] +
-      "/" +
-      ("0" + (dateParts[1] - 1)).toString().slice(-2) +
-      "/" +
-      dateParts[0];
+    var dateObject =dateParts[2] +"/" +("0" + (dateParts[1] - 1)).toString().slice(-2) +"/" +dateParts[0];
     return dateObject;
   };
 
@@ -212,10 +207,7 @@ Template.payrolloverview.onRendered(function () {
     let timesheetEmployeeData = templateObject.timesheetrecords.get();
     let encoded = "";
     for (let i = 0; i < timesheetEmployeeData.length; i++) {
-      if (
-        timesheetEmployeeData[i].isPaused == "Clocked On" ||
-        timesheetEmployeeData[i].isPaused == "paused"
-      ) {
+      if (timesheetEmployeeData[i].isPaused == "Clocked On" ||timesheetEmployeeData[i].isPaused == "paused") {
         let employeeUser = timesheetEmployeeData[i].employee;
         dataListloggedUser = {
           //id: data.tappuser[i].EmployeeID || '',
@@ -238,22 +230,15 @@ Template.payrolloverview.onRendered(function () {
 
   function MakeNegative() {
     $("td").each(function () {
-      if (
-        $(this)
-          .text()
-          .indexOf("-" + Currency) >= 0
-      )
+      if ($(this).text().indexOf("-" + Currency) >= 0)
         $(this).addClass("text-danger");
     });
   }
 
   templateObject.getPayHistory = function () {
-    getVS1Data("TPayHistory")
-      .then(function (dataObject) {
+    getVS1Data("TPayHistory").then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService
-            .getAllPayHistoryDataVS1(initialBaseDataLoad, 0)
-            .then(function (data) {
+          sideBarService.getAllPayHistoryDataVS1(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data("TPayHistory", JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
@@ -608,12 +593,7 @@ Template.payrolloverview.onRendered(function () {
               deduction: deduction || "0.00",
               gross: gross || "0.00",
               netpay: netpay || "0.00",
-              paydate:
-                data.tpayhistory[i].fields.DatePaid != ""
-                  ? moment(data.tpayhistory[i].fields.DatePaid).format(
-                      "DD/MM/YYYY"
-                    )
-                  : data.tpayhistory[i].fields.DatePaid,
+              paydate:data.tpayhistory[i].fields.DatePaid != ""? moment(data.tpayhistory[i].fields.DatePaid).format("DD/MM/YYYY"): data.tpayhistory[i].fields.DatePaid,
               paid: data.tpayhistory[i].fields.Paid || "",
               notes: data.tpayhistory[i].fields.Paynotes || "",
               payid: data.tpayhistory[i].fields.PayID || "",
