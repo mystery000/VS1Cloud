@@ -24,7 +24,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateInstance = Template.instance();
   let taxRateService = new TaxRateService();
   let dataTableList = [];
@@ -192,7 +192,7 @@ Template.FxCurrencyHistory.onRendered(function () {
           }, 100);
         }
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         setTimeout(function () {
           $("#tblFxCurrencyHistory")
             .DataTable({
@@ -263,7 +263,7 @@ Template.FxCurrencyHistory.onRendered(function () {
             });
 
           // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
-          $(".fullScreenSpin").css("display", "none");
+          LoadingOverlay.hide();
         }, 0);
 
         var columns = $("#tblFxCurrencyHistory th");
@@ -298,7 +298,7 @@ Template.FxCurrencyHistory.onRendered(function () {
       })
       .catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         // Meteor._reload.reload();
       });
   };
@@ -338,7 +338,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   };
   templateInstance.getCountryData();
 
-  $(".fullScreenSpin").css("display", "none");
+  LoadingOverlay.hide();
 });
 
 Template.FxCurrencyHistory.events({
@@ -441,8 +441,8 @@ Template.FxCurrencyHistory.events({
   },
   "change #dateTo": function () {
     let templateObject = Template.instance();
-    // $(".fullScreenSpin").css("display", "inline-block");
-    $(".fullScreenSpin").css("display", "inline-block");
+    //LoadingOverlay.show();
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
 
@@ -468,7 +468,7 @@ Template.FxCurrencyHistory.events({
   },
   "change #dateFrom": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
 
@@ -544,6 +544,7 @@ Template.FxCurrencyHistory.events({
   },
   "click .saveTable": function (event) {
     LoadingOverlay.show();
+
     let lineItems = [];
     $(".columnSettings").each(function (index) {
       var $tblrow = $(this);
@@ -695,17 +696,17 @@ Template.FxCurrencyHistory.events({
     templateInstance.tableheaderrecords.set(tableHeaderList);
   },
   "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.hide();
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1BalanceTrans_Report", "");
     Meteor._reload.reload();
   },
