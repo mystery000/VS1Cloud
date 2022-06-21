@@ -1990,30 +1990,30 @@
 
                                                 <ol class='nested_with_switch vertical'>
                                                     {{#each item in profitlosslayoutrecords }}
-                                                        <li data-id="{{ item.ID }}" data-group="{{ item.AccountName }}" data-position="{{ item.Level0Order }}-{{ item.Level1Order }}-{{ item.Level2Order }}-{{ item.Level3Order }}" class="mainList">
+                                                        <li key="layoutFields-{{ item.ID }}" data-group="{{ item.AccountName }}" position="{{ item.Level0Order }}" class="mainList pSortItems">
                                                             <div class="mainHeadingDiv">
                                                                 <h1 class="mainHeading"><span class="collepsDiv fas"></span>{{ item.AccountName }}</h1>
                                                             </div>
                                                             <ol class="groupedListNew">
                                                                 {{#each acItem in item.subAccounts }}
                                                                     {{#if isAccount acItem }}
-                                                                        <li class="subChild" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
+                                                                        <li class="subChild cSortItems" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
                                                                             <span class="childInner">
                                                                                 <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
                                                                             </span>
                                                                         </li>
                                                                     {{else}}
-                                                                        <li class="subChild noDrag" data-group="{{ acItem.AccountName }}" data-id="{{ acItem.ID }}" data-position="{{ acItem.Level0Order }}-{{ acItem.Level1Order }}-{{ acItem.Level2Order }}-{{ acItem.Level3Order }}">
+                                                                        <li class="subChild noDrag cSortItems" data-group="{{ acItem.AccountName }}" key="layoutFields-{{ acItem.ID }}" position="{{ acItem.Level1Order }}">
                                                                             <ol class="ddllkk">
                                                                                 {{#each subacItem in acItem.subAccounts }}
                                                                                     {{#if isAccount subacItem }}
-                                                                                        <li class="subChild" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                        <li class="subChild scSortItems" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
                                                                                             </span>
                                                                                         </li>
                                                                                     {{else}}
-                                                                                        <li class="subChild noDrag" data-group="{{ subacItem.AccountName }}" data-id="{{ subacItem.ID }}" data-position="{{ subacItem.Level0Order }}-{{ subacItem.Level1Order }}-{{ subacItem.Level2Order }}-{{ subacItem.Level3Order }}">
+                                                                                        <li class="subChild noDrag scSortItems" data-group="{{ subacItem.AccountName }}" key="layoutFields-{{ subacItem.ID }}" position="{{ subacItem.Level2Order }}">
                                                                                             <ol class="ddllkk"></ol>
                                                                                             <span class="childInner">
                                                                                                 <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
@@ -2340,12 +2340,12 @@
                                             <h5>Layout Details</h5>
                                             <hr>
                                             <label>Layout Name</label><br>
-                                            <input id="fullName" type="text" class="form-control" name="nplNewLayoutName" value="" placeholder="">
+                                            <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="">
                                             <label>Layout Description</label><br>
-                                            <input id="fullName" type="text" class="form-control" name="nplNewLayoutDescr" value="" placeholder="">
+                                            <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="">
                                             <div class="custom-control custom-switch mt-3">
-                                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="defaultSettting">
-                                                <label style="width: 275px;" class="custom-control-label" for="defaultSettting">Make this the default Profit and Loss for all
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting">
+                                                <label style="width: 275px;" class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all
                                                     users</label>
                                             </div>
                                         </div>

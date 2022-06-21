@@ -5,9 +5,11 @@ import { UtilityService } from "../../utility-service";
 import GlobalFunctions from "../../GlobalFunctions";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
-let reportService = new ReportService();
 
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
+
+let reportService = new ReportService();
+let utilityService = new UtilityService();
 
 Template.balancesheetreport.onCreated(function () {
   const templateObject = Template.instance();
@@ -34,7 +36,7 @@ Template.balancesheetreport.onRendered(() => {
   let taxRateService = new TaxRateService();
 
   let salesService = new SalesBoardService();
-  let utilityService = new UtilityService();
+  
   templateObject.$("#more_search").hide();
   let initCurrency = Currency;
 
@@ -952,34 +954,36 @@ Template.balancesheetreport.onRendered(() => {
 
 Template.balancesheetreport.helpers({
   convertAmount: (amount, currencyData) => {
-    if(amount == ' ') {
-        return amount;
-    }
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     // console.log("Amount to covert", amount);
-    if (!amount) {
+    if (!amount || amount.trim() == "") {
       return "";
     }
-    if (currencyData.currency == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
+    // if (currencyData.currency == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
+
+    // console.log('Input amount', amount);
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+    // console.log('Converted amount', amount);
+
     // Lets remove the minus character
-    const isMinus = amount.indexOf("-") > -1;
-    if (isMinus == true) amount = amount.replace("-", "");
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // Make it positive
 
     // get default currency symbol
-    let _defaultCurrency = currencyList.filter(
-      (a) => a.Code == defaultCurrencyCode
-    )[0];
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
     //console.log("default: ",_defaultCurrency);
-    amount = amount.replace(_defaultCurrency.symbol, "");
+    //amount = amount.replace(_defaultCurrency.symbol, "");
     // console.log("Is nan", amount, isNaN(amount));
-    amount =
-      isNaN(amount) == true
-        ? parseFloat(amount.substring(1))
-        : parseFloat(amount);
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
@@ -1023,11 +1027,8 @@ Template.balancesheetreport.helpers({
     const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
-    // if(!firstElem) {
-    //     return amount;
-    // }
 
-    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
     //console.log("final amount", amount);
     let convertedAmount =

@@ -1203,28 +1203,34 @@ Template.generalledger.helpers({
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     // console.log("Amount to covert", amount);
-    if (!amount) {
+    if (!amount || amount.trim() == "") {
       return "";
     }
-    if (currencyData.currency == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
-    // Lets remove the minus character
-    const isMinus = amount.indexOf("-") > -1;
-    if (isMinus == true) amount = amount.replace("-", "");
+    // if (currencyData.currency == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    // get default currency symbol
-    let _defaultCurrency = currencyList.filter(
-      (a) => a.Code == defaultCurrencyCode
-    )[0];
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // make it positive for now
+
+
+
+    // // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
     //console.log("default: ",_defaultCurrency);
-    amount = amount.replace(_defaultCurrency.symbol, "");
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
     // console.log("Is nan", amount, isNaN(amount));
-    amount =
-      isNaN(amount) == true
-        ? parseFloat(amount.substring(1))
-        : parseFloat(amount);
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
@@ -1269,7 +1275,11 @@ Template.generalledger.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+
+    // console.log(currencyData.currency, defaultCurrencyCode, currencyData.currency == defaultCurrencyCode);
+    // console.log('first elem', firstElem.BuyRate);
+    // console.log("Convert: ", amount, "x", rate, "=", parseFloat(amount * rate).toFixed(2));
     amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
     //console.log("final amount", amount);
     let convertedAmount =

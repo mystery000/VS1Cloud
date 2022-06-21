@@ -51,13 +51,27 @@ function formatFields( fields, searchkey ){
   return groupBy(fields, searchkey );
 }
 
-
 function buildPositions() {
-  const sortfields = $(".sortItem");
+  const sortfields = $(".pSortItems");
   // console.log('Sorting elements')
+  // Level 0 Sorting
   let counter = 1;
   for (let i = 0; i <= sortfields.length; i++) {
-    $(sortfields[i]).attr("position", counter);
+    $(sortfields[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 1 Sorting
+  const cSortItems = $(".cSortItems");
+  counter = 1;
+  for (let i = 0; i <= cSortItems.length; i++) {
+    $(cSortItems[i]).attr("position", counter * 10);
+    counter++;
+  }
+  // Level 2 Sorting
+  const scSortItems = $(".scSortItems");
+  counter = 1;
+  for (let i = 0; i <= scSortItems.length; i++) {
+    $(scSortItems[i]).attr("position", counter * 10);
     counter++;
   }
 }
@@ -612,14 +626,15 @@ templateObject.getProfitLossLayout = async function() {
         childAccounts = subAccounts.filter(( item ) => {
           let sLevel0Order =  item.Level0Order
           let sLevel1Order =  item.Level1Order
-          let subLevel2Order =  item.Level2Order
+          let sLevel2Order =  item.Level2Order
           let sID =  item.ID
-          if (sLevel1Order != 0 && sLevel0Order == Level0Order && subLevel2Order == 0 ) {
+          if (sLevel1Order != 0 && sLevel0Order == Level0Order && sLevel2Order == 0 && sID != ID ) {
             let subSubAccounts = subAccounts.filter(( subitem ) => {
               let subID =  subitem.ID
               let subLevel0Order =  subitem.Level0Order
               let subLevel1Order =  subitem.Level1Order
-              if( sLevel1Order === subLevel1Order && subLevel0Order == Level0Order && sID != subID ){
+              let subLevel2Order =  subitem.Level2Order
+              if( sLevel1Order === subLevel1Order && subLevel0Order == sLevel0Order && sID != subID && subLevel2Order != 0){
                 return subitem;
               }
             })
@@ -661,8 +676,11 @@ templateObject.getProfitLossLayout = async function() {
             }else {
               $item.find('.mainHeadingDiv').removeClass('collapsTogls');
             }
-            $item.removeClass('dragged');
-            alert("New position: " + $item.index());
+            let siblingClass = $item.siblings().attr('class')
+            $item.removeClass();
+            $item.addClass(siblingClass);
+            $item.addClass('selected');
+
             // for array
             // var data = group.sortable("serialize").get();
             // var jsonString = JSON.stringify(data, null, ' ');
@@ -970,7 +988,7 @@ Template.newprofitandloss.events({
     });
 
     document.title = 'Profit and Loss Report';
-    $(".printReport").print({
+    $("#tblFxCurrencyHistory_wrapper").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor, .excludeButton",
       exportOptions: {
@@ -2000,8 +2018,7 @@ Template.newprofitandloss.events({
 
   },
   "click .saveProfitLossLayouts": async function (){
-
-    return false;
+    buildPositions();
     // Under progress
     const profitLossLayoutApis = new ProfitLossLayoutApi();
 
@@ -2021,46 +2038,65 @@ Template.newprofitandloss.events({
     Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
       let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
       if( Position != undefined ){
-        // update lists with custom fields only
-        item.fields.Position = parseInt($(`[key='layoutFields-${item.fields.ID}']`).attr("position"));
-        item.fields.AccountLevel0GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg0level");
-        item.fields.AccountLevel1GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg1level");
-        item.fields.AccountLevel2GroupName = $(`[key='layoutFields-${item.fields.ID}']`).parents('.setParentPosition').data("acg2level");
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('pSortItems') ){
+          item.fields.Level0Order = parseInt(Position)
+          item.fields.Level1Order = 0
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('cSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(Position)
+          item.fields.Level2Order = 0
+          item.fields.Level3Order = 0
+        }
+
+        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('scSortItems') ){
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
+          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".cSortItems").attr('position');
+          item.fields.Level0Order = parseInt(level0OrderPos)
+          item.fields.Level1Order = parseInt(level1OrderPos)
+          item.fields.Level2Order = parseInt(Position)
+          item.fields.Level3Order = 0
+        }
+        
       }
+      return item;
       // fieldsList.push(item);
       /**
        * Update layout fields one by one API call
        */
-      const ApiResponse = await apiEndpoint.fetch(null, {
-        method: "POST",
-        headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(item),
-      });
-      if (ApiResponse.ok == true) {
-        const jsonResponse = await ApiResponse.json();
-        console.log(jsonResponse)
-      }
+      // const ApiResponse = await apiEndpoint.fetch(null, {
+      //   method: "POST",
+      //   headers: ApiService.getPostHeaders(),
+      //   body: JSON.stringify(item),
+      // });
+      // if (ApiResponse.ok == true) {
+      //   const jsonResponse = await ApiResponse.json();
+      //   console.log(jsonResponse)
+      // }
     });
+
+    // console.log( 'profitlosslayoutfields', profitlosslayoutfields ) 
 
     /**
      * 
-     * Update all layout fields with single API call
+     * Update all layout fields index DB
      */
-
-    // let layoutLists = {
-    //   tprofitlosslayout: fieldsList
-    // }
-
-    // const ApiResponse = await apiEndpoint.fetch(null, {
-    //   method: "POST",
-    //   headers: ApiService.getPostHeaders(),
-    //   body: JSON.stringify(layoutLists),
-    // });
-    // if (ApiResponse.ok == true) {
-    //   const jsonResponse = await ApiResponse.json();
-    //   console.log(jsonResponse)
-    // }
-
+    let employeeID = Session.get("mySessionEmployeeLoggedID");
+    let name = $('#nplLayoutName').val();
+    let description = $('#nplLayoutDescr').val();
+    let isdefault = ( $('#npldefaultSettting').is(':checked') )? true: false;
+    let layoutLists = {
+       Name: name,
+       Description: description,
+       Isdefault: isdefault,
+       EmployeeID: employeeID,
+       LayoutLists: profitlosslayoutfields
+    }
+    await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
   }
 });
 
@@ -2070,38 +2106,48 @@ Template.newprofitandloss.helpers({
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     // console.log("Amount to covert", amount);
-    if(!amount) {
+    if (!amount || amount.trim() == "") {
       return "";
     }
-    if (currencyData.currency == defaultCurrencyCode) {
-      // default currency
-      return amount;
-    }
-    // Lets remove the minus character
-    const isMinus = amount.indexOf('-') > -1;
-    if(isMinus == true) amount = amount.replace('-', '');
+    // if (currencyData.currency == defaultCurrencyCode) {
+    //   // default currency
+    //   return amount;
+    // }
 
-    // get default currency symbol
-    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    // Lets remove the minus character
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1;
+
+
+
+    // // get default currency symbol
+    // let _defaultCurrency = currencyList.filter(
+    //   (a) => a.Code == defaultCurrencyCode
+    // )[0];
     //console.log("default: ",_defaultCurrency);
-    amount = amount.replace(_defaultCurrency.symbol, '');
+    // amount = amount.replace(_defaultCurrency.symbol, "");
+
     // console.log("Is nan", amount, isNaN(amount));
-    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // amount =
+    //   isNaN(amount) == true
+    //     ? parseFloat(amount.substring(1))
+    //     : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
-
     // Get the selected date
     let dateTo = $("#dateTo").val();
-    const day = dateTo.split('/')[0];
-    const m = dateTo.split('/')[1];
-    const y = dateTo.split('/')[2];
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
     // console.log('date to', dateTo);
 
     // Filter by currency code
-    currencyList = currencyList.filter(a => a.Code == currencyData.currency);
+    currencyList = currencyList.filter((a) => a.Code == currencyData.currency);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -2132,10 +2178,13 @@ Template.newprofitandloss.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
     //console.log("final amount", amount);
-    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
     return convertedAmount;
