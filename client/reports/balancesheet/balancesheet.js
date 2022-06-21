@@ -759,6 +759,7 @@ Template.balancesheetreport.onRendered(() => {
 
       templateObject.records.set(records);
       if (templateObject.records.get()) {
+        setTimeout(function () {
         function MakeNegative() {
           $("td").each(function () {
             if (
@@ -769,7 +770,6 @@ Template.balancesheetreport.onRendered(() => {
               $(this).addClass("text-danger");
           });
         }
-        setTimeout(function () {
           MakeNegative();
           $("td a").each(function () {
             if (
@@ -779,7 +779,7 @@ Template.balancesheetreport.onRendered(() => {
             )
               $(this).addClass("text-danger");
           });
-        }, 100);
+        }, 500);
       }
     }
   };
