@@ -15,6 +15,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
+let taxRateService = new TaxRateService();
+
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
@@ -768,61 +770,19 @@ $('.tblAvoid').each(function(){
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
+ 
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
+  };
 
-        _currencyList.push(dataList);
-        //}
-      }
-
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-    });
-
-  templateObject.loadCurrency(); 
+  //templateObject.loadCurrency(); 
 
 
-  templateObject.loadCurrencyHistory = () => {
-    taxRateService
-  .getCurrencyHistory()
-  .then((result) => {
-    //console.log(result);
-    const data = result.tcurrencyratehistory;
-    // console.log(data);
-    // console.log("Currency list: ",data);
-
-    templateObject.tcurrencyratehistory.set(data);
-  })
-  .catch(function (err) {
-    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-    $(".fullScreenSpin").css("display", "none");
-    // Meteor._reload.reload();
-  });
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
   }
 
-  templateObject.loadCurrencyHistory();
+  //templateObject.loadCurrencyHistory();
 
 
   LoadingOverlay.hide();
@@ -2097,6 +2057,13 @@ Template.newprofitandloss.events({
        LayoutLists: profitlosslayoutfields
     }
     await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
+  },
+  "click .fx-rate-btn": async (e) => {
+
+    await loadCurrency();
+
+    await loadCurrencyHistory();
+
   }
 });
 
@@ -2337,3 +2304,68 @@ Template.registerHelper("noDecimal", function (a) {
 //   }, 3000);
   
 // }
+
+
+/**
+ * 
+ */
+async function loadCurrency() {
+  let templateObject = Template.instance();
+  LoadingOverlay.show();
+ 
+  let _currencyList = [];
+  const result = await taxRateService.getCurrencies();
+
+  //taxRateService.getCurrencies().then((result) => {
+    // console.log(result);
+    const data = result.tcurrency;
+    //console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+         active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+  
+      _currencyList.push(dataList);
+      //}
+    }
+  
+    // console.log(_currencyList);
+  
+    templateObject.currencyList.set(_currencyList);
+    LoadingOverlay.hide();
+  //});
+};
+
+async function loadCurrencyHistory() {
+  LoadingOverlay.show();
+  let templateObject = Template.instance();
+  taxRateService
+      .getCurrencyHistory()
+      .then((result) => {
+        //console.log(result);
+        const data = result.tcurrencyratehistory;
+        // console.log(data);
+        // console.log("Currency list: ",data);
+
+        templateObject.tcurrencyratehistory.set(data);
+      })
+      .catch(function (err) {
+        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+        LoadingOverlay.hide();
+        // Meteor._reload.reload();
+      });
+      LoadingOverlay.hide();
+}
