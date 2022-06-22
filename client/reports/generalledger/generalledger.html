@@ -241,7 +241,7 @@
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
 
-                                                                                                <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                                <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
                                                                                                     <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                                                                 </td>
 
@@ -287,7 +287,7 @@
                                                                                         {{# if c.active}}
 
                                                                                 
-                                                                                            <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                            <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
                                                                                                 <span class="table-cells">
                                                                                                     <strong>{{convertAmount subItem.value c}}</strong>
                                                                                                 </span>
@@ -329,6 +329,7 @@
                                                         {{/each}}
                                                     {{/each}}
                                                 {{/each}}
+
                                             {{#if grandrecords}}
                                                 <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
                                                     {{#each subItem in grandrecords}}
@@ -339,7 +340,7 @@
                                                                         {{#if currencyList}}
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
-                                                                                    <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.currency}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
+                                                                                    <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}" currency="{{c.currency}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
                                                                         
                                                                                 {{/if}}
                                                                             {{/each}}
@@ -366,7 +367,9 @@
                                                 </tr>
                                             {{/if}}
                                             {{else}}
-                                            <tr class="odd" style="text-align: center;"><td valign="top" colspan="10" class="dataTables_empty">No data available in table</td></tr>
+                                                <tr class="odd" style="text-align: center;">
+                                                    <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+                                                </tr>
                                             {{/if}}
                                         </tbody>
                                     </table>
@@ -404,37 +407,6 @@
     </div>
 
     <!-- End Help Video Modal -->
-
-
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    {{#if currencyList}}
-                        {{#each c in currencyList}}
-                            <span class="dropdown-item custom-control custom-switch">
-                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.currency}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.id}}" name="checkbox">
-                                <label class="custom-control-label" for="currency_{{c.id}}">{{c.currency}} ({{c.code}} - {{c.country}})</label>
-                            </span>
-                        {{/each}}
-                    {{/if}}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary currency-modal-save" data-dismiss="modal" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-        <style>
-            .modal-body {
-                max-height: 50vh;
-                overflow: auto;
-            }
-        </style>
-    </div>
 
     {{> FxRateModal currencies=currencyList}}
 
