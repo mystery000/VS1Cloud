@@ -59,7 +59,7 @@ Template.chequecard.onCreated(() => {
 
   templateObject.accountnamerecords = new ReactiveVar();
   templateObject.viarecords = new ReactiveVar([]);
-  templateObject.custfields = new ReactiveVar([]);
+  // templateObject.custfields = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
 });
 Template.chequecard.onRendered(() => {
@@ -175,49 +175,6 @@ Template.chequecard.onRendered(() => {
     yearRange: "-90:+10",
   });
 
-  $(document).ready(function () {
-    // $("#formCheck-one").click(function () {
-    //   if ($(event.target).is(":checked")) {
-    //     $(".checkbox1div").css("display", "block");
-    //   } else {
-    //     $(".checkbox1div").css("display", "none");
-    //   }
-    // });
-    // $("#formCheck-two").click(function () {
-    //   if ($(event.target).is(":checked")) {
-    //     $(".checkbox2div").css("display", "block");
-    //   } else {
-    //     $(".checkbox2div").css("display", "none");
-    //   }
-    // });
-    // $(".customField1Text").blur(function () {
-    //   var inputValue1 = $(".customField1Text").text();
-    //   $(".lblCustomField1").text(inputValue1);
-    // });
-    // $(".customField2Text").blur(function () {
-    //   var inputValue2 = $(".customField2Text").text();
-    //   $(".lblCustomField2").text(inputValue2);
-    // });
-  });
-
-  // tempcode= custom field
-  // add to custom field
-  $(document).on("click", "#customFieldDropdownTable1 tbody tr", function (e) {
-    $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
-    $("#customFieldDropdownListModal1").modal("toggle");
-  });
-
-  // add to custom field
-  $(document).on("click", "#customFieldDropdownTable2 tbody tr", function (e) {
-    $("#edtSaleCustField2").val($(this).find(".colFieldName").text());
-    $("#customFieldDropdownListModal2").modal("toggle");
-  });
-
-  // add to custom field
-  $(document).on("click", "#customFieldDropdownTable3 tbody tr", function (e) {
-    $("#edtSaleCustField3").val($(this).find(".colFieldName").text());
-    $("#customFieldDropdownListModal3").modal("toggle");
-  });
 
   $(".fullScreenSpin").css("display", "inline-block");
   templateObject.getAllClients = function () {
@@ -4290,9 +4247,9 @@ Template.chequecard.helpers({
     return isMobile;
   },
 
-  custfields: () => {
-    return Template.instance().custfields.get();
-  },
+  // custfields: () => {
+  //   return Template.instance().custfields.get();
+  // },
 });
 
 Template.chequecard.events({
