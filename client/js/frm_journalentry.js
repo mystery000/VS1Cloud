@@ -40,6 +40,7 @@ import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 var times = 0;
+
 Template.journalentrycard.onCreated(() => {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
@@ -86,6 +87,7 @@ Template.journalentrycard.onCreated(() => {
     templateObject.totalCreditInc.set(Currency + '0.00');
     templateObject.totalDebitInc = new ReactiveVar();
     templateObject.totalDebitInc.set(Currency + '0.00');
+    templateObject.currencyList = new ReactiveVar([]);
 
 });
 Template.journalentrycard.onRendered(() => {
@@ -1093,6 +1095,8 @@ Template.journalentrycard.onRendered(() => {
         //     $('#html-2-pdfwrapper').css('display', 'none');
         // });
     };
+
+  
 });
 Template.journalentrycard.onRendered(function() {
     let tempObj = Template.instance();
@@ -1790,6 +1794,9 @@ Template.journalentrycard.helpers({
         }
 
         return isMobile;
+    },
+    isCurrencyEnable: () => {
+        return Session.get('CloudUseForeignLicence');
     }
 });
 
@@ -1797,6 +1804,33 @@ Template.journalentrycard.events({
     // 'click #sltDepartment': function(event) {
     //     $('#departmentModal').modal('toggle');
     // },
+    "click #tblCurrencyPopList tbody tr": (e) => {
+        console.log("currency clicked");
+    
+        const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
+    
+        const currencyCode = $(e.currentTarget).find(".colCode").text();
+        const currencyRate =
+          rateType == "buy"
+            ? $(e.currentTarget).find(".colBuyRate").text()
+            : $(e.currentTarget).find(".colSellRate").text();
+    
+        $("#sltCurrency").val(currencyCode);
+        $("#sltCurrency").trigger("change");
+        $("#exchange_rate").val(currencyRate);
+        $("#exchange_rate").trigger("change");
+        $("#currencyModal").modal("toggle");
+    
+        $("#tblCurrencyPopList_filter .form-control-sm").val("");
+    
+        setTimeout(function () {
+          $(".btnRefreshCurrency").trigger("click");
+          $(".fullScreenSpin").css("display", "none");
+        }, 1000);
+      },
+    'click #sltCurrency': function(event) {
+        $('#currencyModal').modal('toggle');
+    },
     'click #edtSupplierName': function(event) {
         $('#edtSupplierName').select();
         $('#edtSupplierName').editableSelect();
