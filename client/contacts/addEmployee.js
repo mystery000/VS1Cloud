@@ -3054,7 +3054,7 @@ Template.employeescard.onRendered(function () {
 
             let employeePayrollService = new EmployeePayrollService();
             let data = await employeePayrollService.getAllTLeaveTypes('All', 0)
-            console.log('leavetypes', data.tleavetypes)
+            // console.log('leavetypes', data.tleavetypes)
             await templateObject.leaveTypesDrpDown.set(data.tleavetypes);
         }
     }
@@ -4824,7 +4824,7 @@ Template.employeescard.events({
             });
         }
 
-        console.log( 'openingBalanceLines', openingBalanceLines )
+        // console.log( 'openingBalanceLines', openingBalanceLines )
 
         await templateObject.openingBalanceInfo.set(openingBalanceLines);
         let totalAmount = 0;

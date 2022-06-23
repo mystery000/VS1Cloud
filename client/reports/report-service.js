@@ -147,6 +147,21 @@ export class ReportService extends BaseService {
     );
   }
 
+  updateProfitandLossLayout(id, Level0Order, Level1Order, Level2Order, Level3Order ) {
+    let options = "";
+    options = {
+      Level0Order: Level0Order,
+      Level1Order: Level1Order,
+      Level2Order: Level2Order,
+      Level3Order: Level3Order
+    };
+
+    return this.getList(
+    'TProfitLossLayout/' + id,
+      options
+    );
+  }
+
   getDepartment() {
     let options = {
       PropertyList: "DeptClassName",

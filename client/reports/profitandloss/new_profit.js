@@ -522,6 +522,35 @@ Template.newprofitandloss.onRendered(function () {
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);  
+  } else if( url.indexOf("?daterange") ){
+    url = new URL(window.location.href);
+    let daterange = url.searchParams.get("daterange");
+    let currentDate2 = new Date();
+    let fromDate = moment(currentDate2).format("YYYY-MM-DD");
+    let endDate =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    if( daterange == 'monthly' ){
+      fromDate = moment().startOf('month').format('YYYY-MM-DD');
+      endDate   = moment().endOf('month').format('YYYY-MM-DD');
+      templateObject.setReportOptions(0, fromDate, endDate );
+    }
+    if( daterange == 'quarterly' ){
+      fromDate = moment().startOf("Q").format('YYYY-MM-DD');
+      endDate = moment().endOf("Q").format('YYYY-MM-DD');      
+    }
+    if( daterange == 'yearly' ){
+      if (moment().quarter() == 4) {
+        fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
+        endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
+      }else{
+        fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
+        endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
+      }
+    }
+    if( daterange == 'ytd' ){
+      fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
+      endDate = moment().format("YYYY-MM-DD");
+    }
+    templateObject.setReportOptions(0, fromDate, endDate );
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -642,15 +671,12 @@ templateObject.getProfitLossLayout = async function() {
             return item;
           }
         });
-        // let position = item.Pos.match(/.{1,2}/g);
-        // item.fields.Position = parseInt(position[0]) || 0;
-        // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
+        
         newprofitLossLayouts.push({
           ...item,
           subAccounts: childAccounts,
         });
       });
-      console.log('newprofitLossLayouts', newprofitLossLayouts);
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
     // handle Dragging and sorting
@@ -1956,7 +1982,8 @@ Template.newprofitandloss.events({
           Level0Group: '',
           Level1Group: '',
           Level2Group: '',
-          Level1Order: 1,
+          Level0Order: 1,
+          Level1Order: 0,
           Level2Order: 0,
           Level3Order: 0,
           MsTimeStamp: "2022-04-06 16:00:23",
@@ -1995,6 +2022,7 @@ Template.newprofitandloss.events({
               Level0Group: '',
               Level1Group: '',
               Level2Group: '',
+              Level0Order: 0,
               Level1Order: 0,
               Level2Order: 0,
               Level3Order: 0,
@@ -2063,6 +2091,8 @@ Template.newprofitandloss.events({
         }
         
       }
+      const ApiResponse = await reportService.updateProfitandLossLayout(item.fields.ID, item.fields.Level0Order, item.fields.Level1Order, item.fields.Level2Order, item.fields.Level3Order);
+      // console.log(ApiResponse)  
       return item;
       // fieldsList.push(item);
       /**

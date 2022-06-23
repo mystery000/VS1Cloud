@@ -2940,6 +2940,6 @@ export class SideBarService extends BaseService {
         select: "[Active]=true",
       };
     }
-    return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+    return this.getList(this.ERPObjects.TEarnings, options);
   }
 }

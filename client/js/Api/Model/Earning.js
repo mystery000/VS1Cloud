@@ -1,33 +1,28 @@
-/**
- * @type {{type: string, fields: EarningFields}}
- */
- export default class Earning {
-    constructor({ type, fields }) {
-      this.type = type;
+import EarningFields from "./EarningFields";
+export default class Earning {
+  constructor({type, fields}) {
+    this.type = type;
+
+    if(fields instanceof EarningFields) {
       this.fields = fields;
+    }else {
+      this.fields = new EarningFields(fields);
     }
+    
   }
-  
-  export class EarningFields {
-    constructor({
-      Active,
-      EarningsName,
-      EarningsDisplayName,
-      EarningsRateType,
-      ExpenseAccount,
-      EarningsExemptPaygWithholding,
-      EarningsExemptSuperannuationGuaranteeCont,
-      EarningsReportableW1onActivityStatement,
-      EarningType,
-    }) {
-      this.Active = Active;
-      this.EarningsName = EarningsName;
-      this.EarningsDisplayName = EarningsDisplayName;
-      this.EarningsRateType = EarningsRateType;
-      this.ExpenseAccount = ExpenseAccount;
-      this.EarningsExemptPaygWithholding = EarningsExemptPaygWithholding;
-      this.EarningsExemptSuperannuationGuaranteeCont = EarningsExemptSuperannuationGuaranteeCont;
-      this.EarningsReportableW1onActivityStatement = EarningsReportableW1onActivityStatement;
-      this.EarningType = EarningType;
-    }
+
+  /**
+   *
+   * @param {Array} array
+   * @return {Earning[]}
+   */
+  static fromList(array) {
+    let myList = [];
+    array.forEach((element) => {
+      myList.push(new Earning(element));
+    });
+
+    return myList;
   }
+
+}
