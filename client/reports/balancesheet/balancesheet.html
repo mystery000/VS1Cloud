@@ -40,6 +40,9 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-md-5">
+                                <!-- <div class="row no-gutters">
+
+                                </div> -->
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
                                         <label>Search:</label>
@@ -48,6 +51,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i>FX Rates</button>
                                 </div>
 
                             </div>
@@ -102,62 +106,203 @@
                             </div>
                             <div class="table-responsive">
                                 <style>
+                                    .customDoubleTableHeading th {
+                                        padding-top: 0px !important;
+                                        padding-bottom: 0px !important;
+                                    }
                                     .balacesheettable :first-child {
                                         padding-left: 0px!important;
                                     }
                                     .last-balance :first-child {
                                         text-align: left !important;
                                     }
-                                    .linkvalue :first-child {
+                                    .linkvalue td:first-child a,
+                                    .linkvalue td:first-child {
                                         text-align: left !important;
                                         padding-left: 30px;
                                     }
                                     .balacesheettable :last-child {
                                         text-align: right !important;
                                     }
+                                    .tableExportDetailDiv tr {
+                                        border-top: 1px solid #e3e6f0;
+                                        border-bottom: 1px solid #e3e6f0;
+                                    }
+                                    .tableExportDetailDiv th,
+                                    .tableExportDetailDiv td {
+                                        white-space: nowrap;
+                                        padding: .3rem 1rem;
+                                    } 
+                                    .tableExportDetailDiv th {
+                                        text-align: center;
+                                    } 
+                                    .tableExportDetailDiv th:first-child,
+                                    .tableExportDetailDiv td:first-child {
+                                        text-align: left !important;
+                                    }
+                                    /* .tableExportDetailDiv th:last-child,
+                                    .tableExportDetailDiv td:last-child {
+                                        text-align: center !important;
+                                    } */
+                                    .tableExportDetailDiv th.alighnMent1,
+                                    .tableExportDetailDiv td.alighnMent1 {
+                                        text-align: right !important;
+                                    }
                                 </style>
-                                <table class="table table-sm" id="tableExport" name="tableExport">
+                                <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                                     <thead>
-                                        <tr class="table-secondary">
+                                        <tr class="table-secondary customDoubleTableHeading">
                                             <th></th>
-                                            <th class="text-nowrap text-right" style="font-weight: 800;">Sub Totals</th>
-                                            <th class="text-nowrap text-right" style="font-weight: 800;">Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Sub Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Totals</th>
                                         </tr>
+                                        {{#if isOnlyDefaultActive equal "false" }}
+                                            <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                
+                                                {{#if currencyList}}
+                                                    <th class="text-left"></th>
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }} {{#if isNegativeAmount c.currency}} text-danger {{/if}}" active="{{ c.active }}" >{{ c.currency }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+
+                                                    {{#each c in currencyList }}
+                                                        {{# if c.active}}
+                                                            <th class="text-right __alighnMent{{countActive currencyList }} {{#if isNegativeAmount c.currency}} text-danger {{/if}}" active="{{ c.active }}">{{ c.currency }}</th>
+                                                        {{/if}}
+                                                    {{/each}}
+                                                {{/if}}
+
+                                            </tr>
+                                        {{/if}}
                                     </thead>
                                     <tbody>
-                                        {{#each records}}
-                                        <tr>
-                                            {{#each value in dataArrHeader}}
-                                            <div style="display:none;">{{item.Company}}</div>
-                                            <td class="text-nowrap" style="font-weight: 800;">
-                                                {{value}}
-                                            </td>
-                                            <td></td>
-                                            <td></td>
+                                        {{#if records}}
+                                            {{#each records}}
+                                                <tr>                                                  
+                                                    {{#each value in dataArrHeader}}
+                                                        <div style="display:none;">{{item.Company}}</div>
+                                                        <td class="text-nowrap text-left {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                                            {{value}}
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    {{/each}}
+                                                </tr>
+                                                <tr>
+                                                    {{#each value in dataArrAsset}}
+                                                        <td class="text-nowrap {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
+                                                            {{value}}
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    {{/each}}
+                                                </tr>
+                                                <tr class="linkvalue">
+                                                    
+                                                       
+                                                    {{#each value2 in dataArr2}}
+                                                        {{#if isOnlyDefaultActive}}
+                                                            {{#if isObject value2}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.value c}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2}} text-danger {{/if}}">
+                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                                                </td>
+
+                                                            {{/if}}
+
+                                                        
+                                                        {{else}}
+                                                            
+                                                            {{#if isObject value2}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.value c}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2}} text-danger {{/if}}">
+                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
+                                                                </td>
+
+                                                            {{/if}}
+                                                           
+                                                        {{/if}}
+
+                                                    {{/each}}
+
+                                                       
+                                                   
+                                                    
+                                                </tr>
+                                                <tr class="balacesheettable">
+                                                    {{#each item in dataArrTotal}}
+
+                                                        {{#if isOnlyDefaultActive }}
+                                                            {{#if isObject item}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            
+                                                                        <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.value c}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                            {{convertAmount item.value c}}
+                                                                        </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+
+                                                            {{/if}}
+
+                                                        
+                                                        {{else}}
+                                                            
+                                                            {{#if isObject item}}
+
+                                                                {{#if currencyList}}
+                                                                    {{#each c in currencyList}}
+                                                                        {{#if c.active}}
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount item.value c}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                                {{convertAmount item.value c}}
+                                                                            </td>
+                                                                        {{/if}}
+                                                                    {{/each}}
+                                                                {{/if}}
+
+                                                            {{else}}
+                                                                <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
+
+                                                            {{/if}}
+                                                           
+                                                        {{/if}}
+                                                
+                                                    {{/each}}
+                                                </tr>
                                             {{/each}}
-                                        </tr>
-                                        <tr>
-                                            {{#each value in dataArrAsset}}
-                                            <td class="text-nowrap" style="font-weight: 800;">
-                                                {{value}}
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            {{/each}}
-                                        </tr>
-                                        <tr class="linkvalue">
-                                            {{#each value2 in dataArr2}}
-                                            <td class="text-nowrap Indent1" style="text-align: right;" >
-                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2}}</a>
-                                            </td>
-                                            {{/each}}
-                                        </tr>
-                                        <tr class="balacesheettable">
-                                            {{#each value3 in dataArrTotal}}
-                                            <td class="text-nowrap" style="font-weight: 800;">{{value3}}</td>
-                                            {{/each}}
-                                        </tr>
-                                        {{/each}}
+                                        {{/if}}
                                     </tbody>
 
                                 </table>
@@ -194,5 +339,9 @@
     </div>
 
     <!-- End Help Video Modal -->
+
+    <!-- Start Currency Modal -->
+    {{> FxRateModal currencies=currencyList}}
+     <!-- End Currency Modal -->
 
 </template>
