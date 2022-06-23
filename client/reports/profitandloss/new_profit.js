@@ -80,7 +80,7 @@ function buildPositions() {
 
 Template.newprofitandloss.onRendered(function () {
   let taxRateService = new TaxRateService();
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
 
