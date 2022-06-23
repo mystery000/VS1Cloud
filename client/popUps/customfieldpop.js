@@ -202,16 +202,9 @@ Template.customfieldpop.onRendered(() => {
                     $(".fullScreenSpin").css("display", "inline-block");
                     sideBarService.getAllCustomFields().then(function (data) {
                       for (let i in data.tcustomfieldlist) {
-                        if (
-                          data.tcustomfieldlist[i].fields.Description ===
-                          fieldDataName
-                        ) {
-                          $("#statusId").val(
-                            data.tcustomfieldlist[i].fields.ID
-                          );
-                          $("#newStatus").val(
-                            data.tcustomfieldlist[i].fields.Description
-                          );
+                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
+                          $("#statusId").val(data.tcustomfieldlist[i].fields.ID);
+                          $("#newStatus").val(data.tcustomfieldlist[i].fields.Description);
                         }
                       }
                       // setTimeout(function () {
@@ -222,14 +215,9 @@ Template.customfieldpop.onRendered(() => {
                   } else {
                     let data = JSON.parse(dataObject[0].data);
                     for (let i in data.tcustomfieldlist) {
-                      if (
-                        data.tcustomfieldlist[i].fields.Description ===
-                        fieldDataName
-                      ) {
+                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
                         $("#statusId").val(data.tcustomfieldlist[i].fields.ID);
-                        $("#newStatus").val(
-                          data.tcustomfieldlist[i].fields.Description
-                        );
+                        $("#newStatus").val(data.tcustomfieldlist[i].fields.Description);
                       }
                     }
                     // setTimeout(function () {
@@ -242,16 +230,9 @@ Template.customfieldpop.onRendered(() => {
                   $(".fullScreenSpin").css("display", "inline-block");
                   sideBarService.getAllCustomFields().then(function (data) {
                     for (let i in data.tcustomfieldlist) {
-                      if (
-                        data.tcustomfieldlist[i].fields.Description ===
-                        fieldDataName
-                      ) {
-                        $("#statusId" + custFieldNo).val(
-                          data.tcustomfieldlist[i].fields.ID
-                        );
-                        $("#newStatus" + custFieldNo).val(
-                          data.tcustomfieldlist[i].fields.Description
-                        );
+                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
+                        $("#statusId" + custFieldNo).val(data.tcustomfieldlist[i].fields.ID);
+                        $("#newStatus" + custFieldNo).val(data.tcustomfieldlist[i].fields.Description);
                       }
                     }
                     // setTimeout(function () {
@@ -299,7 +280,7 @@ Template.customfieldpop.onRendered(() => {
           if (data.tcustomfieldlist[x].fields.ListType == listType) {
             customData = {
               active: data.tcustomfieldlist[x].fields.Active || false,
-              id: data.tcustomfieldlist[x].fields.ID || 0,
+              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
               custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
               datatype: data.tcustomfieldlist[x].fields.DataType || "",
               isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
@@ -666,15 +647,9 @@ Template.customfieldpop.onRendered(() => {
 
                   if (custFields[0].dropdown) {
                     for (let i in custFields[0].dropdown) {
-                      if (
-                        custFields[0].dropdown[i].fields.Text === fieldDataName
-                      ) {
-                        $("#customFieldDropdownId").val(
-                          custFields[0].dropdown[i].fields.ID
-                        );
-                        $("#newCustomFieldDropdownName").val(
-                          custFields[0].dropdown[i].fields.Text
-                        );
+                      if (custFields[0].dropdown[i].fields.Text === fieldDataName) {
+                        $("#customFieldDropdownId").val(custFields[0].dropdown[i].fields.ID);
+                        $("#newCustomFieldDropdownName").val(custFields[0].dropdown[i].fields.Text);
                       }
                     }
                     setTimeout(function () {
@@ -748,8 +723,7 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField2").attr("custfieldid") || "";
+              var fieldDataID = $("#edtSaleCustField2").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(2);
 
@@ -759,21 +733,13 @@ Template.customfieldpop.onRendered(() => {
               } else {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[1].custfieldlabel
-                  );
+                  $("#newCustomFieldDropdownHeader").text("Edit " + custFields[1].custfieldlabel);
 
                   if (custFields[1].dropdown) {
                     for (let i in custFields[1].dropdown) {
-                      if (
-                        custFields[1].dropdown[i].fields.Text === fieldDataName
-                      ) {
-                        $("#customFieldDropdownId").val(
-                          custFields[1].dropdown[i].fields.ID
-                        );
-                        $("#newCustomFieldDropdownName").val(
-                          custFields[1].dropdown[i].fields.Text
-                        );
+                      if (custFields[1].dropdown[i].fields.Text === fieldDataName) {
+                        $("#customFieldDropdownId").val(custFields[1].dropdown[i].fields.ID);
+                        $("#newCustomFieldDropdownName").val(custFields[1].dropdown[i].fields.Text);
                       }
                     }
                     setTimeout(function () {
@@ -864,9 +830,7 @@ Template.customfieldpop.onRendered(() => {
 
                   if (custFields[2].dropdown) {
                     for (let i in custFields[2].dropdown) {
-                      if (
-                        custFields[2].dropdown[i].fields.Text === fieldDataName
-                      ) {
+                      if (custFields[2].dropdown[i].fields.Text === fieldDataName) {
                         $("#customFieldDropdownId").val(
                           custFields[2].dropdown[i].fields.ID
                         );
@@ -997,7 +961,7 @@ Template.customfieldpop.events({
   "click .btnSaveCustomFieldDropdown": function (e) {
     const templateObject = Template.instance();
     let organisationService = new OrganisationService();
-    let customFieldDropdownId = $("#customFieldDropdownId").val() ? $("#customFieldDropdownId").val() : 0;
+    let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
     let newCustomFieldDropdownName = $("#newCustomFieldDropdownName").val();
 
     $(".fullScreenSpin").css("display", "inline-block");
@@ -1202,7 +1166,7 @@ Template.customfieldpop.events({
               DataType: "ftString",
               Description: termsName,
               Dropdown: dropDownData,
-              ID: fieldID,
+              ID: parseInt(fieldID),
               IsCombo: true,
               ListType: listType,
             },
@@ -1214,7 +1178,7 @@ Template.customfieldpop.events({
               DataType: "ftString",
               //Description: termsName,
               Dropdown: dropDownData,
-              ID: fieldID,
+              ID: parseInt(fieldID),
               IsCombo: true,
               ListType: listType,
             },
@@ -1226,7 +1190,7 @@ Template.customfieldpop.events({
           fields: {
             DataType: "ftString",
             Description: termsName,
-            ID: fieldID,
+            ID: parseInt(fieldID),
             Dropdown: null,
             IsCombo: false,
             ListType: listType,
@@ -1554,16 +1518,9 @@ Template.customfieldpop.events({
                     $(".fullScreenSpin").css("display", "inline-block");
                     sideBarService.getAllCustomFields().then(function (data) {
                       for (let i in data.tcustomfieldlist) {
-                        if (
-                          data.tcustomfieldlist[i].fields.Description ===
-                          fieldDataName
-                        ) {
-                          $("#statusId" + data_id).val(
-                            data.tcustomfieldlist[i].fields.ID
-                          );
-                          $("#newStatus" + data_id).val(
-                            data.tcustomfieldlist[i].fields.Description
-                          );
+                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
+                          $("#statusId" + data_id).val(data.tcustomfieldlist[i].fields.ID);
+                          $("#newStatus" + data_id).val(data.tcustomfieldlist[i].fields.Description);
                         }
                       }
                       setTimeout(function () {
@@ -1575,14 +1532,9 @@ Template.customfieldpop.events({
                     let data = JSON.parse(dataObject[0].data);
                     let useData = data.tcustomfieldlist;
                     for (let i in useData) {
-                      if (
-                        data.tcustomfieldlist[i].fields.Description ===
-                        fieldDataName
-                      ) {
+                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
                         $("#statusId" + data_id).val(useData[i].fields.ID);
-                        $("#newStatus" + data_id).val(
-                          useData[i].fields.Description
-                        );
+                        $("#newStatus" + data_id).val(useData[i].fields.Description);
                       }
                     }
                     setTimeout(function () {
@@ -1595,16 +1547,9 @@ Template.customfieldpop.events({
                   $(".fullScreenSpin").css("display", "inline-block");
                   sideBarService.getAllCustomFields().then(function (data) {
                     for (let i in data.tcustomfieldlist) {
-                      if (
-                        data.tcustomfieldlist[i].fields.Description ===
-                        fieldDataName
-                      ) {
-                        $("#statusId" + data_id).val(
-                          data.tcustomfieldlist[i].fields.ID
-                        );
-                        $("#newStatus" + data_id).val(
-                          data.tcustomfieldlist[i].fields.Description
-                        );
+                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
+                        $("#statusId" + data_id).val(data.tcustomfieldlist[i].fields.ID);
+                        $("#newStatus" + data_id).val(data.tcustomfieldlist[i].fields.Description);
                       }
                     }
                     setTimeout(function () {
@@ -1700,7 +1645,7 @@ Template.customfieldpop.events({
           type: "TCustomFieldList",
           fields: {
             Active: false,
-            ID: fieldID,
+            ID: parseInt(fieldID),
             DataType: "ftString",
             Description: name,
             ListType: listType,
@@ -1869,7 +1814,7 @@ Template.customfieldpop.events({
             type: "TCustomFieldList",
             fields: {
               Active: fieldData[i].active || false,
-              ID: fieldID,
+              ID: parseInt(fieldID),
               DataType: "ftDateTime",
               Description: name,
               ListType: listType,
@@ -1881,7 +1826,7 @@ Template.customfieldpop.events({
             type: "TCustomFieldList",
             fields: {
               Active: fieldData[i].active || false,
-              ID: fieldID,
+              ID: parseInt(fieldID),
               DataType: "ftString",
               Description: name,
               ListType: listType,

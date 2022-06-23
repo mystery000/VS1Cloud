@@ -15,6 +15,8 @@ import GlobalFunctions from "../../GlobalFunctions";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
+let taxRateService = new TaxRateService();
+
 const templateObject = Template.instance();
 const productService = new ProductService();
 const defaultPeriod = 2;
@@ -78,7 +80,7 @@ function buildPositions() {
 
 Template.newprofitandloss.onRendered(function () {
   let taxRateService = new TaxRateService();
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   const templateObject = Template.instance();
   const deptrecords = [];
 
@@ -522,6 +524,32 @@ Template.newprofitandloss.onRendered(function () {
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);  
+  } else if( url.indexOf("?daterange") > 0 ){
+    let currentDate2 = new Date();
+    let fromDate =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    let endDate = moment(currentDate2).format("YYYY-MM-DD");
+    if( url.indexOf("?daterange=monthly") ){
+      fromDate = moment().startOf('month').format('YYYY-MM-DD');
+      endDate   = moment().endOf('month').format('YYYY-MM-DD');
+    }
+    if( url.indexOf("?daterange=quarterly") ){
+      fromDate = moment().startOf("Q").format('YYYY-MM-DD');
+      endDate = moment().endOf("Q").format('YYYY-MM-DD');      
+    }
+    if( url.indexOf("?daterange=yearly") ){
+      if (moment().quarter() == 4) {
+        fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
+        endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
+      }else{
+        fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
+        endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
+      }
+    }
+    if( url.indexOf("?daterange=ytd") ){
+      fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
+      endDate = moment().format("YYYY-MM-DD");
+    }
+    templateObject.setReportOptions(0, fromDate, endDate );
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -642,15 +670,12 @@ templateObject.getProfitLossLayout = async function() {
             return item;
           }
         });
-        // let position = item.Pos.match(/.{1,2}/g);
-        // item.fields.Position = parseInt(position[0]) || 0;
-        // let sortedAccounts = level1Childs.sort((a,b) => (a.Position > b.Position) ? 1 : ((b.Position > a.Position) ? -1 : 0))
+        
         newprofitLossLayouts.push({
           ...item,
           subAccounts: childAccounts,
         });
       });
-      console.log('newprofitLossLayouts', newprofitLossLayouts);
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
     // handle Dragging and sorting
@@ -768,61 +793,19 @@ $('.tblAvoid').each(function(){
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
+ 
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
+  };
 
-        _currencyList.push(dataList);
-        //}
-      }
-
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-    });
-
-  templateObject.loadCurrency(); 
+  //templateObject.loadCurrency(); 
 
 
-  templateObject.loadCurrencyHistory = () => {
-    taxRateService
-  .getCurrencyHistory()
-  .then((result) => {
-    //console.log(result);
-    const data = result.tcurrencyratehistory;
-    // console.log(data);
-    // console.log("Currency list: ",data);
-
-    templateObject.tcurrencyratehistory.set(data);
-  })
-  .catch(function (err) {
-    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-    $(".fullScreenSpin").css("display", "none");
-    // Meteor._reload.reload();
-  });
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
   }
 
-  templateObject.loadCurrencyHistory();
+  //templateObject.loadCurrencyHistory();
 
 
   LoadingOverlay.hide();
@@ -839,6 +822,7 @@ Template.newprofitandloss.events({
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
+   // loadCurrencyHistory();
     
 
     let templateObject = Template.instance();
@@ -1956,7 +1940,8 @@ Template.newprofitandloss.events({
           Level0Group: '',
           Level1Group: '',
           Level2Group: '',
-          Level1Order: 1,
+          Level0Order: 1,
+          Level1Order: 0,
           Level2Order: 0,
           Level3Order: 0,
           MsTimeStamp: "2022-04-06 16:00:23",
@@ -1995,6 +1980,7 @@ Template.newprofitandloss.events({
               Level0Group: '',
               Level1Group: '',
               Level2Group: '',
+              Level0Order: 0,
               Level1Order: 0,
               Level2Order: 0,
               Level3Order: 0,
@@ -2063,6 +2049,8 @@ Template.newprofitandloss.events({
         }
         
       }
+      const ApiResponse = await reportService.updateProfitandLossLayout(item.fields.ID, item.fields.Level0Order, item.fields.Level1Order, item.fields.Level2Order, item.fields.Level3Order);
+      // console.log(ApiResponse)  
       return item;
       // fieldsList.push(item);
       /**
@@ -2097,6 +2085,10 @@ Template.newprofitandloss.events({
        LayoutLists: profitlosslayoutfields
     }
     await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
+  },
+  "click .fx-rate-btn": (e) => {
+    loadCurrency();
+    //loadCurrencyHistory();
   }
 });
 
@@ -2176,10 +2168,13 @@ Template.newprofitandloss.helpers({
 
     return convertedAmount;
   },
-  count: (array) => {
+  count: (array = []) => {
     return array.length;
   },
-  countActive: (array) => {
+  countActive: (array = []) => {
+    if(array.length == 0) {
+      return 0;
+    }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
   },
@@ -2195,6 +2190,9 @@ Template.newprofitandloss.helpers({
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
+    if(array.length == 0) {
+      return false;
+    }
     let activeArray = array.filter((c) => c.active == true);
 
     if(activeArray.length == 1) {
@@ -2324,3 +2322,73 @@ Template.registerHelper("noDecimal", function (a) {
 //   }, 3000);
   
 // }
+
+
+/**
+ * 
+ */
+async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if(await templateObject.currencyList.get().length == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+  
+    //taxRateService.getCurrencies().then((result) => {
+      // console.log(result);
+      const data = result.tcurrency;
+      //console.log(data);
+      for (let i = 0; i < data.length; i++) {
+        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+        var dataList = {
+          id: data[i].Id || "",
+          code: data[i].Code || "-",
+          currency: data[i].Currency || "NA",
+          symbol: data[i].CurrencySymbol || "NA",
+          buyrate: data[i].BuyRate || "-",
+          sellrate: data[i].SellRate || "-",
+          country: data[i].Country || "NA",
+          description: data[i].CurrencyDesc || "-",
+          ratelastmodified: data[i].RateLastModified || "-",
+           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+          //active: false,
+          // createdAt: new Date(data[i].MsTimeStamp) || "-",
+          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+        };
+    
+        _currencyList.push(dataList);
+        //}
+      }
+    
+      // console.log(_currencyList);
+    
+      templateObject.currencyList.set(_currencyList);
+
+      loadCurrencyHistory(templateObject);
+      LoadingOverlay.hide();
+    //});
+  }
+ 
+  
+  
+};
+
+function loadCurrencyHistory(templateObject) {
+  
+  taxRateService
+      .getCurrencyHistory()
+      .then((result) => {
+        //console.log(result);
+        const data = result.tcurrencyratehistory;
+        console.log('currencyratehistory', data);
+        templateObject.tcurrencyratehistory.set(data);
+      })
+      .catch(function (err) {
+        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+        LoadingOverlay.hide();
+        // Meteor._reload.reload();
+      });
+      LoadingOverlay.hide();
+}

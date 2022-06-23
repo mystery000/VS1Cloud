@@ -24,7 +24,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  $(".fullScreenSpin").css("display", "inline-block");
+  LoadingOverlay.show();
   let templateInstance = Template.instance();
   let taxRateService = new TaxRateService();
   let dataTableList = [];
@@ -114,7 +114,9 @@ Template.FxCurrencyHistory.onRendered(function () {
             description: data[i].CurrencyDesc || "-",
             ratelastmodified: data[i].RateLastModified || "-",
             createdAt: new Date(data[i].MsTimeStamp) || "-",
-            formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+            formatedCreatedAt: formatDateToString(
+              new Date(data[i].MsTimeStamp)
+            ),
           };
 
           dataTableList.push(dataList);
@@ -190,9 +192,9 @@ Template.FxCurrencyHistory.onRendered(function () {
           }, 100);
         }
 
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         setTimeout(function () {
-          $("#currencyLists")
+          $("#tblFxCurrencyHistory")
             .DataTable({
               columnDefs: [
                 { type: "date", targets: 0 },
@@ -238,7 +240,7 @@ Template.FxCurrencyHistory.onRendered(function () {
               responsive: true,
               order: [[0, "desc"]],
               action: function () {
-                $("#currencyLists").DataTable().ajax.reload();
+                $("#tblFxCurrencyHistory").DataTable().ajax.reload();
               },
               fnDrawCallback: function (oSettings) {
                 setTimeout(function () {
@@ -260,11 +262,11 @@ Template.FxCurrencyHistory.onRendered(function () {
               }, 100);
             });
 
-          // $('#currencyLists').DataTable().column( 0 ).visible( true );
-          $(".fullScreenSpin").css("display", "none");
+          // $('#tblFxCurrencyHistory').DataTable().column( 0 ).visible( true );
+          LoadingOverlay.hide();
         }, 0);
 
-        var columns = $("#currencyLists th");
+        var columns = $("#tblFxCurrencyHistory th");
         let sTible = "";
         let sWidth = "";
         let sIndex = "";
@@ -296,7 +298,7 @@ Template.FxCurrencyHistory.onRendered(function () {
       })
       .catch(function (err) {
         // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
         // Meteor._reload.reload();
       });
   };
@@ -336,7 +338,7 @@ Template.FxCurrencyHistory.onRendered(function () {
   };
   templateInstance.getCountryData();
 
-  $(".fullScreenSpin").css("display", "none");
+  LoadingOverlay.hide();
 });
 
 Template.FxCurrencyHistory.events({
@@ -439,8 +441,8 @@ Template.FxCurrencyHistory.events({
   },
   "change #dateTo": function () {
     let templateObject = Template.instance();
-    // $(".fullScreenSpin").css("display", "inline-block");
-    $(".fullScreenSpin").css("display", "inline-block");
+    //LoadingOverlay.show();
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
 
@@ -466,7 +468,7 @@ Template.FxCurrencyHistory.events({
   },
   "change #dateFrom": function () {
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     $("#dateFrom").attr("readonly", false);
     $("#dateTo").attr("readonly", false);
 
@@ -542,6 +544,7 @@ Template.FxCurrencyHistory.events({
   },
   "click .saveTable": function (event) {
     LoadingOverlay.show();
+
     let lineItems = [];
     $(".columnSettings").each(function (index) {
       var $tblrow = $(this);
@@ -692,18 +695,70 @@ Template.FxCurrencyHistory.events({
     });
     templateInstance.tableheaderrecords.set(tableHeaderList);
   },
+  // "click .btnExportReportProfit": function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   let utilityService = new UtilityService();
+  //   let templateObject = Template.instance();
+  //   var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //   var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+  //   let formatDateFrom =
+  //     dateFrom.getFullYear() +
+  //     "-" +
+  //     (dateFrom.getMonth() + 1) +
+  //     "-" +
+  //     dateFrom.getDate();
+  //   let formatDateTo =
+  //     dateTo.getFullYear() +
+  //     "-" +
+  //     (dateTo.getMonth() + 1) +
+  //     "-" +
+  //     dateTo.getDate();
+
+  //   const filename = loggedCompany + "-Profit and Loss" + ".csv";
+  //   utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+  //   let rows = [];
+  //   // reportService.getProfitandLoss(formatDateFrom,formatDateTo,false).then(function (data) {
+  //   //     if(data.profitandlossreport){
+  //   //         rows[0] = ['Account Type','Account Name', 'Account Number', 'Total Amount(EX)'];
+  //   //         data.profitandlossreport.forEach(function (e, i) {
+  //   //             rows.push([
+  //   //               data.profitandlossreport[i]['AccountTypeDesc'],
+  //   //               data.profitandlossreport[i].AccountName,
+  //   //               data.profitandlossreport[i].AccountNo,
+  //   //               // utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i]['Sub Account Total']),
+  //   //               utilityService.modifynegativeCurrencyFormat(data.profitandlossreport[i].TotalAmount)]);
+  //   //         });
+  //   //         setTimeout(function () {
+  //   //             utilityService.exportReportToCsv(rows, filename, 'xls');
+  //   //             $('.fullScreenSpin').css('display','none');
+  //   //         }, 1000);
+  //   //     }
+  //   //
+  //   // });
+  // },
   "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.show();
+     jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletocsv").click();
+    
+    LoadingOverlay.hide();
   },
   "click .printConfirm": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
-    $(".fullScreenSpin").css("display", "none");
+    LoadingOverlay.show();
+    // jQuery("#tblFxCurrencyHistory_wrapper .dt-buttons .btntabletopdf").click();
+
+    document.title = 'vs1cloud';
+    $("#tblFxCurrencyHistory").print({
+      title: document.title + " | Fx Currency History | " + loggedCompany,
+      noPrintSelector: ".addSummaryEditor, .excludeButton",
+      exportOptions: {
+        stripHtml: false,
+      },
+    });
+    LoadingOverlay.hide();
   },
   "click .btnRefresh": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
+    LoadingOverlay.show();
     localStorage.setItem("VS1BalanceTrans_Report", "");
     Meteor._reload.reload();
   },
@@ -722,8 +777,9 @@ Template.FxCurrencyHistory.helpers({
         }
         return a.code.toUpperCase() > b.code.toUpperCase() ? 1 : -1;
         // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-      }).sort(sortById);
-      // .sort(sortByDate);
+      })
+      .sort(sortById);
+    // .sort(sortByDate);
     // .sort((a, b) => a.createdAt - b.createdAt);
   },
   tableheaderrecords: () => {
@@ -744,7 +800,6 @@ Template.FxCurrencyHistory.helpers({
     return localStorage.getItem("mySession") || "";
   },
 });
-
 
 function sortById(a, b) {
   return a.id - b.id;
