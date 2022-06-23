@@ -135,7 +135,7 @@ Template.new_quote.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-
+            let fx = $('#sltCurrency').val();
             var customfield1 = $('#edtSaleCustField1').val() || '';
             var customfield2 = $('#edtSaleCustField2').val() || '';
             var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -235,6 +235,7 @@ Template.new_quote.onRendered(() => {
                         customfieldlabel1:'NA',
                         customfieldlabel2:'NA',
                         customfieldlabel3:'NA',
+                        showFX:"",
 
                     };
 
@@ -277,6 +278,7 @@ Template.new_quote.onRendered(() => {
                     customfieldlabel1:customfieldlabel1,
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
+                    showFX:"",
 
                 };
 
@@ -313,13 +315,13 @@ Template.new_quote.onRendered(() => {
                     swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
                     data: array_data,
                     applied : "",
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',
-
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    showFX:fx,
                 };
 
 
@@ -355,7 +357,7 @@ Template.new_quote.onRendered(() => {
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
-
+        let fx = $('#sltCurrency').val();
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -455,6 +457,7 @@ Template.new_quote.onRendered(() => {
                     customfieldlabel1:'NA',
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',
+                    showFX:"",
 
                 };
 
@@ -497,7 +500,7 @@ Template.new_quote.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
-
+                showFX:"",
             };
 
         }
@@ -533,12 +536,13 @@ Template.new_quote.onRendered(() => {
                 swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
                 applied : "",
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                showFX:fx,
 
             };
 
@@ -612,7 +616,15 @@ Template.new_quote.onRendered(() => {
             object_invoce[0]["title"] + " template"
           );
     
-    
+           if (object_invoce[0]["showFX"] == "") {
+                $("#templatePreviewModal .showFx").hide();
+                $("#templatePreviewModal .showFxValue").hide();
+            } else {
+                    $("#templatePreviewModal .showFx").show();
+                    $("#templatePreviewModal .showFxValue").show();
+                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+            }
+            
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
           $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
@@ -913,7 +925,14 @@ Template.new_quote.onRendered(() => {
              
         }
 
-       
+        if (object_invoce[0]["showFX"] == "") {
+            $("#html-2-pdfwrapper_new .showFx").hide();
+            $("#html-2-pdfwrapper_new .showFxValue").hide();
+        } else {
+            $("#html-2-pdfwrapper_new .showFx").show();
+            $("#html-2-pdfwrapper_new .showFxValue").show();
+            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
+        }
     
         $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
     

@@ -153,6 +153,8 @@ Template.new_salesorder.onRendered(() => {
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
         var erpGet = erpDb();
+
+        
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -160,7 +162,7 @@ Template.new_salesorder.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text();
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+        let fx = $('#sltCurrency').val();
 
         $('#tblSalesOrderLine > tbody > tr').each(function() {
 
@@ -251,6 +253,7 @@ Template.new_salesorder.onRendered(() => {
             customfieldlabel1:'NA',
             customfieldlabel2:'NA',
             customfieldlabel3:'NA',
+            showFX:"",
 
             };
         }
@@ -292,6 +295,7 @@ Template.new_salesorder.onRendered(() => {
             customfieldlabel1:customfieldlabel1,
             customfieldlabel2:customfieldlabel2,
             customfieldlabel3:customfieldlabel3,
+            showFX:"",
           };
 
         }
@@ -327,12 +331,13 @@ Template.new_salesorder.onRendered(() => {
                 swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
                 applied : "",
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                showFX:fx,
     
                 };
 
@@ -373,7 +378,7 @@ Template.new_salesorder.onRendered(() => {
                 var customfieldlabel1 = $('.lblCustomField1').first().text();
                 var customfieldlabel2 = $('.lblCustomField2').first().text();
                 var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+                let fx = $('#sltCurrency').val();
                 $('#tblSalesOrderLine > tbody > tr').each(function() {
 
                     var lineID = this.id;
@@ -446,11 +451,11 @@ Template.new_salesorder.onRendered(() => {
                         supplier_name : customer,
                         supplier_addr : invoiceData.shipToDesc,
                         fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal : invoiceData.SubTotal,
-                        gst : invoiceData.TotalTax,
-                        total : total,
-                        paid_amount : invoiceData.totalPaid,
-                        bal_due : invoiceData.balanceDue,
+                        subtotal : "",
+                        gst :"",
+                        total : "",
+                        paid_amount : "",
+                        bal_due :"",
                         bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
                         account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
                         swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -462,6 +467,7 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel1:'NA',
                         customfieldlabel2:'NA',
                         customfieldlabel3:'NA',
+                        showFX:"",
                     };
 
                 }
@@ -502,6 +508,7 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel1:customfieldlabel1,
                         customfieldlabel2:customfieldlabel2,
                         customfieldlabel3:customfieldlabel3,
+                        showFX:"",
                     };
                 }
                 else
@@ -535,13 +542,13 @@ Template.new_salesorder.onRendered(() => {
                         account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
                         swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
                         data: array_data,
-                        applied : "",
-                        customfield1:'NA',
-                        customfield2:'NA',
-                        customfield3:'NA',
-                        customfieldlabel1:'NA',
-                        customfieldlabel2:'NA',
-                        customfieldlabel3:'NA',
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        showFX:"",
                 
                     };
                 }
@@ -667,7 +674,16 @@ Template.new_salesorder.onRendered(() => {
                 $("#templatePreviewModal .link").show();
                 $("#templatePreviewModal .linkText").show();
           }
-          
+          if (object_invoce[0]["showFX"] == "") {
+            $("#templatePreviewModal .showFx").hide();
+            $("#templatePreviewModal .showFxValue").hide();
+          } else {
+                    $("#templatePreviewModal .showFx").show();
+                    $("#templatePreviewModal .showFxValue").show();
+                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+          }
+
+
           if(object_invoce[0]["customfield1"] == "NA")
           {   
                   $('#customfieldtablenew').css('display', 'none');
@@ -762,26 +778,39 @@ Template.new_salesorder.onRendered(() => {
          }
         
         // total amount 
-    
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+         
+        if(object_invoce[0]["subtotal"] == "")
+        {     
+            $("#templatePreviewModal .field_amount").hide();
         }
+        else
+        {
+            $("#templatePreviewModal .field_amount").show();
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#templatePreviewModal #subtotal_total').text("Sub total");
+              $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+            if(object_invoce[0]["gst"] != ""){
+
+                
+                $('#templatePreviewModal #grandTotal').text("Grand total");
+                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
     
-        if(object_invoce[0]["gst"] != ""){
-            $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
+            if(object_invoce[0]["total"] != ""){
+                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
     
-        if(object_invoce[0]["total"] != ""){
-            $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
     
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
     
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
         }
+        
       }
 
     function updateTemplate(object_invoce) {
@@ -913,6 +942,16 @@ Template.new_salesorder.onRendered(() => {
              
         }
 
+
+        if (object_invoce[0]["showFX"] == "") {
+            $("#html-2-pdfwrapper_new .showFx").hide();
+            $("#html-2-pdfwrapper_new .showFxValue").hide();
+        } else {
+            $("#html-2-pdfwrapper_new .showFx").show();
+            $("#html-2-pdfwrapper_new .showFxValue").show();
+            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
+        }
+
        
     
         $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
@@ -983,26 +1022,39 @@ Template.new_salesorder.onRendered(() => {
         }
         
         // total amount 
-    
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+        if(object_invoce[0]["subtotal"] == "")
+        {     
+            $("#html-2-pdfwrapper_new .field_amount").hide();
         }
+        else
+        {
+            $("#html-2-pdfwrapper_new .field_amount").show();
+          
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
+              $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+
+            if(object_invoce[0]["gst"] != ""){
+                $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
+                $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+            
     
-        if(object_invoce[0]["gst"] != ""){
-            $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
+            if(object_invoce[0]["total"] != ""){
+                $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
     
-        if(object_invoce[0]["total"] != ""){
-            $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
     
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
     
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
         }
+       
     }
 
     function saveTemplateFields(key, value){
@@ -7287,6 +7339,15 @@ Template.new_salesorder.onRendered(() => {
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
             var erpGet = erpDb();
+            let fx = $('#sltCurrency').val();
+              
+            var customfield1 = $('#edtSaleCustField1').val() || '';
+            var customfield2 = $('#edtSaleCustField2').val() || '';
+            var customfield3 = $('#edtSaleCustField3').val() || '';
+
+            var customfieldlabel1 = $('.lblCustomField1').first().text();
+            var customfieldlabel2 = $('.lblCustomField2').first().text();
+            var customfieldlabel3 = $('.lblCustomField3').first().text();
             $('#tblSalesOrderLine > tbody > tr').each(function() {
 
                 var lineID = this.id;
@@ -7376,6 +7437,7 @@ Template.new_salesorder.onRendered(() => {
                 customfieldlabel1:'NA',
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
+                showFX:"",
     
                 };
             }
@@ -7417,6 +7479,7 @@ Template.new_salesorder.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
+                showFX:"",
               };
     
             }
@@ -7452,12 +7515,13 @@ Template.new_salesorder.onRendered(() => {
                     swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
                     data: array_data,
                     applied : "",
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    showFX:"",
         
                     };
     
@@ -7570,11 +7634,11 @@ Template.new_salesorder.onRendered(() => {
                         supplier_name : customer,
                         supplier_addr : invoiceData.shipToDesc,
                         fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal : invoiceData.SubTotal,
-                        gst : invoiceData.TotalTax,
-                        total : total,
-                        paid_amount : invoiceData.totalPaid,
-                        bal_due : invoiceData.balanceDue,
+                        subtotal : "",
+                        gst :"",
+                        total : "",
+                        paid_amount : "",
+                        bal_due :"",
                         bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
                         account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
                         swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -7586,6 +7650,7 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel1:'NA',
                         customfieldlabel2:'NA',
                         customfieldlabel3:'NA',
+                        showFX:"",
                     };
 
                 }
@@ -7611,11 +7676,11 @@ Template.new_salesorder.onRendered(() => {
                         supplier_name : customer,
                         supplier_addr : invoiceData.shipToDesc,
                         fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal : invoiceData.SubTotal,
-                        gst : invoiceData.TotalTax,
-                        total : total,
-                        paid_amount : invoiceData.totalPaid,
-                        bal_due : invoiceData.balanceDue,
+                        subtotal : "",
+                        gst :"",
+                        total : "",
+                        paid_amount : "",
+                        bal_due :"",
                         bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
                         account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
                         swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -7626,6 +7691,7 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel1:customfieldlabel1,
                         customfieldlabel2:customfieldlabel2,
                         customfieldlabel3:customfieldlabel3,
+                        showFX:"",
                     };
                 }
                 else
@@ -7650,22 +7716,22 @@ Template.new_salesorder.onRendered(() => {
                         supplier_name : customer,
                         supplier_addr : invoiceData.shipToDesc,
                         fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                        subtotal : invoiceData.SubTotal,
-                        gst : invoiceData.TotalTax,
-                        total : total,
-                        paid_amount : invoiceData.totalPaid,
-                        bal_due : invoiceData.balanceDue,
+                        subtotal : "",
+                        gst :"",
+                        total : "",
+                        paid_amount : "",
+                        bal_due :"",
                         bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
                         account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
                         swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
                         data: array_data,
-                        applied : "",
-                        customfield1:'NA',
-                        customfield2:'NA',
-                        customfield3:'NA',
-                        customfieldlabel1:'NA',
-                        customfieldlabel2:'NA',
-                        customfieldlabel3:'NA',
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        showFX:"",
                 
                     };
                 }
