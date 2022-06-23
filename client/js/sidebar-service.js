@@ -529,6 +529,20 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TPaymentList, options);
   }
 
+
+  getPaymentByNameOrID(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: '"PaymentID desc"',
+      ListType: "Detail",
+      IgnoreDates: true,
+      OrderBy: "PaymentDate desc",
+      LimitCount: '"' + initialReportLoad + '"',
+      Search: 'ClientName = "' + dataSearchName + '" OR ReceiptNo = "' + dataSearchName + '" OR BankAccount = "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TPaymentList, options);
+  }
+
   getTCustomerPaymentList(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -1201,6 +1215,22 @@ export class SideBarService extends BaseService {
       Unpaid: true,
       OrderBy: "PurchaseOrderID desc",
       Search: 'PrintName = "' + supplierName + '"',
+    };
+    return this.getList(this.ERPObjects.TbillReport, options);
+  }
+
+
+  getAllAwaitingSupplierPaymentBySupplierNameOrID(supplierData) {
+    let options = "";
+    options = {
+      IgnoreDates: true,
+      IncludePOs: true,
+      IncludeBills: true,
+      IsDetailReport: false,
+      Paid: false,
+      Unpaid: true,
+      OrderBy: "PurchaseOrderID desc",
+      Search: 'PrintName like "' + supplierData + '" OR InvoiceNumber = "' + supplierData + '" OR Comments like "' + supplierData + '"',
     };
     return this.getList(this.ERPObjects.TbillReport, options);
   }

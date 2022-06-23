@@ -8,4 +8,13 @@ export default class GlobalFunctions {
     const date = new Date(timestamp);
     return date;
   }
+
+  /**
+   * 
+   * @param {string} myString 
+   * @returns {boolean}
+   */
+  static hasNumber(myString) {
+    return /\d/.test(myString);
+  }
 }

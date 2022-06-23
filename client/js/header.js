@@ -1451,7 +1451,6 @@ Template.header.onRendered(function() {
 
         })
     };
-
     templateObject.getCompanyInfo = function() {
 
         organizationService.getCompanyInfo().then(function(data) {
@@ -1514,6 +1513,15 @@ Template.header.onRendered(function() {
 
               }
           });
+        });
+
+        organizationService.getCheckTcompLogoData().then(function(dataLogo) {
+          let logoImagePicture = dataLogo.tcomplogo[0].MIMEEncodedPicture||'';
+          let logoPictureType = dataLogo.tcomplogo[0].Pictype||'';
+          let logoImageData = 'data:image/' +logoPictureType+';base64,'+logoImagePicture;
+          if (dataLogo.tcomplogo.length) {
+          localStorage.setItem("Image",logoImageData);
+          };
         });
     };
     if (!localStorage.getItem('vs1LoggedEmployeeImages_dash')) {

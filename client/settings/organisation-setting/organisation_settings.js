@@ -602,10 +602,12 @@ Template.organisationsettings.events({
             templateObject.phAddress3.set(address[2] ? address[2] : '');
         }
     },
-    'click #uploadImg':function (event) {
+    'click #uploadImg':async function (event) {
         //let imageData= (localStorage.getItem("Image"));
         let templateObject = Template.instance();
         let imageData=templateObject.imageFileData.get();
+        let checkCompLogoData = await organisationService.getCheckTcompLogoData();
+        let myFilesType = $('#fileInput')[0].files[0].type||'';
         if(imageData!=null && imageData!="")
         {
             localStorage.setItem("Image",imageData);
@@ -613,6 +615,32 @@ Template.organisationsettings.events({
             $('#uploadedImage').attr('width','50%');
             $('#removeLogo').show();
             $('#changeLogo').show();
+
+            let companyLogoObj = "";
+            if (checkCompLogoData.tcomplogo.length) {
+                companyLogoObj = {
+                    type: "TCompLogo",
+                    fields: {
+                        ID: parseInt(checkCompLogoData.tcomplogo[0].Id)||0,
+                        MIMEEncodedPicture: imageData.split(',')[1],
+                        ImageTypes: myFilesType||'image/png',
+                        Pictype: myFilesType.split('/')[1]||'png',
+                    }
+                };
+
+            }else{
+              companyLogoObj = {
+                  type: "TCompLogo",
+                  fields: {
+                    MIMEEncodedPicture: imageData.split(',')[1],
+                    SetupID:1,
+                    ImageTypes: myFilesType||'image/png',
+                    Pictype: myFilesType.split('/')[1]||'png',
+                  }
+              };
+            }
+
+            organisationService.saveCompanyLogo(companyLogoObj).then(function (companyLogoObj) {});
         }
 
     },

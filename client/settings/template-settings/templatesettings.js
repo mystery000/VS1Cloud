@@ -62,8 +62,11 @@ Template.templatesettings.onRendered(function () {
 
   //update template with invoice type   
   function updateTemplate(object_invoce) {
-    $("#templatePreviewModal").modal("toggle");
-    if (object_invoce.length > 0) {
+
+
+    
+      $("#templatePreviewModal").modal("toggle");
+      if (object_invoce.length > 0) {
      
       $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
       $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
@@ -143,7 +146,7 @@ Template.templatesettings.onRendered(function () {
       }else{
         $("#templatePreviewModal .invoiceNumber").show();
       }
-      console.log("invoice number==",object_invoce[0]["invoicenumber"])
+    
       $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
       if(object_invoce[0]["refnumber"] == ""){
@@ -166,6 +169,15 @@ Template.templatesettings.onRendered(function () {
       } else {
             $("#templatePreviewModal .link").show();
             $("#templatePreviewModal .linkText").show();
+      }
+
+      if (object_invoce[0]["showFX"] == "") {
+          $("#templatePreviewModal .showFx").hide();
+          $("#templatePreviewModal .showFxValue").hide();
+      } else {
+          $("#templatePreviewModal .showFx").show();
+          $("#templatePreviewModal .showFxValue").show();
+          $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
       }
 
       if(object_invoce[0]["customfield1"] == "")
@@ -207,25 +219,35 @@ Template.templatesettings.onRendered(function () {
     
     // total amount 
 
-    if(object_invoce[0]["subtotal"] != ""){
-        $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+    if(object_invoce[0]["subtotal"] == "")
+    {     
+        $("#templatePreviewModal .field_amount").hide();
+    }
+    else
+    {
+        $("#templatePreviewModal .field_amount").show();
+        if(object_invoce[0]["subtotal"] != ""){
+          $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+        }
+        if(object_invoce[0]["gst"] != ""){
+            $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+        }
+
+        if(object_invoce[0]["total"] != ""){
+            $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+        }
+
+        if(object_invoce[0]["bal_due"] != ""){
+            $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+        }
+
+        if(object_invoce[0]["paid_amount"] != ""){
+            $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+        }
+
     }
 
-    if(object_invoce[0]["gst"] != ""){
-        $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-    }
-
-    if(object_invoce[0]["total"] != ""){
-        $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-    }
-
-    if(object_invoce[0]["bal_due"] != ""){
-        $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-    }
-
-    if(object_invoce[0]["paid_amount"] != ""){
-        $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
-    }
+  
   }
 
   // show bill data with dummy data
@@ -282,6 +304,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
           };
 
     }
@@ -323,6 +346,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
     }
     else{
@@ -358,12 +382,14 @@ Template.templatesettings.onRendered(function () {
         swift : "",
         applied : "",
         data: array_data,
-        customfield1:'',
-        customfield2:'',
-        customfield3:'',
-        customfieldlabel1:'',
-        customfieldlabel2:'',
-        customfieldlabel3:'',
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+        showFX:'AUD',
+
       };
 
 
@@ -436,6 +462,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1:'',
         customfieldlabel2:'',
         customfieldlabel3:'',
+        showFX:'',
       };
 
     }
@@ -477,6 +504,7 @@ Template.templatesettings.onRendered(function () {
           customfieldlabel1:'customfield1 data',
           customfieldlabel2:'customfield2 data',
           customfieldlabel3:'customfield3 data',
+          showFX:'',
         };
 
     }
@@ -513,12 +541,13 @@ Template.templatesettings.onRendered(function () {
         swift : "",
         data: array_data,
         applied : "",
-        customfield1:'',
-        customfield2:'',
-        customfield3:'',
-        customfieldlabel1:'',
-        customfieldlabel2:'',
-        customfieldlabel3:'',
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+        showFX:'AUD',
       };
 
 
@@ -572,11 +601,11 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "<p>Brand New <br> Company </p>",
             supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
             fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -588,6 +617,8 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
+            
             
           };
 
@@ -614,11 +645,11 @@ Template.templatesettings.onRendered(function () {
         supplier_name : "<p>Brand New <br> Company </p>",
         supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
         fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-        subtotal : "",
-        gst : "",
-        total : "",
-        paid_amount : "",
-        bal_due : "",
+        subtotal : "$0.00",
+        gst : "$0.00",
+        total : "$0.00",
+        paid_amount : "$0.00",
+        bal_due : "$0.00",
         bsb : "",
         account : "",
         swift : "",
@@ -630,6 +661,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1:'customfield1 data',
         customfieldlabel2:'customfield2 data',
         customfieldlabel3:'customfield3 data',
+        showFX:'',
       };
 
     }
@@ -656,22 +688,23 @@ Template.templatesettings.onRendered(function () {
         supplier_name : "<p>Brand New <br> Company </p>",
         supplier_addr : "<p> JHB <br> GA1515 <br> Australia",
         fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-        subtotal : "",
-        gst : "",
-        total : "",
-        paid_amount : "",
-        bal_due : "",
+        subtotal : "$0.00",
+        gst : "$0.00",
+        total : "$0.00",
+        paid_amount : "$0.00",
+        bal_due : "$0.00",
         bsb : "",
         account : "",
         swift : "",
         data: array_data,
         applied : "$50.00",
-        customfield1:'',
-        customfield2:'',
-        customfield3:'',
-        customfieldlabel1:'',
-        customfieldlabel2:'',
-        customfieldlabel3:'',
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+        showFX:'AUD',
         
       };
 
@@ -726,41 +759,42 @@ Template.templatesettings.onRendered(function () {
         if(number == 1)
         {
            item_statement = {
-            o_url: "vs1cloud.com",
-            o_name: "Sample Company",
-            o_address: "123 street",
-            o_city: "",
-            o_state: "",
-            o_reg: "",
-            o_abn: "ABN : 5678905",
-            o_phone: "Phone : 25151944",
-            title: template_title,
-            date: "11/04/2022",
-            invoicenumber: "",
-            refnumber: "",
-            pqnumber: "",
-            duedate: "",
-            paylink: "Pay Now",
-            supplier_type: "Customer",
-            supplier_name : "John Wayne Inc",
-            supplier_addr : "",
-            fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "$100,000.00",
-            bsb : "",
-            account : "",
-            swift : "",
-            data: array_data,
-            applied : "$0.00",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+              o_url: "vs1cloud.com",
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "",
+              o_state: "",
+              o_reg: "",
+              o_abn: "ABN : 5678905",
+              o_phone: "Phone : 25151944",
+              title: template_title,
+              date: "11/04/2022",
+              invoicenumber: "",
+              refnumber: "",
+              pqnumber: "",
+              duedate: "",
+              paylink: "Pay Now",
+              supplier_type: "Customer",
+              supplier_name : "John Wayne Inc",
+              supplier_addr : "",
+              fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
+              subtotal : "$0.00",
+              gst : "$0.00",
+              total : "$0.00",
+              paid_amount : "$0.00",
+              bal_due : "$100,000.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              data: array_data,
+              applied : "$0.00",
+              customfield1:'',
+              customfield2:'',
+              customfield3:'',
+              customfieldlabel1:'',
+              customfieldlabel2:'',
+              customfieldlabel3:'',
+              showFX:'',
           };
 
         }
@@ -786,10 +820,10 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "John Wayne Inc",
             supplier_addr : "",
             fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
             bal_due : "$100,000.00",
             bsb : "",
             account : "",
@@ -802,7 +836,8 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
-          };
+            showFX:'',
+           };
 
 
         }
@@ -828,22 +863,23 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "John Wayne Inc",
             supplier_addr : "",
             fields: {"ID" : "10", "Date" : "10", "Type" : "10", "Due Date" : "20", "Total" : "20" , "Paid" : "10", "Balance" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
             bal_due : "$100,000.00",
             bsb : "",
             account : "",
             swift : "",
             data: array_data,
             applied : "$0.00",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
           };
 
 
@@ -886,6 +922,7 @@ Template.templatesettings.onRendered(function () {
     let item_invoices = '';
     if(number == 1)
     {
+
              item_invoices = {
               o_url: "vs1cloud.com",
               o_name: "Sample Company",
@@ -922,6 +959,7 @@ Template.templatesettings.onRendered(function () {
               customfieldlabel1:'',
               customfieldlabel2:'',
               customfieldlabel3:'',
+              showFX:'',
               
             };
 
@@ -965,6 +1003,7 @@ Template.templatesettings.onRendered(function () {
               customfieldlabel1:'Cat 1',
               customfieldlabel2:'25 ',
               customfieldlabel3:'22423',
+              showFX:'',
             };
 
     }
@@ -1000,12 +1039,13 @@ Template.templatesettings.onRendered(function () {
             swift : "WPOCA5s",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'Custom Field 1',
+            customfield2:'Custom Field 2',
+            customfield3:'Custom Field 3',
+            customfieldlabel1:'Cat 1',
+            customfieldlabel2:'25 ',
+            customfieldlabel3:'22423',
+            showFX:'AUD',
           };
     }
     
@@ -1021,7 +1061,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   //show invoice back  info with DummyData
-    function showInvoiceBack(template_title,number) {
+  function showInvoiceBack(template_title,number) {
     object_invoce = [];
     var array_data = [];
     array_data.push([
@@ -1082,6 +1122,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1:'',
         customfieldlabel2:'',
         customfieldlabel3:'',
+        showFX:'',
     };
 
     }
@@ -1124,6 +1165,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1:'customfield1 data',
         customfieldlabel2:'customfield2 data',
         customfieldlabel3:'customfield3 data',
+        showFX:'',
     };
 
     }
@@ -1159,13 +1201,14 @@ Template.templatesettings.onRendered(function () {
         swift : "WPOCA5s",
         data: array_data,
         applied : "",
-        customfield1:'',
-        customfield2:'',
-        customfield3:'',
-        customfieldlabel1:'',
-        customfieldlabel2:'',
-        customfieldlabel3:'',
-    };
+        customfield1:'customfield1',
+        customfield2:'customfield2',
+        customfield3:'customfield3',
+        customfieldlabel1:'customfield1 data',
+        customfieldlabel2:'customfield2 data',
+        customfieldlabel3:'customfield3 data',
+        showFX:'AUD',
+      };
 
     }
 
@@ -1219,8 +1262,8 @@ Template.templatesettings.onRendered(function () {
             subtotal : "$0.00",
             gst : "$0.00",
             total : "$0.00",
-            paid_amount : "",
-            bal_due : "",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -1232,6 +1275,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
             
           };
 
@@ -1263,8 +1307,8 @@ Template.templatesettings.onRendered(function () {
             subtotal : "$0.00",
             gst : "$0.00",
             total : "$0.00",
-            paid_amount : "",
-            bal_due : "",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -1276,6 +1320,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
 
         }
@@ -1305,19 +1350,20 @@ Template.templatesettings.onRendered(function () {
             subtotal : "$0.00",
             gst : "$0.00",
             total : "$0.00",
-            paid_amount : "",
-            bal_due : "",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
             
           };
 
@@ -1388,6 +1434,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
 
           };
 
@@ -1430,6 +1477,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
 
         }
@@ -1465,12 +1513,13 @@ Template.templatesettings.onRendered(function () {
             swift : "WPOCA5s",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
 
           };
 
@@ -1539,6 +1588,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
             
           };
 
@@ -1581,6 +1631,7 @@ Template.templatesettings.onRendered(function () {
               customfieldlabel1:'customfield1 data',
               customfieldlabel2:'customfield2 data',
               customfieldlabel3:'customfield3 data',
+              showFX:'',
             };
 
 
@@ -1590,40 +1641,41 @@ Template.templatesettings.onRendered(function () {
 
           item_refund = {
             o_url: "vs1cloud.com",
-            o_name: "Sample Company",
-            o_address: "123 street",
-            o_city: "Los Angeles",
-            o_state: "Califonia 12345",
-            o_reg: "",
-            o_abn: "5678905",
-            o_phone: "25151944",
-            title: template_title + " 738",
-            date: "14/04/2022",
-            invoicenumber: "",
-            refnumber: "",
-            pqnumber: "90 days",
-            duedate: "29/03/2022",
-            paylink: "",
-            supplier_type: "Customer",
-            supplier_name : "<p>Accenture Software Dev</p>",
-            supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
-            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : "-$50.00",
-            gst : "$0.00",
-            total : "-$50.00",
-            paid_amount : "$0.00",
-            bal_due : "-$50.00",
-            bsb : "",
-            account : "",
-            swift : "",
-            data: array_data,
-            applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+              o_name: "Sample Company",
+              o_address: "123 street",
+              o_city: "Los Angeles",
+              o_state: "Califonia 12345",
+              o_reg: "",
+              o_abn: "5678905",
+              o_phone: "25151944",
+              title: template_title + " 738",
+              date: "14/04/2022",
+              invoicenumber: "",
+              refnumber: "",
+              pqnumber: "90 days",
+              duedate: "29/03/2022",
+              paylink: "",
+              supplier_type: "Customer",
+              supplier_name : "<p>Accenture Software Dev</p>",
+              supplier_addr : "<p>Building 3, Waterfall Corporate <br> South Africa</p>",
+              fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+              subtotal : "-$50.00",
+              gst : "$0.00",
+              total : "-$50.00",
+              paid_amount : "$0.00",
+              bal_due : "-$50.00",
+              bsb : "",
+              account : "",
+              swift : "",
+              data: array_data,
+              applied : "",
+              customfield1:'customfield1',
+              customfield2:'customfield2',
+              customfield3:'customfield3',
+              customfieldlabel1:'customfield1 data',
+              customfieldlabel2:'customfield2 data',
+              customfieldlabel3:'customfield3 data',
+              showFX:'AUD',
             
           };
 
@@ -1691,6 +1743,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
 
           };
         }
@@ -1732,6 +1785,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
 
         }
@@ -1767,12 +1821,13 @@ Template.templatesettings.onRendered(function () {
             swift : "WPOCA5s",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
 
           };
 
@@ -1786,7 +1841,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate(object_invoce);
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-      }
+    }
 
 
     //show suppliers order  info with DummyData
@@ -1825,11 +1880,11 @@ Template.templatesettings.onRendered(function () {
                 supplier_name : "Brand New Company",
                 supplier_addr : "",
                 fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                subtotal : "",
-                gst : "",
-                total : "",
-                paid_amount : "",
-                bal_due : "",
+                subtotal : "$0.00",
+                gst : "$0.00",
+                total : "$0.00",
+                paid_amount : "$0.00",
+                bal_due : "$0.00",
                 bsb : "",
                 account : "",
                 swift : "",
@@ -1841,6 +1896,7 @@ Template.templatesettings.onRendered(function () {
                 customfieldlabel1:'',
                 customfieldlabel2:'',
                 customfieldlabel3:'',
+                showFX:'',
                 
               };
         }
@@ -1867,11 +1923,11 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -1883,6 +1939,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
 
 
@@ -1909,22 +1966,23 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
           };
 
         }
@@ -1940,7 +1998,7 @@ Template.templatesettings.onRendered(function () {
         updateTemplate(object_invoce);
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-      }
+    }
 
     function showStatements(template_title,number)
     {
@@ -1977,11 +2035,11 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -1993,6 +2051,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'',
             customfieldlabel2:'',
             customfieldlabel3:'',
+            showFX:'',
           };
 
         }
@@ -2018,11 +2077,11 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
@@ -2034,6 +2093,7 @@ Template.templatesettings.onRendered(function () {
             customfieldlabel1:'customfield1 data',
             customfieldlabel2:'customfield2 data',
             customfieldlabel3:'customfield3 data',
+            showFX:'',
           };
 
         }
@@ -2059,22 +2119,23 @@ Template.templatesettings.onRendered(function () {
             supplier_name : "Brand New Company",
             supplier_addr : "",
             fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-            subtotal : "",
-            gst : "",
-            total : "",
-            paid_amount : "",
-            bal_due : "",
+            subtotal : "$0.00",
+            gst : "$0.00",
+            total : "$0.00",
+            paid_amount : "$0.00",
+            bal_due : "$0.00",
             bsb : "",
             account : "",
             swift : "",
             data: array_data,
             applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+            customfield1:'customfield1',
+            customfield2:'customfield2',
+            customfield3:'customfield3',
+            customfieldlabel1:'customfield1 data',
+            customfieldlabel2:'customfield2 data',
+            customfieldlabel3:'customfield3 data',
+            showFX:'AUD',
           };
 
 
@@ -2138,11 +2199,11 @@ Template.templatesettings.onRendered(function () {
           supplier_name : "<p>Car Wash Express</p>",
           supplier_addr : "",
           fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "$10.00",
-          gst : "$0.00",
-          total : "$10.00",
-          paid_amount : "$0.00",
-          bal_due : "$10.00",
+          subtotal : "",
+          gst : "",
+          total : "",
+          paid_amount : "",
+          bal_due : "",
           bsb : "4654-454",
           account : "16161616",
           swift : "WPOCA5s",
@@ -2154,6 +2215,7 @@ Template.templatesettings.onRendered(function () {
           customfieldlabel1:'',
           customfieldlabel2:'',
           customfieldlabel3:'',
+          showFX:'',
         };
 
       }
@@ -2179,11 +2241,11 @@ Template.templatesettings.onRendered(function () {
           supplier_name : "<p>Car Wash Express</p>",
           supplier_addr : "",
           fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-          subtotal : "$10.00",
-          gst : "$0.00",
-          total : "$10.00",
-          paid_amount : "$0.00",
-          bal_due : "$10.00",
+          subtotal : "",
+          gst : "",
+          total : "",
+          paid_amount : "",
+          bal_due : "",
           bsb : "4654-454",
           account : "16161616",
           swift : "WPOCA5s",
@@ -2195,46 +2257,48 @@ Template.templatesettings.onRendered(function () {
           customfieldlabel1:'customfield1 data',
           customfieldlabel2:'customfield2 data',
           customfieldlabel3:'customfield3 data',
+          showFX:'',
         };
       }
       else
       {
            item_invoices = {
             o_url: "vs1cloud.com",
-            o_name: "Sample Company",
-            o_address: "123 street",
-            o_city: "Los Angeles",
-            o_state: "Califonia 12345",
-            o_reg: "",
-            o_abn: "ABN : 5678905",
-            o_phone: "Phone : 25151944",
-            title: template_title + "733",
-            date: "12/04/2022",
-            invoicenumber: "12/04/2022",
-            refnumber: "",
-            pqnumber: "",
-            duedate: "14/04/2022",
-            paylink: "Pay Now",
-            supplier_type: "Customer",
-            supplier_name : "<p>Car Wash Express</p>",
-            supplier_addr : "",
-            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : "$10.00",
-            gst : "$0.00",
-            total : "$10.00",
-            paid_amount : "$0.00",
-            bal_due : "$10.00",
-            bsb : "4654-454",
-            account : "16161616",
-            swift : "WPOCA5s",
-            data: array_data,
-            applied : "",
-            customfield1:'',
-            customfield2:'',
-            customfield3:'',
-            customfieldlabel1:'',
-            customfieldlabel2:'',
-            customfieldlabel3:'',
+          o_name: "Sample Company",
+          o_address: "123 street",
+          o_city: "Los Angeles",
+          o_state: "Califonia 12345",
+          o_reg: "",
+          o_abn: "ABN : 5678905",
+          o_phone: "Phone : 25151944",
+          title: template_title + "733",
+          date: "12/04/2022",
+          invoicenumber: "12/04/2022",
+          refnumber: "",
+          pqnumber: "",
+          duedate: "14/04/2022",
+          paylink: "Pay Now",
+          supplier_type: "Customer",
+          supplier_name : "<p>Car Wash Express</p>",
+          supplier_addr : "",
+          fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+          subtotal : "",
+          gst : "",
+          total : "",
+          paid_amount : "",
+          bal_due : "",
+          bsb : "4654-454",
+          account : "16161616",
+          swift : "WPOCA5s",
+          data: array_data,
+          applied : "",
+          customfield1:'customfield1',
+          customfield2:'customfield2',
+          customfield3:'customfield3',
+          customfieldlabel1:'customfield1 data',
+          customfieldlabel2:'customfield2 data',
+          customfieldlabel3:'customfield3 data',
+          showFX:'',
           };
       }
   
@@ -2323,3 +2387,6 @@ Template.templatesettings.helpers({
 });
 
 Template.templatesettings.events({});
+Template.registerHelper('equals', function(a, b) {
+  return a === b;
+});

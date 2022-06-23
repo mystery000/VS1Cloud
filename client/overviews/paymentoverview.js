@@ -770,7 +770,6 @@ Template.paymentoverview.onRendered(function() {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tpaymentlist;
                 if (data.Params.IgnoreDates == true) {
                     FlowRouter.go('/paymentoverview?ignoredate=true');
@@ -1900,6 +1899,138 @@ Template.paymentoverview.events({
 
         });
 
+    },
+    'keyup #tblPaymentOverview_filter input': function (event) {
+          if($(event.target).val() != ''){
+            $(".btnRefreshPaymentOverview").addClass('btnSearchAlert');
+          }else{
+            $(".btnRefreshPaymentOverview").removeClass('btnSearchAlert');
+          }
+          if (event.keyCode == 13) {
+             $(".btnRefreshPaymentOverview").trigger("click");
+          }
+        },
+    'click .btnRefreshPaymentOverview':function(event){
+        let templateObject = Template.instance();
+        let utilityService = new UtilityService();
+        let tableProductList;
+        const dataTableList = [];
+        var splashArrayInvoiceList = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('#tblPaymentOverview_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            sideBarService.getPaymentByNameOrID(dataSearchName).then(function (data) {
+                $(".btnRefreshPaymentOverview").removeClass('btnSearchAlert');
+                let lineItems = [];
+                let lineItemObj = {};
+                if (data.tpaymentlist.length > 0) {
+                  for (let i = 0; i < data.tpaymentlist.length; i++) {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].PaymentAmount) || 0.00;
+                        let openningBalance = utilityService.modifynegativeCurrencyFormat(data.tpaymentlist[i].OpeningBalance) || 0.00;
+                        let bankAccount = data.tpaymentlist[i].BankAccount;
+                        if (bankAccount == "Accounts Receivable") {
+                            bankAccount = "A/R";
+                        } else if (bankAccount == "Accounts Payables") {
+                            bankAccount = "A/P";
+                        }
+                        let paystatus = '';
+                        if (data.tpaymentlist[i].Deleted == true) {
+                            paystatus = "Deleted";
+                        } else if (data.tpaymentlist[i].ClientName == '') {
+                            paystatus = "Deleted";
+                        } else if (data.tpaymentlist[i].PaymentAmount == 0) {
+                            paystatus = "Deleted";
+                        };
+
+                        var dataList = {
+                                  id: data.tpaymentlist[i].PaymentID || '',
+                                  sortdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("YYYY/MM/DD") : data.tpaymentlist[i].PaymentDate,
+                                  paymentdate: data.tpaymentlist[i].PaymentDate != '' ? moment(data.tpaymentlist[i].PaymentDate).format("DD/MM/YYYY") : data.tpaymentlist[i].PaymentDate,
+                                  customername: data.tpaymentlist[i].ClientName || '',
+                                  paymentamount: amount || 0.00,
+                                  openingbalance: openningBalance || 0.00,
+                                  bankaccount: bankAccount || '',
+                                  department: data.tpaymentlist[i].Department || '',
+                                  refno: data.tpaymentlist[i].ReferenceNo || '',
+                                  receiptno: data.tpaymentlist[i].ReceiptNo || '',
+                                  jobname: data.tpaymentlist[i].jobname || '',
+                                  paymentmethod: data.tpaymentlist[i].PaymentMethod || '',
+                                  type: data.tpaymentlist[i].TYPE || '',
+                                  paystatus: paystatus || "",
+                                  notes: data.tpaymentlist[i].Notes || ''
+                              };
+                              if (data.tpaymentlist[i].Deleted == false) {
+                                  dataTableList.push(dataList);
+                              }
+
+                    }
+                    templateObject.datatablerecords.set(dataTableList);
+
+                    let item = templateObject.datatablerecords.get();
+                    $('.fullScreenSpin').css('display', 'none');
+                    if (dataTableList) {
+                        var datatable = $('#tblPaymentOverview').DataTable();
+                        $("#tblPaymentOverview > tbody").empty();
+                        for (let x = 0; x < item.length; x++) {
+                            $("#tblPaymentOverview > tbody").append(
+                                ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+                                '<td contenteditable="false" class="colSortDate hiddenColumn">' + item[x].sortdate + '</td>' +
+                                '<td contenteditable="false" class="colPaymentDate" ><span style="display:none;">' + item[x].sortdate + '</span>' + item[x].paymentdate + '</td>' +
+                                '<td contenteditable="false" class="colPaymentNo">' + item[x].id + '</td>' +
+                                '<td contenteditable="false" class="colType" >' + item[x].type + '</td>' +
+                                '<td contenteditable="false" class="colRefNo" >' + item[x].refno + '</td>' +
+                                '<td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">' + item[x].paymentamount + '</td>' +
+                                '<td contenteditable="false" class="colCustomerName">' + item[x].customername + '</td>' +
+                                '<td contenteditable="false" class="colBankAccount">' + item[x].bankaccount + '</td>' +
+                                '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
+                                '<td contenteditable="false" class="colStatus">' + item[x].paystatus + '</td>' +
+                                '<td contenteditable="false" class="colReceiptNo hiddenColumn">' + item[x].receiptno + '</td>' +
+                                '<td contenteditable="false" class="colJobName hiddenColumn">' + item[x].jobname + '</td>' +
+                                '<td contenteditable="false" class="colPaymentMethod hiddenColumn">' + item[x].paymentmethod + '</td>' +
+                                '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
+                                '</tr>');
+
+                        }
+                        $('.dataTables_info').html('Showing ' + data.tpaymentlist.length + ' of ' + data.Params.Count + ' entries');
+
+                    }
+
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+
+                    swal({
+                        title: 'Question',
+                        text: "Payment does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            FlowRouter.go('/customerawaitingpayments');
+                        } else if (result.dismiss === 'cancel') {
+                            //$('#productListModal').modal('toggle');
+                        }
+                    });
+                }
+                MakeNegative();
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+
+          $(".btnRefresh").trigger("click");
+        }
+
+        function MakeNegative() {
+            $('td').each(function(){
+                if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+            });
+            $('td.colStatus').each(function(){
+                if($(this).text() == "Deleted") $(this).addClass('text-deleted');
+            });
+        };
     },
     'click .btnAll': function(event) {
         let templateObject = Template.instance();
