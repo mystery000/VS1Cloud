@@ -262,12 +262,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ProductName] f7like "' +
-        dataSearchName +
-        '" OR [BARCODE] f7like "' +
-        dataSearchName +
-        '" and [ProductType]!="INV"',
+      select:'[ProductName] f7like "' +dataSearchName +'" OR [BARCODE] f7like "' +dataSearchName +'" and [ProductType]!="INV"',
     };
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
@@ -293,12 +288,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ProductName] f7like "' +
-        dataSearchName +
-        '" OR [BARCODE] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ProductName] f7like "' +dataSearchName +'" OR [BARCODE] f7like "' +dataSearchName +  '"',
     };
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
@@ -307,12 +297,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
@@ -321,12 +306,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[PayrollCalendarName] f7like "' +
-        dataSearchName +
-        '" OR [PayrollCalendarPayPeriod] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[PayrollCalendarName] f7like "' +dataSearchName +'" OR [PayrollCalendarPayPeriod] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TPayrollCalendars, options);
   }
@@ -371,12 +351,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[Description] f7like "' +
-        dataSearchName +
-        '" OR [DisplayIn] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[Description] f7like "' +dataSearchName +'" OR [DisplayIn] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TAllowance, options);
   }
@@ -385,12 +360,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[Description] f7like "' +
-        dataSearchName +
-        '" OR [Displayin] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[Description] f7like "' +dataSearchName +'" OR [Displayin] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TDeduction, options);
   }
@@ -407,12 +377,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.BackOrderSalesList, options);
   }
@@ -421,12 +386,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' + dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TQuoteEx, options);
   }
@@ -435,12 +395,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TSalesOrderEx, options);
   }
@@ -449,12 +404,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" AND [Deleted]=false',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" AND [Deleted]=false',
     };
     return this.getList(this.ERPObjects.TPurchaseOrderEx, options);
   }
@@ -463,12 +413,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[SupplierName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" AND [Deleted]=false',
+      select:'[SupplierName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" AND [Deleted]=false',
     };
     return this.getList(this.ERPObjects.TBillEx, options);
   }
@@ -477,12 +422,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[SupplierName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" AND [Deleted]=false',
+      select:'[SupplierName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" AND [Deleted]=false',
     };
     return this.getList(this.ERPObjects.TCredit, options);
   }
@@ -491,12 +431,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[CompanyName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" AND [Deleted]=false',
+      select:'[CompanyName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" AND [Deleted]=false',
     };
     return this.getList(this.ERPObjects.TCustomerPayment, options);
   }
@@ -505,12 +440,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[CompanyName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '" AND [Deleted]=false',
+      select:'[CompanyName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'" AND [Deleted]=false',
     };
     return this.getList(this.ERPObjects.TSupplierPayment, options);
   }
@@ -519,12 +449,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[Companyname] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[Companyname] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1, options);
   }
@@ -533,12 +458,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[EmployeeName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[EmployeeName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TEmployee, options);
   }
@@ -547,12 +467,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TProspect, options);
   }
@@ -561,12 +476,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:
-        '[ClientName] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[ClientName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TSupplierVS1, options);
   }
@@ -892,7 +802,6 @@ export class SideBarService extends BaseService {
   }
 
   getRateTypeByName(description) {
-    {
       let options = "";
 
       options = {
@@ -900,7 +809,6 @@ export class SideBarService extends BaseService {
       };
 
       return this.getList(this.ERPObjects.TPayRateType, options);
-    }
   }
 
   getAllContactCombineVS1(limitcount, limitfrom) {
@@ -1051,13 +959,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesOrderEx, options);
   }
 
-  getAllTSalesOrderListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTSalesOrderListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -1080,14 +982,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesOrderList, options);
   }
 
-  getAllTSalesOrderListFilterData(
-    filterData,
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTSalesOrderListFilterData(filterData,dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (filterData == "true") {
@@ -1129,13 +1024,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TPurchaseOrderEx, options);
   }
 
-  getAllTPurchaseOrderListData(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllTPurchaseOrderListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -1207,13 +1096,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TChequeList, options);
   }
 
-  getAllPurchaseOrderListAll(
-    dateFrom,
-    dateTo,
-    ignoreDate,
-    limitcount,
-    limitfrom
-  ) {
+  getAllPurchaseOrderListAll(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -1993,7 +1876,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
-      select: '[CodeName] f7like "' + dataSearchName + '"',
+      select: '[CodeName] f7like "' + dataSearchName + '" and [Active]=true',
     };
     return this.getList(this.ERPObjects.TTaxcodeVS1, options);
   }
@@ -2501,6 +2384,7 @@ export class SideBarService extends BaseService {
   getPaymentMethodDataVS1() {
     let options = {
       ListType: "Detail",
+      select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
   }
@@ -2534,6 +2418,7 @@ export class SideBarService extends BaseService {
   getClientTypeData() {
     let options = {
       ListType: "Detail",
+      select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TClientType, options);
   }
@@ -2851,6 +2736,6 @@ export class SideBarService extends BaseService {
         select: "[Active]=true",
       };
     }
-    return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
+    return this.getList(this.ERPObjects.TEarnings, options);
   }
 }

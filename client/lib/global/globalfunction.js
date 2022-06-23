@@ -500,6 +500,21 @@ var matches = getTimeString.match(/^(0?[1-9]|1[012])(:[0-5]\d) [APap][mM]$/);
 return time + ':' + minutes;
 };
 
+
+vs1GlobalBackButton = async function () {
+  jQuery(document).ready(async function($) {
+     window.onpopstate = async function(event) {
+      if(JSON.stringify(event.state) == "forward"){
+        let lastPageVisitUrl = "";
+        if(localStorage.getItem('vs1lastvisiturl') !== undefined){
+          lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
+          await window.open(lastPageVisitUrl, '_self');
+        }
+      }
+    }
+ });
+};
+
 // $(window).load(function() {
 //
 // });

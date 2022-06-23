@@ -85,7 +85,29 @@ Template.customerawaitingpayments.onRendered(function () {
 
         }
     });
+    jQuery(document).ready(function($) {
+       window.onpopstate = async function(event) {
+         let lastPageVisitUrl = "";
+        if(JSON.stringify(event.state) == "forward"){
 
+          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
+            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
+          }
+        }else if(event.state.path){
+          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
+            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
+          }else{
+            lastPageVisitUrl = window.location.pathname;
+          }
+        }else{
+          lastPageVisitUrl = window.location.pathname;
+        }
+        if(lastPageVisitUrl != ""){
+          await window.open(lastPageVisitUrl, '_self');
+        }
+
+      }
+   });
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -1865,7 +1887,6 @@ Template.customerawaitingpayments.onRendered(function () {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-
 });
 
 Template.customerawaitingpayments.events({
@@ -2111,26 +2132,26 @@ Template.customerawaitingpayments.events({
             addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
               sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                   addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                      location.reload(true);
+                      window.open("/customerawaitingpayments", "_self");
                   }).catch(function (err) {
-                      location.reload(true);
+                      window.open("/customerawaitingpayments", "_self");
                   });
               }).catch(function (err) {
                 sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                     addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                        location.reload(true);
+                        window.open("/customerawaitingpayments", "_self");
                     }).catch(function (err) {
-                        location.reload(true);
+                        window.open("/customerawaitingpayments", "_self");
                     });
                 }).catch(function (err) {
-                    location.reload(true);
+                    window.open("/customerawaitingpayments", "_self");
                 });
               });
             }).catch(function (err) {
-                location.reload(true);
+                window.open("/customerawaitingpayments", "_self");
             });
         }).catch(function (err) {
-            location.reload(true);
+            window.open("/customerawaitingpayments", "_self");
         });
 
 

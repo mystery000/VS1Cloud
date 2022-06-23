@@ -168,8 +168,14 @@ const authenticatedRedirect = () => {
     Session.setPersistent('lastUrl', window.location.pathname);
 
     let lastPageVisitUrl = window.location.pathname;
-    if(FlowRouter.current().oldRoute){
+    if(FlowRouter.current().oldRoute != undefined){
       lastPageVisitUrl= FlowRouter.current().oldRoute.path;
+      if (lastPageVisitUrl.indexOf(FlowRouter.current().context.pathname) > -1){
+
+      }else{
+        localStorage.setItem('vs1lastvisiturl', lastPageVisitUrl);
+      }
+
     }else{
       lastPageVisitUrl = window.location.pathname;
     }
