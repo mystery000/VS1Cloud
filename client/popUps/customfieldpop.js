@@ -48,6 +48,25 @@ Template.customfieldpop.onRendered(() => {
         $(".checkbox3div").css("display", "none");
       }
     });
+
+    // add to custom field
+    $(document).on("click", "#customFieldDropdownTable1 tbody tr", function (e) {
+      $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
+      $("#customFieldDropdownListModal1").modal("toggle");
+    });
+
+    // add to custom field
+    $(document).on("click", "#customFieldDropdownTable2 tbody tr", function (e) {
+      $("#edtSaleCustField2").val($(this).find(".colFieldName").text());
+      $("#customFieldDropdownListModal2").modal("toggle");
+    });
+
+    // add to custom field
+    $(document).on("click", "#customFieldDropdownTable3 tbody tr", function (e) {
+      $("#edtSaleCustField3").val($(this).find(".colFieldName").text());
+      $("#customFieldDropdownListModal3").modal("toggle");
+    });
+
   });
 
   templateObject.loadInitCustomFieldsList = function () {
@@ -215,7 +234,7 @@ Template.customfieldpop.onRendered(() => {
                     }
                     // setTimeout(function () {
                     $(".fullScreenSpin").css("display", "none");
-                    $("#newCustomFieldPop").modal("newCustomFieldPop");
+                    $("#newCustomFieldPop").modal("toggle");
                     // }, 200);
                   }
                 })
@@ -275,6 +294,7 @@ Template.customfieldpop.onRendered(() => {
     sideBarService
       .getAllCustomFields()
       .then(function (data) {
+        // console.log('getCustomFieldsList->getAllCustomFields->', data)
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == listType) {
             customData = {
@@ -901,11 +921,12 @@ Template.customfieldpop.onRendered(() => {
 
     getVS1Data("TCheque")
       .then(function (dataObject) {
-
         if (dataObject.length == 0) {
           purchaseService
             .getOneChequeDataEx(currentCheque)
             .then(function (data) {
+
+              // console.log('getChequeData->getOneChequeDataEx->', currentCheque, data)
 
               if (data.fields.Lines != null) {
                 if (data.fields.Lines) {
@@ -923,6 +944,8 @@ Template.customfieldpop.onRendered(() => {
             .catch(function (err) { });
         } else {
           let data = JSON.parse(dataObject[0].data);
+
+          // console.log('getChequeData->else->', currentCheque, data)
 
           let useData = data.tchequeex;
           lines = useData.filter(ud => ud.fields.ID == currentCheque)
@@ -1564,7 +1587,7 @@ Template.customfieldpop.events({
                     }
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
-                      $("#newCustomFieldPop").modal("newCustomFieldPop");
+                      $("#newCustomFieldPop").modal("toggle");
                     }, 200);
                   }
                 })
@@ -1929,6 +1952,7 @@ Template.customfieldpop.events({
       $("input[name='customText']").val("");
     }
   },
+
 });
 
 Template.customfieldpop.helpers({
