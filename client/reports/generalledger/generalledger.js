@@ -143,6 +143,7 @@ Template.generalledger.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       data.tgeneralledgerreport[i].AMOUNTINC
                     ) || "-",
+                  amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
                 {
@@ -151,6 +152,7 @@ Template.generalledger.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       data.tgeneralledgerreport[i].DEBITSEX
                     ) || "-",
+                  amount: data.tgeneralledgerreport[i].DEBITSEX || "-",
                 },
                 {
                   type: "amount",
@@ -158,6 +160,7 @@ Template.generalledger.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       data.tgeneralledgerreport[i].CREDITSEX
                     ) || "-",
+                  amount: data.tgeneralledgerreport[i].CREDITSEX || "-",
                 },
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
                 // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i][">90Days"]) || '-',
@@ -226,14 +229,17 @@ Template.generalledger.onRendered(() => {
                   type: "amount",
                   value:
                     utilityService.modifynegativeCurrencyFormat(Currenttotal),
+                  amount: Currenttotal,
                 },
                 {
                   type: "amount",
                   value: utilityService.modifynegativeCurrencyFormat(oneMonth),
+                  amount: oneMonth,
                 },
                 {
                   type: "amount",
                   value: utilityService.modifynegativeCurrencyFormat(twoMonth),
+                  amount: twoMonth,
                 },
               ];
               current.push(val);
@@ -279,15 +285,18 @@ Template.generalledger.onRendered(() => {
                 type: "amount",
                 value:
                   utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+                amount: grandtwoMonth,
               },
               {
                 type: "amount",
                 value:
                   utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+                amount: grandthreeMonth,
               },
               {
                 type: "amount",
                 value: utilityService.modifynegativeCurrencyFormat(grandOlder),
+                amount: grandOlder,
               },
             ];
 
@@ -418,6 +427,7 @@ Template.generalledger.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(
                   data.tgeneralledgerreport[i].AMOUNTINC
                 ) || "-",
+              amount: data.tgeneralledgerreport[i].AMOUNTINC || "-",
             },
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].Current) || '-',
             {
@@ -426,6 +436,7 @@ Template.generalledger.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(
                   data.tgeneralledgerreport[i].DEBITSEX
                 ) || "-",
+              amount: data.tgeneralledgerreport[i].DEBITSEX || "-",
             },
             {
               type: "amount",
@@ -433,6 +444,7 @@ Template.generalledger.onRendered(() => {
                 utilityService.modifynegativeCurrencyFormat(
                   data.tgeneralledgerreport[i].CREDITSEX
                 ) || "-",
+              amount: data.tgeneralledgerreport[i].CREDITSEX || "-",
             },
 
             // utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i]["60-90Days"]) || '-',
@@ -498,14 +510,17 @@ Template.generalledger.onRendered(() => {
             {
               type: "amount",
               value: utilityService.modifynegativeCurrencyFormat(Currenttotal),
+              amount: Currenttotal,
             },
             {
               type: "amount",
               value: utilityService.modifynegativeCurrencyFormat(oneMonth),
+              amount: oneMonth,
             },
             {
               type: "amount",
               value: utilityService.modifynegativeCurrencyFormat(twoMonth),
+              amount: twoMonth,
             },
           ];
           current.push(val);
@@ -547,14 +562,17 @@ Template.generalledger.onRendered(() => {
           {
             type: "amount",
             value: utilityService.modifynegativeCurrencyFormat(grandtwoMonth),
+            amount: grandtwoMonth,
           },
           {
             type: "amount",
             value: utilityService.modifynegativeCurrencyFormat(grandthreeMonth),
+            amount: grandthreeMonth,
           },
           {
             type: "amount",
             value: utilityService.modifynegativeCurrencyFormat(grandOlder),
+            amount: grandOlder,
           },
         ];
 
@@ -1217,8 +1235,6 @@ Template.generalledger.helpers({
     const isMinus = amount < 0;
     if (isMinus == true) amount = amount * -1; // make it positive for now
 
-
-
     // // get default currency symbol
     // let _defaultCurrency = currencyList.filter(
     //   (a) => a.Code == defaultCurrencyCode
@@ -1275,7 +1291,8 @@ Template.generalledger.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate =
+      currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
 
     // console.log(currencyData.currency, defaultCurrencyCode, currencyData.currency == defaultCurrencyCode);
     // console.log('first elem', firstElem.BuyRate);
@@ -1301,8 +1318,12 @@ Template.generalledger.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {
-    if (Math.sign(amount) === -1) {
-      return true;
+    if (GlobalFunctions.hasNumber(amount)) {
+      // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+      if (Math.sign(amount) === -1) {
+        console.log("The amount is: ", amount);
+        return true;
+      }
     }
     return false;
   },
