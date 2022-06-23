@@ -2346,7 +2346,120 @@ Template.supplierawaitingpurchaseorder.events({
           }
         },
         'click .btnRefreshSupplierAwaiting':function(event){
-        $(".btnRefresh").trigger("click");
+          let templateObject = Template.instance();
+          let utilityService = new UtilityService();
+          let tableProductList;
+          const dataTableList = [];
+          var splashArrayInvoiceList = new Array();
+          const lineExtaSellItems = [];
+          $('.fullScreenSpin').css('display', 'inline-block');
+          let dataSearchName = $('#tblSupplierAwaitingPO_filter input').val();
+          if (dataSearchName.replace(/\s/g, '') != '') {
+              sideBarService.getAllAwaitingSupplierPaymentBySupplierNameOrID(dataSearchName).then(function (data) {
+                  $(".btnRefreshSupplierAwaiting").removeClass('btnSearchAlert');
+                  let lineItems = [];
+                  let lineItemObj = {};
+                  let totalPaidCal = 0;
+                  if (data.tbillreport.length > 0) {
+                      for (let i = 0; i < data.tbillreport.length; i++) {
+                        if (data.tbillreport[i].Type == "Credit") {
+                            totalPaidCal = data.tbillreport[i]['Total Amount (Inc)'] + data.tbillreport[i].Balance;
+                        } else {
+                            totalPaidCal = data.tbillreport[i]['Total Amount (Inc)'] - data.tbillreport[i].Balance;
+                        }
+
+                              let amount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
+                              let applied = utilityService.modifynegativeCurrencyFormat(totalPaidCal) || 0.00;
+                              let balance = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
+                              let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
+                              let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i].Balance) || 0.00;
+                              if (data.tbillreport[i].Type == "Credit") {
+                                totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
+                              }
+
+                              let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tbillreport[i]['Total Amount (Inc)']) || 0.00;
+
+                              var dataList = {
+                                     id: data.tbillreport[i].PurchaseOrderID || '',
+                                     sortdate: data.tbillreport[i].OrderDate != '' ? moment(data.tbillreport[i].OrderDate).format("YYYY/MM/DD") : data.tbillreport[i].OrderDate,
+                                     paymentdate: data.tbillreport[i].OrderDate != '' ? moment(data.tbillreport[i].OrderDate).format("DD/MM/YYYY") : data.tbillreport[i].OrderDate,
+                                     customername: data.tbillreport[i].Company || '',
+                                     paymentamount: amount || 0.00,
+                                     applied: applied || 0.00,
+                                     balance: balance || 0.00,
+                                     originalamount: totalOrginialAmount || 0.00,
+                                     outsandingamount: totalOutstanding || 0.00,
+                                     ponumber: data.tbillreport[i].PurchaseOrderID || '',
+                                     // department: data.tpurchaseorder[i].SaleClassName || '',
+                                     refno: data.tbillreport[i].InvoiceNumber || '',
+                                     paymentmethod: '' || '',
+                                     notes: data.tbillreport[i].Comments || '',
+                                     type: data.tbillreport[i].Type || '',
+                                 };
+
+                          //if(data.tinvoiceex[i].fields.Deleted == false){
+                          //splashArrayInvoiceList.push(dataList);
+                          dataTableList.push(dataList);
+                          //}
+
+
+                          //}
+                      }
+                      templateObject.datatablerecords.set(dataTableList);
+
+                      let item = templateObject.datatablerecords.get();
+                      $('.fullScreenSpin').css('display', 'none');
+                      if (dataTableList) {
+                          var datatable = $('#tblSupplierAwaitingPO').DataTable();
+                          $("#tblSupplierAwaitingPO > tbody").empty();
+                          for (let x = 0; x < item.length; x++) {
+                              $("#tblSupplierAwaitingPO > tbody").append(
+                                  ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+                                  '<td contenteditable="false" class="chkBox pointer" style="width:15px;"><div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-' + item[x].id + '" value="' + item[x].outsandingamount + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + item[x].id + '"></label></div></td>' +
+                                  '<td contenteditable="false" class="colSortDate hiddenColumn">' + item[x].sortdate + '</td>' +
+                                  '<td contenteditable="false" class="colPaymentDate" ><span style="display:none;">' + item[x].sortdate + '</span>' + item[x].paymentdate + '</td>' +
+                                  '<td contenteditable="false" class="colPaymentId">' + item[x].id + '</td>' +
+                                  '<td contenteditable="false" class="colReceiptNo">' + item[x].refno + '</td>' +
+                                  '<td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">' + item[x].applied + '</td>' +
+                                  '<td contenteditable="false" class="colApplied" style="text-align: right!important;">' + item[x].originalamount + '</td>' +
+                                  '<td contenteditable="false" class="colBalance" style="text-align: right!important;">' + item[x].outsandingamount + '</td>' +
+                                  '<td contenteditable="false" class="colSupplierName" id="colSupplierName' + item[x].id + '">' + item[x].customername + '</td>' +
+                                  '<td contenteditable="false" class="colType hiddenColumn" id="coltype' + item[x].id + '">' + item[x].type + '</td>' +
+                                  '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
+                                  '</tr>');
+
+                          }
+                          $('.dataTables_info').html('Showing 1 to ' + data.tbillreport.length + ' of ' + data.tbillreport.length + ' entries');
+                          setTimeout(function() {
+                            makeNegativeGlobal();
+                          }, 100);
+                      }
+
+                  } else {
+                      $('.fullScreenSpin').css('display', 'none');
+
+                      swal({
+                          title: 'Question',
+                          text: "Expenses does not exist, would you like to create it?",
+                          type: 'question',
+                          showCancelButton: true,
+                          confirmButtonText: 'Yes',
+                          cancelButtonText: 'No'
+                      }).then((result) => {
+                          if (result.value) {
+                              FlowRouter.go('/purchaseordercard');
+                          } else if (result.dismiss === 'cancel') {
+                              //$('#productListModal').modal('toggle');
+                          }
+                      });
+                  }
+              }).catch(function (err) {
+                  $('.fullScreenSpin').css('display', 'none');
+              });
+          } else {
+
+            $(".btnRefresh").trigger("click");
+          }
     },
     'click .btnPaymentList': function() {
         FlowRouter.go('/supplierpayment');

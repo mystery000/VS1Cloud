@@ -3870,6 +3870,16 @@ Template.employeescard.events({
             }
             appointmentService.saveAppointmentPreferences(objectData).then(function (data) {
                 var cloudDBID = Session.get('mycloudLogonDBID');
+                sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
+                    addVS1Data('TAppointmentPreferences', JSON.stringify(dataAPPPref)).then(function (datareturn) {
+
+                    }).catch(function (err) {
+
+                    });
+                }).catch(function (err) {
+
+                });
+
                 // var logonName = $("#cloudEmpLogonName").val();
                 var enteredEmail = $("#cloudEmpEmailAddress").val();
                 var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
@@ -4145,8 +4155,8 @@ Template.employeescard.events({
                         //window.open('/employeescard?id=' + employeeSaveID,'_self');
                         sideBarService.getAllEmployees(25, 0).then(function (dataReload) {
                             addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
-                                sideBarService.getAllAppointmentPredList().then(function (data) {
-                                    addVS1Data('TAppointmentPreferences', JSON.stringify(data)).then(function (datareturn) {
+                                sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
+                                    addVS1Data('TAppointmentPreferences', JSON.stringify(dataAPPPref)).then(function (datareturn) {
                                         FlowRouter.go('/employeelist?success=true');
                                     }).catch(function (err) {
                                         FlowRouter.go('/employeelist?success=true');
@@ -4158,7 +4168,15 @@ Template.employeescard.events({
                                 FlowRouter.go('/employeelist?success=true');
                             });
                         }).catch(function (err) {
-                            FlowRouter.go('/employeelist?success=true');
+                          sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
+                              addVS1Data('TAppointmentPreferences', JSON.stringify(dataAPPPref)).then(function (datareturn) {
+                                  FlowRouter.go('/employeelist?success=true');
+                              }).catch(function (err) {
+                                  FlowRouter.go('/employeelist?success=true');
+                              });
+                          }).catch(function (err) {
+                              FlowRouter.go('/employeelist?success=true');
+                          });
                         });
                     }
                 }
