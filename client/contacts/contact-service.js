@@ -3,7 +3,7 @@ export class ContactService extends BaseService {
   getAllCustomers() {
       let options = {
           PropertyList: "ID,GlobalRef,ClientName,FirstName,LastName,Phone,StreetAddress,Suburb,Mobile,Email,Active,ARBalance,Balance,Company,PrintName,IsJob",
-          // select: "[deleted]=false"
+          select: "[deleted]=false"
       };
       return this.getList(this.ERPObjects.TCustomer, options);
   }
@@ -11,7 +11,7 @@ export class ContactService extends BaseService {
   getAllSuppliers() {
       let options = {
           PropertyList: "ID,GlobalRef,ClientName,FirstName,LastName,Phone,StreetAddress,Suburb,Mobile,Email,Active,APBalance,Balance,Company,PrintName",
-          // select: "[deleted]=false"
+          select: "[deleted]=false"
       };
       return this.getList(this.ERPObjects.TSupplier, options);
   }
@@ -19,6 +19,7 @@ export class ContactService extends BaseService {
   getAllEmployees() {
       let options = {
           PropertyList: "ID,GlobalRef,DefaultClassName,EmployeeName,EmployeeNo,FirstName,LastName,Phone,Email,Active",
+          select: "[Active]=true",
       };
       return this.getList(this.ERPObjects.TEmployee, options);
   }
@@ -41,6 +42,7 @@ export class ContactService extends BaseService {
   getAllEmployeesPriority() {
     let options = {
         PropertyList: "ID,CustFld5",
+        select: "[Active]=true",
     };
     return this.getList(this.ERPObjects.TEmployee, options);
   }
@@ -186,7 +188,7 @@ export class ContactService extends BaseService {
     let options = '';
        options = {
         ListType: "Detail",
-        select: '[ClientName]="'+dataSearchName+'"'
+        select: '[ClientName]="'+dataSearchName+'" and [Active]=true'
        };
     return this.getList(this.ERPObjects.TSupplier, options);
   }
@@ -400,7 +402,8 @@ export class ContactService extends BaseService {
 
     getTermData() {
         let options = {
-            PropertyList: "ID,TermsName,",
+            PropertyList: "ID,TermsName",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TTerms, options);
     }
@@ -408,27 +411,31 @@ export class ContactService extends BaseService {
     getTermDataVS1() {
         let options = {
             PropertyList: "ID,TermsName,",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TTermsVS1, options);
     }
 
     getPaymentMethodData() {
         let options = {
-            PropertyList: "ID,PaymentMethodName,",
+            PropertyList: "ID,PaymentMethodName",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TPaymentMethod, options);
     }
 
     getPaymentMethodDataVS1() {
         let options = {
-            PropertyList: "ID,PaymentMethodName,",
+            PropertyList: "ID,PaymentMethodName",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TPaymentMethodVS1, options);
     }
 
     getShippingMethodData() {
         let options = {
-            PropertyList: "ID,ShippingMethod,",
+            PropertyList: "ID,ShippingMethod",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TShippingMethod, options);
     }

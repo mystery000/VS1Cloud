@@ -348,7 +348,7 @@ Template.currenciessettings.onRendered(function () {
                 },
                 // bStateSave: true,
                 // rowId: 0,
-                // paging: false,
+                paging: false,
                 //              "scrollY": "400px",
                 //              "scrollCollapse": true,
                 lengthMenu: [
@@ -365,7 +365,6 @@ Template.currenciessettings.onRendered(function () {
                   setTimeout(function () {
                     MakeNegative();
                   }, 100);
-                  
                 },
               })
               .on("page", function () {

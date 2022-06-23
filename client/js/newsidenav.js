@@ -143,7 +143,6 @@ Template.newsidenav.onRendered(function() {
     let progressPercentage = 0;
 
     let templateObject = Template.instance();
-
     let employeeLoggedUserAccess = Session.get('ERPSolidCurrentUSerAccess');
 
     let isDashboard = Session.get('CloudDashboardModule');

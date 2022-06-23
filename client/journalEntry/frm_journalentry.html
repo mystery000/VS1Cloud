@@ -41,9 +41,9 @@
             </div>
 
             <div class="row" style="padding: 32px; padding-bottom: 0px; background-color: #ededed;">
-                <div class="col-12 col-md-12">
+                <div class="col-12 col-md-8">
                     <div class="row">
-                        <div class="col-6 col-md-4 col-lg-2">
+                        <div class="col-6 col-md-4 col-lg-3">
                             <div class="form-group d-xl-flex flex-column justify-content-xl-start">
                                 <label>Date</label>
                                 <div class="input-group date" style="cursor: pointer;">
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6 col-md-4 col-lg-2">
+                        <div class="col-6 col-md-4 col-lg-3">
                             <div class="form-group d-xl-flex flex-column justify-content-xl-start">
                                 <label>Department</label>
                                 <select type="search" class="form-control" id="sltDepartment" name="sltDepartment" style="background-color:rgb(255, 255, 255); cursor: pointer;">
@@ -70,21 +70,18 @@
                                 </select> -->
                             </div>
                         </div>
-                        <div class="col-6 col-md-4 col-lg-2">
+                        <div class="col-6 col-md-4 col-lg-3">
                             <div class="form-group d-xl-flex flex-column justify-content-xl-start">
                                 <label>Entry No.</label>
                                 <input type="text" class="form-control" id="edtEnrtyNo" name="edtEnrtyNo" value="{{record.entryno}}">
                             </div>
                         </div>
-                        <div class="col-6 col-md-4 col-lg-2">
-                            {{> currencydropdown}}
-                        </div>
-                        <div class="col-6 col-md-4 col-lg-2">
-                            {{> CurrencyRate }}
+                        <div class="col-6 col-md-4 col-lg-3">
+                            {{> CurrencyWidget rate="buy"}}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6 col-md-4 col-lg-2">
+                        <div class="col-12 col-lg-9">
                             <div class="form-group d-xl-flex flex-column justify-content-xl-start">
                                 <label>Memo</label>
                                 <textarea class="form-control" rows="3" id="txaMemo" name="txaMemo" style="width: 100%;">{{record.memo}}</textarea>

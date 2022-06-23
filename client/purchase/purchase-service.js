@@ -98,14 +98,16 @@ export class Purchase extends BaseService {
 
     getTermData() {
         let options = {
-            PropertyList: "ID,TermsName,",
+            PropertyList: "ID,TermsName",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TTerms, options);
     }
 
     getTermDataVS1() {
         let options = {
-            PropertyList: "ID,TermsName,",
+            PropertyList: "ID,TermsName",
+            select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TTermsVS1, options);
     }
