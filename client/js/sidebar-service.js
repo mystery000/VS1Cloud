@@ -1221,6 +1221,24 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TSalesList, options);
   }
+
+  getAllAwaitingCustomerPaymentByCustomerNameOrID(customerData) {
+    let options = "";
+    options = {
+      IgnoreDates: true,
+      IncludeIsInvoice: true,
+      IncludeIsQuote: false,
+      IncludeIsRefund: false,
+      IncludeISSalesOrder: false,
+      IsDetailReport: false,
+      Paid: false,
+      Unpaid: true,
+      OrderBy: "SaleID desc",
+      Search: 'CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
+      // select: '[CodeName] f7like "' + dataSearchName + '" and [Active]=true',
+    };
+    return this.getList(this.ERPObjects.TSalesList, options);
+  }
   getAllOverDueAwaitingSupplierPayment(currentDate, limitcount, limitfrom) {
     let options = "";
     if (currentDate == "PO") {
@@ -1330,6 +1348,8 @@ export class SideBarService extends BaseService {
     //}
     return this.getList(this.ERPObjects.TSalesList, options);
   }
+
+
 
   getAllBillExList(limitcount, limitfrom) {
     let options = "";

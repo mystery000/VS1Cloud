@@ -1921,7 +1921,110 @@ Template.customerawaitingpayments.events({
           }
         },
     'click .btnRefreshCustomerAwaiting':function(event){
+      let templateObject = Template.instance();
+      let utilityService = new UtilityService();
+      let tableProductList;
+      const dataTableList = [];
+      var splashArrayInvoiceList = new Array();
+      const lineExtaSellItems = [];
+      $('.fullScreenSpin').css('display', 'inline-block');
+      let dataSearchName = $('#tblcustomerAwaitingPayment_filter input').val();
+      if (dataSearchName.replace(/\s/g, '') != '') {
+          sideBarService.getAllAwaitingCustomerPaymentByCustomerNameOrID(dataSearchName).then(function (data) {
+              $(".btnRefreshCustomerAwaiting").removeClass('btnSearchAlert');
+              let lineItems = [];
+              let lineItemObj = {};
+              if (data.tsaleslist.length > 0) {
+                  for (let i = 0; i < data.tsaleslist.length; i++) {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+                          let applied = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Payment) || 0.00;
+                          // Currency+''+data.tsaleslist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                          let balance = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].BalanceBalance) || 0.00;
+                          let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                          let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                          let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+
+                          var dataList = {
+                           id: data.tsaleslist[i].SaleId || '',
+                           sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
+                           paymentdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                           customername: data.tsaleslist[i].CustomerName || '',
+                           paymentamount: amount || 0.00,
+                           applied: applied || 0.00,
+                           balance: balance || 0.00,
+                           originalamount: totalOrginialAmount || 0.00,
+                           outsandingamount: totalOutstanding || 0.00,
+                           department: data.tsaleslist[i].ClassName || '',
+                           refno: data.tsaleslist[i].BORef || '',
+                           paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
+                           notes: data.tsaleslist[i].Comments || ''
+                       };
+
+                      //if(data.tinvoiceex[i].fields.Deleted == false){
+                      //splashArrayInvoiceList.push(dataList);
+                      dataTableList.push(dataList);
+                      //}
+
+
+                      //}
+                  }
+                  templateObject.datatablerecords.set(dataTableList);
+
+                  let item = templateObject.datatablerecords.get();
+                  $('.fullScreenSpin').css('display', 'none');
+                  if (dataTableList) {
+                      var datatable = $('#tblcustomerAwaitingPayment').DataTable();
+                      $("#tblcustomerAwaitingPayment > tbody").empty();
+                      for (let x = 0; x < item.length; x++) {
+                          $("#tblcustomerAwaitingPayment > tbody").append(
+                              ' <tr class="dnd-moved" id="' + item[x].id + '" style="cursor: pointer;">' +
+                              '<td contenteditable="false" class="chkBox pointer" style="width:15px;"><div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-' + item[x].id + '" value="' + item[x].outsandingamount + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + item[x].id + '"></label></div></td>' +
+                              '<td contenteditable="false" class="colSortDate hiddenColumn">' + item[x].sortdate + '</td>' +
+                              '<td contenteditable="false" class="colPaymentDate" ><span style="display:none;">' + item[x].sortdate + '</span>' + item[x].paymentdate + '</td>' +
+                              '<td contenteditable="false" class="colPaymentId">' + item[x].id + '</td>' +
+                              '<td contenteditable="false" class="colReceiptNo">' + item[x].refno + '</td>' +
+                              '<td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">' + item[x].applied + '</td>' +
+                              '<td contenteditable="false" class="colApplied" style="text-align: right!important;">' + item[x].originalamount + '</td>' +
+                              '<td contenteditable="false" class="colBalance" style="text-align: right!important;">' + item[x].outsandingamount + '</td>' +
+                              '<td contenteditable="false" class="colCustomerName" id="colCustomerName' + item[x].id + '">' + item[x].customername + '</td>' +
+                              '<td contenteditable="false" class="colDepartment">' + item[x].department + '</td>' +
+                              '<td contenteditable="false" class="colRefNo hiddenColumn">' + item[x].refno + '</td>' +
+                              '<td contenteditable="false" class="colPaymentMethod hiddenColumn">' + item[x].paymentmethod + '</td>' +
+                              '<td contenteditable="false" class="colNotes">' + item[x].notes + '</td>' +
+                              '</tr>');
+
+                      }
+                      $('.dataTables_info').html('Showing 1 to ' + data.tsaleslist.length + ' of ' + data.tsaleslist.length + ' entries');
+                      setTimeout(function() {
+                        makeNegativeGlobal();
+                      }, 100);
+                  }
+
+              } else {
+                  $('.fullScreenSpin').css('display', 'none');
+
+                  swal({
+                      title: 'Question',
+                      text: "Invoice does not exist, would you like to create it?",
+                      type: 'question',
+                      showCancelButton: true,
+                      confirmButtonText: 'Yes',
+                      cancelButtonText: 'No'
+                  }).then((result) => {
+                      if (result.value) {
+                          FlowRouter.go('/invoicecard');
+                      } else if (result.dismiss === 'cancel') {
+                          //$('#productListModal').modal('toggle');
+                      }
+                  });
+              }
+          }).catch(function (err) {
+              $('.fullScreenSpin').css('display', 'none');
+          });
+      } else {
+
         $(".btnRefresh").trigger("click");
+      }
     },
     'click .btnPaymentList': function () {
         FlowRouter.go('/customerpayment');
