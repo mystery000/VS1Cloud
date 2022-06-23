@@ -26,6 +26,18 @@ export class OrganisationService extends BaseService {
     return this.getList(this.ERPObjects.TcompLogo, options);
   }
 
+  saveCompanyLogo(data) {
+      return this.POST(this.ERPObjects.TcompLogo, data);
+  }
+
+  getCheckTcompLogoData() {
+      let options = {
+          PropertyList: "Id,MIMEEncodedPicture,ImageName,Pictype,ImageTypes",
+          LimitCount:"'1'"
+      };
+      return this.getList(this.ERPObjects.TcompLogo, options);
+  }
+
   getCompanyInfo() {
     let options = {
       PropertyList:
