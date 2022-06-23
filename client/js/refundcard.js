@@ -190,7 +190,7 @@ Template.refundcard.onRendered(() => {
 
                             let invoice_data = templateObject.invoicerecord.get();
 
-                            console.log(invoice_data);
+                     
                             let stripe_id = templateObject.accountID.get() || '';
                             let stripe_fee_method = templateObject.stripe_fee_method.get();
                             let lineItems = [];
@@ -199,14 +199,18 @@ Template.refundcard.onRendered(() => {
                             let customer = $('#edtCustomerName').val();
                             let name = $('#firstname').val();
                             let surname = $('#lastname').val();
-
+                            let fx = $('#sltCurrency').val();
                             var customfield1 = $('#edtSaleCustField1').val() || '-';
                             var customfield2 = $('#edtSaleCustField2').val() || '-';
                             var customfield3 = $('#edtSaleCustField3').val() || '-';
                     
-                            var customfieldlabel1 = $('.lblCustomField1').first().text();
-                            var customfieldlabel2 = $('.lblCustomField2').first().text();
-                            var customfieldlabel3 = $('.lblCustomField3').first().text();
+                            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+                            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+                            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+                            if(customfield3 == 'NaN')
+                            {
+                                customfield3 = '-';
+                            }     
                                       
 
                             $('#tblInvoiceLine > tbody > tr').each(function () {
@@ -283,6 +287,7 @@ Template.refundcard.onRendered(() => {
                                     customfieldlabel1:'NA',
                                     customfieldlabel2:'NA',
                                     customfieldlabel3:'NA',   
+                                    showFX:"",
                                     
                                 };
 
@@ -325,6 +330,7 @@ Template.refundcard.onRendered(() => {
                                     customfieldlabel1:customfieldlabel1,
                                     customfieldlabel2:customfieldlabel2,
                                     customfieldlabel3:customfieldlabel3,
+                                    showFX:"",
                                          
                                     
                                 };
@@ -364,12 +370,13 @@ Template.refundcard.onRendered(() => {
                                     swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
                                     data: array_data,
                                     applied : "",
-                                    customfield1:'NA',
-                                    customfield2:'NA',
-                                    customfield3:'NA',
-                                    customfieldlabel1:'NA',
-                                    customfieldlabel2:'NA',
-                                    customfieldlabel3:'NA',   
+                                    customfield1:customfield1 || '-',
+                                    customfield2:customfield2 || '-',
+                                    customfield3:customfield3 || '-',
+                                    customfieldlabel1:customfieldlabel1,
+                                    customfieldlabel2:customfieldlabel2,
+                                    customfieldlabel3:customfieldlabel3, 
+                                    showFX:fx,
                                     
                                 };
 
@@ -394,7 +401,7 @@ Template.refundcard.onRendered(() => {
 
             let invoice_data = templateObject.invoicerecord.get();
 
-            console.log(invoice_data);
+            
             let stripe_id = templateObject.accountID.get() || '';
             let stripe_fee_method = templateObject.stripe_fee_method.get();
             let lineItems = [];
@@ -403,14 +410,19 @@ Template.refundcard.onRendered(() => {
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
-
+            let fx = $('#sltCurrency').val();
             var customfield1 = $('#edtSaleCustField1').val() || '-';
             var customfield2 = $('#edtSaleCustField2').val() || '-';
             var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+            if(customfield3 == 'NaN')
+            {
+                customfield3 = '-';
+            }
     
-            var customfieldlabel1 = $('.lblCustomField1').first().text();
-            var customfieldlabel2 = $('.lblCustomField2').first().text();
-            var customfieldlabel3 = $('.lblCustomField3').first().text();
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
                       
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
@@ -486,7 +498,8 @@ Template.refundcard.onRendered(() => {
                     customfield3:'NA',
                     customfieldlabel1:'NA',
                     customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',   
+                    customfieldlabel3:'NA',  
+                    showFX:"", 
                     
                 };
 
@@ -529,6 +542,7 @@ Template.refundcard.onRendered(() => {
                     customfieldlabel1:customfieldlabel1,
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
+                    showFX:"",
                          
                     
                 };
@@ -574,6 +588,7 @@ Template.refundcard.onRendered(() => {
                     customfieldlabel1:'NA',
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',   
+                    showFX:fx,
                     
                 };
 
@@ -593,7 +608,7 @@ Template.refundcard.onRendered(() => {
         function updateTemplate1(object_invoce) {
 
         
-        
+       
             if (object_invoce.length > 0) {
             
             $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
@@ -724,11 +739,11 @@ Template.refundcard.onRendered(() => {
                     
                     if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                     {
-                    $('#templatePreviewModal .customfield1data').text('');
+                       $('#templatePreviewModal .customfield1data').text('');
                     }
                     else
                     {
-                    $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
+                       $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                     }
     
                     if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
@@ -742,18 +757,25 @@ Template.refundcard.onRendered(() => {
     
                     if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
                     {
-                    $('#templatePreviewModal .customfield3data').text('');
+                       $('#templatePreviewModal .customfield3data').text('');
                     }
                     else
                     {
-                    $('#templatePreviewModal .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                       $('#templatePreviewModal .customfield3data').text(object_invoce[0]["customfield3"]);
                     }
                     
                 
                 
             }
 
-
+            if (object_invoce[0]["showFX"] == "") {
+                $("#templatePreviewModal .showFx").hide();
+                $("#templatePreviewModal .showFxValue").hide();
+            } else {
+                    $("#templatePreviewModal .showFx").show();
+                    $("#templatePreviewModal .showFxValue").show();
+                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+            }
 
             if(object_invoce[0]["customfield1"] == "NA")
             {   
@@ -892,6 +914,16 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .pdfPONumber").show();
             }
 
+
+            if (object_invoce[0]["showFX"] == "") {
+                $("#html-2-pdfwrapper_new .showFx").hide();
+                $("#html-2-pdfwrapper_new .showFxValue").hide();
+            } else {
+                    $("#html-2-pdfwrapper_new .showFx").show();
+                    $("#html-2-pdfwrapper_new .showFxValue").show();
+                    $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
+            }
+
             if(object_invoce[0]["customfield1"] == "NA")
             {   
                     $('#customfieldtablenew').css('display', 'none');
@@ -939,7 +971,7 @@ Template.refundcard.onRendered(() => {
                 }
                 else
                 {
-                    $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                    $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
                 }
                 
                 

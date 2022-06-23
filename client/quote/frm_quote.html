@@ -954,7 +954,7 @@
                 }
             </style>
                 <div class="row align-items-end" style="margin: 16px;">
-                    <div class="col-12 col-lg-8 col-xl-10" style="rpadding-right: 24px;">
+                    <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px;">
                         <div class="row">
                             <button class="btn btn-primary" type="button" id="addRow" style="margin-bottom: 36px; margin-left: 16px;">+ Add New Entry</button>
                         </div>
@@ -1079,13 +1079,21 @@
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    <div class="col-12">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote" checked type="checkbox" id="print_quote" autocomplete="off">
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="print_quote">Print Quote</label>
+                                                        </div> 
+                                                    </div>
                                                 </div>
                                             {{/each}}
                                         </div>
     
                                     </div>
                                 </div>
-                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                <div class="modal-footer" style="padding: 6px;">
+                                    <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
+                                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
                         </div>
     
@@ -1104,7 +1112,7 @@
                                 <div class="modal-body">
 
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote" type="checkbox" id="print_quote" autocomplete="off">
+                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote" checked type="checkbox" id="print_quote" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_quote">Print Quote</label>
                                     </div>                      
 
@@ -1427,6 +1435,8 @@
                                             <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                                 Date:</p>
 
+                                            <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+
                                             <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
                                             <div class="mt-4" id="customfieldlable">
@@ -1443,7 +1453,8 @@
                                             <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-
+                                            <p class="showFxValue"
+                                            style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="link"
                                                 style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                                 <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
@@ -1639,6 +1650,7 @@
                             :</p>
                         <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                             Date:</p>
+                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
                         <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
                         <div class="mt-4" id="customfieldtablenew">
@@ -1653,6 +1665,8 @@
                         <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                         <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                         <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                        <p class="showFxValue"
+                        style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                         <p class="link" style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                             <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                 Now</a>

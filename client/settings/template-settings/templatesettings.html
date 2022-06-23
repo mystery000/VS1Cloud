@@ -47,9 +47,9 @@
 
 
         <div class="row justify-content-center mb-3">
-      
+               <div class="col-12 col-md-8">
 
-            <div class="row">
+                <div class="row">
                     {{#each title in getTemplateList}}
                     <div class="col-12 col-md-4">
                         <div class="card shadow mb-3">
@@ -61,12 +61,17 @@
                                     {{#each index in getTemplateNumber}}
                                     <li class="list-group-item templateItem justify-content-between"  data-id="{{title}}" data-template-id="{{index}}">
                                         <div class="custom-control custom-switch">
+
+                                            {{#if equals index '1'}}
+                                            <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}"
+                                            value="{{title}}_{{index}}" checked style="cursor: pointer;">
+                                            {{else}}
                                             <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}"
                                             value="{{title}}_{{index}}"  style="cursor: pointer;">
+                                            {{/if}}
                                             <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                             <label style="margin-right: 50px;" for="{{title}}_{{index}}"> Template {{index}}</label>
-                                        
-                                              
+                                                                                     
                                         </div>
 
                                         <i id="btnPreviewTemplate" data-id="{{title}}"
@@ -78,6 +83,8 @@
                         </div>
                     </div>
                     {{/each}}
+                </div>
+
                 </div>
                 
         </div>
@@ -151,12 +158,14 @@
                                         :</p>
                                     <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                         Date:</p>
-                                   <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>       
-                                        <div class="mt-4" id="customfieldlable">
+                                    <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+
+                                    <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>       
+                                    <div class="mt-4" id="customfieldlable">
                                             <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                             <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                             <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
-                                        </div>
+                                    </div>
                                                                  
                                     
                                 </div>
@@ -170,6 +179,10 @@
                                         style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                     <p class="due"
                                         style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+
+                                    <p class="showFxValue"
+                                        style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                
                                     <p class="link"
                                         style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay

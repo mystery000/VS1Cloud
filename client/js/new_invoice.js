@@ -87,10 +87,11 @@ Template.new_invoice.onCreated(() => {
 Template.new_invoice.onRendered(() => {
 
    
-    let invoice_type = FlowRouter.current().queryParams.type;
+    var invoice_type = FlowRouter.current().queryParams.type;
     if(invoice_type == 'bo')
     {
         localStorage.setItem('invoice_type','bo');
+       
     }
     else
     {     
@@ -100,18 +101,13 @@ Template.new_invoice.onRendered(() => {
 
     if(localStorage.getItem('invoice_type') == 'bo')
     {
-           $('#Invoices_back_orders_option').css('display', 'block');
-           $('#print_invoice_option').css('display', 'none');
-           $('#print_delivery_option').css('display', 'none');
+           
            $('.Invoices').css('display', 'none');
            $('.Docket').css('display', 'none');
            $('.add_dy .coltr').removeClass('col-md-6');
     }
     else
     {
-           $('#Invoices_back_orders_option').css('display', 'none');
-           $('#print_invoice_option').css('display', 'block');
-           $('#print_delivery_option').css('display', 'block');
            $('.Invoices').css('display', 'block');
            $('.Docket').css('display', 'block');
            $('.Invoice').css('display', 'none');
@@ -6200,7 +6196,7 @@ Template.new_invoice.onRendered(() => {
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
         var erpGet = erpDb();          
-
+        let fx = $('#sltCurrency').val();
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -6298,7 +6294,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:'NA',
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
-                applied : ""
+                applied : "",
+                showFX:"",
               };
 
         }
@@ -6339,7 +6336,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
-                applied : ""
+                applied : "",
+                showFX:"",
               };
 
         }
@@ -6374,13 +6372,14 @@ Template.new_invoice.onRendered(() => {
                 account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
                 swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : ""
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
               };
 
         }
@@ -6408,7 +6407,9 @@ Template.new_invoice.onRendered(() => {
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
-            var erpGet = erpDb();          
+            var erpGet = erpDb();         
+            
+            let fx = $('#sltCurrency').val();
 
             var customfield1 = $('#edtSaleCustField1').val() || '';
             var customfield2 = $('#edtSaleCustField2').val() || '';
@@ -6506,7 +6507,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:'NA',
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
-                applied : ""
+                applied : "",
+                showFX:"",
             };
 
            }
@@ -6547,7 +6549,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
-                applied : ""
+                applied : "",
+                showFX:"",
             };
 
            }
@@ -6582,13 +6585,14 @@ Template.new_invoice.onRendered(() => {
                 account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
                 swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : ""
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
             };
 
 
@@ -6702,11 +6706,11 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount :"",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -6717,7 +6721,9 @@ Template.new_invoice.onRendered(() => {
             customfieldlabel1:'NA',
             customfieldlabel2:'NA',
             customfieldlabel3:'NA',
-            applied : ""
+            applied : "",
+            showFX:"",
+            
            };
 
        }
@@ -6743,11 +6749,11 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount :"",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -6758,7 +6764,8 @@ Template.new_invoice.onRendered(() => {
             customfieldlabel1:customfieldlabel1,
             customfieldlabel2:customfieldlabel2,
             customfieldlabel3:customfieldlabel3,
-            applied : ""
+            applied : "",
+            showFX:"",
            };
 
        }
@@ -6784,22 +6791,23 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total : "",
+            paid_amount :"",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
             data: array_data,
-            customfield1:'NA',
-            customfield2:'NA',
-            customfield3:'NA',
-            customfieldlabel1:'NA',
-            customfieldlabel2:'NA',
-            customfieldlabel3:'NA',
-            applied : ""
+            customfield1:customfield1,
+            customfield2:customfield2,
+            customfield3:customfield3,
+            customfieldlabel1:customfieldlabel1,
+            customfieldlabel2:customfieldlabel2,
+            customfieldlabel3:customfieldlabel3,
+            applied : "",
+            showFX:"",
            };
 
        }
@@ -8316,7 +8324,6 @@ Template.new_invoice.onRendered(() => {
                 
         let invoice_data = templateObject.invoicerecord.get();
 
-        console.log(invoice_data);
 
         var array_data = [];
         let stripe_id = templateObject.accountID.get() || '';
@@ -8337,7 +8344,7 @@ Template.new_invoice.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text();
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+        let fx = $('#sltCurrency').val();
         $('#tblInvoiceLine > tbody > tr').each(function () {
         var lineID = this.id;
         let tdproduct = $('#' + lineID + " .lineProductName").val();
@@ -8348,6 +8355,8 @@ Template.new_invoice.onRendered(() => {
         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
         let taxamount = $('#' + lineID + " .colTaxAmount").text();
         let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+
+        
 
 
         array_data.push([
@@ -8427,7 +8436,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:'NA',
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
-                applied : ""
+                applied : "",
+                showFX:"",
               };
 
         }
@@ -8468,7 +8478,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
-                applied : ""
+                applied : "",
+                showFX:"",
               };
 
         }
@@ -8503,13 +8514,14 @@ Template.new_invoice.onRendered(() => {
                 account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
                 swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : ""
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
               };
 
         }
@@ -8550,6 +8562,8 @@ Template.new_invoice.onRendered(() => {
             var customfieldlabel1 = $('.lblCustomField1').first().text();
             var customfieldlabel2 = $('.lblCustomField2').first().text();
             var customfieldlabel3 = $('.lblCustomField3').first().text();
+
+            let fx = $('#sltCurrency').val();
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
             var lineID = this.id;
@@ -8639,7 +8653,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:'NA',
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
-                applied : ""
+                applied : "",
+                showFX:"",
             };
 
            }
@@ -8680,7 +8695,8 @@ Template.new_invoice.onRendered(() => {
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
-                applied : ""
+                applied : "",
+                showFX:"",
             };
 
            }
@@ -8715,13 +8731,14 @@ Template.new_invoice.onRendered(() => {
                 account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
                 swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
                 data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : ""
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
             };
 
 
@@ -8835,11 +8852,11 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total :"",
+            paid_amount : "",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -8850,7 +8867,8 @@ Template.new_invoice.onRendered(() => {
             customfieldlabel1:'NA',
             customfieldlabel2:'NA',
             customfieldlabel3:'NA',
-            applied : ""
+            applied : "",
+            showFX:"",
            };
 
        }
@@ -8876,11 +8894,11 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total :"",
+            paid_amount : "",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
@@ -8891,7 +8909,8 @@ Template.new_invoice.onRendered(() => {
             customfieldlabel1:customfieldlabel1,
             customfieldlabel2:customfieldlabel2,
             customfieldlabel3:customfieldlabel3,
-            applied : ""
+            applied : "",
+            showFX:"",
            };
 
        }
@@ -8917,22 +8936,23 @@ Template.new_invoice.onRendered(() => {
             supplier_name : customer,
             supplier_addr : invoice_data.shipToDesc,
             fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
+            subtotal : "",
+            gst : "",
+            total :"",
+            paid_amount : "",
+            bal_due : "",
             bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
             account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
             swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
             data: array_data,
-            customfield1:'NA',
-            customfield2:'NA',
-            customfield3:'NA',
-            customfieldlabel1:'NA',
-            customfieldlabel2:'NA',
-            customfieldlabel3:'NA',
-            applied : ""
+            customfield1:customfield1,
+            customfield2:customfield2,
+            customfield3:customfield3,
+            customfieldlabel1:customfieldlabel1,
+            customfieldlabel2:customfieldlabel2,
+            customfieldlabel3:customfieldlabel3,
+            applied : "",
+            showFX:"",
            };
 
        }
@@ -8965,7 +8985,12 @@ Template.new_invoice.onRendered(() => {
             }
             else
             {
-                 await  showInvoiceBack(template_title,number);
+                var invoice_type = FlowRouter.current().queryParams.type;
+                if(invoice_type == 'bo')
+                {
+                    await  showInvoiceBack(template_title,number);
+                }
+                
             }
           
 
@@ -8988,7 +9013,11 @@ Template.new_invoice.onRendered(() => {
                 }
                 else if(template_title == 'Invoice Back Orders')
                 {
-                    file = 'Invoice_Back_Orders -' + invoice_data_info.id + '.pdf';
+                    var invoice_type = FlowRouter.current().queryParams.type;
+                    if(invoice_type == 'bo')
+                    {
+                       file = 'Invoice_Back_Orders -' + invoice_data_info.id + '.pdf';
+                    }
                 }
                 else{
                     file = 'Delivery Docket -' + invoice_data_info.id + '.pdf';
@@ -9212,6 +9241,16 @@ Template.new_invoice.onRendered(() => {
                 $("#templatePreviewModal .link").show();
                 $("#templatePreviewModal .linkText").show();
           }
+
+          if (object_invoce[0]["showFX"] == "") {
+                $("#templatePreviewModal .showFx").hide();
+                $("#templatePreviewModal .showFxValue").hide();
+         } else {
+                $("#templatePreviewModal .showFx").show();
+                $("#templatePreviewModal .showFxValue").show();
+                $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+         }
+
           
           if(object_invoce[0]["customfield1"] == "NA")
           {   
@@ -9267,13 +9306,10 @@ Template.new_invoice.onRendered(() => {
                
           }
 
-
-
           if(object_invoce[0]["customfield1"] == "NA")
           {   
                 $('#customfieldlable').css('display', 'none');
                 $('#customfieldlabledata').css('display', 'none');
-    
           }
           else
           {
@@ -9307,26 +9343,40 @@ Template.new_invoice.onRendered(() => {
          }
         
         // total amount 
+
+        if(object_invoce[0]["subtotal"] == "")
+        {     
+            $("#templatePreviewModal .field_amount").hide();
+        }
+        else
+        {
+            $("#templatePreviewModal .field_amount").show();
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#templatePreviewModal #subtotal_total').text("Sub total");
+              $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+            if(object_invoce[0]["gst"] != ""){
+
+                
+                $('#templatePreviewModal #grandTotal').text("Grand total");
+                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
     
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            if(object_invoce[0]["total"] != ""){
+                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
+    
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
+    
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
+    
         }
     
-        if(object_invoce[0]["gst"] != ""){
-            $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
-    
-        if(object_invoce[0]["total"] != ""){
-            $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
-    
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
-    
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
-        }
+      
       }
 
     function updateTemplate(object_invoce) {
@@ -9394,6 +9444,15 @@ Template.new_invoice.onRendered(() => {
             $("#html-2-pdfwrapper_new .dateNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .dateNumber").show();
+        }
+
+        if (object_invoce[0]["showFX"] == "") {
+            $("#html-2-pdfwrapper_new .showFx").hide();
+            $("#html-2-pdfwrapper_new .showFxValue").hide();
+        } else {
+            $("#html-2-pdfwrapper_new .showFx").show();
+            $("#html-2-pdfwrapper_new .showFxValue").show();
+            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
         }
     
         $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
@@ -9467,7 +9526,7 @@ Template.new_invoice.onRendered(() => {
         }else{
             $("#html-2-pdfwrapper_new .invoiceNumber").show();
         }
-        console.log("invoice number==",object_invoce[0]["invoicenumber"])
+       
         $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
     
         if(object_invoce[0]["refnumber"] == ""){
@@ -9528,26 +9587,40 @@ Template.new_invoice.onRendered(() => {
         }
         
         // total amount 
-    
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+        
+        if(object_invoce[0]["subtotal"] == "")
+        {     
+            $("#html-2-pdfwrapper_new .field_amount").hide();
         }
+        else
+        {
+            $("#html-2-pdfwrapper_new .field_amount").show();
+          
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
+              $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+
+            if(object_invoce[0]["gst"] != ""){
+                $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
+                $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+            
     
-        if(object_invoce[0]["gst"] != ""){
-            $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
+            if(object_invoce[0]["total"] != ""){
+                $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
     
-        if(object_invoce[0]["total"] != ""){
-            $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
     
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
     
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
         }
+       
     }
 
     function saveTemplateFields(key, value){
@@ -10300,6 +10373,29 @@ Template.new_invoice.events({
     {
         if($('#choosetemplate').is(':checked'))
         {
+            let invoice_type = FlowRouter.current().queryParams.type;
+
+            if(invoice_type == "bo")
+            {   
+               
+                 $('#confirmprint #print_invoice_option').css('display', 'none');
+                 $('#confirmprint #print_delivery_option').css('display', 'none');
+
+                 $('#confirmprint #Invoices_back_orders_option').css('display', 'block');
+          
+                 
+
+            }
+            else
+            {  
+               
+                $('#confirmprint #Invoices_back_orders_option').css('display', 'none');
+                $('#confirmprint #print_invoice_option').css('display', 'block');
+                $('#confirmprint  #print_delivery_option').css('display', 'block');
+
+            }
+        
+           
             $('#confirmprint').modal('show');
         }
         else
@@ -12060,10 +12156,17 @@ Template.new_invoice.events({
                 if($('#print_delivery_docket').is(':checked')) {
                     printTemplate.push('Delivery Docket');
                 }
+
+                var invoice_type = FlowRouter.current().queryParams.type;
+                            if(invoice_type == 'bo')
+                            {
+                                if($('#print_Invoices_back_orders').is(':checked')) {
+                                    printTemplate.push('Invoice Back Orders');
+                                }
+
+                            }
               
-                if($('#print_Invoices_back_orders').is(':checked')) {
-                    printTemplate.push('Invoice Back Orders');
-                }
+               
           
 
 
@@ -12080,7 +12183,15 @@ Template.new_invoice.events({
                             var template_number = $('input[name="Delivery Docket"]:checked').val();
                         }
                         else{
-                            var template_number = $('input[name="Invoice Back Orders"]:checked').val();
+                            
+                            var invoice_type = FlowRouter.current().queryParams.type;
+                            if(invoice_type == 'bo')
+                            {
+                               var template_number = $('input[name="Invoice Back Orders"]:checked').val();
+
+                            }
+
+                           
                         }
                        
                         let result = await exportSalesToPdf(printTemplate[i],template_number);
