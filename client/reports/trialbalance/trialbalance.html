@@ -55,10 +55,9 @@
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters">
                                     <div class="form-group" style="margin: 8px;">
-                                        <label>Search:</label>
-                                        <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
+                                        <input type="search" style="height: 38px;" class="form-control form-control-sm" placeholder="Search" aria-controls="Search" autocomplete="off" id="myInputSearch" name="myInputSearch">
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalDepartment" style="margin: 8px; margin-top: 32px;"><i class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalDepartment" style="margin: 8px;"><i class="fas fa-users-cog" style="margin-right: 5px;"></i>Department</button>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
@@ -91,6 +90,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i>FX Rates</button>
                                 </div>
                             </div>
                             <div class="col-12 col-md-2">
@@ -153,24 +153,43 @@
                             </div>
                             <div class="row no-gutters">
                                 <style>
-                                    .totalhr {
+                                    /* .totalhr {
                                         border-top: 2px #858999 solid;
                                     }
 
                                     .grandtotal {
                                         border-top: 2px #858999 solid;
                                         border-bottom: 2px #858999 solid;
+                                    } */
+                                    .tableExportDetailDiv th,
+                                    .tableExportDetailDiv td {
+                                        white-space: nowrap;
+                                        padding: 5px 15px;
+                                    }
+                                    .tableExportDetailDiv th {
+                                        text-align: center;
+                                    }
+                                    .tableExportDetailDiv th.rightAlignMent1 {
+                                        text-align: right !important;
+                                    }
+
+                                    .tableExportDetailDiv td {
+                                        text-align: right !important;
+                                    }
+                                    .tableExportDetailDiv th:first-child,
+                                    .tableExportDetailDiv td:first-child {
+                                        text-align: left !important;
                                     }
                                 </style>
                                 <div class="table-responsive">
-                                    <table class="table table-sm" id="tableExport" name="tableExport">
+                                    <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
                                         <thead>
                                             <tr class="table-active">
                                                 <th>Account Name</th>
-                                                <th>Account No.</th>
-                                                <th>Account</th>
-                                                <th class="text-right">Credit (Ex)</th>
-                                                <th class="text-right">Debit (Ex)</th>
+                                                <th class="text-right">Account No.</th>
+                                                <th class="text-right">Account</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center rightAlignMent{{countActive currencyList}}">Credit (Ex)</th>
+                                                <th colspan="{{countActive currencyList}}" class="text-center rightAlignMent{{countActive currencyList}}">Debit (Ex)</th>
                                                 <!--
 <th>
 <table class="">
@@ -191,6 +210,30 @@ Debit (Ex)
 </th>
 -->
                                             </tr>
+                                            {{#if isOnlyDefaultActive equal "false" }}
+                                                <tr class="table-active tblAvoid customDoubleTableHeading">
+                                                    <th class="text-right"></th>
+                                                    <th class="text-right"></th>
+                                                    <th class="text-right"></th>
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+
+                                                    {{#if currencyList}}
+                                                        {{#each c in currencyList }}
+                                                            {{# if c.active}}
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            {{/if}}
+                                                        {{/each}}
+                                                    {{/if}}
+                                                
+                                                </tr>
+                                            {{/if}}
                                         </thead>
                                         <tbody>
                                             {{#if records}}
@@ -198,7 +241,7 @@ Debit (Ex)
                                                     {{#each recordItem in record}}
                                                         {{#if recordItem.key}}
                                                             <tr class="totalhr">
-                                                                <td colspan="5" style="font-weight: 800;">
+                                                                <td colspan="5" class="{{#if isNegativeAmount recordItem.key}} text-danger {{/if}}" style="font-weight: 800;">
                                                                     <div class="SectionTitle2 report-heading-last">{{recordItem.key}}</div>
                                                                 </td>
                                                             </tr>
@@ -207,14 +250,91 @@ Debit (Ex)
                                                             <tr class="{{item.type}}" id="{{item.Id}}">
                                                                 <div style="display:none;">{{item.AccountName}}</div>
                                                                 {{#each subItem in item.dataArr}}
-                                                                    <td class="Total1Indented MenuLeft text-nowrap Indent1"><a href="#" style="text-decoration:none!important;">{{subItem}}</a></td>
+
+                                                                        {{#if isOnlyDefaultActive }}
+                                                                            {{#if isObject subItem}}
+                                                                        
+                                                                                {{#if currencyList}}
+                                                                                    {{#each c in currencyList }}
+                                                                                        {{# if c.active}}
+                                                                                            <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                                <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
+                                                                                            </td>
+                                                                                        {{/if}}
+                                                                                    {{/each}}
+                                                                                {{/if}}
+
+                                                                            {{else}}
+                                                                            
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1">
+                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
+                                                                                </td>
+
+                                                                            {{/if}}
+
+                                                                        {{else}}
+                                                                            {{#if isObject subItem}}
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
+                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
+                                                                                </td>
+                                                                               
+                                                                            {{else}}
+                                                                                
+                                                                                <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                                    <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
+                                                                                </td>
+
+                                                                            {{/if}}
+
+                                                                        {{/if}}
+                                                                   
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
+
                                                         {{#each total in recordItem.total}}
                                                             <tr class="TotalField">
-                                                                {{#each items in total.dataArr}}
-                                                                    <td class="Total1Indented MenuLeft TotalField"><span class="table-cells"><strong>{{items}}</strong></span></td>
+                                                                {{#each subItem in total.dataArr}}
+                                                                    {{#if isOnlyDefaultActive }}
+                                                                        {{#if isObject subItem}}
+                                                                    
+                                                                            {{#if currencyList}}
+                                                                                {{#each c in currencyList }}
+                                                                                    {{# if c.active}}
+                                                                                        <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                            <span class="table-cells"><strong>{{convertAmount subItem.value c}}</strong></span>
+                                                                                        </td>
+                                                                                    {{/if}}
+                                                                                {{/each}}
+                                                                            {{/if}}
+
+                                                                        {{else}}
+                                                                        
+                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                                <span class="table-cells"><strong>{{subItem}}</strong></span>
+                                                                            </td>
+
+                                                                        {{/if}}
+
+                                                                    {{else}}
+                                                                        {{#if isObject subItem}}
+                                                                          
+                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
+                                                                                <span class="table-cells"><strong>{{subItem.value}}</strong></span>
+                                                                            </td>
+                                                                        
+                                                                        {{else}}
+                                                                            
+                                                                       
+                                                                            <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
+                                                                                <span class="table-cells"><strong>{{subItem}}</strong></span>
+                                                                            </td>
+
+
+                                                                        {{/if}}
+
+                                                                    {{/if}}
+                                                                   
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
@@ -222,8 +342,36 @@ Debit (Ex)
                                                 {{/each}}
                                                 {{#if grandrecords}}
                                                     <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-                                                        {{#each item in grandrecords}}
-                                                            <td>{{item}}</td>
+                                                        {{#each subItem in grandrecords}}
+                                                        
+                                                                {{#if isOnlyDefaultActive }}
+
+                                                                        {{#if isObject subItem}}
+                                                                            {{#if currencyList}}
+                                                                                {{#each c in currencyList }}
+                                                                                    {{# if c.active}}
+                                                                                        <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.currency}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
+                                                                            
+                                                                                    {{/if}}
+                                                                                {{/each}}
+                                                                            {{/if}}
+                                                                        {{else}}
+                                                                            <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
+                                                                        
+
+                                                                        {{/if}}
+
+                                                                {{else}}
+                                                                    {{#if isObject subItem}}
+                                                                        <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}">{{subItem.value}}</td>
+                                                                        
+                                                                    {{else}}
+                                                                        <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
+                                                                        
+                                                                        
+                                                                    {{/if}}
+
+                                                                {{/if}}
                                                         {{/each}}
 
                                                     </tr>
@@ -269,5 +417,7 @@ Debit (Ex)
     </div>
 
     <!-- End Help Video Modal -->
+
+   {{> FxRateModal currencies=currencyList}}
 
 </template>
