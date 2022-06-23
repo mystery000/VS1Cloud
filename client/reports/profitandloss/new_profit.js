@@ -522,22 +522,19 @@ Template.newprofitandloss.onRendered(function () {
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);  
-  } else if( url.indexOf("?daterange") ){
-    url = new URL(window.location.href);
-    let daterange = url.searchParams.get("daterange");
+  } else if( url.indexOf("?daterange") > 0 ){
     let currentDate2 = new Date();
-    let fromDate = moment(currentDate2).format("YYYY-MM-DD");
-    let endDate =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
-    if( daterange == 'monthly' ){
+    let fromDate =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    let endDate = moment(currentDate2).format("YYYY-MM-DD");
+    if( url.indexOf("?daterange=monthly") ){
       fromDate = moment().startOf('month').format('YYYY-MM-DD');
       endDate   = moment().endOf('month').format('YYYY-MM-DD');
-      templateObject.setReportOptions(0, fromDate, endDate );
     }
-    if( daterange == 'quarterly' ){
+    if( url.indexOf("?daterange=quarterly") ){
       fromDate = moment().startOf("Q").format('YYYY-MM-DD');
       endDate = moment().endOf("Q").format('YYYY-MM-DD');      
     }
-    if( daterange == 'yearly' ){
+    if( url.indexOf("?daterange=yearly") ){
       if (moment().quarter() == 4) {
         fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
         endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
@@ -546,7 +543,7 @@ Template.newprofitandloss.onRendered(function () {
         endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
       }
     }
-    if( daterange == 'ytd' ){
+    if( url.indexOf("?daterange=ytd") ){
       fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
       endDate = moment().format("YYYY-MM-DD");
     }
