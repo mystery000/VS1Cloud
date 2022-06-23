@@ -5,20 +5,6 @@
                 <div class="modal-header">
                     <h4>Earning Rate List</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <div class="dropdown float-right">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownEarningsButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Add
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" style="min-width: 270px;" aria-labelledby="dropdownEarningsButton">
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#ordinaryTimeEarningsModal">Ordinary Time Earnings</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#overtimeEarningsModal">Overtime Earnings</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#employmentTermninationPaymentsModal">Employment Termnination Payments</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#lumpSumEModal">Lump Sum E</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#bonusesCommissionsModal">Bonuses & Commissions</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#lumpSumWModal">Lump Sum W</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#directorsFeesModal">Directors Fees</a>
-                        </div>
-                    </div>               
                 </div>
                 <div class="modal-body">
                     <input type="hidden" style="width: 100%; display:none;" id="earningRateID" name="earningRateID" />
@@ -32,28 +18,13 @@
                                         <th class="th colEarningsType" style="width: 80px;">Earnings Type</th>
                                         <th class="th colEarningsDisplayName">Display name</th>
                                         <th class="th colEarningsAccounts">Account</th>
+                                        <th class="th colEarningsRateType">Rate Type</th>
                                         <th class="th colEarningsPAYG hiddenColumn">PAYG withholding</th>
                                         <th class="th colEarningsSuperannuation hiddenColumn">Superannuation Guarantee Contribution</th>
                                         <th class="th colEarningsReportableasW1 hiddenColumn">Reportable as W1</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tbody>
-                                        {{#if datatablerecords}}
-                                            {{#each item in datatablerecords}}
-                                            <tr class="dnd-moved" id="{{item.ID}}" style="cursor: pointer;">
-                                                <td contenteditable="false" class="colEarningsID hiddenColumn">{{item.ID}}</td>
-                                                <td contenteditable="false" class="colEarningsNames">{{item.EarningsName}}</td>
-                                                <td contenteditable="false" class="colEarningsType" >{{item.EarningType}}</td>
-                                                <td contenteditable="false" class="colEarningsDisplayName">{{item.EarningsDisplayName}}</td>
-                                                <td contenteditable="false" class="colExpenseAccount">{{item.ExpenseAccount}}</td>
-                                                <td contenteditable="false" class="colEarningsExemptPaygWithholding hiddenColumn">{{item.EarningsExemptPaygWithholding}}</td>
-                                                <td contenteditable="false" class="colEarningsExemptSuperannuationGuaranteeCont hiddenColumn">{{item.EarningsExemptSuperannuationGuaranteeCont}}</td>
-                                                <td contenteditable="false" class="colEarningsReportableW1onActivityStatement hiddenColumn">{{item.EarningsReportableW1onActivityStatement}}</td>
-                                            </tr>
-                                            {{/each}}
-                                        {{/if}}
-                                    </tbody>
                                 </tbody>
                             </table>
                         </div>
