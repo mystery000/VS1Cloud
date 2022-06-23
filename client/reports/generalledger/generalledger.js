@@ -1318,12 +1318,9 @@ Template.generalledger.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {
-    if (GlobalFunctions.hasNumber(amount)) {
-      // amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-      if (Math.sign(amount) === -1) {
-        console.log("The amount is: ", amount);
-        return true;
-      }
+    if (Math.sign(amount) === -1) {
+     //console.log("The amount is: ", amount);
+      return true;
     }
     return false;
   },
