@@ -460,6 +460,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -467,6 +468,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    HeaderAccountTotal
+                  )) || "",
               },
             ];
 
@@ -482,6 +486,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -489,6 +494,7 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal))  || ""
               },
               ,
             ];
@@ -505,6 +511,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -512,6 +519,7 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
               },
             ];
 
@@ -525,6 +533,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -532,6 +541,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalCurrentAsset_Liability
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalCurrentAsset_Liability
+                  )) || ""
               },
             ];
           } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
@@ -547,6 +559,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -554,6 +567,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalCurrentAsset_Liability
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalCurrentAsset_Liability
+                  )) || "",
               },
             ];
           } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
@@ -562,6 +578,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -569,6 +586,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalAsset_Liability
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalAsset_Liability
+                  )) || ""
               },
             ];
 
@@ -588,6 +608,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -595,6 +616,7 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
               },
             ];
           } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
@@ -603,6 +625,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -610,6 +633,7 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
               },
             ];
           } else if (
@@ -620,6 +644,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -627,6 +652,7 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     HeaderAccountTotal
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
               },
             ];
           } else if (
@@ -637,6 +663,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -644,6 +671,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalCurrentAsset_Liability
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalCurrentAsset_Liability
+                  )) || ""
               },
             ];
           } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
@@ -652,6 +682,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -659,6 +690,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalCurrentAsset_Liability
                   ) || "",
+                  amount:  utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalCurrentAsset_Liability
+                  )) || ""
               },
             ];
           } else if (
@@ -669,6 +703,7 @@ Template.balancesheetreport.onRendered(() => {
               {
                 type: "amount",
                 value: SubAccountTotal || "",
+                amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
               },
               {
                 type: "amount",
@@ -676,6 +711,9 @@ Template.balancesheetreport.onRendered(() => {
                   utilityService.modifynegativeCurrencyFormat(
                     TotalAsset_Liability
                   ) || "",
+                  amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                    TotalAsset_Liability
+                  )) || ""
               },
             ];
 
@@ -701,6 +739,7 @@ Template.balancesheetreport.onRendered(() => {
                 {
                   type: "amount",
                   value: SubAccountTotal || "",
+                  amount: utilityService.convertSubstringParseFloat(SubAccountTotal) || ""
                 },
                 {
                   type: "amount",
@@ -708,6 +747,7 @@ Template.balancesheetreport.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       HeaderAccountTotal
                     ) || "",
+                    amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
                 },
               ];
             } else {
@@ -716,6 +756,7 @@ Template.balancesheetreport.onRendered(() => {
                 {
                   type: "amount",
                   value: SubAccountTotal || "",
+                  amount:  utilityService.convertSubstringParseFloat(SubAccountTotal) || "",
                 },
                 {
                   type: "amount",
@@ -723,6 +764,7 @@ Template.balancesheetreport.onRendered(() => {
                     utilityService.modifynegativeCurrencyFormat(
                       HeaderAccountTotal
                     ) || "",
+                    amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal)) || ""
                 },
               ];
             }
@@ -743,11 +785,14 @@ Template.balancesheetreport.onRendered(() => {
             {
               type: "amount",
               value: Currency + "0.00",
+              amount: 0.00
             },
             {
               type: "amount",
               value:
                 utilityService.modifynegativeCurrencyFormat(totalNetAssets),
+                amount: utilityService.convertSubstringParseFloat(utilityService.modifynegativeCurrencyFormat(
+                  totalNetAssets))
             },
           ],
         };
@@ -1050,6 +1095,7 @@ Template.balancesheetreport.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {
+   
     if (Math.sign(amount) === -1) {
       return true;
     }

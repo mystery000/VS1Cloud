@@ -148,6 +148,11 @@
                                     .tableExportDetailDiv td.alighnMent1 {
                                         text-align: right !important;
                                     }
+
+                                    table tr .text-danger,
+                                    table tr .text-danger a {
+                                        color: #e74a3b !important;
+                                    }
                                 </style>
                                 <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                                     <thead>
@@ -163,13 +168,13 @@
                                                     <th class="text-left"></th>
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }} {{#if isNegativeAmount c.currency}} text-danger {{/if}}" active="{{ c.active }}" >{{ c.currency }}</th>
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.currency }}</th>
                                                         {{/if}}
                                                     {{/each}}
 
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }} {{#if isNegativeAmount c.currency}} text-danger {{/if}}" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.currency }}</th>
                                                         {{/if}}
                                                     {{/each}}
                                                 {{/if}}
@@ -210,7 +215,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.value c}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -233,7 +238,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.value c}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -265,7 +270,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
                                                                             
-                                                                        <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.value c}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                        <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
                                                                             {{convertAmount item.value c}}
                                                                         </td>
                                                                         {{/if}}
@@ -285,7 +290,7 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount item.value c}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList}} {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
                                                                                 {{convertAmount item.value c}}
                                                                             </td>
                                                                         {{/if}}
