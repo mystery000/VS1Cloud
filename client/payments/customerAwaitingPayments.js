@@ -1920,7 +1920,7 @@ Template.customerawaitingpayments.events({
              $(".btnRefreshCustomerAwaiting").trigger("click");
           }
         },
-        'click .btnRefreshCustomerAwaiting':function(event){
+    'click .btnRefreshCustomerAwaiting':function(event){
         $(".btnRefresh").trigger("click");
     },
     'click .btnPaymentList': function () {
