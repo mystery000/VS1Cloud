@@ -7,7 +7,7 @@
         <style>
             .templateItem {
                  display: inline-flex !important;
- 
+
              }
              .btnPreviewTemplate {
                  padding: 6px;
@@ -15,7 +15,7 @@
              }
              .btnPreviewTemplate:hover {
                  background-color: #f8f9fc;
-             }                      
+             }
          </style>
 
         {{#if record}}
@@ -26,7 +26,7 @@
 
             <form>
                 <header style="padding: 16px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-                    <h2 style="margin: 16px;margin-bottom: 0px;">Customer Payment {{record.lid}}
+                    <h2 class="heading" style="margin: 16px;margin-bottom: 0px;">Customer Payment {{record.lid}}
 
                         <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
 
@@ -103,7 +103,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                           
+
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
@@ -119,7 +119,7 @@
                                                         {{/each}}
                                                     </select> -->
                                                 </div>
-                                              
+
 
                                             </div>
 
@@ -141,25 +141,25 @@
 
 
                                         </div>
-                                      
+
                                     </div>
 
-                                   
+
                                 </div>
-                              
-                               
+
+
                             </div>
 
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <div class="row">
-                                    
+
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="row">
                                             <div class="col-6 col-md-12 col-lg-12">
                                                 <div class="form-group"><label>Reference No.</label>
                                                     <input class="form-control form-control" type="text" value="{{record.reference}}" id="edtReference" name="edtReference">
                                                 </div>
-                                              
+
 
                                             </div>
 
@@ -181,7 +181,7 @@
 
 
                                         </div>
-                                      
+
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="row">
@@ -190,15 +190,15 @@
                                             </div>
                                         </div>
                                     </div>
-                              
+
                                 </div>
-                              
-                               
+
+
                             </div>
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                                 <div class="row">
-                                    
-                                    
+
+
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-6 col-md-12 col-lg-12">
@@ -208,17 +208,17 @@
                                         </div>
                                     </div>
                                 </div>
-                              
-                               
+
+
                             </div>
-                           
-                          
-                          
+
+
+
                         </div>
-        
-                   
+
+
                     </div>
-                 
+
                 </div>
                 <!-- <div class="row" style="background-color: #ededed; padding: 0px 32px;">
                     <div class="col-12 col-lg-6">
@@ -999,7 +999,7 @@
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input favCheckBox chkBankingReport" name="print_custom_payment" type="checkbox" id="print_custom_payment" autocomplete="off">
                                     <label style="cursor: pointer;" class="custom-control-label" for="print_custom_payment">Print Custom Payment</label>
-                                </div>                      
+                                </div>
 
                             </div>
 
@@ -1056,10 +1056,10 @@
                                                     <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                                     </h4>
                                                 </div>
-        
+
                                             </div>
-        
-        
+
+
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -1070,16 +1070,16 @@
                                                         :</p>
                                                     <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                                         Date:</p>
-        
+
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                                     <div class="mt-4" id="customfieldlable">
                                                         <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
+
+
                                                 </div>
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
@@ -1087,24 +1087,24 @@
                                                     <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-        
+
                                                     <p class="link"
                                                         style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
-        
+
                                                     <div class="mt-4" id="customfieldlabledata">
                                                         <p class="customfield1data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                                         <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                                         <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                                     </div>
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -1139,30 +1139,30 @@
                                                             <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                                         </div>
                                                         <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                                             </div> -->
                                                         <div class="col-12">
                                                             <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                                         </div>
-        
+
                                                         <div class="col-12">
-        
+
                                                             <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 BSB (Branch Number) :
                                                                 <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
+
                                                             <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                                             </p>
-        
-        
+
+
                                                         </div>
-        
+
                                                     </div>
                                                 </div>
                                                 <div class="col-6 field_amount">
@@ -1206,34 +1206,34 @@
                                                                 </p>
                                                                 <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                                                 </p>
-        
+
                                                             </div>
-        
-        
+
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-        
-        
+
+
                                     </div>
-        
+
                                     <div style="font-size: 10px; margin-right: 8px; float: right;">
                                         <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
                                         <p>Page 1 of 1</p>
                                     </div>
-        
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-times" style="margin-right: 5px;"></i>Close</button>
                             </div>
                         </div>
-        
+
                     </div>
                 </div>
-        
+
                 <div style="display:none;width: 90%; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
                 name="html-2-pdfwrapper_new">
                 <div class="d-flex flex-row d-sm-flex d-md-flex ">
@@ -1269,10 +1269,10 @@
                                 <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
-        
+
                         </div>
-        
-        
+
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -1283,7 +1283,7 @@
                                 <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                     Date:</p>
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-        
+
                                 <div class="mt-4" id="customfieldtablenew">
                                     <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                     <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
@@ -1305,10 +1305,10 @@
                                     <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                     <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                 </div>
-        
-        
-        
-        
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -1343,30 +1343,30 @@
                                         <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                     </div>
                                     <!-- <div class="bankDetails" style="margin: 16px;">
-        
+
                             </div> -->
                                     <div class="col-12">
                                         <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                     </div>
-        
+
                                     <div class="col-12">
-        
+
                                         <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             BSB (Branch Number) :
                                             <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
+
                                         <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-        
-        
+
+
                                     </div>
-        
+
                                 </div>
                             </div>
                             <div class="col-6 field_amount">
@@ -1410,24 +1410,24 @@
                                             </p>
                                             <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             </p>
-        
+
                                         </div>
-        
-        
+
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-        
-        
+
+
                 </div>
-        
+
                 <div style="font-size: 10px; margin-right: 8px; float: right;">
                     <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
                     <p>Page 1 of 1</p>
                 </div>
-        
+
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
@@ -1437,7 +1437,7 @@
                                 <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
                                 <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
                             </div>
-                    
+
 
                         </div>
 

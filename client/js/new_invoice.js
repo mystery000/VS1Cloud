@@ -21,10 +21,6 @@ let times = 0;
 let clickedInput = "";
 let isDropDown = false;
 
-
-
-
-
 let template_list = [
   
     "Invoices",
@@ -117,7 +113,7 @@ Template.new_invoice.onRendered(() => {
 	
 	  let templateObject = Template.instance();
 
-      $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
+    $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
     
         title = $(this).parent().attr("data-id");
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
@@ -125,10 +121,9 @@ Template.new_invoice.onRendered(() => {
            
      });
     
-
-
     let currentInvoice;
     let getso_id;
+
     $(window).on('load', function () {
         const win = $(this); //this = window
         if (win.width() <= 1024 && win.width() >= 450) {
@@ -138,8 +133,9 @@ Template.new_invoice.onRendered(() => {
             $("#totalSection").addClass("offset-md-6");
         }
     });
-
+  
     let imageData = (localStorage.getItem("Image"));
+    
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
     }
@@ -2369,7 +2365,7 @@ Template.new_invoice.onRendered(() => {
     }
     else {
         setTimeout(function () {
-            $('#sltTerms').val(templateObject.defaultsaleterm.get());
+            $('#sltTerms').val(templateObject.defaultsaleterm.get()||'');
         }, 300);
     }
 
@@ -2419,7 +2415,7 @@ Template.new_invoice.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(data.fields.TermsName || templateObject.defaultsaleterm.get());
+        $('#sltTerms').val(data.fields.TermsName || templateObject.defaultsaleterm.get()||'');
         let selectedTaxCodeName = data.fields.TaxCodeName || 'E';
         setCustomerInfo(selectedTaxCodeName);
     }
@@ -6184,7 +6180,6 @@ Template.new_invoice.onRendered(() => {
     function showInvoice1(template_title,number) {
 
         let invoice_data = templateObject.invoicerecord.get();
-
         var array_data = [];
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
@@ -6195,7 +6190,7 @@ Template.new_invoice.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();          
+        var erpGet = erpDb();
         let fx = $('#sltCurrency').val();
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
@@ -6205,7 +6200,10 @@ Template.new_invoice.onRendered(() => {
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
 
+
+
         $('#tblInvoiceLine > tbody > tr').each(function () {
+
         var lineID = this.id;
         let tdproduct = $('#' + lineID + " .lineProductName").val();
         let tddescription = $('#' + lineID + " .lineProductDesc").text();
@@ -6216,7 +6214,6 @@ Template.new_invoice.onRendered(() => {
         let taxamount = $('#' + lineID + " .colTaxAmount").text();
         let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
-
         array_data.push([
             tdproduct,
             tddescription,
@@ -6224,7 +6221,8 @@ Template.new_invoice.onRendered(() => {
             tdunitprice,
             taxamount,
             tdlineamt,
-            ]);
+        ]);
+
         lineItemObj = {
             description: tddescription || '',
             quantity: tdQty || 0,
@@ -6236,8 +6234,8 @@ Template.new_invoice.onRendered(() => {
         }
         lineItems.push(lineItemObj);
 
-
         });
+
         let company = Session.get('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
@@ -6251,7 +6249,9 @@ Template.new_invoice.onRendered(() => {
         stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
+        var po = $('#ponumber').val() || '.';
 
+       
 
         object_invoce = [];
       
@@ -6268,11 +6268,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
-                date: invoice_data.saleDate,
-                invoicenumber:invoice_data.docnumber,
+                title: template_title + "  " + invoice_data.id,
+                date: invoice_data.saledate,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6310,11 +6310,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6352,11 +6352,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6407,9 +6407,10 @@ Template.new_invoice.onRendered(() => {
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
-            var erpGet = erpDb();         
-            
+            var erpGet = erpDb();
+
             let fx = $('#sltCurrency').val();
+            var po = $('#ponumber').val() || '.';
 
             var customfield1 = $('#edtSaleCustField1').val() || '';
             var customfield2 = $('#edtSaleCustField2').val() || '';
@@ -6481,11 +6482,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6523,11 +6524,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6565,11 +6566,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -6597,14 +6598,14 @@ Template.new_invoice.onRendered(() => {
 
 
            }
-          
-    
+
+
             object_invoce.push(item_invoices_back);
             $("#html-2-pdfwrapper_new .field_payment").show();
             $("#html-2-pdfwrapper_new .field_amount").show();
-        
+
             updateTemplate1(object_invoce);
-        
+
             saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
             return true;
     }
@@ -6623,8 +6624,8 @@ Template.new_invoice.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();          
-
+        var erpGet = erpDb();
+        var po = $('#ponumber').val() || '.';
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -6682,7 +6683,7 @@ Template.new_invoice.onRendered(() => {
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
        object_invoce = [];
-            
+
        let item_invoices = '';
        if(number == 1)
        {
@@ -6695,11 +6696,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -6711,9 +6712,9 @@ Template.new_invoice.onRendered(() => {
             total : "",
             paid_amount :"",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account : "",
+            swift : "",
             data: array_data,
             customfield1:'NA',
             customfield2:'NA',
@@ -6723,7 +6724,7 @@ Template.new_invoice.onRendered(() => {
             customfieldlabel3:'NA',
             applied : "",
             showFX:"",
-            
+
            };
 
        }
@@ -6738,11 +6739,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -6754,9 +6755,9 @@ Template.new_invoice.onRendered(() => {
             total : "",
             paid_amount :"",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account : "",
+            swift : "",
             data: array_data,
             customfield1:customfield1,
             customfield2:customfield2,
@@ -6780,11 +6781,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -6796,9 +6797,9 @@ Template.new_invoice.onRendered(() => {
             total : "",
             paid_amount :"",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account : "",
+            swift : "",
             data: array_data,
             customfield1:customfield1,
             customfield2:customfield2,
@@ -6815,11 +6816,11 @@ Template.new_invoice.onRendered(() => {
 
 
         object_invoce.push(item_invoices);
-    
+
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
-    
-            updateTemplate1(object_invoce);
+
+        updateTemplate1(object_invoce);
 
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
     }
@@ -6827,7 +6828,7 @@ Template.new_invoice.onRendered(() => {
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
          switch (template_title) {
-     
+
          case "Invoices":
             showInvoice1(template_title,number);
            break;
@@ -6835,12 +6836,12 @@ Template.new_invoice.onRendered(() => {
         case "Invoice Back Orders":
             showInvoiceBack1(template_title,number);
            break;
-         
+
          case "Delivery Docket":
             showDeliveryDocket1(template_title,number);
            break;
          }
-   
+
       };
 
     let table;
@@ -7332,7 +7333,7 @@ Template.new_invoice.onRendered(() => {
         $('#pdfCustomerAddress').html(postalAddress);
         $('.pdfCustomerAddress').text(postalAddress);
         $('#txaShipingInfo').val(postalAddress);
-        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || templateObject.termrecords.get());
+        $('#sltTerms').val(tableCustomer.find(".colCustomerTermName").text() || templateObject.termrecords.get()||'');
         let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || 'E';
         setCustomerInfo(selectedTaxCodeName);
     });
@@ -8321,7 +8322,7 @@ Template.new_invoice.onRendered(() => {
     });
 
     async  function showInvoice(template_title,number) {
-                
+
         let invoice_data = templateObject.invoicerecord.get();
 
 
@@ -8335,7 +8336,7 @@ Template.new_invoice.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();          
+        var erpGet = erpDb();
 
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
@@ -8344,6 +8345,7 @@ Template.new_invoice.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text();
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
+        var po = $('#ponumber').val() || '.';
         let fx = $('#sltCurrency').val();
         $('#tblInvoiceLine > tbody > tr').each(function () {
         var lineID = this.id;
@@ -8355,9 +8357,6 @@ Template.new_invoice.onRendered(() => {
         let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
         let taxamount = $('#' + lineID + " .colTaxAmount").text();
         let tdlineamt = $('#' + lineID + " .colAmountInc").text();
-
-        
-
 
         array_data.push([
             tdproduct,
@@ -8380,6 +8379,7 @@ Template.new_invoice.onRendered(() => {
 
 
         });
+
         let company = Session.get('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
@@ -8396,9 +8396,9 @@ Template.new_invoice.onRendered(() => {
 
 
         object_invoce = [];
-      
+
         let item_invoices = '';
-    
+
         if(number == 1)
         {
               item_invoices = {
@@ -8410,11 +8410,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
-                date: invoice_data.saleDate,
-                invoicenumber:invoice_data.docnumber,
+                title: template_title + "  " + invoice_data.id,
+                date: invoice_data.saledate,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -8452,11 +8452,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -8482,6 +8482,7 @@ Template.new_invoice.onRendered(() => {
                 showFX:"",
               };
 
+
         }
         else
         {
@@ -8494,11 +8495,11 @@ Template.new_invoice.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
+                title: template_title + "  " + invoice_data.id,
                 date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
+                invoicenumber:invoice_data.id,
                 refnumber: invoice_data.reference,
-                pqnumber: "",
+                pqnumber: po,
                 duedate: invoice_data.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -8525,15 +8526,15 @@ Template.new_invoice.onRendered(() => {
               };
 
         }
-             
-    
+
+
         object_invoce.push(item_invoices);
-    
+
         $("#html-2-pdfwrapper_new .field_payment").show();
         $("#html-2-pdfwrapper_new .field_amount").show();
-    
+
         await updateTemplate(object_invoce);
-    
+
         await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
 
         return true;
@@ -8553,7 +8554,7 @@ Template.new_invoice.onRendered(() => {
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
             let dept = $('#sltDept').val();
-            var erpGet = erpDb();          
+            var erpGet = erpDb();
 
             var customfield1 = $('#edtSaleCustField1').val() || '';
             var customfield2 = $('#edtSaleCustField2').val() || '';
@@ -8564,6 +8565,7 @@ Template.new_invoice.onRendered(() => {
             var customfieldlabel3 = $('.lblCustomField3').first().text();
 
             let fx = $('#sltCurrency').val();
+            var po = $('#ponumber').val() || '.';
 
             $('#tblInvoiceLine > tbody > tr').each(function () {
             var lineID = this.id;
@@ -8615,146 +8617,146 @@ Template.new_invoice.onRendered(() => {
 
            object_invoce = [];
            let item_invoices_back = '';
-    
+
            if(number == 1)
            {
-            item_invoices_back = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address:Session.get('vs1companyaddress1'),
-                o_city:  Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
-                date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
-                refnumber: invoice_data.reference,
-                pqnumber: "",
-                duedate: invoice_data.duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : invoice_data.shipToDesc,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : invoice_data.SubTotal,
-                gst : invoice_data.TotalTax,
-                total : total,
-                paid_amount :invoice_data.totalPaid,
-                bal_due : invoice_data.balanceDue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                applied : "",
-                showFX:"",
-            };
+                item_invoices_back = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address:Session.get('vs1companyaddress1'),
+                    o_city:  Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
+                    title: template_title + "  " + invoice_data.id,
+                    date: invoice_data.saledate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: invoice_data.reference,
+                    pqnumber: po,
+                    duedate: invoice_data.duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : invoice_data.shipToDesc,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal : invoice_data.SubTotal,
+                    gst : invoice_data.TotalTax,
+                    total : total,
+                    paid_amount :invoice_data.totalPaid,
+                    bal_due : invoice_data.balanceDue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:'NA',
+                    customfield2:'NA',
+                    customfield3:'NA',
+                    customfieldlabel1:'NA',
+                    customfieldlabel2:'NA',
+                    customfieldlabel3:'NA',
+                    applied : "",
+                    showFX:"",
+                };
 
            }
            else if(number == 2)
            {
-            item_invoices_back = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address:Session.get('vs1companyaddress1'),
-                o_city:  Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
-                date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
-                refnumber: invoice_data.reference,
-                pqnumber: "",
-                duedate: invoice_data.duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : invoice_data.shipToDesc,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : invoice_data.SubTotal,
-                gst : invoice_data.TotalTax,
-                total : total,
-                paid_amount :invoice_data.totalPaid,
-                bal_due : invoice_data.balanceDue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:customfield1,
-                customfield2:customfield2,
-                customfield3:customfield3,
-                customfieldlabel1:customfieldlabel1,
-                customfieldlabel2:customfieldlabel2,
-                customfieldlabel3:customfieldlabel3,
-                applied : "",
-                showFX:"",
-            };
+                item_invoices_back = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address:Session.get('vs1companyaddress1'),
+                    o_city:  Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
+                    title: template_title + "  " + invoice_data.id,
+                    date: invoice_data.saledate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: invoice_data.reference,
+                    pqnumber: po,
+                    duedate: invoice_data.duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : invoice_data.shipToDesc,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal : invoice_data.SubTotal,
+                    gst : invoice_data.TotalTax,
+                    total : total,
+                    paid_amount :invoice_data.totalPaid,
+                    bal_due : invoice_data.balanceDue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:"",
+                };
 
            }
            else{
 
-            item_invoices_back = {
-                o_url: Session.get('vs1companyURL'),
-                o_name: Session.get('vs1companyName'),
-                o_address:Session.get('vs1companyaddress1'),
-                o_city:  Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
-                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
-                o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoice_data.id,
-                date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
-                refnumber: invoice_data.reference,
-                pqnumber: "",
-                duedate: invoice_data.duedate,
-                paylink: "Pay Now",
-                supplier_type: "Customer",
-                supplier_name : customer,
-                supplier_addr : invoice_data.shipToDesc,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : invoice_data.SubTotal,
-                gst : invoice_data.TotalTax,
-                total : total,
-                paid_amount :invoice_data.totalPaid,
-                bal_due : invoice_data.balanceDue,
-                bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-                account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                customfield1:customfield1,
-                customfield2:customfield2,
-                customfield3:customfield3,
-                customfieldlabel1:customfieldlabel1,
-                customfieldlabel2:customfieldlabel2,
-                customfieldlabel3:customfieldlabel3,
-                applied : "",
-                showFX:fx,
-            };
+                item_invoices_back = {
+                    o_url: Session.get('vs1companyURL'),
+                    o_name: Session.get('vs1companyName'),
+                    o_address:Session.get('vs1companyaddress1'),
+                    o_city:  Session.get('vs1companyCity'),
+                    o_state: Session.get('companyState'),
+                    o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                    o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                    o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
+                    title: template_title + "  " + invoice_data.id,
+                    date: invoice_data.saledate,
+                    invoicenumber:invoice_data.id,
+                    refnumber: invoice_data.reference,
+                    pqnumber: po,
+                    duedate: invoice_data.duedate,
+                    paylink: "Pay Now",
+                    supplier_type: "Customer",
+                    supplier_name : customer,
+                    supplier_addr : invoice_data.shipToDesc,
+                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                    subtotal : invoice_data.SubTotal,
+                    gst : invoice_data.TotalTax,
+                    total : total,
+                    paid_amount :invoice_data.totalPaid,
+                    bal_due : invoice_data.balanceDue,
+                    bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                    account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                    data: array_data,
+                    customfield1:customfield1,
+                    customfield2:customfield2,
+                    customfield3:customfield3,
+                    customfieldlabel1:customfieldlabel1,
+                    customfieldlabel2:customfieldlabel2,
+                    customfieldlabel3:customfieldlabel3,
+                    applied : "",
+                    showFX:fx,
+                };
 
 
            }
-          
-    
+
+
             object_invoce.push(item_invoices_back);
             $("#html-2-pdfwrapper_new .field_payment").show();
             $("#html-2-pdfwrapper_new .field_amount").show();
-        
+
             await updateTemplate(object_invoce);
-        
+
             await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
             return true;
     }
-   
+
     async function showDeliveryDocket(template_title,number)
     {
 
@@ -8769,8 +8771,8 @@ Template.new_invoice.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();          
-
+        var erpGet = erpDb();
+        var po = $('#ponumber').val() || '.';
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -8828,7 +8830,7 @@ Template.new_invoice.onRendered(() => {
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
        object_invoce = [];
-            
+
        let item_invoices = '';
        if(number == 1)
        {
@@ -8841,11 +8843,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -8857,9 +8859,9 @@ Template.new_invoice.onRendered(() => {
             total :"",
             paid_amount : "",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account :"",
+            swift : "",
             data: array_data,
             customfield1:'NA',
             customfield2:'NA',
@@ -8883,11 +8885,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -8899,9 +8901,9 @@ Template.new_invoice.onRendered(() => {
             total :"",
             paid_amount : "",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account :"",
+            swift : "",
             data: array_data,
             customfield1:customfield1,
             customfield2:customfield2,
@@ -8925,11 +8927,11 @@ Template.new_invoice.onRendered(() => {
             o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
             o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
             o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-            title: template_title + invoice_data.id,
+            title: template_title + " " +invoice_data.id,
             date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
+            invoicenumber:invoice_data.id,
             refnumber: invoice_data.reference,
-            pqnumber: "",
+            pqnumber: po,
             duedate: invoice_data.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -8941,9 +8943,9 @@ Template.new_invoice.onRendered(() => {
             total :"",
             paid_amount : "",
             bal_due : "",
-            bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
-            account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+            bsb : "",
+            account :"",
+            swift : "",
             data: array_data,
             customfield1:customfield1,
             customfield2:customfield2,
@@ -8956,24 +8958,24 @@ Template.new_invoice.onRendered(() => {
            };
 
        }
-  
-       
-  
+
+
+
       object_invoce.push(item_invoices);
-  
+
       $("#html-2-pdfwrapper_new .field_payment").show();
       $("#html-2-pdfwrapper_new .field_amount").show();
-  
+
       await updateTemplate(object_invoce);
 
       await saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
     }
 
     // exportSalesToPdf = function() {
-    exportSalesToPdf =  async function (template_title,number) {   
-                
-               
-                
+    exportSalesToPdf =  async function (template_title,number) {
+
+
+
             if(template_title == 'Invoices')
             {
                   await showInvoice(template_title,number);
@@ -8983,14 +8985,12 @@ Template.new_invoice.onRendered(() => {
             {
                   await showDeliveryDocket(template_title,number);
             }
-            else
+            else if(template_title == 'Invoice Back Orders')
             {
-                var invoice_type = FlowRouter.current().queryParams.type;
-                if(invoice_type == 'bo')
-                {
-                    await  showInvoiceBack(template_title,number);
-                }
-                
+                await  showInvoiceBack(template_title,number);
+            }
+            else
+            {           
             }
           
 
@@ -9013,14 +9013,16 @@ Template.new_invoice.onRendered(() => {
                 }
                 else if(template_title == 'Invoice Back Orders')
                 {
-                    var invoice_type = FlowRouter.current().queryParams.type;
-                    if(invoice_type == 'bo')
-                    {
-                       file = 'Invoice_Back_Orders -' + invoice_data_info.id + '.pdf';
-                    }
+                    
+                     file = 'Invoice_Back_Orders -' + invoice_data_info.id + '.pdf';
+                    
+                }
+                else if(template_title == 'Delivery Docket')
+                {
+                    file = 'Delivery Docket -' + invoice_data_info.id + '.pdf';
                 }
                 else{
-                    file = 'Delivery Docket -' + invoice_data_info.id + '.pdf';
+                    
                 }
                
             }
@@ -9157,9 +9159,9 @@ Template.new_invoice.onRendered(() => {
             $("#templatePreviewModal .applied").show()
             $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
           }
-          
-    
-    
+
+
+
           if(object_invoce[0]["supplier_type"] == ""){
             $("#templatePreviewModal .customer").hide()
           }else{
@@ -9190,6 +9192,16 @@ Template.new_invoice.onRendered(() => {
             object_invoce[0]["title"] + " template"
           );
     
+          if(object_invoce[0]["bsb"]=="")
+          { 
+              $('#templatePreviewModal .field_payment').hide();
+
+          }
+          else{
+
+              $('#templatePreviewModal .field_payment').show();
+          }
+         
     
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
@@ -9219,21 +9231,21 @@ Template.new_invoice.onRendered(() => {
           }
           console.log("invoice number==",object_invoce[0]["invoicenumber"])
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-    
+
           if(object_invoce[0]["refnumber"] == ""){
             $("#templatePreviewModal .refNumber").hide();
           }else{
             $("#templatePreviewModal .refNumber").show();
           }
           $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-          
+
           if(object_invoce[0]["duedate"] == ""){
             $("#templatePreviewModal .pdfTerms").hide();
           }else{
             $("#templatePreviewModal .pdfTerms").show();
           }
           $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
-        
+
           if (object_invoce[0]["paylink"] == "") {
                 $("#templatePreviewModal .link").hide();
                 $("#templatePreviewModal .linkText").hide();
@@ -9251,7 +9263,7 @@ Template.new_invoice.onRendered(() => {
                 $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
          }
 
-          
+
           if(object_invoce[0]["customfield1"] == "NA")
           {   
                   $('#customfieldtablenew').css('display', 'none');
@@ -9301,13 +9313,13 @@ Template.new_invoice.onRendered(() => {
                 {
                   $('#templatePreviewModal .customfield3data').text(+ object_invoce[0]["customfield3"]);
                 }
-                
-              
-               
+
+
+
           }
 
           if(object_invoce[0]["customfield1"] == "NA")
-          {   
+          {
                 $('#customfieldlable').css('display', 'none');
                 $('#customfieldlabledata').css('display', 'none');
           }
@@ -9316,7 +9328,7 @@ Template.new_invoice.onRendered(() => {
                 $('#customfieldlable').css('display', 'block');
                 $('#customfieldlabledata').css('display', 'block');
           }
-    
+
         //   table header
           var tbl_header = $("#templatePreviewModal .tbl_header")
           tbl_header.empty()
@@ -9326,12 +9338,12 @@ Template.new_invoice.onRendered(() => {
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
           }
         }
-    
+
         // table content
          var tbl_content = $("#templatePreviewModal .tbl_content")
          tbl_content.empty()
          const data = object_invoce[0]["data"]
-         
+
          for(item of data){
             tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
             var content = ""
@@ -9341,11 +9353,11 @@ Template.new_invoice.onRendered(() => {
              tbl_content.append(content)
              tbl_content.append("</tr>")
          }
-        
-        // total amount 
+
+        // total amount
 
         if(object_invoce[0]["subtotal"] == "")
-        {     
+        {
             $("#templatePreviewModal .field_amount").hide();
         }
         else
@@ -9357,32 +9369,32 @@ Template.new_invoice.onRendered(() => {
             }
             if(object_invoce[0]["gst"] != ""){
 
-                
+
                 $('#templatePreviewModal #grandTotal').text("Grand total");
                 $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
             }
-    
+
             if(object_invoce[0]["total"] != ""){
                 $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
             }
-    
+
             if(object_invoce[0]["bal_due"] != ""){
                 $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
             }
-    
+
             if(object_invoce[0]["paid_amount"] != ""){
                 $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
-    
+
         }
-    
-      
+
+
       }
 
     function updateTemplate(object_invoce) {
-                
+
         if (object_invoce.length > 0) {
-        
+
         $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
         $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
         $("#html-2-pdfwrapper_new .o_address1").text(
@@ -9393,7 +9405,7 @@ Template.new_invoice.onRendered(() => {
         $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
         $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
         $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
-    
+
         if(object_invoce[0]["applied"] == ""){
             $("#html-2-pdfwrapper_new .applied").hide()
             $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
@@ -9401,9 +9413,9 @@ Template.new_invoice.onRendered(() => {
             $("#html-2-pdfwrapper_new .applied").show()
             $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
         }
-        
-    
-    
+
+
+
         if(object_invoce[0]["supplier_type"] == ""){
             $("#html-2-pdfwrapper_new .customer").hide()
         }else{
@@ -9411,7 +9423,7 @@ Template.new_invoice.onRendered(() => {
         }
         $("#html-2-pdfwrapper_new .customer").empty();
         $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
-    
+
         if(object_invoce[0]["supplier_name"] == ""){
             $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
         }else{
@@ -9419,7 +9431,7 @@ Template.new_invoice.onRendered(() => {
         }
         $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
         $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-    
+
         if(object_invoce[0]["supplier_addr"] == ""){
             $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
         }else{
@@ -9427,19 +9439,27 @@ Template.new_invoice.onRendered(() => {
         }
         $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
         $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-    
-        
+
+
         $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
         $("#html-2-pdfwrapper_new .modal-title").text(
             object_invoce[0]["title"] + " template"
         );
-    
-    
+        if(object_invoce[0]["bsb"]=="")
+        { 
+            $('#html-2-pdfwrapper_new .field_payment').hide();
+
+        }
+        else{
+
+            $('#html-2-pdfwrapper_new .field_payment').show();
+        }
+
         $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
         $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
         $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-    
-    
+
+
         if(object_invoce[0]["date"] == ""){
             $("#html-2-pdfwrapper_new .dateNumber").hide();
         }else{
@@ -9454,9 +9474,9 @@ Template.new_invoice.onRendered(() => {
             $("#html-2-pdfwrapper_new .showFxValue").show();
             $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
         }
-    
+
         $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
-    
+
         if(object_invoce[0]["pqnumber"] == ""){
             $("#html-2-pdfwrapper_new .pdfPONumber").hide();
         }else{
@@ -9464,7 +9484,7 @@ Template.new_invoice.onRendered(() => {
         }
 
         if(object_invoce[0]["customfield1"] == "NA")
-        {   
+        {
                 $('#customfieldtablenew').css('display', 'none');
                 $('#customdatatablenew').css('display', 'none');
                 $('#html-2-pdfwrapper_new .customfield1').text('');
@@ -10409,10 +10429,10 @@ Template.new_invoice.events({
                 $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
                 var ponumber = $('#ponumber').val() || '.';
                 $('.po').text(ponumber);
-                var rowCount = $('.tblInvoiceLine tbody tr').length;  
+                var rowCount = $('.tblInvoiceLine tbody tr').length;
 
                 exportSalesToPdf1();
-             
+
 
             } else {
                 swal({
@@ -10435,9 +10455,9 @@ Template.new_invoice.events({
     },
 
     'click #choosetemplate':function(event)
-    {   
+    {
         if($('#choosetemplate').is(':checked'))
-        {        
+        {
             $('#templateselection').modal('show');
         }
         else
@@ -12150,21 +12170,24 @@ Template.new_invoice.events({
                 $('.po').text(ponumber);
                 var rowCount = $('.tblInvoiceLine tbody tr').length;   
 
-                if($('#print_invoice').is(':checked')) {
-                    printTemplate.push('Invoices');
-                }
-                if($('#print_delivery_docket').is(':checked')) {
-                    printTemplate.push('Delivery Docket');
-                }
-
                 var invoice_type = FlowRouter.current().queryParams.type;
-                            if(invoice_type == 'bo')
-                            {
-                                if($('#print_Invoices_back_orders').is(':checked')) {
+                if(invoice_type == 'bo')
+                {
+                         if($('#print_Invoices_back_orders').is(':checked') || $('#print_Invoices_back_orders_second').is(':checked')) {
                                     printTemplate.push('Invoice Back Orders');
-                                }
+                         }
 
-                            }
+               }
+               else{
+
+                        if($('#print_invoice').is(':checked') || $('#print_invoice_second').is(':checked')) {
+                            printTemplate.push('Invoices');
+                        }
+                        if($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
+                            printTemplate.push('Delivery Docket');
+                        }
+
+               }
               
                
           
@@ -12182,16 +12205,12 @@ Template.new_invoice.events({
                         {
                             var template_number = $('input[name="Delivery Docket"]:checked').val();
                         }
+                        else if(printTemplate[i] == 'Invoice Back Orders')
+                        {
+                            var template_number = $('input[name="Invoice Back Orders"]:checked').val();
+                        }
                         else{
-                            
-                            var invoice_type = FlowRouter.current().queryParams.type;
-                            if(invoice_type == 'bo')
-                            {
-                               var template_number = $('input[name="Invoice Back Orders"]:checked').val();
-
-                            }
-
-                           
+                         
                         }
                        
                         let result = await exportSalesToPdf(printTemplate[i],template_number);
@@ -14648,6 +14667,10 @@ Template.new_invoice.events({
     }
 });
 
+
+
 Template.registerHelper('equals', function (a, b) {
     return a === b;
 });
+
+

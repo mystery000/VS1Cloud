@@ -7521,7 +7521,7 @@ Template.new_salesorder.onRendered(() => {
                     customfieldlabel1:customfieldlabel1,
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
-                    showFX:"",
+                    showFX:fx,
         
                     };
     
@@ -9643,12 +9643,13 @@ Template.new_salesorder.events({
             $('.po').text(ponumber);
             var rowCount = $('.tblInvoiceLine tbody tr').length;   
 
-            if($('#print_sales_order').is(':checked')) {
+            if($('#print_sales_order').is(':checked') || $('#print_sales_order_second').is(':checked')) {
                 printTemplate.push('Sales Order');
             }
-            if($('#print_delivery_docket').is(':checked')) {
+            
+           if($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
                 printTemplate.push('Delivery Docket');
-            }
+           }
         
       
             if(printTemplate.length > 0) {

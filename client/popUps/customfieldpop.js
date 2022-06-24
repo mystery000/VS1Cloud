@@ -67,6 +67,89 @@ Template.customfieldpop.onRendered(() => {
       $("#customFieldDropdownListModal3").modal("toggle");
     });
 
+    // add to custom field
+    $(document).on("click", ".btnRefreshCustomField", function (e) {
+
+      data_id = e.target.dataset.id;
+    });
+
+    // add to custom field
+    $(document).on("click", ".btnAddNewCustField", function (e) {
+
+      let data_id = e.target.dataset.id;
+      let custfieldarr = templateObject.custfields.get();
+
+      custfieldarr[data_id - 1].datatype = "ftString";
+      custfieldarr[data_id - 1].isCombo = true;
+
+      templateObject.custfields.set(custfieldarr);
+
+      let selected_data = custfieldarr[data_id - 1];
+      isDropdown = true;
+      $("#isdropDown" + data_id).val(isDropdown);
+      $("#statusId" + data_id).val(selected_data.id || "");
+      $(".custField" + data_id + "Text").css("display", "none");
+      $(".custField" + data_id + "Date").css("display", "none");
+      $(".custField" + data_id + "Dropdown").css("display", "block");
+      $("#currentCustomField").val(data_id);
+
+      if (data_id == 1) {
+        clickedInput = "one";
+      } else if (data_id == 2) {
+        clickedInput = "two";
+      } else {
+        clickedInput = "three";
+      }
+      $("#clickedControl").val(clickedInput);
+
+      $("#customFieldText" + data_id).attr("datatype", "ftString");
+
+      if (Array.isArray(selected_data.dropdown)) {
+        $(".btnAddNewTextBox").nextAll().remove();
+        for (let x = 0; x < selected_data.dropdown.length; x++) {
+          $(".dropDownSection").append(
+            '<div class="row textBoxSection" id="textBoxSection" style="padding:5px">' +
+            '<div class="col-10">' +
+            '<input type="text" style="" name="customText" class="form-control customText" token="' +
+            selected_data.dropdown[x].fields.ID +
+            '" value="' +
+            selected_data.dropdown[x].fields.Text +
+            '" autocomplete="off">' +
+            "</div>" +
+            '<div class="col-2">' +
+            '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>' +
+            "</div>" +
+            "</div>"
+          );
+        }
+      } else if (
+        selected_data.dropdown &&
+        !Array.isArray(selected_data.dropdown) &&
+        Object.keys(selected_data.dropdown).length > 0
+      ) {
+        $(".btnAddNewTextBox").nextAll().remove();
+        $(".dropDownSection").append(
+          '<div class="row textBoxSection" id="textBoxSection" style="padding:5px">' +
+          '<div class="col-10">' +
+          '<input type="text" style="" name="customText" class="form-control customText" token="' +
+          selected_data.dropdown.fields.ID +
+          '" value="' +
+          selected_data.dropdown.fields.Text +
+          '" autocomplete="off">' +
+          "</div>" +
+          '<div class="col-2">' +
+          '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>' +
+          "</div>" +
+          "</div>"
+        );
+      }
+      $(".dropDownSection").show();
+      $("#newStatus" + data_id).val($("#customFieldText" + data_id).val());
+      $("#newCustomFieldPop").modal("toggle");
+      // templateObject.drawDropDownListTable(data_id);
+
+    });
+
   });
 
   templateObject.loadInitCustomFieldsList = function () {
@@ -142,20 +225,10 @@ Template.customfieldpop.onRendered(() => {
           info: true,
           responsive: true,
           fnInitComplete: function () {
-            $(
-              "<button class='btn btn-primary btnAddNewCustField' data-id='" +
-              data_id +
-              "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' data-id='" +
-              data_id +
-              "'></i></button>"
+            $("<button class='btn btn-primary btnAddNewCustField' data-id='" + data_id + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left:  8px !important;'><i class='fas fa-plus' data-id='" + data_id + "'></i></button>"
             ).insertAfter("#customFieldDropdownTable" + data_id + "_filter");
-            $(
-              "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' data-id='" +
-              data_id +
-              "' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" +
-              data_id +
-              "' style='margin-right: 5px'></i>Search</button>"
-            ).insertAfter("#customFieldDropdownTable" + data_id + "_filter");
+
+            $("<button class='btn btn-primary btnRefreshCustomField' type='button' data-id='" + data_id + "' style='padding: 4px 10px; font-size: 14px;  margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" + data_id + "' style='margin-right: 5px'></i>Search</button>").insertAfter("#customFieldDropdownTable" + data_id + "_filter");
           },
         })
         .on("page", function () {
@@ -275,7 +348,6 @@ Template.customfieldpop.onRendered(() => {
     sideBarService
       .getAllCustomFields()
       .then(function (data) {
-        // console.log('getCustomFieldsList->getAllCustomFields->', data)
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
           if (data.tcustomfieldlist[x].fields.ListType == listType) {
             customData = {
@@ -547,18 +619,25 @@ Template.customfieldpop.onRendered(() => {
                 ],
                 info: true,
                 responsive: true,
+                // fnInitComplete: function () {
+                //   $(
+                //     "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+                //   ).insertAfter(
+                //     "#customFieldDropdownTable" + custFieldNo + "_filter"
+                //   );
+                //   $(
+                //     "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                //   ).insertAfter(
+                //     "#customFieldDropdownTable" + custFieldNo + "_filter"
+                //   );
+                // },
+
                 fnInitComplete: function () {
-                  $(
-                    "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-                  ).insertAfter(
-                    "#customFieldDropdownTable" + custFieldNo + "_filter"
-                  );
-                  $(
-                    "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                  ).insertAfter(
-                    "#customFieldDropdownTable" + custFieldNo + "_filter"
-                  );
+                  $("<button class='btn btn-primary btnAddNewCustField' data-id='" + custFieldNo + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' data-id='" + custFieldNo + "'></i></button>"
+                  ).insertAfter("#customFieldDropdownTable" + custFieldNo + "_filter");
+                  $("<button class='btn btn-primary btnRefreshCustomField' type='button' data-id='" + custFieldNo + "' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" + custFieldNo + "' style='margin-right: 5px'></i>Search</button>").insertAfter("#customFieldDropdownTable" + custFieldNo + "_filter");
                 },
+
               })
               .on("page", function () {
                 setTimeout(function () {
@@ -890,8 +969,6 @@ Template.customfieldpop.onRendered(() => {
             .getOneChequeDataEx(currentCheque)
             .then(function (data) {
 
-              // console.log('getChequeData->getOneChequeDataEx->', currentCheque, data)
-
               if (data.fields.Lines != null) {
                 if (data.fields.Lines) {
                   if (data.fields.Lines.length) {
@@ -908,8 +985,6 @@ Template.customfieldpop.onRendered(() => {
             .catch(function (err) { });
         } else {
           let data = JSON.parse(dataObject[0].data);
-
-          // console.log('getChequeData->else->', currentCheque, data)
 
           let useData = data.tchequeex;
           lines = useData.filter(ud => ud.fields.ID == currentCheque)
@@ -980,9 +1055,7 @@ Template.customfieldpop.events({
         // reset VS1 here
         let selectCustFieldNumber = $("#selectCustFieldNumber").val();
 
-        $("#edtSaleCustField" + selectCustFieldNumber).val(
-          newCustomFieldDropdownName
-        );
+        $("#edtSaleCustField" + selectCustFieldNumber).val(newCustomFieldDropdownName);
 
         $("#newCustomFieldDropdownModal").modal("hide");
         $(".fullScreenSpin").css("display", "none");
@@ -1036,6 +1109,7 @@ Template.customfieldpop.events({
     let dropObj = "";
     let listType = "";
     let objDetails1 = "";
+
     $(".fullScreenSpin").css("display", "inline-block");
     if (
       url.includes("/invoicecard") ||
@@ -1117,7 +1191,7 @@ Template.customfieldpop.events({
             $("#customFieldText3").val(termsName);
           }
           $("#newCustomFieldPop").modal("toggle");
-          $("#myModal4").modal("toggle");
+          // $("#myModal4").modal("toggle");  // tempcode
           $(".fullScreenSpin").css("display", "none");
 
 
@@ -1125,6 +1199,7 @@ Template.customfieldpop.events({
             addVS1Data("TCustomFieldList", JSON.stringify(data));
           });
           templateObject.getCustomFieldsList(data_id);
+          templateObject.drawDropDownListTable(data_id);
 
         })
         .catch(function (err) {
@@ -1214,9 +1289,15 @@ Template.customfieldpop.events({
             $(".lblCustomField3").text(termsName);
             $("#customFieldText3").val(termsName);
           }
+
+          sideBarService.getAllCustomFields().then(function (data) {
+            addVS1Data("TCustomFieldList", JSON.stringify(data));
+          });
+          templateObject.getCustomFieldsList(data_id);
           templateObject.drawDropDownListTable(data_id);
+
           $("#newCustomFieldPop").modal("toggle");
-          $("#myModal4").modal("toggle");
+          // $("#myModal4").modal("toggle"); // tempcode
           $(".fullScreenSpin").css("display", "none");
         })
         .catch(function (err) {
@@ -1897,6 +1978,14 @@ Template.customfieldpop.events({
       $("input[name='customText']").val("");
     }
   },
+
+  "click .btnAddNewCustField": function (e) {
+    data_id = e.target.dataset.id;
+  },
+
+  "click .btnRefreshCustomField": function (e) {
+    data_id = e.target.dataset.id;
+  }
 
 });
 
