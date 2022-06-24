@@ -707,9 +707,9 @@ templateObject.getProfitLossLayout = async function() {
             $item.addClass('selected');
 
             // for array
-            // var data = group.sortable("serialize").get();
-            // var jsonString = JSON.stringify(data, null, ' ');
-            // console.log(jsonString);
+            var data = group.sortable("serialize").get();
+            var jsonString = JSON.stringify(data, null, ' ');
+            console.log(jsonString);
             // container.el.removeClass("active");
             // _super($item, container);
           }
