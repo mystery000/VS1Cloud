@@ -1387,11 +1387,13 @@ Template.customerscard.onRendered(function () {
                                 $('#isEOMPlus').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isSalesdefault == true) {
+                              Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                                 $('#chkCustomerDef').prop('checked', true);
                             } else {
                                 $('#chkCustomerDef').prop('checked', false);
                             }
                             if (data.ttermsvs1[i].isPurchasedefault == true) {
+                              Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                                 $('#chkSupplierDef').prop('checked', true);
                             } else {
                                 $('#chkSupplierDef').prop('checked', false);

@@ -138,6 +138,10 @@ Template.newsidenav.onCreated(function() {
 
 });
 Template.newsidenav.onRendered(function() {
+
+    let lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
+    console.log(lastPageVisitUrl);
+
     var countObjectTimes = 0;
     let allDataToLoad = 71;
     let progressPercentage = 0;
@@ -1234,6 +1238,19 @@ Template.newsidenav.onRendered(function() {
 
     templateObject.getAllTermsData = function() {
         sideBarService.getTermsVS1().then(function(data) {
+
+          for (let i in data.ttermsvs1) {
+
+              if (data.ttermsvs1[i].isSalesdefault == true) {
+                  Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
+              }
+
+              if (data.ttermsvs1[i].isPurchasedefault == true) {
+                  Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
+              }
+
+          }
+
           countObjectTimes++;
           progressPercentage = (countObjectTimes * 100) / allDataToLoad;
           $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

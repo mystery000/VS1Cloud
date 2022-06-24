@@ -14,6 +14,22 @@ Template.customerawaitingpayments.onCreated(function () {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
+
+    templateObject.vs1globalBackButton = async function(dataURL) {
+      return new Promise((resolve) => {
+        const redirectURL = dataURL;
+        FlowRouter.go(redirectURL);
+        resolve({success: true, ...redirectURL});
+        // smsService.saveSMSSettings(settingObject).then((res) => {
+        //   sideBarService.getGlobalSettings().then(function(data) {
+        //     addVS1Data('TERPPreference', JSON.stringify(data)).then(() => {
+        //       resolve({success: true, ...res});
+        //     }).catch(function (err) {resolve({success: false, ...err})});
+        //   });
+        // }).catch(err => resolve({success: false, ...err}));
+      });
+    }
+
 });
 
 Template.customerawaitingpayments.onRendered(function () {
@@ -85,7 +101,9 @@ Template.customerawaitingpayments.onRendered(function () {
 
         }
     });
+
     jQuery(document).ready(function($) {
+        window.history.pushState('forward', null, FlowRouter.current().path);
        window.onpopstate = async function(event) {
          let lastPageVisitUrl = "";
         if(JSON.stringify(event.state) == "forward"){
@@ -103,11 +121,13 @@ Template.customerawaitingpayments.onRendered(function () {
           lastPageVisitUrl = window.location.pathname;
         }
         if(lastPageVisitUrl != ""){
-          await window.open(lastPageVisitUrl, '_self');
+          await templateObject.vs1globalBackButton(lastPageVisitUrl);
+          alert(lastPageVisitUrl);
         }
 
       }
    });
+
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -448,7 +468,6 @@ Template.customerawaitingpayments.onRendered(function () {
               });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tsaleslist;
                 let lineItems = [];
                 let lineItemObj = {};
