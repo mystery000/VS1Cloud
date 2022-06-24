@@ -8784,7 +8784,7 @@ Template.new_quote.events({
             $('.po').text(ponumber);
             var rowCount = $('.tblInvoiceLine tbody tr').length;   
 
-            if($('#print_quote').is(':checked')) {
+            if($('#print_quote').is(':checked') || $('#print_quote_second').is(':checked')) {
                 printTemplate.push('Quotes');
             }
         

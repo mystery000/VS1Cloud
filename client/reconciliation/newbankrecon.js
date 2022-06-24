@@ -56,10 +56,10 @@ Template.newbankrecon.onRendered(function() {
     const accountService = new AccountService();
     const supplierService = new PurchaseBoardService();
 
-    let page_number = (FlowRouter.current().queryParams.page !== undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
+    let page_number = (FlowRouter.current().queryParams.page != undefined && parseInt(FlowRouter.current().queryParams.page) > 0)?FlowRouter.current().queryParams.page:1;
     templateObject.page_number.set(page_number);
-    templateObject.sort.set((FlowRouter.current().queryParams.sort !== undefined && FlowRouter.current().queryParams.sort !== '')?FlowRouter.current().queryParams.sort:'');
-    templateObject.sort_param.set((Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'');
+    templateObject.sort.set((FlowRouter.current().queryParams.sort != undefined && FlowRouter.current().queryParams.sort != '')?FlowRouter.current().queryParams.sort:'');
+    templateObject.sort_param.set((Template.instance().sort.get() != '')?'&sort='+Template.instance().sort.get():'');
     let page_limit = 10;
     let page_total = 0;
 
@@ -78,7 +78,7 @@ Template.newbankrecon.onRendered(function() {
                         accountid: data.taccountvs1[i].Id || ' ',
                         accountname: data.taccountvs1[i].AccountName || ' '
                     };
-                    if ((data.taccountvs1[i].AccountTypeName === 'BANK') || (data.taccountvs1[i].AccountTypeName === 'CCARD')) {
+                    if ((data.taccountvs1[i].AccountTypeName == 'BANK') || (data.taccountvs1[i].AccountTypeName == 'CCARD')) {
                         accountnamerecords.push(accountnamerecordObj);
                         templateObject.accountnamerecords.set(accountnamerecords);
                     }
@@ -86,7 +86,7 @@ Template.newbankrecon.onRendered(function() {
             }
             // Session - set account dropdown BEGIN
             setTimeout(function() {
-                if (bankaccountid !== '') {
+                if (bankaccountid != '') {
                     $('#bankAccountID').val(bankaccountid);
                     $('#bankAccountName').val(bankaccountname);
                     templateObject.getOpenBalance(bankaccountname);
@@ -107,7 +107,7 @@ Template.newbankrecon.onRendered(function() {
     templateObject.getAllTaxCodes = function () {
         getVS1Data("TTaxcodeVS1")
             .then(function (dataObject) {
-                if (dataObject.length === 0) {
+                if (dataObject.length == 0) {
                     productService.getTaxCodesVS1().then(function (data) {
                         setTaxCodeModal(data);
                     });
@@ -190,7 +190,7 @@ Template.newbankrecon.onRendered(function() {
 
     templateObject.getAllCustomers = function () {
         getVS1Data('TCustomerVS1').then(function (dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 sideBarService.getClientVS1().then(function (data) {
                     setCustomerList(data.tcustomervs1);
                 });
@@ -236,7 +236,7 @@ Template.newbankrecon.onRendered(function() {
 
     templateObject.getAllSuppliers = function() {
         getVS1Data('TSupplierVS1').then(function(dataObject) {
-            if (dataObject.length === 0) {
+            if (dataObject.length == 0) {
                 supplierService.getSupplierVS1().then(function(data) {
                     setSupplierList(data);
                 });
@@ -292,12 +292,13 @@ Template.newbankrecon.onRendered(function() {
             let access_token = data.token.accessToken;
             const yodleeAccountID = getYodleeAccountID(accountId);
             yodleeService.getTransactionData(access_token, yodleeFromDate).then(function(data) {
-                // console.log(data);
+                console.log(data);
                 let lastTransactionDate = '1899-12-31';
                 let debitTypeList = [];
                 let creditTypeList = [];
                 for (let i = 0; i < data.transaction.length; i++ ) {
-                    if (yodleeAccountID === data.transaction[i].accountId && (data.transaction[i].baseType === 'DEBIT' || data.transaction[i].baseType === 'CREDIT')) {
+                    if (yodleeAccountID == data.transaction[i].accountId && (data.transaction[i].baseType == 'DEBIT' || data.transaction[i].baseType == 'CREDIT')
+                        && data.transaction[i].merchant && data.transaction[i].merchant.name) {
                         let description = '';
                         if (data.transaction[i].description) {
                             if (data.transaction[i].description.simple) {
@@ -307,13 +308,13 @@ Template.newbankrecon.onRendered(function() {
                                 description += data.transaction[i].description.original;
                             }
                         }
-                        // let yodleeTransactionDate = data.transaction[i].date !== '' ? moment(data.transaction[i].date).format("DD/MM/YYYY") : data.transaction[i].date;
-                        let yodleeTransactionDate = data.transaction[i].transactionDate !== '' ? moment(data.transaction[i].transactionDate).format("DD/MM/YYYY") : '';
-                        let yodleeDate = data.transaction[i].transactionDate !== '' ? moment(data.transaction[i].transactionDate).format("YYYY-MM-DD") : '';
+                        // let yodleeTransactionDate = data.transaction[i].date != '' ? moment(data.transaction[i].date).format("DD/MM/YYYY") : data.transaction[i].date;
+                        let yodleeTransactionDate = data.transaction[i].transactionDate != '' ? moment(data.transaction[i].transactionDate).format("DD/MM/YYYY") : '';
+                        let yodleeDate = data.transaction[i].transactionDate != '' ? moment(data.transaction[i].transactionDate).format("YYYY-MM-DD") : '';
                         let deporwith = '';
                         let spentYodleeAmount = 0;
                         let receivedYodleeAmount = 0;
-                        if (data.transaction[i].baseType === 'DEBIT') {
+                        if (data.transaction[i].baseType == 'DEBIT') {
                             deporwith = 'spent';
                             spentYodleeAmount = data.transaction[i].amount.amount;
                             debitTypeList.push(data.transaction[i].type);
@@ -325,11 +326,15 @@ Template.newbankrecon.onRendered(function() {
                         if (yodleeDate > lastTransactionDate) {
                             lastTransactionDate = yodleeDate;
                         }
+                        let merchantName = '';
+                        if (data.transaction[i].merchant && data.transaction[i].merchant.name) {
+                            merchantName = data.transaction[i].merchant.name;
+                        }
                         let yodleeObject = {
                             SortDate: yodleeDate,
                             YodleeDate: yodleeTransactionDate,
                             VS1Date: '',
-                            CompanyName: '',
+                            CompanyName: merchantName || '',
                             VS1Notes: '',
                             VS1List: null,
                             Amount: 0,
@@ -372,7 +377,7 @@ Template.newbankrecon.onRendered(function() {
                 const toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
                 const fromDate = "1899-12-31";
                 getVS1Data('TReconciliationList').then(function (dataObject) {
-                    if(dataObject.length === 0){
+                    if(dataObject.length == 0){
                         sideBarService.getAllTReconcilationByName(fromDate, toDate, bankaccountname).then(function (data) {
                             setAllTReconcilation(data, yodleeData);
                         }).catch(function (err) {
@@ -410,7 +415,7 @@ Template.newbankrecon.onRendered(function() {
         // console.log(data);
         let reconList = [];
         for(let i=0; i<data.treconciliation.length; i++){
-            if (bankaccountname === data.treconciliation[i].fields.AccountName ) {
+            if (bankaccountname == data.treconciliation[i].fields.AccountName ) {
                 let openBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliation[i].fields.OpenBalance) || 0.00;
                 let closeBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliation[i].fields.CloseBalance) || 0.00;
                 let Amount = 0;
@@ -431,7 +436,7 @@ Template.newbankrecon.onRendered(function() {
                     }
                 }
                 let reconObj = {
-                    VS1Date: data.treconciliation[i].fields.ReconciliationDate !== '' ? moment(data.treconciliation[i].fields.ReconciliationDate).format("DD/MM/YYYY") : '',
+                    VS1Date: data.treconciliation[i].fields.ReconciliationDate != '' ? moment(data.treconciliation[i].fields.ReconciliationDate).format("DD/MM/YYYY") : '',
                     CompanyName: data.treconciliation[i].fields.AccountName || '',
                     VS1Notes: data.treconciliation[i].fields.Notes || '',
                     Amount: Amount,
@@ -445,11 +450,11 @@ Template.newbankrecon.onRendered(function() {
         let reconData = [];
         if (yodleeData.length > 0) {
             for (let k = 0; k < yodleeData.length; k++ ) {
-                let VS1Date = ''; let CompanyName = ''; let VS1Notes = ''; let Amount = 0; let VS1Amount = '';
+                let VS1Date = ''; let CompanyName = yodleeData[k].CompanyName; let VS1Notes = ''; let Amount = 0; let VS1Amount = '';
                 let VS1Data = null; let matched = false; let VS1List = null;
                 if (reconList.length > 0) {
                     for (let j = 0; j < reconList.length; j++ ) {
-                        if (yodleeData[k].YodleeLineID.toString() === reconList[j].StatementLineID) {
+                        if (yodleeData[k].YodleeLineID.toString() == reconList[j].StatementLineID) {
                             VS1Data = reconList[j];
                         }
                     }
@@ -461,7 +466,7 @@ Template.newbankrecon.onRendered(function() {
                     Amount = VS1Data.Amount;
                     VS1Amount = VS1Data.VS1Amount;
                     VS1List = VS1Data.VS1List.fields;
-                    matched = parseFloat(yodleeData[k].YodleeAmount) === parseFloat(VS1Data.Amount);
+                    matched = parseFloat(yodleeData[k].YodleeAmount) == parseFloat(VS1Data.Amount);
                 }
                 let reconObject = {
                     SortDate: yodleeData[k].SortDate,
@@ -485,8 +490,8 @@ Template.newbankrecon.onRendered(function() {
                     matched: matched,
                     spentYodleeAmount: yodleeData[k].spentYodleeAmount,
                     receivedYodleeAmount: yodleeData[k].receivedYodleeAmount,
-                    spentVS1Amount: yodleeData[k].deporwith === 'spent'?VS1Amount:utilityService.modifynegativeCurrencyFormat(0),
-                    receivedVS1Amount: yodleeData[k].deporwith === 'received'?VS1Amount:utilityService.modifynegativeCurrencyFormat(0),
+                    spentVS1Amount: yodleeData[k].deporwith == 'spent'?VS1Amount:utilityService.modifynegativeCurrencyFormat(0),
+                    receivedVS1Amount: yodleeData[k].deporwith == 'received'?VS1Amount:utilityService.modifynegativeCurrencyFormat(0),
                 };
                 reconData.push(reconObject);
             }
@@ -502,49 +507,49 @@ Template.newbankrecon.onRendered(function() {
         templateObject.page_list.set(page_list);
         let page_arr = [];
         let sort = templateObject.sort.get();
-        if (sort === "ascDepositSpent") {
+        if (sort == "ascDepositSpent") {
             page_arr = sortTransactionData(reconData, 'spentYodleeAmount', false);
             templateObject.fa_sortDepositSpent.set('fa-sort-asc');
             templateObject.fa_sortDepositReceived.set('fa-sort');
             templateObject.fa_sortWithdrawSpent.set('fa-sort');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "descDepositSpent") {
+        } else if (sort == "descDepositSpent") {
             page_arr = sortTransactionData(reconData, 'spentYodleeAmount', true);
             templateObject.fa_sortDepositSpent.set('fa-sort-desc');
             templateObject.fa_sortDepositReceived.set('fa-sort');
             templateObject.fa_sortWithdrawSpent.set('fa-sort');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "ascDepositReceived") {
+        } else if (sort == "ascDepositReceived") {
             page_arr = sortTransactionData(reconData, 'receivedYodleeAmount', false);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort-asc');
             templateObject.fa_sortWithdrawSpent.set('fa-sort');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "descDepositReceived") {
+        } else if (sort == "descDepositReceived") {
             page_arr = sortTransactionData(reconData, 'receivedYodleeAmount', true);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort-desc');
             templateObject.fa_sortWithdrawSpent.set('fa-sort');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "ascWithdrawSpent") {
+        } else if (sort == "ascWithdrawSpent") {
             page_arr = sortTransactionData(reconData, 'spentVS1Amount', false);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort');
             templateObject.fa_sortWithdrawSpent.set('fa-sort-asc');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "descWithdrawSpent") {
+        } else if (sort == "descWithdrawSpent") {
             page_arr = sortTransactionData(reconData, 'spentVS1Amount', true);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort');
             templateObject.fa_sortWithdrawSpent.set('fa-sort-desc');
             templateObject.fa_sortWithdrawReceived.set('fa-sort');
-        } else if (sort === "ascWithdrawReceived") {
+        } else if (sort == "ascWithdrawReceived") {
             page_arr = sortTransactionData(reconData, 'receivedVS1Amount', false);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort');
             templateObject.fa_sortWithdrawSpent.set('fa-sort');
             templateObject.fa_sortWithdrawReceived.set('fa-sort-asc');
-        } else if (sort === "descWithdrawReceived") {
+        } else if (sort == "descWithdrawReceived") {
             page_arr = sortTransactionData(reconData, 'receivedVS1Amount', true);
             templateObject.fa_sortDepositSpent.set('fa-sort');
             templateObject.fa_sortDepositReceived.set('fa-sort');
@@ -563,10 +568,10 @@ Template.newbankrecon.onRendered(function() {
         // console.log(templateObject.bankTransactionData.get());
         if (templateObject.bankTransactionData.get().length > 0) {
             setTimeout(function() {
-                if (parseInt(page_number) === 1) {
+                if (parseInt(page_number) == 1) {
                     $(".btnPagePrev").prop("disabled", true);
                 }
-                if (parseInt(page_number) === page_cnt) {
+                if (parseInt(page_number) == page_cnt) {
                     $(".btnPageNext").prop("disabled", true);
                 }
                 defineTabpanelEvent();
@@ -582,11 +587,11 @@ Template.newbankrecon.onRendered(function() {
         return array.sort(function(a, b) {
             let x = a[key];
             let y = b[key];
-            if (key === 'SortDate') {
+            if (key == 'SortDate') {
                 x = new Date(x);
                 y = new Date(y);
             }
-            if (key === 'spentYodleeAmount' || key === 'receivedYodleeAmount' || key === 'spentVS1Amount' || key === 'receivedVS1Amount') {
+            if (key == 'spentYodleeAmount' || key == 'receivedYodleeAmount' || key == 'spentVS1Amount' || key == 'receivedVS1Amount') {
                 x = parseFloat(utilityService.substringMethod(x));
                 y = parseFloat(utilityService.substringMethod(y));
             }
@@ -606,8 +611,8 @@ Template.newbankrecon.onRendered(function() {
                 for (let i = 0; i < data.ttobereconcileddeposit.length; i++ ) {
                     let reconciledepositObj = {
                         ID: 'd'+i,
-                        VS1Date: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("DD/MM/YYYY") : '',
-                        SortDate: data.ttobereconcileddeposit[i].DepositDate !== '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("YYYY-MM-DD") : '',
+                        VS1Date: data.ttobereconcileddeposit[i].DepositDate != '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("DD/MM/YYYY") : '',
+                        SortDate: data.ttobereconcileddeposit[i].DepositDate != '' ? moment(data.ttobereconcileddeposit[i].DepositDate).format("YYYY-MM-DD") : '',
                         CompanyName: data.ttobereconcileddeposit[i].CompanyName || ' ',
                         PaymentType: data.ttobereconcileddeposit[i].Notes || ' ',
                         Amount: data.ttobereconcileddeposit[i].Amount,
@@ -618,7 +623,7 @@ Template.newbankrecon.onRendered(function() {
                         DepositLineID: data.ttobereconcileddeposit[i].DepositLineID || 0,
                         CusID: data.ttobereconcileddeposit[i].CusID || 0,
                         StatementLineID: data.ttobereconcileddeposit[i].StatementLineID || 0,
-                        StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate !== '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("DD/MM/YYYY") : '',
+                        StatementTransactionDate: data.ttobereconcileddeposit[i].StatementTransactionDate != '' ? moment(data.ttobereconcileddeposit[i].StatementTransactionDate).format("DD/MM/YYYY") : '',
                         StatementAmount: data.ttobereconcileddeposit[i].StatementAmount,
                         StatementDescription: data.ttobereconcileddeposit[i].StatementDescription || ' ',
                         deporwith: 'received',
@@ -634,8 +639,8 @@ Template.newbankrecon.onRendered(function() {
                     for (let j = 0; j < data.ttobereconciledwithdrawal.length; j++ ) {
                         let reconcilewithdrawalObj = {
                             ID: 'w'+j,
-                            VS1Date: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : '',
-                            SortDate: data.ttobereconciledwithdrawal[j].DepositDate !== '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : '',
+                            VS1Date: data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("DD/MM/YYYY") : '',
+                            SortDate: data.ttobereconciledwithdrawal[j].DepositDate != '' ? moment(data.ttobereconciledwithdrawal[j].DepositDate).format("YYYY-MM-DD") : '',
                             CompanyName: data.ttobereconciledwithdrawal[j].CompanyName || ' ',
                             PaymentType: data.ttobereconciledwithdrawal[j].Notes || ' ',
                             Amount: data.ttobereconciledwithdrawal[j].Amount,
@@ -646,7 +651,7 @@ Template.newbankrecon.onRendered(function() {
                             DepositLineID: data.ttobereconciledwithdrawal[j].DepositLineID || 0,
                             CusID: data.ttobereconciledwithdrawal[j].CusID || 0,
                             StatementLineID: data.ttobereconciledwithdrawal[j].StatementLineID || 0,
-                            StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate !== '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("DD/MM/YYYY") : '',
+                            StatementTransactionDate: data.ttobereconciledwithdrawal[j].StatementTransactionDate != '' ? moment(data.ttobereconciledwithdrawal[j].StatementTransactionDate).format("DD/MM/YYYY") : '',
                             StatementAmount: data.ttobereconciledwithdrawal[j].StatementAmount,
                             StatementDescription: data.ttobereconciledwithdrawal[j].StatementDescription || ' ',
                             deporwith: 'spent',
@@ -687,7 +692,7 @@ Template.newbankrecon.onRendered(function() {
         const toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         const fromDate = "2000-01-01";
         getVS1Data('TReconciliationList').then(function (dataObject) {
-            if(dataObject.length === 0){
+            if(dataObject.length == 0){
                 sideBarService.getAllTReconcilationList(fromDate, toDate).then(function (data) {
                     setAllTReconcilationList(data);
                 }).catch(function (err) {
@@ -713,8 +718,8 @@ Template.newbankrecon.onRendered(function() {
             let closeBalance = utilityService.modifynegativeCurrencyFormat(data.treconciliationlist[i].CloseBalance)|| 0.00;
             const dataList = {
                 id: data.treconciliationlist[i].ID || '',
-                sortdate: data.treconciliationlist[i].ReconciliationDate !== '' ? moment(data.treconciliationlist[i].ReconciliationDate).format("YYYY/MM/DD") : '',
-                recondate: data.treconciliationlist[i].ReconciliationDate !== '' ? moment(data.treconciliationlist[i].ReconciliationDate).format("DD/MM/YYYY") : '',
+                sortdate: data.treconciliationlist[i].ReconciliationDate != '' ? moment(data.treconciliationlist[i].ReconciliationDate).format("YYYY/MM/DD") : '',
+                recondate: data.treconciliationlist[i].ReconciliationDate != '' ? moment(data.treconciliationlist[i].ReconciliationDate).format("DD/MM/YYYY") : '',
                 accountname: data.treconciliationlist[i].AccountName || '',
                 statementno: data.treconciliationlist[i].StatementNo || '',
                 department: data.treconciliationlist[i].Department || '',
@@ -725,7 +730,7 @@ Template.newbankrecon.onRendered(function() {
                 onhold: data.treconciliationlist[i].OnHold || false,
                 finished: data.treconciliationlist[i].Finished || false,
             };
-            if(data.treconciliationlist[i].ReconciliationDate !== ''){
+            if(data.treconciliationlist[i].ReconciliationDate != ''){
                 reconList.push(dataList);
             }
         }
@@ -738,7 +743,7 @@ Template.newbankrecon.onRendered(function() {
             if (data.treconciliation.length) {
                 for (let k = 0; k < data.treconciliation.length; k++ ) {
                     //if(data.treconciliation[k].CloseBalance > 0){
-                    if (data.treconciliation[k].AccountName === bankAccount) {
+                    if (data.treconciliation[k].AccountName == bankAccount) {
                         // counter++;
                         let objData = {
                             Id: data.treconciliation[k].Id,
@@ -751,18 +756,18 @@ Template.newbankrecon.onRendered(function() {
                         if (FlowRouter.current().queryParams.id) {
 
                         } else {
-                            if (data.treconciliation[k].OnHold === true) {
+                            if (data.treconciliation[k].OnHold == true) {
                                 Session.setPersistent('bankaccountid', data.treconciliation[k].AccountID);
                                 Session.setPersistent('bankaccountname', data.treconciliation[k].AccountName);
                             }
                         }
                     }
                 }
-                if (dataArray.length === 0) {
+                if (dataArray.length == 0) {
                     openBal = 0;
                 } else {
                     for (let j in dataArray) {
-                        if(dataArray[dataArray.length - 1].OnHold === true){
+                        if(dataArray[dataArray.length - 1].OnHold == true){
                             openBal = dataArray[dataArray.length - 1].OpenBalance;
                         }else{
                             openBal = dataArray[dataArray.length - 1].CloseBalance;
@@ -796,15 +801,15 @@ Template.newbankrecon.onRendered(function() {
         if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
             openBankAccountListModal();
         } else {
-            if(accountDataName.replace(/\s/g, '') !== ''){
+            if(accountDataName.replace(/\s/g, '') != ''){
                 getVS1Data('TAccountVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
+                    if (dataObject.length == 0) {
                         setOneAccountByName(accountDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let added = false;
                         for (let a = 0; a < data.taccountvs1.length; a++) {
-                            if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                            if((data.taccountvs1[a].fields.AccountName) == accountDataName){
                                 added = true;
                                 setBankAccountData(data, a);
                             }
@@ -864,10 +869,10 @@ Template.newbankrecon.onRendered(function() {
         const cardcvc = data.taccountvs1[i].fields.CVC || '';
         const cardexpiry = data.taccountvs1[i].fields.ExpiryDate || '';
 
-        if ((accounttype === "BANK")) {
+        if ((accounttype == "BANK")) {
             $('.isBankAccount').removeClass('isNotBankAccount');
             $('.isCreditAccount').addClass('isNotCreditAccount');
-        }else if ((accounttype === "CCARD")) {
+        }else if ((accounttype == "CCARD")) {
             $('.isCreditAccount').removeClass('isNotCreditAccount');
             $('.isBankAccount').addClass('isNotBankAccount');
         } else {
@@ -893,7 +898,7 @@ Template.newbankrecon.onRendered(function() {
         $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
         $('#edtCvc').val(cardcvc);
 
-        if(showTrans === 'true'){
+        if(showTrans == 'true'){
             $('.showOnTransactions').prop('checked', true);
         }else{
             $('.showOnTransactions').prop('checked', false);
@@ -917,10 +922,10 @@ Template.newbankrecon.onRendered(function() {
                     // X button 16px wide?
                     $("#taxRateListModal").modal("toggle");
                 } else {
-                    if (taxRateDataName.replace(/\s/g, "") !== "") {
+                    if (taxRateDataName.replace(/\s/g, "") != "") {
                         $(".taxcodepopheader").text("Edit Tax Rate");
                         getVS1Data("TTaxcodeVS1").then(function (dataObject) {
-                            if (dataObject.length === 0) {
+                            if (dataObject.length == 0) {
                                 setTaxCodeVS1(taxRateDataName);
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
@@ -955,15 +960,15 @@ Template.newbankrecon.onRendered(function() {
                 if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                     openBankAccountListModal();
                 }else{
-                    if(accountDataName.replace(/\s/g, '') !== ''){
+                    if(accountDataName.replace(/\s/g, '') != ''){
                         getVS1Data('TAccountVS1').then(function (dataObject) {
-                            if (dataObject.length === 0) {
+                            if (dataObject.length == 0) {
                                 setOneAccountByName(accountDataName);
                             } else {
                                 let data = JSON.parse(dataObject[0].data);
                                 let added = false;
                                 for (let a = 0; a < data.taccountvs1.length; a++) {
-                                    if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                                    if((data.taccountvs1[a].fields.AccountName) == accountDataName){
                                         added = true;
                                         setBankAccountData(data, a);
                                     }
@@ -997,7 +1002,7 @@ Template.newbankrecon.onRendered(function() {
             if (item.VS1List){
                 $('#reconID_'+item.YodleeLineID).val(item.VS1List.ID);
                 let paymentFields = null;
-                if (item.deporwith === "spent") {
+                if (item.deporwith == "spent") {
                     if (item.VS1List.WithdrawalLines && item.VS1List.WithdrawalLines.length > 0) {
                         paymentFields = item.VS1List.WithdrawalLines[0].fields; // Note???
                     }
@@ -1014,10 +1019,10 @@ Template.newbankrecon.onRendered(function() {
                     $('#whatID_' + item.YodleeLineID).val(paymentFields.ClientID);
                 }
             }
-            if (item.VS1Notes.trim() !== "") {
+            if (item.VS1Notes.trim() != "") {
                 $('#discussNav_'+item.YodleeLineID+ ' a').text('Discuss*');
             }
-            if (item.deporwith === "spent") {
+            if (item.deporwith == "spent") {
                 $('#what_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
                 $('#whatDetail_'+item.YodleeLineID).attr("placeholder", "Choose the customer...");
             } else {
@@ -1035,7 +1040,9 @@ Template.newbankrecon.onRendered(function() {
                 }
             });
             $('#btnFindMatch_'+item.YodleeLineID).on('click', function(e, li) {
-                $('#matchNav_'+item.YodleeLineID+' a.nav-link').trigger('click');
+                // $('#matchNav_'+item.YodleeLineID+' a.nav-link').trigger('click');
+                initVS1Transaction();
+                openFindMatch(item);
             });
             $('#btnFindMatch2_'+item.YodleeLineID).on('click', function(e, li) {
                 if (!item.matched) {
@@ -1062,7 +1069,7 @@ Template.newbankrecon.onRendered(function() {
             // });
             $('#discussText_'+item.YodleeLineID).on('keydown', function(e, li) {
                 const discussText = $(this).val() || "";
-                if (discussText.trim() !== "") {
+                if (discussText.trim() != "") {
                     $('#btnSaveDiscuss_' + item.YodleeLineID).show();
                 } else {
                     $('#btnSaveDiscuss_' + item.YodleeLineID).hide();
@@ -1070,7 +1077,7 @@ Template.newbankrecon.onRendered(function() {
             });
             $('#btnSaveDiscuss_' + item.YodleeLineID).on('click', function(e, li) {
                 const discussText = $('#discussText_'+item.YodleeLineID).val() || "";
-                if (discussText.trim() !== "") {
+                if (discussText.trim() != "") {
                     saveDiscuss(discussText, item.YodleeLineID);
                 }
             });
@@ -1081,7 +1088,7 @@ Template.newbankrecon.onRendered(function() {
     }
     function editableWhat(item, $each, e) {
         const offset = $each.offset();
-        if (item.deporwith === "spent") {
+        if (item.deporwith == "spent") {
             selectedCustomerFlag = 'ForTab';
             $('#edtCustomerPOPID').val('');
             //$('#edtCustomerCompany').attr('readonly', false);
@@ -1089,18 +1096,18 @@ Template.newbankrecon.onRendered(function() {
             if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                 openCustomerModal();
             } else {
-                if (customerDataName.replace(/\s/g, '') !== '') {
+                if (customerDataName.replace(/\s/g, '') != '') {
                     //FlowRouter.go('/customerscard?name=' + e.target.value);
                     $('#edtCustomerPOPID').val('');
                     getVS1Data('TCustomerVS1').then(function (dataObject) {
-                        if (dataObject.length === 0) {
+                        if (dataObject.length == 0) {
                             setOneCustomerDataExByName(customerDataName);
                         } else {
                             let data = JSON.parse(dataObject[0].data);
                             let useData = data.tcustomervs1;
                             let added = false;
                             for (let i = 0; i < useData.length; i++) {
-                                if (useData[i].fields.ClientName === customerDataName) {
+                                if (useData[i].fields.ClientName == customerDataName) {
                                     setCustomerModal(useData[i]);
                                 }
                             }
@@ -1116,21 +1123,21 @@ Template.newbankrecon.onRendered(function() {
                 }
             }
         }
-        if (item.deporwith === "received") {
+        if (item.deporwith == "received") {
             const supplierDataName = e.target.value || '';
             if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
                 openSupplierModal();
             } else {
-                if (supplierDataName.replace(/\s/g, '') !== '') {
+                if (supplierDataName.replace(/\s/g, '') != '') {
                     getVS1Data('TSupplierVS1').then(function (dataObject) {
-                        if (dataObject.length === 0) {
+                        if (dataObject.length == 0) {
                             setOneSupplierDataExByName(supplierDataName);
                         } else {
                             let data = JSON.parse(dataObject[0].data);
                             let useData = data.tsuppliervs1;
                             let added = false;
                             for (let i = 0; i < useData.length; i++) {
-                                if (useData[i].fields.ClientName === supplierDataName) {
+                                if (useData[i].fields.ClientName == supplierDataName) {
                                     setSupplierModal(useData[i]);
                                 }
                             }
@@ -1159,13 +1166,13 @@ Template.newbankrecon.onRendered(function() {
         let accountname = table.find(".productName").text();
         let accountId = table.find(".colAccountID").text();
         $('#bankAccountListModal').modal('toggle');
-        if (selectedAccountFlag === 'ForBank') {
+        if (selectedAccountFlag == 'ForBank') {
             $('#bankAccountName').val(accountname);
             $('#bankAccountID').val(accountId);
-            if (accountId !== "") {
+            if (accountId != "") {
                 bankaccountid = accountId;
                 bankaccountname = accountname;
-                if (bankaccountid !== Session.get('bankaccountid')) {
+                if (bankaccountid != Session.get('bankaccountid')) {
                     setTimeout(function () {
                         Session.setPersistent('bankaccountid', accountId);
                         Session.setPersistent('bankaccountname', accountname);
@@ -1173,8 +1180,8 @@ Template.newbankrecon.onRendered(function() {
                     }, 500);
                 }
             }
-        } else if (selectedAccountFlag === 'ForTransfer') {
-            if (accountId !== "") {
+        } else if (selectedAccountFlag == 'ForTransfer') {
+            if (accountId != "") {
                 $('#transferAccount_'+selectedYodleeID).val(accountname);
             }
         }
@@ -1182,7 +1189,7 @@ Template.newbankrecon.onRendered(function() {
     });
     $(document).on("click", ".newbankrecon #tblCustomerlist tbody tr", function (e) {
         $('#customerListModal').modal('toggle');
-        if (selectedCustomerFlag === "ForTab") {
+        if (selectedCustomerFlag == "ForTab") {
             // $('#whatID_'+selectedYodleeID).val(parseInt($(this).find(".colID").text()));
             $('#whatID_'+selectedYodleeID).val($(this).find(".colID").text());
             $('#what_'+selectedYodleeID).val($(this).find(".colCompany").text());
@@ -1206,7 +1213,7 @@ Template.newbankrecon.onRendered(function() {
     });
     $(document).on("click", ".newbankrecon #tblTaxRate tbody tr", function (e) {
         $('#taxRateListModal').modal('toggle');
-        if (selectedTaxFlag === "ForTab") {
+        if (selectedTaxFlag == "ForTab") {
             $('#ctaxRateID_'+selectedYodleeID).val(parseInt($(this).find(".sorting_1").text()));
             // $('#ctaxRateID_' + selectedYodleeID).val($(this).find(".taxName").text());
             $('#ctaxRate_' + selectedYodleeID).val($(this).find(".taxName").text());
@@ -1247,22 +1254,22 @@ Template.newbankrecon.events({
         window.open('/newbankrecon?page=1'+sort, '_self');
     },
     'click .btnPageEnd': function() {
-        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        let sort = (Template.instance().sort.get() != '')?'&sort='+Template.instance().sort.get():'';
         window.open('/newbankrecon?page='+Template.instance().page_count.get()+sort, '_self');
     },
     'click .btnPagePrev': function() {
-        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        let sort = (Template.instance().sort.get() != '')?'&sort='+Template.instance().sort.get():'';
         let prev_page = (Template.instance().page_number.get() <= 1)? 1: parseInt(Template.instance().page_number.get()) - 1;
         window.open('/newbankrecon?page='+prev_page+sort, '_self');
     },
     'click .btnPageNext': function() {
-        let sort = (Template.instance().sort.get() !== '')?'&sort='+Template.instance().sort.get():'';
+        let sort = (Template.instance().sort.get() != '')?'&sort='+Template.instance().sort.get():'';
         let next_page = (Template.instance().page_number.get() >= Template.instance().page_count.get())? Template.instance().page_count.get(): parseInt(Template.instance().page_number.get()) + 1;
         window.open('/newbankrecon?page='+next_page+sort, '_self');
     },
     'click .sortDepositSpent': function() {
         let sort = '';
-        if (Template.instance().sort.get() === "descDepositSpent") {
+        if (Template.instance().sort.get() == "descDepositSpent") {
             sort = "ascDepositSpent";
         } else {
             sort = "descDepositSpent";
@@ -1271,7 +1278,7 @@ Template.newbankrecon.events({
     },
     'click .sortDepositReceived': function() {
         let sort = '';
-        if (Template.instance().sort.get() === "descDepositReceived") {
+        if (Template.instance().sort.get() == "descDepositReceived") {
             sort = "ascDepositReceived";
         } else {
             sort = "descDepositReceived";
@@ -1280,7 +1287,7 @@ Template.newbankrecon.events({
     },
     'click .sortWithdrawSpent': function() {
         let sort = '';
-        if (Template.instance().sort.get() === "descWithdrawSpent") {
+        if (Template.instance().sort.get() == "descWithdrawSpent") {
             sort = "ascWithdrawSpent";
         } else {
             sort = "descWithdrawSpent";
@@ -1289,7 +1296,7 @@ Template.newbankrecon.events({
     },
     'click .sortWithdrawReceived': function() {
         let sort = '';
-        if (Template.instance().sort.get() === "descWithdrawReceived") {
+        if (Template.instance().sort.get() == "descWithdrawReceived") {
             sort = "ascWithdrawReceived";
         } else {
             sort = "descWithdrawReceived";
@@ -1305,16 +1312,16 @@ Template.newbankrecon.events({
         if (event.pageX > offset.left + $each.width() - 10) { // X button 16px wide?
             openProductListModal();
         } else {
-            if (productDataName.replace(/\s/g, '') !== '') {
+            if (productDataName.replace(/\s/g, '') != '') {
                 $('.fullScreenSpin').css('display', 'inline-block');
                 getVS1Data('TProductVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
+                    if (dataObject.length == 0) {
                         setOneProductDataByName(productDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let added = false;
                         for (let i = 0; i < data.tproductvs1.length; i++) {
-                            if (data.tproductvs1[i].fields.ProductName === productDataName) {
+                            if (data.tproductvs1[i].fields.ProductName == productDataName) {
                                 added = true;
                                 $('.fullScreenSpin').css('display', 'none');
                                 setProductNewModal(data.tproductvs1[i]);
@@ -1345,7 +1352,7 @@ Template.newbankrecon.events({
                         changeYear: true,
                         yearRange: "-90:+10",
                     }).keyup(function (e) {
-                        if (e.keyCode === 8 || e.keyCode === 46) {
+                        if (e.keyCode == 8 || e.keyCode == 46) {
                             $("#dtDateTo,#dtDateFrom").val('');
                         }
                     });
@@ -1364,7 +1371,7 @@ Template.newbankrecon.events({
                         changeYear: true,
                         yearRange: "-90:+10",
                     }).keyup(function (e) {
-                        if (e.keyCode === 8 || e.keyCode === 46) {
+                        if (e.keyCode == 8 || e.keyCode == 46) {
                             $("#dtDateTo,#dtDateFrom").val('');
                         }
                     });
@@ -1388,18 +1395,18 @@ Template.newbankrecon.events({
         if (event.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
             openCustomerModal();
         } else {
-            if (customerDataName.replace(/\s/g, '') !== '') {
+            if (customerDataName.replace(/\s/g, '') != '') {
                 //FlowRouter.go('/customerscard?name=' + e.target.value);
                 $('#edtCustomerPOPID').val('');
                 getVS1Data('TCustomerVS1').then(function (dataObject) {
-                    if (dataObject.length === 0) {
+                    if (dataObject.length == 0) {
                         setOneCustomerDataExByName(customerDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
                         let useData = data.tcustomervs1;
                         let added = false;
                         for (let i = 0; i < useData.length; i++) {
-                            if (useData[i].fields.ClientName === customerDataName) {
+                            if (useData[i].fields.ClientName == customerDataName) {
                                 setCustomerModal(useData[i]);
                             }
                         }
@@ -1425,10 +1432,10 @@ Template.newbankrecon.events({
             // X button 16px wide?
             $("#taxRateListModal").modal("toggle");
         } else {
-            if (taxRateDataName.replace(/\s/g, "") !== "") {
+            if (taxRateDataName.replace(/\s/g, "") != "") {
                 $(".taxcodepopheader").text("Edit Tax Rate");
                 getVS1Data("TTaxcodeVS1").then(function (dataObject) {
-                    if (dataObject.length === 0) {
+                    if (dataObject.length == 0) {
                         setTaxCodeVS1(taxRateDataName);
                     } else {
                         let data = JSON.parse(dataObject[0].data);
@@ -1445,19 +1452,19 @@ Template.newbankrecon.events({
     },
     'keydown .lineQty, keydown .lineUnitPrice': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||
+            (event.keyCode == 65 && (event.ctrlKey == true || event.metaKey == true)) ||
             (event.keyCode >= 35 && event.keyCode <= 40)) {
             return;
         }
-        if (event.shiftKey === true) {
+        if (event.shiftKey == true) {
             event.preventDefault();
         }
         if ((event.keyCode >= 48 && event.keyCode <= 57) ||
             (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode === 8 || event.keyCode === 9 ||
-            event.keyCode === 37 || event.keyCode === 39 ||
-            event.keyCode === 46 || event.keyCode === 190 || event.keyCode === 189 || event.keyCode === 109) {
+            event.keyCode == 8 || event.keyCode == 9 ||
+            event.keyCode == 37 || event.keyCode == 39 ||
+            event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) {
 
         }
         else {
@@ -1498,7 +1505,7 @@ Template.newbankrecon.events({
             $(".lineProductName", rowData).val("");
             $(".lineProductDesc", rowData).val("");
             $(".lineQty", rowData).val("");
-            if (DepOrWith === "received") {
+            if (DepOrWith == "received") {
                 $(".lineAccountName", rowData).val("");
             }
             $(".lineUnitPrice", rowData).val("");
@@ -1506,7 +1513,7 @@ Template.newbankrecon.events({
             $(".lineSubTotal", rowData).text("");
             $(".lineTaxRate", rowData).val("");
             $(".lineTaxAmount", rowData).text("");
-            if (DepOrWith === "spent") {
+            if (DepOrWith == "spent") {
                 $(".lineDiscount", rowData).text("");
             }
             $(".btnRemove", rowData).show();
@@ -1524,7 +1531,7 @@ Template.newbankrecon.events({
             let salesService = new SalesBoardService();
             let match_total = Number($("#divLineDetail_"+selectedYodleeID+" #TotalAmount").val().replace(/[^0-9.-]+/g, "")) || 0;
             let grand_total = Number($("#divLineDetail_"+selectedYodleeID+" .grand_total").text().replace(/[^0-9.-]+/g, "")) || 0;
-            if (match_total !== grand_total) {
+            if (match_total != grand_total) {
                 swal('The totals do not match.', '', 'error');
                 $("#divLineDetail_"+selectedYodleeID+" #TotalAmount").focus();
                 return false;
@@ -1537,19 +1544,19 @@ Template.newbankrecon.events({
             let reconNote = $("#divLineDetail_"+selectedYodleeID+" #FromWho").val();
             let discussNote = $("#discussText_"+selectedYodleeID).val();
             let reconcileID = $("#reconID_"+selectedYodleeID).val();
-            reconcileID = (reconcileID && reconcileID !== '')?parseInt(reconcileID):0;
+            reconcileID = (reconcileID && reconcileID != '')?parseInt(reconcileID):0;
             let paymentID = $("#paymentID_"+selectedYodleeID).val();
-            paymentID = (paymentID && paymentID !== '')?parseInt(paymentID):0;
+            paymentID = (paymentID && paymentID != '')?parseInt(paymentID):0;
             paymentID = 0; // Now keep 0 ???
             let clientDetail = null;
-            if (DepOrWith === "spent") {
+            if (DepOrWith == "spent") {
                 clientDetail = getClientDetail(clientName, 'customer');
                 if (!clientDetail) {
                     swal('Customer must be vaild.', '', 'error');
                     $("#whatDetail_"+selectedYodleeID).focus();
                     return false;
                 }
-            } else if (DepOrWith === "received") {
+            } else if (DepOrWith == "received") {
                 clientDetail = getClientDetail(clientName, 'supplier');
                 if (!clientDetail) {
                     swal('Supplier must be vaild.', '', 'error');
@@ -1565,7 +1572,7 @@ Template.newbankrecon.events({
             let clientTermsName = clientDetail.termsName;
             $('.fullScreenSpin').css('display', 'inline-block');
             let bankaccountid = parseInt(Session.get('bankaccountid'));
-            let bankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
+            let bankAccountName = (Session.get("bankaccountname") != undefined && Session.get("bankaccountname") != '')?Session.get("bankaccountname"):null;
             let refText = $("#divLineDetail_"+selectedYodleeID+" #reference").val();
             let dateIn = $("#DateIn_"+selectedYodleeID).val() || '';
             let splitDate = dateIn.split("/");
@@ -1577,7 +1584,7 @@ Template.newbankrecon.events({
 
             let lineItems = [];
             let lineItemsObj = {};
-            if (DepOrWith === "spent") {
+            if (DepOrWith == "spent") {
                 $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
                     let lineProductName = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineProductName").val();
@@ -1724,7 +1731,7 @@ Template.newbankrecon.events({
                     handleSaveError(err);
                 });
             }
-            if (DepOrWith === "received") {
+            if (DepOrWith == "received") {
                 let isEmptyAccount = false;
                 $("#divLineDetail_"+selectedYodleeID+" #tblReconInvoice > tbody > tr").each(function () {
                     let lineID = this.id;
@@ -1737,7 +1744,7 @@ Template.newbankrecon.events({
                     let lineTaxRate = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineTaxRate").val();
                     let lineAmount = $("#divLineDetail_"+selectedYodleeID+" #" + lineID + " .lineAmount").text();
                     lineAmount = Number(lineAmount.replace(/[^0-9.-]+/g, "")) || 0;
-                    if (lineAccountName === '') {
+                    if (lineAccountName == '') {
                         swal('Account must be valid.', '', 'error');
                         $('.fullScreenSpin').css('display', 'none');
                         isEmptyAccount = true;
@@ -1759,7 +1766,7 @@ Template.newbankrecon.events({
                         lineItems.push(lineItemsObj);
                     }
                 });
-                if (lineItems.length === 0 || isEmptyAccount) {
+                if (lineItems.length == 0 || isEmptyAccount) {
                     $('.fullScreenSpin').css('display', 'none');
                     return false;
                 }
@@ -1815,7 +1822,7 @@ Template.newbankrecon.events({
                                 AccountName: bankAccountName || '',
                             }
                         };
-                        // console.log(objPaymentDetails);
+                        console.log(JSON.stringify(objPaymentDetails));
                         paymentService.saveSuppDepositData(objPaymentDetails).then(function(resultPayment) {
                             // console.log(resultPayment);
                             if (resultPayment.fields.ID) {
@@ -1904,28 +1911,28 @@ Template.newbankrecon.events({
                 let descText = $(this).find(".colDesc").text().toLowerCase();
                 let spentAmount = Number($(this).find(".colSpentAmount").text().replace(/[^0-9.-]+/g, "")) || 0;
                 let receivedAmount = Number($(this).find(".colReceivedAmount").text().replace(/[^0-9.-]+/g, "")) || 0;
-                if (searchName !== '' && searchAmount !== '') {
+                if (searchName != '' && searchAmount != '') {
                     if ((nameText.indexOf(searchName.toLowerCase()) >= 0 || refText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0)
-                    && (parseFloat(spentAmount) === parseFloat(searchAmount) || parseFloat(receivedAmount) === parseFloat(searchAmount))) {
+                    && (parseFloat(spentAmount) == parseFloat(searchAmount) || parseFloat(receivedAmount) == parseFloat(searchAmount))) {
                         found = true;
                     }
-                } else if (searchName !== '') {
+                } else if (searchName != '') {
                     if (nameText.indexOf(searchName.toLowerCase()) >= 0 || refText.indexOf(searchName.toLowerCase()) >= 0 || descText.indexOf(searchName.toLowerCase()) >= 0) {
                         found = true;
                     }
-                } else if (searchAmount !== '') {
-                    if (parseFloat(spentAmount) === parseFloat(searchAmount) || parseFloat(receivedAmount) === parseFloat(searchAmount)) {
+                } else if (searchAmount != '') {
+                    if (parseFloat(spentAmount) == parseFloat(searchAmount) || parseFloat(receivedAmount) == parseFloat(searchAmount)) {
                         found = true;
                     }
                 } else {
                     found = true;
                 }
-                if (checked == undefined && DepOrWith === "spent") {
+                if (checked == undefined && DepOrWith == "spent") {
                     if (parseFloat(receivedAmount) > 0) {
                         found = false;
                     }
                 }
-                if (checked == undefined && DepOrWith === "received") {
+                if (checked == undefined && DepOrWith == "received") {
                     if (parseFloat(spentAmount) > 0) {
                         found = false;
                     }
@@ -1956,10 +1963,10 @@ Template.newbankrecon.events({
                 $(event.target).parent().parent().parent().addClass("matchedRow");
                 // $(event.target).parent().parent().parent().css("background-color", "rgba(23, 166, 115, 0.5) !important");
                 let unselectedData = matchTransactionData.filter(function (obj) {
-                    return obj.ID !== lineID;
+                    return obj.ID != lineID;
                 });
                 let selectedData = matchTransactionData.filter(function (obj) {
-                    return obj.ID === lineID;
+                    return obj.ID == lineID;
                 });
                 viewTransactionData.push(selectedData[0]);
                 templateObject.viewTransactionData.set(viewTransactionData);
@@ -1967,7 +1974,7 @@ Template.newbankrecon.events({
                 $(event.target).parent().parent().parent().removeClass("matchedRow");
                 // $(event.target).parent().parent().parent().css("background-color", "white !important");
                 let unselectedData = viewTransactionData.filter(function (obj) {
-                    return obj.ID !== lineID;
+                    return obj.ID != lineID;
                 });
                 templateObject.viewTransactionData.set(unselectedData);
             }
@@ -1984,10 +1991,10 @@ Template.newbankrecon.events({
             let lineID = event.target.id;
             lineID = lineID.split("_").pop();
             let unselectedData = viewTransactionData.filter(function(obj) {
-                return obj.ID !== lineID;
+                return obj.ID != lineID;
             });
             let selectedData = viewTransactionData.filter(function(obj) {
-                return obj.ID === lineID;
+                return obj.ID == lineID;
             });
             templateObject.viewTransactionData.set(unselectedData);
             setTimeout(function () {
@@ -2010,9 +2017,9 @@ Template.newbankrecon.events({
 Template.newbankrecon.helpers({
     accountnamerecords: () => {
         return Template.instance().accountnamerecords.get().sort(function(a, b) {
-            if (a.accountname === 'NA') {
+            if (a.accountname == 'NA') {
                 return 1;
-            } else if (b.accountname === 'NA') {
+            } else if (b.accountname == 'NA') {
                 return -1;
             }
             return (a.accountname.toUpperCase() > b.accountname.toUpperCase()) ? 1 : -1;
@@ -2022,9 +2029,9 @@ Template.newbankrecon.helpers({
         return Template.instance()
             .taxraterecords.get()
             .sort(function (a, b) {
-                if (a.description === "NA") {
+                if (a.description == "NA") {
                     return 1;
-                } else if (b.description === "NA") {
+                } else if (b.description == "NA") {
                     return -1;
                 }
                 return a.description.toUpperCase() > b.description.toUpperCase()
@@ -2230,13 +2237,13 @@ function setCustomerModal(data) {
 
     $('#sltTaxCode').val(popCustomerTaxCode);
 
-    if ((data.fields.Street === data.fields.BillStreet) && (data.fields.Street2 === data.fields.BillStreet2) &&
-        (data.fields.State === data.fields.BillState) && (data.fields.Postcode === data.fields.BillPostcode) &&
-        (data.fields.Country === data.fields.Billcountry)) {
+    if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
+        (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.BillPostcode) &&
+        (data.fields.Country == data.fields.Billcountry)) {
         $('#chkSameAsShipping2').attr("checked", "checked");
     }
 
-    if (data.fields.IsSupplier === true) {
+    if (data.fields.IsSupplier == true) {
         // $('#isformcontractor')
         $('#chkSameAsSupplier').attr("checked", "checked");
     } else {
@@ -2333,13 +2340,13 @@ function setSupplierModal(data) {
     $('#edtCustomeField3').val(popSuppliercustfield3);
     $('#edtCustomeField4').val(popSuppliercustfield4);
 
-    if ((data.tsupplier[0].fields.Street === data.tsupplier[0].fields.BillStreet) && (data.tsupplier[0].fields.Street2 === data.tsupplier[0].fields.BillStreet2) &&
-        (data.tsupplier[0].fields.State === data.tsupplier[0].fields.BillState) && (data.tsupplier[0].fields.Postcode === data.tsupplier[0].fields.Postcode) &&
-        (data.tsupplier[0].fields.Country === data.tsupplier[0].fields.Billcountry)) {
+    if ((data.tsupplier[0].fields.Street == data.tsupplier[0].fields.BillStreet) && (data.tsupplier[0].fields.Street2 == data.tsupplier[0].fields.BillStreet2) &&
+        (data.tsupplier[0].fields.State == data.tsupplier[0].fields.BillState) && (data.tsupplier[0].fields.Postcode == data.tsupplier[0].fields.Postcode) &&
+        (data.tsupplier[0].fields.Country == data.tsupplier[0].fields.Billcountry)) {
         //templateObject.isSameAddress.set(true);
         $('#chkSameAsShipping').attr("checked", "checked");
     }
-    if (data.tsupplier[0].fields.Contractor === true) {
+    if (data.tsupplier[0].fields.Contractor == true) {
         // $('#isformcontractor')
         $('#isformcontractor').attr("checked", "checked");
     } else {
@@ -2362,7 +2369,7 @@ function setTaxCodeVS1(taxRateDataName) {
 }
 function setTaxRateData(data, taxRateDataName) {
     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+        if (data.ttaxcodevs1[i].CodeName == taxRateDataName) {
             $("#edtTaxNamePop").attr("readonly", true);
             let taxRate = (
                 data.ttaxcodevs1[i].Rate * 100
@@ -2391,11 +2398,11 @@ function setCalculated() {
         let grandTotal = 0;
         let DepOrWith = $("#DepOrWith_"+selectedYodleeID).val();
         let discountRate = 0;
-        if (DepOrWith === "spent") {
+        if (DepOrWith == "spent") {
             let customerName = $('#whatDetail_' + selectedYodleeID).val();
-            if (customerName !== "") {
+            if (customerName != "") {
                 let customerDetail = customerList.filter(customer => {
-                    return customer.customername === customerName
+                    return customer.customername == customerName
                 });
                 customerDetail = customerDetail[0];
                 discountRate = customerDetail.discount;
@@ -2408,9 +2415,9 @@ function setCalculated() {
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineSubTotal").text(utilityService.modifynegativeCurrencyFormat(lineQty * lineUnitPrice));
             let lineTaxRate = $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxRate").val();
             let lineTaxRateVal = 0;
-            if (lineTaxRate !== "") {
+            if (lineTaxRate != "") {
                 for (let i = 0; i < taxcodeList.length; i++) {
-                    if (taxcodeList[i].codename === lineTaxRate) {
+                    if (taxcodeList[i].codename == lineTaxRate) {
                         lineTaxRateVal = taxcodeList[i].coderate;
                     }
                 }
@@ -2421,7 +2428,7 @@ function setCalculated() {
             $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(lineTaxAmount));
 
             let lineDiscount = (lineQty * lineUnitPrice + lineTaxAmount) * discountRate / 100;
-            if (DepOrWith === "spent") {
+            if (DepOrWith == "spent") {
                 $('#divLineDetail_' + selectedYodleeID + ' #' + selectedLineID + " .lineDiscount").text(utilityService.modifynegativeCurrencyFormat(lineDiscount));
             }
             lineAmount = lineQty * lineUnitPrice + lineTaxAmount - lineDiscount;
@@ -2442,10 +2449,10 @@ function setCalculated() {
             subTotal += lineSubTotal;
             taxTotal += lineTaxAmount;
             discountTotal += lineDiscount;
-            if (taxOption === 'tax_exclusive') {
+            if (taxOption == 'tax_exclusive') {
                 grandTotal += lineAmount;
                 $('#divLineDetail_' + selectedYodleeID + " #taxTotalDiv").show();
-            } else if (taxOption === 'tax_inclusive') {
+            } else if (taxOption == 'tax_inclusive') {
                 grandTotal += (lineAmount - lineTaxAmount);
                 $('#divLineDetail_' + selectedYodleeID + " #taxTotalDiv").show();
             } else {
@@ -2455,7 +2462,7 @@ function setCalculated() {
         });
         $(".sub_total").text(utilityService.modifynegativeCurrencyFormat(subTotal));
         $(".tax_total").text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-        if (DepOrWith === "spent") {
+        if (DepOrWith == "spent") {
             $(".discount_total").text(utilityService.modifynegativeCurrencyFormat(discountTotal));
         }
         $(".grand_total").text(utilityService.modifynegativeCurrencyFormat(grandTotal));
@@ -2463,24 +2470,24 @@ function setCalculated() {
 }
 function getClientDetail(clientName, clientType) {
     let clientDetail = null;
-    if (clientType === "customer") {
+    if (clientType == "customer") {
         clientDetail = customerList.filter(customer => {
-            return customer.customername === clientName;
+            return customer.customername == clientName;
         });
         clientDetail = clientDetail.length > 0 ? clientDetail[0] : null;
-    } else if (clientType === "supplier") {
+    } else if (clientType == "supplier") {
         clientDetail = supplierList.filter(supplier => {
-            return supplier.suppliername === clientName;
+            return supplier.suppliername == clientName;
         });
         clientDetail = clientDetail.length > 0 ? clientDetail[0] : null;
     }
     return clientDetail;
 }
 function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
-    if (selectedYodleeID !== null) {
+    if (selectedYodleeID != null) {
         let clientDetail;
         let accountName = '';
-        if (DepOrWith === "spent") {
+        if (DepOrWith == "spent") {
             clientDetail = getClientDetail($('#whatDetail_' + selectedYodleeID).val(), 'customer');
             accountName = clientDetail? clientDetail.customername:'';
         } else {
@@ -2488,26 +2495,26 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
             accountName = clientDetail? clientDetail.suppliername:'';
         }
         let discountAmount = 0;
-        if (DepOrWith === "spent") {
+        if (DepOrWith == "spent") {
             discountAmount = clientDetail? Amount * clientDetail.discount / 100 : 0;
         }
         let taxCodeDetail = taxcodeList.filter(taxcode => {
-            return taxcode.codename === $('#ctaxRate_'+selectedYodleeID).val();
+            return taxcode.codename == $('#ctaxRate_'+selectedYodleeID).val();
         });
         taxCodeDetail = taxCodeDetail[0];
-        let taxAmount = (taxCodeDetail !== undefined)?Amount*taxCodeDetail.coderate/100:0;
+        let taxAmount = (taxCodeDetail != undefined)?Amount*taxCodeDetail.coderate/100:0;
         selectedLineID = 'firstLine';
-        let taxrateName = (taxCodeDetail !== undefined)? taxCodeDetail.codename:'';
+        let taxrateName = (taxCodeDetail != undefined)? taxCodeDetail.codename:'';
 
         $('#whatDetail_'+selectedYodleeID).val(accountName);
-        let dateIn_val = (DateIn !=='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
+        let dateIn_val = (DateIn !='')? moment(DateIn).format("DD/MM/YYYY"): DateIn;
         $('#DateIn_'+selectedYodleeID).val(dateIn_val);
 
-        $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith==='spent'?'Spent as':'Received as');
-        $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith==='spent'?'To':'From');
+        $('#divLineDetail_'+selectedYodleeID+' #labelPaymentType').text(DepOrWith=='spent'?'Spent as':'Received as');
+        $('#divLineDetail_'+selectedYodleeID+' #labelWho').text(DepOrWith=='spent'?'To':'From');
         $('#divLineDetail_'+selectedYodleeID+' #FromWho').val(Who);
         $('#divLineDetail_'+selectedYodleeID+' #TotalAmount').val(utilityService.modifynegativeCurrencyFormat(Amount));
-        $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith==='spent'?'spent - Spent':'received - Received');
+        $('#divLineDetail_'+selectedYodleeID+' #textSORBottom').text(DepOrWith=='spent'?'spent - Spent':'received - Received');
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom1').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #totalBottom2').text(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #textComment').text($('#why_'+selectedYodleeID).val());
@@ -2517,11 +2524,11 @@ function setTransactionDetail(Amount, DateIn, Who, DepOrWith) {
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineQty').val(1);
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineUnitPrice').val(utilityService.modifynegativeCurrencyFormat(Amount));
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineSubTotal').val(utilityService.modifynegativeCurrencyFormat(Amount));
-        if (DepOrWith === "received") {
+        if (DepOrWith == "received") {
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountID').val('');
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineAccountName').val('');
         }
-        if (DepOrWith === "spent") {
+        if (DepOrWith == "spent") {
             $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineDiscount').val(utilityService.modifynegativeCurrencyFormat(discountAmount));
         }
         $('#divLineDetail_'+selectedYodleeID+' #firstLine .lineTaxRate').val(taxrateName);
@@ -2541,7 +2548,7 @@ function openTransactionDetail(item){
     }
     selectedYodleeID = item.YodleeLineID;
     let who = $('#who_'+selectedYodleeID).val();
-    who = (who !== '')?who:item.YodleeDescription;
+    who = (who != '')?who:item.YodleeDescription;
     let amount = item.YodleeAmount;
     let dateIn = item.SortDate;
     $('#DepOrWith_'+selectedYodleeID).val(item.deporwith);
@@ -2603,17 +2610,17 @@ function setCalculated2() {
             lineSpentAmount = Number(lineSpentAmount.replace(/[^0-9.-]+/g, "")) || 0;
             let lineReceivedAmount = $tblrow.find(".colReceivedAmount").text();
             lineReceivedAmount = Number(lineReceivedAmount.replace(/[^0-9.-]+/g, "")) || 0;
-            if (DepOrWith === "spent") {
+            if (DepOrWith == "spent") {
                 subTotal += lineSpentAmount;
                 subTotal -= lineReceivedAmount;
             }
-            if (DepOrWith === "received") {
+            if (DepOrWith == "received") {
                 subTotal -= lineSpentAmount;
                 subTotal += lineReceivedAmount;
             }
         });
         let outTotal = matchTotal - subTotal;
-        if (outTotal === 0) {
+        if (outTotal == 0) {
             $("#divLineFindMatch_"+selectedYodleeID+" #textMatched").show();
             $("#divLineFindMatch_"+selectedYodleeID+" #textOutBy").hide();
             $("#divLineFindMatch_"+selectedYodleeID+" #btnReconcile").prop('disabled', false);
@@ -2700,7 +2707,7 @@ function openFindMatch(item){
     $('#match_'+selectedYodleeID).addClass('active');
     $('#match_'+selectedYodleeID+' .textFindMatch').show();
     $('#match_'+selectedYodleeID+' .btnFindMatch').hide();
-    if (item.deporwith === 'spent') {
+    if (item.deporwith == 'spent') {
         $('#divLineFindMatch_'+selectedYodleeID+ ' #labelChkSOR').text("Show Received Items");
     } else {
         $('#divLineFindMatch_'+selectedYodleeID+ ' #labelChkSOR').text("Show Spent Items");
@@ -2719,8 +2726,8 @@ function handleSaveError(err) {
         showCancelButton: false,
         confirmButtonText: 'Try Again'
     }).then((result) => {
-        if (result.value) {if(err === checkResponseError){window.open('/', '_self');}}
-        else if (result.dismiss === 'cancel') {
+        if (result.value) {if(err == checkResponseError){window.open('/', '_self');}}
+        else if (result.dismiss == 'cancel') {
 
         }
     });
@@ -2732,9 +2739,9 @@ function saveDiscuss(text, yodleeID) {
         let employeeID = Session.get('mySessionEmployeeLoggedID');
         let employeename = Session.get('mySessionEmployee');
         let bankaccountid = parseInt(Session.get('bankaccountid'));
-        let bankAccountName = (Session.get("bankaccountname") !== undefined && Session.get("bankaccountname") !== '')?Session.get("bankaccountname"):null;
+        let bankAccountName = (Session.get("bankaccountname") != undefined && Session.get("bankaccountname") != '')?Session.get("bankaccountname"):null;
         let reconcileID = $("#reconID_"+yodleeID).val();
-        reconcileID = (reconcileID && reconcileID !== '')?parseInt(reconcileID):0;
+        reconcileID = (reconcileID && reconcileID != '')?parseInt(reconcileID):0;
         let objReconDetails = {
             type: "TReconciliation",
             fields: {

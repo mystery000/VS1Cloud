@@ -7943,7 +7943,7 @@ Template.refundcard.events({
             $('.po').text(ponumber);
             var rowCount = $('.tblInvoiceLine tbody tr').length;   
 
-            if($('#print_refund').is(':checked')) {
+            if($('#print_refund').is(':checked') || $('#print_refund_second').is(':checked') ) {
                 printTemplate.push('Refunds');
             }
             
