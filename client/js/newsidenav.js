@@ -139,9 +139,6 @@ Template.newsidenav.onCreated(function() {
 });
 Template.newsidenav.onRendered(function() {
 
-    let lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
-    console.log(lastPageVisitUrl);
-
     var countObjectTimes = 0;
     let allDataToLoad = 71;
     let progressPercentage = 0;

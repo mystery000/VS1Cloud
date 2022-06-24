@@ -15,20 +15,6 @@ Template.customerawaitingpayments.onCreated(function () {
 
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
 
-    templateObject.vs1globalBackButton = async function(dataURL) {
-      return new Promise((resolve) => {
-        const redirectURL = dataURL;
-        FlowRouter.go(redirectURL);
-        resolve({success: true, ...redirectURL});
-        // smsService.saveSMSSettings(settingObject).then((res) => {
-        //   sideBarService.getGlobalSettings().then(function(data) {
-        //     addVS1Data('TERPPreference', JSON.stringify(data)).then(() => {
-        //       resolve({success: true, ...res});
-        //     }).catch(function (err) {resolve({success: false, ...err})});
-        //   });
-        // }).catch(err => resolve({success: false, ...err}));
-      });
-    }
 
 });
 
@@ -101,7 +87,7 @@ Template.customerawaitingpayments.onRendered(function () {
 
         }
     });
-
+/* Remove
     jQuery(document).ready(function($) {
         window.history.pushState('forward', null, FlowRouter.current().path);
        window.onpopstate = async function(event) {
@@ -126,7 +112,7 @@ Template.customerawaitingpayments.onRendered(function () {
         }
 
       }
-   });
+   }); */
 
     function MakeNegative() {
         $('td').each(function () {
