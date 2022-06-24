@@ -2239,6 +2239,14 @@ Template.creditcard.onRendered(() => {
         $('#sltStatus').editableSelect();
         $('#shipvia').editableSelect();
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblCreditLine tbody tr .lineAccountName')];
+          var checkEmptyFields;
+          for(var i=0;i< getTableFields.length;i++){
+            checkEmptyFields = getTableFields[i].filter(function(i,element) {
+                return $.trim($(this).val()) === '';
+            });
+          };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblCreditLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineAccountName", rowData).val("");
@@ -2267,7 +2275,14 @@ Template.creditcard.onRendered(() => {
             setTimeout(function() {
                 $('#' + tokenid + " .lineAccountName").trigger('click');
             }, 200);
-
+          }else{
+            $("#tblCreditLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineAccountName").val() == '') {
+                    $tblrow.find(".colAccountName").addClass('boldtablealertsborder');
+                }
+            });
+          }
         });
 
 

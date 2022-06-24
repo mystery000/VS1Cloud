@@ -2699,6 +2699,14 @@ Template.purchaseordercard.onRendered(() => {
         $('#shipvia').editableSelect();
 
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblPurchaseOrderLine tbody tr .lineProductName')];
+          var checkEmptyFields;
+          for(var i=0;i< getTableFields.length;i++){
+            checkEmptyFields = getTableFields[i].filter(function(i,element) {
+                return $.trim($(this).val()) === '';
+            });
+          };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblPurchaseOrderLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
@@ -2731,7 +2739,14 @@ Template.purchaseordercard.onRendered(() => {
             setTimeout(function() {
                 $('#' + tokenid + " .lineProductName").trigger('click');
             }, 200);
-
+          }else{
+            $("#tblPurchaseOrderLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineProductName").val() == '') {
+                    $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+                }
+            });
+          }
         });
 
 

@@ -87,32 +87,7 @@ Template.customerawaitingpayments.onRendered(function () {
 
         }
     });
-/* Remove
-    jQuery(document).ready(function($) {
-        window.history.pushState('forward', null, FlowRouter.current().path);
-       window.onpopstate = async function(event) {
-         let lastPageVisitUrl = "";
-        if(JSON.stringify(event.state) == "forward"){
 
-          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
-            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
-          }
-        }else if(event.state.path){
-          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
-            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
-          }else{
-            lastPageVisitUrl = window.location.pathname;
-          }
-        }else{
-          lastPageVisitUrl = window.location.pathname;
-        }
-        if(lastPageVisitUrl != ""){
-          await templateObject.vs1globalBackButton(lastPageVisitUrl);
-          alert(lastPageVisitUrl);
-        }
-
-      }
-   }); */
 
     function MakeNegative() {
         $('td').each(function () {

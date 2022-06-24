@@ -5926,6 +5926,14 @@ Template.new_salesorder.onRendered(() => {
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblSalesOrderLine tbody tr .lineProductName')];
+          var checkEmptyFields;
+          for(var i=0;i< getTableFields.length;i++){
+            checkEmptyFields = getTableFields[i].filter(function(i,element) {
+                return $.trim($(this).val()) === '';
+            });
+          };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblSalesOrderLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
@@ -5961,7 +5969,15 @@ Template.new_salesorder.onRendered(() => {
             setTimeout(function() {
                 $('#' + tokenid + " .lineProductName").trigger('click');
             }, 200);
+          }else{
+            $("#tblSalesOrderLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineProductName").val() == '') {
+                    $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+                }
 
+              });
+          }
         });
 
 

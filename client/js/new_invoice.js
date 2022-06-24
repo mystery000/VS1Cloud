@@ -6861,6 +6861,16 @@ Template.new_invoice.onRendered(() => {
         $('#sltStatus').editableSelect();
 
         $('#addRow').on('click', function () {
+
+          var getTableFields = [ $('#tblInvoiceLine tbody tr .lineProductName')];
+          var checkEmptyFields;
+
+          for(var i=0;i< getTableFields.length;i++){
+          checkEmptyFields = getTableFields[i].filter(function(i,element) {
+              return $.trim($(this).val()) === '';
+          });
+         };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblInvoiceLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
@@ -6894,6 +6904,14 @@ Template.new_invoice.onRendered(() => {
             setTimeout(function () {
                 $('#' + tokenid + " .lineProductName").trigger('click');
             }, 200);
+          } else {
+              $("#tblInvoiceLine tbody tr").each(function (index) {
+                  var $tblrow = $(this);
+                  if ($tblrow.find(".lineProductName").val() == '') {
+                      $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+                  }
+              });
+          };
         });
 
     });
@@ -7021,6 +7039,8 @@ Template.new_invoice.onRendered(() => {
                 let taxGrandTotalNet = 0;
                 $tblrows.each(function (index) {
                     var $tblrow = $(this);
+                    let tdproduct = $tblrow.find(".lineProductName").val()||'';
+                    if (tdproduct != "") {
                     var qty = $tblrow.find(".lineQty").val() || 0;
                     var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
                     var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -7082,6 +7102,7 @@ Template.new_invoice.onRendered(() => {
                         document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
                     }
+                  }
                 });
 
                 //if ($('.printID').attr('id') == undefined || $('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -7161,6 +7182,8 @@ Template.new_invoice.onRendered(() => {
             let taxGrandTotalNet = 0;
             $tblrows.each(function (index) {
                 var $tblrow = $(this);
+                let tdproduct = $tblrow.find(".lineProductName").val()||'';
+                if (tdproduct != "") {
                 var qty = $tblrow.find(".lineQty").val() || 0;
                 var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
                 var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -7222,6 +7245,7 @@ Template.new_invoice.onRendered(() => {
                     document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
                 }
+              }
             });
 
             //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -11183,6 +11207,8 @@ Template.new_invoice.events({
         let taxGrandTotalNet = 0;
         $tblrows.each(function (index) {
             var $tblrow = $(this);
+            let tdproduct = $tblrow.find(".lineProductName").val()||'';
+            if (tdproduct != "") {
             var qty = $tblrow.find(".lineQty").val() || 0;
             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
             var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -11244,6 +11270,8 @@ Template.new_invoice.events({
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
             }
+
+          }
         });
 
         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -11318,6 +11346,8 @@ Template.new_invoice.events({
         let taxGrandTotalNet = 0;
         $tblrows.each(function (index) {
             var $tblrow = $(this);
+            let tdproduct = $tblrow.find(".lineProductName").val()||'';
+            if (tdproduct != "") {
             var qty = $tblrow.find(".lineQty").val() || 0;
             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
             var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -11379,6 +11409,7 @@ Template.new_invoice.events({
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
             }
+          }
         });
 
     },
@@ -11414,6 +11445,8 @@ Template.new_invoice.events({
         let taxGrandTotalNet = 0;
         $tblrows.each(function (index) {
             var $tblrow = $(this);
+            let tdproduct = $tblrow.find(".lineProductName").val()||'';
+            if (tdproduct != "") {
             var qty = $tblrow.find(".lineQty").val() || 0;
             var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
             var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -11475,6 +11508,8 @@ Template.new_invoice.events({
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
             }
+
+          }
         });
 
         //if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
@@ -11544,6 +11579,8 @@ Template.new_invoice.events({
         let taxGrandTotalNet = 0;
         $tblrows.each(function (index) {
             var $tblrow = $(this);
+            let tdproduct = $tblrow.find(".lineProductName").val()||'';
+            if (tdproduct != "") {
             var qty = $tblrow.find(".lineQty").val() || 0;
             var price = $tblrow.find(".colUnitPriceIncChange").val() || 0;
             var taxRate = $tblrow.find(".lineTaxCode").val();
@@ -11610,6 +11647,7 @@ Template.new_invoice.events({
                 document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
 
             }
+          }
         });
 
         $('#' + targetID + " #lineUnitPrice").text($('#' + targetID + " .colUnitPriceExChange").val());

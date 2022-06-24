@@ -4685,6 +4685,15 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         $('#sltStatus').editableSelect();
         $('#sltPaymentMethod').editableSelect();
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblInvoiceLine tbody tr .lineProductName')];
+          var checkEmptyFields;
+
+          for(var i=0;i< getTableFields.length;i++){
+          checkEmptyFields = getTableFields[i].filter(function(i,element) {
+              return $.trim($(this).val()) === '';
+          });
+         };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblInvoiceLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
@@ -4703,7 +4712,15 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             setTimeout(function() {
                 $('#' + tokenid + " .lineProductName").trigger('click');
             }, 200);
+          }else{
+            $("#tblInvoiceLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineProductName").val() == '') {
+                    $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+                }
 
+              });
+          }
         });
 
     });

@@ -2434,6 +2434,14 @@ Template.billcard.onRendered(() => {
         $('#shipvia').editableSelect();
 
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblBillLine tbody tr .lineAccountName')];
+          var checkEmptyFields;
+          for(var i=0;i< getTableFields.length;i++){
+            checkEmptyFields = getTableFields[i].filter(function(i,element) {
+                return $.trim($(this).val()) === '';
+            });
+          };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblBillLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineAccountName", rowData).val("");
@@ -2463,7 +2471,14 @@ Template.billcard.onRendered(() => {
             setTimeout(function() {
                 $('#' + tokenid + " .lineAccountName").trigger('click');
             }, 200);
-
+          }else{
+            $("#tblBillLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineAccountName").val() == '') {
+                    $tblrow.find(".colAccountName").addClass('boldtablealertsborder');
+                }
+            });
+          }
         });
 
 
