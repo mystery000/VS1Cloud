@@ -255,12 +255,7 @@ export class SideBarService extends BaseService {
   getCustomFieldsDropDownByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      select:
-        '[Text] f7like "' +
-        dataSearchName +
-        '" OR [ID] f7like "' +
-        dataSearchName +
-        '"',
+      select:'[Text] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TCustomFieldListDropDown, options);
   }
