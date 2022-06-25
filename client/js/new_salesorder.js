@@ -23,7 +23,7 @@ let isDropDown = false;
 let salesDefaultTerms = "";
 
 var template_list = [
-
+  
     "Sales Order",
     "Delivery Docket",
   ];
@@ -71,11 +71,11 @@ Template.new_salesorder.onCreated(() => {
 Template.new_salesorder.onRendered(() => {
     const templateObject = Template.instance();
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
-
+    
         title = $(this).parent().attr("data-id");
         number =  $(this).parent().attr("data-template-id");//e.getAttribute("data-template-id");
         templateObject.generateInvoiceData(title,number);
-
+           
      });
 
     let currentSalesOrder;
@@ -95,7 +95,7 @@ Template.new_salesorder.onRendered(() => {
     if (imageData) {
         $('.uploadedImage').attr('src', imageData);
     }
-
+   
     const salesService = new SalesBoardService();
     const clientsService = new SalesBoardService();
     const accountService = new SalesBoardService();
@@ -124,7 +124,7 @@ Template.new_salesorder.onRendered(() => {
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
          switch (template_title) {
-
+     
          case "Sales Order":
             showSealsOrder1(template_title,number);
            break;
@@ -133,7 +133,7 @@ Template.new_salesorder.onRendered(() => {
             showDeliveryDocket1(template_title,number);
            break;
          }
-
+   
       };
 
 
@@ -154,7 +154,7 @@ Template.new_salesorder.onRendered(() => {
         let dept = $('#sltDept').val();
         var erpGet = erpDb();
 
-
+        var po = $('#ponumber').val() || '.';
         var customfield1 = $('#edtSaleCustField1').val() || '';
         var customfield2 = $('#edtSaleCustField2').val() || '';
         var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -177,7 +177,7 @@ Template.new_salesorder.onRendered(() => {
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
             array_data.push([
-
+            
                 tdproduct,
                 tddescription,
                 tdQty,
@@ -212,7 +212,7 @@ Template.new_salesorder.onRendered(() => {
         // var pdf = new jsPDF('p', 'pt', 'a4');
         // pdf.setFontSize(18);
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
+       
 
         let item_sale = '';
         if(number == 1)
@@ -226,11 +226,12 @@ Template.new_salesorder.onRendered(() => {
             o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
             o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
             o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-            title: template_title + invoiceData.id,
+            title: 'Sales Order',
+            value:  invoiceData.id,
             date: invoiceData.saledate,
-            invoicenumber: invoiceData.docnumber,
+            invoicenumber:invoiceData.id,
             refnumber: invoiceData.reference,
-            pqnumber: " _ ",
+            pqnumber: po,
             duedate: invoiceData.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -268,11 +269,12 @@ Template.new_salesorder.onRendered(() => {
             o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
             o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
             o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-            title: template_title + invoiceData.id,
+            title: 'Sales Order',
+            value:  invoiceData.id,
             date: invoiceData.saledate,
-            invoicenumber: invoiceData.docnumber,
+            invoicenumber:invoiceData.id,
             refnumber: invoiceData.reference,
-            pqnumber: " _ ",
+            pqnumber: po,
             duedate: invoiceData.duedate,
             paylink: "Pay Now",
             supplier_type: "Customer",
@@ -310,11 +312,12 @@ Template.new_salesorder.onRendered(() => {
                 o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                 o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                 o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                title: template_title + invoiceData.id,
+                title: 'Sales Order',
+                value:  invoiceData.id,
                 date: invoiceData.saledate,
-                invoicenumber: invoiceData.docnumber,
+                invoicenumber:invoiceData.id,
                 refnumber: invoiceData.reference,
-                pqnumber: " _ ",
+                pqnumber: po,
                 duedate: invoiceData.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -338,12 +341,12 @@ Template.new_salesorder.onRendered(() => {
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
                 showFX:fx,
-
+    
                 };
 
         }
 
-
+        
 
         object_invoce.push(item_sale);
         $("#templatePreviewModal .field_payment").show();
@@ -358,7 +361,7 @@ Template.new_salesorder.onRendered(() => {
     function showDeliveryDocket1(template_title,number)
     {
 
-                object_invoce = [];
+                object_invoce = [];          
                 var array_data = [];
                 let invoiceData = templateObject.salesorderrecord.get();
                 let stripe_id = templateObject.accountID.get() || '';
@@ -374,7 +377,7 @@ Template.new_salesorder.onRendered(() => {
                 var customfield1 = $('#edtSaleCustField1').val() || '';
                 var customfield2 = $('#edtSaleCustField2').val() || '';
                 var customfield3 = $('#edtSaleCustField3').val() || '';
-
+        
                 var customfieldlabel1 = $('.lblCustomField1').first().text();
                 var customfieldlabel2 = $('.lblCustomField2').first().text();
                 var customfieldlabel3 = $('.lblCustomField3').first().text();
@@ -392,7 +395,7 @@ Template.new_salesorder.onRendered(() => {
                     let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
                     array_data.push([
-
+                    
                         tdproduct,
                         tddescription,
                         tdQty,
@@ -412,7 +415,7 @@ Template.new_salesorder.onRendered(() => {
 
                     lineItems.push(lineItemObj);
                 });
-
+                var po = $('#ponumber').val() || '.';
                 let company = Session.get('vs1companyName');
                 let vs1User = localStorage.getItem('mySession');
                 let customerEmail = $('#edtCustomerEmail').val();
@@ -440,11 +443,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -456,9 +460,9 @@ Template.new_salesorder.onRendered(() => {
                         total : "",
                         paid_amount : "",
                         bal_due :"",
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         applied : "",
                         customfield1:'NA',
@@ -482,11 +486,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -498,9 +503,9 @@ Template.new_salesorder.onRendered(() => {
                         total : total,
                         paid_amount : invoiceData.totalPaid,
                         bal_due : invoiceData.balanceDue,
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         customfield1:customfield1,
                         customfield2:customfield2,
@@ -522,11 +527,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -538,9 +544,9 @@ Template.new_salesorder.onRendered(() => {
                         total : total,
                         paid_amount : invoiceData.totalPaid,
                         bal_due : invoiceData.balanceDue,
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         customfield1:customfield1,
                         customfield2:customfield2,
@@ -549,7 +555,7 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel2:customfieldlabel2,
                         customfieldlabel3:customfieldlabel3,
                         showFX:"",
-
+                
                     };
                 }
 
@@ -571,7 +577,7 @@ Template.new_salesorder.onRendered(() => {
     function updateTemplate1(object_invoce) {
         $("#templatePreviewModal").modal("toggle");
         if (object_invoce.length > 0) {
-
+         
           $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
           $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
           $("#templatePreviewModal .o_address1").text(
@@ -582,7 +588,7 @@ Template.new_salesorder.onRendered(() => {
           $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
           $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
           $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
-
+    
           if(object_invoce[0]["applied"] == ""){
             $("#templatePreviewModal .applied").hide()
             $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
@@ -600,7 +606,7 @@ Template.new_salesorder.onRendered(() => {
           }
           $("#templatePreviewModal .customer").empty();
           $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
-
+    
           if(object_invoce[0]["supplier_name"] == ""){
             $("#templatePreviewModal .pdfCustomerName").hide()
           }else{
@@ -608,7 +614,7 @@ Template.new_salesorder.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerName").empty();
           $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-
+    
           if(object_invoce[0]["supplier_addr"] == ""){
             $("#templatePreviewModal .pdfCustomerAddress").hide()
           }else{
@@ -616,35 +622,54 @@ Template.new_salesorder.onRendered(() => {
           }
           $("#templatePreviewModal .pdfCustomerAddress").empty();
           $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-
-
+    
+          
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " template"
+            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
           );
 
+          if(object_invoce[0]["value"]=="")
+          {
+              $('.print-header-value').text('');
 
+          }
+          else{
+             $('.print-header-value').text(object_invoce[0]["value"]);
+          }
+    
+          if(object_invoce[0]["bsb"]=="")
+          { 
+              $('#templatePreviewModal .field_payment').hide();
+
+          }
+          else{
+
+              $('#templatePreviewModal .field_payment').show();
+          }
+         
+    
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
           $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
           $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-
-
+    
+    
           if(object_invoce[0]["date"] == ""){
             $("#templatePreviewModal .dateNumber").hide();
           }else{
             $("#templatePreviewModal .dateNumber").show();
           }
-
+    
           $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
-
+    
           if(object_invoce[0]["pqnumber"] == ""){
             $("#templatePreviewModal .pdfPONumber").hide();
           }else{
             $("#templatePreviewModal .pdfPONumber").show();
           }
-
+    
           $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
-
+    
           if(object_invoce[0]["invoicenumber"] == ""){
             $("#templatePreviewModal .invoiceNumber").hide();
           }else{
@@ -674,39 +699,40 @@ Template.new_salesorder.onRendered(() => {
                 $("#templatePreviewModal .link").show();
                 $("#templatePreviewModal .linkText").show();
           }
+
           if (object_invoce[0]["showFX"] == "") {
-            $("#templatePreviewModal .showFx").hide();
-            $("#templatePreviewModal .showFxValue").hide();
-          } else {
-                    $("#templatePreviewModal .showFx").show();
-                    $("#templatePreviewModal .showFxValue").show();
-                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
-          }
+                $("#templatePreviewModal .showFx").hide();
+                $("#templatePreviewModal .showFxValue").hide();
+         } else {
+                $("#templatePreviewModal .showFx").show();
+                $("#templatePreviewModal .showFxValue").show();
+                $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+         }
 
 
           if(object_invoce[0]["customfield1"] == "NA")
-          {
+          {   
                   $('#customfieldtablenew').css('display', 'none');
                   $('#customdatatablenew').css('display', 'none');
                   $('#templatePreviewModal .customfield1').text('');
                   $('#templatePreviewModal .customfield2').text('');
                   $('#templatePreviewModal .customfield3').text('');
-
-
+                  
+                  
                   $('#templatePreviewModal .customfield1data').text('');
                   $('#templatePreviewModal .customfield2data').text('');
                   $('#templatePreviewModal .customfield3data').text('');
-
+    
           }
           else
           {
                 $('#customfieldtablenew').css('display', 'block');
                 $('#customdatatablenew').css('display', 'block');
-
+                
                 $('#templatePreviewModal .customfield1').text(object_invoce[0]["customfieldlabel1"]);
                 $('#templatePreviewModal .customfield2').text(object_invoce[0]["customfieldlabel2"]);
                 $('#templatePreviewModal .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
+                
                 if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                 {
                   $('#templatePreviewModal .customfield1data').text('');
@@ -715,7 +741,7 @@ Template.new_salesorder.onRendered(() => {
                 {
                   $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                 }
-
+  
                 if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                 {
                   $('#templatePreviewModal .customfield2data').text('');
@@ -731,20 +757,17 @@ Template.new_salesorder.onRendered(() => {
                 }
                 else
                 {
-                  $('#templatePreviewModal .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                  $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
                 }
 
 
 
           }
 
-
-
           if(object_invoce[0]["customfield1"] == "NA")
           {
                 $('#customfieldlable').css('display', 'none');
                 $('#customfieldlabledata').css('display', 'none');
-
           }
           else
           {
@@ -811,6 +834,7 @@ Template.new_salesorder.onRendered(() => {
 
         }
 
+
       }
 
     function updateTemplate(object_invoce) {
@@ -864,10 +888,31 @@ Template.new_salesorder.onRendered(() => {
 
 
         $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-        $("#html-2-pdfwrapper_new .modal-title").text(
-            object_invoce[0]["title"] + " template"
-        );
+        
+        $("#templatePreviewModal .modal-title").text(
+            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+         );
 
+        if(object_invoce[0]["value"]=="")
+        {
+              $('.print-header-value').text('');
+
+        }
+        else
+        {
+             $('.print-header-value').text(object_invoce[0]["value"]);
+        }
+
+
+        if(object_invoce[0]["bsb"]=="")
+        { 
+            $('#html-2-pdfwrapper_new .field_payment').hide();
+
+        }
+        else{
+
+            $('#html-2-pdfwrapper_new .field_payment').show();
+        }
 
         $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
         $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
@@ -878,6 +923,15 @@ Template.new_salesorder.onRendered(() => {
             $("#html-2-pdfwrapper_new .dateNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .dateNumber").show();
+        }
+
+        if (object_invoce[0]["showFX"] == "") {
+            $("#html-2-pdfwrapper_new .showFx").hide();
+            $("#html-2-pdfwrapper_new .showFxValue").hide();
+        } else {
+            $("#html-2-pdfwrapper_new .showFx").show();
+            $("#html-2-pdfwrapper_new .showFxValue").show();
+            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
         }
 
         $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
@@ -895,22 +949,22 @@ Template.new_salesorder.onRendered(() => {
                 $('#html-2-pdfwrapper_new .customfield1').text('');
                 $('#html-2-pdfwrapper_new .customfield2').text('');
                 $('#html-2-pdfwrapper_new .customfield3').text('');
-
-
+                
+                
                 $('#html-2-pdfwrapper_new .customfield1data').text('');
                 $('#html-2-pdfwrapper_new .customfield2data').text('');
                 $('#html-2-pdfwrapper_new .customfield3data').text('');
-
+  
         }
         else
         {
               $('#customfieldtablenew').css('display', 'block');
               $('#customdatatablenew').css('display', 'block');
-
+              
               $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
               $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
               $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-
+              
               if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
               {
                 $('#html-2-pdfwrapper_new .customfield1data').text('');
@@ -937,47 +991,37 @@ Template.new_salesorder.onRendered(() => {
               {
                 $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
               }
-
-
-
+              
+            
+             
         }
 
-
-        if (object_invoce[0]["showFX"] == "") {
-            $("#html-2-pdfwrapper_new .showFx").hide();
-            $("#html-2-pdfwrapper_new .showFxValue").hide();
-        } else {
-            $("#html-2-pdfwrapper_new .showFx").show();
-            $("#html-2-pdfwrapper_new .showFxValue").show();
-            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
-        }
-
-
-
+       
+    
         $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
-
+    
         if(object_invoce[0]["invoicenumber"] == ""){
             $("#html-2-pdfwrapper_new .invoiceNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .invoiceNumber").show();
         }
-        console.log("invoice number==",object_invoce[0]["invoicenumber"])
+       
         $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
-
+    
         if(object_invoce[0]["refnumber"] == ""){
             $("#html-2-pdfwrapper_new .refNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .refNumber").show();
         }
         $("#html-2-pdfwrapper_new .ro").text(object_invoce[0]["refnumber"]);
-
+        
         if(object_invoce[0]["duedate"] == ""){
             $("#html-2-pdfwrapper_new .pdfTerms").hide();
         }else{
             $("#html-2-pdfwrapper_new .pdfTerms").show();
         }
         $("#html-2-pdfwrapper_new .due").text(object_invoce[0]["duedate"]);
-
+        
         if (object_invoce[0]["paylink"] == "") {
             $("#html-2-pdfwrapper_new .link").hide();
             $("#html-2-pdfwrapper_new .linkText").hide();
@@ -987,7 +1031,7 @@ Template.new_salesorder.onRendered(() => {
         }
 
          if(object_invoce[0]["customfield1"] == "")
-         {
+         {   
                     $('#customfieldlable').css('display', 'none');
                     $('#customfieldlabledata').css('display', 'none');
 
@@ -997,7 +1041,7 @@ Template.new_salesorder.onRendered(() => {
                     $('#customfieldlable').css('display', 'block');
                     $('#customfieldlabledata').css('display', 'block');
          }
-
+    
         //   table header
         var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
         tbl_header.empty()
@@ -1005,12 +1049,12 @@ Template.new_salesorder.onRendered(() => {
                 tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
         }
         }
-
+    
         // table content
         var tbl_content = $("#html-2-pdfwrapper_new .tbl_content")
         tbl_content.empty()
         const data = object_invoce[0]["data"]
-
+        
         for(item of data){
             tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
             var content = ""
@@ -1020,16 +1064,17 @@ Template.new_salesorder.onRendered(() => {
             tbl_content.append(content)
             tbl_content.append("</tr>")
         }
-
-        // total amount
+        
+        // total amount 
+        
         if(object_invoce[0]["subtotal"] == "")
-        {
+        {     
             $("#html-2-pdfwrapper_new .field_amount").hide();
         }
         else
         {
             $("#html-2-pdfwrapper_new .field_amount").show();
-
+          
             if(object_invoce[0]["subtotal"] != ""){
               $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
               $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
@@ -1039,22 +1084,22 @@ Template.new_salesorder.onRendered(() => {
                 $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
                 $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
             }
-
-
+            
+    
             if(object_invoce[0]["total"] != ""){
                 $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
             }
-
+    
             if(object_invoce[0]["bal_due"] != ""){
                 $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
             }
-
+    
             if(object_invoce[0]["paid_amount"] != ""){
                 $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
-
+    
         }
-
+       
     }
 
     function saveTemplateFields(key, value){
@@ -7340,7 +7385,7 @@ Template.new_salesorder.onRendered(() => {
 
 
         });
-
+      
 
         function showSealsOrder(template_title,number) {
             object_invoce = [];
@@ -7358,7 +7403,7 @@ Template.new_salesorder.onRendered(() => {
             let dept = $('#sltDept').val();
             var erpGet = erpDb();
             let fx = $('#sltCurrency').val();
-
+            var po = $('#ponumber').val() || '.';
             var customfield1 = $('#edtSaleCustField1').val() || '';
             var customfield2 = $('#edtSaleCustField2').val() || '';
             var customfield3 = $('#edtSaleCustField3').val() || '';
@@ -7379,7 +7424,7 @@ Template.new_salesorder.onRendered(() => {
                 let tdlineamt = $('#' + lineID + " .colAmountEx").text();
 
                 array_data.push([
-
+                
                     tdproduct,
                     tddescription,
                     tdQty,
@@ -7414,8 +7459,8 @@ Template.new_salesorder.onRendered(() => {
             // var pdf = new jsPDF('p', 'pt', 'a4');
             // pdf.setFontSize(18);
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
-
+           
+    
             let item_sale = '';
             if(number == 1)
             {
@@ -7428,11 +7473,12 @@ Template.new_salesorder.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoiceData.id,
+                title: 'Sales Order',
+                value:  invoiceData.id,
                 date: invoiceData.saledate,
-                invoicenumber: invoiceData.docnumber,
-                refnumber: invoiceData.reference,
-                pqnumber: " _ ",
+                invoicenumber:invoiceData.id,
+                refnumber: invoice_data.reference,
+                pqnumber: po,
                 duedate: invoiceData.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -7456,7 +7502,7 @@ Template.new_salesorder.onRendered(() => {
                 customfieldlabel2:'NA',
                 customfieldlabel3:'NA',
                 showFX:"",
-
+    
                 };
             }
             else if(number == 2)
@@ -7470,11 +7516,12 @@ Template.new_salesorder.onRendered(() => {
                 o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                 o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                 o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                title: template_title + invoiceData.id,
+                title: 'Sales Order',
+                value:  invoiceData.id,
                 date: invoiceData.saledate,
-                invoicenumber: invoiceData.docnumber,
+                invoicenumber:invoiceData.id,
                 refnumber: invoiceData.reference,
-                pqnumber: " _ ",
+                pqnumber: po,
                 duedate: invoiceData.duedate,
                 paylink: "Pay Now",
                 supplier_type: "Customer",
@@ -7499,7 +7546,7 @@ Template.new_salesorder.onRendered(() => {
                 customfieldlabel3:customfieldlabel3,
                 showFX:"",
               };
-
+    
             }
             else
             {
@@ -7512,11 +7559,12 @@ Template.new_salesorder.onRendered(() => {
                     o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
                     o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
                     o_phone:Template.new_invoice.__helpers.get('companyphone').call() ,
-                    title: template_title + invoiceData.id,
+                    title: 'Sales Order',
+                    value:  invoiceData.id,
                     date: invoiceData.saledate,
-                    invoicenumber: invoiceData.docnumber,
+                    invoicenumber:invoiceData.id,
                     refnumber: invoiceData.reference,
-                    pqnumber: " _ ",
+                    pqnumber: po,
                     duedate: invoiceData.duedate,
                     paylink: "Pay Now",
                     supplier_type: "Customer",
@@ -7540,25 +7588,25 @@ Template.new_salesorder.onRendered(() => {
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
                     showFX:fx,
-
+        
                     };
-
+    
             }
-
-
-
+    
+            
+    
             object_invoce.push(item_sale);
             $("#templatePreviewModal .field_payment").show();
             $("#templatePreviewModal .field_amount").show();
             updateTemplate(object_invoce);
-
+    
             saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
         }
 
         function showDeliveryDocket(template_title,number)
         {
 
-               object_invoce = [];
+               object_invoce = [];          
                var array_data = [];
                let invoiceData = templateObject.salesorderrecord.get();
                let stripe_id = templateObject.accountID.get() || '';
@@ -7575,13 +7623,13 @@ Template.new_salesorder.onRendered(() => {
                var customfield1 = $('#edtSaleCustField1').val() || '';
                var customfield2 = $('#edtSaleCustField2').val() || '';
                var customfield3 = $('#edtSaleCustField3').val() || '';
-
+       
                var customfieldlabel1 = $('.lblCustomField1').first().text();
                var customfieldlabel2 = $('.lblCustomField2').first().text();
                var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+               var po = $('#ponumber').val() || '.';
                $('#tblSalesOrderLine > tbody > tr').each(function() {
-
+   
                    var lineID = this.id;
                    let tdproduct = $('#' + lineID + " .lineProductName").val();
                    let tddescription = $('#' + lineID + " .lineProductDesc").text();
@@ -7591,18 +7639,18 @@ Template.new_salesorder.onRendered(() => {
                    let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
                    let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-
+   
                    array_data.push([
-
+                   
                        tdproduct,
                        tddescription,
                        tdQty,
                        tdunitprice,
                        taxamount,
                        tdlineamt,
-
+   
                    ]);
-
+   
                    lineItemObj = {
                        description: tddescription || '',
                        quantity: tdQty || 0,
@@ -7610,10 +7658,10 @@ Template.new_salesorder.onRendered(() => {
                            minimumFractionDigits: 2
                        }) || 0
                    }
-
+   
                    lineItems.push(lineItemObj);
                });
-
+               
                let company = Session.get('vs1companyName');
                let vs1User = localStorage.getItem('mySession');
                let customerEmail = $('#edtCustomerEmail').val();
@@ -7628,7 +7676,7 @@ Template.new_salesorder.onRendered(() => {
                // var pdf = new jsPDF('p', 'pt', 'a4');
                // pdf.setFontSize(18);
                $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-
+    
                 let item_invoices = '';
                 if(number == 1)
                 {
@@ -7641,11 +7689,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -7657,9 +7706,9 @@ Template.new_salesorder.onRendered(() => {
                         total : "",
                         paid_amount : "",
                         bal_due :"",
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         applied : "",
                         customfield1:'NA',
@@ -7683,11 +7732,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -7699,9 +7749,9 @@ Template.new_salesorder.onRendered(() => {
                         total : "",
                         paid_amount : "",
                         bal_due :"",
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         customfield1:customfield1,
                         customfield2:customfield2,
@@ -7723,11 +7773,12 @@ Template.new_salesorder.onRendered(() => {
                         o_reg: Template.new_salesorder.__helpers.get('companyReg').call(),
                         o_abn: Template.new_salesorder.__helpers.get('companyabn').call(),
                         o_phone:Template.new_salesorder.__helpers.get('companyphone').call() ,
-                        title: template_title + invoiceData.id,
+                        title: 'Delivery Docket',
+                        value: invoiceData.id,
                         date: invoiceData.saledate,
-                        invoicenumber: invoiceData.docnumber,
+                        invoicenumber:invoiceData.id,
                         refnumber: invoiceData.reference,
-                        pqnumber: " _ ",
+                        pqnumber: po,
                         duedate: invoiceData.duedate,
                         paylink: "Pay Now",
                         supplier_type: "Customer",
@@ -7739,9 +7790,9 @@ Template.new_salesorder.onRendered(() => {
                         total : "",
                         paid_amount : "",
                         bal_due :"",
-                        bsb : Template.new_salesorder.__helpers.get('vs1companyBankBSB').call(),
-                        account :Template.new_salesorder.__helpers.get('vs1companyBankAccountNo').call(),
-                        swift : Template.new_salesorder.__helpers.get('vs1companyBankSwiftCode').call(),
+                        bsb : "",
+                        account :"",
+                        swift : "",
                         data: array_data,
                         customfield1:customfield1,
                         customfield2:customfield2,
@@ -7750,17 +7801,17 @@ Template.new_salesorder.onRendered(() => {
                         customfieldlabel2:customfieldlabel2,
                         customfieldlabel3:customfieldlabel3,
                         showFX:"",
-
+                
                     };
                 }
 
-
-
+     
+  
                 object_invoce.push(item_invoices);
-
+            
                 $("#templatePreviewModal .field_payment").show();
                 $("#templatePreviewModal .field_amount").show();
-
+            
                 updateTemplate(object_invoce);
                 saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
 
@@ -7865,11 +7916,11 @@ Template.new_salesorder.onRendered(() => {
             // });
 
         };
-
-        exportSalesToPdf =  async function (template_title,number) {
-
-
-
+      
+        exportSalesToPdf =  async function (template_title,number) {   
+                    
+                
+                    
             if(template_title == 'Sales Order')
             {
                 await showSealsOrder(template_title,number);
@@ -7883,7 +7934,7 @@ Template.new_salesorder.onRendered(() => {
             {
                 await  showInvoiceBack(template_title,number);
             }
-
+        
 
             let margins = {
                 top: 0,
@@ -7891,7 +7942,7 @@ Template.new_salesorder.onRendered(() => {
                 left: 0,
                 width: 100
             };
-
+    
             let invoice_data_info = templateObject.salesorderrecord.get();
             document.getElementById('html-2-pdfwrapper_new').style.display="block";
             var source = document.getElementById('html-2-pdfwrapper_new');
@@ -7905,7 +7956,7 @@ Template.new_salesorder.onRendered(() => {
                 else{
                     file = 'Delivery Docket -' + invoice_data_info.id + '.pdf';
                 }
-
+            
             }
 
             var opt = {
@@ -7943,7 +7994,7 @@ Template.new_salesorder.onRendered(() => {
         };
 
 
-    setTimeout(function() {
+        setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 1024px)")
 
@@ -7973,7 +8024,7 @@ Template.new_salesorder.onRendered(() => {
         mediaQuery(x)
         x.addListener(mediaQuery)
     }, 10);
-    setTimeout(function() {
+       setTimeout(function() {
 
         var x = window.matchMedia("(max-width: 420px)")
 
@@ -8613,7 +8664,8 @@ Template.new_salesorder.helpers({
         return Session.get('vs1companyPOBox');
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        let phone = "Phone: "+ Session.get('vs1companyPhone');
+        return phone;
     },
     companyabn: () => { //Update Company ABN
       let countryABNValue = "ABN: " + Session.get('vs1companyABN');
@@ -8664,7 +8716,7 @@ Template.new_salesorder.events({
             }
             else
             {
-
+            
                 $('.fullScreenSpin').css('display', 'inline-block');
                 $('#html-2-pdfwrapper').css('display', 'block');
                 if ($('.edtCustomerEmail').val() != "") {
@@ -8673,11 +8725,11 @@ Template.new_salesorder.events({
                     $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
                     var ponumber = $('#ponumber').val() || '.';
                     $('.po').text(ponumber);
-                    var rowCount = $('.tblInvoiceLine tbody tr').length;
+                    var rowCount = $('.tblInvoiceLine tbody tr').length;  
 
                     exportSalesToPdf1();
-
-                }
+                
+                } 
 
                 $('#confirmprint').modal('hide');
             }
@@ -8685,16 +8737,16 @@ Template.new_salesorder.events({
         },
 
         'click #choosetemplate':function(event)
-        {
+        {   
             if($('#choosetemplate').is(':checked'))
-            {
+            {        
                 $('#templateselection').modal('show');
             }
             else
-            {
+            {   
             $('#templateselection').modal('hide');
             }
-
+            
         },
 
     'click .btnRefreshCustomField': function (event) {
@@ -9649,7 +9701,7 @@ Template.new_salesorder.events({
 
 
     'click .printConfirm':async function (event) {
-
+   
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#html-2-pdfwrapper-new').css('display', 'block');
@@ -9659,21 +9711,21 @@ Template.new_salesorder.events({
             $('#printcomment').html($('#txaComment').val().replace(/[\r\n]/g, "<br />"));
             var ponumber = $('#ponumber').val() || '.';
             $('.po').text(ponumber);
-            var rowCount = $('.tblInvoiceLine tbody tr').length;
+            var rowCount = $('.tblInvoiceLine tbody tr').length;   
 
             if($('#print_sales_order').is(':checked') || $('#print_sales_order_second').is(':checked')) {
                 printTemplate.push('Sales Order');
             }
-
+            
            if($('#print_delivery_docket').is(':checked') || $('#print_delivery_docket_second').is(':checked')) {
                 printTemplate.push('Delivery Docket');
            }
-
-
+        
+      
             if(printTemplate.length > 0) {
-
+                  
                   for(var i = 0; i < printTemplate.length; i++)
-                  {
+                  {  
                     if(printTemplate[i] == 'Invoices')
                     {
                         var template_number = $('input[name="Sales Order"]:checked').val();
@@ -9685,18 +9737,18 @@ Template.new_salesorder.events({
                     else{
                         var template_number = $('input[name="Invoice Back Orders"]:checked').val();
                     }
-
+                   
                     let result = await exportSalesToPdf(printTemplate[i],template_number);
                     if(result == true)
                     {
                          console.log("Template Number Is "+  template_number);
                     }
-
+                     
                   }
-
+                 
             }
 
-
+         
 
         } else {
             swal({
