@@ -835,6 +835,15 @@ authenticatedRoutes.route('/customerawaitingpayments', {
     }
 });
 
+authenticatedRoutes.route('/overduecustomerawaitingpayments', {
+    name: 'overduecustomerawaitingpayments',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'overduecustomerawaitingpayments'
+        });
+    }
+});
+
 authenticatedRoutes.route('/customerpayment', {
     name: 'customerpayment',
     action() {

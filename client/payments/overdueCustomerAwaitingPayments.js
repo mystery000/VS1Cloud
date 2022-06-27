@@ -8,7 +8,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-Template.customerawaitingpayments.onCreated(function () {
+Template.overduecustomerawaitingpayments.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -18,7 +18,7 @@ Template.customerawaitingpayments.onCreated(function () {
 
 });
 
-Template.customerawaitingpayments.onRendered(function () {
+Template.overduecustomerawaitingpayments.onRendered(function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -66,29 +66,6 @@ Template.customerawaitingpayments.onRendered(function () {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
-        if (error) {}
-        else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -124,16 +101,16 @@ Template.customerawaitingpayments.onRendered(function () {
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        getVS1Data('TAwaitingCustomerPayment').then(function (dataObject) {
+        getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-              sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                   let lineItems = [];
                   let lineItemObj = {};
-                  addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data));
+                  addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
-                      //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
+                      //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
                   } else {
                     $('#dateFrom').attr('readonly', false);
                     $('#dateTo').attr('readonly', false);
@@ -300,8 +277,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                   let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                   let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                   if(checkurlIgnoreDate == 'true'){
-                                    sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                        getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                    sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                        getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                             if (dataObjectold.length == 0) {}
                                             else {
                                                 let dataOld = JSON.parse(dataObjectold[0].data);
@@ -311,7 +288,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                     tsaleslist: thirdaryData
                                                 }
 
-                                                addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                     templateObject.resetData(objCombineData);
                                                     $('.fullScreenSpin').css('display', 'none');
                                                 }).catch(function (err) {
@@ -325,8 +302,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                         $('.fullScreenSpin').css('display', 'none');
                                     });
                                   }else{
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
                                               let dataOld = JSON.parse(dataObjectold[0].data);
@@ -336,7 +313,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                   tsaleslist: thirdaryData
                                               }
 
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                   templateObject.resetData(objCombineData);
                                                   $('.fullScreenSpin').css('display', 'none');
                                               }).catch(function (err) {
@@ -432,7 +409,7 @@ Template.customerawaitingpayments.onRendered(function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
+                    //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
                 } else {
                   $('#dateFrom').attr('readonly', false);
                   $('#dateTo').attr('readonly', false);
@@ -599,8 +576,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                 if(checkurlIgnoreDate == 'true'){
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
                                               let dataOld = JSON.parse(dataObjectold[0].data);
@@ -610,7 +587,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                   tsaleslist: thirdaryData
                                               }
 
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                   templateObject.resetData(objCombineData);
                                                   $('.fullScreenSpin').css('display', 'none');
                                               }).catch(function (err) {
@@ -624,8 +601,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                       $('.fullScreenSpin').css('display', 'none');
                                   });
                                 }else{
-                                sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                    getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
                                         else {
                                             let dataOld = JSON.parse(dataObjectold[0].data);
@@ -635,7 +612,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                 tsaleslist: thirdaryData
                                             }
 
-                                            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                 templateObject.resetData(objCombineData);
                                                 $('.fullScreenSpin').css('display', 'none');
                                             }).catch(function (err) {
@@ -720,17 +697,17 @@ Template.customerawaitingpayments.onRendered(function () {
 
             }
         }).catch(function (err) {
-            sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                 let lineItems = [];
                 let lineItemObj = {};
-                addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data));
+                addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
+                    //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
                 } else {
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
+                  $('#dateFrom').attr('readonly', false);
+                  $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -894,8 +871,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                 if(checkurlIgnoreDate == 'true'){
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
                                               let dataOld = JSON.parse(dataObjectold[0].data);
@@ -905,7 +882,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                   tsaleslist: thirdaryData
                                               }
 
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                   templateObject.resetData(objCombineData);
                                                   $('.fullScreenSpin').css('display', 'none');
                                               }).catch(function (err) {
@@ -919,8 +896,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                       $('.fullScreenSpin').css('display', 'none');
                                   });
                                 }else{
-                                sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                    getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
                                         else {
                                             let dataOld = JSON.parse(dataObjectold[0].data);
@@ -930,7 +907,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                 tsaleslist: thirdaryData
                                             }
 
-                                            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                 templateObject.resetData(objCombineData);
                                                 $('.fullScreenSpin').css('display', 'none');
                                             }).catch(function (err) {
@@ -1023,10 +1000,9 @@ Template.customerawaitingpayments.onRendered(function () {
 
     templateObject.getAllCustomerPaymentData();
 
-
     templateObject.getAllFilterAwaitingCustData = function(fromDate, toDate, ignoreDate) {
-        sideBarService.getAllAwaitingCustomerPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
-            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data)).then(function(datareturn) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
+            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function(datareturn) {
                 location.reload();
             }).catch(function(err) {
                 location.reload();
@@ -1051,7 +1027,7 @@ Template.customerawaitingpayments.onRendered(function () {
     }
 });
 
-Template.customerawaitingpayments.events({
+Template.overduecustomerawaitingpayments.events({
 
     'click .chkDatatable': function (event) {
         var columns = $('#tblcustomerAwaitingPayment th');
@@ -1091,8 +1067,24 @@ Template.customerawaitingpayments.events({
       const lineExtaSellItems = [];
       $('.fullScreenSpin').css('display', 'inline-block');
       let dataSearchName = $('#tblcustomerAwaitingPayment_filter input').val();
+
+      var currentBeginDate = new Date();
+var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+let fromDateMonth = (currentBeginDate.getMonth() + 1);
+let fromDateDay = currentBeginDate.getDate();
+if((currentBeginDate.getMonth()+1) < 10){
+    fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+}else{
+  fromDateMonth = (currentBeginDate.getMonth()+1);
+}
+
+if(currentBeginDate.getDate() < 10){
+    fromDateDay = "0" + currentBeginDate.getDate();
+}
+var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+
       if (dataSearchName.replace(/\s/g, '') != '') {
-          sideBarService.getAllAwaitingCustomerPaymentByCustomerNameOrID(dataSearchName).then(function (data) {
+          sideBarService.getAllOverDueAwaitingCustomerPaymentByCustomerNameOrID(toDate,dataSearchName).then(function (data) {
               $(".btnRefreshCustomerAwaiting").removeClass('btnSearchAlert');
               let lineItems = [];
               let lineItemObj = {};
@@ -1393,30 +1385,30 @@ Template.customerawaitingpayments.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
-            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
               sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                   addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                      window.open("/customerawaitingpayments", "_self");
+                      window.open("/overduecustomerawaitingpayments", "_self");
                   }).catch(function (err) {
-                      window.open("/customerawaitingpayments", "_self");
+                      window.open("/overduecustomerawaitingpayments", "_self");
                   });
               }).catch(function (err) {
                 sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                     addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                        window.open("/customerawaitingpayments", "_self");
+                        window.open("/overduecustomerawaitingpayments", "_self");
                     }).catch(function (err) {
-                        window.open("/customerawaitingpayments", "_self");
+                        window.open("/overduecustomerawaitingpayments", "_self");
                     });
                 }).catch(function (err) {
-                    window.open("/customerawaitingpayments", "_self");
+                    window.open("/overduecustomerawaitingpayments", "_self");
                 });
               });
             }).catch(function (err) {
-                window.open("/customerawaitingpayments", "_self");
+                window.open("/overduecustomerawaitingpayments", "_self");
             });
         }).catch(function (err) {
-            window.open("/customerawaitingpayments", "_self");
+            window.open("/overduecustomerawaitingpayments", "_self");
         });
 
 
@@ -1842,7 +1834,7 @@ Template.customerawaitingpayments.events({
     }
 
 });
-Template.customerawaitingpayments.helpers({
+Template.overduecustomerawaitingpayments.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.paymentdate == 'NA') {

@@ -1361,34 +1361,63 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesList, options);
   }
 
-  getAllOverDueAwaitingCustomerPayment(currentDate, limitcount, limitfrom) {
+  getAllOverDueAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
-    //if(ignoreDate == true){
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        IncludeIsInvoice: true,
+        IncludeIsQuote: false,
+        IncludeIsRefund: true,
+        IncludeISSalesOrder: false,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        Search: "Balance != 0",
+        OrderBy: "SaleID desc",
+        Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        IncludeIsInvoice: true,
+        IncludeIsQuote: false,
+        IncludeIsRefund: true,
+        IncludeISSalesOrder: false,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        Search: "Balance != 0",
+        OrderBy: "SaleID desc",
+        Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TSalesList, options);
+  }
+
+  getAllOverDueAwaitingCustomerPaymentByCustomerNameOrID(dateTo,customerData) {
+    let options = "";
     options = {
       IgnoreDates: true,
-      IncludeIsCashSale: false,
-      IncludeIsCustomerReturn: false,
       IncludeIsInvoice: true,
-      IncludeIslayby: false,
-      IncludeIsLaybyPayment: false,
-      IncludeIsPOS: false,
       IncludeIsQuote: false,
       IncludeIsRefund: false,
       IncludeISSalesOrder: false,
-      IncludeIsVoucher: false,
       IsDetailReport: false,
       Paid: false,
       Unpaid: true,
       OrderBy: "SaleID desc",
-      Search: 'dueDate < "' + currentDate + '" and Balance != 0',
-      LimitCount: '"' + limitcount + '"',
-      LimitFrom: '"' + limitfrom + '"',
+      Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+      Search: 'CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
     };
-    //}
     return this.getList(this.ERPObjects.TSalesList, options);
   }
-
-
 
   getAllBillExList(limitcount, limitfrom) {
     let options = "";

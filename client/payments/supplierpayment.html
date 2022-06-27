@@ -193,15 +193,7 @@
                                         }
                                     </style>
                                     <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <h6 class="dropdown-header" role="presentation">Date ranges</h6>
-                                        <a class="dropdown-item today"  id="today" role="presentation" href="#">Today</a>
-                                        <a class="dropdown-item lastweek"  id="lastweek" role="presentation" href="#">Last Week</a>
-                                        <a class="dropdown-item lastMonth"  id="lastMonth" role="presentation" href="#">Last Month</a>
-                                        <a class="dropdown-item lastQuarter"  id="lastQuarter" role="presentation" href="#">Last Quarter</a>
-                                        <a class="dropdown-item last12Months"  id="last12Months" role="presentation" href="#">Last 12 Months</a>
-                                        <a class="dropdown-item ignoreDate"  id="ignoreDate" role="presentation" href="#">Ignore Date</a>
-                                    </div>
+                                    {{> daterangedropdownoption}}
                                 </div>
                                 <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
                                     <label style="margin-top: 8px; margin-right: 16px;">From</label>
