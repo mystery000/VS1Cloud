@@ -2111,6 +2111,7 @@ Template.receiptsoverview.events({
             let supplierName = $(parentElement + ' .merchants').val() || ' ';
             let currencyId = $(parentElement + ' .currencies').attr('data-id');
             let currencyName = $(parentElement + ' .currencies').val() || ' ';
+            let currencyBuyRate = $(parentElement + ' .exchange-rate-js').val() || ' ';
             let chartAccountId = $(parentElement + ' .chart-accounts').attr('data-id');
             let chartAccountName = $(parentElement + ' .chart-accounts').val() || ' ';
             let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
@@ -2119,6 +2120,8 @@ Template.receiptsoverview.events({
 
             var totalAmount = 0;
             totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
+
+            console.log("TODO: API update required for fx rate: ", "TExpenseClaimLineEx");
 
             let expenseClaimLine = {
                 type: "TExpenseClaimLineEx",
@@ -2134,12 +2137,13 @@ Template.receiptsoverview.events({
                     DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                     Description: description,
                     Paymethod: transactionTypeName,
-                    Attachments: attachment
+                    Attachments: attachment,
                     // GroupReport: groupReport,
                     // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                     // TransactionTypeName: transactionTypeName,
                     // CurrencyID: currencyId ? parseInt(currencyId) : 0,
                     // CurrencyName: currencyName,
+                    // CurrencyRate: currencyBuyRate
                 }
             };
 
