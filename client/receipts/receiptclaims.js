@@ -2121,7 +2121,6 @@ Template.receiptsoverview.events({
             var totalAmount = 0;
             totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
 
-            console.log("TODO: API update required for fx rate: ", "TExpenseClaimLineEx");
 
             let expenseClaimLine = {
                 type: "TExpenseClaimLineEx",
@@ -2141,11 +2140,10 @@ Template.receiptsoverview.events({
                     // GroupReport: groupReport,
                     // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                     // TransactionTypeName: transactionTypeName,
-                    // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                    // CurrencyName: currencyName,
-                    // CurrencyRate: currencyBuyRate
+               
                 }
             };
+
 
             let expenseClaim = {
                 type: "TExpenseClaimEx",
@@ -2157,8 +2155,16 @@ Template.receiptsoverview.events({
                     Lines: [expenseClaimLine],
                     RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
                     RequestToEmployeeName: employeeName,
+                     // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                    // CurrencyName: currencyName,
+                    // CurrencyRate: currencyBuyRate,
+                    // ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
+                    // ForeignExchangeCode: currencyName,
                 }
             }
+
+            console.log("TODO: API update required for fx rate: ", "TExpenseClaimEx", expenseClaim);
+
 
 
             $('.fullScreenSpin').css('display', 'inline-block');
