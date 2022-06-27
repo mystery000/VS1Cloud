@@ -1375,7 +1375,7 @@
         <!-- Start PDF -->
         <!-- New A4 -->
 
-        <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true" style="z-index:9990;">
+        <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1386,14 +1386,14 @@
                     </div>
                     <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
                         <div style="width: 90%; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                            id="html-2-pdfwrapper_quotes" name="pdfwrapper_quotes">
+                            id="html-2-pdfwrapper_quotes" name="html-2-pdfwrapper_quotes">
                             <div class="d-flex flex-row d-sm-flex d-md-flex ">
                                 <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
                                     <div style="display: flex;" class="col-6 col-md-6 col-sm-12">
                                         <div class="col-4 col-md-4 col-sm-10" style="max-width: 60mm; max-height: 30mm;">
                                             <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 200px;margin-bottom: 8px;">
                                         </div>
-                                        <div class="col-8 col-md-8 col-sm-10">
+                                        <div class="col-lg-12 col-md-8 col-sm-6">
                                             <div style="padding-left: 16px;font-weight: bold;">
                                                 <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                                 <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1417,7 +1417,11 @@
                                 <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                                     <div style="display: flex; width: 100%;">
                                         <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                            <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                             <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                             </h4>
+                                        </div>
+                                        <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                            <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                             </h4>
                                         </div>
 
@@ -1429,11 +1433,9 @@
                                             <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                             <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                                                 Number:</p>
-                                            <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                                            <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                                                :</p>
-                                            <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                                                Date:</p>
+                                            <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                                            <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
+                                            <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
 
                                             <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
 
@@ -1450,13 +1452,13 @@
                                         <div style="width: 50%; padding-left: 16px;">
                                             <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                             <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                            <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                            <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                                             <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="showFxValue"
                                             style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                             <p class="link"
-                                                style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                                                style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                                 <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                     Now</a>
                                             </p>
@@ -1609,7 +1611,7 @@
                     <div class="col-4 col-md-4 col-sm-10 p-2" style="max-width: 60mm; max-height: 30mm;">
                         <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 150px;margin-bottom: 8px;">
                     </div>
-                    <div class="col-8 col-md-8 col-sm-10 p-2">
+                    <div class="col-lg-12 col-md-8 col-sm-6 p-2">
                         <div style="padding-left: 16px;font-weight: bold;">
                             <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                             <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1636,6 +1638,10 @@
                         <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                         </h4>
                     </div>
+                    <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                        <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                        </h4>
+                    </div>
 
                 </div>
 
@@ -1645,12 +1651,12 @@
                         <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                         <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                             Number:</p>
-                        <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                        <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                            :</p>
-                        <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                            Date:</p>
-                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+                        <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                        <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
+                        <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
+                      
+                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>  
+
                         <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
                         <div class="mt-4" id="customfieldtablenew">
@@ -1662,12 +1668,12 @@
                     <div style="width: 50%; padding-left: 16px;">
                         <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                         <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                        <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                        <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                         <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                         <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                         <p class="showFxValue"
                         style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                        <p class="link" style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                        <p class="link" style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                             <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                 Now</a>
                         </p>
@@ -1799,7 +1805,7 @@
             <p>Page 1 of 1</p>
         </div>
 
-        </div>
+    </div>
 
 
         <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; display:none; overflow-x: visible;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
