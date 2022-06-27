@@ -276,7 +276,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                                   let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                   let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                  if(checkurlIgnoreDate == 'true'){
+                                  if(data.Params.IgnoreDates == true){
                                     sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                         getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                             if (dataObjectold.length == 0) {}
@@ -335,9 +335,9 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                           },
                           "fnInitComplete": function () {
                             let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                            //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                                 this.fnPageChange('last');
-                            }
+                            //}
                                $("<button class='btn btn-primary btnRefreshCustomerAwaiting' type='button' id='btnRefreshCustomerAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcustomerAwaitingPayment_filter");
                                $('.myvarFilterForm').appendTo(".colDateFilter");
                            },
@@ -449,34 +449,6 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                 templateObject.datatablerecords.set(dataTableList);
                 if (templateObject.datatablerecords.get()) {
 
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
-                        if (error) {}
-                        else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
                     setTimeout(function () {
                         MakeNegative();
                     }, 100);
@@ -575,7 +547,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(checkurlIgnoreDate == 'true'){
+                                if(data.Params.IgnoreDates == true){
                                   sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                       getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
@@ -634,9 +606,9 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                               this.fnPageChange('last');
-                          }
+                          //}
                              $("<button class='btn btn-primary btnRefreshCustomerAwaiting' type='button' id='btnRefreshCustomerAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcustomerAwaitingPayment_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
@@ -870,7 +842,7 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
 
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(checkurlIgnoreDate == 'true'){
+                                if(data.Params.IgnoreDates == true){
                                   sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
                                       getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
@@ -929,9 +901,9 @@ Template.overduecustomerawaitingpayments.onRendered(function () {
                         },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                               this.fnPageChange('last');
-                          }
+                          //}
                              $("<button class='btn btn-primary btnRefreshCustomerAwaiting' type='button' id='btnRefreshCustomerAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcustomerAwaitingPayment_filter");
                              $('.myvarFilterForm').appendTo(".colDateFilter");
                          },
@@ -1623,7 +1595,21 @@ var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDat
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', true);
         $('#dateTo').attr('readonly', true);
-        templateObject.getAllFilterAwaitingCustData('', '', true);
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+          fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        templateObject.getAllFilterAwaitingCustData('', toDate, true);
     },
     'click .printConfirm': function (event) {
 
