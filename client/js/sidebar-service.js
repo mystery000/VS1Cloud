@@ -251,6 +251,15 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
+
+  getCustomFieldsDropDownByNameOrID(dataSearchName) {
+    let options = {
+      ListType: "Detail",
+      select:'[Text] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
+    };
+    return this.getList(this.ERPObjects.TCustomFieldListDropDown, options);
+  }
+
   getAllCustomFieldsDropDown() {
     let options = {
       ListType: "Detail",

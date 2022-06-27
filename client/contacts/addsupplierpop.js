@@ -190,6 +190,7 @@ Template.addsupplierpop.onRendered(function () {
                     for (let i = 0; i < data.ttermsvs1.length; i++) {
                         terms.push(data.ttermsvs1[i].TermsName);
                         if(data.ttermsvs1[i].isPurchasedefault == true){
+                            Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
                         }
                     }
@@ -214,6 +215,7 @@ Template.addsupplierpop.onRendered(function () {
                 for (let i = 0; i < data.ttermsvs1.length; i++) {
                     terms.push(data.ttermsvs1[i].TermsName);
                     if(data.ttermsvs1[i].isPurchasedefault == true){
+                        Session.setPersistent('ERPTermsPurchase', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultpurchaseterm.set(data.ttermsvs1[i].TermsName);
                     }
                 }

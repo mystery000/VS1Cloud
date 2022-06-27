@@ -128,7 +128,7 @@ Template.supplierlistpop.onRendered(function () {
                             data.tsuppliervs1[i].fields.ID || '',
                             data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                             data.tsuppliervs1[i].fields.Discount || 0,
-                            data.tsuppliervs1[i].fields.TermsName || '',
+                            data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                             data.tsuppliervs1[i].fields.FirstName || '',
                             data.tsuppliervs1[i].fields.LastName || ''
                         ];
@@ -509,7 +509,7 @@ Template.supplierlistpop.onRendered(function () {
                         data.tsuppliervs1[i].fields.ID || '',
                         data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                         data.tsuppliervs1[i].fields.Discount || 0,
-                        data.tsuppliervs1[i].fields.TermsName || '',
+                        data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                         data.tsuppliervs1[i].fields.FirstName || '',
                         data.tsuppliervs1[i].fields.LastName || ''
                     ];
@@ -730,7 +730,7 @@ Template.supplierlistpop.onRendered(function () {
                                             dataObjectnew.tsuppliervs1[j].fields.ID || '',
                                             dataObjectnew.tsuppliervs1[j].fields.ClientTypeName || 'Default',
                                             dataObjectnew.tsuppliervs1[j].fields.Discount || 0,
-                                            dataObjectnew.tsuppliervs1[j].fields.TermsName || '',
+                                            dataObjectnew.tsuppliervs1[j].fields.TermsName || loggedTermsPurchase || 'COD',
                                             dataObjectnew.tsuppliervs1[j].fields.FirstName || '',
                                             dataObjectnew.tsuppliervs1[j].fields.LastName || ''
                                         ];
@@ -846,7 +846,7 @@ Template.supplierlistpop.onRendered(function () {
                                               data.tsuppliervs1[i].fields.ID || '',
                                               data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                                               data.tsuppliervs1[i].fields.Discount || 0,
-                                              data.tsuppliervs1[i].fields.TermsName || '',
+                                              data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                                               data.tsuppliervs1[i].fields.FirstName || '',
                                               data.tsuppliervs1[i].fields.LastName || ''
                                           ];
@@ -1005,7 +1005,7 @@ Template.supplierlistpop.onRendered(function () {
                         data.tsuppliervs1[i].fields.ID || '',
                         data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                         data.tsuppliervs1[i].fields.Discount || 0,
-                        data.tsuppliervs1[i].fields.TermsName || '',
+                        data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                         data.tsuppliervs1[i].fields.FirstName || '',
                         data.tsuppliervs1[i].fields.LastName || ''
                     ];
@@ -1431,7 +1431,7 @@ Template.supplierlistpop.events({
                             data.tsuppliervs1[i].fields.ID || '',
                             data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                             data.tsuppliervs1[i].fields.Discount || 0,
-                            data.tsuppliervs1[i].fields.TermsName || '',
+                            data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                             data.tsuppliervs1[i].fields.FirstName || '',
                             data.tsuppliervs1[i].fields.LastName || ''
                         ];
@@ -1529,7 +1529,7 @@ Template.supplierlistpop.events({
                         data.tsuppliervs1[i].fields.ID || '',
                         data.tsuppliervs1[i].fields.ClientTypeName || 'Default',
                         data.tsuppliervs1[i].fields.Discount || 0,
-                        data.tsuppliervs1[i].fields.TermsName || '',
+                        data.tsuppliervs1[i].fields.TermsName || loggedTermsPurchase || 'COD',
                         data.tsuppliervs1[i].fields.FirstName || '',
                         data.tsuppliervs1[i].fields.LastName || ''
                     ];

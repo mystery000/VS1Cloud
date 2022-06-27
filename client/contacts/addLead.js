@@ -658,14 +658,14 @@ Template.leadscard.events({
             bstate = state;
             bzipcode = postalcode;
             bcountry = country;
-            bsuburb = suburb;
+            // bsuburb = suburb;
         } else {
             bstreetAddress = $('#edtBillingAddress').val();
             bcity = $('#edtBillingCity').val();
             bstate = $('#edtBillingState').val();
             bzipcode = $('#edtBillingZIP').val();
             bcountry = $('#bedtCountry').val();
-            bsuburb = $('#edtBillingSuburb').val();
+            // bsuburb = $('#edtBillingSuburb').val();
         }
 
         let rewardPointsOpeningBalance = $('#custOpeningBalance').val();
@@ -720,7 +720,7 @@ Template.leadscard.events({
                 BillState: bstate,
                 BillPostCode: bzipcode,
                 Billcountry: bcountry,
-                Billsuburb: bsuburb,
+                // Billsuburb: bsuburb,
                 IsSupplier:isSupplier,
                 Notes: notes,
                 URL: website,

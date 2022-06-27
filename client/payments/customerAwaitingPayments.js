@@ -14,6 +14,8 @@ Template.customerawaitingpayments.onCreated(function () {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
+
+
 });
 
 Template.customerawaitingpayments.onRendered(function () {
@@ -85,29 +87,8 @@ Template.customerawaitingpayments.onRendered(function () {
 
         }
     });
-    jQuery(document).ready(function($) {
-       window.onpopstate = async function(event) {
-         let lastPageVisitUrl = "";
-        if(JSON.stringify(event.state) == "forward"){
 
-          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
-            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
-          }
-        }else if(event.state.path){
-          if(localStorage.getItem('vs1lastvisiturl') !== undefined){
-            lastPageVisitUrl = localStorage.getItem('vs1lastvisiturl');
-          }else{
-            lastPageVisitUrl = window.location.pathname;
-          }
-        }else{
-          lastPageVisitUrl = window.location.pathname;
-        }
-        if(lastPageVisitUrl != ""){
-          await window.open(lastPageVisitUrl, '_self');
-        }
 
-      }
-   });
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -448,7 +429,6 @@ Template.customerawaitingpayments.onRendered(function () {
               });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                console.log(data);
                 let useData = data.tsaleslist;
                 let lineItems = [];
                 let lineItemObj = {};

@@ -1038,7 +1038,7 @@ Template.paymentcard.onRendered(() => {
         }
 
 
-    templateObject.getLastPaymentData = function() {
+    templateObject.getLastPaymentData = async function() {
         let lastBankAccount = "Bank";
         let lastDepartment = Session.get('department') || "";
         paymentService.getAllCustomerPaymentData1().then(function(data) {
@@ -3658,9 +3658,9 @@ Template.paymentcard.onRendered(() => {
         var currentSalesID = getsale_id[getsale_id.length - 1];
         if (getsale_id[1]) {
             currentSalesID = parseInt(currentSalesID);
-            getVS1Data('TInvoiceEx').then(function(dataObject) {
+            getVS1Data('TInvoiceEx').then(async function(dataObject) {
                 if (dataObject.length == 0) {
-                    paymentService.getOneInvoicePayment(currentSalesID).then(function(data) {
+                    paymentService.getOneInvoicePayment(currentSalesID).then(async function(data) {
                         let lineItems = [];
                         let lineItemObj = {};
 
@@ -3726,7 +3726,7 @@ Template.paymentcard.onRendered(() => {
                         $('#sltDept').val(getDepartmentVal);
                         let bankAccountData = Session.get('bankaccount') || 'Bank';
                         $('#edtSelectBankAccountName').val(bankAccountData);
-                        templateObject.getLastPaymentData();
+                        await templateObject.getLastPaymentData();
                         if (clientList) {
                             for (var i = 0; i < clientList.length; i++) {
                                 if (clientList[i].customername == data.fields.CustomerName) {
@@ -3849,7 +3849,7 @@ Template.paymentcard.onRendered(() => {
                             $('#sltDept').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
-                            templateObject.getLastPaymentData();
+                            await templateObject.getLastPaymentData();
                             if (clientList) {
                                 for (var i = 0; i < clientList.length; i++) {
                                     if (clientList[i].customername == useData[d].fields.CustomerName) {
@@ -3899,7 +3899,7 @@ Template.paymentcard.onRendered(() => {
                     }
 
                     if (!added) {
-                        paymentService.getOneInvoicePayment(currentSalesID).then(function(data) {
+                        paymentService.getOneInvoicePayment(currentSalesID).then(async function(data) {
                             let lineItems = [];
                             let lineItemObj = {};
 
@@ -3965,7 +3965,7 @@ Template.paymentcard.onRendered(() => {
                             $('#sltDept').val(getDepartmentVal);
                             let bankAccountData = Session.get('bankaccount') || 'Bank';
                             $('#edtSelectBankAccountName').val(bankAccountData);
-                            templateObject.getLastPaymentData();
+                            await templateObject.getLastPaymentData();
                             if (clientList) {
                                 for (var i = 0; i < clientList.length; i++) {
                                     if (clientList[i].customername == data.fields.CustomerName) {
@@ -4015,7 +4015,8 @@ Template.paymentcard.onRendered(() => {
                     }
                 }
             }).catch(function(err) {
-                paymentService.getOneInvoicePayment(currentSalesID).then(function(data) {
+              console.log(err);
+                paymentService.getOneInvoicePayment(currentSalesID).then(async function(data) {
                     let lineItems = [];
                     let lineItemObj = {};
 
@@ -4074,7 +4075,7 @@ Template.paymentcard.onRendered(() => {
                     templateObject.record.set(record);
 
                     let getDepartmentVal = Session.get('department') || data.fields.DeptClassName || defaultDept;
-
+                    await templateObject.getLastPaymentData();
                     $('#edtCustomerName').val(data.fields.CustomerName);
                     let getPaymentMethodVal = Session.get('paymentmethod') || data.fields.PayMethod || 'Cash';
                     $('#sltPaymentMethod').val(getPaymentMethodVal);
@@ -4688,7 +4689,8 @@ Template.paymentcard.onRendered(() => {
         $('#edtSelectBankAccountName').removeAttr('disabled');
         $('#edtSelectBankAccountName').attr('readonly', false);
         $('#edtSelectBankAccountName').attr('readonly', false);
-        setTimeout(function() {
+        setTimeout(async function() {
+          await templateObject.getLastPaymentData();
             if (localStorage.getItem('check_acc')) {
                 $('#sltBankAccountName').val(localStorage.getItem('check_acc'));
             } else {
@@ -4709,7 +4711,7 @@ Template.paymentcard.onRendered(() => {
         $('#sltDept').val(getDepartmentVal);
         let bankAccountData = Session.get('bankaccount') || 'Bank';
         $('#edtSelectBankAccountName').val(bankAccountData);
-        templateObject.getLastPaymentData();
+
 
     }
 
@@ -7917,7 +7919,7 @@ Template.paymentcard.events({
     'blur .linePaymentamount': function(event) {
         let paymentAmt = $(event.target).val() || 0;
 
-        let oustandingAmt = $(event.target).closest('tr').find('.lineOutstandingAmount').text() || 0;
+        let oustandingAmt = $(event.target).closest('tr').find('.lineAmountdue').text() || 0;
         let formatedoustandingAmt = Number(oustandingAmt.replace(/[^0-9.-]+/g, "")) || 0;
 
         let formatedpaymentAmt = Number(paymentAmt.replace(/[^0-9.-]+/g, "")) || 0;
