@@ -6917,7 +6917,7 @@ Template.appointments.events({
             });
 
             if (resultEmpData[0].override == "false") {
-
+              document.getElementById("product-list").value = calendarSet.defaultProduct || '';
             } else if (resultEmpData[0].override == "true") {
                 if (empData[empData.length - 1].DefaultApptDuration == 120) {
                     hoursFormattedStartTime = templateObject.timeFormat('2') || '2';
@@ -6928,14 +6928,25 @@ Template.appointments.events({
                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                 var endTime = moment(startTime, 'HH:mm').add(parseInt(hoursFormattedStartTime), 'hours').format('HH:mm');
                 document.getElementById("endTime").value = endTime;
+                if (empData.length > 0) {
+                      document.getElementById("product-list").value =  empData[empData.length - 1].DefaultServiceProduct || '';
+                    } else {
+                      document.getElementById("product-list").value = calendarSet.defaultProduct || '';
+                    }
             }else{
                 if (calOptions.DefaultApptDuration) {
                     let hoursFormattedStartTime = templateObject.timeFormat(calOptions.DefaultApptDuration) || '';
                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                 }
+
+                if (empData.length > 0) {
+                    document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || '';
+                  } else {
+                    document.getElementById("product-list").value = calendarSet.defaultProduct || '';
+                  }
             }
 
-            document.getElementById("product-list").value = calOptions.defaultProduct || '';
+            //document.getElementById("product-list").value = calOptions.defaultProduct || '';
             $(".paused").hide();
             $("#btnHold").prop("disabled", false);
             $("#btnStartAppointment").prop("disabled", false);
