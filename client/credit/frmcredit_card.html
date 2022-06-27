@@ -1280,14 +1280,22 @@
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    <div class="col-12">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input favCheckBox chkBankingReport" name="print_credit" checked type="checkbox" id="print_credit" autocomplete="off">
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="print_credit">Print Credit</label>
+                                                        </div>  
+                                                    </div>
                                                 </div>
                                             {{/each}}
                                         </div>
     
                                     </div>
                                 </div>
-                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                            </div>
+                                <div class="modal-footer" style="padding: 6px;">
+                                    <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
+                                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                                </div>
                         </div>
     
                     </div>
@@ -1305,8 +1313,8 @@
                                 <div class="modal-body">
 
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_credit" type="checkbox" id="print_credit" autocomplete="off">
-                                        <label style="cursor: pointer;" class="custom-control-label" for="print_credit">Print Credit</label>
+                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_credit_second" checked type="checkbox" id="print_credit_second" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_credit_second">Print Credit</label>
                                     </div>                      
 
                                 </div>
@@ -1378,7 +1386,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true" style="z-index:9990;">
+                <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -1396,7 +1404,7 @@
                                                 <div class="col-4 col-md-4 col-sm-10" style="max-width: 60mm; max-height: 30mm;">
                                                     <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 200px;margin-bottom: 8px;">
                                                 </div>
-                                                <div class="col-8 col-md-8 col-sm-10">
+                                                <div class="col-lg-12 col-md-8 col-sm-6">
                                                     <div style="padding-left: 16px;font-weight: bold;">
                                                         <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                                         <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1420,7 +1428,11 @@
                                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                                    <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                     <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                     </h4>
+                                                </div>
+                                                <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                                    <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                                     </h4>
                                                 </div>
         
@@ -1432,11 +1444,11 @@
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                                     <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                                                         Number:</p>
-                                                    <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                                                    <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                                                        :</p>
-                                                    <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                                                        Date:</p>
+                                                    <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                                                    <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
+                                                    <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
+        
+                                                    <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
         
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
         
@@ -1451,12 +1463,13 @@
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                                     <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                                    <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                                    <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                                                     <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-        
+                                                    <p class="showFxValue"
+                                                    style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="link"
-                                                        style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                                                        style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
@@ -1609,7 +1622,7 @@
                             <div class="col-4 col-md-4 col-sm-10 p-2" style="max-width: 60mm; max-height: 30mm;">
                                 <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 150px;margin-bottom: 8px;">
                             </div>
-                            <div class="col-8 col-md-8 col-sm-10 p-2">
+                            <div class="col-lg-12 col-md-8 col-sm-6 p-2">
                                 <div style="padding-left: 16px;font-weight: bold;">
                                     <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                     <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -1636,6 +1649,10 @@
                                 <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
+                            <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                </h4>
+                            </div>
         
                         </div>
         
@@ -1645,11 +1662,12 @@
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                 <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                                     Number:</p>
-                                <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                                <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                                    :</p>
-                                <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                                    Date:</p>
+                                <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                                <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
+                                <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
+                              
+                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>  
+        
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
         
                                 <div class="mt-4" id="customfieldtablenew">
@@ -1661,10 +1679,12 @@
                             <div style="width: 50%; padding-left: 16px;">
                                 <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                 <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                                 <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                 <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                <p class="link" style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                                <p class="showFxValue"
+                                style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                <p class="link" style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                     <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                         Now</a>
                                 </p>
@@ -1884,7 +1904,7 @@
                                     <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyReg}}</p>
                                     {{/if}}
                                     <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyabn}}</p>
-                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">Phone: {{companyphone}}</p>
+                                    <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyphone}}</p>
                                 </div>
                             </div>
                         </div>
@@ -1896,14 +1916,14 @@
                     </div>
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
                         <h4 style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0);">Credit&nbsp;&nbsp;&nbsp; {{creditrecord.id}}</h4>
-                        <div style="none: flex; width: 100%;">
+                        <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <label style="margin-bottom: 4px; color: rgb(0 0 0); width: 100%;">Date:</label>
                                 <label class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No.:</label>
                             </div>
                             <div style="width: 50%; padding-left: 16px;">
                                 <p style="margin-bottom: 4px; color: rgb(0 0 0);">{{creditrecord.saledate}}</p>
-                                <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{creditrecord.invoicenumber}}.</p>
+                                <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;">{{creditrecord.id}}.</p>
                             </div>
                         </div>
                     </div>
