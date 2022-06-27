@@ -360,7 +360,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:'[Description] f7like "' +dataSearchName +'" OR [DisplayIn] f7like "' +dataSearchName +'"',
+      select:'[Description] f7like "' +dataSearchName +'" OR [DisplayName] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TAllowance, options);
   }
