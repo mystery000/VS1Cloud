@@ -1421,7 +1421,7 @@ Template.vs1login.onRendered(function () {
                                                 }
                                         } else if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 403) {
                                             swal({
-                                                title: 'Oooops...',
+                                                title: 'Oops...',
                                                 text: oReqCheackUserObject.getResponseHeader('errormessage'),
                                                 type: 'error',
                                                 showCancelButton: false,
@@ -1438,7 +1438,7 @@ Template.vs1login.onRendered(function () {
                                             $('.fullScreenSpin').css('display', 'none');
                                         } else if (oReqCheackUserObject.readyState == 4 && oReqCheackUserObject.status == 406) {
                                             swal({
-                                                title: 'Oooops...',
+                                                title: 'Oops...',
                                                 text: oReqCheackUserObject.getResponseHeader('errormessage'),
                                                 type: 'error',
                                                 showCancelButton: false,
@@ -2200,7 +2200,7 @@ Template.vs1login.onRendered(function () {
                                     $('.fullScreenSpin').css('display', 'none');
                                 } else if (oReq.readyState == 4 && oReq.status == 406) {
                                     swal({
-                                        title: 'Oooops...',
+                                        title: 'Oops...',
                                         text: oReq.getResponseHeader('errormessage'),
                                         type: 'error',
                                         showCancelButton: false,
@@ -2231,7 +2231,7 @@ Template.vs1login.onRendered(function () {
                                         });
                                     } else {
                                         swal({
-                                            title: 'Oooops...',
+                                            title: 'Oops...',
                                             text: oReq.getResponseHeader('errormessage'),
                                             type: 'error',
                                             showCancelButton: false,
@@ -2251,7 +2251,7 @@ Template.vs1login.onRendered(function () {
                                     var ErrorResponse = oReq.getResponseHeader('errormessage');
                                     if (ErrorResponse.indexOf("Could not connect to ERP") >= 0) {
                                         swal({
-                                            title: 'Oooops...',
+                                            title: 'Oops...',
                                             text: "Could not connect to Database. Unable to start Database. Licence on hold ",
                                             type: 'error',
                                             showCancelButton: false,
@@ -2263,7 +2263,7 @@ Template.vs1login.onRendered(function () {
                                         });
                                     } else {
                                         swal({
-                                            title: 'Oooops...',
+                                            title: 'Oops...',
                                             text: oReq.getResponseHeader('errormessage'),
                                             type: 'error',
                                             showCancelButton: false,
@@ -3370,7 +3370,7 @@ Template.vs1login.onRendered(function () {
 
                             } else if (oReq.statusText == '') {
                                 swal({
-                                    title: 'Oooops...',
+                                    title: 'Oops...',
                                     text: "Connection Failed, Please try again",
                                     type: 'error',
                                     showCancelButton: false,
@@ -3404,7 +3404,7 @@ Template.vs1login.onRendered(function () {
                                 $('.fullScreenSpin').css('display', 'none');
                             } else if (oReq.readyState == 4 && oReq.status == 406) {
                                 swal({
-                                    title: 'Oooops...',
+                                    title: 'Oops...',
                                     text: oReq.getResponseHeader('errormessage'),
                                     type: 'error',
                                     showCancelButton: false,
@@ -3435,7 +3435,7 @@ Template.vs1login.onRendered(function () {
                                     });
                                 } else {
                                     swal({
-                                        title: 'Oooops...',
+                                        title: 'Oops...',
                                         text: oReq.getResponseHeader('errormessage'),
                                         type: 'error',
                                         showCancelButton: false,
@@ -3455,7 +3455,7 @@ Template.vs1login.onRendered(function () {
                                 var ErrorResponse = oReq.getResponseHeader('errormessage');
                                 if (ErrorResponse.indexOf("Could not connect to ERP") >= 0) {
                                     swal({
-                                        title: 'Oooops...',
+                                        title: 'Oops...',
                                         text: "Could not connect to Database. Unable to start Database. Licence on hold ",
                                         type: 'error',
                                         showCancelButton: false,
@@ -3467,7 +3467,7 @@ Template.vs1login.onRendered(function () {
                                     });
                                 } else {
                                     swal({
-                                        title: 'Oooops...',
+                                        title: 'Oops...',
                                         text: oReq.getResponseHeader('errormessage'),
                                         type: 'error',
                                         showCancelButton: false,
@@ -4103,7 +4103,7 @@ Template.vs1login.onRendered(function () {
 
                         } else if (oReq.statusText == '') {
                             swal({
-                                title: 'Oooops...',
+                                title: 'Oops...',
                                 text: "Connection Failed, Please try again",
                                 type: 'error',
                                 showCancelButton: false,
@@ -4137,7 +4137,7 @@ Template.vs1login.onRendered(function () {
                             $('.fullScreenSpin').css('display', 'none');
                         } else if (oReq.readyState == 4 && oReq.status == 406) {
                             swal({
-                                title: 'Oooops...',
+                                title: 'Oops...',
                                 text: oReq.getResponseHeader('errormessage'),
                                 type: 'error',
                                 showCancelButton: false,
@@ -4168,7 +4168,7 @@ Template.vs1login.onRendered(function () {
                                 });
                             } else {
                                 swal({
-                                    title: 'Oooops...',
+                                    title: 'Oops...',
                                     text: oReq.getResponseHeader('errormessage'),
                                     type: 'error',
                                     showCancelButton: false,
@@ -4188,7 +4188,7 @@ Template.vs1login.onRendered(function () {
                             var ErrorResponse = oReq.getResponseHeader('errormessage');
                             if (ErrorResponse.indexOf("Could not connect to ERP") >= 0) {
                                 swal({
-                                    title: 'Oooops...',
+                                    title: 'Oops...',
                                     text: "Could not connect to Database. Unable to start Database. Licence on hold ",
                                     type: 'error',
                                     showCancelButton: false,
@@ -4200,7 +4200,7 @@ Template.vs1login.onRendered(function () {
                                 });
                             } else {
                                 swal({
-                                    title: 'Oooops...',
+                                    title: 'Oops...',
                                     text: oReq.getResponseHeader('errormessage'),
                                     type: 'error',
                                     showCancelButton: false,
@@ -4801,7 +4801,7 @@ Template.vs1login.onRendered(function () {
 
                     } else if (oReq.statusText == '') {
                         swal({
-                            title: 'Oooops...',
+                            title: 'Oops...',
                             text: "Connection Failed, Please try again",
                             type: 'error',
                             showCancelButton: false,
@@ -4835,7 +4835,7 @@ Template.vs1login.onRendered(function () {
                         $('.fullScreenSpin').css('display', 'none');
                     } else if (oReq.readyState == 4 && oReq.status == 406) {
                         swal({
-                            title: 'Oooops...',
+                            title: 'Oops...',
                             text: oReq.getResponseHeader('errormessage'),
                             type: 'error',
                             showCancelButton: false,
@@ -4866,7 +4866,7 @@ Template.vs1login.onRendered(function () {
                             });
                         } else {
                             swal({
-                                title: 'Oooops...',
+                                title: 'Oops...',
                                 text: oReq.getResponseHeader('errormessage'),
                                 type: 'error',
                                 showCancelButton: false,
@@ -4886,7 +4886,7 @@ Template.vs1login.onRendered(function () {
                         var ErrorResponse = oReq.getResponseHeader('errormessage');
                         if (ErrorResponse.indexOf("Could not connect to ERP") >= 0) {
                             swal({
-                                title: 'Oooops...',
+                                title: 'Oops...',
                                 text: "Could not connect to Database. Unable to start Database. Licence on hold ",
                                 type: 'error',
                                 showCancelButton: false,
@@ -4898,7 +4898,7 @@ Template.vs1login.onRendered(function () {
                             });
                         } else {
                             swal({
-                                title: 'Oooops...',
+                                title: 'Oops...',
                                 text: oReq.getResponseHeader('errormessage'),
                                 type: 'error',
                                 showCancelButton: false,

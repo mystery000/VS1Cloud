@@ -1518,6 +1518,7 @@ Template.paymentoverview.events({
     },
     'click .customerOverdue, click .custOverdueAmt': function(event) {
         $('.modal-backdrop').css('display', 'none');
+        addVS1Data('TOverdueAwaitingCustomerPayment', []);
         FlowRouter.go('/overduecustomerawaitingpayments');
     },
     'click .supplierAwaitingPayment': function(event) {
@@ -1526,7 +1527,8 @@ Template.paymentoverview.events({
     },
     'click .supplierOverdue': function(event) {
         $('.modal-backdrop').css('display', 'none');
-        FlowRouter.go('/overduecustomerawaitingpayments');
+        addVS1Data('TOverdueAwaitingSupplierPayment', []);
+        FlowRouter.go('/overduesupplierawaiting');
     },
 
     'click .chkDatatable': function(event) {
