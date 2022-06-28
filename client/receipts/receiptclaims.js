@@ -24,6 +24,7 @@ import {
 } from '../js/ocr-service';
 import '../lib/global/indexdbstorage.js';
 import moment from 'moment';
+import CurrencyConverter from '../packages/currency/CurrencyConverter';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
@@ -2158,8 +2159,9 @@ Template.receiptsoverview.events({
                      // CurrencyID: currencyId ? parseInt(currencyId) : 0,
                     // CurrencyName: currencyName,
                     // CurrencyRate: currencyBuyRate,
-                    // ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
-                    // ForeignExchangeCode: currencyName,
+                    ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
+                    ForeignExchangeCode: currencyName,
+                    ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
                 }
             }
 
