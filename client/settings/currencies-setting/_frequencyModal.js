@@ -15,7 +15,12 @@ import {
   OnEventFrequencyModel,
   WeeklyFrequencyModel,
 } from "./Model/FrequencyModel";
+import LoadingOverlay from "../../LoadingOverlay";
+
 let sideBarService = new SideBarService();
+let taxRateService = new TaxRateService();
+
+const employeeId = Session.get("mySessionEmployeeLoggedID");
 
 let currentDate = new Date();
 let currentFormatedDate =
@@ -143,6 +148,26 @@ Template._frequencyModal.events({
     console.log("Modal is open");
   },
   "click .btnSaveFrequency": (e) => {
+    LoadingOverlay.show();
+
+    let reportSchedule = {
+      type: "TReportSchedules",
+      fields: {
+        Active: true,
+        BeginFromOption: "",
+        ContinueIndefinitely: true,
+        EmployeeId: employeeId,
+        Every: 1,
+        EndDate: "",
+        FormID: 2,
+        LastEmaileddate: "",
+        MonthDays: 0,
+        StartDate: "",
+        WeekDay: 1,
+        NextDueDate: "",
+      },
+    };
+
     /**
      * If monthly
      */
@@ -156,22 +181,35 @@ Template._frequencyModal.events({
         });
 
       fxUpdateObject.ofMonths = checkedMonths;
-      fxUpdateObject.everyDay = $("#settingsMonthlySpecDay").val();
+      fxUpdateObject.everyDay = $("#sltDay").val();
       fxUpdateObject.startDate = $("#edtMonthlyStartDate").val();
       fxUpdateObject.startTime = $("#edtMonthlyStartTime").val();
-    } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
-      let selectedDays = [];
-      document
-        .querySelectorAll(".weekly-input-js input[type=checkbox]:checked")
-        .forEach((element) => {
-          selectedDays.push(element.getAttribute("value"));
-        });
 
-      fxUpdateObject.selectedDays = selectedDays;
+      // Updating object
+      reportSchedule.fields.MonthDays = checkedMonths.join(",");
+      reportSchedule.fields.Frequency = "M";
+      reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+    } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
+      const selectedDay = document
+        .querySelector(".weekly-input-js input[type=checkbox]:checked")
+        .getAttribute("data-value");
+
+      fxUpdateObject.selectedDays = selectedDay;
       fxUpdateObject.everyWeeks = $("#weeklyEveryXWeeks").val();
       fxUpdateObject.startDate = $("#edtWeeklyStartDate").val();
       fxUpdateObject.startTime = $("#edtWeeklyStartTime").val();
+
+      // Updating object
+      reportSchedule.fields.Frequency = "W";
+      reportSchedule.fields.WeekDay = parseInt(selectedDay);
+      reportSchedule.fields.Every = fxUpdateObject.everyWeeks;
+      reportSchedule.fields.StartDate = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
+      reportSchedule.fields.Frequency = "D";
+
+      reportSchedule.fields.SatAction = "P";
+      reportSchedule.fields.SunAction = "P";
+      reportSchedule.fields.Every = -1;
       if ($("#dailyWeekdays").prop("checked")) {
         console.log("checked");
         let selectedDays = [];
@@ -183,6 +221,9 @@ Template._frequencyModal.events({
 
         fxUpdateObject.weekDays = selectedDays;
         fxUpdateObject.every = null;
+
+        reportSchedule.fields.SatAction = "D";
+        reportSchedule.fields.SunAction = "D";
       } else if ($("#dailyEveryDay").prop("checked")) {
         //console.log($("#dailyEveryDay").prop("checked"));
         /**
@@ -197,23 +238,53 @@ Template._frequencyModal.events({
           "saturday",
           "sunday",
         ];
-        fxUpdateObject.every = null;
+        fxUpdateObject.every = 1;
+
+        reportSchedule.fields.Every = fxUpdateObject.every;
       } else if ($("#dailyEvery").prop("checked")) {
         //console.log($("#dailyEvery").prop("checked"));
         fxUpdateObject.weekDays = null;
-        fxUpdateObject.every = $("#dailyEveryXDays").val();
+        fxUpdateObject.every = parseInt($("#dailyEveryXDays").val());
+
+        reportSchedule.fields.Every = fxUpdateObject.every;
       }
 
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
       fxUpdateObject.startTime = $("#edtDailyStartTime").val();
+
+      reportSchedule.fields.StartDate = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
       fxUpdateObject.startTime = $("#edtDailyStartTime").val();
+
+      reportSchedule.fields.Frequency = "";
+      reportSchedule.fields.EndDate = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
+      reportSchedule.fields.Frequency = "";
     }
 
+    console.log("Report Schedule", reportSchedule);
+
+    try {
+      // Save email settings
+      taxRateService.saveScheduleSettings(reportSchedule);
+    } catch (e) {
+      console.log(e);
+      swal({
+        title: "Oooops...",
+        text: err,
+        type: "error",
+        showCancelButton: false,
+        confirmButtonText: "Try Again",
+      }).then((result) => {
+        if (result.value) {
+          // Meteor._reload.reload();
+        } else if (result.dismiss === "cancel") {
+        }
+      });
+    }
     /**
      * Now we need to save the freqency object
      */
@@ -221,12 +292,14 @@ Template._frequencyModal.events({
     addVS1Data("TCurrencyFrequencySettings", JSON.stringify(fxUpdateObject))
       .then(function (datareturn) {
         //location.reload(true);
+        $("#frequencyModal").modal("hide");
       })
       .catch(function (err) {
         //location.reload(true);
       });
-
+    Meteor.call("addTask", reportSchedule.fields);
     console.log(fxUpdateObject);
+    LoadingOverlay.hide();
   },
   'click input[name="frequencyRadio"]': (event) => {
     if (event.target.id == "frequencyMonthly") {
@@ -328,5 +401,13 @@ Template._frequencyModal.events({
     } else {
       $("#frequencyModal").modal("toggle");
     }
+  },
+  "click .weeklySettings .chkBoxDays": function (event) {
+    var checkboxes = document.querySelectorAll(".weeklySettings .chkBoxDays");
+    checkboxes.forEach((item) => {
+      if (item !== event.target) {
+        item.checked = false;
+      }
+    });
   },
 });
