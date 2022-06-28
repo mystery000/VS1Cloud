@@ -862,6 +862,15 @@ authenticatedRoutes.route('/supplierawaitingpurchaseorder', {
     }
 });
 
+authenticatedRoutes.route('/overduesupplierawaiting', {
+    name: 'overduesupplierawaiting',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'overduesupplierawaiting'
+        });
+    }
+});
+
 authenticatedRoutes.route('/supplierawaitingbills', {
     name: 'supplierawaitingbills',
     action() {

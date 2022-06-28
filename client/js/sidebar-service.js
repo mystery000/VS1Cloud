@@ -1323,6 +1323,40 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
+  getAllOverDueAwaitingSupplierPaymentOver(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        IncludePOs: true,
+        IncludeBills: true,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        OrderBy: "PurchaseOrderID desc",
+        Search: 'DueDate < "' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        IncludePOs: true,
+        IncludeBills: true,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        OrderBy: "PurchaseOrderID desc",
+        Search: 'DueDate < "' + dateTo + '"',
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TbillReport, options);
+  }
+
   getAllAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
