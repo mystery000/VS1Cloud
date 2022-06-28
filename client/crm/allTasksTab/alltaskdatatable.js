@@ -254,8 +254,8 @@ Template.alltaskdatatable.onRendered(function () {
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchAllTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewAllCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewAllCompleted'>" +
-            btnFilterName +
-            "</span></button>"
+          btnFilterName +
+          "</span></button>"
         ).insertAfter("#tblAllTaskDatatable_filter");
       },
     });
@@ -467,8 +467,8 @@ Template.alltaskdatatable.onRendered(function () {
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchTodayTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewTodayCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewTodayCompleted'>" +
-            btnFilterName +
-            "</span></button>"
+          btnFilterName +
+          "</span></button>"
         ).insertAfter("#tblTodayTaskDatatable_filter");
       },
     });
@@ -638,8 +638,8 @@ Template.alltaskdatatable.onRendered(function () {
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchUpcomingTaskDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewUpcomingCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewUpcomingCompleted'>" +
-            btnFilterName +
-            "</span></button>"
+          btnFilterName +
+          "</span></button>"
         ).insertAfter("#tblUpcomingTaskDatatable_filter");
       },
     });
@@ -800,12 +800,12 @@ Template.alltaskdatatable.onRendered(function () {
       if (item.fields.TaskLabel) {
         if (item.fields.TaskLabel.fields) {
           td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
-          style="margin-right: 5px;" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+          style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
           labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
         } else {
           item.fields.TaskLabel.forEach((lbl) => {
             td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
-            style="margin-right: 5px;" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+            style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
             labelsForExcel += lbl.fields.TaskLabelName + " ";
           });
         }
@@ -978,7 +978,7 @@ Template.alltaskdatatable.onRendered(function () {
                   : lbl.fields.TaskLabelName.substring(0, 19) + "...";
 
               label_dropdowns += `<a class="dropdown-item add_label" data-id="${lbl.fields.ID}">
-              <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+              <i class="fas fa-tag" style="margin-right: 8px; color:${lbl.fields.Color};" data-id="${lbl.fields.ID}"></i>${labelName}
                 <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
                   <div class="custom-control custom-checkbox chkBox pointer"
                     style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
@@ -989,7 +989,7 @@ Template.alltaskdatatable.onRendered(function () {
                 </div>
               </a>`;
               detail_label_dropdowns += `<a class="dropdown-item detail_label" data-id="${lbl.fields.ID}">
-              <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+              <i class="fas fa-tag" style="margin-right: 8px; color:${lbl.fields.Color};" data-id="${lbl.fields.ID}"></i>${labelName}
                 <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
                   <div class="custom-control custom-checkbox chkBox pointer"
                     style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
@@ -1035,7 +1035,7 @@ Template.alltaskdatatable.onRendered(function () {
                 : lbl.fields.TaskLabelName.substring(0, 19) + "...";
 
             label_dropdowns += `<a class="dropdown-item add_label" data-id="${lbl.fields.ID}">
-            <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+            <i class="fas fa-tag" style="margin-right: 8px; color:${lbl.fields.Color};" data-id="${lbl.fields.ID}"></i>${labelName}
               <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
                 <div class="custom-control custom-checkbox chkBox pointer"
                   style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
@@ -1046,7 +1046,7 @@ Template.alltaskdatatable.onRendered(function () {
               </div>
             </a>`;
             detail_label_dropdowns += `<a class="dropdown-item detail_label" data-id="${lbl.fields.ID}">
-            <i class="fas fa-tag text-primary" style="margin-right: 8px;" data-id="${lbl.fields.ID}"></i>${labelName}
+            <i class="fas fa-tag" style="margin-right: 8px; color:${lbl.fields.Color};" data-id="${lbl.fields.ID}"></i>${labelName}
               <div style="width: 20%; float: right;" data-id="${lbl.fields.ID}">
                 <div class="custom-control custom-checkbox chkBox pointer"
                   style="width: 15px; float: right;" data-id="${lbl.fields.ID}">
@@ -1066,7 +1066,7 @@ Template.alltaskdatatable.onRendered(function () {
         }
         addVS1Data("TCRMLabelList", JSON.stringify(data));
       })
-      .catch(function (err) {});
+      .catch(function (err) { });
   };
 
   templateObject.initLabelsTable = function (search = null) {
@@ -1176,7 +1176,8 @@ Template.alltaskdatatable.onRendered(function () {
 
     task_array.forEach((item) => {
       td0 = moment(item.fields.MsTimeStamp).format("DD/MM/YYYY");
-      td1 = item.fields.TaskLabelName;
+      td1 = `<span class="taskTag"><a class="taganchor"><i class="fas fa-tag" style="margin-right: 5px; color:${item.fields.Color};"></i>${item.fields.TaskLabelName}</a></span>`;
+
       td2 = ` 
           <div class="dropdown btnLabelActions" title="Delete Label">
             <button type="button" class="btn btn-danger btnDeleteLabel" data-id="${item.fields.ID}"><i
@@ -1302,7 +1303,7 @@ Template.alltaskdatatable.onRendered(function () {
         }
         addVS1Data("TCRMProjectList", JSON.stringify(data));
       })
-      .catch(function (err) {});
+      .catch(function (err) { });
   };
 
   templateObject.initProjectsTable = function (search = null) {
@@ -1414,8 +1415,8 @@ Template.alltaskdatatable.onRendered(function () {
       fnInitComplete: function () {
         $(
           "<button class='btn btn-primary btnSearchCrm btnSearchProjectsDatatable' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button><button class='btn btn-primary btnViewProjectCompleted' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i><span id='lblViewProjectCompleted'>" +
-            btnFilterName +
-            "</span></button>"
+          btnFilterName +
+          "</span></button>"
         ).insertAfter("#tblNewProjectsDatatable_filter");
       },
     });
@@ -1875,7 +1876,7 @@ Template.alltaskdatatable.events({
               TaskID: taskID,
             },
           })
-          .then(function (data) {});
+          .then(function (data) { });
       });
       // unselected_lbls.forEach((lbl) => {
       //   crmService
@@ -1907,10 +1908,10 @@ Template.alltaskdatatable.events({
     priority = $("#chkPriorityAdd1").prop("checked")
       ? 1
       : $("#chkPriorityAdd2").prop("checked")
-      ? 2
-      : $("#chkPriorityAdd3").prop("checked")
-      ? 3
-      : 0;
+        ? 2
+        : $("#chkPriorityAdd3").prop("checked")
+          ? 3
+          : 0;
 
     if (task_name === "") {
       swal("Task name is not entered!", "", "warning");
@@ -1986,7 +1987,7 @@ Template.alltaskdatatable.events({
                   TaskID: res.fields.ID,
                 },
               })
-              .then(function (data) {});
+              .then(function (data) { });
           });
 
           //////////////////////////////
@@ -2010,7 +2011,7 @@ Template.alltaskdatatable.events({
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Try Again",
-        }).then((result) => {});
+        }).then((result) => { });
         $(".fullScreenSpin").css("display", "none");
       });
   },
@@ -2375,7 +2376,7 @@ Template.alltaskdatatable.events({
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Try Again",
-        }).then((result) => {});
+        }).then((result) => { });
         $(".fullScreenSpin").css("display", "none");
       });
   },
@@ -2571,7 +2572,7 @@ Template.alltaskdatatable.events({
                 type: "error",
                 showCancelButton: false,
                 confirmButtonText: "Try Again",
-              }).then((result) => {});
+              }).then((result) => { });
               $("#editCrmProject").modal("hide");
               $("#newProjectTasksModal").modal("hide");
               $(".fullScreenSpin").css("display", "none");
@@ -2635,7 +2636,7 @@ Template.alltaskdatatable.events({
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Try Again",
-        }).then((result) => {});
+        }).then((result) => { });
         $(".fullScreenSpin").css("display", "none");
         $("#editCrmProject").modal("hide");
         $("#newProjectTasksModal").modal("hide");
@@ -2685,7 +2686,7 @@ Template.alltaskdatatable.events({
           type: "error",
           showCancelButton: false,
           confirmButtonText: "Try Again",
-        }).then((result) => {});
+        }).then((result) => { });
         $("#editCrmProject").modal("hide");
         $(".fullScreenSpin").css("display", "none");
       });
@@ -2830,7 +2831,7 @@ Template.alltaskdatatable.events({
       let templateObject = Template.instance();
       crmService.getOneLabel(id).then(function (obj) {
         $("#editLabelName").val(obj.fields.TaskLabelName);
-        // $('#editLabelColor').val();
+        $('#editLabelColor').val(obj.fields.Color);
 
         $("#editLabelModal").modal("toggle");
 
@@ -2848,7 +2849,7 @@ Template.alltaskdatatable.events({
       let templateObject = Template.instance();
       crmService.getOneLabel(id).then(function (obj) {
         $("#editLabelName").val(obj.fields.TaskLabelName);
-        // $('#editLabelColor').val();
+        $('#editLabelColor').val(obj.fields.Color);
 
         $("#editLabelModal").modal("toggle");
 
@@ -2870,7 +2871,8 @@ Template.alltaskdatatable.events({
       type: "Tprojecttask_TaskLabel",
       fields: {
         TaskLabelName: labelName,
-        TaskID: 1, // tempcode. it should be removed after api is updated
+        // TaskID: 1, // tempcode. it should be removed after api is updated
+        Color: labelColor
       },
     };
 
@@ -2902,6 +2904,7 @@ Template.alltaskdatatable.events({
         fields: {
           ID: id,
           TaskLabelName: labelName,
+          Color: labelColor
         },
       };
 
