@@ -202,7 +202,16 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
 
 }else{
   setTimeout(function () {
-    let data = JSON.parse(localStorage.getItem('VS1SalesEmpReport_dash'));
+    let getData = JSON.parse(localStorage.getItem('VS1SalesEmpReport_dash'));
+
+    let sortedArray = [];
+    sortedArray = getData.sort(function (a, b) {
+      return b.fields.Totalsales - a.fields.Totalsales;
+    });
+    // if (callback) {
+    //   callback(sortedArray);
+    // }
+    let data = sortedArray;
 
     topTenData1 = _.take(data, 5);
     let totalBalance = 0;

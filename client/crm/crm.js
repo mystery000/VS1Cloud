@@ -267,7 +267,7 @@ Template.crmoverview.events({
             type: "error",
             showCancelButton: false,
             confirmButtonText: "Try Again",
-          }).then((result) => {});
+          }).then((result) => { });
           $(".fullScreenSpin").css("display", "none");
         });
     }
@@ -690,140 +690,143 @@ function openEditTaskModal(id, type) {
   // let catg = e.target.dataset.catg;
   // let templateObject = Template.instance();
   // $("#editProjectID").val("");
+
   $("#txtCrmSubTaskID").val(id);
 
   $(".fullScreenSpin").css("display", "inline-block");
   // get selected task detail via api
   crmService
-      .getTaskDetail(id)
-      .then(function (data) {
-        $(".fullScreenSpin").css("display", "none");
-        if (data.fields.ID == id) {
-          let selected_record = data.fields;
+    .getTaskDetail(id)
+    .then(function (data) {
+      $(".fullScreenSpin").css("display", "none");
+      if (data.fields.ID == id) {
+        let selected_record = data.fields;
 
-          $("#txtCrmTaskID").val(selected_record.ID);
-          $("#txtCrmProjectID").val(selected_record.ProjectID);
-          $("#txtCommentsDescription").val("");
+        $("#txtCrmTaskID").val(selected_record.ID);
+        $("#txtCrmProjectID").val(selected_record.ProjectID);
+        $("#txtCommentsDescription").val("");
 
-          $(".editTaskDetailName").val(selected_record.TaskName);
-          $(".editTaskDetailDescription").val(
-              selected_record.TaskDescription
-          );
+        $(".editTaskDetailName").val(selected_record.TaskName);
+        $(".editTaskDetailDescription").val(
+          selected_record.TaskDescription
+        );
 
-          let projectName =
-              selected_record.ProjectName == "Default"
-                  ? "All Tasks"
-                  : selected_record.ProjectName;
+        let projectName =
+          selected_record.ProjectName == "Default"
+            ? "All Tasks"
+            : selected_record.ProjectName;
 
-          let catg = "";
-          let today = moment().format("YYYY-MM-DD");
-          if (selected_record.due_date) {
-            if (selected_record.due_date.substring(0, 10) == today) {
-              catg =
-                  `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
-                  "<span class='text-primary'>" +
-                  projectName +
-                  "</span>";
-              $(".taskDueDate").css("color", "#00a3d3");
-            } else if (selected_record.due_date.substring(0, 10) > today) {
-              catg =
-                  `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
-                  "<span class='text-danger'>" +
-                  projectName +
-                  "</span>";
-              $(".taskDueDate").css("color", "#1cc88a");
-            } else if (selected_record.due_date.substring(0, 10) < today) {
-              // catg =
-              //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
-              //   "<span class='text-warning'>Overdue</span>";
-              // $(".taskDueDate").css("color", "#e74a3b");
-              catg =
-                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                  "<span class='text-success'>" +
-                  projectName +
-                  "</span>";
-              $(".taskDueDate").css("color", "#1cc88a");
-            } else {
-              catg =
-                  `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                  "<span class='text-success'>" +
-                  projectName +
-                  "</span>";
-              $(".taskDueDate").css("color", "#1cc88a");
-            }
+        let catg = "";
+        let today = moment().format("YYYY-MM-DD");
+        if (selected_record.due_date) {
+          if (selected_record.due_date.substring(0, 10) == today) {
+            catg =
+              `<i class="fas fa-calendar-day text-primary" style="margin-right: 5px;"></i>` +
+              "<span class='text-primary'>" +
+              projectName +
+              "</span>";
+            $(".taskDueDate").css("color", "#00a3d3");
+          } else if (selected_record.due_date.substring(0, 10) > today) {
+            catg =
+              `<i class="fas fa-calendar-alt text-danger" style="margin-right: 5px;"></i>` +
+              "<span class='text-danger'>" +
+              projectName +
+              "</span>";
+            $(".taskDueDate").css("color", "#1cc88a");
+          } else if (selected_record.due_date.substring(0, 10) < today) {
+            // catg =
+            //   `<i class="fas fa-inbox text-warning" style="margin-right: 5px;"></i>` +
+            //   "<span class='text-warning'>Overdue</span>";
+            // $(".taskDueDate").css("color", "#e74a3b");
+            catg =
+              `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+              "<span class='text-success'>" +
+              projectName +
+              "</span>";
+            $(".taskDueDate").css("color", "#1cc88a");
           } else {
             catg =
-                `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
-                "<span class='text-success'>" +
-                projectName +
-                "</span>";
+              `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+              "<span class='text-success'>" +
+              projectName +
+              "</span>";
             $(".taskDueDate").css("color", "#1cc88a");
           }
+        } else {
+          catg =
+            `<i class="fas fa-inbox text-success" style="margin-right: 5px;"></i>` +
+            "<span class='text-success'>" +
+            projectName +
+            "</span>";
+          $(".taskDueDate").css("color", "#1cc88a");
+        }
 
-          $(".taskLocation").html(
-              `<a class="taganchor">
+        $(".taskLocation").html(
+          `<a class="taganchor">
                 ${catg}
               </a>`
-          );
+        );
 
-          $("#taskmodalNameLabel").html(selected_record.TaskName);
-          $(".activityAdded").html(
-              "Added on " +
-              moment(selected_record.MsTimeStamp).format("MMM D h:mm A")
-          );
-          let due_date = selected_record.due_date
-              ? moment(selected_record.due_date).format("D MMM")
-              : "No Date";
-          $("#taskmodalDuedate").html(due_date);
-          $("#taskmodalDescription").html(selected_record.TaskDescription);
+        $("#taskmodalNameLabel").html(selected_record.TaskName);
+        $(".activityAdded").html(
+          "Added on " +
+          moment(selected_record.MsTimeStamp).format("MMM D h:mm A")
+        );
+        let due_date = selected_record.due_date
+          ? moment(selected_record.due_date).format("D MMM")
+          : "No Date";
+        $("#taskmodalDuedate").html(due_date);
+        $("#taskmodalDescription").html(selected_record.TaskDescription);
 
-          $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
-          $("#chkComplete_taskEditLabel").removeClass("task_priority_1");
-          $("#chkComplete_taskEditLabel").removeClass("task_priority_2");
-          $("#chkComplete_taskEditLabel").removeClass("task_priority_3");
-          $("#chkComplete_taskEditLabel").addClass(
-              "task_priority_" + selected_record.priority
-          );
+        $("#chkComplete_taskEditLabel").removeClass("task_priority_0");
+        $("#chkComplete_taskEditLabel").removeClass("task_priority_1");
+        $("#chkComplete_taskEditLabel").removeClass("task_priority_2");
+        $("#chkComplete_taskEditLabel").removeClass("task_priority_3");
+        $("#chkComplete_taskEditLabel").addClass(
+          "task_priority_" + selected_record.priority
+        );
 
-          let taskmodalLabels = "";
-          $(".chkDetailLabel").prop("checked", false);
-          if (selected_record.TaskLabel) {
-            if (selected_record.TaskLabel.fields != undefined) {
-              taskmodalLabels =
-                  `<a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
-                  selected_record.TaskLabel.fields.TaskLabelName +
-                  "</a>";
-              $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
-                  "checked",
-                  true
-              );
-            } else {
-              selected_record.TaskLabel.forEach((lbl) => {
-                taskmodalLabels +=
-                    `<a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
-                    lbl.fields.TaskLabelName +
-                    "</a>, ";
-                $("#detail_label_" + lbl.fields.ID).prop("checked", true);
-              });
-              taskmodalLabels = taskmodalLabels.slice(0, -2);
-            }
-          }
-          if (taskmodalLabels != "") {
+        let taskmodalLabels = "";
+        $(".chkDetailLabel").prop("checked", false);
+        if (selected_record.TaskLabel) {
+          if (selected_record.TaskLabel.fields != undefined) {
             taskmodalLabels =
-                '<span class="taskTag"><i class="fas fa-tag"></i>' +
-                taskmodalLabels +
-                "</span>";
+              `<span class="taskTag"><i class="fas fa-tag" style="color:${selected_record.TaskLabel.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${selected_record.TaskLabel.fields.ID}">` +
+              selected_record.TaskLabel.fields.TaskLabelName +
+              "</a></span>";
+            $("#detail_label_" + selected_record.TaskLabel.fields.ID).prop(
+              "checked",
+              true
+            );
+          } else {
+            selected_record.TaskLabel.forEach((lbl) => {
+              taskmodalLabels +=
+                `<span class="taskTag"><i class="fas fa-tag" style="color:${lbl.fields.Color};"></i><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}">` +
+                lbl.fields.TaskLabelName +
+                "</a></span> ";
+              $("#detail_label_" + lbl.fields.ID).prop("checked", true);
+            });
+            taskmodalLabels = taskmodalLabels.slice(0, -2);
           }
-          $("#taskmodalLabels").html(taskmodalLabels);
-
-          let subtasks = "";
-          if (selected_record.subtasks) {
-            if (selected_record.subtasks.fields != undefined) {
-              let subtask = selected_record.subtasks.fields;
-              let sub_due_date = subtask.SubTaskDate
-                  ? moment(subtask.SubTaskDate).format("D MMM")
-                  : "";
-              subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
+        }
+        // if (taskmodalLabels != "") {
+        //   taskmodalLabels =
+        //     '<span class="taskTag"><i class="fas fa-tag"></i>' +
+        //     taskmodalLabels +
+        //     "</span>";
+        // }
+        $("#taskmodalLabels").html(taskmodalLabels);
+        // console.log('selected_record.subtasks-', typeof selected_record.subtasks)
+        let subtasks = "";
+        if (false) {
+          // if(typeof selected_record.subtasks == 'object' || Array.isArray(selected_record.subtasks))
+          // if (selected_record.subtasks) {
+          if (selected_record.subtasks.fields != undefined) {
+            let subtask = selected_record.subtasks.fields;
+            let sub_due_date = subtask.SubTaskDate
+              ? moment(subtask.SubTaskDate).format("D MMM")
+              : "";
+            subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
                 <div class="row justify-content-between">
                   <div style="display: inline-flex;">
                     <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
@@ -859,13 +862,13 @@ function openEditTaskModal(id, type) {
                 </div>
                 <hr />
               </div>`;
-            } else {
-              selected_record.subtasks.forEach((item) => {
-                let subtask = item.fields;
-                let sub_due_date = subtask.SubTaskDate
-                    ? moment(subtask.SubTaskDate).format("D MMM")
-                    : "";
-                subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
+          } else {
+            selected_record.subtasks.forEach((item) => {
+              let subtask = item.fields;
+              let sub_due_date = subtask.SubTaskDate
+                ? moment(subtask.SubTaskDate).format("D MMM")
+                : "";
+              subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
                   <div class="row justify-content-between">
                     <div style="display: inline-flex;">
                       <i class="fas fa-grip-vertical taskActionButton taskDrag"></i>
@@ -901,26 +904,26 @@ function openEditTaskModal(id, type) {
                   </div>
                   <hr />
                 </div>`;
-              });
-            }
+            });
           }
-          $(".subtask-row").html(subtasks);
+        }
+        $(".subtask-row").html(subtasks);
 
-          let comments = "";
-          if (selected_record.comments) {
-            if (selected_record.comments.fields != undefined) {
-              let comment = selected_record.comments.fields;
-              let comment_date = comment.CommentsDate
-                  ? moment(comment.CommentsDate).format("MMM D h:mm A")
-                  : "";
-              let commentUserArry =
-                  comment.EnteredBy.toUpperCase().split(" ");
-              let commentUser =
-                  commentUserArry.length > 1
-                      ? commentUserArry[0].charAt(0) +
-                      commentUserArry[1].charAt(0)
-                      : commentUserArry[0].charAt(0);
-              comments = `
+        let comments = "";
+        if (selected_record.comments) {
+          if (selected_record.comments.fields != undefined) {
+            let comment = selected_record.comments.fields;
+            let comment_date = comment.CommentsDate
+              ? moment(comment.CommentsDate).format("MMM D h:mm A")
+              : "";
+            let commentUserArry =
+              comment.EnteredBy.toUpperCase().split(" ");
+            let commentUser =
+              commentUserArry.length > 1
+                ? commentUserArry[0].charAt(0) +
+                commentUserArry[1].charAt(0)
+                : commentUserArry[0].charAt(0);
+            comments = `
                 <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
                   <div class="row commentRow">
                     <div class="col-1">
@@ -940,20 +943,20 @@ function openEditTaskModal(id, type) {
                   </div>
                 </div>
                 `;
-            } else {
-              selected_record.comments.forEach((item) => {
-                let comment = item.fields;
-                let comment_date = comment.CommentsDate
-                    ? moment(comment.CommentsDate).format("MMM D h:mm A")
-                    : "";
-                let commentUserArry =
-                    comment.EnteredBy.toUpperCase().split(" ");
-                let commentUser =
-                    commentUserArry.length > 1
-                        ? commentUserArry[0].charAt(0) +
-                        commentUserArry[1].charAt(0)
-                        : commentUserArry[0].charAt(0);
-                comments += `
+          } else {
+            selected_record.comments.forEach((item) => {
+              let comment = item.fields;
+              let comment_date = comment.CommentsDate
+                ? moment(comment.CommentsDate).format("MMM D h:mm A")
+                : "";
+              let commentUserArry =
+                comment.EnteredBy.toUpperCase().split(" ");
+              let commentUser =
+                commentUserArry.length > 1
+                  ? commentUserArry[0].charAt(0) +
+                  commentUserArry[1].charAt(0)
+                  : commentUserArry[0].charAt(0);
+              comments += `
                   <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
                     <div class="row commentRow">
                       <div class="col-1">
@@ -973,42 +976,42 @@ function openEditTaskModal(id, type) {
                     </div>
                   </div>
                   `;
-              });
-            }
+            });
           }
-          $(".task-comment-row").html(comments);
+        }
+        $(".task-comment-row").html(comments);
 
-          let activities = "";
-          if (selected_record.activity) {
-            if (selected_record.activity.fields != undefined) {
-              let activity = selected_record.activity.fields;
-              let day = "";
-              if (
-                  moment().format("YYYY-MM-DD") ==
-                  moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-              ) {
-                day = " ‧ Today";
-              } else if (
-                  moment().add(-1, "day").format("YYYY-MM-DD") ==
-                  moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-              ) {
-                day = " . Yesterday";
-              }
-              let activityDate =
-                  moment(activity.ActivityDateStartd).format("MMM D") +
-                  day +
-                  " . " +
-                  moment(activity.ActivityDateStartd).format("ddd");
+        let activities = "";
+        if (selected_record.activity) {
+          if (selected_record.activity.fields != undefined) {
+            let activity = selected_record.activity.fields;
+            let day = "";
+            if (
+              moment().format("YYYY-MM-DD") ==
+              moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+            ) {
+              day = " ‧ Today";
+            } else if (
+              moment().add(-1, "day").format("YYYY-MM-DD") ==
+              moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+            ) {
+              day = " . Yesterday";
+            }
+            let activityDate =
+              moment(activity.ActivityDateStartd).format("MMM D") +
+              day +
+              " . " +
+              moment(activity.ActivityDateStartd).format("ddd");
 
-              let commentUserArry =
-                  activity.EnteredBy.toUpperCase().split(" ");
-              let commentUser =
-                  commentUserArry.length > 1
-                      ? commentUserArry[0].charAt(0) +
-                      commentUserArry[1].charAt(0)
-                      : commentUserArry[0].charAt(0);
+            let commentUserArry =
+              activity.EnteredBy.toUpperCase().split(" ");
+            let commentUser =
+              commentUserArry.length > 1
+                ? commentUserArry[0].charAt(0) +
+                commentUserArry[1].charAt(0)
+                : commentUserArry[0].charAt(0);
 
-              activities = `
+            activities = `
                 <div class="row" style="padding: 16px;">
                   <div class="col-12">
                     <span class="activityDate">${activityDate}</span>
@@ -1019,56 +1022,53 @@ function openEditTaskModal(id, type) {
                   </div>
                   <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                     <div class="row">
-                      <span class="activityName">${
-                  activity.EnteredBy
-              } </span> <span class="activityAction">${
-                  activity.ActivityName
+                      <span class="activityName">${activity.EnteredBy
+              } </span> <span class="activityAction">${activity.ActivityName
               } </span>  
                     </div>
                     <div class="row">
-                      <span class="activityComment">${
-                  activity.ActivityDescription
+                      <span class="activityComment">${activity.ActivityDescription
               }</span>
                     </div>
                     <div class="row">
                       <span class="activityTime">${moment(
-                  activity.ActivityDateStartd
+                activity.ActivityDateStartd
               ).format("h:mm A")}</span>
                     </div>
                   </div>
                   <hr style="width: 100%; margin: 16px;" />
                 </div>
                 `;
-            } else {
-              selected_record.activity.forEach((item) => {
-                let activity = item.fields;
-                let day = "";
-                if (
-                    moment().format("YYYY-MM-DD") ==
-                    moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-                ) {
-                  day = " ‧ Today";
-                } else if (
-                    moment().add(-1, "day").format("YYYY-MM-DD") ==
-                    moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-                ) {
-                  day = " . Yesterday";
-                }
-                let activityDate =
-                    moment(activity.ActivityDateStartd).format("MMM D") +
-                    day +
-                    " . " +
-                    moment(activity.ActivityDateStartd).format("ddd");
+          } else {
+            selected_record.activity.forEach((item) => {
+              let activity = item.fields;
+              let day = "";
+              if (
+                moment().format("YYYY-MM-DD") ==
+                moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+              ) {
+                day = " ‧ Today";
+              } else if (
+                moment().add(-1, "day").format("YYYY-MM-DD") ==
+                moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+              ) {
+                day = " . Yesterday";
+              }
+              let activityDate =
+                moment(activity.ActivityDateStartd).format("MMM D") +
+                day +
+                " . " +
+                moment(activity.ActivityDateStartd).format("ddd");
 
-                let commentUserArry =
-                    activity.EnteredBy.toUpperCase().split(" ");
-                let commentUser =
-                    commentUserArry.length > 1
-                        ? commentUserArry[0].charAt(0) +
-                        commentUserArry[1].charAt(0)
-                        : commentUserArry[0].charAt(0);
+              let commentUserArry =
+                activity.EnteredBy.toUpperCase().split(" ");
+              let commentUser =
+                commentUserArry.length > 1
+                  ? commentUserArry[0].charAt(0) +
+                  commentUserArry[1].charAt(0)
+                  : commentUserArry[0].charAt(0);
 
-                activities = `
+              activities = `
                   <div class="row" style="padding: 16px;">
                     <div class="col-12">
                       <span class="activityDate">${activityDate}</span>
@@ -1079,69 +1079,66 @@ function openEditTaskModal(id, type) {
                     </div>
                     <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                       <div class="row">
-                        <span class="activityName">${
-                    activity.EnteredBy
-                } </span> <span class="activityAction">${
-                    activity.ActivityName
+                        <span class="activityName">${activity.EnteredBy
+                } </span> <span class="activityAction">${activity.ActivityName
                 } </span>  
                       </div>
                       <div class="row">
-                        <span class="activityComment">${
-                    activity.ActivityDescription
+                        <span class="activityComment">${activity.ActivityDescription
                 }</span>
                       </div>
                       <div class="row">
                         <span class="activityTime">${moment(
-                    activity.ActivityDateStartd
+                  activity.ActivityDateStartd
                 ).format("h:mm A")}</span>
                       </div>
                     </div>
                     <hr style="width: 100%; margin: 16px;" />
                   </div>
                   `;
-              });
-            }
+            });
           }
-          $(".task-activity-row").html(activities);
-
-          if (type == "comment") {
-            $("#nav-comments-tab").click();
-          } else {
-            $("#nav-subtasks-tab").click();
-          }
-
-          $("#chkPriority0").prop("checked", false);
-          $("#chkPriority1").prop("checked", false);
-          $("#chkPriority2").prop("checked", false);
-          $("#chkPriority3").prop("checked", false);
-          $("#chkPriority" + selected_record.priority).prop("checked", true);
-
-          $(".taskModalActionFlagDropdown").removeClass(
-              "task_modal_priority_3"
-          );
-          $(".taskModalActionFlagDropdown").removeClass(
-              "task_modal_priority_2"
-          );
-          $(".taskModalActionFlagDropdown").removeClass(
-              "task_modal_priority_1"
-          );
-          $(".taskModalActionFlagDropdown").removeClass(
-              "task_modal_priority_0"
-          );
-          $(".taskModalActionFlagDropdown").addClass(
-              "task_modal_priority_" + selected_record.priority
-          );
-
-          $("#taskDetailModal").modal("toggle");
-        } else {
-          swal("Cannot edit this task", "", "warning");
-          return;
         }
-      })
-  .catch(function (err) {
+        $(".task-activity-row").html(activities);
+
+        if (type == "comment") {
+          $("#nav-comments-tab").click();
+        } else {
+          $("#nav-subtasks-tab").click();
+        }
+
+        $("#chkPriority0").prop("checked", false);
+        $("#chkPriority1").prop("checked", false);
+        $("#chkPriority2").prop("checked", false);
+        $("#chkPriority3").prop("checked", false);
+        $("#chkPriority" + selected_record.priority).prop("checked", true);
+
+        $(".taskModalActionFlagDropdown").removeClass(
+          "task_modal_priority_3"
+        );
+        $(".taskModalActionFlagDropdown").removeClass(
+          "task_modal_priority_2"
+        );
+        $(".taskModalActionFlagDropdown").removeClass(
+          "task_modal_priority_1"
+        );
+        $(".taskModalActionFlagDropdown").removeClass(
+          "task_modal_priority_0"
+        );
+        $(".taskModalActionFlagDropdown").addClass(
+          "task_modal_priority_" + selected_record.priority
+        );
+
+        $("#taskDetailModal").modal("toggle");
+      } else {
+        swal("Cannot edit this task", "", "warning");
+        return;
+      }
+    })
+    .catch(function (err) {
       $(".fullScreenSpin").css("display", "none");
 
       swal(err, "", "error");
       return;
-  });
+    });
 }

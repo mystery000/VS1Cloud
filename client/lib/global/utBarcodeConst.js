@@ -75,8 +75,6 @@ initialDatatableLoad = 25; //This load for 100 Datatables
 
 loggedTermsPurchase = Session.get('ERPTermsPurchase') || "COD";
 loggedTermsSales = Session.get('ERPTermsSales') || "COD";
-console.log(loggedTermsPurchase);
-console.log(loggedTermsSales);
 if(Session.get('ERPLoggedCountry') == "Australia"){
   // Session.setPersistent('ERPTaxCodePurchaseInc', "NCG");
   // Session.setPersistent('ERPTaxCodeSalesInc', "GST");

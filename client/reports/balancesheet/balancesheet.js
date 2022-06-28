@@ -36,7 +36,7 @@ Template.balancesheetreport.onRendered(() => {
   let taxRateService = new TaxRateService();
 
   let salesService = new SalesBoardService();
-  
+
   templateObject.$("#more_search").hide();
   let initCurrency = Currency;
 
@@ -96,17 +96,12 @@ Template.balancesheetreport.onRendered(() => {
   }
 
   templateObject.getBalanceSheetReports = function (dateAsOf) {
-    if (!localStorage.getItem("VS1BalanceSheet_Report")) {
-      reportService
-        .getBalanceSheetReport(dateAsOf)
-        .then(function (data) {
+    if (!localStorage.getItem("VS1BalanceSheet_Report1")) {
+      reportService.getBalanceSheetReport(dateAsOf).then(function (data) {
           $(".fullScreenSpin").css("display", "none");
           let records = [];
           if (data.balancesheetreport) {
-            localStorage.setItem(
-              "VS1BalanceSheet_Report",
-              JSON.stringify(data) || ""
-            );
+            localStorage.setItem("VS1BalanceSheet_Report",JSON.stringify(data) || "");
             let date = new Date(dateAsOf);
             let previousYear = date.getFullYear() - 1;
             let Balancedatedisplay = moment(dateAsOf).format("DD/MM/YYYY");
@@ -129,18 +124,12 @@ Template.balancesheetreport.onRendered(() => {
             let totalNetAssets = 0;
             let GrandTotalLiability = 0;
             let GrandTotalAsset = 0;
-            for (
-              let i = 0, len = data.balancesheetreport.length;
-              i < len;
-              i++
-            ) {
+            for (let i = 0, len = data.balancesheetreport.length;i < len; i++) {
               let recordObj = {};
               recordObj.id = data.balancesheetreport[i].ID;
               recordObj.name = $.trim(
                 data.balancesheetreport[i]["Account Tree"]
-              )
-                .split(" ")
-                .join("_");
+              ).split(" ").join("_");
 
               let SubAccountTotal =
                 data.balancesheetreport[i]["Sub Account Total"];
@@ -151,8 +140,14 @@ Template.balancesheetreport.onRendered(() => {
               } else {
                 SubAccountTotal = " ";
               }
-              let HeaderAccountTotal =
-                data.balancesheetreport[i]["Header Account Total"];
+              let HeaderAccountTotal =data.balancesheetreport[i]["Header Account Total"];
+              console.log(HeaderAccountTotal);
+              if (HeaderAccountTotal !== 0) {
+                HeaderAccountTotal = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal);
+              } else {
+                HeaderAccountTotal = " ";
+              }
+
               let TotalCurrentAsset_Liability =
                 data.balancesheetreport[i]["Total Current Asset & Liability"];
               let TotalAsset_Liability =
@@ -176,9 +171,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalAccountsReceivable"
@@ -186,9 +179,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalOtherCurrentAsset"
@@ -196,9 +187,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalCurrentAssets"
@@ -244,9 +233,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalAccountsPayable"
@@ -254,9 +241,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalOtherCurrentLiability"
@@ -264,9 +249,7 @@ Template.balancesheetreport.onRendered(() => {
                 recordObj.dataArrTotal = [
                   data.balancesheetreport[i]["Account Tree"] || "-",
                   SubAccountTotal || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                  HeaderAccountTotal || "",
                 ];
               } else if (
                 AccountTree.replace(/\s/g, "") == "TotalCurrentLiabilities"
@@ -319,18 +302,14 @@ Template.balancesheetreport.onRendered(() => {
                     accountCode + data.balancesheetreport[i]["Account Tree"] ||
                       "-",
                     SubAccountTotal || "",
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    ) || "",
+                    HeaderAccountTotal || "",
                   ];
                 } else {
                   recordObj.dataArr2 = [
                     data.balancesheetreport[i]["Account Tree"] || "-",
                     SubAccountTotal || "",
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    ) || "",
-                  ];
+                    HeaderAccountTotal || "",
+                ];
                 }
               }
 
@@ -1095,7 +1074,7 @@ Template.balancesheetreport.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {
-   
+
     if (Math.sign(amount) === -1) {
       return true;
     }

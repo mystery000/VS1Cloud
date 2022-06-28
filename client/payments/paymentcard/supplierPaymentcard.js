@@ -137,6 +137,8 @@ Template.supplierpaymentcard.onRendered(() => {
         object_invoce = [];
         var array_data = [];
         let invoice_data = templateObject.record.get();
+
+
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
         let lineItems = [];
@@ -154,6 +156,7 @@ Template.supplierpaymentcard.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text();
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
+        let fx = $('#sltCurrency').val();
 
          for(var i = 0; i < invoice_data.LineItems.length; i++)
          {
@@ -196,11 +199,12 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
+                    title: "Supplier Payment",
+                    value: invoice_data.lid,
+                    date: invoice_data.paymentDate || '-',
                     invoicenumber: invoice_data.id || '-',
                     refnumber: ref_daa,
-                    pqnumber: "",
+                    pqnumber: ".",
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Supplier",
@@ -223,6 +227,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     customfieldlabel1:'NA',
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',
+                    showFX:"",
 
                  };
         }
@@ -238,11 +243,12 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
+                    title: "Supplier Payment",
+                    value: invoice_data.lid,
+                    date: invoice_data.paymentDate || '-',
                     invoicenumber: invoice_data.id || '-',
                     refnumber: ref_daa,
-                    pqnumber: "",
+                    pqnumber: ".",
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Supplier",
@@ -265,6 +271,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     customfieldlabel1:customfieldlabel1,
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
+                    showFX:"",
 
                 };
 
@@ -272,45 +279,50 @@ Template.supplierpaymentcard.onRendered(() => {
         }
         else
         {
-                item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
-                    invoicenumber: invoice_data.id || '-',
-                    refnumber: ref_daa,
-                    pqnumber: "",
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal :invoice_data.SubTotal,
-                    gst :  invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo') || '',
-                    data: array_data,
-                    applied : invoice_data.applied,
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',
+            if(fx == '')
+            {
+                fx = '-';
+            }
+            item_supplier = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
+                o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
+                o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
+                title: "Supplier Payment",
+                value: invoice_data.lid,
+                date: invoice_data.paymentDate || '-',
+                invoicenumber: invoice_data.id || '-',
+                refnumber: ref_daa,
+                pqnumber: ".",
+                duedate: invoice_data.duedate || '-',
+                paylink: "Pay Now",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : invoice_data.shipToDesc,
+                fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                subtotal :invoice_data.SubTotal,
+                gst :  invoice_data.TotalTax,
+                total : total,
+                paid_amount : invoice_data.totalPaid,
+                bal_due :  invoice_data.balanceDue,
+                bsb : localStorage.getItem('vs1companyBankBSB') || '',
+                swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                account : localStorage.getItem('vs1companyBankAccountNo') || '',
+                data: array_data,
+                applied : invoice_data.applied,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                showFX:fx,
 
-                };
-
+            };
         }
         object_invoce.push(item_supplier);
 
@@ -341,7 +353,7 @@ Template.supplierpaymentcard.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text();
         var customfieldlabel2 = $('.lblCustomField2').first().text();
         var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+        let fx = $('#sltCurrency').val();
          for(var i = 0; i < invoice_data.LineItems.length; i++)
          {
                 array_data.push([
@@ -383,11 +395,12 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
+                    title: "Supplier Payment",
+                    value: invoice_data.lid,
+                    date: invoice_data.paymentDate || '-',
                     invoicenumber: invoice_data.lid || '-',
                     refnumber: ref_daa,
-                    pqnumber: "",
+                    pqnumber: ".",
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Supplier",
@@ -410,7 +423,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     customfieldlabel1:'NA',
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',
-
+                    showFX:"",
                 };
         }
         else if(number == 2)
@@ -425,11 +438,12 @@ Template.supplierpaymentcard.onRendered(() => {
                     o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
                     o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
                     o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
+                    title: "Supplier Payment",
+                    value: invoice_data.lid,
+                    date: invoice_data.paymentDate || '-',
                     invoicenumber: invoice_data.lid || '-',
                     refnumber: ref_daa,
-                    pqnumber: "",
+                    pqnumber: ".",
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Supplier",
@@ -452,6 +466,7 @@ Template.supplierpaymentcard.onRendered(() => {
                     customfieldlabel1:customfieldlabel1,
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
+                    showFX:"",
 
                 };
 
@@ -459,44 +474,52 @@ Template.supplierpaymentcard.onRendered(() => {
         }
         else
         {
-                item_supplier = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name: Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
-                    title: template_title + " "+invoice_data.lid,
-                    date: invoice_data.saledate || '-',
-                    invoicenumber: invoice_data.lid || '-',
-                    refnumber: ref_daa,
-                    pqnumber: "",
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal :invoice_data.SubTotal,
-                    gst :  invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo') || '',
-                    data: array_data,
-                    applied : invoice_data.applied,
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',
+            if(fx == '')
+            {
+                fx = '-';
+            }
 
-                };
+            item_supplier = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.supplierpaymentcard.__helpers.get('companyReg').call(),
+                o_abn: Template.supplierpaymentcard.__helpers.get('companyabn').call(),
+                o_phone:Template.supplierpaymentcard.__helpers.get('companyphone').call() ,
+                title: "Supplier Payment",
+                value: invoice_data.lid,
+                date: invoice_data.paymentDate || '-',
+                invoicenumber: invoice_data.lid || '-',
+                refnumber: ref_daa,
+                pqnumber: ".",
+                duedate: invoice_data.duedate || '-',
+                paylink: "Pay Now",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : invoice_data.shipToDesc,
+                fields: {"Date" : "20", "Type" : "10", "No" : "10", "Amount" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
+                subtotal :invoice_data.SubTotal,
+                gst :  invoice_data.TotalTax,
+                total : total,
+                paid_amount : invoice_data.totalPaid,
+                bal_due :  invoice_data.balanceDue,
+                bsb : localStorage.getItem('vs1companyBankBSB') || '',
+                swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                account : localStorage.getItem('vs1companyBankAccountNo') || '',
+                data: array_data,
+                applied : invoice_data.applied,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                showFX:fx,
+
+            };
+
 
         }
         object_invoce.push(item_supplier);
@@ -520,7 +543,9 @@ Template.supplierpaymentcard.onRendered(() => {
      };
 
 
-     function updateTemplate1(object_invoce) {
+    function updateTemplate1(object_invoce) {
+
+
         $("#templatePreviewModal").modal("toggle");
         if (object_invoce.length > 0) {
 
@@ -572,8 +597,27 @@ Template.supplierpaymentcard.onRendered(() => {
 
           $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
           $("#templatePreviewModal .modal-title").text(
-            object_invoce[0]["title"] + " template"
+            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
           );
+
+          if(object_invoce[0]["value"]=="")
+          {
+              $('.print-header-value').text('');
+
+          }
+          else{
+             $('.print-header-value').text(object_invoce[0]["value"]);
+          }
+
+          if(object_invoce[0]["bsb"]=="")
+          {
+              $('#templatePreviewModal .field_payment').hide();
+
+          }
+          else{
+
+              $('#templatePreviewModal .field_payment').show();
+          }
 
 
           $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
@@ -627,6 +671,16 @@ Template.supplierpaymentcard.onRendered(() => {
                 $("#templatePreviewModal .linkText").show();
           }
 
+          if (object_invoce[0]["showFX"] == "") {
+                $("#templatePreviewModal .showFx").hide();
+                $("#templatePreviewModal .showFxValue").hide();
+         } else {
+                $("#templatePreviewModal .showFx").show();
+                $("#templatePreviewModal .showFxValue").show();
+                $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+         }
+
+
           if(object_invoce[0]["customfield1"] == "NA")
           {
                   $('#customfieldtablenew').css('display', 'none');
@@ -674,20 +728,17 @@ Template.supplierpaymentcard.onRendered(() => {
                 }
                 else
                 {
-                  $('#templatePreviewModal .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                  $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
                 }
 
 
 
           }
 
-
-
           if(object_invoce[0]["customfield1"] == "NA")
           {
                 $('#customfieldlable').css('display', 'none');
                 $('#customfieldlabledata').css('display', 'none');
-
           }
           else
           {
@@ -722,29 +773,43 @@ Template.supplierpaymentcard.onRendered(() => {
 
         // total amount
 
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+        if(object_invoce[0]["subtotal"] == "")
+        {
+            $("#templatePreviewModal .field_amount").hide();
+        }
+        else
+        {
+            $("#templatePreviewModal .field_amount").show();
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#templatePreviewModal #subtotal_total').text("Sub total");
+              $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+            if(object_invoce[0]["gst"] != ""){
+
+
+                $('#templatePreviewModal #grandTotal').text("Grand total");
+                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+
+            if(object_invoce[0]["total"] != ""){
+                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
+
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
+
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
+
         }
 
-        if(object_invoce[0]["gst"] != ""){
-            $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
 
-        if(object_invoce[0]["total"] != ""){
-            $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
-
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
-
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
-        }
-      }
+    }
 
     function updateTemplate(object_invoce) {
-
+        console.log(object_invoce);
         if (object_invoce.length > 0) {
 
         $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
@@ -794,10 +859,31 @@ Template.supplierpaymentcard.onRendered(() => {
 
 
         $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-        $("#html-2-pdfwrapper_new .modal-title").text(
-            object_invoce[0]["title"] + " template"
-        );
 
+        $("#templatePreviewModal .modal-title").text(
+            object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+         );
+
+        if(object_invoce[0]["value"]=="")
+        {
+              $('.print-header-value').text('');
+
+        }
+        else
+        {
+             $('.print-header-value').text(object_invoce[0]["value"]);
+        }
+
+
+        if(object_invoce[0]["bsb"]=="")
+        {
+            $('#html-2-pdfwrapper_new .field_payment').hide();
+
+        }
+        else{
+
+            $('#html-2-pdfwrapper_new .field_payment').show();
+        }
 
         $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
         $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
@@ -808,6 +894,17 @@ Template.supplierpaymentcard.onRendered(() => {
             $("#html-2-pdfwrapper_new .dateNumber").hide();
         }else{
             $("#html-2-pdfwrapper_new .dateNumber").show();
+        }
+
+        if (object_invoce[0]["showFX"] == "") {
+
+            $("#html-2-pdfwrapper_new .showFx").hide();
+            $("#html-2-pdfwrapper_new .showFxValue").hide();
+        } else {
+
+            $("#html-2-pdfwrapper_new .showFx").show();
+            $("#html-2-pdfwrapper_new .showFxValue").show();
+            $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
         }
 
         $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
@@ -881,7 +978,7 @@ Template.supplierpaymentcard.onRendered(() => {
         }else{
             $("#html-2-pdfwrapper_new .invoiceNumber").show();
         }
-        console.log("invoice number==",object_invoce[0]["invoicenumber"])
+
         $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
 
         if(object_invoce[0]["refnumber"] == ""){
@@ -943,25 +1040,39 @@ Template.supplierpaymentcard.onRendered(() => {
 
         // total amount
 
-        if(object_invoce[0]["subtotal"] != ""){
-            $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+        if(object_invoce[0]["subtotal"] == "")
+        {
+            $("#html-2-pdfwrapper_new .field_amount").hide();
+        }
+        else
+        {
+            $("#html-2-pdfwrapper_new .field_amount").show();
+
+            if(object_invoce[0]["subtotal"] != ""){
+              $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
+              $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            }
+
+            if(object_invoce[0]["gst"] != ""){
+                $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
+                $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+            }
+
+
+            if(object_invoce[0]["total"] != ""){
+                $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
+            }
+
+            if(object_invoce[0]["bal_due"] != ""){
+                $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+            }
+
+            if(object_invoce[0]["paid_amount"] != ""){
+                $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
+            }
+
         }
 
-        if(object_invoce[0]["gst"] != ""){
-            $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-        }
-
-        if(object_invoce[0]["total"] != ""){
-            $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
-        }
-
-        if(object_invoce[0]["bal_due"] != ""){
-            $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-        }
-
-        if(object_invoce[0]["paid_amount"] != ""){
-            $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
-        }
     }
 
     function saveTemplateFields(key, value){
@@ -6454,7 +6565,7 @@ Template.supplierpaymentcard.helpers({
         });
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return "phone: "+Session.get('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
       let countryABNValue = "ABN: " + Session.get('vs1companyABN');
@@ -6531,7 +6642,7 @@ Template.supplierpaymentcard.events({
             $('.po').text(ponumber);
             var rowCount = $('.tblInvoiceLine tbody tr').length;
 
-            if($('#print_supplier_payment').is(':checked')) {
+            if($('#print_supplier_payment').is(':checked') || $('#print_supplier_payment_second').is(':checked')) {
                 printTemplate.push('Supplier Payments');
             }
 
@@ -6971,12 +7082,12 @@ Template.supplierpaymentcard.events({
                 // window.open('/supplierpayment','_self');
                 sideBarService.getTSupplierPaymentList().then(function(dataUpdate) {
                     addVS1Data('TSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                        window.open('/supplierpayment', '_self');
+                        window.open('/supplierpayment?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/supplierpayment', '_self');
+                        window.open('/supplierpayment?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/supplierpayment', '_self');
+                    window.open('/supplierpayment?success=true', '_self');
                 });
                 //window.history.go(-2);
             }).catch(function(err) {
@@ -7938,12 +8049,12 @@ Template.supplierpaymentcard.events({
 
                 sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                     addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/supplierawaitingpurchaseorder', '_self');
+                    window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                 });
                 //window.history.go(-2);
             }).catch(function(err) {
@@ -8137,7 +8248,7 @@ Template.supplierpaymentcard.events({
                                 attachments: attachment
                             }, function(error, result) {
                                 if (error && error.error === "error") {
-                                    window.open('/supplierawaitingpurchaseorder', '_self');
+                                    window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                                 } else {
                                     $('#html-2-pdfwrapper').css('display', 'none');
                                     swal({
@@ -8262,12 +8373,12 @@ Template.supplierpaymentcard.events({
 
                 sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                     addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/supplierawaitingpurchaseorder', '_self');
+                    window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                 });
                 //window.history.go(-2);
             }).catch(function(err) {
@@ -8582,18 +8693,18 @@ Template.supplierpaymentcard.events({
                     addVS1Data('TPurchaseOrderEx', JSON.stringify(dataUpdate)).then(function(datareturn) {
                         sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                window.open('/supplierpayment', '_self');
+                                window.open('/supplierpayment?success=true', '_self');
                             }).catch(function(err) {
-                                window.open('/supplierpayment', '_self');
+                                window.open('/supplierpayment?success=true', '_self');
                             });
                         }).catch(function(err) {
-                            window.open('/supplierpayment', '_self');
+                            window.open('/supplierpayment?success=true', '_self');
                         });
                     }).catch(function(err) {
-                        window.open('/supplierpayment', '_self');
+                        window.open('/supplierpayment?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/supplierpayment', '_self');
+                    window.open('/supplierpayment?success=true', '_self');
                 });
 
             }).catch(function(err) {
@@ -9269,12 +9380,12 @@ Template.supplierpaymentcard.events({
 
                 sideBarService.getAllAwaitingSupplierPayment(prevMonth11Date, toDate, false,initialReportLoad,0).then(function(dataUpdate) {
                     addVS1Data('TAwaitingSupplierPayment', JSON.stringify(dataUpdate)).then(function(datareturn) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     }).catch(function(err) {
-                        window.open('/supplierawaitingpurchaseorder', '_self');
+                        window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                     });
                 }).catch(function(err) {
-                    window.open('/supplierawaitingpurchaseorder', '_self');
+                    window.open('/supplierawaitingpurchaseorder?success=true', '_self');
                 });
 
             }).catch(function(err) {

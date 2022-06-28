@@ -25,15 +25,7 @@
             </div>
         </div>
 
-
         <style>
-            @media only screen and (min-width: 1200px) {
-
-                .cardB {
-                    width: 1000px;
-                }
-            }
-
             /* Remove Hyperlinks */
             @media print {
                 a:link {
@@ -111,6 +103,7 @@
 
             td.fgr.fgrblue {
                 color: #00a3d3 !important;
+                padding-left: 4rem !important;
             }
 
             td.fgrtotal {
@@ -340,7 +333,7 @@
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
                                                 <input type="checkbox" checked class="custom-control-input chkTotal" id="mddItem7" name="checkbox">
-                                                <label class="custom-control-label" for="mddItem7">Total</label>
+                                                <label class="custom-control-label" for="mddItem7">Running Total</label>
                                             </span>
                                             <span class="dropdown-item custom-control custom-switch">
                                                 <input type="checkbox" class="custom-control-input chkYTDate" id="mddItem8" name="checkbox">
@@ -357,10 +350,10 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item nonePeriod selPeriod" data-period="0" role="presentation" href="#">None</a>
                                             <hr class="periodSelectorLine" />
-                                            <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Period</a>
-                                            <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Periods</a>
-                                            <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Periods</a>
-                                            <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Periods</a>
+                                            <a class="dropdown-item onePeriod selPeriod" data-period="1" role="presentation" href="#">1 Extra Period</a>
+                                            <a class="dropdown-item twoPeriods selPeriod" data-period="2" role="presentation" href="#">2 Extra Periods</a>
+                                            <a class="dropdown-item threePeriods selPeriod" data-period="3" role="presentation" href="#">3 Extra Periods</a>
+                                            <a class="dropdown-item fourPeriods selPeriod" data-period="4" role="presentation" href="#">4 Extra Periods</a>
                                             <hr class="periodSelectorLine" />
                                             <a class="dropdown-item PSother pointer" style="color:#3a3b45;" data-toggle="modal" data-target="#nplComparisonPeriods">Other</a>
                                         </div>
@@ -377,15 +370,42 @@
                                         margin: 0 auto !important;
                                     }
                                 </style>
-                                <img class="imageUpload img-fluid" id="uploadedImage" style="margin-top: 32px;" src="assets/img/VS1.png">
+                                <img class="imageUpload img-fluid" id="uploadedImage" style="margin-top: 32px; width: 100%;" src="assets/img/VS1.png">
                             </div>
                             <div class="col-12 col-md-5">
                                 <div class="row no-gutters justify-content-end">
 
-                                    <div class="form-group" style="margin: 8px; display: inline-flex; margin-top: 40px;">
+
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>From</label>
+                                        <div class="input-group date" style="width: 145px;">
+                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 8px;">
+                                        <label>To</label>
+                                        <div class="input-group date" style="width: 145px;">
+                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo" value="{{ formatDate reportOptions.toDate }}">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <style>
+                                        .selectedDateRangeBtnMod {
+                                            border-top-left-radius: 0px !important;
+                                            border-bottom-left-radius: 0px !important;
+                                        }
+                                    </style>
+                                </div>
+                                <div class="row no-gutters justify-content-end">
+                                    <div class="form-group" style="margin: 8px; display: inline-flex;">
                                         <input type="text" class="form-control" id="selectedDateRange" aria-describedby="basic-addon2" style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;" readonly>
                                         <div class="input-group-append">
-                                            <button type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                            <button type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-calendar-alt"></i></button>
                                             <style>
                                                 .dropdown-toggle::after {
                                                     display: none;
@@ -425,32 +445,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>From</label>
-                                        <div class="input-group date" style="width: 145px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateFrom" name="dateFrom" value="{{ formatDate reportOptions.fromDate }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin: 8px;">
-                                        <label>To</label>
-                                        <div class="input-group date" style="width: 145px;">
-                                            <input type="text" class="form-control edtReportDates" id="dateTo" name="dateTo" value="{{ formatDate reportOptions.toDate }}">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <style>
-                                        .selectedDateRangeBtnMod {
-                                            border-top-left-radius: 0px !important;
-                                            border-bottom-left-radius: 0px !important;
-                                        }
-                                    </style>
-                                </div>
-                                <div class="row no-gutters justify-content-end">
                                     <button class="btn btn-primary btnExportReportProfit" type="button" style="margin: 8px;"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                                     <button class="btn btn-primary btnPrintReport" type="button" style="margin: 8px;"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
                                 </div>
@@ -496,7 +490,7 @@
                                 <div class="table-responsive customProfitLossTable p-2 ">
                                     <table class="table table-hover table-sm textCenterAlign pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
                                         <thead class="tblAvoid">
-                                           
+
                                             <tr class="table-active tblAvoid customDoubleTableHeading">
                                                 <th class="textLeftTxt" rowspan="2"></th>
                                                 <!-- <th class="text-left" rowspan="2"></th> -->
@@ -506,7 +500,7 @@
                                                     {{/each}}
                                                 {{/if}}
                                                 {{#if reportOptions.showtotal}}
-                                                    <th colspan="{{countActive currencyList }}" class="tglTotal text-center textAlignRight{{countActive currencyList }}">Total</th>
+                                                    <th colspan="{{countActive currencyList }}" class="tglTotal text-center textAlignRight{{countActive currencyList }}">Running Total</th>
                                                 {{/if}}
 
                                             </tr>
@@ -536,31 +530,31 @@
                                             </tr>
                                             {{/if}}
                                         </thead>
-                                        
+
                                         <tbody>
                                             {{#if records}}
                                                 {{#each item in records}}
                                                     <tr class="tableInnerRow" id="item-value-{{item.name}}">
                                                         {{#if equals item.accounttype ""}}
-                                                            <td class="fgr fgrblue"><span
-                                                                    class="tglAccCodes" style="display:none;">{{ item.id }} -
+                                                            <td class="fgr fgrblue" style="padding-left: 4rem !important;">
+                                                                <span class="tglAccCodes" style="display:none;">{{ item.id }} -
                                                                 </span>{{item.accountname}}
-                                                            </td>                                                
+                                                            </td>
                                                             {{#if item.periodAmounts }}
                                                                 {{#each itemamount in item.periodAmounts}}
 
                                                                     {{#if isOnlyDefaultActive }}
-                                                                        
+
                                                                         {{#if currencyList}}
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
                                                                                     <td class="fgr fgrtotal text-right {{c.currency}} {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
-                                                                                            {{convertAmount itemamount.decimalAmt c}}                                                                                                                      
+                                                                                            {{convertAmount itemamount.decimalAmt c}}
                                                                                         {{else}}
                                                                                             {{convertAmount itemamount.roundAmt c}}
                                                                                         {{/if}}
-                                                                                    </td>  
+                                                                                    </td>
                                                                                 {{/if}}
                                                                             {{/each}}
                                                                         {{/if}}
@@ -569,11 +563,11 @@
 
                                                                         <td class="fgr fgrtotal text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                             {{#if reportOptions.showDecimal }}
-                                                                                {{itemamount.decimalAmt}}                                                                                                                   
+                                                                                {{itemamount.decimalAmt}}
                                                                             {{else}}
                                                                                 {{itemamount.roundAmt}}
                                                                             {{/if}}
-                                                                        </td>  
+                                                                        </td>
 
                                                                     {{/if}}
 
@@ -606,7 +600,7 @@
                                                                     </td>
 
                                                                 {{/if}}
-                                                            
+
                                                             {{/if}}
                                                         {{else}}
                                                             {{#if containsequals item.accounttype "Total"}}
@@ -622,7 +616,7 @@
                                                                         {{#if currencyList}}
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
-                                                                                
+
                                                                                     <td class="fgr fgrtotal text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
@@ -630,7 +624,7 @@
                                                                                         {{convertAmount itemamount.roundAmt c}}
                                                                                         {{/if}}
                                                                                     </td>
-                                                                                    
+
                                                                                 {{/if}}
                                                                             {{/each}}
                                                                         {{/if}}
@@ -648,7 +642,7 @@
 
                                                                 {{/each}}
                                                             {{/if}}
-                                                        
+
                                                             {{#if reportOptions.showtotal}}
                                                                 {{#if isOnlyDefaultActive }}
 
@@ -678,20 +672,20 @@
 
                                                                 {{/if}}
 
-                                                        
-                                                        
+
+
                                                             {{/if}}
                                                         {{else}}
                                                             <td class="fgrtotal text-right fgrtotalName">{{item.accounttype}}</td>
                                                             <!-- <td></td> -->
                                                             {{#if item.periodAmounts }}
                                                                 {{#each itemamount in item.periodAmounts}}
-                                                                
+
                                                                     {{#if isOnlyDefaultActive }}
                                                                         {{#if currencyList}}
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
-                                                                            
+
                                                                                     <td class="fgr fgrtotal text-center {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
@@ -699,7 +693,7 @@
                                                                                         {{convertAmount itemamount.roundAmt c}}
                                                                                         {{/if}}
                                                                                     </td>
-                                                                                    
+
                                                                                 {{/if}}
                                                                             {{/each}}
                                                                         {{/if}}
@@ -715,11 +709,11 @@
                                                                         </td>
 
                                                                     {{/if}}
-                                                                        
 
-                                                                
 
-                                                                    
+
+
+
                                                                 {{/each}}
                                                             {{/if}}
 
@@ -729,7 +723,7 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
-                                                                    
+
                                                                             <td lass="fgr fgrblue text-right tglTotal {{#if isNegativeAmount item.totalroundamountex}} text-danger {{/if}}">
                                                                                 {{#if reportOptions.showDecimal }}
                                                                                     {{convertAmount item.totalamountex c}}
@@ -737,7 +731,7 @@
                                                                                     {{convertAmount item.totalroundamountex c}}
                                                                                 {{/if}}
                                                                             </td>
-                                                                            
+
                                                                         {{/if}}
                                                                     {{/each}}
                                                                 {{/if}}
@@ -1038,9 +1032,9 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalFXRates">
-        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>FX Rates</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -1929,7 +1923,7 @@
                                        }
                                        .subChild.selected .childInner strong {
                                            color: #fff;
-                                       }   
+                                       }
                                         ol.vertical li.placeholder {
                                             position: relative;
                                             margin: 0;
@@ -1940,15 +1934,15 @@
                                             height: 2px !important;
                                             float: left;
                                             background: #028dde;
-                                        } 
-                                        
+                                        }
+
                                         .selected > .childInner,
                                         .selected > .mainHeadingDiv h1 {
                                             background: #028dde !important;
                                             border: 1px solid #028dde !important;
                                             color: #fff !important;
                                             cursor: grab !important;
-                                        } 
+                                        }
                                         .subChild.dragged .childInner,
                                         /* .dragged, */
                                         ol.vertical li.dragged .childInner,
@@ -1963,7 +1957,7 @@
                                         .dragged .childInner strong {
                                             color: #fff !important;
                                         }
-                                        
+
                                         .collepsDiv {
                                             display: inline-flex;
                                             width: 32px;
@@ -2029,7 +2023,7 @@
                                                                                                 <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
                                                                                             </span>
                                                                                         </li>
-                                                                                    {{/if}}    
+                                                                                    {{/if}}
                                                                                 {{/each}}
                                                                             </ol>
                                                                             <span class="childInner">
