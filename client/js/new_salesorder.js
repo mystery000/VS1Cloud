@@ -8630,11 +8630,13 @@ Template.new_salesorder.events({
                     //     '    </tr>' +
                     //     '</table>';
 
+                    // add to custom field
                     sideBarService.getAllSalesOrderList("All").then(function (data) {
                       addVS1Data('TSalesOrderEx', JSON.stringify(data)).then(function (datareturn) {
                       }).catch(function (err) {
                       });
                     }); 
+                    // add to custom field
                     // need some delay here
 
                     if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
