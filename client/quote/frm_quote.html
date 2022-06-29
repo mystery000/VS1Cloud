@@ -54,14 +54,16 @@
             </div>
 
             <!-- Start {{> optionCustomFiled}} -->
-             <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
+            {{> customfieldDroppop}}
+            {{> customfieldpop}}
+             <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
                 {{> customfieldpop}}
              </div>
 
              <div class="modal fade" role="dialog" tabindex="-1" id="newCustomFieldPop">
                 {{> customfieldformpop}}
-             </div>
-           <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
+             </div> -->
+           <!-- <div class="modal fade" role="dialog" tabindex="-1" id="customFieldList">
             <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -77,32 +79,17 @@
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th colCustField" style="width:10px">ID</th>
-                                    <!-- <th class="th colHeadDept" style="width:100px;">Header Department</th> -->
                                     <th class="th colFieldName">Custom Field Value</th>
-                                    <!--   <th class="th colDeleteCustomField">Delete</th> -->
-                                    <!-- <th class="th colStatus" style="width:50px">Active</th> -->
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- {{#if datatablerecords}}
-                              {{#each item in datatablerecords}}
-                              <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
-
-                                  <td contenteditable="false" class="colClientTypeName">{{item.typeName}}</td>
-
-                                  <td contenteditable="false" class="colDescription">{{item.description}}</td>
-
-                                  <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
-                              </tr>
-                              {{/each}}
-                              {{/if}} -->
                             </tbody>
 
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
             <!-- END  -->
 
             <!-- Start Attachemt -->
@@ -305,15 +292,7 @@
 
                                 <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="row">
-                                        <div class="col-6 col-md-12 col-lg-12">
-                                            <div class="one box checkbox1div"
-                                                style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                                <div class="form-group">
-                                                    <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
-                                                    <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="col-6 col-md-12 col-lg-12">
                                              {{> CurrencyWidget rate="sell"}}
                                         </div>
@@ -322,7 +301,20 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                            <div class="row">
+                          <div class="row">
+                            <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                              <div class="row">
+
+                                <div class="col-6 col-md-12 col-lg-12">
+                                  <div class="one box checkbox1div"
+                                      style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                      <div class="form-group">
+                                          <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
+                                          <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+                                      </div>
+                                  </div>
+                                </div>
+
                                 <div class="col-6 col-md-12 col-lg-12">
                                     <div class="two box checkbox2div"
                                         style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
@@ -341,7 +333,9 @@
                                         </div>
                                     </div>
                                 </div>
+                              </div>
                             </div>
+                          </div>
                         </div>
                         
 
