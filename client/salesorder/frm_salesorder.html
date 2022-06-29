@@ -982,7 +982,9 @@
 
                                         <tr class="dnd-moved" id={{item.lineID}}>
                                             <!-- <td contenteditable="false" class="lineProductName colProductName pointer" prodid=' '>{{item.item}}</td> -->
-                                            <td contenteditable="false" class="colProductName"><input class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" ></td>
+                                            <td contenteditable="false" class="colProductName">
+                                              <input class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" lineid="{{item.id}}">
+                                            </td>
                                             <td contenteditable="true" class="lineProductDesc colDescription">{{item.description}}</td>
                                             <!--                                    <td contenteditable="true" class="lineQty colQty" style="text-align: right!important;" type="number">{{item.quantity}}</td>-->
                                             <td><input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
