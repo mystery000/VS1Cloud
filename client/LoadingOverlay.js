@@ -22,4 +22,4 @@ class LoadingOverlay {
   }
 }
 
-export default loadingOverlay = new LoadingOverlay();
+export default LoadingOverlay = new LoadingOverlay();

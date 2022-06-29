@@ -120,39 +120,39 @@
                                     </style>
                                     <div class="form-group"
                                         style="margin-bottom: 0px !important; width: 48%; margin-right: 3%;">
-                                        <select class="form-control pointer settingsMonthlySpecDay" id="sltDay"
+                                        <select id="sltDay" class="form-control pointer settingsMonthlySpecDay"
                                             name="sltDay" style="height: 30px !important; padding: 2px 6px;">
-                                            <option value="day1">1st</option>
-                                            <option value="day2">2nd</option>
-                                            <option value="day3">3rd</option>
-                                            <option value="day4">4th</option>
-                                            <option value="day5">5th</option>
-                                            <option value="day6">6th</option>
-                                            <option value="day7">7th</option>
-                                            <option value="day8">8th</option>
-                                            <option value="day9">9th</option>
-                                            <option value="day10">10th</option>
-                                            <option value="day11">11th</option>
-                                            <option value="day12">12th</option>
-                                            <option value="day13">13th</option>
-                                            <option value="day14">14th</option>
-                                            <option value="day15">15th</option>
-                                            <option value="day16">16th</option>
-                                            <option value="day17">17th</option>
-                                            <option value="day18">18th</option>
-                                            <option value="day19">19th</option>
-                                            <option value="day20">20th</option>
-                                            <option value="day21">21st</option>
-                                            <option value="day22">22nd</option>
-                                            <option value="day23">23rd</option>
-                                            <option value="day24">24th</option>
-                                            <option value="day25">25th</option>
-                                            <option value="day26">26th</option>
-                                            <option value="day27">27th</option>
-                                            <option value="day28">28th</option>
-                                            <option value="day29">29th</option>
-                                            <option value="day30">30th</option>
-                                            <option value="day31">31st</option>
+                                            <option value="1">1st</option>
+                                            <option value="2">2nd</option>
+                                            <option value="3">3rd</option>
+                                            <option value="4">4th</option>
+                                            <option value="5">5th</option>
+                                            <option value="6">6th</option>
+                                            <option value="7">7th</option>
+                                            <option value="8">8th</option>
+                                            <option value="9">9th</option>
+                                            <option value="10">10th</option>
+                                            <option value="11">11th</option>
+                                            <option value="12">12th</option>
+                                            <option value="13">13th</option>
+                                            <option value="14">14th</option>
+                                            <option value="15">15th</option>
+                                            <option value="16">16th</option>
+                                            <option value="17">17th</option>
+                                            <option value="18">18th</option>
+                                            <option value="19">19th</option>
+                                            <option value="20">20th</option>
+                                            <option value="21">21st</option>
+                                            <option value="22">22nd</option>
+                                            <option value="23">23rd</option>
+                                            <option value="24">24th</option>
+                                            <option value="25">25th</option>
+                                            <option value="26">26th</option>
+                                            <option value="27">27th</option>
+                                            <option value="28">28th</option>
+                                            <option value="29">29th</option>
+                                            <option value="30">30th</option>
+                                            <option value="31">31st</option>
                                         </select>
                                     </div>
                                 </div>
@@ -316,7 +316,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-monday-weekly" value="monday" checked>
+                                                    id="formCheck-monday-weekly" value="monday" data-value="1" checked>
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-monday-weekly">Monday</label>
                                             </div>
@@ -324,7 +324,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-tuesday-weekly" value="tuesday">
+                                                    id="formCheck-tuesday-weekly" value="tuesday" data-value="2">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-tuesday-weekly">Tuesday</label>
                                             </div>
@@ -332,7 +332,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-wednesday-weekly" value="wednesday">
+                                                    id="formCheck-wednesday-weekly" value="wednesday" data-value="3">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-wednesday-weekly">Wednesday</label>
                                             </div>
@@ -340,7 +340,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-thursday-weekly" value="thursday">
+                                                    id="formCheck-thursday-weekly" value="thursday" data-value="4">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-thursday-weekly">Thursday</label>
                                             </div>
@@ -348,7 +348,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-friday-weekly" value="friday">
+                                                    id="formCheck-friday-weekly" value="friday" data-value="5">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-friday-weekly">Friday</label>
                                             </div>
@@ -356,7 +356,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-saturday-weekly" value="saturday">
+                                                    id="formCheck-saturday-weekly" value="saturday" data-value="6">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-saturday-weekly">Saturday</label>
                                             </div>
@@ -364,7 +364,7 @@
                                         <div class="col-6 col-lg-4">
                                             <div class="custom-control custom-checkbox chkBox pointer">
                                                 <input class="custom-control-input chkBoxDays pointer" type="checkbox"
-                                                    id="formCheck-sunday-weekly" value="sunday">
+                                                    id="formCheck-sunday-weekly" value="sunday" data-value="7">
                                                 <label class="custom-control-label chkBox pointer"
                                                     for="formCheck-sunday-weekly">Sunday</label>
                                             </div>

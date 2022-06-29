@@ -949,6 +949,8 @@ Template.balancesheetreport.onRendered(() => {
       // console.log(_currencyList);
 
       templateObject.currencyList.set(_currencyList);
+
+     // $(`.currency-selector-js[currency=${defaultCurrencyCode}]`).parent().css('display', "none");
     });
 
   templateObject.loadCurrency();
