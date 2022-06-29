@@ -1933,14 +1933,22 @@ Template.alltaskdatatable.events({
     // label api is not completed
     if (subTaskID) {
       var objDetails = {
-        type: "Tprojecttask_subtasks",
+        type: "Tprojecttasks",
         fields: {
-          TaskID: subTaskID,
-          SubTaskName: task_name,
-          SubTaskDescription: task_description,
-          ProjectID: projectID,
-          SubTaskDate: due_date,
-          priority: priority,
+          ID: subTaskID,
+          subtasks: [
+            {
+              type: "Tprojecttasks",
+              fields: {
+                TaskName: task_name,
+                TaskDescription: task_description,
+                Completed: false,
+                ProjectID: projectID,
+                due_date: due_date,
+                priority: priority,
+              },
+            }
+          ]
         },
       };
     } else {

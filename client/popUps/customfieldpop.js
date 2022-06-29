@@ -428,7 +428,24 @@ Template.customfieldpop.onRendered(() => {
       url.includes("/refundcard")
     ) {
       listType = "ltSales";
-    } else if (url.includes("/chequecard")) {
+    } else if (url.includes("/customerscard")) {
+      listType = "ltCustomer";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (url.includes("/employeescard")) {
+      listType = "ltContact";
+    } else if (url.includes("/leadscard")) {
+      listType = "ltLeads";
+    } else if (url.includes("/productview")) {
+      listType = "ltProducts";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (
+      url.includes("/purchaseordercard") ||
+      url.includes("/billcard") ||
+      url.includes("/creditcard") ||
+      url.includes("/chequecard") ||
+      url.includes("/depositcard")) {
       // customfield tempcode
       listType = "ltOrderLines";
     }
@@ -1209,7 +1226,24 @@ Template.customfieldpop.events({
       url.includes("/refundcard")
     ) {
       listType = "ltSales";
-    } else if (url.includes("/chequecard")) {
+    } else if (url.includes("/customerscard")) {
+      listType = "ltCustomer";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (url.includes("/employeescard")) {
+      listType = "ltContact";
+    } else if (url.includes("/leadscard")) {
+      listType = "ltLeads";
+    } else if (url.includes("/productview")) {
+      listType = "ltProducts";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (
+      url.includes("/purchaseordercard") ||
+      url.includes("/billcard") ||
+      url.includes("/creditcard") ||
+      url.includes("/chequecard") ||
+      url.includes("/depositcard")) {
       // customfield tempcode
       listType = "ltOrderLines";
     }
@@ -1766,7 +1800,24 @@ Template.customfieldpop.events({
       url.includes("/refundcard")
     ) {
       listType = "ltSales";
-    } else if (url.includes("/chequecard")) {
+    } else if (url.includes("/customerscard")) {
+      listType = "ltCustomer";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (url.includes("/employeescard")) {
+      listType = "ltContact";
+    } else if (url.includes("/leadscard")) {
+      listType = "ltLeads";
+    } else if (url.includes("/productview")) {
+      listType = "ltProducts";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (
+      url.includes("/purchaseordercard") ||
+      url.includes("/billcard") ||
+      url.includes("/creditcard") ||
+      url.includes("/chequecard") ||
+      url.includes("/depositcard")) {
       // customfield tempcode
       listType = "ltOrderLines";
     }
@@ -1885,7 +1936,24 @@ Template.customfieldpop.events({
       url.includes("/refundcard")
     ) {
       listType = "ltSales";
-    } else if (url.includes("/chequecard")) {
+    } else if (url.includes("/customerscard")) {
+      listType = "ltCustomer";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (url.includes("/employeescard")) {
+      listType = "ltContact";
+    } else if (url.includes("/leadscard")) {
+      listType = "ltLeads";
+    } else if (url.includes("/productview")) {
+      listType = "ltProducts";
+    } else if (url.includes("/supplierscard")) {
+      listType = "ltSupplier";
+    } else if (
+      url.includes("/purchaseordercard") ||
+      url.includes("/billcard") ||
+      url.includes("/creditcard") ||
+      url.includes("/chequecard") ||
+      url.includes("/depositcard")) {
       // customfield tempcode
       listType = "ltOrderLines";
     }
