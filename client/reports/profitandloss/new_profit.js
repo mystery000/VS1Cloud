@@ -820,7 +820,7 @@ Template.newprofitandloss.events({
     const options = await templateObject.reportOptions.get();
     let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
     let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    FlowRouter.go(`balancetransactionlist?accountName=${accountName}&toDate=${dateFrom}&fromDate=${dateTo}`);
+    FlowRouter.go(`/balancetransactionlist?accountName=${accountName}&toDate=${dateFrom}&fromDate=${dateTo}&isTabItem=false`);
   },
   "change input[type='checkbox']": (event) => {
     // This should be global
