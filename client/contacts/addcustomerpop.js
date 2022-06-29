@@ -375,7 +375,7 @@ Template.addcustomerpop.onRendered(function () {
             shippingaddress: '',
             scity: '',
             sstate: '',
-            terms: templateObject.defaultsaleterm.get() || '',
+            terms: loggedTermsSales||templateObject.defaultsaleterm.get() || '',
             spostalcode: '',
             scountry: LoggedCountry || '',
             billingaddress: '',

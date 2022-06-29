@@ -1081,9 +1081,9 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
               if (FlowRouter.current().queryParams.overdue) {
 
               }else if (FlowRouter.current().queryParams.type) {
-                if(data.Params.IncludePOs == true){
+                if(FlowRouter.current().queryParams.type == 'po'){
                   toDate = "PO";
-                }else if(data.Params.IncludeBills == true){
+                }else if(FlowRouter.current().queryParams.type == 'bill'){
                   toDate = "Bill";
                 }
               }
@@ -1267,9 +1267,9 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                     if (FlowRouter.current().queryParams.overdue) {
 
                                     }else if (FlowRouter.current().queryParams.type) {
-                                      if(data.Params.IncludePOs == true){
+                                      if(FlowRouter.current().queryParams.type == 'po'){
                                         toDate = "PO";
-                                      }else if(data.Params.IncludeBills == true){
+                                      }else if(FlowRouter.current().queryParams.type == 'bill'){
                                         toDate = "Bill";
                                       }
                                     }
@@ -1568,9 +1568,9 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                                 if (FlowRouter.current().queryParams.overdue) {
 
                                 }else if (FlowRouter.current().queryParams.type) {
-                                  if(data.Params.IncludePOs == true){
+                                  if(FlowRouter.current().queryParams.type == 'po'){
                                     toDate = "PO";
-                                  }else if(data.Params.IncludeBills == true){
+                                  }else if(FlowRouter.current().queryParams.type == 'bill'){
                                     toDate = "Bill";
                                   }
                                 }
@@ -1688,12 +1688,13 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                 });
             }
         }).catch(function (err) {
+          console.log(err);
           if (FlowRouter.current().queryParams.overdue) {
 
           }else if (FlowRouter.current().queryParams.type) {
-            if(data.Params.IncludePOs == true){
+            if(FlowRouter.current().queryParams.type == 'po'){
               toDate = "PO";
-            }else if(data.Params.IncludeBills == true){
+            }else if(FlowRouter.current().queryParams.type == 'bill'){
               toDate = "Bill";
             }
           }
@@ -1761,37 +1762,6 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
               }
               templateObject.datatablerecords.set(dataTableList);
               if (templateObject.datatablerecords.get()) {
-
-                  Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblSupplierAwaitingPO', function (error, result) {
-                      if (error) {
-
-                      } else {
-                          if (result) {
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
-
-                                  if (hiddenColumn == true) {
-
-                                      $("." + columnClass + "").addClass('hiddenColumn');
-                                      $("." + columnClass + "").removeClass('showColumn');
-                                  } else if (hiddenColumn == false) {
-                                      $("." + columnClass + "").removeClass('hiddenColumn');
-                                      $("." + columnClass + "").addClass('showColumn');
-                                  }
-
-                              }
-                          }
-
-                      }
-                  });
-
-
                   setTimeout(function () {
                       MakeNegative();
                   }, 100);
@@ -1878,9 +1848,9 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
                               if (FlowRouter.current().queryParams.overdue) {
 
                               }else if (FlowRouter.current().queryParams.type) {
-                                if(data.Params.IncludePOs == true){
+                                if(FlowRouter.current().queryParams.type == 'po'){
                                   toDate = "PO";
-                                }else if(data.Params.IncludeBills == true){
+                                }else if(FlowRouter.current().queryParams.type == 'bill'){
                                   toDate = "Bill";
                                 }
                               }
@@ -2009,7 +1979,7 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
       if(FlowRouter.current().queryParams.page){
 
       }else{
-      addVS1Data('TAwaitingSupplierPaymentType', []);
+      //addVS1Data('TAwaitingSupplierPaymentType', []);
       }
       setTimeout(function () {
         templateObject.getAllSupplierPaymentDataType();
@@ -2034,6 +2004,27 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
     });
 
     templateObject.getAllFilterAwaitingSuppData = function(fromDate, toDate, ignoreDate) {
+      if (FlowRouter.current().queryParams.overdue || FlowRouter.current().queryParams.type) {
+        if (FlowRouter.current().queryParams.overdue) {
+
+        }else if (FlowRouter.current().queryParams.type) {
+          if(FlowRouter.current().queryParams.type == 'po'){
+            toDate = "PO";
+          }else if(FlowRouter.current().queryParams.type == 'bill'){
+            toDate = "Bill";
+          }
+        }
+
+        sideBarService.getAllOverDueAwaitingSupplierPayment(toDate,initialReportLoad,0).then(function(data) {
+            addVS1Data('TAwaitingSupplierPaymentType', JSON.stringify(data)).then(function(datareturn) {
+                location.reload();
+            }).catch(function(err) {
+                location.reload();
+            });
+        }).catch(function(err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+      }else{
         sideBarService.getAllAwaitingSupplierPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
             addVS1Data('TAwaitingSupplierPayment', JSON.stringify(data)).then(function(datareturn) {
                 location.reload();
@@ -2043,6 +2034,8 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
         }).catch(function(err) {
             $('.fullScreenSpin').css('display', 'none');
         });
+      }
+
     }
 
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -2605,9 +2598,9 @@ Template.supplierawaitingpurchaseorder.events({
               if (FlowRouter.current().queryParams.overdue) {
 
               }else if (FlowRouter.current().queryParams.type) {
-                if(data.Params.IncludePOs == true){
+                if(FlowRouter.current().queryParams.type == 'po'){
                   toDate = "PO";
-                }else if(data.Params.IncludeBills == true){
+                }else if(FlowRouter.current().queryParams.type == 'bill'){
                   toDate = "Bill";
                 }
               }
@@ -2624,9 +2617,9 @@ Template.supplierawaitingpurchaseorder.events({
               if (FlowRouter.current().queryParams.overdue) {
 
               }else if (FlowRouter.current().queryParams.type) {
-                if(data.Params.IncludePOs == true){
+                if(FlowRouter.current().queryParams.type == 'po'){
                   toDate = "PO";
-                }else if(data.Params.IncludeBills == true){
+                }else if(FlowRouter.current().queryParams.type == 'bill'){
                   toDate = "Bill";
                 }
               }

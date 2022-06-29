@@ -103,9 +103,11 @@
                 </div>
 
                 <!-- Start {{> optionCustomFiled}} -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
+                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
                     {{> customfieldpop}}
-                </div>
+                </div> -->
+                {{> customfieldDroppop}}
+                {{> customfieldpop}}
                 <!-- END  -->
 
                 <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
@@ -154,7 +156,7 @@
                                                         <div class="custom-control custom-checkbox" id="print_invoice_option">
                                                             <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_invoice" type="checkbox" id="print_invoice" autocomplete="off">
                                                             <label style="cursor: pointer;" class="custom-control-label"  for="print_invoice">Print Invoice</label>
-                                                        </div>      
+                                                        </div>
                                                     </div>
                                                 {{/if}}
                                                 {{#if equals title 'Invoice Back Orders'}}
@@ -352,9 +354,9 @@
                                                     <div style="margin: 8px; border: none !important;">
                                                         <div style="width: 100%; display: flex;">
                                                             <div style="padding-right: 16px; width: 50%;">
-                                                                <p id="subtotal_total" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                                                <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                                     Sub Total</p>
-                                                                <p id="grandTotal" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                                                <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                                     Total GST</p>
                                                             </div>
                                                             <div style="padding-left: 16px; width: 50%;">
@@ -455,10 +457,10 @@
                                 <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
-    
+
                         </div>
-    
-    
+
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
@@ -469,11 +471,11 @@
                                     :</p>
                                 <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                     Date:</p>
-                              
-                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>  
-    
+
+                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
-    
+
                                 <div class="mt-4" id="customfieldtablenew">
                                     <p class="customfield1" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 1</p>
                                     <p class="customfield2" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
@@ -497,10 +499,10 @@
                                     <p class="customfield2data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 2</p>
                                     <p class="customfield3data" style="margin-bottom: 4px; color: rgb(0 0 0);">Custom Field 3</p>
                                 </div>
-    
-    
-    
-    
+
+
+
+
                             </div>
                         </div>
                     </div>
@@ -535,39 +537,39 @@
                                         <p style="font-weight: 600; color: rgb(0 0 0);">Payment Details</p>
                                     </div>
                                     <!-- <div class="bankDetails" style="margin: 16px;">
-    
+
                             </div> -->
                                     <div class="col-12">
                                         <p style="font-weight: 600; color: rgb(0 0 0);"></p>
                                     </div>
-    
+
                                     <div class="col-12">
-    
+
                                         <p class="bsb" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             BSB (Branch Number) :
                                             <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-    
+
                                         <p class="account_number" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Account Number: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-    
+
                                         <p class="swift" style="text-align: left; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             Swift Code: <span style="margin-bottom: 8px; font-weight: 800; color: rgb(0 0 0);"></span>
                                         </p>
-    
-    
+
+
                                     </div>
-    
+
                                 </div>
                             </div>
                             <div class="col-6 field_amount">
                                 <div style="margin: 8px; border: none !important;">
                                     <div style="width: 100%; display: flex;">
                                         <div style="padding-right: 16px; width: 50%;">
-                                            <p id="subtotal_total" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                 Sub Total</p>
-                                            <p id="grandTotal" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                 Total GST</p>
                                         </div>
                                         <div style="padding-left: 16px; width: 50%;">
@@ -602,24 +604,24 @@
                                             </p>
                                             <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">
                                             </p>
-    
+
                                         </div>
-    
-    
+
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
-    
+
+
                 </div>
-    
+
                 <div style="font-size: 10px; margin-right: 8px; float: right;">
                     <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
                     <p>Page 1 of 1</p>
                 </div>
-    
+
             </div>
 
                 <!-- Start Attachemt -->
@@ -1717,25 +1719,25 @@
                                 </div>
 
                                 <div class="modal-body">
-                                 
+
                                         <div class="custom-control custom-checkbox" id="print_invoice_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_invoice_second" type="checkbox" id="print_invoice_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label"  for="print_invoice_second">Print Invoice</label>
                                         </div>
-                                     
-                                  
+
+
                                         <div class="custom-control custom-checkbox" id="Invoices_back_orders_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_Invoices_back_orders_second" type="checkbox" id="print_Invoices_back_orders_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label" for="print_Invoices_back_orders_second">Print Invoice Back Order</label>
-                                        </div>       
-                                      
+                                        </div>
+
                                         <div class="custom-control custom-checkbox" id="print_delivery_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport"   name="print_delivery_docket_second" type="checkbox" id="print_delivery_docket_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket_second">Print Delivery Docket</label>
                                         </div>
-                                       
 
-                                 
+
+
 
                                 </div>
 
@@ -2055,7 +2057,7 @@
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
 
                         <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">Invoice&nbsp;&nbsp;&nbsp; {{invoicerecord.id}}</h4>
-                      
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
@@ -2163,8 +2165,8 @@
                                 <div style="margin: 8px; border: none !important;">
                                     <div style="width: 100%; display: flex;">
                                         <div style="padding-right: 16px; width: 50%;">
-                                            <p id="subtotal_total" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
-                                            <p id="grandTotal" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
+                                            <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Sub Total</p>
+                                            <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">Total GST</p>
                                         </div>
                                         <div style="padding-left: 16px; width: 50%;">
                                             <p id="subtotal_totalPrint" style="text-align: right; margin-bottom: 8px; font-weight: 600; color: rgb(0 0 0);">{{invoicerecord.SubTotal}}</p>
@@ -2206,7 +2208,7 @@
         {{/if}}
 
 
-      
+
 
         <!-- Modal print-button -modal -->
         <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">

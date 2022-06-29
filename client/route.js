@@ -1793,3 +1793,12 @@ authenticatedRoutes.route('/fx-currency-history', {
         });
     }
 });
+
+authenticatedRoutes.route('/payrollleavetaken', {
+    name: 'payrollleavetaken',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleavetaken'
+        });
+    }
+});

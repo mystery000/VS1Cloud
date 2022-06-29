@@ -1967,10 +1967,7 @@ Template.balancesheetreport.events({
       .clone()
       .endOf("month")
       .format("YYYY-MM-DD");
-    let fromDate = moment($("#balanceDate").val())
-      .clone()
-      .startOf("year")
-      .format("YYYY-MM-DD");
+    let fromDate = "1899-01-01";
     Session.setPersistent("showHeader", true);
     window.open(
       "/balancetransactionlist?accountName=" +

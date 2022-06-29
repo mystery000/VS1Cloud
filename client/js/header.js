@@ -1765,7 +1765,8 @@ Template.header.events({
         }, 200);
         if (searchData != '') {
             templateObject.getAllGlobalSearch(searchData);
-
+        }else{
+          $('#searchGuideModal').modal('toggle');
         }
     },
     'keypress .txtGlobalSearch': function(event) {
