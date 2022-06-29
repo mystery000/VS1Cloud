@@ -107,8 +107,7 @@
             }
 
             td.fgrtotal {
-                font-weight: 700;
-
+                font-weight: 800 !important;
             }
 
             td.fgrSubtotal {
@@ -676,7 +675,7 @@
 
                                                             {{/if}}
                                                         {{else}}
-                                                            <td class="fgrtotal--7 text-right fgrtotalName">{{item.accounttype}}</td>
+                                                            <td class="fgrtotal text-right fgrtotalName">{{item.accounttype}}</td>
                                                             <!-- <td></td> -->
                                                             {{#if item.periodAmounts }}
                                                                 {{#each itemamount in item.periodAmounts}}
@@ -700,7 +699,7 @@
 
                                                                     {{else}}
 
-                                                                        <td class="fgr fgrtotal--9 text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
+                                                                        <td class="fgr fgrtotal text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                             {{#if reportOptions.showDecimal }}
                                                                                 {{itemamount.decimalAmt}}
                                                                             {{else}}
@@ -724,7 +723,7 @@
                                                                     {{#each c in currencyList }}
                                                                         {{# if c.active}}
 
-                                                                            <td lass="fgr fgrblue text-right tglTotal {{#if isNegativeAmount item.totalroundamountex}} text-danger {{/if}}">
+                                                                            <td class="fgr fgrblue text-right tglTotal fgrtotal {{#if isNegativeAmount item.totalroundamountex}} text-danger {{/if}}">
                                                                                 {{#if reportOptions.showDecimal }}
                                                                                     {{convertAmount item.totalamountex c}}
                                                                                 {{else}}
@@ -737,7 +736,7 @@
                                                                 {{/if}}
                                                             {{else}}
 
-                                                                <td lass="fgr fgrblue text-right tglTotal {{#if isNegativeAmount item.totalroundamountex}} text-danger {{/if}}">
+                                                                <td class="fgr fgrblue text-right tglTotal fgrtotal {{#if isNegativeAmount item.totalroundamountex}} text-danger {{/if}}">
                                                                     {{#if reportOptions.showDecimal }}
                                                                         {{item.totalamountex}}
                                                                     {{else}}
