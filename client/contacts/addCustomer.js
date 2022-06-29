@@ -891,6 +891,7 @@ Template.customerscard.onRendered(function () {
             terms.push(data.ttermsvs1[i].TermsName);
             if(data.ttermsvs1[i].isSalesdefault == true){
                 templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
+                Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
             }
         }
         terms = _.sortBy(terms);
@@ -1230,7 +1231,7 @@ Template.customerscard.onRendered(function () {
             shippingaddress: '',
             scity: '',
             sstate: '',
-            terms: templateObject.defaultsaleterm.get() || '',
+            terms: loggedTermsSales||templateObject.defaultsaleterm.get() || '',
             spostalcode: '',
             scountry: LoggedCountry || '',
             billingaddress: '',
