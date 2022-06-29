@@ -3,6 +3,7 @@ import { CountryService } from "../../js/country-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import LoadingOverlay from "../../LoadingOverlay";
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
