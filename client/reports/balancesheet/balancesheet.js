@@ -1693,8 +1693,16 @@ Template.balancesheetreport.helpers({
 
     let rate =
       currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    //amount = amount + 0.36;
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }); // Add commas
     //console.log("final amount", amount);
+
+    // amount = amount.toLocaleString();
+   // console.log(amount, Number(amount).toLocaleString("en-US"));
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
