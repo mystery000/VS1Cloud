@@ -110,44 +110,8 @@ Template._frequencyModal.onRendered(function () {
   //   $("#frequencyModal").on('shown.bs.modal', (e) => {
   //     console.log("Showing modal");
   //   })
-});
 
-Template._frequencyModal.events({
-  // 'click .btnFxupdate' : function(event){
-  //     $("#frequencyModal").modal('toggle');
-  //     // FlowRouter.go('/settings/fx-update'); old wrong code
-  //   },
-  //   "change #dailyWeekdays": (e) => {
-  //     if (e.checked == true) {
-  //       console.log("checked");
-  //     } else {
-  //       console.log("unchecked");
-  //       console.log($("#week-days-js input[type=checkbox]"));
-  //       $("#week-days-js input[type=checkbox]").attr("disabled", true);
-  //     }
-  //   },
-  "change input[name=dailyRadio]": (e) => {
-    $(".week-days-js input[type=checkbox].chkBoxDays").attr(
-      "disabled",
-      $(e.currentTarget).attr("data-value") == "week-days" ? false : true
-    );
-  },
-  "shown.bs.modal #frequencyModal": (e) => {
-    let templateObject = Template.instance();
-
-    /**
-     * Loading default values
-     */
-    document.querySelector("#frequencyDaily").click();
-
-    // $("#frequencyDaily").prop('checked', true);
-    // templateObject.assignFrequency("Daily");
-    // $("#edtDailyStartTime").val("08:00:00");
-    // $("#edtDailyStartDate").val(currentFormatedDate);
-
-    console.log("Modal is open");
-  },
-  "click .btnSaveFrequency": (e) => {
+  templateObject.saveShedule = async (e) => {
     LoadingOverlay.show();
 
     let reportSchedule = {
@@ -269,17 +233,31 @@ Template._frequencyModal.events({
 
     try {
       // Save email settings
-      taxRateService.saveScheduleSettings(reportSchedule);
+      await taxRateService.saveScheduleSettings(reportSchedule);
+      LoadingOverlay.hide(0);
+
+      swal({
+        title: "Success",
+        text: "Fx update was scheduled successfully",
+        type: "success",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.open("/currenciessettings", "_self");
+      });
     } catch (e) {
-      console.log(e);
+      LoadingOverlay.hide(0);
+      //console.log(e);
       swal({
         title: "Oooops...",
-        text: err,
+        text: "Couldn't save schedule",
         type: "error",
-        showCancelButton: false,
+        showCancelButton: true,
         confirmButtonText: "Try Again",
       }).then((result) => {
+        console.log(result);
         if (result.value) {
+          $(".btnSaveFrequency").click();
           // Meteor._reload.reload();
         } else if (result.dismiss === "cancel") {
         }
@@ -300,6 +278,48 @@ Template._frequencyModal.events({
     Meteor.call("addTask", reportSchedule.fields);
     console.log(fxUpdateObject);
     LoadingOverlay.hide();
+  };
+});
+
+Template._frequencyModal.events({
+  // 'click .btnFxupdate' : function(event){
+  //     $("#frequencyModal").modal('toggle');
+  //     // FlowRouter.go('/settings/fx-update'); old wrong code
+  //   },
+  //   "change #dailyWeekdays": (e) => {
+  //     if (e.checked == true) {
+  //       console.log("checked");
+  //     } else {
+  //       console.log("unchecked");
+  //       console.log($("#week-days-js input[type=checkbox]"));
+  //       $("#week-days-js input[type=checkbox]").attr("disabled", true);
+  //     }
+  //   },
+  "change input[name=dailyRadio]": (e) => {
+    $(".week-days-js input[type=checkbox].chkBoxDays").attr(
+      "disabled",
+      $(e.currentTarget).attr("data-value") == "week-days" ? false : true
+    );
+  },
+  "shown.bs.modal #frequencyModal": (e) => {
+    let templateObject = Template.instance();
+
+    /**
+     * Loading default values
+     */
+    document.querySelector("#frequencyDaily").click();
+
+    // $("#frequencyDaily").prop('checked', true);
+    // templateObject.assignFrequency("Daily");
+    // $("#edtDailyStartTime").val("08:00:00");
+    // $("#edtDailyStartDate").val(currentFormatedDate);
+
+    console.log("Modal is open");
+  },
+  "click .btnSaveFrequency": (e) => {
+    let templateObject = Template.instance();
+
+    templateObject.saveShedule();
   },
   'click input[name="frequencyRadio"]': (event) => {
     if (event.target.id == "frequencyMonthly") {
