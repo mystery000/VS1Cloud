@@ -24,6 +24,7 @@ import {
 } from '../js/ocr-service';
 import '../lib/global/indexdbstorage.js';
 import moment from 'moment';
+import CurrencyConverter from '../packages/currency/CurrencyConverter';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let accountService = new AccountService();
@@ -1786,17 +1787,26 @@ Template.receiptsoverview.events({
     'click #tblCurrencyPopList tbody tr': function(e) {
         let currencyName = $(e.target).closest('tr').find(".colCode").text() || '';
         let currencyID = $(e.target).closest('tr').attr('id') || '';
+        let buyRate = $(e.target).closest('tr').find(".colBuyRate").text() || "";
         let from = $('#employeeListModal').attr('data-from');
 
         if (from == 'ViewReceipt') {
             $('#viewReceiptModal .currencies').val(currencyName);
             $('#viewReceiptModal .currencies').attr('data-id', currencyID);
+            $('#viewReceiptModal .currencies').attr('buy-rate', buyRate);
+            $('#viewReceiptModal .currencies').trigger("change");
+
         } else if (from == 'NavExpense') {
             $('#nav-expense .currencies').val(currencyName);
             $('#nav-expense .currencies').attr('data-id', currencyID);
+            $('#nav-expense .currencies').attr('buy-rate', buyRate);
+            $('#nav-expense .currencies').trigger("change");
+
         } else if (from == 'NavTime') {
             $('#nav-time .currencies').val(currencyName);
             $('#nav-time .currencies').attr('data-id', currencyID);
+            $('#nav-time .currencies').attr('buy-rate', buyRate);
+            $('#nav-time .currencies').trigger("change");
         }
         $('#currencyModal').modal('toggle');
     },
@@ -2102,6 +2112,7 @@ Template.receiptsoverview.events({
             let supplierName = $(parentElement + ' .merchants').val() || ' ';
             let currencyId = $(parentElement + ' .currencies').attr('data-id');
             let currencyName = $(parentElement + ' .currencies').val() || ' ';
+            let currencyBuyRate = $(parentElement + ' .exchange-rate-js').val() || ' ';
             let chartAccountId = $(parentElement + ' .chart-accounts').attr('data-id');
             let chartAccountName = $(parentElement + ' .chart-accounts').val() || ' ';
             let claimDate = $(parentElement + ' .dtReceiptDate').val() || ' ';
@@ -2110,6 +2121,7 @@ Template.receiptsoverview.events({
 
             var totalAmount = 0;
             totalAmount = $(parentElement + ' .edtTotal').val().replace('$', '');
+
 
             let expenseClaimLine = {
                 type: "TExpenseClaimLineEx",
@@ -2125,14 +2137,14 @@ Template.receiptsoverview.events({
                     DateTime: moment(claimDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                     Description: description,
                     Paymethod: transactionTypeName,
-                    Attachments: attachment
+                    Attachments: attachment,
                     // GroupReport: groupReport,
                     // TransactionTypeID: transactionTypeId ? parseInt(transactionTypeId) : 0,
                     // TransactionTypeName: transactionTypeName,
-                    // CurrencyID: currencyId ? parseInt(currencyId) : 0,
-                    // CurrencyName: currencyName,
+               
                 }
             };
+
 
             let expenseClaim = {
                 type: "TExpenseClaimEx",
@@ -2144,8 +2156,17 @@ Template.receiptsoverview.events({
                     Lines: [expenseClaimLine],
                     RequestToEmployeeID: employeeId ? parseInt(employeeId) : 0,
                     RequestToEmployeeName: employeeName,
+                     // CurrencyID: currencyId ? parseInt(currencyId) : 0,
+                    // CurrencyName: currencyName,
+                    // CurrencyRate: currencyBuyRate,
+                    ForeignExchangeRate: parseFloat(parseFloat(currencyBuyRate).toFixed(2)),
+                    ForeignExchangeCode: currencyName,
+                    ForeignTotalAmount: CurrencyConverter.convertAmount(totalAmount, currencyBuyRate)
                 }
             }
+
+            console.log("TODO: API update required for fx rate: ", "TExpenseClaimEx", expenseClaim);
+
 
 
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -2715,7 +2736,30 @@ Template.receiptsoverview.events({
                 });
             }
         }
-    }
+    },
+    "change .currencies": (e) => {
+        //console.log(e);
+        const value = $(e.currentTarget).attr('buy-rate');
+
+        let from = $('#employeeListModal').attr('data-from');
+
+        if (from == 'ViewReceipt') {
+            $('#viewReceiptModal .exchange-rate-js').val(value);
+            $('#viewReceiptModal .exchange-rate-js').trigger("change");
+
+        } else if (from == 'NavExpense') {
+            $('#nav-expense .exchange-rate-js').val(value);
+
+            $('#nav-expense .exchange-rate-js').trigger("change");
+
+        } else if (from == 'NavTime') {
+            $('#nav-time .exchange-rate-js').val(value);
+            $('#nav-time .exchange-rate-js').trigger("change");
+        }
+        
+        console.log('Something has changed: ',  value);
+
+    },
 
 });
 

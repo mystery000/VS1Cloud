@@ -20,6 +20,7 @@ export class FxFrequency {
     this.startDate = startDate;
     this.startTime = startTime;
   }
+
 }
 
 export class FxFrequencyMonthly extends FxFrequency {
@@ -46,12 +47,12 @@ export class FxFrequencyWeekly extends FxFrequency {
 }
 
 export class FxFrequencyDaily extends FxFrequency {
-  constructor({ days, every, startDate, startTime}) {
+  constructor({ days, every, startDate, startTime }) {
     super({
       type: "daily",
       rythm: "daily",
       startDate: startDate,
-      startTime: startTime
+      startTime: startTime,
     });
     this.days = days;
     this.every = every;
