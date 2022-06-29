@@ -4,6 +4,7 @@ import { CountryService } from "../js/country-service";
 import { TaxRateService } from "../settings/settings-service";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
+import LoadingOverlay from "../LoadingOverlay";
 
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
@@ -25,6 +26,26 @@ Template.setup.onCreated(() => {
   templateObject.imageFileData = new ReactiveVar();
   templateObject.countryList = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
+
+  templateObject.showSkype = new ReactiveVar();
+  templateObject.showMob = new ReactiveVar();
+  templateObject.showFax = new ReactiveVar();
+  templateObject.showLinkedIn = new ReactiveVar();
+  templateObject.phCity = new ReactiveVar();
+  templateObject.phState = new ReactiveVar();
+  templateObject.phCountry = new ReactiveVar();
+  templateObject.phCode = new ReactiveVar();
+  templateObject.phAttention = new ReactiveVar();
+
+  templateObject.samePhysicalAddress1 = new ReactiveVar();
+  templateObject.samePhysicalAddress2 = new ReactiveVar();
+  templateObject.samePhysicalAddress3 = new ReactiveVar();
+
+  templateObject.isSameAddress = new ReactiveVar();
+  templateObject.isSameAddress.set(false);
+
+  templateObject.iscompanyemail = new ReactiveVar();
+  templateObject.iscompanyemail.set(false);
 
   // Step 2 variables
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -123,110 +144,209 @@ Template.setup.onRendered(function () {
   let countries = [];
   var countryService = new CountryService();
 
-  function getOrganisationDetails() {
-    organisationService
-      .getOrganisationDetail()
-      .then((dataListRet) => {
-        for (let event in dataListRet) {
-          let dataCopy = dataListRet[event];
-          for (let data in dataCopy) {
-            let mainData = dataCopy[data];
-            templateObject.showSkype.set(mainData.ContactEmail);
-            templateObject.showMob.set(mainData.MobileNumber);
-            templateObject.showFax.set(mainData.FaxNumber);
-            templateObject.showLinkedIn.set(mainData.DvaABN);
-            templateObject.phCity.set(mainData.PoCity);
-            templateObject.phState.set(mainData.PoState);
-            templateObject.phCountry.set(mainData.PoCountry);
-            templateObject.phCode.set(mainData.PoPostcode);
-            templateObject.phAttention.set(mainData.Contact);
-            let companyName = mainData.CompanyName;
-            let postalAddress =
-              mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
-            let physicalAddress =
-              mainData.Address +
-              "\n" +
-              mainData.Address2 +
-              "\n" +
-              mainData.Address3;
-            templateObject.samePhysicalAddress1.set(mainData.Address);
-            templateObject.samePhysicalAddress2.set(mainData.Address2);
-            templateObject.samePhysicalAddress3.set(mainData.Address3);
+  templateObject.getOrganisationDetails = async () => {
+    LoadingOverlay.show();
 
-            $("#displayname").val(mainData.CompanyName);
-            $("#tradingname").val(mainData.TradingName);
+    const dataListRet = await organisationService.getOrganisationDetail();
+    let mainData = dataListRet.tcompanyinfo[0];
 
-            $("#ownerfirstname").val(mainData.Firstname);
-            $("#ownerlastname").val(mainData.LastName);
-            //$('#businessnumber').val(mainData.Abn);
-            //$('#branch').val(mainData.Apcano);
-            //$('#comment').val(mainData.GlobalRef);
-            // $('#org_type').val(mainData.CompanyCategory);
-            $("#edtCompanyNumber").val(mainData.CompanyNumber);
-            $("#edtABNNumber").val(mainData.abn);
-            $("#edtAddress").val(mainData.Address);
-            $("#edtCity").val(mainData.City);
-            $("#edtState").val(mainData.State);
-            $("#edtPostCode").val(mainData.Postcode);
-            $("#edtCountry").val(mainData.Country);
-            $("#edtCountry").append(
-              '<option selected="selected" value="' +
-                mainData.Country +
-                '">' +
-                mainData.Country +
-                "</option>"
-            );
-            $("#edtpostaladdress").val(mainData.PoBox);
-            $("#edtPostalCity").val(mainData.PoCity);
-            $("#edtPostalState").val(mainData.PoState);
-            $("#edtPostalPostCode").val(mainData.PoPostcode);
-            $("#edtPostalCountry").val(mainData.PoCountry);
-            $("#edtPostalCountry").append(
-              '<option selected="selected" value="' +
-                mainData.PoCountry +
-                '">' +
-                mainData.PoCountry +
-                "</option>"
-            );
+    templateObject.showSkype.set(mainData.ContactEmail);
+    templateObject.showMob.set(mainData.MobileNumber);
+    templateObject.showFax.set(mainData.FaxNumber);
+    templateObject.showLinkedIn.set(mainData.DvaABN);
+    templateObject.phCity.set(mainData.PoCity);
+    templateObject.phState.set(mainData.PoState);
+    templateObject.phCountry.set(mainData.PoCountry);
+    templateObject.phCode.set(mainData.PoPostcode);
+    templateObject.phAttention.set(mainData.Contact);
+    let companyName = mainData.CompanyName;
+    let postalAddress =
+      mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
+    let physicalAddress =
+      mainData.Address + "\n" + mainData.Address2 + "\n" + mainData.Address3;
+    templateObject.samePhysicalAddress1.set(mainData.Address);
+    templateObject.samePhysicalAddress2.set(mainData.Address2);
+    templateObject.samePhysicalAddress3.set(mainData.Address3);
 
-            if (
-              mainData.Address == mainData.PoBox &&
-              mainData.City == mainData.PoCity &&
-              mainData.State == mainData.PoState &&
-              mainData.Postcode == mainData.PoPostcode &&
-              mainData.Country == mainData.PoCountry
-            ) {
-              templateObject.isSameAddress.set(true);
-              $("#chksameaddress").attr("checked", "checked");
-              $("#show_address_data").css("display", "none");
-            } else {
-              $("#chksameaddress").removeAttr("checked");
-              $("#show_address_data").css("display", "block");
-            }
-            if (mainData.TrackEmails) {
-              templateObject.iscompanyemail.set(true);
-              $("#chkIsDefailtEmail").attr("checked", "checked");
-            } else {
-              //templateObject.iscompanyemail.set(false);
-              $("#chkIsDefailtEmail").removeAttr("checked");
-            }
+    $("#displayname").val(mainData.CompanyName);
+    $("#tradingname").val(mainData.TradingName);
 
-            $("#pocontact").val(mainData.Contact);
-            $("#contact").val(mainData.ContactName);
-            $("#edtphonenumber").val(mainData.PhoneNumber);
-            $("#edtemailaddress").val(mainData.Email);
-            $("#edtWebsite").val(mainData.Url);
-            //$('#mobile').val(mainData.MobileNumber);
-            $("#edtfaxnumber").val(mainData.FaxNumber);
-          }
-        }
-        $(".fullScreenSpin").css("display", "none");
-      })
-      .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-      });
-  }
-  getOrganisationDetails();
+    $("#ownerfirstname").val(mainData.Firstname);
+    $("#ownerlastname").val(mainData.LastName);
+    //$('#businessnumber').val(mainData.Abn);
+    //$('#branch').val(mainData.Apcano);
+    //$('#comment').val(mainData.GlobalRef);
+    // $('#org_type').val(mainData.CompanyCategory);
+    $("#edtCompanyNumber").val(mainData.CompanyNumber);
+    $("#edtABNNumber").val(mainData.abn);
+    $("#edtAddress").val(mainData.Address);
+    $("#edtCity").val(mainData.City);
+    $("#edtState").val(mainData.State);
+    $("#edtPostCode").val(mainData.Postcode);
+    $("#edtCountry").val(mainData.Country);
+    $("#edtCountry").append(
+      '<option selected="selected" value="' +
+        mainData.Country +
+        '">' +
+        mainData.Country +
+        "</option>"
+    );
+    $("#edtpostaladdress").val(mainData.PoBox);
+    $("#edtPostalCity").val(mainData.PoCity);
+    $("#edtPostalState").val(mainData.PoState);
+    $("#edtPostalPostCode").val(mainData.PoPostcode);
+    $("#edtPostalCountry").val(mainData.PoCountry);
+    $("#edtPostalCountry").append(
+      '<option selected="selected" value="' +
+        mainData.PoCountry +
+        '">' +
+        mainData.PoCountry +
+        "</option>"
+    );
+
+    if (
+      mainData.Address == mainData.PoBox &&
+      mainData.City == mainData.PoCity &&
+      mainData.State == mainData.PoState &&
+      mainData.Postcode == mainData.PoPostcode &&
+      mainData.Country == mainData.PoCountry
+    ) {
+      templateObject.isSameAddress.set(true);
+      $("#chksameaddress").attr("checked", "checked");
+      $("#show_address_data").css("display", "none");
+    } else {
+      $("#chksameaddress").removeAttr("checked");
+      $("#show_address_data").css("display", "block");
+    }
+    if (mainData.TrackEmails) {
+      templateObject.iscompanyemail.set(true);
+      $("#chkIsDefailtEmail").attr("checked", "checked");
+    } else {
+      //templateObject.iscompanyemail.set(false);
+      $("#chkIsDefailtEmail").removeAttr("checked");
+    }
+
+    $("#pocontact").val(mainData.Contact);
+    $("#contact").val(mainData.ContactName);
+    $("#edtphonenumber").val(mainData.PhoneNumber);
+    $("#edtemailaddress").val(mainData.Email);
+    $("#edtWebsite").val(mainData.Url);
+    //$('#mobile').val(mainData.MobileNumber);
+    $("#edtfaxnumber").val(mainData.FaxNumber);
+
+    LoadingOverlay.hide();
+
+    // organisationService
+    //   .getOrganisationDetail()
+    //   .then((dataListRet) => {
+
+    //     console.log(dataListRet);
+
+    //     for (let event in dataListRet) {
+
+    //       let dataCopy = dataListRet[event];
+    //       for (let data in dataCopy) {
+    //         let mainData = dataCopy[data];
+
+    //         console.log(mainData.CompanyName);
+
+    //         templateObject.showSkype.set(mainData.ContactEmail);
+    //         templateObject.showMob.set(mainData.MobileNumber);
+    //         templateObject.showFax.set(mainData.FaxNumber);
+    //         templateObject.showLinkedIn.set(mainData.DvaABN);
+    //         templateObject.phCity.set(mainData.PoCity);
+    //         templateObject.phState.set(mainData.PoState);
+    //         templateObject.phCountry.set(mainData.PoCountry);
+    //         templateObject.phCode.set(mainData.PoPostcode);
+    //         templateObject.phAttention.set(mainData.Contact);
+    //         let companyName = mainData.CompanyName;
+    //         let postalAddress =
+    //           mainData.PoBox + "\n" + mainData.PoBox2 + "\n" + mainData.PoBox3;
+    //         let physicalAddress =
+    //           mainData.Address +
+    //           "\n" +
+    //           mainData.Address2 +
+    //           "\n" +
+    //           mainData.Address3;
+    //         templateObject.samePhysicalAddress1.set(mainData.Address);
+    //         templateObject.samePhysicalAddress2.set(mainData.Address2);
+    //         templateObject.samePhysicalAddress3.set(mainData.Address3);
+
+    //         $("#displayname").val(mainData.CompanyName);
+    //         $("#tradingname").val(mainData.TradingName);
+
+    //         $("#ownerfirstname").val(mainData.Firstname);
+    //         $("#ownerlastname").val(mainData.LastName);
+    //         //$('#businessnumber').val(mainData.Abn);
+    //         //$('#branch').val(mainData.Apcano);
+    //         //$('#comment').val(mainData.GlobalRef);
+    //         // $('#org_type').val(mainData.CompanyCategory);
+    //         $("#edtCompanyNumber").val(mainData.CompanyNumber);
+    //         $("#edtABNNumber").val(mainData.abn);
+    //         $("#edtAddress").val(mainData.Address);
+    //         $("#edtCity").val(mainData.City);
+    //         $("#edtState").val(mainData.State);
+    //         $("#edtPostCode").val(mainData.Postcode);
+    //         $("#edtCountry").val(mainData.Country);
+    //         $("#edtCountry").append(
+    //           '<option selected="selected" value="' +
+    //             mainData.Country +
+    //             '">' +
+    //             mainData.Country +
+    //             "</option>"
+    //         );
+    //         $("#edtpostaladdress").val(mainData.PoBox);
+    //         $("#edtPostalCity").val(mainData.PoCity);
+    //         $("#edtPostalState").val(mainData.PoState);
+    //         $("#edtPostalPostCode").val(mainData.PoPostcode);
+    //         $("#edtPostalCountry").val(mainData.PoCountry);
+    //         $("#edtPostalCountry").append(
+    //           '<option selected="selected" value="' +
+    //             mainData.PoCountry +
+    //             '">' +
+    //             mainData.PoCountry +
+    //             "</option>"
+    //         );
+
+    //         if (
+    //           mainData.Address == mainData.PoBox &&
+    //           mainData.City == mainData.PoCity &&
+    //           mainData.State == mainData.PoState &&
+    //           mainData.Postcode == mainData.PoPostcode &&
+    //           mainData.Country == mainData.PoCountry
+    //         ) {
+    //           templateObject.isSameAddress.set(true);
+    //           $("#chksameaddress").attr("checked", "checked");
+    //           $("#show_address_data").css("display", "none");
+    //         } else {
+    //           $("#chksameaddress").removeAttr("checked");
+    //           $("#show_address_data").css("display", "block");
+    //         }
+    //         if (mainData.TrackEmails) {
+    //           templateObject.iscompanyemail.set(true);
+    //           $("#chkIsDefailtEmail").attr("checked", "checked");
+    //         } else {
+    //           //templateObject.iscompanyemail.set(false);
+    //           $("#chkIsDefailtEmail").removeAttr("checked");
+    //         }
+
+    //         $("#pocontact").val(mainData.Contact);
+    //         $("#contact").val(mainData.ContactName);
+    //         $("#edtphonenumber").val(mainData.PhoneNumber);
+    //         $("#edtemailaddress").val(mainData.Email);
+    //         $("#edtWebsite").val(mainData.Url);
+    //         //$('#mobile').val(mainData.MobileNumber);
+    //         $("#edtfaxnumber").val(mainData.FaxNumber);
+    //       }
+    //     }
+    //     $(".fullScreenSpin").css("display", "none");
+    //   })
+    //   .catch(function (err) {
+    //     $(".fullScreenSpin").css("display", "none");
+    //   });
+  };
+  templateObject.getOrganisationDetails();
+
   templateObject.getCountryData = function () {
     getVS1Data("TCountries")
       .then(function (dataObject) {
@@ -3416,6 +3536,8 @@ Template.setup.onRendered(function () {
   // Step 7 Render functionalities
   // Step 8 Render functionalities
   // Step 9 Render functionalities
+
+  //   $("#displayname").val("hello test");
 });
 
 Template.setup.events({
