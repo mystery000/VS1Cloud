@@ -1671,6 +1671,29 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
+  getTAppointmentListDataByName(dataSearchName) {
+    let options = "";
+    let seeOwnAppointments = Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+    let loggedEmpID = Session.get("mySessionEmployeeLoggedID") || 0;
+    if (seeOwnAppointments == true) {
+      options = {
+        OrderBy: "CreationDate desc",
+        IgnoreDates: true,
+        IsDetailReport: false,
+        Search: 'TrainerID = "' + loggedEmpID + '" OR ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+      };
+
+    }else{
+      options = {
+        OrderBy: "CreationDate desc",
+        IgnoreDates: true,
+        IsDetailReport: false,
+        Search: 'ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TAppointmentList, options);
+  }
+
   getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
