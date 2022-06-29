@@ -12,13 +12,33 @@ Template.binlocationslist.onCreated(() => {
 
 Template.binlocationslist.onRendered(() => {
 
+    const templateObject = Template.instance();
+
     let imageData = (localStorage.getItem("Image"));
     if (imageData) {
         $('#uploadedImage').attr('src', imageData);
         $('#uploadedImage').attr('width', '50%');
     }
 
+    var today = moment().format('DD/MM/YYYY');
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    let fromDateMonth = (currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+
+    if ((currentDate.getMonth() + 1) < 10) {
+        fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+
+    if (currentDate.getDate() < 10) {
+        fromDateDay = "0" + currentDate.getDate();
+    }
+    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentDate.getFullYear();
+
     templateObject.dateAsAt.set(begunDate);
+
+    const dataTableList = [];
+    const deptrecords = [];
 
     $("#date-input,#dateTo,#dateFrom").datepicker({
         showOn: 'button',
