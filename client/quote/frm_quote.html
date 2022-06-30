@@ -252,7 +252,7 @@
                                                 <input class="form-control form-control" type="hidden"  id="lastname" value="{{quoterecord.lastname}}">
                                             </div>
                                         </div>
-
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -973,7 +973,7 @@
                                         <input class="custom-control-input chkGlobalSettings" id="choosetemplate" type="checkbox" style="cursor: pointer;">
                                         <label class="custom-control-label" style="width:131px;cursor: pointer;" for="choosetemplate">Choose Template</label>
                                     </div>
-
+                               
 
                                 </div>
 
@@ -1040,8 +1040,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row justify-content-center mb-3">
-
-
+    
+    
                                         <div class="row">
                                             {{#each title in getTemplateList}}
                                                 <div class="col-12 ">
@@ -1054,19 +1054,19 @@
                                                                 {{#each index in getTemplateNumber}}
                                                                     <li class="list-group-item templateItem justify-content-between" data-id="{{title}}" data-template-id="{{index}}">
                                                                         <div class="custom-control custom-switch">
-
+    
                                                                             {{#if equals index '1'}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" checked style="cursor: pointer;">
                                                                             {{else}}
                                                                                 <input class="custom-control-input chkGlobalSettings" type="radio" name="{{title}}" id="{{title}}_{{index}}" value="{{index}}" style="cursor: pointer;">
                                                                             {{/if}}
-
+    
                                                                             <label class="custom-control-label" for="{{title}}_{{index}}" style="cursor: pointer; color: transparent;"></label>
                                                                             <label style="margin-right: 50px;" for="{{title}}_{{index}}"> Template {{index}}</label>
-
-
+    
+    
                                                                         </div>
-
+    
                                                                         <i id="btnPreviewTemplate" data-id="{{title}}" class="far fa-eye btnPreviewTemplate" data-toggle="modal"></i>
                                                                     </li>
                                                                 {{/each}}
@@ -1077,12 +1077,12 @@
                                                         <div class="custom-control custom-checkbox">
                                                             <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote" checked type="checkbox" id="print_quote" autocomplete="off">
                                                             <label style="cursor: pointer;" class="custom-control-label" for="print_quote">Print Quote</label>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             {{/each}}
                                         </div>
-
+    
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 6px;">
@@ -1090,7 +1090,7 @@
                                     <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                             </div>
                         </div>
-
+    
                     </div>
 
                     <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
@@ -1108,7 +1108,7 @@
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input favCheckBox chkBankingReport" name="print_quote_second" checked type="checkbox" id="print_quote_second" autocomplete="off">
                                         <label style="cursor: pointer;" class="custom-control-label" for="print_quote_second">Print Quote</label>
-                                    </div>
+                                    </div>                      
 
                                 </div>
 
@@ -1379,7 +1379,7 @@
                         </button>
                     </div>
                     <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
-                        <div style="width: 90%; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
+                        <div style="width: 90%; position:relative;  background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
                             id="html-2-pdfwrapper_quotes" name="html-2-pdfwrapper_quotes">
                             <div class="d-flex flex-row d-sm-flex d-md-flex ">
                                 <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
@@ -1584,8 +1584,15 @@
 
                             <div style="font-size: 10px; margin-right: 8px; float: right;">
                                 <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-                                <p>Page 1 of 1</p>
+                              
                             </div>
+
+                            <p class="bottome-text-fix" style="font-size: 10px;
+                            margin-right: 18px;
+                            position: absolute;
+                            bottom: 0;
+                            z-index: 1111;
+                            right: 0;" >Page 1 of 1</p>
 
                         </div>
                     </div>
@@ -1597,7 +1604,7 @@
             </div>
         </div>
 
-        <div style="display:none;width: 90%; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
+        <div style="display:none;width: 90%;position:relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
         name="html-2-pdfwrapper_new">
         <div class="d-flex flex-row d-sm-flex d-md-flex ">
             <div class="col-7 col-md-7 col-sm-12" style="margin: 0px; padding: 16px;">
@@ -1648,8 +1655,8 @@
                         <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
                         <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
                         <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
-
-                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+                      
+                        <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>  
 
                         <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
@@ -1796,10 +1803,16 @@
 
         <div style="font-size: 10px; margin-right: 8px; float: right;">
             <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-            <p>Page 1 of 1</p>
+           
         </div>
+        <p class="bottome-text-fix" style="font-size: 10px;
+        margin-right: 18px;
+        position: absolute;
+        bottom: 0;
+        z-index: 1111;
+        right: 0;" >Page 1 of 1</p>
 
-    </div>
+        </div>
 
 
         <div style="width: 210mm; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; display:none; overflow-x: visible;" id="html-2-pdfwrapper" name="html-2-pdfwrapper">
@@ -1823,7 +1836,7 @@
                                 <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyReg}}</p>
                                 {{/if}}
                                 <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyabn}}</p>
-                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">Phone: {{companyphone}}</p>
+                                <p style="margin-bottom: 0px; color: rgb(0 0 0);">{{companyphone}}</p>
                             </div>
                         </div>
                     </div>

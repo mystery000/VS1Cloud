@@ -150,8 +150,8 @@ Template.paymentcard.onRendered(() => {
 
         function showCustomerPayment1(template_title,number) {
 
-            let invoice_data = templateObject.record.get();
 
+            let invoice_data = templateObject.record.get();
 
             var array_data = [];
             object_invoce = [];
@@ -166,15 +166,29 @@ Template.paymentcard.onRendered(() => {
             let dept = $('#sltDept').val();
             var erpGet = erpDb();      
             let fx = $('#sltCurrency').val();
+
     
+            var txaNotes = $('#txaNotes').val();
 
-            var customfield1 = $('#edtSaleCustField1').val() || '';
-            var customfield2 = $('#edtSaleCustField2').val() || '';
-            var customfield3 = $('#edtSaleCustField3').val() || '';
+  
+           
 
-            var customfieldlabel1 = $('.lblCustomField1').first().text();
-            var customfieldlabel2 = $('.lblCustomField2').first().text();
-            var customfieldlabel3 = $('.lblCustomField3').first().text();
+            var customfield1 = $('#edtSaleCustField1').val() || '-';
+            var customfield2 = $('#edtSaleCustField2').val() || '-';
+            var customfield3 = $('#edtSaleCustField3').val() || '-';
+    
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+            var ref_daa = $('#edtReference').val() || '-';
+            var applied  = $('.appliedAmount').text();
+           
+            if(ref_daa == " " || ref_daa == "")
+            {
+                ref_daa = "-";
+            }
+          
+            var dtPaymentDate = $('#dtPaymentDate').val() || '-';
 
 
             $('#tblPaymentcard > tbody > tr').each(function () {
@@ -217,15 +231,8 @@ Template.paymentcard.onRendered(() => {
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
         
             let item_payments = '';
-            var ref_daa = '';
-            if(invoice_data.reference == " ")
-            {
-                ref_daa = '_'
-
-            }
-            else{
-                ref_daa =invoice_data.reference;
-            }
+        
+         
             if(number == 1)
             {
                 item_payments = {
@@ -239,26 +246,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:'NA',
                     customfield2:'NA',
                     customfield3:'NA',
@@ -266,6 +273,7 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',
                     showFX:"",
+                    comment:"",
                     
                 };
         
@@ -283,26 +291,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -310,6 +318,8 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
                     showFX:"",
+                    comment:"",
+
                 };
         
             }
@@ -331,26 +341,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -358,6 +368,7 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
                     showFX:fx,
+                    comment:"",
                     
                 };
         
@@ -376,8 +387,8 @@ Template.paymentcard.onRendered(() => {
         }
 
         function showCustomerPayment(template_title,number) {
-            let invoice_data = templateObject.record.get();
 
+            let invoice_data = templateObject.record.get();
 
             var array_data = [];
             object_invoce = [];
@@ -392,22 +403,32 @@ Template.paymentcard.onRendered(() => {
             let dept = $('#sltDept').val();
             var erpGet = erpDb();      
             let fx = $('#sltCurrency').val();
+
+            var ref_daa = $('#edtReference').val();
+            var txaNotes = $('#txaNotes').val();
+
+            var customfield1 = $('#edtSaleCustField1').val() || '-';
+            var customfield2 = $('#edtSaleCustField2').val() || '-';
+            var customfield3 = $('#edtSaleCustField3').val() || '-';
     
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
-            var customfield1 = $('#edtSaleCustField1').val() || '';
-            var customfield2 = $('#edtSaleCustField2').val() || '';
-            var customfield3 = $('#edtSaleCustField3').val() || '';
+            var applied  = $('.appliedAmount').text();
 
-            var customfieldlabel1 = $('.lblCustomField1').first().text();
-            var customfieldlabel2 = $('.lblCustomField2').first().text();
-            var customfieldlabel3 = $('.lblCustomField3').first().text();
-
+            var dtPaymentDate = $('#dtPaymentDate').val() || '-';
+           if(ref_daa == " " || ref_daa == "")
+            {
+                ref_daa = "-";
+            }
+          
 
             $('#tblPaymentcard > tbody > tr').each(function () {
             var lineID = this.id;
         
             let date = $('#' + lineID + " .colTransDate").text();
-            let type = $('#' + lineID + " .colType").text();        
+            let type = $('#' + lineID + " .colType").text();
             let invoiceNo = $('#' + lineID + " .colTransNo").text();
             let lineOrginalamount = $('#'+lineID +" .lineOrginalamount").text();
             let lineAmountdue = $('#'+lineID + " .lineAmountdue").text();
@@ -427,7 +448,7 @@ Template.paymentcard.onRendered(() => {
             ]);
 
 
-            
+
             });
             let company = Session.get('vs1companyName');
             let vs1User = localStorage.getItem('mySession');
@@ -443,15 +464,8 @@ Template.paymentcard.onRendered(() => {
             $(".linkText").attr("href", stripeGlobalURL + stringQuery);
         
             let item_payments = '';
-            var ref_daa = '';
-            if(invoice_data.reference == " ")
-            {
-                ref_daa = '_'
-
-            }
-            else{
-                ref_daa =invoice_data.reference;
-            }
+        
+         
             if(number == 1)
             {
                 item_payments = {
@@ -465,26 +479,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:'NA',
                     customfield2:'NA',
                     customfield3:'NA',
@@ -492,6 +506,7 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:'NA',
                     customfieldlabel3:'NA',
                     showFX:"",
+                    comment:"",
                     
                 };
         
@@ -509,26 +524,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -536,6 +551,8 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
                     showFX:"",
+                    comment:"",
+
                 };
         
             }
@@ -557,26 +574,26 @@ Template.paymentcard.onRendered(() => {
                     o_phone:Template.paymentcard.__helpers.get('companyphone').call() ,
                     title: "Customer Payment" ,
                     value: invoice_data.lid,
-                    date: invoice_data.paymentDate || '-',
-                    invoicenumber:invoice_data.lid || '-',
+                    date: dtPaymentDate,
+                    invoicenumber:"",
                     refnumber: ref_daa,
-                    pqnumber:  '.',
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
+                    pqnumber:  '',
+                    duedate: '',
+                    paylink: "",
                     supplier_type: "Customer",
                     supplier_name : customer,
-                    supplier_addr : invoice_data.shipToDesc,
+                    supplier_addr : "",
                     fields: {"Date" : "20", "Type" : "10", "Trans" : "10", "Original" : "20", "Due" : "10" , "Paid" : "10", "Outstanding" : "20"},
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due :  invoice_data.balanceDue,
-                    bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                    account : localStorage.getItem('vs1companyBankAccountNo')|| '',
-                    swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                    subtotal : "",
+                    gst : "",
+                    total : "",
+                    paid_amount : "",
+                    bal_due : "",
+                    bsb : '',
+                    account : '',
+                    swift : '',
                     data: array_data,            
-                    applied : invoice_data.applied,
+                    applied :"",
                     customfield1:customfield1,
                     customfield2:customfield2,
                     customfield3:customfield3,
@@ -584,6 +601,7 @@ Template.paymentcard.onRendered(() => {
                     customfieldlabel2:customfieldlabel2,
                     customfieldlabel3:customfieldlabel3,
                     showFX:fx,
+                    comment:"",
                     
                 };
         
@@ -603,11 +621,13 @@ Template.paymentcard.onRendered(() => {
 
 
         function updateTemplate1(object_invoce) {
-
-        
             $("#templatePreviewModal").modal("toggle");
             if (object_invoce.length > 0) {
              
+            
+              $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
+
+
               $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
               $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
               $("#templatePreviewModal .o_address1").text(
@@ -865,12 +885,14 @@ Template.paymentcard.onRendered(() => {
             }
     
     
-        }
+          }
     
         function updateTemplate(object_invoce) {
-
-            if (object_invoce.length > 0) {
     
+            
+            if (object_invoce.length > 0) {
+            
+            $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
             $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
             $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
             $("#html-2-pdfwrapper_new .o_address1").text(
@@ -956,11 +978,9 @@ Template.paymentcard.onRendered(() => {
             }
     
             if (object_invoce[0]["showFX"] == "") {
-               
                 $("#html-2-pdfwrapper_new .showFx").hide();
                 $("#html-2-pdfwrapper_new .showFxValue").hide();
             } else {
-            
                 $("#html-2-pdfwrapper_new .showFx").show();
                 $("#html-2-pdfwrapper_new .showFxValue").show();
                 $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
@@ -1021,7 +1041,7 @@ Template.paymentcard.onRendered(() => {
                   }
                   else
                   {
-                    $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                    $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
                   }
                   
                 
@@ -4907,7 +4927,9 @@ Template.paymentcard.onRendered(() => {
 
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                $(".btnSave").trigger("click");
+                //$(".btnSave").trigger("click");
+                $('#html-2-pdfwrapper').css('display', 'none');
+                $('.fullScreenSpin').css('display', 'none');
             } else {
                 document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 $('#html-2-pdfwrapper').css('display', 'none');
@@ -5053,7 +5075,7 @@ Template.paymentcard.helpers({
         });
     },
     companyphone: () => {
-        return Session.get('vs1companyPhone');
+        return "Phone: "+Session.get('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
       let countryABNValue = "ABN: " + Session.get('vs1companyABN');
@@ -5086,9 +5108,7 @@ Template.paymentcard.helpers({
     poBox: () => {
         return Session.get('vs1companyPOBox');
     },
-    companyphone: () => {
-        return "phone: " +Session.get('vs1companyPhone');
-    },
+ 
     companyabn: () => {
         return Session.get('vs1companyABN');
     },

@@ -185,427 +185,467 @@ Template.refundcard.onRendered(() => {
 
         function showRefund1(template_title,number) {
                     
-                            object_invoce = [];
-                            var array_data = [];
-
-                            let invoice_data = templateObject.invoicerecord.get();
-
-                     
-                            let stripe_id = templateObject.accountID.get() || '';
-                            let stripe_fee_method = templateObject.stripe_fee_method.get();
-                            let lineItems = [];
-                            let total = $('#grandTotal').html() || 0;
-                            let tax = $('#subtotal_tax').html() || 0;
-                            let customer = $('#edtCustomerName').val();
-                            let name = $('#firstname').val();
-                            let surname = $('#lastname').val();
-                            let fx = $('#sltCurrency').val();
-                            var customfield1 = $('#edtSaleCustField1').val() || '-';
-                            var customfield2 = $('#edtSaleCustField2').val() || '-';
-                            var customfield3 = $('#edtSaleCustField3').val() || '-';
-                    
-                            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-                            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-                            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-                            if(customfield3 == 'NaN')
-                            {
-                                customfield3 = '-';
-                            }     
-                            
-                            var po = $('#ponumber').val() || '.';          
-
-                            $('#tblInvoiceLine > tbody > tr').each(function () {
-                                var lineID = this.id;
-                
-                
-                                let tdproduct = $('#' + lineID + " .lineProductName").val();
-                                let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                                let tdQty = $('#' + lineID + " .lineQty").val();
-                                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                                let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-                                let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-                
-                
-                                array_data.push([
-                                    tdproduct,
-                                    tddescription,
-                                    tdQty,
-                                    tdunitprice,
-                                    taxAmount,
-                                    tdlineamt,
-                                ]);
-                            
-                                lineItemObj = {
-                                    description: tddescription || '',
-                                    quantity: tdQty || 0,
-                                    unitPrice: tdunitprice.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2
-                                    }) || 0
-                                }
-                
-                                lineItems.push(lineItemObj);
-                            });
-
-                            let item_refund = '';
-
-                            if(number == 1)
-                            {
-                                item_refund = {
-                                    o_url: Session.get('vs1companyURL'),
-                                    o_name:  Session.get('vs1companyName'),
-                                    o_address: Session.get('vs1companyaddress1'),
-                                    o_city: Session.get('vs1companyCity'),
-                                    o_state: Session.get('companyState'),
-                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                                    title: 'Refund',
-                                    value:invoice_data.id,
-                                    date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.id,
-                                    refnumber: invoice_data.reference || '-',
-                                    pqnumber: po,
-                                    duedate: invoice_data.duedate,
-                                    paylink: "Pay Now",
-                                    supplier_type: "Customer",
-                                    supplier_name :customer,
-                                    supplier_addr : invoice_data.shipToDesc,
-                                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                                    subtotal : invoice_data.SubTotal,
-                                    gst : invoice_data.TotalTax,
-                                    total : total,
-                                    paid_amount : invoice_data.totalPaid,
-                                    bal_due : invoice_data.balanceDue,
-                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                                    data: array_data,
-                                    applied : "",
-                                    customfield1:'NA',
-                                    customfield2:'NA',
-                                    customfield3:'NA',
-                                    customfieldlabel1:'NA',
-                                    customfieldlabel2:'NA',
-                                    customfieldlabel3:'NA',   
-                                    showFX:"",
-                                    
-                                };
-
-                            }
-                            else if(number == 2)
-                            {
-                                item_refund = {
-                                    o_url: Session.get('vs1companyURL'),
-                                    o_name:  Session.get('vs1companyName'),
-                                    o_address: Session.get('vs1companyaddress1'),
-                                    o_city: Session.get('vs1companyCity'),
-                                    o_state: Session.get('companyState'),
-                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                                    title: 'Refund',
-                                    value:invoice_data.id,
-                                    date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.id,
-                                    refnumber: invoice_data.reference || '-',
-                                    pqnumber: po,
-                                    duedate: invoice_data.duedate || '-',
-                                    paylink: "Pay Now",
-                                    supplier_type: "Customer",
-                                    supplier_name :customer,
-                                    supplier_addr : invoice_data.shipToDesc,
-                                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                                    subtotal : invoice_data.SubTotal,
-                                    gst : invoice_data.TotalTax,
-                                    total : total,
-                                    paid_amount : invoice_data.totalPaid,
-                                    bal_due : invoice_data.balanceDue,
-                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                                    data: array_data,
-                                    applied : "",
-                                    customfield1:customfield1 || '-',
-                                    customfield2:customfield2 || '-',
-                                    customfield3:customfield3 || '-',
-                                    customfieldlabel1:customfieldlabel1,
-                                    customfieldlabel2:customfieldlabel2,
-                                    customfieldlabel3:customfieldlabel3,
-                                    showFX:"",
-                                         
-                                    
-                                };
-
-
-                            }
-                            else
-                            {
-
-                                item_refund = {
-                                    o_url: Session.get('vs1companyURL'),
-                                    o_name:  Session.get('vs1companyName'),
-                                    o_address: Session.get('vs1companyaddress1'),
-                                    o_city: Session.get('vs1companyCity'),
-                                    o_state: Session.get('companyState'),
-                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                                    title: 'Refund',
-                                    value:invoice_data.id,
-                                    date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.id,
-                                    refnumber: invoice_data.reference || '-',
-                                    pqnumber: po,
-                                    duedate: invoice_data.duedate || '-',
-                                    paylink: "Pay Now",
-                                    supplier_type: "Customer",
-                                    supplier_name :customer,
-                                    supplier_addr : invoice_data.shipToDesc,
-                                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                                    subtotal : invoice_data.SubTotal,
-                                    gst : invoice_data.TotalTax,
-                                    total : total,
-                                    paid_amount : invoice_data.totalPaid,
-                                    bal_due : invoice_data.balanceDue,
-                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                                    data: array_data,
-                                    applied : "",
-                                    customfield1:customfield1 || '-',
-                                    customfield2:customfield2 || '-',
-                                    customfield3:customfield3 || '-',
-                                    customfieldlabel1:customfieldlabel1,
-                                    customfieldlabel2:customfieldlabel2,
-                                    customfieldlabel3:customfieldlabel3, 
-                                    showFX:fx,
-                                    
-                                };
-
-                            }
-                    
-
-
-                        
-                            object_invoce.push(item_refund);
-                            $("#templatePreviewModal .field_payment").hide();
-                            $("#templatePreviewModal .field_amount").show();
-                            updateTemplate1(object_invoce);
-                            saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-        }
-
-        function showRefund(template_title,number)
-        {
-
-         
-            object_invoce = [];
             var array_data = [];
+            let lineItems = [];   
+            object_invoce = [];
+            let item_invoices = '';
 
             let invoice_data = templateObject.invoicerecord.get();
-
-            
             let stripe_id = templateObject.accountID.get() || '';
             let stripe_fee_method = templateObject.stripe_fee_method.get();
-            let lineItems = [];
-            let total = $('#grandTotal').html() || 0;
+            var erpGet = erpDb();
+
+            var customfield1 = $('#edtSaleCustField1').val() || '-';
+            var customfield2 = $('#edtSaleCustField2').val() || '-';
+            var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+            let balancedue = $('#totalBalanceDue').html() || 0;
             let tax = $('#subtotal_tax').html() || 0;
             let customer = $('#edtCustomerName').val();
             let name = $('#firstname').val();
             let surname = $('#lastname').val();
+            let dept = $('#sltDept').val();
             let fx = $('#sltCurrency').val();
-            var customfield1 = $('#edtSaleCustField1').val() || '-';
-            var customfield2 = $('#edtSaleCustField2').val() || '-';
-            var customfield3 = $('#edtSaleCustField3').val() || '-';
-            var po = $('#ponumber').val() || '.';          
-            if(customfield3 == 'NaN')
-            {
-                customfield3 = '-';
-            }
-    
-            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
-            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
-            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-                      
+            var comment = $('#txaComment').val();
+            var parking_instruction = $('#txapickmemo').val();
+            var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+            var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+            var ref = $('#edtRef').val() || '-';
+            var txabillingAddress = $('#txabillingAddress').val() || '';
+            var dtSODate = $('#dtSODate').val();
+            var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+            var grandTotal = $('#grandTotal').text() || '$'+ 0;
+            var duedate = $('#dtDueDate').val();
+            var po = $('#ponumber').val() || '.';
 
-            $('#tblInvoiceLine > tbody > tr').each(function () {
+
+             $('#tblInvoiceLine > tbody > tr').each(function () {
+
                 var lineID = this.id;
-
-
                 let tdproduct = $('#' + lineID + " .lineProductName").val();
                 let tddescription = $('#' + lineID + " .lineProductDesc").text();
                 let tdQty = $('#' + lineID + " .lineQty").val();
                 let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
                 let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
                 let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-                let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
 
                 array_data.push([
                     tdproduct,
                     tddescription,
                     tdQty,
                     tdunitprice,
-                    taxAmount,
+                    taxamount,
                     tdlineamt,
                 ]);
-            
+
                 lineItemObj = {
                     description: tddescription || '',
                     quantity: tdQty || 0,
                     unitPrice: tdunitprice.toLocaleString(undefined, {
                         minimumFractionDigits: 2
-                    }) || 0
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                 lineItems.push(lineItemObj);
+
+        });
+
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
+            let customerEmail = $('#edtCustomerEmail').val();
+            let id = $('.printID').attr("id") || "new";
+            let currencyname = (CountryAbbr).toLowerCase();
+            stringQuery = "?";
+            var customerID = $('#edtCustomerEmail').attr('customerid');
+            for (let l = 0; l < lineItems.length; l++) {
+                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+            }
+            stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+
+     
+            
+                if(number == 1)
+                {
+                    item_invoices = {
+
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:'NA',
+                        customfield2:'NA',
+                        customfield3:'NA',
+                        customfieldlabel1:'NA',
+                        customfieldlabel2:'NA',
+                        customfieldlabel3:'NA',
+                        applied : "",
+                        showFX:"",
+                        comment:comment,
+                    };
+
+                }
+                else if(number == 2)
+                {
+                    item_invoices = {
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        applied : "",
+                        showFX:"",
+                        comment:comment,
+                    };
+
+                }
+                else
+                {
+                    item_invoices = {
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        applied : "",
+                        showFX:fx,
+                        comment:comment,
+                    };
+
                 }
 
-                lineItems.push(lineItemObj);
-            });
 
-            let item_refund = '';
+       
+            
+                object_invoce.push(item_invoices);
+            
+                $("#templatePreviewModal .field_payment").show();
+                $("#templatePreviewModal .field_amount").show();
 
-            if(number == 1)
-            {
-                item_refund = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                    title: 'Refund',
-                    value:invoice_data.id,
-                    date: invoice_data.saledate,
-                    invoicenumber: invoice_data.id,
-                    refnumber: invoice_data.reference || '-',
-                    pqnumber: po,
-                    duedate: invoice_data.duedate,
-                    paylink: "Pay Now",
-                    supplier_type: "Customer",
-                    supplier_name :customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due : invoice_data.balanceDue,
-                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',  
-                    showFX:"", 
-                    
-                };
+                updateTemplate1(object_invoce);
 
+                  saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+      
+    }
+
+        function showRefund(template_title,number)
+        {
+             
+            var array_data = [];
+            let lineItems = [];   
+            object_invoce = [];
+            let item_invoices = '';
+
+            let invoice_data = templateObject.invoicerecord.get();
+            let stripe_id = templateObject.accountID.get() || '';
+            let stripe_fee_method = templateObject.stripe_fee_method.get();
+            var erpGet = erpDb();
+
+            var customfield1 = $('#edtSaleCustField1').val() || '-';
+            var customfield2 = $('#edtSaleCustField2').val() || '-';
+            var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+            var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+            var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+            var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+            let balancedue = $('#totalBalanceDue').html() || 0;
+            let tax = $('#subtotal_tax').html() || 0;
+            let customer = $('#edtCustomerName').val();
+            let name = $('#firstname').val();
+            let surname = $('#lastname').val();
+            let dept = $('#sltDept').val();
+            let fx = $('#sltCurrency').val();
+            var comment = $('#txaComment').val();
+            var parking_instruction = $('#txapickmemo').val();
+            var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+            var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+            var ref = $('#edtRef').val() || '-';
+            var txabillingAddress = $('#txabillingAddress').val() || '';
+            var dtSODate = $('#dtSODate').val();
+            var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+            var grandTotal = $('#grandTotal').text() || '$'+ 0;
+            var duedate = $('#dtDueDate').val();
+            var po = $('#ponumber').val() || '.';
+
+
+             $('#tblInvoiceLine > tbody > tr').each(function () {
+
+                var lineID = this.id;
+                let tdproduct = $('#' + lineID + " .lineProductName").val();
+                let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                let tdQty = $('#' + lineID + " .lineQty").val();
+                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                let taxamount = $('#' + lineID + " .colTaxAmount").text();
+                let tdlineamt = $('#' + lineID + " .colAmountInc").text();
+
+                array_data.push([
+                    tdproduct,
+                    tddescription,
+                    tdQty,
+                    tdunitprice,
+                    taxamount,
+                    tdlineamt,
+                ]);
+
+                lineItemObj = {
+                    description: tddescription || '',
+                    quantity: tdQty || 0,
+                    unitPrice: tdunitprice.toLocaleString(undefined, {
+                        minimumFractionDigits: 2
+                    }) || 0,
+                    tax:tdtaxrate||0,
+                    amount:tdlineamt || 0
+                }
+                 lineItems.push(lineItemObj);
+
+        });
+
+            let company = Session.get('vs1companyName');
+            let vs1User = localStorage.getItem('mySession');
+            let customerEmail = $('#edtCustomerEmail').val();
+            let id = $('.printID').attr("id") || "new";
+            let currencyname = (CountryAbbr).toLowerCase();
+            stringQuery = "?";
+            var customerID = $('#edtCustomerEmail').attr('customerid');
+            for (let l = 0; l < lineItems.length; l++) {
+                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
             }
-            else if(number == 2)
-            {
-                item_refund = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                    title: 'Refund',
-                    value:invoice_data.id,
-                    date: invoice_data.saledate,
-                    invoicenumber: invoice_data.id,
-                    refnumber: invoice_data.reference || '-',
-                    pqnumber: po,
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
-                    supplier_type: "Customer",
-                    supplier_name :customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due : invoice_data.balanceDue,
-                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:customfield1 || '-',
-                    customfield2:customfield2 || '-',
-                    customfield3:customfield3 || '-',
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:"",
-                         
-                    
-                };
+            stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
 
+     
+            
+                if(number == 1)
+                {
+                    item_invoices = {
 
-            }
-            else
-            {
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:'NA',
+                        customfield2:'NA',
+                        customfield3:'NA',
+                        customfieldlabel1:'NA',
+                        customfieldlabel2:'NA',
+                        customfieldlabel3:'NA',
+                        applied : "",
+                        showFX:"",
+                        comment:comment,
+                    };
 
-                item_refund = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
-                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
-                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
-                    title: 'Refund',
-                    value:invoice_data.id,
-                    date: invoice_data.saledate,
-                    invoicenumber: invoice_data.id,
-                    refnumber: invoice_data.reference || '-',
-                    pqnumber: po,
-                    duedate: invoice_data.duedate || '-',
-                    paylink: "Pay Now",
-                    supplier_type: "Customer",
-                    supplier_name :customer,
-                    supplier_addr : invoice_data.shipToDesc,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal : invoice_data.SubTotal,
-                    gst : invoice_data.TotalTax,
-                    total : total,
-                    paid_amount : invoice_data.totalPaid,
-                    bal_due : invoice_data.balanceDue,
-                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:'NA',
-                    customfield2:'NA',
-                    customfield3:'NA',
-                    customfieldlabel1:'NA',
-                    customfieldlabel2:'NA',
-                    customfieldlabel3:'NA',   
-                    showFX:fx,
-                    
-                };
+                }
+                else if(number == 2)
+                {
+                    item_invoices = {
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        applied : "",
+                        showFX:"",
+                        comment:comment,
+                    };
 
-            }
-    
+                }
+                else
+                {
+                    item_invoices = {
+                        o_url: Session.get('vs1companyURL'),
+                        o_name: Session.get('vs1companyName'),
+                        o_address: Session.get('vs1companyaddress1'),
+                        o_city: Session.get('vs1companyCity'),
+                        o_state: Session.get('companyState'),
+                        o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                        o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                        o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                        title: 'Refund',
+                        value:invoice_data.id,
+                        date: dtSODate,
+                        invoicenumber:invoice_data.id,
+                        refnumber: ref,
+                        pqnumber: po,
+                        duedate: duedate,
+                        paylink: "Pay Now",
+                        supplier_type: "Customer",
+                        supplier_name : customer,
+                        supplier_addr : txabillingAddress,
+                        fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                        subtotal :subtotal_total,
+                        gst : subtotal_tax,
+                        total : grandTotal,
+                        paid_amount : total_paid,
+                        bal_due : balancedue,
+                        bsb : Template.new_invoice.__helpers.get('vs1companyBankBSB').call(),
+                        account : Template.new_invoice.__helpers.get('vs1companyBankAccountNo').call(),
+                        swift : Template.new_invoice.__helpers.get('vs1companyBankSwiftCode').call(),
+                        data: array_data,
+                        customfield1:customfield1,
+                        customfield2:customfield2,
+                        customfield3:customfield3,
+                        customfieldlabel1:customfieldlabel1,
+                        customfieldlabel2:customfieldlabel2,
+                        customfieldlabel3:customfieldlabel3,
+                        applied : "",
+                        showFX:fx,
+                        comment:comment,
+                    };
 
+                }
 
         
-            object_invoce.push(item_refund);
-            $("#templatePreviewModal .field_payment").hide();
+            object_invoce.push(item_invoices);
+           
+            $("#templatePreviewModal .field_payment").show();
             $("#templatePreviewModal .field_amount").show();
             updateTemplate(object_invoce);
             saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
@@ -615,7 +655,7 @@ Template.refundcard.onRendered(() => {
         function updateTemplate1(object_invoce) {
             $("#templatePreviewModal").modal("toggle");
             if (object_invoce.length > 0) {
-             
+              $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
               $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
               $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
               $("#templatePreviewModal .o_address1").text(
@@ -878,7 +918,8 @@ Template.refundcard.onRendered(() => {
         function updateTemplate(object_invoce) {
     
             if (object_invoce.length > 0) {
-    
+            
+            $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
             $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
             $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
             $("#html-2-pdfwrapper_new .o_address1").text(
@@ -1027,7 +1068,7 @@ Template.refundcard.onRendered(() => {
                   }
                   else
                   {
-                    $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                    $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
                   }
                   
                 
