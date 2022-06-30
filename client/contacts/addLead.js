@@ -146,6 +146,13 @@ Template.leadscard.onRendered(function () {
             if (dataObject.length === 0) {
                 contactService.getOneLeadDataEx(leadID).then(function (data) {
                     setOneLeadDataEx(data);
+
+                    // add to custom field
+                    setTimeout(function () {
+                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    }, 5500);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -154,6 +161,13 @@ Template.leadscard.onRendered(function () {
                 let added = false;
                 for (let i = 0; i < useData.length; i++) {
                     if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
+                        // add to custom field
+                        setTimeout(function () {
+                          $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                          $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                          $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                        }, 5500);
+                        
                         added = true;
                         setOneLeadDataEx(useData[i]);
                         $('.fullScreenSpin').css('display', 'none');
@@ -672,11 +686,13 @@ Template.leadscard.events({
         // let sltRewardPointsOpeningDate =  $('#dtAsOf').val();
         const sltRewardPointsOpeningDate = new Date($("#dtAsOf").datepicker("getDate"));
         let openingDate = sltRewardPointsOpeningDate.getFullYear() + "-" + (sltRewardPointsOpeningDate.getMonth() + 1) + "-" + sltRewardPointsOpeningDate.getDate();
-        let notes = $('#txaNotes').val();
-        let custField1 = $('#edtCustomField1').val();
-        let custField2 = $('#edtCustomField2').val();
-        let custField3 = $('#edtCustomField3').val();
+        let notes = $('#txaNotes').val(); 
         let custField4 = $('#edtCustomField4').val();
+        // add to custom field
+        let custField1 = $('#edtSaleCustField1').val()||'';
+        let custField2 = $('#edtSaleCustField2').val()||'';
+        let custField3 = $('#edtSaleCustField3').val()||'';
+
         let uploadedItems = templateObject.uploadedFiles.get();
 
         const url = FlowRouter.current().path;
@@ -1319,7 +1335,22 @@ Template.leadscard.events({
     },
     'click .btnRefund': function (event) {
         convertToCustomer('refundcard');
-    }
+    },
+
+    // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
 });
 
 Template.leadscard.helpers({

@@ -179,8 +179,11 @@
                             <h6 class="text-left float-left flex-grow-1 font-weight-bold m-0 leadInfo" id="leadInfo" style="color: #00A3D3;">
                                 {{#if record}} {{record.employeeName}} - {{record.firstname}} {{record.lastname}} - {{record.phone}}{{/if}}</h6>
                             <!--here-->
-                            <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#customfieldModal"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
+                            <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="fas fa-ellipsis-v text-gray-400"></i></a>
                         </div>
+
+                        {{> customfieldDroppop}}
+                        {{> customfieldpop}}
 
                         <!-- Start {{> optionCustomFiled}} -->
                         <div class="modal fade" role="dialog" tabindex="-1" id="customfieldModal">
@@ -419,6 +422,39 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="row">
+                                                  <div class="col d-xl-flex flex-row align-items-xl-start" style="padding: 0;">
+                                                      <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                        <div class="one box checkbox1div"
+                                                        style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                        <div class="form-group">
+                                                            <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
+                                                            <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+                                                        </div>
+                                                    </div>
+                                                      </div>
+                                                      <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                        <div class="two box checkbox2div"
+                                                            style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                            <div class="form-group">
+                                                                <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
+                                                                <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                      <div class="form-group flex-grow-1" style="margin: 4px;">
+                                                        <div class="two box checkbox3div"
+                                                            style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                            <div class="form-group">
+                                                                <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
+                                                                <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
+                                                            </div>
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                                
                                             </div>
                                             <div class="col" style="padding: 4px;margin-top: 16px;">
                                                 <div>

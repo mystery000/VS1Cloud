@@ -1396,6 +1396,14 @@ Template.productview.onRendered(function() {
                 if (dataObject.length == 0) {
                     productService.getOneProductdatavs1(currentProductID).then(function(data) {
                         $('.fullScreenSpin').css('display', 'none');
+
+                        // add to custom field
+                        setTimeout(function () {
+                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        }, 5500);
+
                         let lineItems = [];
                         let lineItemObj = {};
                         let currencySymbol = Currency;
@@ -1547,6 +1555,13 @@ Template.productview.onRendered(function() {
 
                     for (let i = 0; i < useData.length; i++) {
                         if (parseInt(useData[i].fields.ID) === currentProductID) {
+
+                            // add to custom field
+                            setTimeout(function () {
+                              $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                              $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                              $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                            }, 5500);
 
                             added = true;
                             $('.fullScreenSpin').css('display', 'none');
@@ -3411,8 +3426,11 @@ Template.productview.events({
 
         let getchkcustomField1 = true;
         let getchkcustomField2 = true;
-        let getcustomField1 = $('.customField1Text').html();
-        let getcustomField2 = $('.customField2Text').html();
+        // let getcustomField1 = $('.customField1Text').html();
+        // let getcustomField2 = $('.customField2Text').html();
+        // let getcustomField3 = $('.customField3Text').html();
+        
+
         if ($('#formCheck-one').is(':checked')) {
             getchkcustomField1 = false;
         }
@@ -3420,8 +3438,16 @@ Template.productview.events({
             getchkcustomField2 = false;
         }
 
-        let customField1 = $("#txtCustomField1").val();
-        let customField2 = $("#txtCustomField2").val();
+        // let customField1 = $("#txtCustomField1").val();
+        // let customField2 = $("#txtCustomField2").val();
+
+        // add to custom field
+        let customField1 = $('#edtSaleCustField1').val()||'';
+        let customField2 = $('#edtSaleCustField2').val()||'';
+        let customField3 = $('#edtSaleCustField3').val()||'';
+        let getcustomField1 = customField1;
+        let getcustomField2 = customField2;
+        let getcustomField3 = customField3;
 
         var url = FlowRouter.current().path;
         var getso_id = url.split('?id=');
@@ -3459,6 +3485,7 @@ Template.productview.events({
                         PRODUCTCODE: productCode,
                         CUSTFLD1: customField1,
                         CUSTFLD2: customField2,
+                        CUSTFLD3: customField3,
                         CUSTFLD14: lastPriceSetting,
                         CUSTFLD15: lastCostSetting,
                         ProductPrintName: productName,
@@ -3491,6 +3518,7 @@ Template.productview.events({
                         PRODUCTCODE: productCode,
                         CUSTFLD1: customField1,
                         CUSTFLD2: customField2,
+                        CUSTFLD3: customField3,
                         CUSTFLD14: lastPriceSetting,
                         CUSTFLD15: lastCostSetting,
                         ProductPrintName: productName,
@@ -3554,10 +3582,14 @@ Template.productview.events({
                                         label: getcustomField1,
                                         hidden: getchkcustomField1
                                     }, {
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    }],
+                                      index: '2',
+                                      label: getcustomField2,
+                                      hidden: getchkcustomField2
+                                  }, {
+                                    index: '3',
+                                    label: getcustomField3,
+                                    hidden: getchkcustomField3
+                                }],
                                     updatedAt: new Date()
                                 }
                             }, function(err, idTag) {});
@@ -3574,16 +3606,20 @@ Template.productview.events({
                                     label: getcustomField1,
                                     hidden: getchkcustomField1
                                 }, {
-                                    index: '2',
-                                    label: getcustomField2,
-                                    hidden: getchkcustomField2
-                                }],
+                                  index: '2',
+                                  label: getcustomField2,
+                                  hidden: getchkcustomField2
+                              }, {
+                                index: '3',
+                                label: getcustomField3,
+                                hidden: getchkcustomField3
+                            }],
                                 createdAt: new Date()
                             }, function(err, idTag) {
                                 if (err) {
                                     FlowRouter.go('/inventorylist?success=true');
                                 } else {
-                                    FlowRouter.go('/inventorylist?success=true');
+                                    // FlowRouter.go('/inventorylist?success=true');
 
                                 }
                             });
@@ -3632,6 +3668,7 @@ Template.productview.events({
                                 PRODUCTCODE: productCode,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
+                                CUSTFLD3: customField3,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3664,6 +3701,7 @@ Template.productview.events({
                                 PRODUCTCODE: productCode,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
+                                CUSTFLD3: customField3,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3728,10 +3766,14 @@ Template.productview.events({
                                                 label: getcustomField1,
                                                 hidden: getchkcustomField1
                                             }, {
-                                                index: '2',
-                                                label: getcustomField2,
-                                                hidden: getchkcustomField2
-                                            }],
+                                              index: '2',
+                                              label: getcustomField2,
+                                              hidden: getchkcustomField2
+                                          }, {
+                                            index: '3',
+                                            label: getcustomField3,
+                                            hidden: getchkcustomField3
+                                        }],
                                             updatedAt: new Date()
                                         }
                                     }, function(err, idTag) {});
@@ -3748,10 +3790,14 @@ Template.productview.events({
                                             label: getcustomField1,
                                             hidden: getchkcustomField1
                                         }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
+                                          index: '2',
+                                          label: getcustomField2,
+                                          hidden: getchkcustomField2
+                                      }, {
+                                        index: '3',
+                                        label: getcustomField3,
+                                        hidden: getchkcustomField3
+                                    }],
                                         createdAt: new Date()
                                     }, function(err, idTag) {});
                                 }
@@ -3793,6 +3839,7 @@ Template.productview.events({
                                 PRODUCTCODE: productCode,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
+                                CUSTFLD3: customField3,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3825,6 +3872,7 @@ Template.productview.events({
                                 PRODUCTCODE: productCode,
                                 CUSTFLD1: customField1,
                                 CUSTFLD2: customField2,
+                                CUSTFLD3: customField3,
                                 CUSTFLD14: lastPriceSetting,
                                 CUSTFLD15: lastCostSetting,
                                 ProductPrintName: productName,
@@ -3890,10 +3938,14 @@ Template.productview.events({
                                                 label: getcustomField1,
                                                 hidden: getchkcustomField1
                                             }, {
-                                                index: '2',
-                                                label: getcustomField2,
-                                                hidden: getchkcustomField2
-                                            }],
+                                              index: '2',
+                                              label: getcustomField2,
+                                              hidden: getchkcustomField2
+                                          }, {
+                                            index: '3',
+                                            label: getcustomField3,
+                                            hidden: getchkcustomField3
+                                        }],
                                             updatedAt: new Date()
                                         }
                                     }, function(err, idTag) {});
@@ -3910,10 +3962,14 @@ Template.productview.events({
                                             label: getcustomField1,
                                             hidden: getchkcustomField1
                                         }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
+                                          index: '2',
+                                          label: getcustomField2,
+                                          hidden: getchkcustomField2
+                                      }, {
+                                        index: '3',
+                                        label: getcustomField3,
+                                        hidden: getchkcustomField3
+                                    }],
                                         createdAt: new Date()
                                     }, function(err, idTag) {});
                                 }
@@ -3957,6 +4013,7 @@ Template.productview.events({
                             PRODUCTCODE: productCode,
                             CUSTFLD1: customField1,
                             CUSTFLD2: customField2,
+                            CUSTFLD3: customField3,
                             CUSTFLD14: lastPriceSetting,
                             CUSTFLD15: lastCostSetting,
                             ProductPrintName: productName,
@@ -3989,6 +4046,7 @@ Template.productview.events({
                             PRODUCTCODE: productCode,
                             CUSTFLD1: customField1,
                             CUSTFLD2: customField2,
+                            CUSTFLD3: customField3,
                             CUSTFLD14: lastPriceSetting,
                             CUSTFLD15: lastCostSetting,
                             ProductPrintName: productName,
@@ -4055,10 +4113,14 @@ Template.productview.events({
                                             label: getcustomField1,
                                             hidden: getchkcustomField1
                                         }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
+                                          index: '2',
+                                          label: getcustomField2,
+                                          hidden: getchkcustomField2
+                                      }, {
+                                        index: '3',
+                                        label: getcustomField3,
+                                        hidden: getchkcustomField3
+                                    }],
                                         updatedAt: new Date()
                                     }
                                 }, function(err, idTag) {});
@@ -4078,7 +4140,11 @@ Template.productview.events({
                                         index: '2',
                                         label: getcustomField2,
                                         hidden: getchkcustomField2
-                                    }],
+                                    }, {
+                                      index: '3',
+                                      label: getcustomField3,
+                                      hidden: getchkcustomField3
+                                  }],
                                     createdAt: new Date()
                                 }, function(err, idTag) {});
                             }
@@ -4666,6 +4732,21 @@ Template.productview.events({
         $("#" + targetID + ' .edtDiscount').val(getDiscountRate || 0);
 
     },
+
+// add to custom field
+"click #edtSaleCustField1": function (e) {
+  $("#clickedControl").val("one");
+},
+
+// add to custom field
+"click #edtSaleCustField2": function (e) {
+  $("#clickedControl").val("two");
+},
+
+// add to custom field
+"click #edtSaleCustField3": function (e) {
+  $("#clickedControl").val("three");
+},
 
 
 });
