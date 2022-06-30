@@ -1297,7 +1297,11 @@ Template.generalledger.helpers({
     // console.log(currencyData.currency, defaultCurrencyCode, currencyData.currency == defaultCurrencyCode);
     // console.log('first elem', firstElem.BuyRate);
     // console.log("Convert: ", amount, "x", rate, "=", parseFloat(amount * rate).toFixed(2));
-    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }); // Add commas
     //console.log("final amount", amount);
     let convertedAmount =
       isMinus == true

@@ -251,6 +251,15 @@ export class SideBarService extends BaseService {
     };
     return this.getList(this.ERPObjects.TCustomFieldList, options);
   }
+
+  getCustomFieldsDropDownByNameOrID(dataSearchName) {
+    let options = {
+      ListType: "Detail",
+      select:'[Text] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
+    };
+    return this.getList(this.ERPObjects.TCustomFieldListDropDown, options);
+  }
+
   getAllCustomFieldsDropDown() {
     let options = {
       ListType: "Detail",
@@ -351,7 +360,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select:'[Description] f7like "' +dataSearchName +'" OR [DisplayIn] f7like "' +dataSearchName +'"',
+      select:'[Description] f7like "' +dataSearchName +'" OR [DisplayName] f7like "' +dataSearchName +'"',
     };
     return this.getList(this.ERPObjects.TAllowance, options);
   }
@@ -1314,6 +1323,40 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
+  getAllOverDueAwaitingSupplierPaymentOver(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+    let options = "";
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        IncludePOs: true,
+        IncludeBills: true,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        OrderBy: "PurchaseOrderID desc",
+        Search: 'DueDate < "' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        IncludePOs: true,
+        IncludeBills: true,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        OrderBy: "PurchaseOrderID desc",
+        Search: 'DueDate < "' + dateTo + '"',
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TbillReport, options);
+  }
+
   getAllAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
     if (ignoreDate == true) {
@@ -1352,34 +1395,63 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesList, options);
   }
 
-  getAllOverDueAwaitingCustomerPayment(currentDate, limitcount, limitfrom) {
+  getAllOverDueAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
     let options = "";
-    //if(ignoreDate == true){
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        IncludeIsInvoice: true,
+        IncludeIsQuote: false,
+        IncludeIsRefund: true,
+        IncludeISSalesOrder: false,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        Search: "Balance != 0",
+        OrderBy: "SaleID desc",
+        Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        IncludeIsInvoice: true,
+        IncludeIsQuote: false,
+        IncludeIsRefund: true,
+        IncludeISSalesOrder: false,
+        IsDetailReport: false,
+        Paid: false,
+        Unpaid: true,
+        Search: "Balance != 0",
+        OrderBy: "SaleID desc",
+        Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: '"' + limitcount + '"',
+        LimitFrom: '"' + limitfrom + '"',
+      };
+    }
+    return this.getList(this.ERPObjects.TSalesList, options);
+  }
+
+  getAllOverDueAwaitingCustomerPaymentByCustomerNameOrID(dateTo,customerData) {
+    let options = "";
     options = {
       IgnoreDates: true,
-      IncludeIsCashSale: false,
-      IncludeIsCustomerReturn: false,
       IncludeIsInvoice: true,
-      IncludeIslayby: false,
-      IncludeIsLaybyPayment: false,
-      IncludeIsPOS: false,
       IncludeIsQuote: false,
       IncludeIsRefund: false,
       IncludeISSalesOrder: false,
-      IncludeIsVoucher: false,
       IsDetailReport: false,
       Paid: false,
       Unpaid: true,
       OrderBy: "SaleID desc",
-      Search: 'dueDate < "' + currentDate + '" and Balance != 0',
-      LimitCount: '"' + limitcount + '"',
-      LimitFrom: '"' + limitfrom + '"',
+      Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+      Search: 'CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
     };
-    //}
     return this.getList(this.ERPObjects.TSalesList, options);
   }
-
-
 
   getAllBillExList(limitcount, limitfrom) {
     let options = "";
@@ -1595,6 +1667,29 @@ export class SideBarService extends BaseService {
           LimitFrom: '"' + limitfrom + '"',
         };
       }
+    }
+    return this.getList(this.ERPObjects.TAppointmentList, options);
+  }
+
+  getTAppointmentListDataByName(dataSearchName) {
+    let options = "";
+    let seeOwnAppointments = Session.get("CloudAppointmentSeeOwnAppointmentsOnly") || false;
+    let loggedEmpID = Session.get("mySessionEmployeeLoggedID") || 0;
+    if (seeOwnAppointments == true) {
+      options = {
+        OrderBy: "CreationDate desc",
+        IgnoreDates: true,
+        IsDetailReport: false,
+        Search: 'TrainerID = "' + loggedEmpID + '" OR ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+      };
+
+    }else{
+      options = {
+        OrderBy: "CreationDate desc",
+        IgnoreDates: true,
+        IsDetailReport: false,
+        Search: 'ClientName = "' + dataSearchName + '" OR EnteredByEmployeeName = "' + dataSearchName + '"',
+      };
     }
     return this.getList(this.ERPObjects.TAppointmentList, options);
   }

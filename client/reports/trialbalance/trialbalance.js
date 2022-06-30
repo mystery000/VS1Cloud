@@ -1101,7 +1101,11 @@ Template.trialbalance.helpers({
     // console.log("Currency list: ", currencyList);
 
     let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
-    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }); // Add commas
     //console.log("final amount", amount);
     let convertedAmount =
       isMinus == true

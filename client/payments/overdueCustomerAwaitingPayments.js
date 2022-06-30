@@ -8,7 +8,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
-Template.customerawaitingpayments.onCreated(function () {
+Template.overduecustomerawaitingpayments.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -18,7 +18,7 @@ Template.customerawaitingpayments.onCreated(function () {
 
 });
 
-Template.customerawaitingpayments.onRendered(function () {
+Template.overduecustomerawaitingpayments.onRendered(function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let paymentService = new PaymentsService();
@@ -66,29 +66,6 @@ Template.customerawaitingpayments.onRendered(function () {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
-        if (error) {}
-        else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0)
@@ -124,16 +101,16 @@ Template.customerawaitingpayments.onRendered(function () {
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        getVS1Data('TAwaitingCustomerPayment').then(function (dataObject) {
+        getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObject) {
             if (dataObject.length == 0) {
-              sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+              sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
                   let lineItems = [];
                   let lineItemObj = {};
-                  addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data));
+                  addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
-                      //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
+                      //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
                   } else {
                     $('#dateFrom').attr('readonly', false);
                     $('#dateTo').attr('readonly', false);
@@ -300,8 +277,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                   let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                   let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                   if(data.Params.IgnoreDates == true){
-                                    sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                        getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                    sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                        getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                             if (dataObjectold.length == 0) {}
                                             else {
                                                 let dataOld = JSON.parse(dataObjectold[0].data);
@@ -311,7 +288,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                     tsaleslist: thirdaryData
                                                 }
 
-                                                addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                     templateObject.resetData(objCombineData);
                                                     $('.fullScreenSpin').css('display', 'none');
                                                 }).catch(function (err) {
@@ -325,8 +302,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                         $('.fullScreenSpin').css('display', 'none');
                                     });
                                   }else{
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
                                               let dataOld = JSON.parse(dataObjectold[0].data);
@@ -336,7 +313,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                   tsaleslist: thirdaryData
                                               }
 
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                   templateObject.resetData(objCombineData);
                                                   $('.fullScreenSpin').css('display', 'none');
                                               }).catch(function (err) {
@@ -432,7 +409,274 @@ Template.customerawaitingpayments.onRendered(function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
+                    //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
+                } else {
+                  $('#dateFrom').attr('readonly', false);
+                  $('#dateTo').attr('readonly', false);
+                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                }
+
+                for (let i = 0; i < data.tsaleslist.length; i++) {
+                    let amount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+                    let applied = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Payment) || 0.00;
+                    // Currency+''+data.tsaleslist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+                    let balance = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
+                    let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
+                    var dataList = {
+                        id: data.tsaleslist[i].SaleId || '',
+                        sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
+                        paymentdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
+                        customername: data.tsaleslist[i].CustomerName || '',
+                        paymentamount: amount || 0.00,
+                        applied: applied || 0.00,
+                        balance: balance || 0.00,
+                        originalamount: totalOrginialAmount || 0.00,
+                        outsandingamount: totalOutstanding || 0.00,
+                        // bankaccount: data.tsaleslist[i].GLAccountName || '',
+                        department: data.tsaleslist[i].ClassName || '',
+                        refno: data.tsaleslist[i].BORef || '',
+                        paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
+                        notes: data.tsaleslist[i].Comments || ''
+                    };
+                    //if (data.tsaleslist[i].Balance != 0) {
+                        dataTableList.push(dataList);
+                    //}
+
+                }
+                templateObject.datatablerecords.set(dataTableList);
+                if (templateObject.datatablerecords.get()) {
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                }
+
+                $('.fullScreenSpin').css('display', 'none');
+                setTimeout(function () {
+                    //$.fn.dataTable.moment('DD/MM/YY');
+                    $('#tblcustomerAwaitingPayment').DataTable({
+                        columnDefs: [{
+                                "orderable": false,
+                                "targets": 0
+                            }, {
+                                type: 'date',
+                                targets: 1
+                            }
+                        ],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [{
+                                extend: 'excelHtml5',
+                                text: '',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "Outstanding Invoices - " + moment().format(),
+                                orientation: 'portrait',
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBox)',
+                                    format: {
+                                        body: function (data, row, column) {
+                                            if (data.includes("</span>")) {
+                                                var res = data.split("</span>");
+                                                data = res[1];
+                                            }
+
+                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
+
+                                        }
+                                    }
+                                }
+                            }, {
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'Supplier Payment',
+                                filename: "Outstanding Invoices - " + moment().format(),
+                                exportOptions: {
+                                    columns: ':visible:not(.chkBox)',
+                                    stripHtml: false
+                                }
+                            }
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        colReorder: {
+                            fixedColumnsLeft: 1
+                        },
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialReportDatatableLoad,
+                        "bLengthChange": false,
+
+
+                        // pageLength: 25,
+                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[ 1, "desc" ],[ 3, "desc" ]],
+                        // "aaSorting": [[1,'desc']],
+                        action: function () {
+                            $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
+                        },
+                        "fnDrawCallback": function (oSettings) {
+                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                            $('.paginate_button.page-item').removeClass('disabled');
+                            $('#tblcustomerAwaitingPayment_ellipsis').addClass('disabled');
+
+                            if (oSettings._iDisplayLength == -1) {
+                                if (oSettings.fnRecordsDisplay() > 150) {
+                                    $('.paginate_button.page-item.previous').addClass('disabled');
+                                    $('.paginate_button.page-item.next').addClass('disabled');
+                                }
+                            } else {}
+                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                                $('.paginate_button.page-item.next').addClass('disabled');
+                            }
+                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                            .on('click', function () {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                let dataLenght = oSettings._iDisplayLength;
+
+                                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                                if(data.Params.IgnoreDates == true){
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
+                                          if (dataObjectold.length == 0) {}
+                                          else {
+                                              let dataOld = JSON.parse(dataObjectold[0].data);
+                                              var thirdaryData = $.merge($.merge([], dataObjectnew.tsaleslist), dataOld.tsaleslist);
+                                              let objCombineData = {
+                                                  Params: dataOld.Params,
+                                                  tsaleslist: thirdaryData
+                                              }
+
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                  templateObject.resetData(objCombineData);
+                                                  $('.fullScreenSpin').css('display', 'none');
+                                              }).catch(function (err) {
+                                                  $('.fullScreenSpin').css('display', 'none');
+                                              });
+
+                                          }
+                                      }).catch(function (err) {});
+
+                                  }).catch(function (err) {
+                                      $('.fullScreenSpin').css('display', 'none');
+                                  });
+                                }else{
+                                sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
+                                        if (dataObjectold.length == 0) {}
+                                        else {
+                                            let dataOld = JSON.parse(dataObjectold[0].data);
+                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tsaleslist), dataOld.tsaleslist);
+                                            let objCombineData = {
+                                                Params: dataOld.Params,
+                                                tsaleslist: thirdaryData
+                                            }
+
+                                            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                                templateObject.resetData(objCombineData);
+                                                $('.fullScreenSpin').css('display', 'none');
+                                            }).catch(function (err) {
+                                                $('.fullScreenSpin').css('display', 'none');
+                                            });
+
+                                        }
+                                    }).catch(function (err) {});
+
+                                }).catch(function (err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+                              }
+                            });
+
+                            setTimeout(function () {
+                                MakeNegative();
+                            }, 100);
+                        },
+                        "fnInitComplete": function () {
+                          let urlParametersPage = FlowRouter.current().queryParams.page;
+                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                              this.fnPageChange('last');
+                          //}
+                             $("<button class='btn btn-primary btnRefreshCustomerAwaiting' type='button' id='btnRefreshCustomerAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcustomerAwaitingPayment_filter");
+                             $('.myvarFilterForm').appendTo(".colDateFilter");
+                         },
+                         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                           let countTableData = data.Params.Count || 0; //get count from API data
+
+                             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                         }
+
+                    }).on('page', function () {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                        let draftRecord = templateObject.datatablerecords.get();
+                        templateObject.datatablerecords.set(draftRecord);
+                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
+                        setTimeout(function () {
+                            MakeNegative();
+                        }, 100);
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+
+                }, 0);
+
+                var columns = $('#tblcustomerAwaitingPayment th');
+                let sTible = "";
+                let sWidth = "";
+                let sIndex = "";
+                let sVisible = "";
+                let columVisible = false;
+                let sClass = "";
+                $.each(columns, function (i, v) {
+                    if (v.hidden == false) {
+                        columVisible = true;
+                    }
+                    if ((v.className.includes("hiddenColumn"))) {
+                        columVisible = false;
+                    }
+                    sWidth = v.style.width.replace('px', "");
+
+                    let datatablerecordObj = {
+                        sTitle: v.innerText || '',
+                        sWidth: sWidth || '',
+                        sIndex: v.cellIndex || '',
+                        sVisible: columVisible || false,
+                        sClass: v.className || ''
+                    };
+                    tableHeaderList.push(datatablerecordObj);
+                });
+                templateObject.tableheaderrecords.set(tableHeaderList);
+                $('div.dataTables_filter input').addClass('form-control form-control-sm');
+                $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
+                    var listData = $(this).closest('tr').attr('id');
+                    if (listData) {
+                        FlowRouter.go('/paymentcard?invid=' + listData);
+                    }
+                });
+
+            }
+        }).catch(function (err) {
+            sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+                let lineItems = [];
+                let lineItemObj = {};
+                addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data));
+                if (data.Params.IgnoreDates == true) {
+                    $('#dateFrom').attr('readonly', true);
+                    $('#dateTo').attr('readonly', true);
+                    //FlowRouter.go('/overduecustomerawaitingpayments?ignoredate=true');
                 } else {
                   $('#dateFrom').attr('readonly', false);
                   $('#dateTo').attr('readonly', false);
@@ -599,8 +843,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
                                 if(data.Params.IgnoreDates == true){
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                  sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                      getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                           if (dataObjectold.length == 0) {}
                                           else {
                                               let dataOld = JSON.parse(dataObjectold[0].data);
@@ -610,7 +854,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                   tsaleslist: thirdaryData
                                               }
 
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                              addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                   templateObject.resetData(objCombineData);
                                                   $('.fullScreenSpin').css('display', 'none');
                                               }).catch(function (err) {
@@ -624,8 +868,8 @@ Template.customerawaitingpayments.onRendered(function () {
                                       $('.fullScreenSpin').css('display', 'none');
                                   });
                                 }else{
-                                sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                    getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
+                                sideBarService.getAllOverDueAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                    getVS1Data('TOverdueAwaitingCustomerPayment').then(function (dataObjectold) {
                                         if (dataObjectold.length == 0) {}
                                         else {
                                             let dataOld = JSON.parse(dataObjectold[0].data);
@@ -635,302 +879,7 @@ Template.customerawaitingpayments.onRendered(function () {
                                                 tsaleslist: thirdaryData
                                             }
 
-                                            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
-                                                templateObject.resetData(objCombineData);
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            }).catch(function (err) {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                            });
-
-                                        }
-                                    }).catch(function (err) {});
-
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                              }
-                            });
-
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        "fnInitComplete": function () {
-                          let urlParametersPage = FlowRouter.current().queryParams.page;
-                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
-                              this.fnPageChange('last');
-                        //  }
-                             $("<button class='btn btn-primary btnRefreshCustomerAwaiting' type='button' id='btnRefreshCustomerAwaiting' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblcustomerAwaitingPayment_filter");
-                             $('.myvarFilterForm').appendTo(".colDateFilter");
-                         },
-                         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                           let countTableData = data.Params.Count || 0; //get count from API data
-
-                             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                         }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-
-                }, 0);
-
-                var columns = $('#tblcustomerAwaitingPayment th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function (i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblcustomerAwaitingPayment tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colCustomerName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if (listData) {
-                        FlowRouter.go('/paymentcard?invid=' + listData);
-                    }
-                });
-
-            }
-        }).catch(function (err) {
-            sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data));
-                if (data.Params.IgnoreDates == true) {
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-                    //FlowRouter.go('/customerawaitingpayments?ignoredate=true');
-                } else {
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                }
-
-                for (let i = 0; i < data.tsaleslist.length; i++) {
-                    let amount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
-                    let applied = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Payment) || 0.00;
-                    // Currency+''+data.tsaleslist[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                    let balance = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
-                    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
-                    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].Balance) || 0.00;
-                    let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data.tsaleslist[i].TotalAmountinc) || 0.00;
-                    var dataList = {
-                        id: data.tsaleslist[i].SaleId || '',
-                        sortdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("YYYY/MM/DD") : data.tsaleslist[i].SaleDate,
-                        paymentdate: data.tsaleslist[i].SaleDate != '' ? moment(data.tsaleslist[i].SaleDate).format("DD/MM/YYYY") : data.tsaleslist[i].SaleDate,
-                        customername: data.tsaleslist[i].CustomerName || '',
-                        paymentamount: amount || 0.00,
-                        applied: applied || 0.00,
-                        balance: balance || 0.00,
-                        originalamount: totalOrginialAmount || 0.00,
-                        outsandingamount: totalOutstanding || 0.00,
-                        // bankaccount: data.tsaleslist[i].GLAccountName || '',
-                        department: data.tsaleslist[i].ClassName || '',
-                        refno: data.tsaleslist[i].BORef || '',
-                        paymentmethod: data.tsaleslist[i].PaymentMethodName || '',
-                        notes: data.tsaleslist[i].Comments || ''
-                    };
-                    //if (data.tsaleslist[i].Balance != 0) {
-                        dataTableList.push(dataList);
-                    //}
-
-                }
-                templateObject.datatablerecords.set(dataTableList);
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblcustomerAwaitingPayment', function (error, result) {
-                        if (error) {}
-                        else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function () {
-                    //$.fn.dataTable.moment('DD/MM/YY');
-                    $('#tblcustomerAwaitingPayment').DataTable({
-                        columnDefs: [{
-                                "orderable": false,
-                                "targets": 0
-                            }, {
-                                type: 'date',
-                                targets: 1
-                            }
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Outstanding Invoices - " + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible:not(.chkBox)',
-                                    format: {
-                                        body: function (data, row, column) {
-                                            if (data.includes("</span>")) {
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
-
-                                            return column === 1 ? data.replace(/<.*?>/ig, "") : data;
-
-                                        }
-                                    }
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Supplier Payment',
-                                filename: "Outstanding Invoices - " + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible:not(.chkBox)',
-                                    stripHtml: false
-                                }
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        colReorder: {
-                            fixedColumnsLeft: 1
-                        },
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialReportDatatableLoad,
-                        "bLengthChange": false,
-
-
-                        // pageLength: 25,
-                        // lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[ 1, "desc" ],[ 3, "desc" ]],
-                        // "aaSorting": [[1,'desc']],
-                        action: function () {
-                            $('#tblcustomerAwaitingPayment').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblcustomerAwaitingPayment_ellipsis').addClass('disabled');
-
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-                                    $('.paginate_button.page-item.previous').addClass('disabled');
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                            } else {}
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function () {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                let dataLenght = oSettings._iDisplayLength;
-
-                                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                if(data.Params.IgnoreDates == true){
-                                  sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                      getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
-                                          if (dataObjectold.length == 0) {}
-                                          else {
-                                              let dataOld = JSON.parse(dataObjectold[0].data);
-                                              var thirdaryData = $.merge($.merge([], dataObjectnew.tsaleslist), dataOld.tsaleslist);
-                                              let objCombineData = {
-                                                  Params: dataOld.Params,
-                                                  tsaleslist: thirdaryData
-                                              }
-
-                                              addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
-                                                  templateObject.resetData(objCombineData);
-                                                  $('.fullScreenSpin').css('display', 'none');
-                                              }).catch(function (err) {
-                                                  $('.fullScreenSpin').css('display', 'none');
-                                              });
-
-                                          }
-                                      }).catch(function (err) {});
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-                                }else{
-                                sideBarService.getAllAwaitingCustomerPayment(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-                                    getVS1Data('TAwaitingCustomerPayment').then(function (dataObjectold) {
-                                        if (dataObjectold.length == 0) {}
-                                        else {
-                                            let dataOld = JSON.parse(dataObjectold[0].data);
-                                            var thirdaryData = $.merge($.merge([], dataObjectnew.tsaleslist), dataOld.tsaleslist);
-                                            let objCombineData = {
-                                                Params: dataOld.Params,
-                                                tsaleslist: thirdaryData
-                                            }
-
-                                            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
+                                            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(objCombineData)).then(function (datareturn) {
                                                 templateObject.resetData(objCombineData);
                                                 $('.fullScreenSpin').css('display', 'none');
                                             }).catch(function (err) {
@@ -1023,10 +972,9 @@ Template.customerawaitingpayments.onRendered(function () {
 
     templateObject.getAllCustomerPaymentData();
 
-
     templateObject.getAllFilterAwaitingCustData = function(fromDate, toDate, ignoreDate) {
-        sideBarService.getAllAwaitingCustomerPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
-            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data)).then(function(datareturn) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
+            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function(datareturn) {
                 location.reload();
             }).catch(function(err) {
                 location.reload();
@@ -1051,7 +999,7 @@ Template.customerawaitingpayments.onRendered(function () {
     }
 });
 
-Template.customerawaitingpayments.events({
+Template.overduecustomerawaitingpayments.events({
 
     'click .chkDatatable': function (event) {
         var columns = $('#tblcustomerAwaitingPayment th');
@@ -1091,8 +1039,24 @@ Template.customerawaitingpayments.events({
       const lineExtaSellItems = [];
       $('.fullScreenSpin').css('display', 'inline-block');
       let dataSearchName = $('#tblcustomerAwaitingPayment_filter input').val();
+
+      var currentBeginDate = new Date();
+var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+let fromDateMonth = (currentBeginDate.getMonth() + 1);
+let fromDateDay = currentBeginDate.getDate();
+if((currentBeginDate.getMonth()+1) < 10){
+    fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+}else{
+  fromDateMonth = (currentBeginDate.getMonth()+1);
+}
+
+if(currentBeginDate.getDate() < 10){
+    fromDateDay = "0" + currentBeginDate.getDate();
+}
+var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+
       if (dataSearchName.replace(/\s/g, '') != '') {
-          sideBarService.getAllAwaitingCustomerPaymentByCustomerNameOrID(dataSearchName).then(function (data) {
+          sideBarService.getAllOverDueAwaitingCustomerPaymentByCustomerNameOrID(toDate,dataSearchName).then(function (data) {
               $(".btnRefreshCustomerAwaiting").removeClass('btnSearchAlert');
               let lineItems = [];
               let lineItemObj = {};
@@ -1393,30 +1357,30 @@ Template.customerawaitingpayments.events({
         var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
-        sideBarService.getAllAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
-            addVS1Data('TAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
+        sideBarService.getAllOverDueAwaitingCustomerPayment(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (data) {
+            addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(data)).then(function (datareturn) {
               sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                   addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                      window.open("/customerawaitingpayments", "_self");
+                      window.open("/overduecustomerawaitingpayments", "_self");
                   }).catch(function (err) {
-                      window.open("/customerawaitingpayments", "_self");
+                      window.open("/overduecustomerawaitingpayments", "_self");
                   });
               }).catch(function (err) {
                 sideBarService.getAllOverDueAwaitingCustomerPayment(toDate,initialReportLoad,0).then(function (dataOverDue) {
                     addVS1Data('TOverdueAwaitingCustomerPayment', JSON.stringify(dataOverDue)).then(function (datareturn) {
-                        window.open("/customerawaitingpayments", "_self");
+                        window.open("/overduecustomerawaitingpayments", "_self");
                     }).catch(function (err) {
-                        window.open("/customerawaitingpayments", "_self");
+                        window.open("/overduecustomerawaitingpayments", "_self");
                     });
                 }).catch(function (err) {
-                    window.open("/customerawaitingpayments", "_self");
+                    window.open("/overduecustomerawaitingpayments", "_self");
                 });
               });
             }).catch(function (err) {
-                window.open("/customerawaitingpayments", "_self");
+                window.open("/overduecustomerawaitingpayments", "_self");
             });
         }).catch(function (err) {
-            window.open("/customerawaitingpayments", "_self");
+            window.open("/overduecustomerawaitingpayments", "_self");
         });
 
 
@@ -1631,7 +1595,21 @@ Template.customerawaitingpayments.events({
         $('.fullScreenSpin').css('display', 'inline-block');
         $('#dateFrom').attr('readonly', true);
         $('#dateTo').attr('readonly', true);
-        templateObject.getAllFilterAwaitingCustData('', '', true);
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if((currentBeginDate.getMonth()+1) < 10){
+            fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+        }else{
+          fromDateMonth = (currentBeginDate.getMonth()+1);
+        }
+
+        if(currentBeginDate.getDate() < 10){
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+        templateObject.getAllFilterAwaitingCustData('', toDate, true);
     },
     'click .printConfirm': function (event) {
 
@@ -1842,7 +1820,7 @@ Template.customerawaitingpayments.events({
     }
 
 });
-Template.customerawaitingpayments.helpers({
+Template.overduecustomerawaitingpayments.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.paymentdate == 'NA') {

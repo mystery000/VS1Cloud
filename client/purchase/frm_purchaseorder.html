@@ -170,13 +170,22 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                                <div class="col-12">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_purchase_order" checked type="checkbox" id="print_purchase_order" autocomplete="off">
+                                                        <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order">Print Purchase Order</label>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         {{/each}}
                                     </div>
 
                                 </div>
                             </div>
-                            <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                            <div class="modal-footer" style="padding: 6px;">
+                                <button class="btn btn-primary printConfirm btnFooter" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Confirm Print</button>
+                                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
                         </div>
                     </div>
 
@@ -200,7 +209,7 @@
                                                 <div class="col-4 col-md-4 col-sm-10" style="max-width: 60mm; max-height: 30mm;">
                                                     <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 200px;margin-bottom: 8px;">
                                                 </div>
-                                                <div class="col-8 col-md-8 col-sm-10">
+                                                <div class="col-lg-12 col-md-8 col-sm-6">
                                                     <div style="padding-left: 16px;font-weight: bold;">
                                                         <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                                         <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -224,7 +233,11 @@
                                         <div class="col-5 col-md-5 col-sm-12" style="margin: 0px; padding: 16px; border: none !important; ">
                                             <div style="display: flex; width: 100%;">
                                                 <div style="width: 50%; padding-right: 16px;font-weight: bold;">
-                                                    <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                     <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                                     </h4>
+                                                </div>
+                                                <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                                    <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                                     </h4>
                                                 </div>
 
@@ -236,11 +249,11 @@
                                                     <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                                     <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                                                         Number:</p>
-                                                    <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                                                    <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                                                        :</p>
-                                                    <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                                                        Date:</p>
+                                                    <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                                                    <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No :</p>
+                                                    <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
+
+                                                    <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
 
                                                     <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
@@ -255,12 +268,13 @@
                                                 <div style="width: 50%; padding-left: 16px;">
                                                     <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                                     <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                                    <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                                    <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                                                     <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-
+                                                    <p class="showFxValue"
+                                                    style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                                     <p class="link"
-                                                        style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                                                        style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                                         <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                                             Now</a>
                                                     </p>
@@ -340,9 +354,9 @@
                                                     <div style="margin: 8px; border: none !important;">
                                                         <div style="width: 100%; display: flex;">
                                                             <div style="padding-right: 16px; width: 50%;">
-                                                                <p id="subtotal_total" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                                                <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                                     Sub Total</p>
-                                                                <p id="grandTotal" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                                                <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                                     Total GST</p>
                                                             </div>
                                                             <div style="padding-left: 16px; width: 50%;">
@@ -405,7 +419,6 @@
                     </div>
                 </div>
 
-
                 <div style="display:none;width: 90%; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;" id="html-2-pdfwrapper_new"
                 name="html-2-pdfwrapper_new">
                 <div class="d-flex flex-row d-sm-flex d-md-flex ">
@@ -414,7 +427,7 @@
                             <div class="col-4 col-md-4 col-sm-10 p-2" style="max-width: 60mm; max-height: 30mm;">
                                 <img src="assets/img/VS1.png" class="uploadedImage" style="max-height: 30mm; max-width: 150px;margin-bottom: 8px;">
                             </div>
-                            <div class="col-8 col-md-8 col-sm-10 p-2">
+                            <div class="col-lg-12 col-md-8 col-sm-6 p-2">
                                 <div style="padding-left: 16px;font-weight: bold;">
                                     <p class="o_url" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
                                     <p class="o_name" style="margin-bottom: 0px; color: rgb(0 0 0);"></p>
@@ -441,6 +454,10 @@
                                 <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
                                 </h4>
                             </div>
+                            <div style="width: 50%; padding-left: 16px;font-weight: bold;">
+                                <h4 class="print-header-value" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">
+                                </h4>
+                            </div>
 
                         </div>
 
@@ -450,11 +467,12 @@
                                 <p class="dateNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</p>
                                 <p class="pdfPONumber" style="margin-bottom: 4px; color: rgb(0 0 0);">P.O
                                     Number:</p>
-                                <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p>
-                                <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No
-                                    :</p>
-                                <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
-                                    Date:</p>
+                                <!-- <p class="invoiceNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Invoice No:</p> -->
+                                <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
+                                <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due Date:</p>
+
+                                <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX currency:</p>
+
                                 <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
                                 <div class="mt-4" id="customfieldtablenew">
@@ -466,10 +484,12 @@
                             <div style="width: 50%; padding-left: 16px;">
                                 <p class="date" style="margin-bottom: 4px; color: rgb(0 0 0);"></p>
                                 <p class="po" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                <!-- <p class="io" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p> -->
                                 <p class="ro" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
                                 <p class="due" style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
-                                <p class="link" style="text-align: center; width : 100px; margin-bottom : 8px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
+                                <p class="showFxValue"
+                                style="margin-bottom: 4px; color: rgb(0 0 0); white-space: nowrap;"></p>
+                                <p class="link" style="text-align: center; width : 100px; margin-bottom : -7px; color: rgb(0 0 0);color: #fff !important; background-color: #17a673; border-color: #169b6b; border-radius: 10px;     padding: 4px 8px;">
                                     <a class="linkText" href="" style="color: #fff !important; padding: 0px; padding-left: 5px; text-align: center;">Pay
                                         Now</a>
                                 </p>
@@ -546,9 +566,9 @@
                                 <div style="margin: 8px; border: none !important;">
                                     <div style="width: 100%; display: flex;">
                                         <div style="padding-right: 16px; width: 50%;">
-                                            <p id="subtotal_total" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            <p id="subtotal_totalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                 Sub Total</p>
-                                            <p id="grandTotal" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
+                                            <p id="grandTotalLabel" style="font-weight: 600; margin-bottom: 8px; color: rgb(0 0 0);">
                                                 Total GST</p>
                                         </div>
                                         <div style="padding-left: 16px; width: 50%;">
@@ -1762,8 +1782,8 @@
                                 <div class="modal-body">
 
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_purchase_order" type="checkbox" id="print_purchase_order" autocomplete="off">
-                                        <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order">Print Purchase Order</label>
+                                        <input class="custom-control-input favCheckBox chkBankingReport" name="print_purchase_order_second" checked type="checkbox" id="print_purchase_order_second" autocomplete="off">
+                                        <label style="cursor: pointer;" class="custom-control-label" for="print_purchase_order_second">Print Purchase Order</label>
                                     </div>
 
                                 </div>

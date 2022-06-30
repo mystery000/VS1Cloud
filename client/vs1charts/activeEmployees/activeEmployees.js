@@ -14,7 +14,6 @@ Template.activeEmployees.onRendered(() => {
   const templateObject = Template.instance();
   let contactService = new ContactService();
   let loggedUserList = []; // List of logged users
-  console.log("Contact Active employees rendered");
 
 
   templateObject.getLoggedUserData = function () {
@@ -38,7 +37,6 @@ Template.activeEmployees.onRendered(() => {
         //   ladtloging: data.tappuser[i].LastTime || "",
         //   // employeepicture: encoded|| ''
         // };
-        console.log(dataListloggedUser);
         loggedUserList.push(
           new User({
             id: data.tappuser[i].EmployeeID || "",
@@ -48,7 +46,6 @@ Template.activeEmployees.onRendered(() => {
           })
         );
       }
-      console.log(loggedUserList);
       templateObject.loggeduserdata.set(loggedUserList);
     });
     /*
@@ -118,11 +115,7 @@ Template.activeEmployees.events({});
 
 Template.activeEmployees.helpers({
   loggeduserdata: () => {
-    return Template.instance()
-      .loggeduserdata.get()
-      .sort(function (a, b) {
-        console.log(a);
-        console.log(b);
+    return Template.instance().loggeduserdata.get().sort(function (a, b) {
         if (a.employeeName == "NA") {
           return 1;
         } else if (b.employeeName == "NA") {
@@ -134,4 +127,3 @@ Template.activeEmployees.helpers({
       });
   },
 });
-

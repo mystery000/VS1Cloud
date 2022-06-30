@@ -835,6 +835,15 @@ authenticatedRoutes.route('/customerawaitingpayments', {
     }
 });
 
+authenticatedRoutes.route('/overduecustomerawaitingpayments', {
+    name: 'overduecustomerawaitingpayments',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'overduecustomerawaitingpayments'
+        });
+    }
+});
+
 authenticatedRoutes.route('/customerpayment', {
     name: 'customerpayment',
     action() {
@@ -849,6 +858,15 @@ authenticatedRoutes.route('/supplierawaitingpurchaseorder', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'supplierawaitingpurchaseorder'
+        });
+    }
+});
+
+authenticatedRoutes.route('/overduesupplierawaiting', {
+    name: 'overduesupplierawaiting',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'overduesupplierawaiting'
         });
     }
 });
@@ -1772,6 +1790,15 @@ authenticatedRoutes.route('/fx-currency-history', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'FxCurrencyHistory'
+        });
+    }
+});
+
+authenticatedRoutes.route('/payrollleavetaken', {
+    name: 'payrollleavetaken',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'payrollleavetaken'
         });
     }
 });

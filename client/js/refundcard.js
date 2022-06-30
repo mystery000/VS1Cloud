@@ -211,7 +211,8 @@ Template.refundcard.onRendered(() => {
                             {
                                 customfield3 = '-';
                             }     
-                                      
+                            
+                            var po = $('#ponumber').val() || '.';          
 
                             $('#tblInvoiceLine > tbody > tr').each(function () {
                                 var lineID = this.id;
@@ -257,14 +258,15 @@ Template.refundcard.onRendered(() => {
                                     o_address: Session.get('vs1companyaddress1'),
                                     o_city: Session.get('vs1companyCity'),
                                     o_state: Session.get('companyState'),
-                                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                                    title: template_title + invoice_data.id,
+                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                                    title: 'Refund',
+                                    value:invoice_data.id,
                                     date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.docnumber,
+                                    invoicenumber: invoice_data.id,
                                     refnumber: invoice_data.reference || '-',
-                                    pqnumber: "_",
+                                    pqnumber: po,
                                     duedate: invoice_data.duedate,
                                     paylink: "Pay Now",
                                     supplier_type: "Customer",
@@ -276,9 +278,9 @@ Template.refundcard.onRendered(() => {
                                     total : total,
                                     paid_amount : invoice_data.totalPaid,
                                     bal_due : invoice_data.balanceDue,
-                                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                                     data: array_data,
                                     applied : "",
                                     customfield1:'NA',
@@ -300,14 +302,15 @@ Template.refundcard.onRendered(() => {
                                     o_address: Session.get('vs1companyaddress1'),
                                     o_city: Session.get('vs1companyCity'),
                                     o_state: Session.get('companyState'),
-                                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                                    title: template_title + invoice_data.id,
+                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                                    title: 'Refund',
+                                    value:invoice_data.id,
                                     date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.docnumber,
+                                    invoicenumber: invoice_data.id,
                                     refnumber: invoice_data.reference || '-',
-                                    pqnumber: "_",
+                                    pqnumber: po,
                                     duedate: invoice_data.duedate || '-',
                                     paylink: "Pay Now",
                                     supplier_type: "Customer",
@@ -319,9 +322,9 @@ Template.refundcard.onRendered(() => {
                                     total : total,
                                     paid_amount : invoice_data.totalPaid,
                                     bal_due : invoice_data.balanceDue,
-                                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                                     data: array_data,
                                     applied : "",
                                     customfield1:customfield1 || '-',
@@ -346,14 +349,15 @@ Template.refundcard.onRendered(() => {
                                     o_address: Session.get('vs1companyaddress1'),
                                     o_city: Session.get('vs1companyCity'),
                                     o_state: Session.get('companyState'),
-                                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                                    title: template_title + invoice_data.id,
+                                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                                    title: 'Refund',
+                                    value:invoice_data.id,
                                     date: invoice_data.saledate,
-                                    invoicenumber: invoice_data.docnumber,
+                                    invoicenumber: invoice_data.id,
                                     refnumber: invoice_data.reference || '-',
-                                    pqnumber: "_",
+                                    pqnumber: po,
                                     duedate: invoice_data.duedate || '-',
                                     paylink: "Pay Now",
                                     supplier_type: "Customer",
@@ -365,9 +369,9 @@ Template.refundcard.onRendered(() => {
                                     total : total,
                                     paid_amount : invoice_data.totalPaid,
                                     bal_due : invoice_data.balanceDue,
-                                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                                     data: array_data,
                                     applied : "",
                                     customfield1:customfield1 || '-',
@@ -414,7 +418,7 @@ Template.refundcard.onRendered(() => {
             var customfield1 = $('#edtSaleCustField1').val() || '-';
             var customfield2 = $('#edtSaleCustField2').val() || '-';
             var customfield3 = $('#edtSaleCustField3').val() || '-';
-
+            var po = $('#ponumber').val() || '.';          
             if(customfield3 == 'NaN')
             {
                 customfield3 = '-';
@@ -469,14 +473,15 @@ Template.refundcard.onRendered(() => {
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
                     o_state: Session.get('companyState'),
-                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                    title: template_title + invoice_data.id,
+                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                    title: 'Refund',
+                    value:invoice_data.id,
                     date: invoice_data.saledate,
-                    invoicenumber: invoice_data.docnumber,
+                    invoicenumber: invoice_data.id,
                     refnumber: invoice_data.reference || '-',
-                    pqnumber: "_",
+                    pqnumber: po,
                     duedate: invoice_data.duedate,
                     paylink: "Pay Now",
                     supplier_type: "Customer",
@@ -488,9 +493,9 @@ Template.refundcard.onRendered(() => {
                     total : total,
                     paid_amount : invoice_data.totalPaid,
                     bal_due : invoice_data.balanceDue,
-                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                     data: array_data,
                     applied : "",
                     customfield1:'NA',
@@ -512,14 +517,15 @@ Template.refundcard.onRendered(() => {
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
                     o_state: Session.get('companyState'),
-                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                    title: template_title + invoice_data.id,
+                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                    title: 'Refund',
+                    value:invoice_data.id,
                     date: invoice_data.saledate,
-                    invoicenumber: invoice_data.docnumber,
+                    invoicenumber: invoice_data.id,
                     refnumber: invoice_data.reference || '-',
-                    pqnumber: "_",
+                    pqnumber: po,
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Customer",
@@ -531,9 +537,9 @@ Template.refundcard.onRendered(() => {
                     total : total,
                     paid_amount : invoice_data.totalPaid,
                     bal_due : invoice_data.balanceDue,
-                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                     data: array_data,
                     applied : "",
                     customfield1:customfield1 || '-',
@@ -558,14 +564,15 @@ Template.refundcard.onRendered(() => {
                     o_address: Session.get('vs1companyaddress1'),
                     o_city: Session.get('vs1companyCity'),
                     o_state: Session.get('companyState'),
-                    o_reg: Template.new_quote.__helpers.get('companyReg').call(),
-                    o_abn: Template.new_quote.__helpers.get('companyabn').call(),
-                    o_phone:Template.new_quote.__helpers.get('companyphone').call() ,
-                    title: template_title + invoice_data.id,
+                    o_reg: Template.refundcard.__helpers.get('companyReg').call(),
+                    o_abn: Template.refundcard.__helpers.get('companyabn').call(),
+                    o_phone:Template.refundcard.__helpers.get('companyphone').call() ,
+                    title: 'Refund',
+                    value:invoice_data.id,
                     date: invoice_data.saledate,
-                    invoicenumber: invoice_data.docnumber,
+                    invoicenumber: invoice_data.id,
                     refnumber: invoice_data.reference || '-',
-                    pqnumber: "_",
+                    pqnumber: po,
                     duedate: invoice_data.duedate || '-',
                     paylink: "Pay Now",
                     supplier_type: "Customer",
@@ -577,9 +584,9 @@ Template.refundcard.onRendered(() => {
                     total : total,
                     paid_amount : invoice_data.totalPaid,
                     bal_due : invoice_data.balanceDue,
-                    bsb : Template.new_quote.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.new_quote.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.new_quote.__helpers.get('vs1companyBankSwiftCode').call(),
+                    bsb : Template.refundcard.__helpers.get('vs1companyBankBSB').call(),
+                    account :Template.refundcard.__helpers.get('vs1companyBankAccountNo').call(),
+                    swift : Template.refundcard.__helpers.get('vs1companyBankSwiftCode').call(),
                     data: array_data,
                     applied : "",
                     customfield1:'NA',
@@ -606,130 +613,157 @@ Template.refundcard.onRendered(() => {
         }
 
         function updateTemplate1(object_invoce) {
-
-        
-       
+            $("#templatePreviewModal").modal("toggle");
             if (object_invoce.length > 0) {
-            
-            $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
-            $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
-            $("#templatePreviewModal .o_address1").text(
+             
+              $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
+              $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
+              $("#templatePreviewModal .o_address1").text(
                 object_invoce[0]["o_address"]
-            );
-            $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
-            $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
-            $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
-            $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
-            $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
+              );
+              $("#templatePreviewModal .o_city").text(object_invoce[0]["o_city"]);
+              $("#templatePreviewModal .o_state").text(object_invoce[0]["o_state"]);
+              $("#templatePreviewModal .o_reg").text(object_invoce[0]["o_reg"]);
+              $("#templatePreviewModal .o_abn").text(object_invoce[0]["o_abn"]);
+              $("#templatePreviewModal .o_phone").text(object_invoce[0]["o_phone"]);
         
-            if(object_invoce[0]["applied"] == ""){
+              if(object_invoce[0]["applied"] == ""){
                 $("#templatePreviewModal .applied").hide()
                 $("#templatePreviewModal .applied").text(object_invoce[0]["applied"]);
-            }else{
+              }else{
                 $("#templatePreviewModal .applied").show()
                 $("#templatePreviewModal .applied").text("Applied : " +  object_invoce[0]["applied"]);
-            }
-            
-        
-        
-            if(object_invoce[0]["supplier_type"] == ""){
+              }
+    
+    
+    
+              if(object_invoce[0]["supplier_type"] == ""){
                 $("#templatePreviewModal .customer").hide()
-            }else{
+              }else{
                 $("#templatePreviewModal .customer").show()
-            }
-            $("#templatePreviewModal .customer").empty();
-            $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
+              }
+              $("#templatePreviewModal .customer").empty();
+              $("#templatePreviewModal .customer").append(object_invoce[0]["supplier_type"]);
         
-            if(object_invoce[0]["supplier_name"] == ""){
+              if(object_invoce[0]["supplier_name"] == ""){
                 $("#templatePreviewModal .pdfCustomerName").hide()
-            }else{
+              }else{
                 $("#templatePreviewModal .pdfCustomerName").show()
-            }
-            $("#templatePreviewModal .pdfCustomerName").empty();
-            $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
+              }
+              $("#templatePreviewModal .pdfCustomerName").empty();
+              $("#templatePreviewModal .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
         
-            if(object_invoce[0]["supplier_addr"] == ""){
+              if(object_invoce[0]["supplier_addr"] == ""){
                 $("#templatePreviewModal .pdfCustomerAddress").hide()
-            }else{
+              }else{
                 $("#templatePreviewModal .pdfCustomerAddress").show()
-            }
-            $("#templatePreviewModal .pdfCustomerAddress").empty();
-            $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
+              }
+              $("#templatePreviewModal .pdfCustomerAddress").empty();
+              $("#templatePreviewModal .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
         
-            
-            $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
-            $("#templatePreviewModal .modal-title").text(
-                object_invoce[0]["title"] + " template"
-            );
+              
+              $("#templatePreviewModal .print-header").text(object_invoce[0]["title"]);
+              $("#templatePreviewModal .modal-title").text(
+                object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+              );
+    
+              if(object_invoce[0]["value"]=="")
+              {
+                  $('.print-header-value').text('');
+    
+              }
+              else{
+                 $('.print-header-value').text(object_invoce[0]["value"]);
+              }
+        
+              if(object_invoce[0]["bsb"]=="")
+              { 
+                  $('#templatePreviewModal .field_payment').hide();
+    
+              }
+              else{
+    
+                  $('#templatePreviewModal .field_payment').show();
+              }
+             
+        
+              $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
+              $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
+              $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
         
         
-            $("#templatePreviewModal .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
-            $("#templatePreviewModal .account_number").text( "Account Number : " + object_invoce[0]["account"]);
-            $("#templatePreviewModal .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-        
-        
-            if(object_invoce[0]["date"] == ""){
+              if(object_invoce[0]["date"] == ""){
                 $("#templatePreviewModal .dateNumber").hide();
-            }else{
+              }else{
                 $("#templatePreviewModal .dateNumber").show();
-            }
+              }
         
-            $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
+              $("#templatePreviewModal .date").text(object_invoce[0]["date"]);
         
-            if(object_invoce[0]["pqnumber"] == ""){
+              if(object_invoce[0]["pqnumber"] == ""){
                 $("#templatePreviewModal .pdfPONumber").hide();
-            }else{
+              }else{
                 $("#templatePreviewModal .pdfPONumber").show();
-            }
+              }
         
-            $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
+              $("#templatePreviewModal .po").text(object_invoce[0]["pqnumber"]);
         
-            if(object_invoce[0]["invoicenumber"] == ""){
+              if(object_invoce[0]["invoicenumber"] == ""){
                 $("#templatePreviewModal .invoiceNumber").hide();
-            }else{
+              }else{
                 $("#templatePreviewModal .invoiceNumber").show();
-            }
-            console.log("invoice number==",object_invoce[0]["invoicenumber"])
-            $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
-        
-            if(object_invoce[0]["refnumber"] == ""){
+              }
+              console.log("invoice number==",object_invoce[0]["invoicenumber"])
+              $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
+    
+              if(object_invoce[0]["refnumber"] == ""){
                 $("#templatePreviewModal .refNumber").hide();
-            }else{
+              }else{
                 $("#templatePreviewModal .refNumber").show();
-            }
-            $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
-            
-            if(object_invoce[0]["duedate"] == ""){
+              }
+              $("#templatePreviewModal .ro").text(object_invoce[0]["refnumber"]);
+    
+              if(object_invoce[0]["duedate"] == ""){
                 $("#templatePreviewModal .pdfTerms").hide();
-            }else{
+              }else{
                 $("#templatePreviewModal .pdfTerms").show();
-            }
-            $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
-            
-            if (object_invoce[0]["paylink"] == "") {
+              }
+              $("#templatePreviewModal .due").text(object_invoce[0]["duedate"]);
+    
+              if (object_invoce[0]["paylink"] == "") {
                     $("#templatePreviewModal .link").hide();
                     $("#templatePreviewModal .linkText").hide();
-            } else {
+              } else {
                     $("#templatePreviewModal .link").show();
                     $("#templatePreviewModal .linkText").show();
-            }
-            
-            if(object_invoce[0]["customfield1"] == "NA")
-            {   
-                    $('#customfieldtablenew').css('display', 'none');
-                    $('#customdatatablenew').css('display', 'none');
-                    $('#templatePreviewModal .customfield1').text('');
-                    $('#templatePreviewModal .customfield2').text('');
-                    $('#templatePreviewModal .customfield3').text('');
-                    
-                    
-                    $('#templatePreviewModal .customfield1data').text('');
-                    $('#templatePreviewModal .customfield2data').text('');
-                    $('#templatePreviewModal .customfield3data').text('');
+              }
+    
+              if (object_invoce[0]["showFX"] == "") {
+                    $("#templatePreviewModal .showFx").hide();
+                    $("#templatePreviewModal .showFxValue").hide();
+             } else {
+                    $("#templatePreviewModal .showFx").show();
+                    $("#templatePreviewModal .showFxValue").show();
+                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
+             }
+    
+    
+              if(object_invoce[0]["customfield1"] == "NA")
+              {   
+                      $('#customfieldtablenew').css('display', 'none');
+                      $('#customdatatablenew').css('display', 'none');
+                      $('#templatePreviewModal .customfield1').text('');
+                      $('#templatePreviewModal .customfield2').text('');
+                      $('#templatePreviewModal .customfield3').text('');
+                      
+                      
+                      $('#templatePreviewModal .customfield1data').text('');
+                      $('#templatePreviewModal .customfield2data').text('');
+                      $('#templatePreviewModal .customfield3data').text('');
         
-            }
-            else
-            {
+              }
+              else
+              {
                     $('#customfieldtablenew').css('display', 'block');
                     $('#customdatatablenew').css('display', 'block');
                     
@@ -739,110 +773,112 @@ Template.refundcard.onRendered(() => {
                     
                     if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
                     {
-                       $('#templatePreviewModal .customfield1data').text('');
+                      $('#templatePreviewModal .customfield1data').text('');
                     }
                     else
                     {
-                       $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
+                      $('#templatePreviewModal .customfield1data').text(object_invoce[0]["customfield1"]);
                     }
-    
+      
                     if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
                     {
-                    $('#templatePreviewModal .customfield2data').text('');
+                      $('#templatePreviewModal .customfield2data').text('');
                     }
                     else
                     {
-                    $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
+                      $('#templatePreviewModal .customfield2data').text( object_invoce[0]["customfield2"]);
                     }
     
                     if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
                     {
-                       $('#templatePreviewModal .customfield3data').text('');
+                      $('#templatePreviewModal .customfield3data').text('');
                     }
                     else
                     {
-                       $('#templatePreviewModal .customfield3data').text(object_invoce[0]["customfield3"]);
+                      $('#templatePreviewModal .customfield3data').text( object_invoce[0]["customfield3"]);
                     }
-                    
-                
-                
-            }
-
-            if (object_invoce[0]["showFX"] == "") {
-                $("#templatePreviewModal .showFx").hide();
-                $("#templatePreviewModal .showFxValue").hide();
-            } else {
-                    $("#templatePreviewModal .showFx").show();
-                    $("#templatePreviewModal .showFxValue").show();
-                    $("#templatePreviewModal .showFxValue").text(object_invoce[0]["showFX"]);
-            }
-
-            if(object_invoce[0]["customfield1"] == "NA")
-            {   
+    
+    
+    
+              }
+    
+              if(object_invoce[0]["customfield1"] == "NA")
+              {
                     $('#customfieldlable').css('display', 'none');
                     $('#customfieldlabledata').css('display', 'none');
-        
-            }
-            else
-            {
+              }
+              else
+              {
                     $('#customfieldlable').css('display', 'block');
                     $('#customfieldlabledata').css('display', 'block');
-            }
-        
+              }
+    
             //   table header
-            var tbl_header = $("#templatePreviewModal .tbl_header")
-            tbl_header.empty()
-            for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
+              var tbl_header = $("#templatePreviewModal .tbl_header")
+              tbl_header.empty()
+              for(const [key , value] of Object.entries(object_invoce[0]["fields"])){
                     console.log("key and value", key)
                     console.log("key and value", value)
                     tbl_header.append("<th style='width:" + value + "%'; color: rgb(0 0 0);'>" + key + "</th>")
+              }
             }
-            }
-        
+    
             // table content
-            var tbl_content = $("#templatePreviewModal .tbl_content")
-            tbl_content.empty()
-            const data = object_invoce[0]["data"]
-            
-            for(item of data){
+             var tbl_content = $("#templatePreviewModal .tbl_content")
+             tbl_content.empty()
+             const data = object_invoce[0]["data"]
+    
+             for(item of data){
                 tbl_content.append("<tr style='border-bottom: 1px solid rgba(0, 0, 0, .1);'>")
                 var content = ""
-                for(item_temp of item){
+                 for(item_temp of item){
                     content = content + "<td>" + item_temp + "</td>"
+                 }
+                 tbl_content.append(content)
+                 tbl_content.append("</tr>")
+             }
+    
+            // total amount
+    
+            if(object_invoce[0]["subtotal"] == "")
+            {
+                $("#templatePreviewModal .field_amount").hide();
+            }
+            else
+            {
+                $("#templatePreviewModal .field_amount").show();
+                if(object_invoce[0]["subtotal"] != ""){
+                  $('#templatePreviewModal #subtotal_total').text("Sub total");
+                  $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
                 }
-                tbl_content.append(content)
-                tbl_content.append("</tr>")
+                if(object_invoce[0]["gst"] != ""){
+    
+    
+                    $('#templatePreviewModal #grandTotal').text("Grand total");
+                    $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+                }
+    
+                if(object_invoce[0]["total"] != ""){
+                    $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
+                }
+    
+                if(object_invoce[0]["bal_due"] != ""){
+                    $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+                }
+    
+                if(object_invoce[0]["paid_amount"] != ""){
+                    $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
+                }
+    
             }
-            
-            // total amount 
-        
-            if(object_invoce[0]["subtotal"] != ""){
-                $("#templatePreviewModal #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
-            }
-        
-            if(object_invoce[0]["gst"] != ""){
-                $("#templatePreviewModal #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-            }
-        
-            if(object_invoce[0]["total"] != ""){
-                $("#templatePreviewModal #grandTotalPrint").text(object_invoce[0]["total"]);
-            }
-        
-            if(object_invoce[0]["bal_due"] != ""){
-                $("#templatePreviewModal #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-            }
-        
-            if(object_invoce[0]["paid_amount"] != ""){
-                $("#templatePreviewModal #paid_amount").text(object_invoce[0]["paid_amount"]);
-            }
-
-            $("#templatePreviewModal").modal("toggle");
-        }
-
+    
+    
+          }
+    
         function updateTemplate(object_invoce) {
-            
+    
             if (object_invoce.length > 0) {
-            
+    
             $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
             $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
             $("#html-2-pdfwrapper_new .o_address1").text(
@@ -853,7 +889,7 @@ Template.refundcard.onRendered(() => {
             $("#html-2-pdfwrapper_new .o_reg").text(object_invoce[0]["o_reg"]);
             $("#html-2-pdfwrapper_new .o_abn").text(object_invoce[0]["o_abn"]);
             $("#html-2-pdfwrapper_new .o_phone").text(object_invoce[0]["o_phone"]);
-        
+    
             if(object_invoce[0]["applied"] == ""){
                 $("#html-2-pdfwrapper_new .applied").hide()
                 $("#html-2-pdfwrapper_new .applied").text(object_invoce[0]["applied"]);
@@ -861,9 +897,9 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .applied").show()
                 $("#html-2-pdfwrapper_new .applied").text("Applied : " +  object_invoce[0]["applied"]);
             }
-            
-        
-        
+    
+    
+    
             if(object_invoce[0]["supplier_type"] == ""){
                 $("#html-2-pdfwrapper_new .customer").hide()
             }else{
@@ -871,7 +907,7 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .customer").empty();
             $("#html-2-pdfwrapper_new .customer").append(object_invoce[0]["supplier_type"]);
-        
+    
             if(object_invoce[0]["supplier_name"] == ""){
                 $("#html-2-pdfwrapper_new .pdfCustomerName").hide()
             }else{
@@ -879,7 +915,7 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .pdfCustomerName").empty();
             $("#html-2-pdfwrapper_new .pdfCustomerName").append(object_invoce[0]["supplier_name"]);
-        
+    
             if(object_invoce[0]["supplier_addr"] == ""){
                 $("#html-2-pdfwrapper_new .pdfCustomerAddress").hide()
             }else{
@@ -887,45 +923,65 @@ Template.refundcard.onRendered(() => {
             }
             $("#html-2-pdfwrapper_new .pdfCustomerAddress").empty();
             $("#html-2-pdfwrapper_new .pdfCustomerAddress").append(object_invoce[0]["supplier_addr"]);
-        
-            
+    
+    
             $("#html-2-pdfwrapper_new .print-header").text(object_invoce[0]["title"]);
-            $("#html-2-pdfwrapper_new .modal-title").text(
-                object_invoce[0]["title"] + " template"
-            );
-        
-        
+            
+            $("#templatePreviewModal .modal-title").text(
+                object_invoce[0]["title"] + " " +object_invoce[0]["value"]+ " template"
+             );
+    
+            if(object_invoce[0]["value"]=="")
+            {
+                  $('.print-header-value').text('');
+    
+            }
+            else
+            {
+                 $('.print-header-value').text(object_invoce[0]["value"]);
+            }
+    
+    
+            if(object_invoce[0]["bsb"]=="")
+            { 
+                $('#html-2-pdfwrapper_new .field_payment').hide();
+    
+            }
+            else{
+    
+                $('#html-2-pdfwrapper_new .field_payment').show();
+            }
+    
             $("#html-2-pdfwrapper_new .bsb").text( "BSB (Branch Number) : " + object_invoce[0]["bsb"]);
             $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
             $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
-        
-        
+    
+    
             if(object_invoce[0]["date"] == ""){
                 $("#html-2-pdfwrapper_new .dateNumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .dateNumber").show();
             }
-        
+    
+            if (object_invoce[0]["showFX"] == "") {
+                $("#html-2-pdfwrapper_new .showFx").hide();
+                $("#html-2-pdfwrapper_new .showFxValue").hide();
+            } else {
+                $("#html-2-pdfwrapper_new .showFx").show();
+                $("#html-2-pdfwrapper_new .showFxValue").show();
+                $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
+            }
+    
             $("#html-2-pdfwrapper_new .date").text(object_invoce[0]["date"]);
-        
+    
             if(object_invoce[0]["pqnumber"] == ""){
                 $("#html-2-pdfwrapper_new .pdfPONumber").hide();
             }else{
                 $("#html-2-pdfwrapper_new .pdfPONumber").show();
             }
-
-
-            if (object_invoce[0]["showFX"] == "") {
-                $("#html-2-pdfwrapper_new .showFx").hide();
-                $("#html-2-pdfwrapper_new .showFxValue").hide();
-            } else {
-                    $("#html-2-pdfwrapper_new .showFx").show();
-                    $("#html-2-pdfwrapper_new .showFxValue").show();
-                    $("#html-2-pdfwrapper_new .showFxValue").text(object_invoce[0]["showFX"]);
-            }
-
+    
             if(object_invoce[0]["customfield1"] == "NA")
-            {   
+            {
                     $('#customfieldtablenew').css('display', 'none');
                     $('#customdatatablenew').css('display', 'none');
                     $('#html-2-pdfwrapper_new .customfield1').text('');
@@ -936,49 +992,49 @@ Template.refundcard.onRendered(() => {
                     $('#html-2-pdfwrapper_new .customfield1data').text('');
                     $('#html-2-pdfwrapper_new .customfield2data').text('');
                     $('#html-2-pdfwrapper_new .customfield3data').text('');
-    
+      
             }
             else
             {
-                $('#customfieldtablenew').css('display', 'block');
-                $('#customdatatablenew').css('display', 'block');
-                
-                $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
-                $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
-                $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
-                
-                if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
-                {
+                  $('#customfieldtablenew').css('display', 'block');
+                  $('#customdatatablenew').css('display', 'block');
+                  
+                  $('#html-2-pdfwrapper_new .customfield1').text(object_invoce[0]["customfieldlabel1"]);
+                  $('#html-2-pdfwrapper_new .customfield2').text(object_invoce[0]["customfieldlabel2"]);
+                  $('#html-2-pdfwrapper_new .customfield3').text(object_invoce[0]["customfieldlabel3"]);
+                  
+                  if(object_invoce[0]["customfield1"] == '' || object_invoce[0]["customfield1"] == 0)
+                  {
                     $('#html-2-pdfwrapper_new .customfield1data').text('');
-                }
-                else
-                {
+                  }
+                  else
+                  {
                     $('#html-2-pdfwrapper_new .customfield1data').text(object_invoce[0]["customfield1"]);
-                }
-
-                if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
-                {
+                  }
+    
+                  if(object_invoce[0]["customfield2"] == '' || object_invoce[0]["customfield2"] == 0)
+                  {
                     $('#html-2-pdfwrapper_new .customfield2data').text('');
-                }
-                else
-                {
+                  }
+                  else
+                  {
                     $('#html-2-pdfwrapper_new .customfield2data').text( object_invoce[0]["customfield2"]);
-                }
-
-                if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
-                {
+                  }
+    
+                  if(object_invoce[0]["customfield3"] == '' || object_invoce[0]["customfield3"] == 0)
+                  {
                     $('#html-2-pdfwrapper_new .customfield3data').text('');
-                }
-                else
-                {
-                    $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
-                }
+                  }
+                  else
+                  {
+                    $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                  }
+                  
                 
-                
-                
+                 
             }
-
-        
+    
+           
         
             $("#html-2-pdfwrapper_new .po").text(object_invoce[0]["pqnumber"]);
         
@@ -987,7 +1043,7 @@ Template.refundcard.onRendered(() => {
             }else{
                 $("#html-2-pdfwrapper_new .invoiceNumber").show();
             }
-            console.log("invoice number==",object_invoce[0]["invoicenumber"])
+           
             $("#html-2-pdfwrapper_new .io").text(object_invoce[0]["invoicenumber"]);
         
             if(object_invoce[0]["refnumber"] == ""){
@@ -1011,18 +1067,18 @@ Template.refundcard.onRendered(() => {
                 $("#html-2-pdfwrapper_new .link").show();
                 $("#html-2-pdfwrapper_new .linkText").show();
             }
-
-            if(object_invoce[0]["customfield1"] == "")
-            {   
+    
+             if(object_invoce[0]["customfield1"] == "")
+             {   
                         $('#customfieldlable').css('display', 'none');
                         $('#customfieldlabledata').css('display', 'none');
-
-            }
-            else
-            {
+    
+             }
+             else
+             {
                         $('#customfieldlable').css('display', 'block');
                         $('#customfieldlabledata').css('display', 'block');
-            }
+             }
         
             //   table header
             var tbl_header = $("#html-2-pdfwrapper_new .tbl_header")
@@ -1048,28 +1104,41 @@ Template.refundcard.onRendered(() => {
             }
             
             // total amount 
-        
-            if(object_invoce[0]["subtotal"] != ""){
-                $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+            
+            if(object_invoce[0]["subtotal"] == "")
+            {     
+                $("#html-2-pdfwrapper_new .field_amount").hide();
             }
+            else
+            {
+                $("#html-2-pdfwrapper_new .field_amount").show();
+              
+                if(object_invoce[0]["subtotal"] != ""){
+                  $('#html-2-pdfwrapper_new #subtotal_total').text("Sub total");
+                  $("#html-2-pdfwrapper_new #subtotal_totalPrint").text(object_invoce[0]["subtotal"]);
+                }
+    
+                if(object_invoce[0]["gst"] != ""){
+                    $('#html-2-pdfwrapper_new #grandTotal').text("Grand total");
+                    $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
+                }
+                
         
-            if(object_invoce[0]["gst"] != ""){
-                $("#html-2-pdfwrapper_new #totalTax_totalPrint").text(object_invoce[0]["gst"]);
-            }
+                if(object_invoce[0]["total"] != ""){
+                    $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
+                }
         
-            if(object_invoce[0]["total"] != ""){
-                $("#html-2-pdfwrapper_new #grandTotalPrint").text(object_invoce[0]["total"]);
-            }
+                if(object_invoce[0]["bal_due"] != ""){
+                    $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
+                }
         
-            if(object_invoce[0]["bal_due"] != ""){
-                $("#html-2-pdfwrapper_new #totalBalanceDuePrint").text(object_invoce[0]["bal_due"]);
-            }
+                if(object_invoce[0]["paid_amount"] != ""){
+                    $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
+                }
         
-            if(object_invoce[0]["paid_amount"] != ""){
-                $("#html-2-pdfwrapper_new #paid_amount").text(object_invoce[0]["paid_amount"]);
             }
+           
         }
-
         function saveTemplateFields(key, value){
             localStorage.setItem(key, value)
         }
@@ -1158,1924 +1227,8 @@ Template.refundcard.onRendered(() => {
     }
     templateObject.getAllClients();
 
-    templateObject.getSalesCustomFieldsList= function () {
-      getVS1Data('TCustomFieldList').then(function(dataObject) {
-          if (dataObject.length == 0) {
-            sideBarService.getAllCustomFields().then(function (data) {
-                let customData = {};
-                for(let x = 0; x < data.tcustomfieldlist.length; x++) {
-                    if(data.tcustomfieldlist[x].fields.ListType == "ltSales") {
-                        customData = {
-                            active: data.tcustomfieldlist[x].fields.Active||false,
-                            id: data.tcustomfieldlist[x].fields.ID||0,
-                            custfieldlabel: data.tcustomfieldlist[x].fields.Description||'',
-                            datatype: data.tcustomfieldlist[x].fields.DataType||'',
-                            isempty: data.tcustomfieldlist[x].fields.ISEmpty||false,
-                            iscombo: data.tcustomfieldlist[x].fields.IsCombo||false,
-                            dropdown: data.tcustomfieldlist[x].fields.Dropdown||null,
-                        };
-                        custField.push(customData);
-                }
-            }
-            if(custField.length < 4) {
-                let remainder = 4 - custField.length;
-                let getRemCustomFields = 0;
-                // count = count + remainder;
-                let count = remainder;
-                for(let r =0 ; r < remainder; r++) {
-                  getRemCustomFields = (parseInt(remainder) + parseInt(custField.length) - r);
-                    customData = {
-                        id: "",
-                        custfieldlabel: "Custom Field "+getRemCustomFields,
-                        datatype: "",
-                        isempty: true,
-                        iscombo: false
-                    };
-                    count++;
-                    custField.push(customData);
-                }
-            }
-            templateObject.custfields.set(custField);
-            if(templateObject.custfields.get()){
-              //Custom Field 1
-              if(custField[0].active){
-                $('.checkbox1div').css('display','block');
-                $('#formCheck-customOne').prop('checked', true);
-              }
-
-              if(custField[1].active){
-                $('.checkbox2div').css('display','block');
-                $('#formCheck-customTwo').prop('checked', true);
-              }
-              if(custField[2].active){
-                $('.checkbox3div').css('display','block');
-                $('#formCheck-customThree').prop('checked', true);
-              }
-              if(custField[0].datatype == 'ftString' && custField[0].iscombo == false){
-
-                $('.custField1Text').css('display','block');
-                $('.custField1Date').css('display','none');
-                $('.custField1Dropdown').css('display','none');
-
-                $('.checkbox1div').empty();
-                $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '</label>' +
-                    '<input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'> </div>');
-                $('#edtSaleCustField1').attr('datatype',"ftString");
-
-              }else if(custField[0].datatype == 'ftDateTime'){
-
-                $('.custField1Text').css('display','none');
-                $('.custField1Date').css('display','block');
-                $('.custField1Dropdown').css('display','none');
-                $('#customFieldText1').attr('datatype','ftDateTime');
-
-                $('.checkbox1div').empty();
-                $('.checkbox1div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-                    '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField1" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'>' +
-                    '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                    '</div> </div></div>');
-                $('#edtSaleCustField1').attr('datatype','ftDateTime');
-
-                setTimeout(function () {
-                    $("#edtSaleCustField1").datepicker({
-                        showOn: 'button',
-                        buttonText: 'Show Date',
-                        buttonImageOnly: true,
-                        buttonImage: '/img/imgCal2.png',
-                        constrainInput: false,
-                        dateFormat: 'd/mm/yy',
-                        showOtherMonths: true,
-                        selectOtherMonths: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-90:+10",
-                    });
-
-                    //  var currentDate = new Date();
-                    // var begunDate = moment(currentDate).format("DD/MM/YYYY");
-                    // $("#edtSaleCustField1").val(begunDate);
-                }, 1500);
-
-              }else if(custField[0].datatype == 'ftString' && custField[0].iscombo == true){
-
-                $('.custField1Text').css('display','none');
-                $('.custField1Date').css('display','none');
-                $('.custField1Dropdown').css('display','block');
-
-                $('.checkbox1div').empty();
-                $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-                    ' <select type="search" class="form-control pointer customField1" id="edtSaleCustField1" name="edtSaleCustField1" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid='+ custField[0].id +'></select></div>');
-                $('#edtSaleCustField1').attr('datatype','ftString');
-                var splashArrayCustomFieldList = new Array();
-                if(custField[0].dropdown != null){
-                if (custField[0].dropdown.length > 0){
-
-                  for (let x = 0; x < custField[0].dropdown.length; x++) {
-                      var dataList = [
-                          custField[0].dropdown[x].fields.ID || '',
-                          custField[0].dropdown[x].fields.Text || ''
-                      ];
-
-                      splashArrayCustomFieldList.push(dataList);
-                  }
-                }else{
-
-                  var dataList = [
-                      custField[0].dropdown.fields.ID || '',
-                      custField[0].dropdown.fields.Text || ''
-                  ];
-
-                  splashArrayCustomFieldList.push(dataList);
-                }
-                }else{
-                  var dataList = [
-                      '',
-                      ''
-                  ];
-                  splashArrayCustomFieldList.push(dataList);
-                }
-
-              setTimeout(function () {
-                  $('#custListType').DataTable({
-                      data: splashArrayCustomFieldList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      paging: true,
-                      "aaSorting": [],
-                      "orderMulti": true,
-                      columnDefs: [{
-                              "orderable": false,
-                              "targets": -1
-                          }, {
-                              className: "colCustField",
-                              "targets": [0]
-                          }, {
-                              className: "colFieldName pointer",
-                              "targets": [1]
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                      info: true,
-                      responsive: true,
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                          $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                      },
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                      let draftRecord = templateObject.datatablerecords.get();
-                      templateObject.datatablerecords.set(draftRecord);
-                  }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-                  $('.fullScreenSpin').css('display', 'none');
-              }, 10);
-                setTimeout(function () {
-                    $('#edtSaleCustField1').editableSelect();
-                    $('#edtSaleCustField1').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        var $earch = $(this);
-                        var offset = $earch.offset();
-                        var fieldDataName = e.target.value || '';
-                        var fieldDataID = $('#edtSaleCustField1').attr('custfieldid') || '';
-                        $('#selectCustFieldID').val(fieldDataID);
-                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                            $('#customFieldList').modal('toggle');
-                        } else {
-                            if (fieldDataName.replace(/\s/g, '') != '') {
-                                $('#newStatusHeader1').text('Edit '+custField[0].custfieldlabel);
-                                getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                    if (dataObject.length == 0) {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        sideBarService.getAllCustomFields().then(function (data) {
-                                            for (let i in data.tcustomfieldlist) {
-                                                if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                    $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                    $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                                }
-                                            }
-                                            setTimeout(function () {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                                $('#newCustomFieldPop').modal('toggle');
-                                            }, 200);
-                                        });
-                                    } else {
-                                        let data = JSON.parse(dataObject[0].data);
-                                        let useData = data.tcustomfieldlist;
-                                        for (let i in useData) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(useData[i].fields.ID);
-                                                $('#newStatus').val(useData[i].fields.Description);
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                        }, 200);
-                                    }
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId1').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus1').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                });
-
-                            } else {
-                                $('#customFieldList').modal('toggle');
-                            }
-                        }
-                    });
-                }, 1500);
-
-              }
-
-              //Custom Field 2
-              if(custField[1].datatype == 'ftString' && custField[1].iscombo == false){
-
-                $('.custField2Text').css('display','block');
-                $('.custField2Date').css('display','none');
-                $('.custField2Dropdown').css('display','none');
-
-                $('.checkbox2div').empty();
-                $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '</label>' +
-                    '<input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value=""> </div>');
-                $('#edtSaleCustField2').attr('datatype',"ftString");
-              }else if(custField[1].datatype == 'ftDateTime'){
-
-                $('.custField2Text').css('display','none');
-                $('.custField2Date').css('display','block');
-                $('.custField2Dropdown').css('display','none');
-                $('#customFieldText2').attr('datatype','ftDateTime');
-
-                $('.checkbox2div').empty();
-                $('.checkbox2div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-                    '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField2" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField2" name="edtSaleCustField2" value="">' +
-                    '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                    '</div> </div></div>');
-                $('#edtSaleCustField2').attr('datatype','ftDateTime');
-
-                setTimeout(function () {
-                    $("#edtSaleCustField2").datepicker({
-                        showOn: 'button',
-                        buttonText: 'Show Date',
-                        buttonImageOnly: true,
-                        buttonImage: '/img/imgCal2.png',
-                        constrainInput: false,
-                        dateFormat: 'd/mm/yy',
-                        showOtherMonths: true,
-                        selectOtherMonths: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-90:+10",
-                    });
-
-                }, 1500);
-
-              }else if(custField[1].datatype == 'ftString' && custField[1].iscombo == true){
-
-                $('.custField2Text').css('display','none');
-                $('.custField2Date').css('display','none');
-                $('.custField2Dropdown').css('display','block');
-
-                $('.checkbox2div').empty();
-                $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-                    ' <select type="search" class="form-control pointer customField2" id="edtSaleCustField2" name="edtSaleCustField2" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-                $('#edtSaleCustField2').attr('datatype','ftString');
-
-                var splashArrayCustomFieldList = new Array();
-                if(custField[1].dropdown != null){
-                if (custField[1].dropdown.length > 0){
-                  for (let x = 0; x < custField[1].dropdown.length; x++) {
-                      var dataList = [
-                          custField[1].dropdown[x].fields.ID || '',
-                          custField[1].dropdown[x].fields.Text || ''
-                      ];
-
-                      splashArrayCustomFieldList.push(dataList);
-                  }
-                }else{
-                  var dataList = [
-                      custField[1].dropdown.fields.ID || '',
-                      custField[1].dropdown.fields.Text || ''
-                  ];
-                  splashArrayCustomFieldList.push(dataList);
-                }
-                }else{
-                  var dataList = [
-                      '',
-                      ''
-                  ];
-                  splashArrayCustomFieldList.push(dataList);
-                }
-
-              setTimeout(function () {
-                  $('#custListType').DataTable({
-                      data: splashArrayCustomFieldList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      paging: true,
-                      "aaSorting": [],
-                      "orderMulti": true,
-                      columnDefs: [{
-                              "orderable": false,
-                              "targets": -1
-                          }, {
-                              className: "colCustField",
-                              "targets": [0]
-                          }, {
-                              className: "colFieldName pointer",
-                              "targets": [1]
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                      info: true,
-                      responsive: true,
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                          $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                      },
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                      let draftRecord = templateObject.datatablerecords.get();
-                      templateObject.datatablerecords.set(draftRecord);
-                  }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-                  $('.fullScreenSpin').css('display', 'none');
-              }, 10);
-
-                setTimeout(function () {
-                    $('#edtSaleCustField2').editableSelect();
-                    $('#edtSaleCustField2').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        var $earch = $(this);
-                        var offset = $earch.offset();
-                        var fieldDataName = e.target.value || '';
-                        var fieldDataID = $('#edtSaleCustField2').attr('custfieldid') || '';
-                        $('#selectCustFieldID').val(fieldDataID);
-                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                            $('#customFieldList').modal('toggle');
-                        } else {
-                            if (fieldDataName.replace(/\s/g, '') != '') {
-                                $('#newStatusHeader2').text('Edit '+custField[1].custfieldlabel);
-                                getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                    if (dataObject.length == 0) {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        sideBarService.getAllCustomFields().then(function (data) {
-                                            for (let i in data.tcustomfieldlist) {
-                                                if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                    $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                    $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                                }
-                                            }
-                                            setTimeout(function () {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                                $('#newCustomFieldPop').modal('toggle');
-                                            }, 200);
-                                        });
-                                    } else {
-                                        let data = JSON.parse(dataObject[0].data);
-                                        let useData = data.tcustomfieldlist;
-                                        for (let i in useData) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(useData[i].fields.ID);
-                                                $('#newStatus').val(useData[i].fields.Description);
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                        }, 200);
-                                    }
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId2').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus2').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                });
-
-                            } else {
-                                $('#customFieldList').modal('toggle');
-                            }
-                        }
-                    });
-                }, 1500);
-
-              }
-
-              //Custom Field 3
-              if(custField[2].datatype == 'ftString' && custField[2].iscombo == false){
-
-                $('.custField3Text').css('display','block');
-                $('.custField3Date').css('display','none');
-                $('.custField3Dropdown').css('display','none');
-
-                $('.checkbox3div').empty();
-                $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '</label>' +
-                    '<input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value=""> </div>');
-                $('#edtSaleCustField3').attr('datatype',"ftString");
-              }else if(custField[2].datatype == 'ftDateTime'){
-
-                $('.custField3Text').css('display','none');
-                $('.custField3Date').css('display','block');
-                $('.custField3Dropdown').css('display','none');
-                $('#customFieldText3').attr('datatype','ftDateTime');
-
-                $('.checkbox3div').empty();
-                $('.checkbox3div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-                    '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField3" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField3" name="edtSaleCustField3" value="">' +
-                    '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                    '</div> </div></div>');
-                $('#edtSaleCustField3').attr('datatype','ftDateTime');
-
-                setTimeout(function () {
-                    $("#edtSaleCustField3").datepicker({
-                        showOn: 'button',
-                        buttonText: 'Show Date',
-                        buttonImageOnly: true,
-                        buttonImage: '/img/imgCal2.png',
-                        constrainInput: false,
-                        dateFormat: 'd/mm/yy',
-                        showOtherMonths: true,
-                        selectOtherMonths: true,
-                        changeMonth: true,
-                        changeYear: true,
-                        yearRange: "-90:+10",
-                    });
-
-                }, 1500);
-
-              }else if(custField[2].datatype == 'ftString' && custField[2].iscombo == true){
-                $('.custField3Text').css('display','none');
-                $('.custField3Date').css('display','none');
-                $('.custField3Dropdown').css('display','block');
-
-                $('.checkbox3div').empty();
-                $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-                    ' <select type="search" class="form-control pointer customField3" id="edtSaleCustField3" name="edtSaleCustField3" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-                $('#edtSaleCustField3').attr('datatype','ftString');
-
-                var splashArrayCustomFieldList = new Array();
-                if(custField[2].dropdown != null){
-                if (custField[2].dropdown.length > 0){
-                  for (let x = 0; x < custField[2].dropdown.length; x++) {
-                      var dataList = [
-                          custField[2].dropdown[x].fields.ID || '',
-                          custField[2].dropdown[x].fields.Text || ''
-                      ];
-
-                      splashArrayCustomFieldList.push(dataList);
-                  }
-                }else{
-                  var dataList = [
-                      custField[2].dropdown.fields.ID || '',
-                      custField[2].dropdown.fields.Text || ''
-                  ];
-                  splashArrayCustomFieldList.push(dataList);
-                }
-                }else{
-                  var dataList = [
-                      '',
-                      ''
-                  ];
-                  splashArrayCustomFieldList.push(dataList);
-                }
-
-              setTimeout(function () {
-                  $('#custListType').DataTable({
-                      data: splashArrayCustomFieldList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      paging: true,
-                      "aaSorting": [],
-                      "orderMulti": true,
-                      columnDefs: [{
-                              "orderable": false,
-                              "targets": -1
-                          }, {
-                              className: "colCustField",
-                              "targets": [0]
-                          }, {
-                              className: "colFieldName pointer",
-                              "targets": [1]
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                      info: true,
-                      responsive: true,
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                          $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                      },
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                      let draftRecord = templateObject.datatablerecords.get();
-                      templateObject.datatablerecords.set(draftRecord);
-                  }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-                  $('.fullScreenSpin').css('display', 'none');
-              }, 10);
-
-
-                setTimeout(function () {
-                    $('#edtSaleCustField3').editableSelect();
-                    $('#edtSaleCustField3').editableSelect()
-                    .on('click.editable-select', function (e, li) {
-                        var $earch = $(this);
-                        var offset = $earch.offset();
-                        var fieldDataName = e.target.value || '';
-                        var fieldDataID = $('#edtSaleCustField3').attr('custfieldid') || '';
-                        $('#selectCustFieldID').val(fieldDataID);
-                        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                            $('#customFieldList').modal('toggle');
-                        } else {
-                            if (fieldDataName.replace(/\s/g, '') != '') {
-                                $('#newStatusHeader3').text('Edit '+custField[2].custfieldlabel);
-                                getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                    if (dataObject.length == 0) {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        sideBarService.getAllCustomFields().then(function (data) {
-                                            for (let i in data.tcustomfieldlist) {
-                                                if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                    $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                    $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                                }
-                                            }
-                                            setTimeout(function () {
-                                                $('.fullScreenSpin').css('display', 'none');
-                                                $('#newCustomFieldPop').modal('toggle');
-                                            }, 200);
-                                        });
-                                    } else {
-                                        let data = JSON.parse(dataObject[0].data);
-                                        let useData = data.tcustomfieldlist;
-                                        for (let i in useData) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(useData[i].fields.ID);
-                                                $('#newStatus').val(useData[i].fields.Description);
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                        }, 200);
-                                    }
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId3').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus3').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                });
-
-                            } else {
-                                $('#customFieldList').modal('toggle');
-                            }
-                        }
-                    });
-                }, 1500);
-
-              }
-
-            }
-            }).catch(function (err) {
-            });
-      }else{
-          let data = JSON.parse(dataObject[0].data);
-          let customData = {};
-          for(let x = 0; x < data.tcustomfieldlist.length; x++) {
-              if(data.tcustomfieldlist[x].fields.ListType == "ltSales") {
-                  customData = {
-                      active: data.tcustomfieldlist[x].fields.Active||false,
-                      id: data.tcustomfieldlist[x].fields.ID||0,
-                      custfieldlabel: data.tcustomfieldlist[x].fields.Description||'',
-                      datatype: data.tcustomfieldlist[x].fields.DataType||'',
-                      isempty: data.tcustomfieldlist[x].fields.ISEmpty||false,
-                      iscombo: data.tcustomfieldlist[x].fields.IsCombo||false,
-                      dropdown: data.tcustomfieldlist[x].fields.Dropdown||null,
-                  }
-                  custField.push(customData);
-          }
-      }
-
-      if(custField.length < 4) {
-          let remainder = 4 - custField.length;
-          let getRemCustomFields = 0;
-          count = count + remainder;
-          for(let r =0 ; r < remainder; r++) {
-            getRemCustomFields = (parseInt(remainder) + parseInt(custField.length) - r);
-              customData = {
-                  id: "",
-                  custfieldlabel: "Custom Field "+getRemCustomFields,
-                  datatype: "",
-                  isempty: true,
-                  iscombo: false
-              }
-              count++;
-              custField.push(customData);
-          }
-
-      }
-
-      templateObject.custfields.set(custField);
-      if(templateObject.custfields.get()){
-        //Custom Field 1
-        if(custField[0].active){
-          $('.checkbox1div').css('display','block');
-          $('#formCheck-customOne').prop('checked', true);
-        }
-
-        if(custField[1].active){
-          $('.checkbox2div').css('display','block');
-          $('#formCheck-customTwo').prop('checked', true);
-        }
-        if(custField[2].active){
-          $('.checkbox3div').css('display','block');
-          $('#formCheck-customThree').prop('checked', true);
-        }
-        if(custField[0].datatype == 'ftString' && custField[0].iscombo == false){
-
-          $('.custField1Text').css('display','block');
-          $('.custField1Date').css('display','none');
-          $('.custField1Dropdown').css('display','none');
-
-          $('.checkbox1div').empty();
-          $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '</label>' +
-              '<input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'> </div>');
-          $('#edtSaleCustField1').attr('datatype',"ftString");
-
-        }else if(custField[0].datatype == 'ftDateTime'){
-
-          $('.custField1Text').css('display','none');
-          $('.custField1Date').css('display','block');
-          $('.custField1Dropdown').css('display','none');
-          $('#customFieldText1').attr('datatype','ftDateTime');
-
-          $('.checkbox1div').empty();
-          $('.checkbox1div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-              '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField1" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'>' +
-              '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-              '</div> </div></div>');
-          $('#edtSaleCustField1').attr('datatype','ftDateTime');
-
-          setTimeout(function () {
-              $("#edtSaleCustField1").datepicker({
-                  showOn: 'button',
-                  buttonText: 'Show Date',
-                  buttonImageOnly: true,
-                  buttonImage: '/img/imgCal2.png',
-                  constrainInput: false,
-                  dateFormat: 'd/mm/yy',
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-              });
-
-              //  var currentDate = new Date();
-              // var begunDate = moment(currentDate).format("DD/MM/YYYY");
-              // $("#edtSaleCustField1").val(begunDate);
-          }, 1500);
-
-        }else if(custField[0].datatype == 'ftString' && custField[0].iscombo == true){
-
-          $('.custField1Text').css('display','none');
-          $('.custField1Date').css('display','none');
-          $('.custField1Dropdown').css('display','block');
-
-          $('.checkbox1div').empty();
-          $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-              ' <select type="search" class="form-control pointer customField1" id="edtSaleCustField1" name="edtSaleCustField1" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid='+ custField[0].id +'></select></div>');
-          $('#edtSaleCustField1').attr('datatype','ftString');
-          var splashArrayCustomFieldList = new Array();
-          if(custField[0].dropdown != null){
-          if (custField[0].dropdown.length > 0){
-
-            for (let x = 0; x < custField[0].dropdown.length; x++) {
-                var dataList = [
-                    custField[0].dropdown[x].fields.ID || '',
-                    custField[0].dropdown[x].fields.Text || ''
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-            }
-          }else{
-
-            var dataList = [
-                custField[0].dropdown.fields.ID || '',
-                custField[0].dropdown.fields.Text || ''
-            ];
-
-            splashArrayCustomFieldList.push(dataList);
-          }
-          }else{
-            var dataList = [
-                '',
-                ''
-            ];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-        setTimeout(function () {
-            $('#custListType').DataTable({
-                data: splashArrayCustomFieldList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: true,
-                "aaSorting": [],
-                "orderMulti": true,
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": -1
-                    }, {
-                        className: "colCustField",
-                        "targets": [0]
-                    }, {
-                        className: "colFieldName pointer",
-                        "targets": [1]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                info: true,
-                responsive: true,
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                    $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                },
-
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        }, 10);
-          setTimeout(function () {
-              $('#edtSaleCustField1').editableSelect();
-              $('#edtSaleCustField1').editableSelect()
-              .on('click.editable-select', function (e, li) {
-                  var $earch = $(this);
-                  var offset = $earch.offset();
-                  var fieldDataName = e.target.value || '';
-                  var fieldDataID = $('#edtSaleCustField1').attr('custfieldid') || '';
-                  $('#selectCustFieldID').val(fieldDataID);
-                  if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                      $('#customFieldList').modal('toggle');
-                  } else {
-                      if (fieldDataName.replace(/\s/g, '') != '') {
-                          $('#newStatusHeader1').text('Edit '+custField[0].custfieldlabel);
-                          getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                              if (dataObject.length == 0) {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  sideBarService.getAllCustomFields().then(function (data) {
-                                      for (let i in data.tcustomfieldlist) {
-                                          if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                              $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                              $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                          }
-                                      }
-                                      setTimeout(function () {
-                                          $('.fullScreenSpin').css('display', 'none');
-                                          $('#newCustomFieldPop').modal('toggle');
-                                      }, 200);
-                                  });
-                              } else {
-                                  let data = JSON.parse(dataObject[0].data);
-                                  let useData = data.tcustomfieldlist;
-                                  for (let i in useData) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId').val(useData[i].fields.ID);
-                                          $('#newStatus').val(useData[i].fields.Description);
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                  }, 200);
-                              }
-                          }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              sideBarService.getAllCustomFields().then(function (data) {
-                                  for (let i in data.tcustomfieldlist) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId1').val(data.tcustomfieldlist[i].fields.ID);
-                                          $('#newStatus1').val(data.tcustomfieldlist[i].fields.Description);
-
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('toggle');
-                                  }, 200);
-                              });
-                          });
-
-                      } else {
-                          $('#customFieldList').modal('toggle');
-                      }
-                  }
-              });
-          }, 1500);
-
-        }
-
-        //Custom Field 2
-        if(custField[1].datatype == 'ftString' && custField[1].iscombo == false){
-
-          $('.custField2Text').css('display','block');
-          $('.custField2Date').css('display','none');
-          $('.custField2Dropdown').css('display','none');
-
-          $('.checkbox2div').empty();
-          $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '</label>' +
-              '<input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value=""> </div>');
-          $('#edtSaleCustField2').attr('datatype',"ftString");
-        }else if(custField[1].datatype == 'ftDateTime'){
-
-          $('.custField2Text').css('display','none');
-          $('.custField2Date').css('display','block');
-          $('.custField2Dropdown').css('display','none');
-          $('#customFieldText2').attr('datatype','ftDateTime');
-
-          $('.checkbox2div').empty();
-          $('.checkbox2div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-              '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField2" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField2" name="edtSaleCustField2" value="">' +
-              '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-              '</div> </div></div>');
-          $('#edtSaleCustField2').attr('datatype','ftDateTime');
-
-          setTimeout(function () {
-              $("#edtSaleCustField2").datepicker({
-                  showOn: 'button',
-                  buttonText: 'Show Date',
-                  buttonImageOnly: true,
-                  buttonImage: '/img/imgCal2.png',
-                  constrainInput: false,
-                  dateFormat: 'd/mm/yy',
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-              });
-
-          }, 1500);
-
-        }else if(custField[1].datatype == 'ftString' && custField[1].iscombo == true){
-
-          $('.custField2Text').css('display','none');
-          $('.custField2Date').css('display','none');
-          $('.custField2Dropdown').css('display','block');
-
-          $('.checkbox2div').empty();
-          $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-              ' <select type="search" class="form-control pointer customField2" id="edtSaleCustField2" name="edtSaleCustField2" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-          $('#edtSaleCustField2').attr('datatype','ftString');
-
-          var splashArrayCustomFieldList = new Array();
-          if(custField[1].dropdown != null){
-          if (custField[1].dropdown.length > 0){
-            for (let x = 0; x < custField[1].dropdown.length; x++) {
-                var dataList = [
-                    custField[1].dropdown[x].fields.ID || '',
-                    custField[1].dropdown[x].fields.Text || ''
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-            }
-          }else{
-            var dataList = [
-                custField[1].dropdown.fields.ID || '',
-                custField[1].dropdown.fields.Text || ''
-            ];
-            splashArrayCustomFieldList.push(dataList);
-          }
-          }else{
-            var dataList = [
-                '',
-                ''
-            ];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-        setTimeout(function () {
-            $('#custListType').DataTable({
-                data: splashArrayCustomFieldList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: true,
-                "aaSorting": [],
-                "orderMulti": true,
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": -1
-                    }, {
-                        className: "colCustField",
-                        "targets": [0]
-                    }, {
-                        className: "colFieldName pointer",
-                        "targets": [1]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                info: true,
-                responsive: true,
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                    $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                },
-
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        }, 10);
-
-          setTimeout(function () {
-              $('#edtSaleCustField2').editableSelect();
-              $('#edtSaleCustField2').editableSelect()
-              .on('click.editable-select', function (e, li) {
-                  var $earch = $(this);
-                  var offset = $earch.offset();
-                  var fieldDataName = e.target.value || '';
-                  var fieldDataID = $('#edtSaleCustField2').attr('custfieldid') || '';
-                  $('#selectCustFieldID').val(fieldDataID);
-                  if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                      $('#customFieldList').modal('toggle');
-                  } else {
-                      if (fieldDataName.replace(/\s/g, '') != '') {
-                          $('#newStatusHeader2').text('Edit '+custField[1].custfieldlabel);
-                          getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                              if (dataObject.length == 0) {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  sideBarService.getAllCustomFields().then(function (data) {
-                                      for (let i in data.tcustomfieldlist) {
-                                          if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                              $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                              $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                          }
-                                      }
-                                      setTimeout(function () {
-                                          $('.fullScreenSpin').css('display', 'none');
-                                          $('#newCustomFieldPop').modal('toggle');
-                                      }, 200);
-                                  });
-                              } else {
-                                  let data = JSON.parse(dataObject[0].data);
-                                  let useData = data.tcustomfieldlist;
-                                  for (let i in useData) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId').val(useData[i].fields.ID);
-                                          $('#newStatus').val(useData[i].fields.Description);
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                  }, 200);
-                              }
-                          }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              sideBarService.getAllCustomFields().then(function (data) {
-                                  for (let i in data.tcustomfieldlist) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId2').val(data.tcustomfieldlist[i].fields.ID);
-                                          $('#newStatus2').val(data.tcustomfieldlist[i].fields.Description);
-
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('toggle');
-                                  }, 200);
-                              });
-                          });
-
-                      } else {
-                          $('#customFieldList').modal('toggle');
-                      }
-                  }
-              });
-          }, 1500);
-
-        }
-
-        //Custom Field 3
-        if(custField[2].datatype == 'ftString' && custField[2].iscombo == false){
-
-          $('.custField3Text').css('display','block');
-          $('.custField3Date').css('display','none');
-          $('.custField3Dropdown').css('display','none');
-
-          $('.checkbox3div').empty();
-          $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '</label>' +
-              '<input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value=""> </div>');
-          $('#edtSaleCustField3').attr('datatype',"ftString");
-        }else if(custField[2].datatype == 'ftDateTime'){
-
-          $('.custField3Text').css('display','none');
-          $('.custField3Date').css('display','block');
-          $('.custField3Dropdown').css('display','none');
-          $('#customFieldText3').attr('datatype','ftDateTime');
-
-          $('.checkbox3div').empty();
-          $('.checkbox3div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-              '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField3" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField3" name="edtSaleCustField3" value="">' +
-              '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-              '</div> </div></div>');
-          $('#edtSaleCustField3').attr('datatype','ftDateTime');
-
-          setTimeout(function () {
-              $("#edtSaleCustField3").datepicker({
-                  showOn: 'button',
-                  buttonText: 'Show Date',
-                  buttonImageOnly: true,
-                  buttonImage: '/img/imgCal2.png',
-                  constrainInput: false,
-                  dateFormat: 'd/mm/yy',
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-              });
-
-          }, 1500);
-
-        }else if(custField[2].datatype == 'ftString' && custField[2].iscombo == true){
-          $('.custField3Text').css('display','none');
-          $('.custField3Date').css('display','none');
-          $('.custField3Dropdown').css('display','block');
-
-          $('.checkbox3div').empty();
-          $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-              ' <select type="search" class="form-control pointer customField3" id="edtSaleCustField3" name="edtSaleCustField3" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-          $('#edtSaleCustField3').attr('datatype','ftString');
-
-          var splashArrayCustomFieldList = new Array();
-          if(custField[2].dropdown != null){
-          if (custField[2].dropdown.length > 0){
-            for (let x = 0; x < custField[2].dropdown.length; x++) {
-                var dataList = [
-                    custField[2].dropdown[x].fields.ID || '',
-                    custField[2].dropdown[x].fields.Text || ''
-                ];
-
-                splashArrayCustomFieldList.push(dataList);
-            }
-          }else{
-            var dataList = [
-                custField[2].dropdown.fields.ID || '',
-                custField[2].dropdown.fields.Text || ''
-            ];
-            splashArrayCustomFieldList.push(dataList);
-          }
-          }else{
-            var dataList = [
-                '',
-                ''
-            ];
-            splashArrayCustomFieldList.push(dataList);
-          }
-
-        setTimeout(function () {
-            $('#custListType').DataTable({
-                data: splashArrayCustomFieldList,
-                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                paging: true,
-                "aaSorting": [],
-                "orderMulti": true,
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": -1
-                    }, {
-                        className: "colCustField",
-                        "targets": [0]
-                    }, {
-                        className: "colFieldName pointer",
-                        "targets": [1]
-                    }
-                ],
-                select: true,
-                destroy: true,
-                colReorder: true,
-                pageLength: initialDatatableLoad,
-                lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                info: true,
-                responsive: true,
-                "fnInitComplete": function () {
-                    $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                    $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                },
-
-            }).on('page', function () {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-            }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                setTimeout(function () {
-                    MakeNegative();
-                }, 100);
-            });
-            $('.fullScreenSpin').css('display', 'none');
-        }, 10);
-
-
-          setTimeout(function () {
-              $('#edtSaleCustField3').editableSelect();
-              $('#edtSaleCustField3').editableSelect()
-              .on('click.editable-select', function (e, li) {
-                  var $earch = $(this);
-                  var offset = $earch.offset();
-                  var fieldDataName = e.target.value || '';
-                  var fieldDataID = $('#edtSaleCustField3').attr('custfieldid') || '';
-                  $('#selectCustFieldID').val(fieldDataID);
-                  if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                      $('#customFieldList').modal('toggle');
-                  } else {
-                      if (fieldDataName.replace(/\s/g, '') != '') {
-                          $('#newStatusHeader3').text('Edit '+custField[2].custfieldlabel);
-                          getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                              if (dataObject.length == 0) {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  sideBarService.getAllCustomFields().then(function (data) {
-                                      for (let i in data.tcustomfieldlist) {
-                                          if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                              $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                              $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                          }
-                                      }
-                                      setTimeout(function () {
-                                          $('.fullScreenSpin').css('display', 'none');
-                                          $('#newCustomFieldPop').modal('toggle');
-                                      }, 200);
-                                  });
-                              } else {
-                                  let data = JSON.parse(dataObject[0].data);
-                                  let useData = data.tcustomfieldlist;
-                                  for (let i in useData) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId').val(useData[i].fields.ID);
-                                          $('#newStatus').val(useData[i].fields.Description);
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                  }, 200);
-                              }
-                          }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              sideBarService.getAllCustomFields().then(function (data) {
-                                  for (let i in data.tcustomfieldlist) {
-                                      if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                          $('#statusId3').val(data.tcustomfieldlist[i].fields.ID);
-                                          $('#newStatus3').val(data.tcustomfieldlist[i].fields.Description);
-
-                                      }
-                                  }
-                                  setTimeout(function () {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#newCustomFieldPop').modal('toggle');
-                                  }, 200);
-                              });
-                          });
-
-                      } else {
-                          $('#customFieldList').modal('toggle');
-                      }
-                  }
-              });
-          }, 1500);
-
-        }
-
-      }
-      }
-
-      }).catch(function(err) {
-        sideBarService.getAllCustomFields().then(function (data) {
-            let customData = {};
-            for(let x = 0; x < data.tcustomfieldlist.length; x++) {
-                if(data.tcustomfieldlist[x].fields.ListType == "ltSales") {
-                    customData = {
-                        active: data.tcustomfieldlist[x].fields.Active||false,
-                        id: data.tcustomfieldlist[x].fields.ID||0,
-                        custfieldlabel: data.tcustomfieldlist[x].fields.Description||'',
-                        datatype: data.tcustomfieldlist[x].fields.DataType||'',
-                        isempty: data.tcustomfieldlist[x].fields.ISEmpty||false,
-                        iscombo: data.tcustomfieldlist[x].fields.IsCombo||false,
-                        dropdown: data.tcustomfieldlist[x].fields.Dropdown||null,
-                    }
-                    custField.push(customData);
-            }
-        }
-
-        if(custField.length < 4) {
-            let remainder = 4 - custField.length;
-            let getRemCustomFields = 0;
-            count = count + remainder;
-            for(let r =0 ; r < remainder; r++) {
-              getRemCustomFields = (parseInt(remainder) + parseInt(custField.length) - r);
-                customData = {
-                    id: "",
-                    custfieldlabel: "Custom Field "+getRemCustomFields,
-                    datatype: "",
-                    isempty: true,
-                    iscombo: false
-                }
-                count++;
-                custField.push(customData);
-            }
-
-        }
-
-        templateObject.custfields.set(custField);
-        if(templateObject.custfields.get()){
-          //Custom Field 1
-          if(custField[0].active){
-            $('.checkbox1div').css('display','block');
-            $('#formCheck-customOne').prop('checked', true);
-          }
-
-          if(custField[1].active){
-            $('.checkbox2div').css('display','block');
-            $('#formCheck-customTwo').prop('checked', true);
-          }
-          if(custField[2].active){
-            $('.checkbox3div').css('display','block');
-            $('#formCheck-customThree').prop('checked', true);
-          }
-          if(custField[0].datatype == 'ftString' && custField[0].iscombo == false){
-
-            $('.custField1Text').css('display','block');
-            $('.custField1Date').css('display','none');
-            $('.custField1Dropdown').css('display','none');
-
-            $('.checkbox1div').empty();
-            $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '</label>' +
-                '<input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'> </div>');
-            $('#edtSaleCustField1').attr('datatype',"ftString");
-
-          }else if(custField[0].datatype == 'ftDateTime'){
-
-            $('.custField1Text').css('display','none');
-            $('.custField1Date').css('display','block');
-            $('.custField1Dropdown').css('display','none');
-            $('#customFieldText1').attr('datatype','ftDateTime');
-
-            $('.checkbox1div').empty();
-            $('.checkbox1div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-                '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField1" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField1" name="edtSaleCustField1" value="" custfieldid='+ custField[0].id +'>' +
-                '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                '</div> </div></div>');
-            $('#edtSaleCustField1').attr('datatype','ftDateTime');
-
-            setTimeout(function () {
-                $("#edtSaleCustField1").datepicker({
-                    showOn: 'button',
-                    buttonText: 'Show Date',
-                    buttonImageOnly: true,
-                    buttonImage: '/img/imgCal2.png',
-                    constrainInput: false,
-                    dateFormat: 'd/mm/yy',
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-90:+10",
-                });
-
-                //  var currentDate = new Date();
-                // var begunDate = moment(currentDate).format("DD/MM/YYYY");
-                // $("#edtSaleCustField1").val(begunDate);
-            }, 1500);
-
-          }else if(custField[0].datatype == 'ftString' && custField[0].iscombo == true){
-
-            $('.custField1Text').css('display','none');
-            $('.custField1Date').css('display','none');
-            $('.custField1Dropdown').css('display','block');
-
-            $('.checkbox1div').empty();
-            $('.checkbox1div').append('<div class="form-group"><label class="lblCustomField1">' + custField[0].custfieldlabel + '<br></label>' +
-                ' <select type="search" class="form-control pointer customField1" id="edtSaleCustField1" name="edtSaleCustField1" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;" custfieldid='+ custField[0].id +'></select></div>');
-            $('#edtSaleCustField1').attr('datatype','ftString');
-            var splashArrayCustomFieldList = new Array();
-            if(custField[0].dropdown != null){
-            if (custField[0].dropdown.length > 0){
-
-              for (let x = 0; x < custField[0].dropdown.length; x++) {
-                  var dataList = [
-                      custField[0].dropdown[x].fields.ID || '',
-                      custField[0].dropdown[x].fields.Text || ''
-                  ];
-
-                  splashArrayCustomFieldList.push(dataList);
-              }
-            }else{
-
-              var dataList = [
-                  custField[0].dropdown.fields.ID || '',
-                  custField[0].dropdown.fields.Text || ''
-              ];
-
-              splashArrayCustomFieldList.push(dataList);
-            }
-            }else{
-              var dataList = [
-                  '',
-                  ''
-              ];
-              splashArrayCustomFieldList.push(dataList);
-            }
-
-          setTimeout(function () {
-              $('#custListType').DataTable({
-                  data: splashArrayCustomFieldList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  paging: true,
-                  "aaSorting": [],
-                  "orderMulti": true,
-                  columnDefs: [{
-                          "orderable": false,
-                          "targets": -1
-                      }, {
-                          className: "colCustField",
-                          "targets": [0]
-                      }, {
-                          className: "colFieldName pointer",
-                          "targets": [1]
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                  info: true,
-                  responsive: true,
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                      $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                  },
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-              $('.fullScreenSpin').css('display', 'none');
-          }, 10);
-            setTimeout(function () {
-                $('#edtSaleCustField1').editableSelect();
-                $('#edtSaleCustField1').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var fieldDataName = e.target.value || '';
-                    var fieldDataID = $('#edtSaleCustField1').attr('custfieldid') || '';
-                    $('#selectCustFieldID').val(fieldDataID);
-                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                        $('#customFieldList').modal('toggle');
-                    } else {
-                        if (fieldDataName.replace(/\s/g, '') != '') {
-                            $('#newStatusHeader1').text('Edit '+custField[0].custfieldlabel);
-                            getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                if (dataObject.length == 0) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                } else {
-                                    let data = JSON.parse(dataObject[0].data);
-                                    let useData = data.tcustomfieldlist;
-                                    for (let i in useData) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId').val(useData[i].fields.ID);
-                                            $('#newStatus').val(useData[i].fields.Description);
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                    }, 200);
-                                }
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                sideBarService.getAllCustomFields().then(function (data) {
-                                    for (let i in data.tcustomfieldlist) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId1').val(data.tcustomfieldlist[i].fields.ID);
-                                            $('#newStatus1').val(data.tcustomfieldlist[i].fields.Description);
-
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('toggle');
-                                    }, 200);
-                                });
-                            });
-
-                        } else {
-                            $('#customFieldList').modal('toggle');
-                        }
-                    }
-                });
-            }, 1500);
-
-          }
-
-          //Custom Field 2
-          if(custField[1].datatype == 'ftString' && custField[1].iscombo == false){
-
-            $('.custField2Text').css('display','block');
-            $('.custField2Date').css('display','none');
-            $('.custField2Dropdown').css('display','none');
-
-            $('.checkbox2div').empty();
-            $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '</label>' +
-                '<input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value=""> </div>');
-            $('#edtSaleCustField2').attr('datatype',"ftString");
-          }else if(custField[1].datatype == 'ftDateTime'){
-
-            $('.custField2Text').css('display','none');
-            $('.custField2Date').css('display','block');
-            $('.custField2Dropdown').css('display','none');
-            $('#customFieldText2').attr('datatype','ftDateTime');
-
-            $('.checkbox2div').empty();
-            $('.checkbox2div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-                '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField2" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField2" name="edtSaleCustField2" value="">' +
-                '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                '</div> </div></div>');
-            $('#edtSaleCustField2').attr('datatype','ftDateTime');
-
-            setTimeout(function () {
-                $("#edtSaleCustField2").datepicker({
-                    showOn: 'button',
-                    buttonText: 'Show Date',
-                    buttonImageOnly: true,
-                    buttonImage: '/img/imgCal2.png',
-                    constrainInput: false,
-                    dateFormat: 'd/mm/yy',
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-90:+10",
-                });
-
-            }, 1500);
-
-          }else if(custField[1].datatype == 'ftString' && custField[1].iscombo == true){
-
-            $('.custField2Text').css('display','none');
-            $('.custField2Date').css('display','none');
-            $('.custField2Dropdown').css('display','block');
-
-            $('.checkbox2div').empty();
-            $('.checkbox2div').append('<div class="form-group"><label class="lblCustomField2">' + custField[1].custfieldlabel + '<br></label>' +
-                ' <select type="search" class="form-control pointer customField2" id="edtSaleCustField2" name="edtSaleCustField2" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-            $('#edtSaleCustField2').attr('datatype','ftString');
-
-            var splashArrayCustomFieldList = new Array();
-            if(custField[1].dropdown != null){
-            if (custField[1].dropdown.length > 0){
-              for (let x = 0; x < custField[1].dropdown.length; x++) {
-                  var dataList = [
-                      custField[1].dropdown[x].fields.ID || '',
-                      custField[1].dropdown[x].fields.Text || ''
-                  ];
-
-                  splashArrayCustomFieldList.push(dataList);
-              }
-            }else{
-              var dataList = [
-                  custField[1].dropdown.fields.ID || '',
-                  custField[1].dropdown.fields.Text || ''
-              ];
-              splashArrayCustomFieldList.push(dataList);
-            }
-            }else{
-              var dataList = [
-                  '',
-                  ''
-              ];
-              splashArrayCustomFieldList.push(dataList);
-            }
-
-          setTimeout(function () {
-              $('#custListType').DataTable({
-                  data: splashArrayCustomFieldList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  paging: true,
-                  "aaSorting": [],
-                  "orderMulti": true,
-                  columnDefs: [{
-                          "orderable": false,
-                          "targets": -1
-                      }, {
-                          className: "colCustField",
-                          "targets": [0]
-                      }, {
-                          className: "colFieldName pointer",
-                          "targets": [1]
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                  info: true,
-                  responsive: true,
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                      $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                  },
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-              $('.fullScreenSpin').css('display', 'none');
-          }, 10);
-
-            setTimeout(function () {
-                $('#edtSaleCustField2').editableSelect();
-                $('#edtSaleCustField2').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var fieldDataName = e.target.value || '';
-                    var fieldDataID = $('#edtSaleCustField2').attr('custfieldid') || '';
-                    $('#selectCustFieldID').val(fieldDataID);
-                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                        $('#customFieldList').modal('toggle');
-                    } else {
-                        if (fieldDataName.replace(/\s/g, '') != '') {
-                            $('#newStatusHeader2').text('Edit '+custField[1].custfieldlabel);
-                            getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                if (dataObject.length == 0) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                } else {
-                                    let data = JSON.parse(dataObject[0].data);
-                                    let useData = data.tcustomfieldlist;
-                                    for (let i in useData) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId').val(useData[i].fields.ID);
-                                            $('#newStatus').val(useData[i].fields.Description);
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                    }, 200);
-                                }
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                sideBarService.getAllCustomFields().then(function (data) {
-                                    for (let i in data.tcustomfieldlist) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId2').val(data.tcustomfieldlist[i].fields.ID);
-                                            $('#newStatus2').val(data.tcustomfieldlist[i].fields.Description);
-
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('toggle');
-                                    }, 200);
-                                });
-                            });
-
-                        } else {
-                            $('#customFieldList').modal('toggle');
-                        }
-                    }
-                });
-            }, 1500);
-
-          }
-
-          //Custom Field 3
-          if(custField[2].datatype == 'ftString' && custField[2].iscombo == false){
-
-            $('.custField3Text').css('display','block');
-            $('.custField3Date').css('display','none');
-            $('.custField3Dropdown').css('display','none');
-
-            $('.checkbox3div').empty();
-            $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '</label>' +
-                '<input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value=""> </div>');
-            $('#edtSaleCustField3').attr('datatype',"ftString");
-          }else if(custField[2].datatype == 'ftDateTime'){
-
-            $('.custField3Text').css('display','none');
-            $('.custField3Date').css('display','block');
-            $('.custField3Dropdown').css('display','none');
-            $('#customFieldText3').attr('datatype','ftDateTime');
-
-            $('.checkbox3div').empty();
-            $('.checkbox3div').append('<div class="form-group" data-placement="bottom" title="Date format: DD/MM/YYYY"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-                '<div class="input-group date" style="cursor: pointer;"><input type="text" class="form-control customField3" style="width: 86% !important; display: inline-flex;" id="edtSaleCustField3" name="edtSaleCustField3" value="">' +
-                '<div class="input-group-addon" style=""><span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>' +
-                '</div> </div></div>');
-            $('#edtSaleCustField3').attr('datatype','ftDateTime');
-
-            setTimeout(function () {
-                $("#edtSaleCustField3").datepicker({
-                    showOn: 'button',
-                    buttonText: 'Show Date',
-                    buttonImageOnly: true,
-                    buttonImage: '/img/imgCal2.png',
-                    constrainInput: false,
-                    dateFormat: 'd/mm/yy',
-                    showOtherMonths: true,
-                    selectOtherMonths: true,
-                    changeMonth: true,
-                    changeYear: true,
-                    yearRange: "-90:+10",
-                });
-
-            }, 1500);
-
-          }else if(custField[2].datatype == 'ftString' && custField[2].iscombo == true){
-            $('.custField3Text').css('display','none');
-            $('.custField3Date').css('display','none');
-            $('.custField3Dropdown').css('display','block');
-
-            $('.checkbox3div').empty();
-            $('.checkbox3div').append('<div class="form-group"><label class="lblCustomField3">' + custField[2].custfieldlabel + '<br></label>' +
-                ' <select type="search" class="form-control pointer customField3" id="edtSaleCustField3" name="edtSaleCustField3" style="background-color:rgb(255, 255, 255); border-top-left-radius: 0.35rem; border-bottom-left-radius: 0.35rem;"></select></div>');
-            $('#edtSaleCustField3').attr('datatype','ftString');
-
-            var splashArrayCustomFieldList = new Array();
-            if(custField[2].dropdown != null){
-            if (custField[2].dropdown.length > 0){
-              for (let x = 0; x < custField[2].dropdown.length; x++) {
-                  var dataList = [
-                      custField[2].dropdown[x].fields.ID || '',
-                      custField[2].dropdown[x].fields.Text || ''
-                  ];
-
-                  splashArrayCustomFieldList.push(dataList);
-              }
-            }else{
-              var dataList = [
-                  custField[2].dropdown.fields.ID || '',
-                  custField[2].dropdown.fields.Text || ''
-              ];
-              splashArrayCustomFieldList.push(dataList);
-            }
-            }else{
-              var dataList = [
-                  '',
-                  ''
-              ];
-              splashArrayCustomFieldList.push(dataList);
-            }
-
-          setTimeout(function () {
-              $('#custListType').DataTable({
-                  data: splashArrayCustomFieldList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  paging: true,
-                  "aaSorting": [],
-                  "orderMulti": true,
-                  columnDefs: [{
-                          "orderable": false,
-                          "targets": -1
-                      }, {
-                          className: "colCustField",
-                          "targets": [0]
-                      }, {
-                          className: "colFieldName pointer",
-                          "targets": [1]
-                      }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
-                  info: true,
-                  responsive: true,
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#custListType_filter");
-                      $("<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#custListType_filter");
-                  },
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('column-reorder', function () {}).on('length.dt', function (e, settings, len) {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-              $('.fullScreenSpin').css('display', 'none');
-          }, 10);
-
-
-            setTimeout(function () {
-                $('#edtSaleCustField3').editableSelect();
-                $('#edtSaleCustField3').editableSelect()
-                .on('click.editable-select', function (e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var fieldDataName = e.target.value || '';
-                    var fieldDataID = $('#edtSaleCustField3').attr('custfieldid') || '';
-                    $('#selectCustFieldID').val(fieldDataID);
-                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                        $('#customFieldList').modal('toggle');
-                    } else {
-                        if (fieldDataName.replace(/\s/g, '') != '') {
-                            $('#newStatusHeader3').text('Edit '+custField[2].custfieldlabel);
-                            getVS1Data('TCustomFieldList').then(function (dataObject) { //edit to test indexdb
-                                if (dataObject.length == 0) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getAllCustomFields().then(function (data) {
-                                        for (let i in data.tcustomfieldlist) {
-                                            if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                                $('#statusId').val(data.tcustomfieldlist[i].fields.ID);
-                                                $('#newStatus').val(data.tcustomfieldlist[i].fields.Description);
-
-                                            }
-                                        }
-                                        setTimeout(function () {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newCustomFieldPop').modal('toggle');
-                                        }, 200);
-                                    });
-                                } else {
-                                    let data = JSON.parse(dataObject[0].data);
-                                    let useData = data.tcustomfieldlist;
-                                    for (let i in useData) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId').val(useData[i].fields.ID);
-                                            $('#newStatus').val(useData[i].fields.Description);
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('newCustomFieldPop');
-                                    }, 200);
-                                }
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                sideBarService.getAllCustomFields().then(function (data) {
-                                    for (let i in data.tcustomfieldlist) {
-                                        if (data.tcustomfieldlist[i].fields.Description === fieldDataName) {
-                                            $('#statusId3').val(data.tcustomfieldlist[i].fields.ID);
-                                            $('#newStatus3').val(data.tcustomfieldlist[i].fields.Description);
-
-                                        }
-                                    }
-                                    setTimeout(function () {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newCustomFieldPop').modal('toggle');
-                                    }, 200);
-                                });
-                            });
-
-                        } else {
-                            $('#customFieldList').modal('toggle');
-                        }
-                    }
-                });
-            }, 1500);
-
-          }
-
-        }
-        }).catch(function (err) {
-        });
-      });
+    templateObject.getSalesCustomFieldsList= function () { 
+      return;
     };
     setTimeout(function(){
         templateObject.getSalesCustomFieldsList()
@@ -3187,6 +1340,7 @@ Template.refundcard.onRendered(() => {
                         };
 
                         if (data.ttermsvs1[i].isSalesdefault == true) {
+                          Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                             templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                         }
 
@@ -3222,6 +1376,7 @@ Template.refundcard.onRendered(() => {
                         termsname: data.ttermsvs1[i].TermsName || ' ',
                     };
                     if (data.ttermsvs1[i].isSalesdefault == true) {
+                      Session.setPersistent('ERPTermsSales', data.ttermsvs1[i].TermsName||"COD");
                         templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
                     }
                     termrecords.push(termrecordObj);
@@ -4683,6 +2838,15 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
         $('#sltStatus').editableSelect();
         $('#sltPaymentMethod').editableSelect();
         $('#addRow').on('click', function() {
+          var getTableFields = [ $('#tblInvoiceLine tbody tr .lineProductName')];
+          var checkEmptyFields;
+
+          for(var i=0;i< getTableFields.length;i++){
+          checkEmptyFields = getTableFields[i].filter(function(i,element) {
+              return $.trim($(this).val()) === '';
+          });
+         };
+          if (!checkEmptyFields.length) {
             var rowData = $('#tblInvoiceLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
             $(".lineProductName", rowData).val("");
@@ -4701,7 +2865,15 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
             setTimeout(function() {
                 $('#' + tokenid + " .lineProductName").trigger('click');
             }, 200);
+          }else{
+            $("#tblInvoiceLine tbody tr").each(function (index) {
+                var $tblrow = $(this);
+                if ($tblrow.find(".lineProductName").val() == '') {
+                    $tblrow.find(".colProductName").addClass('boldtablealertsborder');
+                }
 
+              });
+          }
         });
 
     });
@@ -6885,6 +5057,13 @@ Template.refundcard.helpers({
             });
         },
 
+        vs1companyBankAccountName: () => {
+            return localStorage.getItem('vs1companyBankAccountName') || '';
+        },
+        vs1companyBankAccountNo: () => {
+            return localStorage.getItem('vs1companyBankAccountNo') || '';
+        },
+
         vs1companyBankBSB: () => {
             return localStorage.getItem('vs1companyBankBSB') || '';
         },
@@ -6970,8 +5149,12 @@ Template.refundcard.helpers({
             return Session.get('vs1companyPOBox');
         },
         companyphone: () => {
-            return Session.get('vs1companyPhone');
+            
+         let phone = "Phone: "+ Session.get('vs1companyPhone');
+         return phone;
+
         },
+
         companyabn: () => { //Update Company ABN
             let countryABNValue = "ABN: " + Session.get('vs1companyABN');
             if (LoggedCountry == "South Africa") {
@@ -6980,6 +5163,8 @@ Template.refundcard.helpers({
 
             return countryABNValue;
         },
+
+
         companyReg: () => { //Add Company Reg
             let countryRegValue = '';
             if (LoggedCountry == "South Africa") {
@@ -8507,6 +6692,17 @@ Template.refundcard.events({
                             '    </tr>' +
                             '</table>';
 
+                            // add to custom field
+                            // sideBarService.getAllSalesOrderList("All").then(function (data) {
+                            //   addVS1Data('TSalesOrderEx', JSON.stringify(data)).then(function (datareturn) {
+                            //   }).catch(function (err) {
+                            //   });
+                            // }); 
+                            sideBarService.getAllRefundList("All").then(function(data) { 
+                              addVS1Data('TRefundSale', JSON.stringify(data)); 
+                              }).catch(function(err) {
+                              });
+                            // add to custom field
                         if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
                             Meteor.call('sendEmail', {
                                 from: "" + mailFromName + " <" + mailFrom + ">",
@@ -9462,7 +7658,22 @@ Template.refundcard.events({
                 }
             });
         }
-     }
+     },
+
+     // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
 });
 
 Template.registerHelper('equals', function(a, b) {

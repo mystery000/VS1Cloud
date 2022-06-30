@@ -71,6 +71,97 @@ Template.customfieldpop.onRendered(() => {
     $(document).on("click", ".btnRefreshCustomField", function (e) {
 
       data_id = e.target.dataset.id;
+      $(".fullScreenSpin").css("display", "inline-block");
+
+      $(".fullScreenSpin").css("display", "inline-block");
+
+      let dataSearchName = $("#customFieldDropdownTable" + data_id + "_filter input").val();
+
+      if (dataSearchName.replace(/\s/g, "") != "") {
+        sideBarService
+          .getCustomFieldsDropDownByNameOrID(dataSearchName)
+          .then(function (fieldsData) {
+            $(".btnRefreshCustomField").removeClass("btnSearchAlert");
+
+            let data = fieldsData.tcustomfieldlistdropdown
+            splashArrayClientTypeList1 = [];
+
+            $("#isdropDown" + data_id).val(true);
+            if (data.length > 0) {
+              for (let i = 0; i < data.length; i++) {
+                var dataList = [
+                  data[i].fields.ID || "",
+                  data[i].fields.Text || "",
+                ];
+                splashArrayClientTypeList1.push(dataList);
+              }
+            }
+
+            $(".fullScreenSpin").css("display", "none");
+            setTimeout(function () {
+              $("#customFieldDropdownTable" + data_id)
+                .DataTable({
+                  data: splashArrayClientTypeList1,
+                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                  paging: true,
+                  aaSorting: [],
+                  orderMulti: true,
+                  columnDefs: [
+                    {
+                      orderable: false,
+                      targets: -1,
+                    },
+                    {
+                      className: "colCustField",
+                      targets: [0],
+                    },
+                    {
+                      className: "colFieldName pointer",
+                      targets: [1],
+                    },
+                  ],
+                  select: true,
+                  destroy: true,
+                  colReorder: true,
+                  pageLength: initialDatatableLoad,
+                  lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"],
+                  ],
+                  info: true,
+                  responsive: true,
+                  fnInitComplete: function () {
+                    $("<button class='btn btn-primary btnAddNewCustField' data-id='" + data_id + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left:  8px !important;'><i class='fas fa-plus' data-id='" + data_id + "'></i></button>"
+                    ).insertAfter("#customFieldDropdownTable" + data_id + "_filter");
+
+                    $("<button class='btn btn-primary btnRefreshCustomField' type='button' data-id='" + data_id + "' style='padding: 4px 10px; font-size: 14px;  margin-left: 8px !important;'><i class='fas fa-search-plus' data-id='" + data_id + "' style='margin-right: 5px'></i>Search</button>").insertAfter("#customFieldDropdownTable" + data_id + "_filter");
+                  },
+                })
+                .on("page", function () {
+                  setTimeout(function () {
+                    // MakeNegative();
+                  }, 100);
+                  // let draftRecord = templateObject.datatablerecords.get();
+                  // templateObject.datatablerecords.set(draftRecord);
+                })
+                .on("column-reorder", function () { })
+                .on("length.dt", function (e, settings, len) {
+                  setTimeout(function () {
+                    // MakeNegative();
+                  }, 100);
+                });
+              $(".fullScreenSpin").css("display", "none");
+            }, 10);
+
+            $(".fullScreenSpin").css("display", "none");
+          })
+          .catch(function (err) {
+            $(".fullScreenSpin").css("display", "none");
+          });
+      } else {
+        $(".fullScreenSpin").css("display", "none");
+      }
+
     });
 
     // add to custom field
@@ -1318,26 +1409,6 @@ Template.customfieldpop.events({
     }
   },
 
-  "click .btnRefreshCustomField": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    sideBarService
-      .getAllCustomFields()
-      .then(function (data) {
-        addVS1Data("TCustomFieldList", JSON.stringify(data))
-          .then(function (datareturn) {
-            Meteor._reload.reload();
-          })
-          .catch(function (err) {
-            Meteor._reload.reload();
-          });
-
-        $(".fullScreenSpin").css("display", "none");
-      })
-      .catch(function (err) {
-        $(".fullScreenSpin").css("display", "none");
-      });
-  },
-
   "click .btnCustomFieldToggleText": function (e) {
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
@@ -1979,13 +2050,17 @@ Template.customfieldpop.events({
     }
   },
 
-  "click .btnAddNewCustField": function (e) {
-    data_id = e.target.dataset.id;
+  // search labels table
+  "keyup .dataTables_filter input": function (event) {
+    if ($(event.target).val() != "") {
+      $(".btnRefreshCustomField").addClass("btnSearchAlert");
+    } else {
+      $(".btnRefreshCustomField").removeClass("btnSearchAlert");
+    }
+    if (event.keyCode == 13) {
+      $(".btnRefreshCustomField").trigger("click");
+    }
   },
-
-  "click .btnRefreshCustomField": function (e) {
-    data_id = e.target.dataset.id;
-  }
 
 });
 

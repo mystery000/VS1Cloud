@@ -19,7 +19,7 @@ let taxRateService = new TaxRateService();
 
 const templateObject = Template.instance();
 const productService = new ProductService();
-const defaultPeriod = 2;
+const defaultPeriod = 3;
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 Template.newprofitandloss.onCreated(function () {
@@ -314,10 +314,12 @@ Template.newprofitandloss.onRendered(function () {
             }
             let compPeriod = options.compPeriod  + 1;
             let periodAmounts = [];
+            let totalAmount = 0;
             for (let counter = 1; counter <= compPeriod; counter++) { 
               if( i == 0 ){      
                 options.threcords.push( accountData[i]["DateDesc_" + counter] );
               }
+              totalAmount +=  accountData[i]["Amount_" + counter];
               let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
               let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
               periodAmounts.push({
@@ -325,8 +327,8 @@ Template.newprofitandloss.onRendered(function () {
                 roundAmt: RoundAmount
               });
             }  
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmount"] ) || 0.0;
-            let totalRoundAmount = Math.round(accountData[i]["TotalAmount"]) || 0;
+            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+            let totalRoundAmount = Math.round(totalAmount) || 0;
             if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
@@ -812,6 +814,14 @@ $('.tblAvoid').each(function(){
 });
 
 Template.newprofitandloss.events({
+  "click .pnlReportAccount": async function(e){
+    let templateObject = Template.instance();    
+    let accountName = $(e.target).data('account');
+    const options = await templateObject.reportOptions.get();
+    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    FlowRouter.go(`/balancetransactionlist?accountName=${accountName}&toDate=${dateFrom}&fromDate=${dateTo}&isTabItem=false`);
+  },
   "change input[type='checkbox']": (event) => {
     // This should be global
     $(event.currentTarget).attr(
@@ -2098,23 +2108,28 @@ Template.newprofitandloss.helpers({
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
 
     // console.log("Amount to covert", amount);
-    if(!amount) {
+    if (!amount || amount.trim() == "") {
       return "";
     }
     if (currencyData.currency == defaultCurrencyCode) {
       // default currency
       return amount;
     }
-    // Lets remove the minus character
-    const isMinus = amount.indexOf('-') > -1;
-    if(isMinus == true) amount = amount.replace('-', '');
+    // // Lets remove the minus character
+    // const isMinus = amount.indexOf('-') > -1;
+    // if(isMinus == true) amount = amount.replace('-', '');
+
+    amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
+
+    const isMinus = amount < 0;
+    if (isMinus == true) amount = amount * -1; // Make it positive
 
     // get default currency symbol
-    let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
+    // let _defaultCurrency = currencyList.filter(a => a.Code == defaultCurrencyCode)[0];
     //console.log("default: ",_defaultCurrency);
-    amount = amount.replace(_defaultCurrency.symbol, '');
+    // amount = amount.replace(_defaultCurrency.symbol, '');
     // console.log("Is nan", amount, isNaN(amount));
-    amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
+    // amount = isNaN(amount) == true ? parseFloat(amount.substring(1)) : parseFloat(amount);
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
@@ -2161,7 +2176,11 @@ Template.newprofitandloss.helpers({
     // console.log("Currency list: ", currencyList);
 
     let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
-    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }); // Add commas
     //console.log("final amount", amount);
     let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);

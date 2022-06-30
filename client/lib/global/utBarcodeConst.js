@@ -72,6 +72,9 @@ initialBaseDataLoad = 25; //This load for 25 data base lists
 initialReportLoad = 25; //This load for 100 reports data
 initialReportDatatableLoad = 25; //This load for 100 Datatables
 initialDatatableLoad = 25; //This load for 100 Datatables
+
+loggedTermsPurchase = Session.get('ERPTermsPurchase') || "COD";
+loggedTermsSales = Session.get('ERPTermsSales') || "COD";
 if(Session.get('ERPLoggedCountry') == "Australia"){
   // Session.setPersistent('ERPTaxCodePurchaseInc', "NCG");
   // Session.setPersistent('ERPTaxCodeSalesInc', "GST");

@@ -59,6 +59,7 @@
                                 <style>
                                     #uploadedImage {
                                         margin: 0 auto !important;
+                                        width: 100%;
                                     }
                                 </style>
                                 <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" src="assets/img/VS1.png">
@@ -132,10 +133,10 @@
                                     .tableExportDetailDiv td {
                                         white-space: nowrap;
                                         padding: .3rem 1rem;
-                                    } 
+                                    }
                                     .tableExportDetailDiv th {
                                         text-align: center;
-                                    } 
+                                    }
                                     .tableExportDetailDiv th:first-child,
                                     .tableExportDetailDiv td:first-child {
                                         text-align: left !important;
@@ -158,12 +159,12 @@
                                     <thead>
                                         <tr class="table-secondary customDoubleTableHeading">
                                             <th></th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Sub Totals</th>
-                                            <th colspan="{{countActive currencyList }}" class="text-nowrap alighnMent{{countActive currencyList }}" style="font-weight: 800;">Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right alighnMent{{countActive currencyList }}" style="font-weight: 800;">Sub Account Totals</th>
+                                            <th colspan="{{countActive currencyList }}" class="text-nowrap text-right alighnMent{{countActive currencyList }}" style="font-weight: 800;">Header Account Totals</th>
                                         </tr>
                                         {{#if isOnlyDefaultActive equal "false" }}
                                             <tr class="table-active tblAvoid customDoubleTableHeading">
-                                                
+
                                                 {{#if currencyList}}
                                                     <th class="text-left"></th>
                                                     {{#each c in currencyList }}
@@ -185,7 +186,7 @@
                                     <tbody>
                                         {{#if records}}
                                             {{#each records}}
-                                                <tr>                                                  
+                                                <tr>
                                                     {{#each value in dataArrHeader}}
                                                         <div style="display:none;">{{item.Company}}</div>
                                                         <td class="text-nowrap text-left {{#if isNegativeAmount value}} text-danger {{/if}}" style="font-weight: 800;" >
@@ -205,8 +206,8 @@
                                                     {{/each}}
                                                 </tr>
                                                 <tr class="linkvalue">
-                                                    
-                                                       
+
+
                                                     {{#each value2 in dataArr2}}
                                                         {{#if isOnlyDefaultActive}}
                                                             {{#if isObject value2}}
@@ -214,8 +215,8 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
-                                                                            
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
+
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{ countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -229,15 +230,15 @@
 
                                                             {{/if}}
 
-                                                        
+
                                                         {{else}}
-                                                            
+
                                                             {{#if isObject value2}}
 
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
-                                                                            
+
                                                                             <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
@@ -251,14 +252,14 @@
                                                                 </td>
 
                                                             {{/if}}
-                                                           
+
                                                         {{/if}}
 
                                                     {{/each}}
 
-                                                       
-                                                   
-                                                    
+
+
+
                                                 </tr>
                                                 <tr class="balacesheettable">
                                                     {{#each item in dataArrTotal}}
@@ -269,7 +270,7 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
-                                                                            
+
                                                                         <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
                                                                             {{convertAmount item.value c}}
                                                                         </td>
@@ -282,9 +283,9 @@
 
                                                             {{/if}}
 
-                                                        
+
                                                         {{else}}
-                                                            
+
                                                             {{#if isObject item}}
 
                                                                 {{#if currencyList}}
@@ -301,9 +302,9 @@
                                                                 <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
 
                                                             {{/if}}
-                                                           
+
                                                         {{/if}}
-                                                
+
                                                     {{/each}}
                                                 </tr>
                                             {{/each}}
