@@ -2176,7 +2176,11 @@ Template.newprofitandloss.helpers({
     // console.log("Currency list: ", currencyList);
 
     let rate = firstElem.BuyRate; // Must used from tcurrecyhistory
-    amount = parseFloat(amount * rate).toFixed(2); // Multiply by the rate
+    amount = parseFloat(amount * rate); // Multiply by the rate
+    amount = Number(amount).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }); // Add commas
     //console.log("final amount", amount);
     let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);

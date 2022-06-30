@@ -1,4 +1,10 @@
 <template name="setup">
+
+    <style>
+        .uploadedImageLogo {
+            max-width: 150px;
+        }
+    </style>
     <div class="setup-wizard">
         <!-- First page -->
         <div class="first-page">
@@ -46,7 +52,7 @@
                                                                 <div class="panelfield lastchild">
                                                                     <div class="col-lg-12 paddingMargin">
                                                                         <div class="col-md-7">
-                                                                            <img class="imageUpload img-fluid mb-3 mt-4" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" width="160" height="160">
+                                                                            <img class="imageUpload uploadedImageLogo img-fluid mb-3 mt-4" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" width="160" height="160">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -141,7 +147,7 @@
                                                                         <label>
                                                                             Email
                 
-                                                                            <div class="custom-control custom-control-inline custom-switch" style="margin-right: -6px;">
+                                                                            <div class="custom-control custom-control-inline custom-switch" style="margin-right: -6px; height: 24px !important;">
                                                                                 <div class="form-group" style="margin-bottom: 7px;">
                                                                                     <input class="custom-control-input" type="checkbox" id="chkIsDefailtEmail" name="chkIsDefailtEmail">
                                                                                     <label class="custom-control-label" for="chkIsDefailtEmail"></label>
@@ -447,7 +453,6 @@
                                                                                                     float: inherit!important;
                                                                                                     left: inherit!important;
                                                                                                     top: auto!important;
-                
                                                                                                 }
                                                                                             }
                                                                                         </style>
@@ -1427,7 +1432,7 @@
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                                     <div class="btn-group" style="margin: 16px;">
-                                        <button class="btn btn-primary exportbtnExcelEmployee" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                        <button class="btn btn-primary  exportbtnExcelEmployee" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                                         <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                                         <div role="menu" class="dropdown-menu">
                                             <a role="presentation" class="dropdown-item exportbtnExcelEmployee" id="exportbtnExcelEmployee" href="#">Export Excel</a>
@@ -1598,11 +1603,11 @@
                     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
                         <div class="row d-xl-flex flex-row justify-content-xl-center">
                             <div class="col-7 d-xl-flex flex-grow-1 align-items-xl-start">
-                                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 12px; margin-left:0px;"><i
+                                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 8px; margin-left:0px;"><i
                                         class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                 <div>
                                     <a class="btn btn-primary float-left btnAddNewAccounts" role="button" data-toggle="modal"
-                                        href="#addNewAccount" style="margin: 12px;"><i class="fa fa-plus"
+                                        href="#addNewAccount" style="margin: 8px;"><i class="fa fa-plus"
                                             style="margin-right: 8px;"></i>New Account</a>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="addNewAccount">
                                         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered"
@@ -1853,7 +1858,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 12px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
+                                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
                             </div>
                             <div class="col-5 d-xl-flex justify-content-xl-end align-items-end">
                                 <style>
@@ -1863,8 +1868,8 @@
                                         }
                                     }
                                 </style>
-                                <div class="btn-group float-right exportbtngroup" style="margin: 16px;">
-                                    <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export"
+                                <div class="btn-group float-right exportbtngroup" style="margin: 8px;">
+                                    <button class="btn btn-primary d-flex align-items-center exportbtnExcel" type="button"><i class="fas fa-file-export"
                                             style="margin-right: 5px;"></i>Export</button>
                                     <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
                                         aria-expanded="false" type="button"></button>
@@ -1876,7 +1881,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button style="margin: 16px;" class="btn btn-primary float-right" role="button" data-toggle="modal"
+                                    <button style="margin: 8px;" class="btn d-flex align-items-center btn-primary float-right" role="button" data-toggle="modal"
                                         href="#importModal"><i class="fas fa-file-import"
                                             style="padding-right: 5px;"></i>Import</button>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
@@ -1972,10 +1977,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary printConfirmAccount float-right" type="button" style="margin: 16px;"><i
+                                <button class="btn btn-primary d-flex align-items-center printConfirmAccount float-right" type="button" style="margin: 8px;"><i
                                         class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                                 <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2"
-                                    style="margin: 16px;">
+                                    style="margin: 8px;">
                                     <i class="icon ion-android-more-horizontal"></i>
                                 </a>
                             </div>
@@ -2829,10 +2834,10 @@
                     <div class="container-fluid" style="padding-left: 0; padding-right: 0;">
                         <div class="row d-xl-flex flex-row justify-content-xl-center">
                             <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0rem !important;">
-                                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px; margin-left: 0"><i
+                                <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 8px; margin-left: 0"><i
                                         class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                 <div>
-                                    <a class="btn btn-primary float-left btnNewProduct" href="/productview" style="margin: 16px;"><i
+                                    <a class="btn btn-primary float-left btnNewProduct" href="/productview" style="margin: 8px;"><i
                                             class="fa fa-plus" style="margin-right: 8px;"></i>New Product</a>
                                     <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                         <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
