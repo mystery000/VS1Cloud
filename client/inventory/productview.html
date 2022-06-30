@@ -129,8 +129,12 @@
                                 <p class="text-primary m-0 font-weight-bold" id="productcardbodycode">{{productrecord.lib}}</p>
                             </div>
                             <div class="float-right"></div><div>
-                            <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i class="icon ion-android-more-horizontal"></i></a>
+                            <a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal4"><i class="icon ion-android-more-horizontal"></i></a>
                             <!-- Start {{> optionCustomFiled}} -->
+
+                            {{> customfieldDroppop}}
+                            {{> customfieldpop}}
+
                             <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
                                 <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -273,23 +277,44 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6 col-md-4 colBarcode" id="colBarcode">
+                                <div class="col-6 col-md-3 colBarcode" id="colBarcode">
                                     <div class="form-group">
                                         <label>Barcode</label>
                                         <input type="text" class="form-control highlightInput" id="edtbarcode" name="edtbarcode" value="{{productrecord.barcode}}">
                                     </div>
                                 </div>
-                                <div class="col-6 col-md-4 checkbox1div colCustom1" id="colCustom1" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-3 checkbox1div colCustom1" id="colCustom1" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                    <!-- <div class="form-group">
                                         <label class="lblCustomField1">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[0].label}}{{else}}Custom Field 1{{/if}}</label>
                                         <input type="text" class="form-control highlightInput" id="txtCustomField1" name="txtCustomField1" style="" value="{{productrecord.customfield1}}">
-                                    </div>
+                                    </div> -->
+                                    <div class="one box checkbox1div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[0].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label class="lblCustomField1">{{custfields.[0].custfieldlabel}}</label>
+                                            <input class="form-control form-control" type="text" id="edtSaleCustField1" name="edtSaleCustField1" value="{{invoicerecord.saleCustField1}}" custfieldid=''>
+                                        </div>
+                                      </div>
                                 </div>
-                                <div class="col-6 col-md-4 checkbox2div colCustom2" id="colCustom2" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
-                                    <div class="form-group">
+                                <div class="col-6 col-md-3 checkbox2div colCustom2" id="colCustom2" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                    <!-- <div class="form-group">
                                         <label class="lblCustomField2">{{#if productsCloudPreferenceRec}}{{productsCloudPreferenceRec.customFields.[1].label}}{{else}}Custom Field 2{{/if}}</label>
                                         <input type="text" class="form-control highlightInput" id="txtCustomField2" name="txtCustomField2" value="{{productrecord.customfield2}}" style="">
+                                    </div> -->
+                                    <div class="two box checkbox2div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <label class="lblCustomField2">{{custfields.[1].custfieldlabel}}<br></label>
+                                            <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{invoicerecord.saleCustField2}}" custfieldid=''>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="col-6 col-md-3 checkbox3div colCustom2" id="colCustom3" style="{{#if productsCloudPreferenceRec}}{{#if equals productsCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                  <div class="two box checkbox3div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[1].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                  <div class="form-group" style="margin-bottom: 0;">
+                                      <label class="lblCustomField2">{{custfields.[2].custfieldlabel}}<br></label>
+                                      <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{invoicerecord.saleCustField3}}" custfieldid=''>
+                                  </div>
+                              </div>
                                 </div>
                             </div>
                             <div class="row">

@@ -499,7 +499,14 @@ Template.supplierscard.onRendered(function () {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
             if (dataObject.length === 0){
                 contactService.getOneSupplierDataEx(supplierID).then(function (data) {
+                  
                     setOneSupplierDataEx(data);
+                    // add to custom field
+                    setTimeout(function () {
+                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    }, 5500);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -509,11 +516,23 @@ Template.supplierscard.onRendered(function () {
                     if(parseInt(useData[i].fields.ID) === parseInt(supplierID)){
                         added = true;
                         setOneSupplierDataEx(useData[i]);
+                        // add to custom field
+                        setTimeout(function () {
+                          $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                          $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                          $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                        }, 5500);
                     }
                 }
                 if(!added) {
                     contactService.getOneSupplierDataEx(supplierID).then(function (data) {
                         setOneSupplierDataEx(data);
+                        // add to custom field
+                        setTimeout(function () {
+                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        }, 5500);
                     });
                 }
             }
@@ -1128,9 +1147,10 @@ Template.supplierscard.events({
         let notes =  $('#txaNotes').val()||'';
         let suppaccountno =  $('#suppAccountNo').val()||'';
 
-        let custField1 = $('#edtCustomeField1').val()||'';
-        let custField2 = $('#edtCustomeField2').val()||'';
-        let custField3 = $('#edtCustomeField3').val()||'';
+// add to custom field
+        let custField1 = $('#edtSaleCustField1').val()||'';
+        let custField2 = $('#edtSaleCustField2').val()||'';
+        let custField3 = $('#edtSaleCustField3').val()||'';
         let custField4 = $('#edtCustomeField4').val()||'';
 
         const url = FlowRouter.current().path;
@@ -1182,7 +1202,7 @@ Template.supplierscard.events({
                     CUSTFLD1: custField1,
                     CUSTFLD2: custField2,
                     CUSTFLD3: custField3,
-                    CUSTFLD4: custField4,
+                    // CUSTFLD4: custField4,
                     PublishOnVS1: true
 
                 }
@@ -1233,7 +1253,7 @@ Template.supplierscard.events({
                         CUSTFLD1: custField1,
                         CUSTFLD2: custField2,
                         CUSTFLD3: custField3,
-                        CUSTFLD4: custField4,
+                        // CUSTFLD4: custField4,
                         PublishOnVS1: true
 
                     }
@@ -1279,7 +1299,7 @@ Template.supplierscard.events({
                         CUSTFLD1: custField1,
                         CUSTFLD2: custField2,
                         CUSTFLD3: custField3,
-                        CUSTFLD4: custField4,
+                        // CUSTFLD4: custField4,
                         PublishOnVS1: true
                     }
                 };
@@ -1292,6 +1312,7 @@ Template.supplierscard.events({
                 //window.open('/supplierscard?id=' + supplierSaveID,'_self');
                 //window.open('/supplierlist','_self');
                 sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad,0).then(function(dataReload) {
+                  //console.log('getAllSuppliersDataVS1', dataReload)
                     addVS1Data('TSupplierVS1',JSON.stringify(dataReload)).then(function (datareturn) {
                         window.open('/supplierlist','_self');
                     }).catch(function (err) {
@@ -1900,6 +1921,22 @@ Template.supplierscard.events({
 
         }
     },
+
+    // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
+ 
 });
 
 Template.supplierscard.helpers({

@@ -1028,6 +1028,12 @@ Template.customerscard.onRendered(function () {
             if (dataObject.length == 0) {
                 contactService.getOneCustomerDataEx(customerID).then(function (data) {
                     setOneCustomerDataEx(data);
+                    // add to custom field
+                    setTimeout(function () {
+                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    }, 5500);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -1035,6 +1041,14 @@ Template.customerscard.onRendered(function () {
                 let added = false;
                 for (let i = 0; i < useData.length; i++) {
                     if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
+
+// add to custom field
+                      setTimeout(function () {
+                        $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                        $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                        $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                      }, 5500);
+
                         added = true;
                         setOneCustomerDataEx(useData[i]);
                         setTimeout(function () {
@@ -1046,6 +1060,12 @@ Template.customerscard.onRendered(function () {
                 if (!added) {
                     contactService.getOneCustomerDataEx(customerID).then(function (data) {
                         setOneCustomerDataEx(data);
+                        // add to custom field
+                        setTimeout(function () {
+                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        }, 5500);
                     });
                 }
             }
@@ -1991,9 +2011,10 @@ Template.customerscard.events({
             sltTaxCodeName = $('#sltTaxCode').val()||'';
         }
         let notes = $('#txaNotes').val()||'';
-        let custField1 = $('#edtCustomField1').val()||'';
-        let custField2 = $('#edtCustomField2').val()||'';
-        let custField3 = $('#edtCustomField3').val()||'';
+        // add to custom field
+        let custField1 = $('#edtSaleCustField1').val()||'';
+        let custField2 = $('#edtSaleCustField2').val()||'';
+        let custField3 = $('#edtSaleCustField3').val()||'';
         let custField4 = $('#edtCustomField4').val()||'';
         let customerType = $('#sltCustomerType').val()||'';
         let uploadedItems = templateObject.uploadedFiles.get();
@@ -2058,7 +2079,7 @@ Template.customerscard.events({
                 CUSTFLD1: custField1,
                 CUSTFLD2: custField2,
                 CUSTFLD3: custField3,
-                CUSTFLD4: custField4,
+                // CUSTFLD4: custField4,
                 Discount: parseFloat(permanentDiscount)||0
             }
         };
@@ -2746,22 +2767,42 @@ Template.customerscard.events({
             $('.checkbox4div').css('display', 'none');
         }
     },
-    'blur .customField1Text': function (event) {
-        const inputValue1 = $('.customField1Text').text();
-        $('.lblCustomField1').text(inputValue1);
+    // 'blur .customField1Text': function (event) {
+    //     const inputValue1 = $('.customField1Text').text();
+    //     $('.lblCustomField1').text(inputValue1);
+    // },
+    // 'blur .customField2Text': function (event) {
+    //     const inputValue2 = $('.customField2Text').text();
+    //     $('.lblCustomField2').text(inputValue2);
+    // },
+    // 'blur .customField3Text': function (event) {
+    //     const inputValue3 = $('.customField3Text').text();
+    //     $('.lblCustomField3').text(inputValue3);
+    // },
+    // 'blur .customField4Text': function (event) {
+    //     const inputValue4 = $('.customField4Text').text();
+    //     $('.lblCustomField4').text(inputValue4);
+    // },
+
+    // add to custom field
+    "click #edtSaleCustField1": function (e) {
+      $("#clickedControl").val("one");
     },
-    'blur .customField2Text': function (event) {
-        const inputValue2 = $('.customField2Text').text();
-        $('.lblCustomField2').text(inputValue2);
+
+    // add to custom field
+    "click #edtSaleCustField2": function (e) {
+      $("#clickedControl").val("two");
     },
-    'blur .customField3Text': function (event) {
-        const inputValue3 = $('.customField3Text').text();
-        $('.lblCustomField3').text(inputValue3);
+
+    // add to custom field
+    "click #edtSaleCustField3": function (e) {
+      $("#clickedControl").val("three");
     },
-    'blur .customField4Text': function (event) {
-        const inputValue4 = $('.customField4Text').text();
-        $('.lblCustomField4').text(inputValue4);
+
+    'click .btnOpenSettings': function (event) {
+      console.log('btnOpenSettings---')
     },
+
     'click .btnSaveSettings': function (event) {
         let templateObject = Template.instance();
         $('.lblCustomField1').html('');

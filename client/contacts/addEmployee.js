@@ -1322,6 +1322,14 @@ Template.employeescard.onRendered(function () {
                     if (dataObject.length == 0) {
                         contactService.getOneEmployeeDataEx(employeeID).then(function (data) {
                             $('.fullScreenSpin').css('display', 'none');
+                            console.log('data--->',data)
+                            // add to custom field
+                            setTimeout(function () {
+                              $('#edtSaleCustField1').val(data.fields.CustFld1);
+                              $('#edtSaleCustField2').val(data.fields.CustFld2);
+                              $('#edtSaleCustField3').val(data.fields.CustFld3);
+                            }, 5500);
+
                             let lineItems = [];
                             let empEmail = '';
                             let overideset = data.fields.User.fields.CustFld14;
@@ -1528,6 +1536,16 @@ Template.employeescard.onRendered(function () {
                                 let lineItems = [];
                                 let empEmail = '';
                                 let overideset = useData[i].fields.CustFld14;
+
+                                console.log('useData[i]--->',useData[i])
+
+                                setTimeout(function () {// add to custom field
+                                console.log('useData[i] set--->',useData[i].fields.CUSTFLD1)
+
+                                  $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
+                                  $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
+                                  $('#edtSaleCustField3').val(useData[i].fields.CustFld3);
+                              }, 5500);
 
                                 if (useData[i].fields.Email.replace(/\s/g, '') == '') {
                                     if (useData[i].fields.User != null) {
@@ -3603,11 +3621,12 @@ Template.employeescard.events({
         let state = $('#edtState').val();
         let postalcode = $('#edtPostalCode').val();
         let country = $('#edtCountry').val();
-
-        let custField1 = $('#edtCustomeField1').val();
-        let custField2 = $('#edtCustomeField2').val();
-        let custField3 = $('#edtCustomeField3').val();
+ 
         let custField4 = $('#edtCustomeField4').val();
+        // add to custom field
+        let custField1 = $('#edtSaleCustField1').val()||'';
+        let custField2 = $('#edtSaleCustField2').val()||'';
+        let custField3 = $('#edtSaleCustField3').val()||'';
 
         let priorityData = $('#edtPriority').val() || '';
 
@@ -6942,7 +6961,22 @@ Template.employeescard.events({
         }else{
             $('.superannuationGuaranteeCont').addClass('hideelement')
         }
-    }
+    },
+
+    // add to custom field
+  "click #edtSaleCustField1": function (e) {
+    $("#clickedControl").val("one");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField2": function (e) {
+    $("#clickedControl").val("two");
+  },
+
+  // add to custom field
+  "click #edtSaleCustField3": function (e) {
+    $("#clickedControl").val("three");
+  },
 });
 
 Template.employeescard.helpers({
