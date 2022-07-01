@@ -5145,9 +5145,9 @@ Template.new_quote.onRendered(() => {
 
         let file = "Quotes.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            if(template_title == 'Sales Order')
+            if(template_title == 'Quotes')
             {
-                file = 'Quotes -' + quoteData.id + '.pdf';
+                file = 'Quote -' + quoteData.id + '.pdf';
             }
            
         

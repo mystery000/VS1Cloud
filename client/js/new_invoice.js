@@ -4803,9 +4803,9 @@ Template.new_invoice.onRendered(() => {
             tdproduct,
             tddescription,
             tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
+            '',
+            '',
+            '',
         ]);
 
         lineItemObj = {
@@ -7028,9 +7028,9 @@ Template.new_invoice.onRendered(() => {
             tdproduct,
             tddescription,
             tdQty,
-            tdunitprice,
-            taxamount,
-            tdlineamt,
+            '',
+            '',
+            '',
         ]);
 
         lineItemObj = {
@@ -7042,6 +7042,7 @@ Template.new_invoice.onRendered(() => {
             tax:tdtaxrate||0,
             amount:tdlineamt || 0
         }
+        
         lineItems.push(lineItemObj);
 
         });
@@ -7251,7 +7252,7 @@ Template.new_invoice.onRendered(() => {
                 else if(template_title == 'Invoice Back Orders')
                 {
                     
-                     file = 'Invoice_Back_Orders -' + invoice_data_info.id + '.pdf';
+                     file = 'Invoice Back Orders -' + invoice_data_info.id + '.pdf';
                     
                 }
                 else if(template_title == 'Delivery Docket')
@@ -7327,9 +7328,9 @@ Template.new_invoice.onRendered(() => {
             let file = '';
             if(localStorage.getItem('invoice_type') == 'bo')
             {
-                file = "Back_order_invoice.pdf";
+                file = "Back order invoice.pdf";
                 if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                    file = 'Back_order_invoice-' + invoice_data_info.id + '.pdf';
+                    file = 'Back order invoice-' + invoice_data_info.id + '.pdf';
                 }
 
             }

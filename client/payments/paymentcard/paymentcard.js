@@ -4846,7 +4846,7 @@ Template.paymentcard.onRendered(() => {
         };
         let id = $('.printID').attr("id");
         var source = document.getElementById('html-2-pdfwrapper');
-        let file = "Customer Payment.pdf";
+        let file = "Customer Payment-"+id+".pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             file = 'Customer Payment-' + id + '.pdf';
         }
@@ -4901,7 +4901,7 @@ Template.paymentcard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Customer Payments')
             {
-                file = 'Customer_Payments-' + invoice_data_info.lid + '.pdf';
+                file = 'Customer Payments-' + invoice_data_info.lid + '.pdf';
             }
            
            

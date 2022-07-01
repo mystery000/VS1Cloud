@@ -4422,7 +4422,13 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
     
     exportSalesToPdf1 = function() {
 
-        let file = "refund.pdf";
+       
+
+        
+        var source = document.getElementById('html-2-pdfwrapper');
+        let id = $('.printID').attr("id");
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        let file = "refund "+id+".pdf";
         var opt = {
             margin: 0,
             filename: file,
@@ -4439,11 +4445,6 @@ TotalAmtInc: utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fi
                 orientation: 'portrait'
             }
         };
-
-        
-        var source = document.getElementById('html-2-pdfwrapper');
-        let id = $('.printID').attr("id");
-        var pdf = new jsPDF('p', 'pt', 'a4');
 
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
