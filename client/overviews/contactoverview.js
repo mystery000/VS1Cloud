@@ -784,38 +784,6 @@ Template.contactoverview.onRendered(function () {
           templateObject.datatablerecords.set(dataTableList);
 
           if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "tblcontactoverview",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
-
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
 
             setTimeout(function () {
               MakeNegative();
@@ -890,52 +858,31 @@ Template.contactoverview.onRendered(function () {
                     if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                       $(".paginate_button.page-item.next").addClass("disabled");
                     }
-                    $(
-                      ".paginate_button.next:not(.disabled)",
-                      this.api().table().container()
-                    ).on("click", function () {
+                    $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
                       $(".fullScreenSpin").css("display", "inline-block");
                       let dataLenght = oSettings._iDisplayLength;
 
-                      sideBarService
-                        .getAllContactCombineVS1(
-                          initialDatatableLoad,
-                          oSettings.fnRecordsDisplay()
-                        )
-                        .then(function (dataObjectnew) {
-                          getVS1Data("TERPCombinedContactsVS1")
-                            .then(function (dataObjectold) {
+                      sideBarService.getAllContactCombineVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                          getVS1Data("TERPCombinedContactsVS1").then(function (dataObjectold) {
                               if (dataObjectold.length == 0) {
                               } else {
                                 let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                var thirdaryData = $.merge(
-                                  $.merge(
-                                    [],
-                                    dataObjectnew.terpcombinedcontactsvs1
-                                  ),
-                                  dataOld.terpcombinedcontactsvs1
-                                );
+                                var thirdaryData = $.merge($.merge([],dataObjectnew.terpcombinedcontactsvs1),dataOld.terpcombinedcontactsvs1);
                                 let objCombineData = {
+                                  Params: dataOld.Params,
                                   terpcombinedcontactsvs1: thirdaryData,
                                 };
 
-                                addVS1Data(
-                                  "TERPCombinedContactsVS1",
-                                  JSON.stringify(objCombineData)
-                                )
-                                  .then(function (datareturn) {
+                                addVS1Data("TERPCombinedContactsVS1",JSON.stringify(objCombineData)).then(function (datareturn) {
                                     templateObject.resetData(objCombineData);
                                     $(".fullScreenSpin").css("display", "none");
-                                  })
-                                  .catch(function (err) {
+                                  }).catch(function (err) {
                                     $(".fullScreenSpin").css("display", "none");
                                   });
                               }
-                            })
-                            .catch(function (err) {});
-                        })
-                        .catch(function (err) {
+                            }).catch(function (err) {});
+                        }).catch(function (err) {
                           $(".fullScreenSpin").css("display", "none");
                         });
                     });

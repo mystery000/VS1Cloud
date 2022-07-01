@@ -276,6 +276,7 @@ Template.profitlossreport.events({
       .clone()
       .startOf("year")
       .format("YYYY-MM-DD");
+      addVS1Data('TAccountRunningBalanceReport', []);
     //Session.setPersistent('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +

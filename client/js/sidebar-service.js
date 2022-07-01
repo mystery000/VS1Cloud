@@ -1407,7 +1407,7 @@ export class SideBarService extends BaseService {
         IsDetailReport: false,
         Paid: false,
         Unpaid: true,
-        Search: "Balance != 0",
+        // Search: "Balance != 0",
         OrderBy: "SaleID desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         LimitCount: '"' + limitcount + '"',
@@ -1423,7 +1423,7 @@ export class SideBarService extends BaseService {
         IsDetailReport: false,
         Paid: false,
         Unpaid: true,
-        Search: "Balance != 0",
+        // Search: "Balance != 0",
         OrderBy: "SaleID desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         DateFrom: '"' + dateFrom + '"',
@@ -1447,8 +1447,8 @@ export class SideBarService extends BaseService {
       Paid: false,
       Unpaid: true,
       OrderBy: "SaleID desc",
-      Search: 'dueDate < "' + dateTo + '" and Balance != 0',
-      Search: 'CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
+      // Search: 'dueDate < "' + dateTo + '" and Balance != 0',
+      Search: 'dueDate < "' + dateTo + '" and Balance != 0 and CustomerName like "' + customerData + '" OR SaleId = "' + customerData + '"',
     };
     return this.getList(this.ERPObjects.TSalesList, options);
   }
