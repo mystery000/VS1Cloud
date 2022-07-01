@@ -696,7 +696,7 @@ Template.generalledger.onRendered(() => {
           country: data[i].Country || "NA",
           description: data[i].CurrencyDesc || "-",
           ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+          active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
           //active: false,
           // createdAt: new Date(data[i].MsTimeStamp) || "-",
           // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
@@ -766,7 +766,7 @@ Template.generalledger.events({
       });
     } else {
       let _currency = _currencyList.find(
-        (c) => c.currency == defaultCurrencyCode
+        (c) => c.code == defaultCurrencyCode
       );
       _currency.active = true;
       _currencySelectedList.push(_currency);
@@ -785,7 +785,7 @@ Template.generalledger.events({
     });
 
     _currencyList = _currencyList.sort((a, b) => {
-      if (a.currency == defaultCurrencyCode) {
+      if (a.code == defaultCurrencyCode) {
         return -1;
       }
       return 1;
@@ -1224,10 +1224,10 @@ Template.generalledger.helpers({
     if (!amount || amount.trim() == "") {
       return "";
     }
-    // if (currencyData.currency == defaultCurrencyCode) {
-    //   // default currency
-    //   return amount;
-    // }
+    if (currencyData.code == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
 
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
@@ -1260,7 +1260,7 @@ Template.generalledger.helpers({
     // console.log('date to', dateTo);
 
     // Filter by currency code
-    currencyList = currencyList.filter((a) => a.Code == currencyData.currency);
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1292,7 +1292,7 @@ Template.generalledger.helpers({
     // console.log("Currency list: ", currencyList);
 
     let rate =
-      currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+      currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
 
     // console.log(currencyData.currency, defaultCurrencyCode, currencyData.currency == defaultCurrencyCode);
     // console.log('first elem', firstElem.BuyRate);
@@ -1334,7 +1334,7 @@ Template.generalledger.helpers({
 
     if (activeArray.length == 1) {
       //console.log(activeArray[0].currency);
-      if (activeArray[0].currency == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
         return !false;

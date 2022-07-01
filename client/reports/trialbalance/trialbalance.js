@@ -532,7 +532,7 @@ Template.trialbalance.onRendered(() => {
            country: data[i].Country || "NA",
            description: data[i].CurrencyDesc || "-",
            ratelastmodified: data[i].RateLastModified || "-",
-           active: data[i].Currency == defaultCurrencyCode ? true : false, // By default if AUD then true
+           active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
            //active: false,
            // createdAt: new Date(data[i].MsTimeStamp) || "-",
            // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
@@ -602,7 +602,7 @@ Template.trialbalance.events({
       });
     } else {
       let _currency = _currencyList.find(
-        (c) => c.currency == defaultCurrencyCode
+        (c) => c.code == defaultCurrencyCode
       );
       _currency.active = true;
       _currencySelectedList.push(_currency);
@@ -621,7 +621,7 @@ Template.trialbalance.events({
     });
 
     _currencyList = _currencyList.sort((a, b) => {
-      if (a.currency == defaultCurrencyCode) {
+      if (a.code == defaultCurrencyCode) {
         return -1;
       }
       return 1;
@@ -1031,10 +1031,10 @@ Template.trialbalance.helpers({
     if (!amount || amount.trim() == "") {
       return "";
     }
-    // if (currencyData.currency == defaultCurrencyCode) {
-    //   // default currency
-    //   return amount;
-    // }
+    if (currencyData.code == defaultCurrencyCode) {
+      // default currency
+      return amount;
+    }
 
     amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
 
@@ -1069,7 +1069,7 @@ Template.trialbalance.helpers({
     // console.log('date to', dateTo);
 
     // Filter by currency code
-    currencyList = currencyList.filter((a) => a.Code == currencyData.currency);
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1100,7 +1100,7 @@ Template.trialbalance.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate = currencyData.currency == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
@@ -1137,7 +1137,7 @@ Template.trialbalance.helpers({
 
     if (activeArray.length == 1) {
       //console.log(activeArray[0].currency);
-      if (activeArray[0].currency == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
         return !false;

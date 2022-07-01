@@ -16,7 +16,7 @@ Template.FxRateModal.events({});
 Template.FxRateModal.helpers({
   isDefaultCurrency: (currencyData) => {
     //console.log(currencyData);
-    return currencyData.currency == defaultCurrencyCode
+    return currencyData.code == defaultCurrencyCode
       ? "hidden"
       : "";
   },

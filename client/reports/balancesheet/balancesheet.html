@@ -169,13 +169,13 @@
                                                     <th class="text-left"></th>
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.currency }}</th>
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}" >{{ c.code }}</th>
                                                         {{/if}}
                                                     {{/each}}
 
                                                     {{#each c in currencyList }}
                                                         {{# if c.active}}
-                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.currency }}</th>
+                                                            <th class="text-right __alighnMent{{countActive currencyList }}" active="{{ c.active }}">{{ c.code }}</th>
                                                         {{/if}}
                                                     {{/each}}
                                                 {{/if}}
@@ -216,7 +216,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
 
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{ countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{ countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.code}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -239,7 +239,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
 
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.currency}}">
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.code}}">
                                                                                 <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
                                                                             </td>
                                                                         {{/if}}
@@ -271,7 +271,7 @@
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
 
-                                                                        <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                        <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
                                                                             {{convertAmount item.value c}}
                                                                         </td>
                                                                         {{/if}}
@@ -291,7 +291,7 @@
                                                                 {{#if currencyList}}
                                                                     {{#each c in currencyList}}
                                                                         {{#if c.active}}
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList}} {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.currency}}" style="font-weight: 800;" >
+                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList}} {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
                                                                                 {{convertAmount item.value c}}
                                                                             </td>
                                                                         {{/if}}
