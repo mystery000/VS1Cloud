@@ -541,6 +541,9 @@ Template.trialbalance.onRendered(() => {
          _currencyList.push(dataList);
          //}
        }
+       _currencyList = _currencyList.sort((a, b) => {
+         return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
+       });
  
        // console.log(_currencyList);
  

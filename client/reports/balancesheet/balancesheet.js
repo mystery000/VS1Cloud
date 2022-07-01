@@ -1582,7 +1582,9 @@ Template.balancesheetreport.onRendered(() => {
         _currencyList.push(dataList);
         //}
       }
-
+      _currencyList = _currencyList.sort((a, b) => {
+        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
+      });
       // console.log(_currencyList);
 
       templateObject.currencyList.set(_currencyList);
@@ -1614,7 +1616,9 @@ Template.balancesheetreport.onRendered(() => {
 
   LoadingOverlay.hide();
 });
-
+function sortByAlfa(a, b) {
+  return a.currency - b.currency;
+}
 Template.balancesheetreport.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory

@@ -131,6 +131,12 @@ Template.setup.onRendered(function () {
     for (let i = 0; i < currentStep; i++) {
       if (confirmedSteps.includes(i + 1))
         $(`.setup-stepper li:nth-child(${i + 1})`).addClass("completed");
+        if (isStepActive(i + 1) == true) {
+        // we need to REMOVE clickDisabled
+        } else {
+        $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass("clickDisabled");
+        // we need to ADD clickDisabled
+        }
     }
     if (currentStep !== 9) {
       $(".setup-step-" + currentStep).css("display", "block");
@@ -3530,6 +3536,8 @@ Template.setup.onRendered(function () {
           }
         });
       });
+
+
   };
   templateObject.getAllAccountss();
 
@@ -3539,7 +3547,14 @@ Template.setup.onRendered(function () {
 
   //   $("#displayname").val("hello test");
 });
-
+function isStepActive (stepId) {
+  let currentStepID = $('.setup-stepper .current a.gotToStepID').attr('data-step-id');
+  if(stepId < currentStepID) {
+    return true
+  }else {
+    return false
+  }
+} 
 Template.setup.events({
   "click #start-wizard": function () {
     $(".first-page").css("display", "none");
@@ -3551,6 +3566,7 @@ Template.setup.events({
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled"); 
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
     if (stepId !== 9) {
@@ -3560,18 +3576,34 @@ Template.setup.events({
     }
     let confirmedSteps =
       localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-    localStorage.setItem(
-      "VS1Cloud_SETUP_CONFIRMED_STEPS",
-      confirmedSteps + (stepId - 1) + ","
-    );
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+      localStorage.setItem(
+        "VS1Cloud_SETUP_CONFIRMED_STEPS",
+        confirmedSteps + (stepId - 1) + ","
+      );
+      localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
   },
   "click .btnBack": function (event) {
     let stepId = $(event.target).attr("data-step-id");
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled"); 
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
+    if (stepId !== 9) {
+      $(".setup-step-" + stepId).css("display", "block");
+    } else {
+      $(".setup-complete").css("display", "flex");
+    }
+    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+  },
+  "click .gotToStepID": function (event) {
+    let stepId = $(event.target).attr("data-step-id");
+    stepId = parseInt(stepId) + 1;
+    $(".setup-step").css("display", "none");
+    $(`.setup-stepper li`).removeClass("current");
+    // $(`.setup-stepper li`).removeClass("clickDisabled");
+    $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
+    // $(`.setup-stepper li:nth-child(n+${stepId})`).addClass("clickDisabled");
     if (stepId !== 9) {
       $(".setup-step-" + stepId).css("display", "block");
     } else {

@@ -4,6 +4,20 @@
         .uploadedImageLogo {
             max-width: 150px;
         }
+        .setup-stepper ul li .content a {
+            display: inline-flex;
+            width: 100%;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none !important;
+        }
+        .clickDisabled {
+            pointer-events: none;
+        }
     </style>
     <div class="setup-wizard">
         <!-- First page -->
@@ -24,15 +38,15 @@
             <div class="main-setup-container">
                 <div class="setup-stepper">
                     <ul>
-                        <li><div class="content">Step 1</div></li>
-                        <li><div class="content">Step 2</div></li>
-                        <li><div class="content">Step 3</div></li>
-                        <li><div class="content">Step 4</div></li>
-                        <li><div class="content">Step 5</div></li>
-                        <li><div class="content">Step 6</div></li>
-                        <li><div class="content">Step 7</div></li>
-                        <li><div class="content">Step 8</div></li>
-                        <li><div class="content">Step 9</div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="0" href="">Step 1</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="1" href="">Step 2</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="2" href="">Step 3</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="3" href="">Step 4</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="4" href="">Step 5</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="5" href="">Step 6</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="6" href="">Step 7</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="7" href="">Step 8</a></div></li>
+                        <li><div class="content"><a class="gotToStepID clickDisabled" data-step-id="8" href="">Step 9</a></div></li>
                     </ul>
                 </div>
                 <div class="setup-step setup-step-1">
