@@ -3853,7 +3853,7 @@ Template.creditcard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Credits')
             {
-                file = 'Credits -' + invoice_data_info.id + '.pdf';
+                file = 'Credit -' + invoice_data_info.id + '.pdf';
             }
            
            

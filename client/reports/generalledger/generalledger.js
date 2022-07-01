@@ -811,6 +811,7 @@ Template.generalledger.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     //Session.setPersistent('showHeader',true);
+    addVS1Data('TAccountRunningBalanceReport', []);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +

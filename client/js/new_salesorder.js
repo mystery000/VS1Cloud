@@ -431,9 +431,9 @@ Template.new_salesorder.onRendered(() => {
                     tdproduct,
                     tddescription,
                     tdQty,
-                    tdunitprice,
-                    taxamount,
-                    tdlineamt,
+                    '',
+                    '',
+                    '',
             
                 ]);
             
@@ -5782,37 +5782,37 @@ Template.new_salesorder.onRendered(() => {
 
             $('#tblSalesOrderLine > tbody > tr').each(function() {
 
-                var lineID = this.id;
-                let tdproduct = $('#' + lineID + " .lineProductName").val();
-                let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                let tdQty = $('#' + lineID + " .lineQty").val();
-                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
-                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-            
-                array_data.push([
+                    var lineID = this.id;
+                    let tdproduct = $('#' + lineID + " .lineProductName").val();
+                    let tddescription = $('#' + lineID + " .lineProductDesc").text();
+                    let tdQty = $('#' + lineID + " .lineQty").val();
+                    let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+                    let taxamount = $('#'+ lineID+" .lineTaxAmount").text();
+                    let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+                    let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+                    let tdlineamt = $('#' + lineID + " .colAmountEx").text();
                 
-                    tdproduct,
-                    tddescription,
-                    tdQty,
-                    tdunitprice,
-                    taxamount,
-                    tdlineamt,
-            
-                ]);
-            
-                lineItemObj = {
-                    description: tddescription || '',
-                    quantity: tdQty || 0,
-                    unitPrice: tdunitprice.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    }) || 0
-                }
-            
-                lineItems.push(lineItemObj);
-            });
+                    array_data.push([
+                    
+                        tdproduct,
+                        tddescription,
+                        tdQty,
+                        '',
+                        '',
+                        '',
+                
+                    ]);
+                
+                    lineItemObj = {
+                        description: tddescription || '',
+                        quantity: tdQty || 0,
+                        unitPrice: tdunitprice.toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                        }) || 0
+                    }
+                
+                    lineItems.push(lineItemObj);
+                });
 
                     let company = Session.get('vs1companyName');
                     let vs1User = localStorage.getItem('mySession');
