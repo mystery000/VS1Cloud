@@ -2382,14 +2382,10 @@ async function loadCurrency() {
         _currencyList.push(dataList);
         //}
       }
-<<<<<<< HEAD
       _currencyList = _currencyList.sort((a, b) => {
         return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
       });
     
-=======
-
->>>>>>> c8986404b40846de8b00464346e9194bb01da930
       // console.log(_currencyList);
 
       templateObject.currencyList.set(_currencyList);
