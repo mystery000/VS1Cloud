@@ -21,31 +21,12 @@ Template.balancetransactionlist.onRendered(function() {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblBalanceTransactionList', function(error, result){
-    if(error){
-
-    }else{
-      if(result){
-
-        for (let i = 0; i < result.customFields.length; i++) {
-          let customcolumn = result.customFields;
-          let columData = customcolumn[i].label;
-          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-          let hiddenColumn = customcolumn[i].hidden;
-          let columnClass = columHeaderUpdate.split('.')[1];
-          let columnWidth = customcolumn[i].width;
-           $("th."+columnClass+"").html(columData);
-            $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-        }
-      }
-
-    }
-    });
-
+    templateObject.resetData = function (dataVal) {
+      location.reload();
+    };
     let urlParameters = FlowRouter.current().queryParams.accountName || '';
     templateObject.getAllBalanceSheetRedirectData = function () {
-      if(!localStorage.getItem('VS1BalanceTrans_Report')){
+      if(!localStorage.getItem('VS1BalanceTrans_Report11')){
       reportService.getBalanceSheetRedirectData().then(function (data) {
         //localStorage.setItem('VS1BalanceTrans_Report', JSON.stringify(data)||'');
         for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
@@ -93,35 +74,6 @@ Template.balancetransactionlist.onRendered(function() {
          templateObject.datatablerecords.set(dataTableList);
 
         if(templateObject.datatablerecords.get()){
-
-          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblBalanceTransactionList', function(error, result){
-          if(error){
-
-          }else{
-            if(result){
-              for (let i = 0; i < result.customFields.length; i++) {
-                let customcolumn = result.customFields;
-                let columData = customcolumn[i].label;
-                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                let hiddenColumn = customcolumn[i].hidden;
-                let columnClass = columHeaderUpdate.split('.')[1];
-                let columnWidth = customcolumn[i].width;
-                let columnindex = customcolumn[i].index + 1;
-
-                if(hiddenColumn == true){
-
-                  $("."+columnClass+"").addClass('hiddenColumn');
-                  $("."+columnClass+"").removeClass('showColumn');
-                }else if(hiddenColumn == false){
-                  $("."+columnClass+"").removeClass('hiddenColumn');
-                  $("."+columnClass+"").addClass('showColumn');
-                }
-
-              }
-            }
-
-          }
-          });
 
           function MakeNegative() {
             $('td').each(function(){
@@ -262,7 +214,7 @@ Template.balancetransactionlist.onRendered(function() {
       let data = JSON.parse(localStorage.getItem('VS1BalanceTrans_Report'));
       for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
         let childArray = data.taccountrunningbalancereport[i];
-        if((childArray.AccountName === urlParameters)&&(childArray.Type != '')){
+        if((childArray.Type != '')){
 
         let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
         let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
@@ -299,7 +251,7 @@ Template.balancetransactionlist.onRendered(function() {
       };
 
        dataTableList.push(dataList);
-     }
+    }
        }
 
        templateObject.datatablerecords.set(dataTableList);
@@ -471,8 +423,8 @@ Template.balancetransactionlist.onRendered(function() {
     }
     let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
     let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-    if(urlParametersDateFrom){
-      reportService.getBalanceSheetRedirectRangeData(urlParametersDateFrom,urlParametersDateTo).then(function (data) {
+    if(urlParametersDateFrom && FlowRouter.current().queryParams.accountName==""){
+      reportService.getBalanceSheetRedirectRangeData(urlParametersDateFrom,urlParametersDateTo,initialDataLoad, 0).then(function (data) {
         //localStorage.setItem('VS1BalanceTrans_Report', JSON.stringify(data)||'');
         for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
           let childArray = data.taccountrunningbalancereport[i];
@@ -688,222 +640,667 @@ Template.balancetransactionlist.onRendered(function() {
       });
     }else if(FlowRouter.current().queryParams.accountName){
       let balanceTotal = 0;
-      reportService.getBalanceSheetRedirectClientData(urlParameters).then(function (data) {
-        //localStorage.setItem('VS1BalanceTrans_Report', JSON.stringify(data)||'');
-        for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
-          let childArray = data.taccountrunningbalancereport[i];
-          if((childArray.AccountName === urlParameters)&&(childArray.Type != '')){
+      getVS1Data('TAccountRunningBalanceReport').then(function (dataObject) {
+          if (dataObject.length == 0) {
+            reportService.getBalanceSheetRedirectClientData(urlParameters,initialDataLoad, 0).then(function (data) {
+              addVS1Data('TAccountRunningBalanceReport', JSON.stringify(data));
+              for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
+                let childArray = data.taccountrunningbalancereport[i];
+                if((childArray.Type != '')){
 
-          let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
-          let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
-          let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
-          let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
-          let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
-            balanceTotal += childArray.Balance;
-            console.log(balanceTotal);
-          let transactionNo = '';
-          if((childArray.Type === "Bill") || (childArray.Type === "Cheque")
-          ||(childArray.Type === "Credit")||(childArray.Type === "PO")||(childArray.Type === "Un-Invoiced PO")){
-            transactionNo = childArray.PurchaseOrderID;
-          }else if((childArray.Type === "Cash Sale") || (childArray.Type === "Invoice")
-          ||(childArray.Type === "Journal Entry")||(childArray.Type === "Manufacturing")
-          ||(childArray.Type === "Payroll") ||(childArray.Type === "POS")
-          ||(childArray.Type === "Refund") ||(childArray.Type === "UnInvoiced SO")){
-            transactionNo = childArray.SaleID;
-          }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
-          ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
-            transactionNo = childArray.PaymentID;
-          }
-
-          var dataList = {
-          date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
-          sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
-          accountname: childArray.AccountName || '',
-          type: childArray.Type || '',
-          clientname: childArray.clientname || '',
-          debit: debitAmount || 0.00,
-          credit: creditAmount || 0.00,
-          balance: balaneAmount || 0.00,
-          accounttype:childArray.AccountType,
-          transactionno: transactionNo || '',
-          openingbalance: openingAmount || 0.00,
-          closingbalance: closingAmount || 0.00
-        };
-
-         dataTableList.push(dataList);
-       }
-         }
-
-         templateObject.datatablerecords.set(dataTableList);
-
-        if(templateObject.datatablerecords.get()){
-
-          Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblBalanceTransactionList', function(error, result){
-          if(error){
-
-          }else{
-            if(result){
-              for (let i = 0; i < result.customFields.length; i++) {
-                let customcolumn = result.customFields;
-                let columData = customcolumn[i].label;
-                let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                let hiddenColumn = customcolumn[i].hidden;
-                let columnClass = columHeaderUpdate.split('.')[1];
-                let columnWidth = customcolumn[i].width;
-                let columnindex = customcolumn[i].index + 1;
-
-                if(hiddenColumn == true){
-
-                  $("."+columnClass+"").addClass('hiddenColumn');
-                  $("."+columnClass+"").removeClass('showColumn');
-                }else if(hiddenColumn == false){
-                  $("."+columnClass+"").removeClass('hiddenColumn');
-                  $("."+columnClass+"").addClass('showColumn');
+                let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
+                let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
+                let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
+                let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
+                let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
+                  balanceTotal += childArray.Balance;
+                let transactionNo = '';
+                if((childArray.Type === "Bill") || (childArray.Type === "Cheque")
+                ||(childArray.Type === "Credit")||(childArray.Type === "PO")||(childArray.Type === "Un-Invoiced PO")){
+                  transactionNo = childArray.PurchaseOrderID;
+                }else if((childArray.Type === "Cash Sale") || (childArray.Type === "Invoice")
+                ||(childArray.Type === "Journal Entry")||(childArray.Type === "Manufacturing")
+                ||(childArray.Type === "Payroll") ||(childArray.Type === "POS")
+                ||(childArray.Type === "Refund") ||(childArray.Type === "UnInvoiced SO")){
+                  transactionNo = childArray.SaleID;
+                }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
+                ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
+                  transactionNo = childArray.PaymentID;
                 }
 
+                var dataList = {
+                date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
+                sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
+                accountname: childArray.AccountName || '',
+                type: childArray.Type || '',
+                clientname: childArray.clientname || '',
+                debit: debitAmount || 0.00,
+                credit: creditAmount || 0.00,
+                balance: balaneAmount || 0.00,
+                accounttype:childArray.AccountType,
+                transactionno: transactionNo || '',
+                openingbalance: openingAmount || 0.00,
+                closingbalance: closingAmount || 0.00
+              };
+
+               dataTableList.push(dataList);
+             }
+               }
+
+               templateObject.datatablerecords.set(dataTableList);
+
+              if(templateObject.datatablerecords.get()){
+
+                function MakeNegative() {
+                  $('td').each(function(){
+                    if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+                   });
+                };
+                setTimeout(function () {
+                  MakeNegative();
+                }, 100);
               }
+
+              setTimeout(function () {
+                  $('#tblBalanceTransactionList').DataTable({
+                        columnDefs: [
+                          {type: 'date', targets: 0}
+                        ],
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        buttons: [
+                            {
+                                extend: 'excelHtml5',
+                                text: '',
+                                download: 'open',
+                                className: "btntabletocsv hiddenColumn",
+                                filename: "Balance Transaction List - "+ moment().format(),
+                                orientation:'portrait',
+                                exportOptions: {
+                                    columns: ':visible',
+                                    format: {
+                                        body: function ( data, row, column ) {
+                                            if(data.includes("</span>")){
+                                                var res = data.split("</span>");
+                                                data = res[1];
+                                            }
+
+                                            return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                        }
+                                    }
+                                }
+                            },{
+                                extend: 'print',
+                                download: 'open',
+                                className: "btntabletopdf hiddenColumn",
+                                text: '',
+                                title: 'Balance Transaction',
+                                filename: "Balance Transaction List - "+ moment().format(),
+                                exportOptions: {
+                                    columns: ':visible',
+                                    stripHtml: false
+                                }
+                            }],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        // bStateSave: true,
+                        // rowId: 0,
+                        pageLength: initialReportDatatableLoad,
+                        lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "order": [[ 0, "desc" ]],
+                        action: function () {
+                            $('#tblBalanceTransactionList').DataTable().ajax.reload();
+                        },
+                        fnDrawCallback: function (oSettings) {
+                          $(".paginate_button.page-item").removeClass("disabled");
+                          $("#tblBalanceTransactionList_ellipsis").addClass("disabled");
+
+                          if (oSettings._iDisplayLength == -1) {
+                            if (oSettings.fnRecordsDisplay() > 150) {
+                              $(".paginate_button.page-item.previous").addClass("disabled");
+                              $(".paginate_button.page-item.next").addClass("disabled");
+                            }
+                          } else {
+                          }
+                          if (data.Params.Count < oSettings.fnRecordsDisplay()) {
+                            $(".paginate_button.page-item.next").addClass("disabled");
+                          }
+                          $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
+                            $(".fullScreenSpin").css("display", "inline-block");
+                            let dataLenght = oSettings._iDisplayLength;
+                            reportService.getBalanceSheetRedirectClientData(urlParameters,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                                getVS1Data("TAccountRunningBalanceReport").then(function (dataObjectold) {
+                                    if (dataObjectold.length == 0) {
+                                    } else {
+                                      let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                      var thirdaryData = $.merge($.merge([],dataObjectnew.taccountrunningbalancereport),dataOld.taccountrunningbalancereport);
+                                      let objCombineData = {
+                                        Params: dataOld.Params,
+                                        taccountrunningbalancereport: thirdaryData,
+                                      };
+
+                                      addVS1Data("TAccountRunningBalanceReport",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                          templateObject.resetData(objCombineData);
+                                          $(".fullScreenSpin").css("display", "none");
+                                        }).catch(function (err) {
+                                          $(".fullScreenSpin").css("display", "none");
+                                        });
+                                    }
+                                  }).catch(function (err) {});
+                              }).catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                              });
+                          });
+                          setTimeout(function () {
+                            MakeNegative();
+                          }, 100);
+                        },
+                        fnInitComplete: function () {
+                          this.fnPageChange("last");
+                          $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                        }
+
+                    }).on('page', function () {
+
+                        let draftRecord = templateObject.datatablerecords.get();
+                        templateObject.datatablerecords.set(draftRecord);
+                    }).on('column-reorder', function () {
+
+                    });
+
+
+                    $('.fullScreenSpin').css('display','none');
+
+                    /* Add count functionality to table */
+                    let countTableData = data.Params.Count || 1; //get count from API data
+                    if (data.taccountrunningbalancereport.length > countTableData) {
+                      //Check if what is on the list is more than API count
+                      countTableData = data.taccountrunningbalancereport.length || 1;
+                    }
+
+                    if (data.taccountrunningbalancereport.length > 0) {
+                      $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
+                    } else {
+                      $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
+                    }
+                    /* End Add count functionality to table */
+              }, 0);
+
+                var columns = $('#tblBalanceTransactionList th');
+                let sTible = "";
+                let sWidth = "";
+                let sIndex = "";
+                let sVisible = "";
+                let columVisible = false;
+                let sClass = "";
+                $.each(columns, function(i,v) {
+                  if(v.hidden == false){
+                    columVisible =  true;
+                  }
+                  if((v.className.includes("hiddenColumn"))){
+                    columVisible = false;
+                  }
+                  sWidth = v.style.width.replace('px', "");
+
+                  let datatablerecordObj = {
+                    sTitle: v.innerText || '',
+                    sWidth: sWidth || '',
+                    sIndex: v.cellIndex || '',
+                    sVisible: columVisible || false,
+                    sClass: v.className || ''
+                  };
+                  tableHeaderList.push(datatablerecordObj);
+                });
+              templateObject.tableheaderrecords.set(tableHeaderList);
+               $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display','none');
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
+              let childArray = data.taccountrunningbalancereport[i];
+              if((childArray.Type != '')){
+
+              let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
+              let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
+              let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
+              let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
+              let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
+                balanceTotal += childArray.Balance;
+              let transactionNo = '';
+              if((childArray.Type === "Bill") || (childArray.Type === "Cheque")
+              ||(childArray.Type === "Credit")||(childArray.Type === "PO")||(childArray.Type === "Un-Invoiced PO")){
+                transactionNo = childArray.PurchaseOrderID;
+              }else if((childArray.Type === "Cash Sale") || (childArray.Type === "Invoice")
+              ||(childArray.Type === "Journal Entry")||(childArray.Type === "Manufacturing")
+              ||(childArray.Type === "Payroll") ||(childArray.Type === "POS")
+              ||(childArray.Type === "Refund") ||(childArray.Type === "UnInvoiced SO")){
+                transactionNo = childArray.SaleID;
+              }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
+              ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
+                transactionNo = childArray.PaymentID;
+              }
+
+              var dataList = {
+              date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
+              sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
+              accountname: childArray.AccountName || '',
+              type: childArray.Type || '',
+              clientname: childArray.clientname || '',
+              debit: debitAmount || 0.00,
+              credit: creditAmount || 0.00,
+              balance: balaneAmount || 0.00,
+              accounttype:childArray.AccountType,
+              transactionno: transactionNo || '',
+              openingbalance: openingAmount || 0.00,
+              closingbalance: closingAmount || 0.00
+            };
+
+             dataTableList.push(dataList);
+           }
+             }
+
+             templateObject.datatablerecords.set(dataTableList);
+
+            if(templateObject.datatablerecords.get()){
+
+              function MakeNegative() {
+                $('td').each(function(){
+                  if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+                 });
+              };
+              setTimeout(function () {
+                MakeNegative();
+              }, 100);
             }
 
-          }
-          });
+            setTimeout(function () {
+                $('#tblBalanceTransactionList').DataTable({
+                      columnDefs: [
+                        {type: 'date', targets: 0}
+                      ],
+                      select: true,
+                      destroy: true,
+                      colReorder: true,
+                      sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                      buttons: [
+                          {
+                              extend: 'excelHtml5',
+                              text: '',
+                              download: 'open',
+                              className: "btntabletocsv hiddenColumn",
+                              filename: "Balance Transaction List - "+ moment().format(),
+                              orientation:'portrait',
+                              exportOptions: {
+                                  columns: ':visible',
+                                  format: {
+                                      body: function ( data, row, column ) {
+                                          if(data.includes("</span>")){
+                                              var res = data.split("</span>");
+                                              data = res[1];
+                                          }
 
-          function MakeNegative() {
-            $('td').each(function(){
-              if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-             });
-          };
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        }
+                                          return column === 1 ? data.replace(/<.*?>/ig, ""): data;
 
-        $('.fullScreenSpin').css('display','none');
-        if ($.fn.DataTable.isDataTable('#balance-sheet-detail')) {
-            $('#tblBalanceTransactionList').DataTable().destroy();
-            Meteor._reload.reload();
-        }
-        setTimeout(function () {
-            $('#tblBalanceTransactionList').DataTable({
-                  columnDefs: [
-                    {type: 'date', targets: 0}
-                  ],
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [
-                      {
-                          extend: 'excelHtml5',
-                          text: '',
-                          download: 'open',
-                          className: "btntabletocsv hiddenColumn",
-                          filename: "Balance Transaction List - "+ moment().format(),
-                          orientation:'portrait',
-                          exportOptions: {
-                              columns: ':visible',
-                              format: {
-                                  body: function ( data, row, column ) {
-                                      if(data.includes("</span>")){
-                                          var res = data.split("</span>");
-                                          data = res[1];
                                       }
-
-                                      return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-
                                   }
                               }
+                          },{
+                              extend: 'print',
+                              download: 'open',
+                              className: "btntabletopdf hiddenColumn",
+                              text: '',
+                              title: 'Balance Transaction',
+                              filename: "Balance Transaction List - "+ moment().format(),
+                              exportOptions: {
+                                  columns: ':visible',
+                                  stripHtml: false
+                              }
+                          }],
+
+                      // bStateSave: true,
+                      // rowId: 0,
+                      pageLength: initialReportDatatableLoad,
+                      lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                      info: true,
+                      responsive: true,
+                      "order": [[ 3, "desc" ]],
+                      action: function () {
+                          $('#tblBalanceTransactionList').DataTable().ajax.reload();
+                      },
+                      fnDrawCallback: function (oSettings) {
+                        $(".paginate_button.page-item").removeClass("disabled");
+                        $("#tblBalanceTransactionList_ellipsis").addClass("disabled");
+
+                        if (oSettings._iDisplayLength == -1) {
+                          if (oSettings.fnRecordsDisplay() > 150) {
+                            $(".paginate_button.page-item.previous").addClass("disabled");
+                            $(".paginate_button.page-item.next").addClass("disabled");
                           }
-                      },{
-                          extend: 'print',
-                          download: 'open',
-                          className: "btntabletopdf hiddenColumn",
-                          text: '',
-                          title: 'Balance Transaction',
-                          filename: "Balance Transaction List - "+ moment().format(),
-                          exportOptions: {
-                              columns: ':visible',
-                              stripHtml: false
-                          }
-                      }],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  // bStateSave: true,
-                  // rowId: 0,
-                  pageLength: initialReportDatatableLoad,
-                  lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[ 0, "desc" ]],
-                  action: function () {
-                      $('#tblBalanceTransactionList').DataTable().ajax.reload();
-                  },
+                        } else {
+                        }
+                        if (data.Params.Count < oSettings.fnRecordsDisplay()) {
+                          $(".paginate_button.page-item.next").addClass("disabled");
+                        }
+                        $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
+                          $(".fullScreenSpin").css("display", "inline-block");
+                          let dataLenght = oSettings._iDisplayLength;
+                          reportService.getBalanceSheetRedirectClientData(urlParameters,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                              getVS1Data("TAccountRunningBalanceReport").then(function (dataObjectold) {
+                                  if (dataObjectold.length == 0) {
+                                  } else {
+                                    let dataOld = JSON.parse(dataObjectold[0].data);
 
-              }).on('page', function () {
+                                    var thirdaryData = $.merge($.merge([],dataObjectnew.taccountrunningbalancereport),dataOld.taccountrunningbalancereport);
+                                    let objCombineData = {
+                                      Params: dataOld.Params,
+                                      taccountrunningbalancereport: thirdaryData,
+                                    };
 
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-              }).on('column-reorder', function () {
+                                    addVS1Data("TAccountRunningBalanceReport",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                        templateObject.resetData(objCombineData);
+                                        $(".fullScreenSpin").css("display", "none");
+                                      }).catch(function (err) {
+                                        $(".fullScreenSpin").css("display", "none");
+                                      });
+                                  }
+                                }).catch(function (err) {});
+                            }).catch(function (err) {
+                              $(".fullScreenSpin").css("display", "none");
+                            });
+                        });
+                        setTimeout(function () {
+                          MakeNegative();
+                        }, 100);
+                      },
+                      fnInitComplete: function () {
+                        this.fnPageChange("last");
+                        $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                      }
 
+                  }).on('page', function () {
+
+                      let draftRecord = templateObject.datatablerecords.get();
+                      templateObject.datatablerecords.set(draftRecord);
+                  }).on('column-reorder', function () {
+
+                  });
+
+
+                  $('.fullScreenSpin').css('display','none');
+
+                  /* Add count functionality to table */
+                  let countTableData = data.Params.Count || 1; //get count from API data
+                  if (data.taccountrunningbalancereport.length > countTableData) {
+                    //Check if what is on the list is more than API count
+                    countTableData = data.taccountrunningbalancereport.length || 1;
+                  }
+
+                  if (data.taccountrunningbalancereport.length > 0) {
+                    $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
+                  } else {
+                    $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
+                  }
+                  /* End Add count functionality to table */
+            }, 0);
+
+              var columns = $('#tblBalanceTransactionList th');
+              let sTible = "";
+              let sWidth = "";
+              let sIndex = "";
+              let sVisible = "";
+              let columVisible = false;
+              let sClass = "";
+              $.each(columns, function(i,v) {
+                if(v.hidden == false){
+                  columVisible =  true;
+                }
+                if((v.className.includes("hiddenColumn"))){
+                  columVisible = false;
+                }
+                sWidth = v.style.width.replace('px', "");
+
+                let datatablerecordObj = {
+                  sTitle: v.innerText || '',
+                  sWidth: sWidth || '',
+                  sIndex: v.cellIndex || '',
+                  sVisible: columVisible || false,
+                  sClass: v.className || ''
+                };
+                tableHeaderList.push(datatablerecordObj);
               });
-
-
-              $('.fullScreenSpin').css('display','none');
-          }, 0);
-
-      $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
-          var listData = $(this).closest('tr').attr('id');
-          var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
-
-          if((listData) && (transactiontype)){
-            if(transactiontype === 'Quote' ){
-              window.open('/quotecard?id=' + listData,'_self');
-            }else if(transactiontype === 'Sales Order'){
-              window.open('/salesordercard?id=' + listData,'_self');
-            }else if(transactiontype === 'Invoice'){
-              window.open('/invoicecard?id=' + listData,'_self');
-            }else if(transactiontype === 'PO'){
-              window.open('/purchaseordercard?id=' + listData,'_self');
-            }else if(transactiontype === 'Bill'){
-              //window.open('/billcard?id=' + listData,'_self');
-            }else if(transactiontype === 'Credit'){
-              //window.open('/creditcard?id=' + listData,'_self');
-            }else if(transactiontype === 'Customer Payment'){
-              window.open('/paymentcard?id=' + listData,'_self');
-            }
+            templateObject.tableheaderrecords.set(tableHeaderList);
+             $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
           }
-        });
-
-          var columns = $('#tblBalanceTransactionList th');
-          let sTible = "";
-          let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
-          let columVisible = false;
-          let sClass = "";
-          $.each(columns, function(i,v) {
-            if(v.hidden == false){
-              columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-              columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-              sTitle: v.innerText || '',
-              sWidth: sWidth || '',
-              sIndex: v.cellIndex || '',
-              sVisible: columVisible || false,
-              sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-          });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-         $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
       }).catch(function (err) {
+        reportService.getBalanceSheetRedirectClientData(urlParameters,initialDataLoad, 0).then(function (data) {
+          addVS1Data('TAccountRunningBalanceReport', JSON.stringify(data));
+          for(let i = 0; i < data.taccountrunningbalancereport.length; i++){
+            let childArray = data.taccountrunningbalancereport[i];
+            if((childArray.Type != '')){
 
-          $('.fullScreenSpin').css('display','none');
+            let openingAmount = utilityService.modifynegativeCurrencyFormat(childArray.OpeningBalanceEx);
+            let closingAmount = utilityService.modifynegativeCurrencyFormat(childArray.ClosingBalanceEx);
+            let creditAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalCreditEx);
+            let debitAmount = utilityService.modifynegativeCurrencyFormat(childArray.TotalDebitEx);
+            let balaneAmount = utilityService.modifynegativeCurrencyFormat(childArray.Balance);
+              balanceTotal += childArray.Balance;
+            let transactionNo = '';
+            if((childArray.Type === "Bill") || (childArray.Type === "Cheque")
+            ||(childArray.Type === "Credit")||(childArray.Type === "PO")||(childArray.Type === "Un-Invoiced PO")){
+              transactionNo = childArray.PurchaseOrderID;
+            }else if((childArray.Type === "Cash Sale") || (childArray.Type === "Invoice")
+            ||(childArray.Type === "Journal Entry")||(childArray.Type === "Manufacturing")
+            ||(childArray.Type === "Payroll") ||(childArray.Type === "POS")
+            ||(childArray.Type === "Refund") ||(childArray.Type === "UnInvoiced SO")){
+              transactionNo = childArray.SaleID;
+            }else if((childArray.Type === "Bank Deposit") || (childArray.Type === "Customer Payment")
+            ||(childArray.Type === "Deposit Entry")||(childArray.Type === "Supplier Payment")){
+              transactionNo = childArray.PaymentID;
+            }
+
+            var dataList = {
+            date: childArray.Date !=''? moment(childArray.Date).format("DD/MM/YYYY"): data.taccountrunningbalancereport[i].Date,
+            sortdate: childArray.Date !=''? moment(childArray.Date).format("YYYY/MM/DD"): childArray.Date,
+            accountname: childArray.AccountName || '',
+            type: childArray.Type || '',
+            clientname: childArray.clientname || '',
+            debit: debitAmount || 0.00,
+            credit: creditAmount || 0.00,
+            balance: balaneAmount || 0.00,
+            accounttype:childArray.AccountType,
+            transactionno: transactionNo || '',
+            openingbalance: openingAmount || 0.00,
+            closingbalance: closingAmount || 0.00
+          };
+
+           dataTableList.push(dataList);
+         }
+           }
+
+           templateObject.datatablerecords.set(dataTableList);
+
+          if(templateObject.datatablerecords.get()){
+
+            function MakeNegative() {
+              $('td').each(function(){
+                if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+               });
+            };
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          }
+
+          setTimeout(function () {
+              $('#tblBalanceTransactionList').DataTable({
+                    columnDefs: [
+                      {type: 'date', targets: 0}
+                    ],
+                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            text: '',
+                            download: 'open',
+                            className: "btntabletocsv hiddenColumn",
+                            filename: "Balance Transaction List - "+ moment().format(),
+                            orientation:'portrait',
+                            exportOptions: {
+                                columns: ':visible',
+                                format: {
+                                    body: function ( data, row, column ) {
+                                        if(data.includes("</span>")){
+                                            var res = data.split("</span>");
+                                            data = res[1];
+                                        }
+
+                                        return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+                                    }
+                                }
+                            }
+                        },{
+                            extend: 'print',
+                            download: 'open',
+                            className: "btntabletopdf hiddenColumn",
+                            text: '',
+                            title: 'Balance Transaction',
+                            filename: "Balance Transaction List - "+ moment().format(),
+                            exportOptions: {
+                                columns: ':visible',
+                                stripHtml: false
+                            }
+                        }],
+                    select: true,
+                    destroy: true,
+                    colReorder: true,
+                    // bStateSave: true,
+                    // rowId: 0,
+                    pageLength: initialReportDatatableLoad,
+                    lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                    info: true,
+                    responsive: true,
+                    "order": [[ 0, "desc" ]],
+                    action: function () {
+                        $('#tblBalanceTransactionList').DataTable().ajax.reload();
+                    },
+                    fnDrawCallback: function (oSettings) {
+                      $(".paginate_button.page-item").removeClass("disabled");
+                      $("#tblBalanceTransactionList_ellipsis").addClass("disabled");
+
+                      if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                          $(".paginate_button.page-item.previous").addClass("disabled");
+                          $(".paginate_button.page-item.next").addClass("disabled");
+                        }
+                      } else {
+                      }
+                      if (data.Params.Count < oSettings.fnRecordsDisplay()) {
+                        $(".paginate_button.page-item.next").addClass("disabled");
+                      }
+                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function () {
+                        $(".fullScreenSpin").css("display", "inline-block");
+                        let dataLenght = oSettings._iDisplayLength;
+                        reportService.getBalanceSheetRedirectClientData(urlParameters,initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+                            getVS1Data("TAccountRunningBalanceReport").then(function (dataObjectold) {
+                                if (dataObjectold.length == 0) {
+                                } else {
+                                  let dataOld = JSON.parse(dataObjectold[0].data);
+
+                                  var thirdaryData = $.merge($.merge([],dataObjectnew.taccountrunningbalancereport),dataOld.taccountrunningbalancereport);
+                                  let objCombineData = {
+                                    Params: dataOld.Params,
+                                    taccountrunningbalancereport: thirdaryData,
+                                  };
+
+                                  addVS1Data("TAccountRunningBalanceReport",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                      templateObject.resetData(objCombineData);
+                                      $(".fullScreenSpin").css("display", "none");
+                                    }).catch(function (err) {
+                                      $(".fullScreenSpin").css("display", "none");
+                                    });
+                                }
+                              }).catch(function (err) {});
+                          }).catch(function (err) {
+                            $(".fullScreenSpin").css("display", "none");
+                          });
+                      });
+                      setTimeout(function () {
+                        MakeNegative();
+                      }, 100);
+                    },
+                    fnInitComplete: function () {
+                      this.fnPageChange("last");
+                      $("<button class='btn btn-primary btnRefreshTrans' type='button' id='btnRefreshTrans' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblBalanceTransactionList_filter");
+                    }
+
+                }).on('page', function () {
+
+                    let draftRecord = templateObject.datatablerecords.get();
+                    templateObject.datatablerecords.set(draftRecord);
+                }).on('column-reorder', function () {
+
+                });
+
+
+                $('.fullScreenSpin').css('display','none');
+
+                /* Add count functionality to table */
+                let countTableData = data.Params.Count || 1; //get count from API data
+                if (data.taccountrunningbalancereport.length > countTableData) {
+                  //Check if what is on the list is more than API count
+                  countTableData = data.taccountrunningbalancereport.length || 1;
+                }
+
+                if (data.taccountrunningbalancereport.length > 0) {
+                  $(".dataTables_info").html("Showing 1 to " +data.taccountrunningbalancereport.length +" of " +countTableData +" entries");
+                } else {
+                  $(".dataTables_info").html("Showing 0 to " +data.taccountrunningbalancereport.length +" of 0 entries");
+                }
+                /* End Add count functionality to table */
+          }, 0);
+
+            var columns = $('#tblBalanceTransactionList th');
+            let sTible = "";
+            let sWidth = "";
+            let sIndex = "";
+            let sVisible = "";
+            let columVisible = false;
+            let sClass = "";
+            $.each(columns, function(i,v) {
+              if(v.hidden == false){
+                columVisible =  true;
+              }
+              if((v.className.includes("hiddenColumn"))){
+                columVisible = false;
+              }
+              sWidth = v.style.width.replace('px', "");
+
+              let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || '',
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+              };
+              tableHeaderList.push(datatablerecordObj);
+            });
+          templateObject.tableheaderrecords.set(tableHeaderList);
+           $('div.dataTables_filter input').addClass('form-control form-control-sm');
+
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display','none');
+        });
       });
+
     }else{
       templateObject.getAllBalanceSheetRedirectData();
     }
@@ -917,6 +1314,30 @@ Template.balancetransactionlist.onRendered(function() {
 
   });
 
+
+  $('#tblBalanceTransactionList tbody').on( 'click', 'tr', function () {
+      var listData = $(this).closest('tr').attr('id');
+      var transactiontype = $(event.target).closest("tr").find(".transactiontype").text();
+
+      if((listData) && (transactiontype)){
+        if(transactiontype === 'Quote' ){
+          window.open('/quotecard?id=' + listData,'_self');
+        }else if(transactiontype === 'Sales Order'){
+          window.open('/salesordercard?id=' + listData,'_self');
+        }else if(transactiontype === 'Invoice'){
+          window.open('/invoicecard?id=' + listData,'_self');
+        }else if(transactiontype === 'PO'){
+          window.open('/purchaseordercard?id=' + listData,'_self');
+        }else if(transactiontype === 'Bill'){
+          //window.open('/billcard?id=' + listData,'_self');
+        }else if(transactiontype === 'Credit'){
+          //window.open('/creditcard?id=' + listData,'_self');
+        }else if(transactiontype === 'Customer Payment'){
+          window.open('/paymentcard?id=' + listData,'_self');
+        }
+
+      }
+    });
 
 });
 
@@ -1092,11 +1513,24 @@ Template.balancetransactionlist.events({
    },
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display','inline-block');
-    localStorage.setItem('VS1BalanceTrans_Report', '');
+    //localStorage.setItem('VS1BalanceTrans_Report', '');
     Meteor._reload.reload();
+  },
+ 'click .btnRefreshTrans': function () {
+   $('.fullScreenSpin').css('display','inline-block');
+   //localStorage.setItem('VS1BalanceTrans_Report', '');
+   Meteor._reload.reload();
+ },
+ 'keyup #tblBalanceTransactionList_filter input': function (event) {
+       if($(event.target).val() != ''){
+         $(".btnRefreshTrans").addClass('btnSearchAlert');
+       }else{
+         $(".btnRefreshTrans").removeClass('btnSearchAlert');
+       }
+       if (event.keyCode == 13) {
+          $(".btnRefreshTrans").trigger("click");
+       }
   }
-
-
 });
 
 Template.balancetransactionlist.helpers({

@@ -228,6 +228,7 @@ Template.profitandlosschart.onRendered(()=>{
         let toDate= moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate= moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
         //Session.setPersistent('showHeader',true);
+        addVS1Data('TAccountRunningBalanceReport', []);
         FlowRouter.go('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false);
     },
     'click .btnRefresh': function () {

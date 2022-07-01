@@ -546,6 +546,7 @@ Template.agedreceivables.events({
         let toDate = moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate = moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
         //Session.setPersistent('showHeader',true);
+        addVS1Data('TAccountRunningBalanceReport', []);
         window.open('/balancetransactionlist?accountName=' + accountName + '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem=' + false, '_self');
     },
     'change #dateTo': function () {

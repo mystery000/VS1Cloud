@@ -46,6 +46,7 @@ export class ReportService extends BaseService {
     let options = {
       ReportType: "Detail",
       IgnoreSummarised: true,
+      LimitCount: '"25"',
     };
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
@@ -58,8 +59,8 @@ export class ReportService extends BaseService {
       IgnoreDates: false,
       DateTo: '"' + dateto + '"',
       DateFrom: '"' + datefrom + '"',
-      // LimitCount: '"' + limitcount + '"',
-      // LimitFrom: '"' + limitfrom + '"',
+      LimitCount: '"' + limitcount + '"',
+      LimitFrom: '"' + limitfrom + '"',
     };
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
@@ -70,9 +71,11 @@ export class ReportService extends BaseService {
       ReportType: "Detail",
       IgnoreSummarised: true,
       IgnoreDates: true,
-      Search:'AccountName = "'+accountName+'"',
-      // LimitCount: '"' + limitcount + '"',
-      // LimitFrom: '"' + limitfrom + '"',
+      AccountName:'"'+accountName+'"',
+      Search: "Type != ''",
+      OrderBy:"clientname desc",
+      LimitCount: '"' + limitcount + '"',
+      LimitFrom: '"' + limitfrom + '"',
     };
     // return this.getList(this.ERPObjects.TAccount,options);
     return this.getList(this.ERPObjects.TAccountRunningBalanceReport, options);
