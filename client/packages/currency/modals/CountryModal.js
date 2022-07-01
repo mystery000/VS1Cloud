@@ -20,6 +20,8 @@ Template.CountryModal.onRendered(function () {
   templateObject.getCountryData = function () {
     getVS1Data("TCountries")
       .then(function (dataObject) {
+        console.log("country list", dataObject);
+
         if (dataObject.length == 0) {
           countryService.getCountry().then((data) => {
             for (let i = 0; i < data.tcountries.length; i++) {

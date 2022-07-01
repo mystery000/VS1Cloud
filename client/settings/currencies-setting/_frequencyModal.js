@@ -16,6 +16,8 @@ import {
   WeeklyFrequencyModel,
 } from "./Model/FrequencyModel";
 import LoadingOverlay from "../../LoadingOverlay";
+import { updateAllCurrencies } from "./currencies";
+import CronSetting from "../../CronSetting";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -113,6 +115,7 @@ Template._frequencyModal.onRendered(function () {
 
   templateObject.saveShedule = async (e) => {
     LoadingOverlay.show();
+    // updateAllCurrencies();
 
     let reportSchedule = {
       type: "TReportSchedules",
@@ -131,6 +134,34 @@ Template._frequencyModal.onRendered(function () {
         NextDueDate: "",
       },
     };
+
+    let cronSetting = new CronSetting({
+      id: 1,
+      employeeId: employeeId,
+      startAt: new Date(),
+      cronJob: () => updateAllCurrencies,
+      type: fxUpdateObject.type
+    });
+
+
+
+    function convertDayNumberToString(number) {
+      let lastNumber = number.toString().slice(-1);
+      let suffixe = "st";
+
+      if(lastNumber == 1) {
+        suffixe = "st";
+      } else if(lastNumber == 2) {
+        suffixe = "nd";
+      } else if(lastNumber == 3) {
+        suffixe = "rd"
+      } else {
+        suffixe = "th";
+      }
+
+      return number + suffixe;
+    }
+
 
     /**
      * If monthly
@@ -153,10 +184,17 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.MonthDays = checkedMonths.join(",");
       reportSchedule.fields.Frequency = "M";
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+
+      
+      cronSetting.startAt = fxUpdateObject.getDate();
+      cronSetting.months = checkedMonths;
+      cronSetting.dayNumberOfMonth = convertDayNumberToString(fxUpdateObject.everyDay);
+
+      //cronSetting.parsed = later.recur()
+
     } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
       const selectedDay = document
-        .querySelector(".weekly-input-js input[type=checkbox]:checked")
-        .getAttribute("data-value");
+        .querySelector(".weekly-input-js input[type=checkbox]:checked").value;
 
       fxUpdateObject.selectedDays = selectedDay;
       fxUpdateObject.everyWeeks = $("#weeklyEveryXWeeks").val();
@@ -168,6 +206,14 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.WeekDay = parseInt(selectedDay);
       reportSchedule.fields.Every = fxUpdateObject.everyWeeks;
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+
+
+      // cronSetting.type = "Weekly";
+      cronSetting.days = fxUpdateObject.selectedDays;
+      cronSetting.every = fxUpdateObject.everyWeeks;
+      
+
+
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
       reportSchedule.fields.Frequency = "D";
 
@@ -205,6 +251,9 @@ Template._frequencyModal.onRendered(function () {
         fxUpdateObject.every = 1;
 
         reportSchedule.fields.Every = fxUpdateObject.every;
+
+        
+
       } else if ($("#dailyEvery").prop("checked")) {
         //console.log($("#dailyEvery").prop("checked"));
         fxUpdateObject.weekDays = null;
@@ -229,6 +278,9 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.Frequency = "";
     }
 
+    cronSetting.buildParsedText();
+    console.log("Cron Task: ", cronSetting);
+    Meteor.call('addCurrencyCron', cronSetting);
     console.log("Report Schedule", reportSchedule);
 
     try {
