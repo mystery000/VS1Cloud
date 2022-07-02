@@ -292,37 +292,68 @@ Template._frequencyModal.onRendered(function () {
     cronSetting.buildParsedText();
 
     console.log("Cron task: ", cronSetting);
-    
-    Meteor.call('addCurrencyCron', cronSetting, (error, result) => {
+
+    try {
+      Meteor.call("addCurrencyCron", cronSetting);
+      LoadingOverlay.hide(0);
+      swal({
+        title: "Success",
+        text: "Fx update was scheduled successfully",
+        type: "success",
+        showCancelButton: false,
+        confirmButtonText: "OK",
+      }).then(() => {
+        window.open("/currenciessettings", "_self");
+      });
+    } catch (exception) {
       LoadingOverlay.hide(0);
 
-      if(result) {
-        swal({
-          title: "Success",
-          text: "Fx update was scheduled successfully",
-          type: "success",
-          showCancelButton: false,
-          confirmButtonText: "OK",
-        }).then(() => {
-          window.open("/currenciessettings", "_self");
-        });
-      } else if(error) {
-        swal({
-          title: "Oooops...",
-          text: "Couldn't save schedule",
-          type: "error",
-          showCancelButton: true,
-          confirmButtonText: "Try Again",
-        }).then((result) => {
-          console.log(result);
-          if (result.value) {
-            $(".btnSaveFrequency").click();
-            // Meteor._reload.reload();
-          } else if (result.dismiss === "cancel") {
-          }
-        });
-      }
-    });
+      swal({
+        title: "Oooops...",
+        text: "Couldn't save schedule",
+        type: "error",
+        showCancelButton: true,
+        confirmButtonText: "Try Again",
+      }).then((result) => {
+        console.log(result);
+        if (result.value) {
+          $(".btnSaveFrequency").click();
+          // Meteor._reload.reload();
+        } else if (result.dismiss === "cancel") {
+        }
+      });
+    }
+
+    // Meteor.call('addCurrencyCron', cronSetting, (error, result) => {
+    //   LoadingOverlay.hide(0);
+
+    //   if(result) {
+    //     swal({
+    //       title: "Success",
+    //       text: "Fx update was scheduled successfully",
+    //       type: "success",
+    //       showCancelButton: false,
+    //       confirmButtonText: "OK",
+    //     }).then(() => {
+    //       window.open("/currenciessettings", "_self");
+    //     });
+    //   } else if(error) {
+    //     swal({
+    //       title: "Oooops...",
+    //       text: "Couldn't save schedule",
+    //       type: "error",
+    //       showCancelButton: true,
+    //       confirmButtonText: "Try Again",
+    //     }).then((result) => {
+    //       console.log(result);
+    //       if (result.value) {
+    //         $(".btnSaveFrequency").click();
+    //         // Meteor._reload.reload();
+    //       } else if (result.dismiss === "cancel") {
+    //       }
+    //     });
+    //   }
+    // });
     // console.log("Report Schedule", reportSchedule);
 
     // try {

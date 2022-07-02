@@ -9,7 +9,7 @@ Meteor.methods({
     const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
     SyncedCron.remove(cronId);
 
-    SyncedCron.add({
+    return SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
         const parsed = parser.text(cronSetting.toParse);
