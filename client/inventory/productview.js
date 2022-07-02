@@ -1398,11 +1398,12 @@ Template.productview.onRendered(function() {
                         $('.fullScreenSpin').css('display', 'none');
 
                         // add to custom field
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                        }, 5500);
+                        // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        // }, 5500);
 
                         let lineItems = [];
                         let lineItemObj = {};
@@ -1557,11 +1558,12 @@ Template.productview.onRendered(function() {
                         if (parseInt(useData[i].fields.ID) === currentProductID) {
 
                             // add to custom field
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-                              $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-                              $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-                            }, 5500);
+                        // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                            //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                            //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                            // }, 5500);
 
                             added = true;
                             $('.fullScreenSpin').css('display', 'none');

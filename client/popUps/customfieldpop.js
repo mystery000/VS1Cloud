@@ -6,11 +6,13 @@ import { OrganisationService } from "../js/organisation-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SalesBoardService } from '../js/sales-service';
 import { ContactService } from "../contacts/contact-service";
+import { ProductService } from "../product/product-service";
 
 
 let sideBarService = new SideBarService();
 let salesService = new SalesBoardService();
-const contactService = new ContactService();
+let contactService = new ContactService();
+let productService = new ProductService();
 let isDropdown = false;
 let clickedInput = "";
 
@@ -1161,10 +1163,20 @@ Template.customfieldpop.onRendered(() => {
   };
 
   templateObject.getTLeadExData = function (currentID) {
+    contactService.getOneLeadDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
 
   };
 
   templateObject.getTProductExData = function (currentID) {
+    productService.getOneProductdatavs1(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
 
   };
 

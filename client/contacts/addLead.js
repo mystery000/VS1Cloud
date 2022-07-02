@@ -148,11 +148,12 @@ Template.leadscard.onRendered(function () {
                     setOneLeadDataEx(data);
 
                     // add to custom field
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                    }, 5500);
+                    // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                    //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                    //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    // }, 5500);
                     $('.fullScreenSpin').css('display', 'none');
                 });
             } else {
@@ -162,11 +163,12 @@ Template.leadscard.onRendered(function () {
                 for (let i = 0; i < useData.length; i++) {
                     if (parseInt(useData[i].fields.ID) === parseInt(leadID)) {
                         // add to custom field
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-                          $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-                          $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-                        }, 5500);
+                        // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                        // }, 5500);
                         
                         added = true;
                         setOneLeadDataEx(useData[i]);
