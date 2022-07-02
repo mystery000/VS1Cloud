@@ -1608,11 +1608,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#sltStatus').val(data.fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -1954,11 +1955,12 @@ Template.new_quote.onRendered(() => {
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
 
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                }, 2500);
+                                // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                                // }, 2500);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -2231,11 +2233,12 @@ Template.new_quote.onRendered(() => {
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                                 $('#sltStatus').val(data.fields.SalesStatus);
 
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                                }, 2500);
+                                // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                                // }, 2500);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2516,11 +2519,12 @@ Template.new_quote.onRendered(() => {
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#sltStatus').val(data.fields.SalesStatus);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                                // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2987,11 +2991,12 @@ Template.new_quote.onRendered(() => {
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#sltStatus').val(data.fields.SalesStatus);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                                // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3291,11 +3296,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                             $('#sltStatus').val(useData[d].fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (useData[d].fields.Attachments) {
@@ -3571,11 +3577,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#sltStatus').val(data.fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -3871,11 +3878,13 @@ Template.new_quote.onRendered(() => {
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#sltStatus').val(data.fields.SalesStatus);
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    }, 2500);
+
+                                // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                    // }, 2500);
 
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {

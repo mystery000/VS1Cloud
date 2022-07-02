@@ -1464,6 +1464,7 @@ Template.invoicelist.events({
         var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
         let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+
         sideBarService.getAllTInvoiceListData(prevMonth11Date,toDate, false,initialReportLoad,0).then(function (dataInvoice) {
             addVS1Data('TInvoiceList', JSON.stringify(dataInvoice)).then(function (datareturn) {
               sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
@@ -1487,7 +1488,15 @@ Template.invoicelist.events({
               });
             });
         }).catch(function (err) {
-            window.open('/invoicelist', '_self');
+          sideBarService.getAllInvoiceList(initialDataLoad, 0).then(function (data) {
+              addVS1Data('TInvoiceEx', JSON.stringify(data)).then(function (datareturn) {
+                  window.open('/invoicelist', '_self');
+              }).catch(function (err) {
+                  window.open('/invoicelist', '_self');
+              });
+          }).catch(function (err) {
+              window.open('/invoicelist', '_self');
+          });
         });
 
 

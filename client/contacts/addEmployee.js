@@ -1324,11 +1324,12 @@ Template.employeescard.onRendered(function () {
                             $('.fullScreenSpin').css('display', 'none');
                             console.log('data--->',data)
                             // add to custom field
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.CustFld1);
-                              $('#edtSaleCustField2').val(data.fields.CustFld2);
-                              $('#edtSaleCustField3').val(data.fields.CustFld3);
-                            }, 5500);
+                            // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.CustFld1);
+                            //   $('#edtSaleCustField2').val(data.fields.CustFld2);
+                            //   $('#edtSaleCustField3').val(data.fields.CustFld3);
+                            // }, 5500);
 
                             let lineItems = [];
                             let empEmail = '';
@@ -1539,13 +1540,13 @@ Template.employeescard.onRendered(function () {
 
                                 console.log('useData[i]--->',useData[i])
 
-                                setTimeout(function () {// add to custom field
-                                console.log('useData[i] set--->',useData[i].fields.CUSTFLD1)
+                            // tempcode
+                              //   setTimeout(function () {// add to custom field 
 
-                                  $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
-                                  $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
-                                  $('#edtSaleCustField3').val(useData[i].fields.CustFld3);
-                              }, 5500);
+                              //     $('#edtSaleCustField1').val(useData[i].fields.CustFld1);
+                              //     $('#edtSaleCustField2').val(useData[i].fields.CustFld2);
+                              //     $('#edtSaleCustField3').val(useData[i].fields.CustFld3);
+                              // }, 5500);
 
                                 if (useData[i].fields.Email.replace(/\s/g, '') == '') {
                                     if (useData[i].fields.User != null) {

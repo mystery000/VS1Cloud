@@ -670,11 +670,12 @@ Template.new_invoice.onRendered(() => {
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    }, 2500);
+                    // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                    // }, 2500);
                     /* START attachment */
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -986,11 +987,11 @@ Template.new_invoice.onRendered(() => {
                             templateObject.CleintName.set(data.fields.CustomerName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                            // setTimeout(function () {// tempcode
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -1655,11 +1656,12 @@ Template.new_invoice.onRendered(() => {
                                 templateObject.CleintName.set(data.fields.CustomerName);
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                                }, 2500);
+                                // // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                                // }, 2500);
                                 /* START attachment */
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2020,11 +2022,12 @@ Template.new_invoice.onRendered(() => {
                         templateObject.CleintName.set(data.fields.CustomerName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                        // // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
                         /* START attachment */
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2446,11 +2449,12 @@ Template.new_invoice.onRendered(() => {
                             templateObject.CleintName.set(data.fields.CustomerName);
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                            // // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
                             /* START attachment */
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2617,11 +2621,12 @@ Template.new_invoice.onRendered(() => {
                         var added = false;
                         for (let d = 0; d < useData.length; d++) {
                             if (parseInt(useData[d].fields.ID) === currentInvoice) {
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                }, 2500);
+                              // // tempcode
+                              //   setTimeout(function () {
+                              //     $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                              //     $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                              //     $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                              //   }, 2500);
 
                                 added = true;
                                 $('.fullScreenSpin').css('display', 'none');
@@ -2791,11 +2796,12 @@ Template.new_invoice.onRendered(() => {
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                }, 2500);
+                                // // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                                // }, 2500);
                                 /* START attachment */
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3409,11 +3415,12 @@ Template.new_invoice.onRendered(() => {
                         templateObject.CleintName.set(data.fields.CustomerName);
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                        // // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
                         /* START attachment */
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3736,11 +3743,12 @@ Template.new_invoice.onRendered(() => {
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    }, 2500);
+                    // // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                    // }, 2500);
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
                         if (data.fields.Attachments.length) {
@@ -4026,11 +4034,12 @@ Template.new_invoice.onRendered(() => {
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
 
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    }, 2500);
+                    // // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                    // }, 2500);
                     /* START attachment */
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
