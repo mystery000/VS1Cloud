@@ -118,264 +118,48 @@ Template.purchaseordercard.onRendered(() => {
 
     function showPurchaseOrder1(template_title,number)
     {
-            var array_data = [];
-            let margins = {
-                top: 0,
-                bottom: 0,
-                left: 0,
-                width: 100
-            };
-            let quoteData =  templateObject.purchaseorderrecord.get();
-        
-            let stripe_id = templateObject.accountID.get() || '';
-            let stripe_fee_method = templateObject.stripe_fee_method.get();
-            let lineItems = [];
-            let total = $('#grandTotal').html() || 0;
-            let tax = $('#subtotal_tax').html() || 0;
-            let customer = $('#edtCustomerName').val();
-            let name = $('#firstname').val();
-            let surname = $('#lastname').val();
-            let fx = $('#sltCurrency').val();
-            var customfield1 = $('#edtSaleCustField1').val() || '';
-            var customfield2 = $('#edtSaleCustField2').val() || '';
-            var customfield3 = $('#edtSaleCustField3').val() || '';
-    
-            var customfieldlabel1 = $('.lblCustomField1').first().text();
-            var customfieldlabel2 = $('.lblCustomField2').first().text();
-            var customfieldlabel3 = $('.lblCustomField3').first().text();
-            
-            $('#tblPurchaseOrderLine > tbody > tr').each(function () {
-                var lineID = this.id;
-
-
-                let tdproduct = $('#' + lineID + " .lineProductName").val();
-                let tddescription = $('#' + lineID + " .lineProductDesc").text();
-                let tdQty = $('#' + lineID + " .lineQty").val();
-                let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
-                let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
-                let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
-                let tdlineamt = $('#' + lineID + " .colAmountEx").text();
-                let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-
-
-                array_data.push([
-                    tdproduct,
-                    tddescription,
-                    tdQty,
-                    tdunitprice,
-                    taxAmount,
-                    tdlineamt,
-                ]);
-            
-                lineItemObj = {
-                    description: tddescription || '',
-                    quantity: tdQty || 0,
-                    unitPrice: tdunitprice.toLocaleString(undefined, {
-                        minimumFractionDigits: 2
-                    }) || 0
-                }
-
-                lineItems.push(lineItemObj);
-            });
-            let id = $('.printID').attr("id") || "new";
-            var erpGet = erpDb();
-            let company = Session.get('vs1companyName');
-            let vs1User = localStorage.getItem('mySession');
-            let customerEmail = $('#edtCustomerEmail').val();
-            let currencyname = (CountryAbbr).toLowerCase();
-            let stringQuery = "?";
-            var customerID = $('#edtCustomerEmail').attr('customerid');
-            for (let l = 0; l < lineItems.length; l++) {
-                stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
-            }
-            stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-            let file = "Quote.pdf";
-            if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-                file = 'Quote-' + id + '.pdf';
-            }
-          
-            $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-            let item_purchase = '';
-            if(number == 1)
-            {
-               item_purchase = {
-                o_url: Session.get('vs1companyURL'),
-                o_name:  Session.get('vs1companyName'),
-                o_address: Session.get('vs1companyaddress1'),
-                o_city: Session.get('vs1companyCity'),
-                o_state: Session.get('companyState'),
-                o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-                o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-                o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-                title: "Purchase Order" ,
-                value: quoteData.id,
-                date: quoteData.saledate,
-                invoicenumber: quoteData.docnumber,
-                refnumber: quoteData.reference,
-                pqnumber: ".",
-                duedate: quoteData.duedate,
-                paylink: "Pay Now",
-                supplier_type: "Supplier",
-                supplier_name : customer,
-                supplier_addr : quoteData.shipToDesc,
-                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : quoteData.SubTotal,
-                gst : quoteData.TotalTax,
-                total : total,
-                paid_amount : quoteData.totalPaid,
-                bal_due : quoteData.balanceDue,
-                bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-                account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
-                data: array_data,
-                applied : "",
-                customfield1:'NA',
-                customfield2:'NA',
-                customfield3:'NA',
-                customfieldlabel1:'NA',
-                customfieldlabel2:'NA',
-                customfieldlabel3:'NA',
-                showFX:"",
-                
-               };
-    
-    
-            }
-            else if(number == 2)
-            {
-    
-                item_purchase = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-                    o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-                    o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-                    title: "Purchase Order" ,
-                    value: quoteData.id,
-                    date: quoteData.saledate,
-                    invoicenumber: quoteData.docnumber,
-                    refnumber: quoteData.reference,
-                    pqnumber: ".",
-                    duedate: quoteData.duedate,
-                    paylink: "Pay Now",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : quoteData.shipToDesc,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal : quoteData.SubTotal,
-                    gst : quoteData.TotalTax,
-                    total : total,
-                    paid_amount : quoteData.totalPaid,
-                    bal_due : quoteData.balanceDue,
-                    bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:customfield1,
-                    customfield2:customfield2,
-                    customfield3:customfield3,
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:"",
-                    
-                   };
-    
-            }
-            else{
-    
-    
-                item_purchase = {
-                    o_url: Session.get('vs1companyURL'),
-                    o_name:  Session.get('vs1companyName'),
-                    o_address: Session.get('vs1companyaddress1'),
-                    o_city: Session.get('vs1companyCity'),
-                    o_state: Session.get('companyState'),
-                    o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-                    o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-                    o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-                    title: "Purchase Order" ,
-                    value: quoteData.id,
-                    date: quoteData.saledate,
-                    invoicenumber: quoteData.docnumber,
-                    refnumber: quoteData.reference,
-                    pqnumber: ".",
-                    duedate: quoteData.duedate,
-                    paylink: "Pay Now",
-                    supplier_type: "Supplier",
-                    supplier_name : customer,
-                    supplier_addr : quoteData.shipToDesc,
-                    fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                    subtotal : quoteData.SubTotal,
-                    gst : quoteData.TotalTax,
-                    total : total,
-                    paid_amount : quoteData.totalPaid,
-                    bal_due : quoteData.balanceDue,
-                    bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-                    account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-                    swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
-                    data: array_data,
-                    applied : "",
-                    customfield1:customfield1,
-                    customfield2:customfield2,
-                    customfield3:customfield3,
-                    customfieldlabel1:customfieldlabel1,
-                    customfieldlabel2:customfieldlabel2,
-                    customfieldlabel3:customfieldlabel3,
-                    showFX:fx,
-                    
-                   };
-    
-    
-            }
-     
-
-            object_invoce.push(item_purchase);
-            $("#templatePreviewModal .field_payment").show();
-            $("#templatePreviewModal .field_amount").show();
-            updateTemplate1(object_invoce);
-
-            saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
-
-
-    }
-
-    function showPurchaseOrder(template_title,number)
-    {
         var array_data = [];
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-        let quoteData =  templateObject.purchaseorderrecord.get();
-    
+        let lineItems = [];   
+        object_invoce = [];
+        let item_invoices = '';
+
+        let invoice_data =  templateObject.purchaseorderrecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
-        let lineItems = [];
-        let total = $('#grandTotal').html() || 0;
+        var erpGet = erpDb();
+
+        var customfield1 = $('#edtSaleCustField1').val() || '-';
+        var customfield2 = $('#edtSaleCustField2').val() || '-';
+        var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+
+        let balancedue = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
+        let dept = $('#sltDept').val();
         let fx = $('#sltCurrency').val();
-        var customfield1 = $('#edtSaleCustField1').val() || '';
-        var customfield2 = $('#edtSaleCustField2').val() || '';
-        var customfield3 = $('#edtSaleCustField3').val() || '';
+        var comment = $('#txaComment').val();
+        var parking_instruction = $('#txapickmemo').val();
+        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+        var ref = $('#edtRef').val() || '-';
+        var txabillingAddress = $('#txabillingAddress').val() || '';
+        var dtSODate = $('#dtSODate').val();
+        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+        var grandTotal = $('#grandTotal').text() || '$'+ 0;
+        var duedate = $('#dtDueDate').val();
+        var po = $('#ponumber').val() || '.';
 
-        var customfieldlabel1 = $('.lblCustomField1').first().text();
-        var customfieldlabel2 = $('.lblCustomField2').first().text();
-        var customfieldlabel3 = $('.lblCustomField3').first().text();
-        
+
         $('#tblPurchaseOrderLine > tbody > tr').each(function () {
             var lineID = this.id;
-
-
+        
+        
             let tdproduct = $('#' + lineID + " .lineProductName").val();
             let tddescription = $('#' + lineID + " .lineProductDesc").text();
             let tdQty = $('#' + lineID + " .lineQty").val();
@@ -384,8 +168,8 @@ Template.purchaseordercard.onRendered(() => {
             let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
             let tdlineamt = $('#' + lineID + " .colAmountEx").text();
             let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
-
-
+        
+        
             array_data.push([
                 tdproduct,
                 tddescription,
@@ -402,168 +186,419 @@ Template.purchaseordercard.onRendered(() => {
                     minimumFractionDigits: 2
                 }) || 0
             }
-
+        
             lineItems.push(lineItemObj);
         });
-        let id = $('.printID').attr("id") || "new";
-        var erpGet = erpDb();
+
+
         let company = Session.get('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
+        let id = $('.printID').attr("id") || "new";
         let currencyname = (CountryAbbr).toLowerCase();
-        let stringQuery = "?";
+        stringQuery = "?";
         var customerID = $('#edtCustomerEmail').attr('customerid');
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
-        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
-        let file = "Quote.pdf";
+
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        let file = "PurchaseOrder.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            file = 'Quote-' + id + '.pdf';
+            file = 'PurchaseOrder-' + id + '.pdf';
         }
-      
+        
+
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-        let item_purchase = '';
-        object_invoce = [];
+
+     
         if(number == 1)
         {
-           item_purchase = {
-            o_url: Session.get('vs1companyURL'),
-            o_name:  Session.get('vs1companyName'),
-            o_address: Session.get('vs1companyaddress1'),
-            o_city: Session.get('vs1companyCity'),
-            o_state: Session.get('companyState'),
-            o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-            o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-            o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-            title: "Purchase Order" ,
-            value: quoteData.id,
-            date: quoteData.saledate,
-            invoicenumber: quoteData.docnumber,
-            refnumber: quoteData.reference,
-            pqnumber: ".",
-            duedate: quoteData.duedate,
-            paylink: "Pay Now",
-            supplier_type: "Supplier",
-            supplier_name : customer,
-            supplier_addr : quoteData.shipToDesc,
-            fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-            subtotal : quoteData.SubTotal,
-            gst : quoteData.TotalTax,
-            total : total,
-            paid_amount : quoteData.totalPaid,
-            bal_due : quoteData.balanceDue,
-            bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-            account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-            swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
-            data: array_data,
-            applied : "",
-            customfield1:'NA',
-            customfield2:'NA',
-            customfield3:'NA',
-            customfieldlabel1:'NA',
-            customfieldlabel2:'NA',
-            customfieldlabel3:'NA',
-            showFX:"",
-            
-           };
+              item_invoices = {
 
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
+                applied : "",
+                showFX:"",
+                comment:comment,
+              };
 
         }
         else if(number == 2)
         {
-
-            item_purchase = {
+            item_invoices = {
+             
                 o_url: Session.get('vs1companyURL'),
-                o_name:  Session.get('vs1companyName'),
+                o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
                 o_state: Session.get('companyState'),
-                o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-                o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-                o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-                title: "Purchase Order" ,
-                value: quoteData.id,
-                date: quoteData.saledate,
-                invoicenumber: quoteData.docnumber,
-                refnumber: quoteData.reference,
-                pqnumber: ".",
-                duedate: quoteData.duedate,
-                paylink: "Pay Now",
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
                 supplier_type: "Supplier",
                 supplier_name : customer,
-                supplier_addr : quoteData.shipToDesc,
+                supplier_addr : txabillingAddress,
                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : quoteData.SubTotal,
-                gst : quoteData.TotalTax,
-                total : total,
-                paid_amount : quoteData.totalPaid,
-                bal_due : quoteData.balanceDue,
-                bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-                account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
                 data: array_data,
-                applied : "",
                 customfield1:customfield1,
                 customfield2:customfield2,
                 customfield3:customfield3,
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
+                applied : "",
                 showFX:"",
-                
-               };
+                comment:comment,
+
+              };
 
         }
-        else{
-
-
-            item_purchase = {
+        else
+        {
+            item_invoices = {
                 o_url: Session.get('vs1companyURL'),
-                o_name:  Session.get('vs1companyName'),
+                o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
                 o_state: Session.get('companyState'),
-                o_reg: Template.purchaseordercard.__helpers.get('companyReg').call(),
-                o_abn: Template.purchaseordercard.__helpers.get('companyabn').call(),
-                o_phone:Template.purchaseordercard.__helpers.get('companyphone').call() ,
-                title: "Purchase Order" ,
-                value: quoteData.id,
-                date: quoteData.saledate,
-                invoicenumber: quoteData.docnumber,
-                refnumber: quoteData.reference,
-                pqnumber: ".",
-                duedate: quoteData.duedate,
-                paylink: "Pay Now",
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
                 supplier_type: "Supplier",
                 supplier_name : customer,
-                supplier_addr : quoteData.shipToDesc,
+                supplier_addr : txabillingAddress,
                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
-                subtotal : quoteData.SubTotal,
-                gst : quoteData.TotalTax,
-                total : total,
-                paid_amount : quoteData.totalPaid,
-                bal_due : quoteData.balanceDue,
-                bsb : Template.purchaseordercard.__helpers.get('vs1companyBankBSB').call(),
-                account :Template.purchaseordercard.__helpers.get('vs1companyBankAccountNo').call(),
-                swift : Template.purchaseordercard.__helpers.get('vs1companyBankSwiftCode').call(),
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
                 data: array_data,
-                applied : "",
                 customfield1:customfield1,
                 customfield2:customfield2,
                 customfield3:customfield3,
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
+                applied : "",
                 showFX:fx,
-                
-               };
-
+                comment:comment,
+              };
 
         }
- 
 
-        object_invoce.push(item_purchase);
+
+       
+    
+        object_invoce.push(item_invoices);
+    
+        $("#templatePreviewModal .field_payment").show();
+        $("#templatePreviewModal .field_amount").show();
+
+        updateTemplate1(object_invoce);
+
+        saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
+
+
+    }
+
+    function showPurchaseOrder(template_title,number)
+    {
+        var array_data = [];
+        let lineItems = [];   
+        object_invoce = [];
+        let item_invoices = '';
+
+        let invoice_data =  templateObject.purchaseorderrecord.get();
+        let stripe_id = templateObject.accountID.get() || '';
+        let stripe_fee_method = templateObject.stripe_fee_method.get();
+        var erpGet = erpDb();
+
+        var customfield1 = $('#edtSaleCustField1').val() || '-';
+        var customfield2 = $('#edtSaleCustField2').val() || '-';
+        var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+
+        let balancedue = $('#totalBalanceDue').html() || 0;
+        let tax = $('#subtotal_tax').html() || 0;
+        let customer = $('#edtCustomerName').val();
+        let name = $('#firstname').val();
+        let surname = $('#lastname').val();
+        let dept = $('#sltDept').val();
+        let fx = $('#sltCurrency').val();
+        var comment = $('#txaComment').val();
+        var parking_instruction = $('#txapickmemo').val();
+        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+        var ref = $('#edtRef').val() || '-';
+        var txabillingAddress = $('#txabillingAddress').val() || '';
+        var dtSODate = $('#dtSODate').val();
+        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+        var grandTotal = $('#grandTotal').text() || '$'+ 0;
+        var duedate = $('#dtDueDate').val();
+        var po = $('#ponumber').val() || '.';
+
+
+        $('#tblPurchaseOrderLine > tbody > tr').each(function () {
+            var lineID = this.id;
+        
+        
+            let tdproduct = $('#' + lineID + " .lineProductName").val();
+            let tddescription = $('#' + lineID + " .lineProductDesc").text();
+            let tdQty = $('#' + lineID + " .lineQty").val();
+            let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+            let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+            let tdtaxCode = $('#' + lineID + " .lineTaxCode").val();
+            let tdlineamt = $('#' + lineID + " .colAmountEx").text();
+            let taxAmount = $('#'+ lineID+ " .colTaxAmount").text();
+        
+        
+            array_data.push([
+                tdproduct,
+                tddescription,
+                tdQty,
+                tdunitprice,
+                taxAmount,
+                tdlineamt,
+            ]);
+        
+            lineItemObj = {
+                description: tddescription || '',
+                quantity: tdQty || 0,
+                unitPrice: tdunitprice.toLocaleString(undefined, {
+                    minimumFractionDigits: 2
+                }) || 0
+            }
+        
+            lineItems.push(lineItemObj);
+        });
+
+
+        let company = Session.get('vs1companyName');
+        let vs1User = localStorage.getItem('mySession');
+        let customerEmail = $('#edtCustomerEmail').val();
+        let id = $('.printID').attr("id") || "new";
+        let currencyname = (CountryAbbr).toLowerCase();
+        stringQuery = "?";
+        var customerID = $('#edtCustomerEmail').attr('customerid');
+        for (let l = 0; l < lineItems.length; l++) {
+            stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+        }
+
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        let file = "PurchaseOrder.pdf";
+        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            file = 'PurchaseOrder-' + id + '.pdf';
+        }
+        
+
+        $(".linkText").attr("href", stripeGlobalURL + stringQuery);
+
+     
+        if(number == 1)
+        {
+              item_invoices = {
+
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                 fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
+                applied : "",
+                showFX:"",
+                comment:comment,
+              };
+
+        }
+        else if(number == 2)
+        {
+            item_invoices = {
+             
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:"",
+                comment:comment,
+
+              };
+
+        }
+        else
+        {
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Purchase Order',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber:"",
+                pqnumber: "",
+                duedate: "",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Product Name" : "20", "Description" : "20", "Qty" : "10", "Unit Price" : "10", "Tax" : "20", "Amount" : "20" },
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
+                comment:comment,
+              };
+
+        }
+
+
+       
+    
+        object_invoce.push(item_invoices);
         $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
         updateTemplate(object_invoce);
@@ -831,14 +866,15 @@ Template.purchaseordercard.onRendered(() => {
             }
 
         }
-
+        
+        $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
 
       }
 
     function updateTemplate(object_invoce) {
 
         if (object_invoce.length > 0) {
-
+            $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
         $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
         $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
         $("#html-2-pdfwrapper_new .o_address1").text(
@@ -916,7 +952,7 @@ Template.purchaseordercard.onRendered(() => {
         $("#html-2-pdfwrapper_new .account_number").text( "Account Number : " + object_invoce[0]["account"]);
         $("#html-2-pdfwrapper_new .swift").text("Swift Code : " + object_invoce[0]["swift"]);
 
-
+        $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
         if(object_invoce[0]["date"] == ""){
             $("#html-2-pdfwrapper_new .dateNumber").hide();
         }else{
@@ -987,7 +1023,7 @@ Template.purchaseordercard.onRendered(() => {
               }
               else
               {
-                $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                $('#html-2-pdfwrapper_new .customfield3data').text( object_invoce[0]["customfield3"]);
               }
               
             
@@ -4049,11 +4085,11 @@ Template.purchaseordercard.onRendered(() => {
         document.getElementById('html-2-pdfwrapper_new').style.display="block";
         var source = document.getElementById('html-2-pdfwrapper_new');
 
-        let file = "Purchase_order.pdf";
+        let file = "Purchase order.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Purchase Orders')
             {
-                file = 'Purchase-Orders-' + quoteData.id + '.pdf';
+                file = 'Purchase Order-' + quoteData.id + '.pdf';
             }
            
         
@@ -4079,7 +4115,9 @@ Template.purchaseordercard.onRendered(() => {
 
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                $(".btnSave").trigger("click");
+                //$(".btnSave").trigger("click");
+                $('#html-2-pdfwrapper_new').css('display', 'none');
+                $('.fullScreenSpin').css('display', 'none');
             } else {
                 document.getElementById('html-2-pdfwrapper_new').style.display="none";
                 $('#html-2-pdfwrapper_new').css('display', 'none');
@@ -4799,7 +4837,7 @@ Template.purchaseordercard.helpers({
         return Session.get('vs1companyPOBox');
     },
     companyphone: () => {
-        return "phone: "+Session.get('vs1companyPhone');
+        return "Phone: "+Session.get('vs1companyPhone');
     },
     companyabn: () => { //Update Company ABN
             let countryABNValue = "ABN: " + Session.get('vs1companyABN');

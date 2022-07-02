@@ -124,52 +124,62 @@ Template.creditcard.onRendered(() => {
 
     function showCreditData(template_title,number) {
        
-        let invoice_data = templateObject.creditrecord.get();
         var array_data = [];
+        let lineItems = [];   
         object_invoce = [];
+        let item_invoices = '';
+
+        let invoice_data = templateObject.creditrecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
-        let lineItems = [];
-        let total = $('#totalBalanceDue').html() || 0;
+        var erpGet = erpDb();
+
+        var customfield1 = $('#edtSaleCustField1').val() || '-';
+        var customfield2 = $('#edtSaleCustField2').val() || '-';
+        var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+
+        let balancedue = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();      
         let fx = $('#sltCurrency').val();
-      
+        var comment = $('#txaComment').val();
+        var parking_instruction = $('#txapickmemo').val();
+        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+        var ref = $('#edtRef').val() || '-';
+        var txabillingAddress = $('#txabillingAddress').val() || '';
+        var dtSODate = $('#dtSODate').val();
+        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+        var grandTotal = $('#grandTotal').text() || '$'+ 0;
+        var duedate = $('#dtDueDate').val();
+        var po = $('#ponumber').val() || '.';
 
-        var customfield1 = $('#edtSaleCustField1').val() || '';
-        var customfield2 = $('#edtSaleCustField2').val() || '';
-        var customfield3 = $('#edtSaleCustField3').val() || '';
-
-        var customfieldlabel1 = $('.lblCustomField1').first().text();
-        var customfieldlabel2 = $('.lblCustomField2').first().text();
-        var customfieldlabel3 = $('.lblCustomField3').first().text();
-
-
-        for(var i = 0 ; i < invoice_data.LineItems.length ; i++)
-        {
-
-             array_data.push([
-                invoice_data.LineItems[i].accountname,
-                invoice_data.LineItems[i].memo,
-                invoice_data.LineItems[i].TaxTotal,
-                invoice_data.LineItems[i].unitPrice,
-              
-              ]);
-
-        }
 
         $('#tblCreditLine > tbody > tr').each(function () {
+
         var lineID = this.id;
-      
-        let accountname = $('#' + lineID + " .colAccountName").text();
-        let memo = $('#' + lineID + " .lineMemo").val();
-       
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let amount = $('#'+lineID +" .lineAmount").text();
+        let accountName = $('#' + lineID + " .es-input").val();
+        let colMemo = $('#' + lineID + " .colMemo").text();
+        let colTaxAmount = $('#' + lineID + " .colTaxAmount").text();
+
+        let colAmount = $('#' + lineID + " .colAmount").val();
+
+
+        array_data.push([
+            accountName,
+            colMemo,
+            colTaxAmount,
+            colAmount,
+    
+        ]);
+
 
         });
 
@@ -183,145 +193,147 @@ Template.creditcard.onRendered(() => {
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
-        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-            
-        let item_credits = '';
-        
+
+     
+    
         if(number == 1)
         {
-           item_credits = {
-            o_url: Session.get('vs1companyURL'),
-            o_name: Session.get('vs1companyName'),
-            o_address: Session.get('vs1companyaddress1'),
-            o_city: Session.get('vs1companyCity'),
-            o_state: Session.get('companyState'),
-            o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-            o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-            o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
-            title: 'Credit',
-            value: invoice_data.id,
-            date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
-            refnumber: invoice_data.reference,
-            pqnumber: "",
-            duedate: invoice_data.duedate,
-            paylink: "Pay Now",
-            supplier_type: "Supplier",
-            supplier_name : customer,
-            supplier_addr : invoice_data.shipToDesc,
-            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
-            bsb : localStorage.getItem('vs1companyBankBSB') || '',
-            swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-            data: array_data,
-            account : localStorage.getItem('vs1companyBankAccountNo') || '',
-            applied : "",
-            customfield1:'NA',
-            customfield2:'NA',
-            customfield3:'NA',
-            customfieldlabel1:'NA',
-            customfieldlabel2:'NA',
-            customfieldlabel3:'NA',
-            showFX:"",
-          };
-    
-        }
-        else if(number == 2)
-        {
-             item_credits = {
+              item_invoices = {
+
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
                 o_state: Session.get('companyState'),
-                o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-                o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-                o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
                 title: 'Credit',
-                value: invoice_data.id,
-                date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
-                refnumber: invoice_data.reference,
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
                 pqnumber: "",
-                duedate: invoice_data.duedate,
-                paylink: "Pay Now",
+                duedate:"",
+                paylink: "",
                 supplier_type: "Supplier",
                 supplier_name : customer,
-                supplier_addr : invoice_data.shipToDesc,
+                supplier_addr : txabillingAddress,
                 fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-                subtotal : invoice_data.SubTotal,
-                gst : invoice_data.TotalTax,
-                total : total,
-                paid_amount : invoice_data.totalPaid,
-                bal_due :  invoice_data.balanceDue,
-                bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
                 data: array_data,
-                account : localStorage.getItem('vs1companyBankAccountNo') || '',
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
                 applied : "",
+                showFX:"",
+                comment:comment,
+              };
+
+        }
+        else if(number == 2)
+        {
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Credit',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
                 customfield1:customfield1,
                 customfield2:customfield2,
                 customfield3:customfield3,
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
+                applied : "",
                 showFX:"",
-            };
-    
+                comment:comment,
+              };
+
         }
         else
         {
-    
-          item_credits = {
-            o_url: Session.get('vs1companyURL'),
-            o_name: Session.get('vs1companyName'),
-            o_address: Session.get('vs1companyaddress1'),
-            o_city: Session.get('vs1companyCity'),
-            o_state: Session.get('companyState'),
-            o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-            o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-            o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
-            title: 'Credit',
-            value: invoice_data.id,
-            date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
-            refnumber: invoice_data.reference,
-            pqnumber: "",
-            duedate: invoice_data.duedate,
-            paylink: "Pay Now",
-            supplier_type: "Supplier",
-            supplier_name : customer,
-            supplier_addr : invoice_data.shipToDesc,
-            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
-            bsb : localStorage.getItem('vs1companyBankBSB') || '',
-            swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-            data: array_data,
-            account : localStorage.getItem('vs1companyBankAccountNo') || '',
-            applied : "",
-            customfield1:customfield1,
-            customfield2:customfield2,
-            customfield3:customfield3,
-            customfieldlabel1:customfieldlabel1,
-            customfieldlabel2:customfieldlabel2,
-            customfieldlabel3:customfieldlabel3,
-            showFX:fx,
-          };
-    
-    
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Credit',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
+                comment:comment,
+              };
+
         }
-       
-        object_invoce.push(item_credits);
-    
+     
+        object_invoce.push(item_invoices);
+
         $("#templatePreviewModal .field_payment").hide();
         $("#templatePreviewModal .field_amount").show();
     
@@ -332,54 +344,65 @@ Template.creditcard.onRendered(() => {
 
     function showCreditData1(template_title,number) {
        
-        let invoice_data = templateObject.creditrecord.get();
         var array_data = [];
+        let lineItems = [];   
         object_invoce = [];
+        let item_invoices = '';
+
+        let invoice_data = templateObject.creditrecord.get();
         let stripe_id = templateObject.accountID.get() || '';
         let stripe_fee_method = templateObject.stripe_fee_method.get();
-        let lineItems = [];
-        let total = $('#totalBalanceDue').html() || 0;
+        var erpGet = erpDb();
+
+        var customfield1 = $('#edtSaleCustField1').val() || '-';
+        var customfield2 = $('#edtSaleCustField2').val() || '-';
+        var customfield3 = $('#edtSaleCustField3').val() || '-';
+
+        var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
+        var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
+        var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
+        
+        let balancedue = $('#totalBalanceDue').html() || 0;
         let tax = $('#subtotal_tax').html() || 0;
         let customer = $('#edtCustomerName').val();
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        var erpGet = erpDb();      
         let fx = $('#sltCurrency').val();
-      
+        var comment = $('#txaComment').val();
+        var parking_instruction = $('#txapickmemo').val();
+        var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
+        var total_paid = $('#totalPaidAmt').html() || '$'+ 0 ;
+        var ref = $('#edtRef').val() || '-';
+        var txabillingAddress = $('#txabillingAddress').val() || '';
+        var dtSODate = $('#dtSODate').val();
+        var subtotal_total = $('#subtotal_total').text() || '$'+ 0;
+        var grandTotal = $('#grandTotal').text() || '$'+ 0;
+        var duedate = $('#dtDueDate').val();
+        var po = $('#ponumber').val() || '.';
 
-        var customfield1 = $('#edtSaleCustField1').val() || '';
-        var customfield2 = $('#edtSaleCustField2').val() || '';
-        var customfield3 = $('#edtSaleCustField3').val() || '';
-
-        var customfieldlabel1 = $('.lblCustomField1').first().text();
-        var customfieldlabel2 = $('.lblCustomField2').first().text();
-        var customfieldlabel3 = $('.lblCustomField3').first().text();
-
-
-        for(var i = 0 ; i < invoice_data.LineItems.length ; i++)
-        {
-
-             array_data.push([
-                invoice_data.LineItems[i].accountname,
-                invoice_data.LineItems[i].memo,
-                invoice_data.LineItems[i].TaxTotal,
-                invoice_data.LineItems[i].unitPrice,
-              
-              ]);
-
-        }
 
         $('#tblCreditLine > tbody > tr').each(function () {
+
         var lineID = this.id;
-      
-        let accountname = $('#' + lineID + " .colAccountName").text();
-        let memo = $('#' + lineID + " .lineMemo").val();
-       
-        let taxamount = $('#' + lineID + " .colTaxAmount").text();
-        let amount = $('#'+lineID +" .lineAmount").text();
+        let accountName = $('#' + lineID + " .es-input").val();
+        let colMemo = $('#' + lineID + " .colMemo").text();
+        let colTaxAmount = $('#' + lineID + " .colTaxAmount").text();
+
+        let colAmount = $('#' + lineID + " .colAmount").val();
+
+
+        array_data.push([
+            accountName,
+            colMemo,
+            colTaxAmount,
+            colAmount,
+    
+        ]);
+
 
         });
+
         let company = Session.get('vs1companyName');
         let vs1User = localStorage.getItem('mySession');
         let customerEmail = $('#edtCustomerEmail').val();
@@ -390,149 +413,155 @@ Template.creditcard.onRendered(() => {
         for (let l = 0; l < lineItems.length; l++) {
             stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
         }
-        stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
+        stringQuery = stringQuery + "tax=" + tax + "&total=" + grandTotal + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + invoice_data.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Invoice&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&dept=" + dept + "&currency=" + currencyname;
         $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-            
-        let item_credits = '';
-        
+
+     
+    
         if(number == 1)
         {
-           item_credits = {
-            o_url: Session.get('vs1companyURL'),
-            o_name: Session.get('vs1companyName'),
-            o_address: Session.get('vs1companyaddress1'),
-            o_city: Session.get('vs1companyCity'),
-            o_state: Session.get('companyState'),
-            o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-            o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-            o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
-            title: 'Credit',
-            value: invoice_data.id,
-            date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
-            refnumber: invoice_data.reference,
-            pqnumber: "",
-            duedate: invoice_data.duedate,
-            paylink: "Pay Now",
-            supplier_type: "Supplier",
-            supplier_name : customer,
-            supplier_addr : invoice_data.shipToDesc,
-            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
-            bsb : localStorage.getItem('vs1companyBankBSB') || '',
-            swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-            data: array_data,
-            account : localStorage.getItem('vs1companyBankAccountNo') || '',
-            applied : "",
-            customfield1:'NA',
-            customfield2:'NA',
-            customfield3:'NA',
-            customfieldlabel1:'NA',
-            customfieldlabel2:'NA',
-            customfieldlabel3:'NA',
-            showFX:"",
-          };
-    
-        }
-        else if(number == 2)
-        {
-             item_credits = {
+              item_invoices = {
+
                 o_url: Session.get('vs1companyURL'),
                 o_name: Session.get('vs1companyName'),
                 o_address: Session.get('vs1companyaddress1'),
                 o_city: Session.get('vs1companyCity'),
                 o_state: Session.get('companyState'),
-                o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-                o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-                o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
                 title: 'Credit',
-                value: invoice_data.id,
-                date: invoice_data.saledate,
-                invoicenumber:invoice_data.docnumber,
-                refnumber: invoice_data.reference,
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
                 pqnumber: "",
-                duedate: invoice_data.duedate,
-                paylink: "Pay Now",
+                duedate:"",
+                paylink: "",
                 supplier_type: "Supplier",
                 supplier_name : customer,
-                supplier_addr : invoice_data.shipToDesc,
+                supplier_addr : txabillingAddress,
                 fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-                subtotal : invoice_data.SubTotal,
-                gst : invoice_data.TotalTax,
-                total : total,
-                paid_amount : invoice_data.totalPaid,
-                bal_due :  invoice_data.balanceDue,
-                bsb : localStorage.getItem('vs1companyBankBSB') || '',
-                swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
                 data: array_data,
-                account : localStorage.getItem('vs1companyBankAccountNo') || '',
+                customfield1:'NA',
+                customfield2:'NA',
+                customfield3:'NA',
+                customfieldlabel1:'NA',
+                customfieldlabel2:'NA',
+                customfieldlabel3:'NA',
                 applied : "",
+                showFX:"",
+                comment:comment,
+              };
+
+        }
+        else if(number == 2)
+        {
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Credit',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
                 customfield1:customfield1,
                 customfield2:customfield2,
                 customfield3:customfield3,
                 customfieldlabel1:customfieldlabel1,
                 customfieldlabel2:customfieldlabel2,
                 customfieldlabel3:customfieldlabel3,
+                applied : "",
                 showFX:"",
-            };
-    
+                comment:comment,
+              };
+
         }
         else
         {
-    
-          item_credits = {
-            o_url: Session.get('vs1companyURL'),
-            o_name: Session.get('vs1companyName'),
-            o_address: Session.get('vs1companyaddress1'),
-            o_city: Session.get('vs1companyCity'),
-            o_state: Session.get('companyState'),
-            o_reg: Template.creditcard.__helpers.get('companyReg').call(),
-            o_abn: Template.creditcard.__helpers.get('companyabn').call(),
-            o_phone:Template.creditcard.__helpers.get('companyphone').call() ,
-            title: 'Credit',
-            value: invoice_data.id,
-            date: invoice_data.saledate,
-            invoicenumber:invoice_data.docnumber,
-            refnumber: invoice_data.reference,
-            pqnumber: "",
-            duedate: invoice_data.duedate,
-            paylink: "Pay Now",
-            supplier_type: "Supplier",
-            supplier_name : customer,
-            supplier_addr : invoice_data.shipToDesc,
-            fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
-            subtotal : invoice_data.SubTotal,
-            gst : invoice_data.TotalTax,
-            total : total,
-            paid_amount : invoice_data.totalPaid,
-            bal_due :  invoice_data.balanceDue,
-            bsb : localStorage.getItem('vs1companyBankBSB') || '',
-            swift : localStorage.getItem('vs1companyBankSwiftCode') || '',
-            data: array_data,
-            account : localStorage.getItem('vs1companyBankAccountNo') || '',
-            applied : "",
-            customfield1:customfield1,
-            customfield2:customfield2,
-            customfield3:customfield3,
-            customfieldlabel1:customfieldlabel1,
-            customfieldlabel2:customfieldlabel2,
-            customfieldlabel3:customfieldlabel3,
-            showFX:fx,
-          };
-    
-    
+            item_invoices = {
+                o_url: Session.get('vs1companyURL'),
+                o_name: Session.get('vs1companyName'),
+                o_address: Session.get('vs1companyaddress1'),
+                o_city: Session.get('vs1companyCity'),
+                o_state: Session.get('companyState'),
+                o_reg: Template.new_invoice.__helpers.get('companyReg').call(),
+                o_abn: Template.new_invoice.__helpers.get('companyabn').call(),
+                o_phone:Template.new_invoice.__helpers.get('companyphone').call(),
+                title: 'Credit',
+                value:invoice_data.id,
+                date: dtSODate,
+                invoicenumber:invoice_data.id,
+                refnumber: "",
+                pqnumber: "",
+                duedate:"",
+                paylink: "",
+                supplier_type: "Supplier",
+                supplier_name : customer,
+                supplier_addr : txabillingAddress,
+                fields: {"Account Name" : "30", "Memo" : "30", "Tax" : "20", "Amount" : "20"},
+                subtotal :subtotal_total,
+                gst : subtotal_tax,
+                total : grandTotal,
+                paid_amount : total_paid,
+                bal_due : balancedue,
+                bsb :'',
+                account : '',
+                swift : '',
+                data: array_data,
+                customfield1:customfield1,
+                customfield2:customfield2,
+                customfield3:customfield3,
+                customfieldlabel1:customfieldlabel1,
+                customfieldlabel2:customfieldlabel2,
+                customfieldlabel3:customfieldlabel3,
+                applied : "",
+                showFX:fx,
+                comment:comment,
+              };
+
         }
+
+
        
-        object_invoce.push(item_credits);
     
-        $("#templatePreviewModal .field_payment").hide();
+        object_invoce.push(item_invoices);
+    
+        $("#templatePreviewModal .field_payment").show();
         $("#templatePreviewModal .field_amount").show();
-    
+
         updateTemplate1(object_invoce);
+
         saveTemplateFields("fields" + template_title , object_invoce[0]["fields"])
     
     }
@@ -1823,9 +1852,9 @@ Template.creditcard.onRendered(() => {
 
 
     function updateTemplate1(object_invoce) {
-        $("#templatePreviewModal").modal("toggle");
-        if (object_invoce.length > 0) {
-         
+          $("#templatePreviewModal").modal("toggle");
+          if (object_invoce.length > 0) {
+          $('#templatePreviewModal #printcomment').text(object_invoce[0]["comment"]);
           $("#templatePreviewModal .o_url").text(object_invoce[0]["o_url"]);
           $("#templatePreviewModal .o_name").text(object_invoce[0]["o_name"]);
           $("#templatePreviewModal .o_address1").text(
@@ -2049,7 +2078,7 @@ Template.creditcard.onRendered(() => {
          }
 
         // total amount
-
+      
         if(object_invoce[0]["subtotal"] == "")
         {
             $("#templatePreviewModal .field_amount").hide();
@@ -2089,6 +2118,7 @@ Template.creditcard.onRendered(() => {
 
         if (object_invoce.length > 0) {
 
+        $('#html-2-pdfwrapper_new #printcomment').text(object_invoce[0]["comment"]);
         $("#html-2-pdfwrapper_new .o_url").text(object_invoce[0]["o_url"]);
         $("#html-2-pdfwrapper_new .o_name").text(object_invoce[0]["o_name"]);
         $("#html-2-pdfwrapper_new .o_address1").text(
@@ -2237,7 +2267,7 @@ Template.creditcard.onRendered(() => {
               }
               else
               {
-                $('#html-2-pdfwrapper_new .customfield3data').text(+ object_invoce[0]["customfield3"]);
+                $('#html-2-pdfwrapper_new .customfield3data').text(object_invoce[0]["customfield3"]);
               }
               
             
@@ -3823,7 +3853,7 @@ Template.creditcard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Credits')
             {
-                file = 'Credits -' + invoice_data_info.id + '.pdf';
+                file = 'Credit -' + invoice_data_info.id + '.pdf';
             }
            
            

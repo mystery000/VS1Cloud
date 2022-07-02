@@ -705,6 +705,9 @@ Template.generalledger.onRendered(() => {
         _currencyList.push(dataList);
         //}
       }
+      _currencyList = _currencyList.sort((a, b) => {
+        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
+      });
 
       // console.log(_currencyList);
 
@@ -808,6 +811,7 @@ Template.generalledger.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     //Session.setPersistent('showHeader',true);
+    addVS1Data('TAccountRunningBalanceReport', []);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +

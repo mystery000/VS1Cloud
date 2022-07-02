@@ -759,7 +759,7 @@ Template.invoicelistBO.onRendered(function() {
                       if(checkDeleted == "Deleted"){
                         swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
                       }else{
-                        FlowRouter.go('/invoicecard?id=' + listData);
+                       window.open('/invoicecard?id=' + listData+'&type=bo','_self');
                       }
                     }
 
