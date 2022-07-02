@@ -1,6 +1,21 @@
 Meteor.startup(() => {
   console.log("Currency Cron started");
+  const currentDate = new Date();
 
+  /**
+   * step 1 : We need to get the list of schedules
+   * The future stasks
+   */
+
+  /**
+   * Step 2 : We need to check if their date is reached
+   * if reached then run add the cron
+   * else do nohing
+   */
+
+  /**
+   * Step 3: Start
+   */
   SyncedCron.start();
 });
 

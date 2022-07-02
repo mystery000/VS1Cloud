@@ -34,9 +34,10 @@ export default class CronSetting {
 
     if (this.type == "Monthly") {
       if (this.months.length > 0) {
+        let lastMonth = this.months.pop();
         // We on a monthly one
         text += "every " + this.dayNumberOfMonth + " day of the month";
-        text += " " + this.months.join(",");
+        text += " of " + this.months.join(",") + " and " + lastMonth;
 
         const date = this.convertToDate(this.startAt);
         const minutes = this.convertToDate(this.startAt).getMinutes();
@@ -82,29 +83,31 @@ export default class CronSetting {
       const minutes = this.convertToDate(this.startAt).getMinutes();
       const hours = this.convertToDate(this.startAt).getHours();
 
-      text +=
-        "at " +
-        (hours < 10 ? "0" : "") +
-        hours +
-        ":" +
-        (minutes < 10 ? "0" : "") +
-        minutes;
-
       if (this.days.length > 0) {
-      
-        // there are days
-        text += " on " + this.days.join(",");
+        const lastDay = this.days.pop();
+
+        this.days.length == 1
+          ? (text += " on " + lastDay)
+          : (text += " on " + this.days.join(",") + " and " + lastDay);
+
+        text +=
+          " starting on the " +
+          this.convertDayNumberToString(date.getDay()) +
+          " day in " +
+          date.toDateString().split(" ")[1] +
+          " in " +
+          date.toDateString().split(" ")[3];
       } else {
         text += " every " + this.every + " day";
       }
 
       text +=
-        " starting on the " +
-        date.getDay() +
-        " day of " +
-        date.toDateString().split(" ")[1] +
-        " in " +
-        date.toDateString().split(" ")[3];
+        " at " +
+        (hours < 10 ? "0" : "") +
+        hours +
+        ":" +
+        (minutes < 10 ? "0" : "") +
+        minutes;
     } else if (this.type == "OneTime") {
       const date = this.convertToDate(this.startAt);
       const minutes = this.convertToDate(this.startAt).getMinutes();
@@ -144,5 +147,22 @@ export default class CronSetting {
     date = new Date(date);
     // console.log("Converting date: ",date);
     return date;
+  }
+
+  convertDayNumberToString(number) {
+    let lastNumber = number.toString().slice(-1);
+    let suffixe = "st";
+
+    if (lastNumber == 1) {
+      suffixe = "st";
+    } else if (lastNumber == 2) {
+      suffixe = "nd";
+    } else if (lastNumber == 3) {
+      suffixe = "rd";
+    } else {
+      suffixe = "th";
+    }
+
+    return number + suffixe;
   }
 }
