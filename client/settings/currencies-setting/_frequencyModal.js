@@ -16,6 +16,8 @@ import {
   WeeklyFrequencyModel,
 } from "./Model/FrequencyModel";
 import LoadingOverlay from "../../LoadingOverlay";
+import { updateAllCurrencies } from "./currencies";
+import CronSetting from "../../CronSetting";
 
 let sideBarService = new SideBarService();
 let taxRateService = new TaxRateService();
@@ -45,7 +47,7 @@ let FxEditorSetting = new FxSettingsEditor({
       }),
     });
 
-    console.log(fxUpdateObject);
+    // console.log(fxUpdateObject);
   },
   onEditDisabled: () => {
     fxUpdateObject = null;
@@ -112,7 +114,25 @@ Template._frequencyModal.onRendered(function () {
   //   })
 
   templateObject.saveShedule = async (e) => {
+    function convertDayNumberToString(number) {
+      let lastNumber = number.toString().slice(-1);
+      let suffixe = "st";
+
+      if (lastNumber == 1) {
+        suffixe = "st";
+      } else if (lastNumber == 2) {
+        suffixe = "nd";
+      } else if (lastNumber == 3) {
+        suffixe = "rd";
+      } else {
+        suffixe = "th";
+      }
+
+      return number + suffixe;
+    }
+
     LoadingOverlay.show();
+    // updateAllCurrencies();
 
     let reportSchedule = {
       type: "TReportSchedules",
@@ -132,10 +152,19 @@ Template._frequencyModal.onRendered(function () {
       },
     };
 
+    let cronSetting = new CronSetting({
+      id: 1,
+      employeeId: employeeId,
+      startAt: new Date(),
+      cronJob: () => updateAllCurrencies,
+      type: fxUpdateObject.type,
+    });
+
     /**
      * If monthly
      */
     if (fxUpdateObject instanceof MonthlyFrequencyModel) {
+      console.log("TYPE: ", fxUpdateObject);
       let checkedMonths = [];
       document
         .querySelectorAll(".months-input-js input[type=checkbox]:checked")
@@ -153,10 +182,20 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.MonthDays = checkedMonths.join(",");
       reportSchedule.fields.Frequency = "M";
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+
+      cronSetting.startAt = fxUpdateObject.getDate();
+      cronSetting.months = checkedMonths;
+      cronSetting.dayNumberOfMonth = convertDayNumberToString(
+        fxUpdateObject.everyDay
+      );
+
+      //cronSetting.parsed = later.recur()
     } else if (fxUpdateObject instanceof WeeklyFrequencyModel) {
-      const selectedDay = document
-        .querySelector(".weekly-input-js input[type=checkbox]:checked")
-        .getAttribute("data-value");
+      console.log("TYPE: ", fxUpdateObject);
+
+      const selectedDay = document.querySelector(
+        ".weekly-input-js input[type=checkbox]:checked"
+      ).value;
 
       fxUpdateObject.selectedDays = selectedDay;
       fxUpdateObject.everyWeeks = $("#weeklyEveryXWeeks").val();
@@ -168,7 +207,13 @@ Template._frequencyModal.onRendered(function () {
       reportSchedule.fields.WeekDay = parseInt(selectedDay);
       reportSchedule.fields.Every = fxUpdateObject.everyWeeks;
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+
+      // cronSetting.type = "Weekly";
+      cronSetting.days = fxUpdateObject.selectedDays;
+      cronSetting.every = fxUpdateObject.everyWeeks;
     } else if (fxUpdateObject instanceof DailyFrequencyModel) {
+      console.log("TYPE: ", fxUpdateObject);
+
       reportSchedule.fields.Frequency = "D";
 
       reportSchedule.fields.SatAction = "P";
@@ -188,6 +233,8 @@ Template._frequencyModal.onRendered(function () {
 
         reportSchedule.fields.SatAction = "D";
         reportSchedule.fields.SunAction = "D";
+
+        cronSetting.days = selectedDays;
       } else if ($("#dailyEveryDay").prop("checked")) {
         //console.log($("#dailyEveryDay").prop("checked"));
         /**
@@ -205,64 +252,113 @@ Template._frequencyModal.onRendered(function () {
         fxUpdateObject.every = 1;
 
         reportSchedule.fields.Every = fxUpdateObject.every;
+
+        cronSetting.every = 1;
+        cronSetting.days = fxUpdateObject.weekDays;
       } else if ($("#dailyEvery").prop("checked")) {
         //console.log($("#dailyEvery").prop("checked"));
         fxUpdateObject.weekDays = null;
         fxUpdateObject.every = parseInt($("#dailyEveryXDays").val());
 
         reportSchedule.fields.Every = fxUpdateObject.every;
+
+        cronSetting.every = fxUpdateObject.every;
       }
 
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
       fxUpdateObject.startTime = $("#edtDailyStartTime").val();
 
       reportSchedule.fields.StartDate = fxUpdateObject.getDate();
+
+      cronSetting.startAt = fxUpdateObject.getDate();
+
+      console.log(reportSchedule.fields.StartDate);
     } else if (fxUpdateObject instanceof OneTimeOnlyFrequencyModel) {
+      console.log("TYPE: ", fxUpdateObject);
+
       fxUpdateObject.startDate = $("#edtDailyStartDate").val();
       fxUpdateObject.startTime = $("#edtDailyStartTime").val();
 
       reportSchedule.fields.Frequency = "";
       reportSchedule.fields.EndDate = fxUpdateObject.getDate();
     } else if (fxUpdateObject instanceof OnEventFrequencyModel) {
+      console.log("TYPE: ", fxUpdateObject);
+
       fxUpdateObject.onLogin = $("#settingsOnLogon").prop("checked");
       fxUpdateObject.onLogout = $("#settingsOnLogout").prop("checked");
       reportSchedule.fields.Frequency = "";
     }
 
-    console.log("Report Schedule", reportSchedule);
-
-    try {
-      // Save email settings
-      await taxRateService.saveScheduleSettings(reportSchedule);
+    cronSetting.buildParsedText();
+    // console.log("Cron task: ", cronSetting);
+    Meteor.call('addCurrencyCron', cronSetting, (error, result) => {
       LoadingOverlay.hide(0);
 
-      swal({
-        title: "Success",
-        text: "Fx update was scheduled successfully",
-        type: "success",
-        showCancelButton: false,
-        confirmButtonText: "OK",
-      }).then(() => {
-        window.open("/currenciessettings", "_self");
-      });
-    } catch (e) {
-      LoadingOverlay.hide(0);
-      //console.log(e);
-      swal({
-        title: "Oooops...",
-        text: "Couldn't save schedule",
-        type: "error",
-        showCancelButton: true,
-        confirmButtonText: "Try Again",
-      }).then((result) => {
-        console.log(result);
-        if (result.value) {
-          $(".btnSaveFrequency").click();
-          // Meteor._reload.reload();
-        } else if (result.dismiss === "cancel") {
-        }
-      });
-    }
+      if(result) {
+        swal({
+          title: "Success",
+          text: "Fx update was scheduled successfully",
+          type: "success",
+          showCancelButton: false,
+          confirmButtonText: "OK",
+        }).then(() => {
+          window.open("/currenciessettings", "_self");
+        });
+      }
+
+      if(error) {
+        LoadingOverlay.hide(0);
+        //console.log(e);
+        swal({
+          title: "Oooops...",
+          text: "Couldn't save schedule",
+          type: "error",
+          showCancelButton: true,
+          confirmButtonText: "Try Again",
+        }).then((result) => {
+          console.log(result);
+          if (result.value) {
+            $(".btnSaveFrequency").click();
+            // Meteor._reload.reload();
+          } else if (result.dismiss === "cancel") {
+          }
+        });
+      }
+    });
+    // console.log("Report Schedule", reportSchedule);
+
+    // try {
+    //   // Save email settings
+    //   // Meteor.call("addCurrencyCron", cronSetting);
+    //   LoadingOverlay.hide(0);
+
+    //   swal({
+    //     title: "Success",
+    //     text: "Fx update was scheduled successfully",
+    //     type: "success",
+    //     showCancelButton: false,
+    //     confirmButtonText: "OK",
+    //   }).then(() => {
+    //     window.open("/currenciessettings", "_self");
+    //   });
+    // } catch (e) {
+    //   LoadingOverlay.hide(0);
+    //   //console.log(e);
+    //   swal({
+    //     title: "Oooops...",
+    //     text: "Couldn't save schedule",
+    //     type: "error",
+    //     showCancelButton: true,
+    //     confirmButtonText: "Try Again",
+    //   }).then((result) => {
+    //     console.log(result);
+    //     if (result.value) {
+    //       $(".btnSaveFrequency").click();
+    //       // Meteor._reload.reload();
+    //     } else if (result.dismiss === "cancel") {
+    //     }
+    //   });
+    // }
     /**
      * Now we need to save the freqency object
      */
@@ -275,8 +371,8 @@ Template._frequencyModal.onRendered(function () {
       .catch(function (err) {
         //location.reload(true);
       });
-    Meteor.call("addTask", reportSchedule.fields);
-    console.log(fxUpdateObject);
+    // Meteor.call("addTask", reportSchedule.fields);
+    // console.log(fxUpdateObject);
     LoadingOverlay.hide();
   };
 });
@@ -336,7 +432,7 @@ Template._frequencyModal.events({
 
       $("#edtMonthlyStartTime").val(fxUpdateObject.startTime);
       $("#edtMonthlyStartDate").val(fxUpdateObject.startDate);
-      console.log(fxUpdateObject);
+      // console.log(fxUpdateObject);
     } else if (event.target.id == "frequencyWeekly") {
       document.getElementById("weeklySettings").style.display = "block";
       document.getElementById("monthlySettings").style.display = "none";
@@ -351,7 +447,7 @@ Template._frequencyModal.events({
 
       $("#edtWeeklyStartTime").val(fxUpdateObject.startTime);
       $("#edtWeeklyStartDate").val(fxUpdateObject.startDate);
-      console.log(fxUpdateObject);
+      // console.log(fxUpdateObject);
     } else if (event.target.id == "frequencyDaily") {
       document.getElementById("dailySettings").style.display = "block";
       document.getElementById("monthlySettings").style.display = "none";
@@ -366,7 +462,7 @@ Template._frequencyModal.events({
 
       $("#edtDailyStartTime").val(fxUpdateObject.startTime);
       $("#edtDailyStartDate").val(fxUpdateObject.startDate);
-      console.log(fxUpdateObject);
+      // console.log(fxUpdateObject);
     } else if (event.target.id == "frequencyOnetimeonly") {
       document.getElementById("oneTimeOnlySettings").style.display = "block";
       document.getElementById("monthlySettings").style.display = "none";
@@ -381,7 +477,7 @@ Template._frequencyModal.events({
 
       $("#edtOneTimeOnlyTime").val(fxUpdateObject.startTime);
       $("#edtOneTimeOnlyDate").val(fxUpdateObject.startDate);
-      console.log(fxUpdateObject);
+      // console.log(fxUpdateObject);
     } else if (event.target.id == "frequencyOnevent") {
       document.getElementById("onEventSettings").style.display = "block";
       document.getElementById("monthlySettings").style.display = "none";
@@ -393,7 +489,7 @@ Template._frequencyModal.events({
         onLogin: $("#settingsOnLogon").prop("checked"),
         onLogout: $("#settingsOnLogout").prop("checked"),
       });
-      console.log(fxUpdateObject);
+      // console.log(fxUpdateObject);
     } else {
       $("#frequencyModal").modal("toggle");
     }
