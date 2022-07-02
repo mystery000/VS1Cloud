@@ -1,14 +1,12 @@
-
 Meteor.startup(() => {
   console.log("Currency Cron started");
-
 
   SyncedCron.start();
 });
 
 Meteor.methods({
   addCurrencyCron: (cronSetting) => {
-    const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeId}`;
+    const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
     if (cronSetting.active) {
       SyncedCron.remove(cronId);
     }
@@ -18,7 +16,9 @@ Meteor.methods({
       schedule: function (parser) {
         return parser.text(cronSetting.toParse);
       },
-      job: () =>  cronSetting.cronJob,
+      job: () => {
+        cronSetting.cronJob();
+      },
     });
   },
 });
