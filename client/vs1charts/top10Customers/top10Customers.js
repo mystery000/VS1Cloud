@@ -22,7 +22,9 @@ Template.top10Customers.onRendered(function () {
   const templateObject = Template.instance();
   let topTenData1 = [];
   let topData = this;
-
+  function chartClickEvent() {
+    FlowRouter.go("/customerdetailsreport?daterange=ignore");
+  } 
   getInvSales(function (data) {
     setTimeout(function () {
       let customerList = [];
@@ -88,12 +90,7 @@ Template.top10Customers.onRendered(function () {
           ],
         },
         options: {
-          onClick: function (evt, item) {
-            if (item[0]["_model"].label) {
-              var activePoints = item[0]["_model"].label;
-              FlowRouter.go("/salesreport?contact=" + activePoints);
-            }
-          },
+          onClick: chartClickEvent,
           maintainAspectRatio: false,
           responsive: true,
           tooltips: {

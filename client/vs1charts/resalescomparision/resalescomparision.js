@@ -97,13 +97,13 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
         }]
         },
         options: {
-          'onClick' : function (evt, item) {
-            if(item[0]['_model'].label){
-              var activePoints = item[0]['_model'].label;
-              FlowRouter.go('/salesreport?contact=' + activePoints);
-            }
+          // 'onClick' : function (evt, item) {
+          //   if(item[0]['_model'].label){
+          //     var activePoints = item[0]['_model'].label;
+          //     FlowRouter.go('/salesreport?contact=' + activePoints);
+          //   }
 
-          },
+          // },
           maintainAspectRatio: false,
           responsive: true,
         tooltips: {
@@ -263,13 +263,13 @@ if (!localStorage.getItem('VS1SalesEmpReport_dash')) {
       }]
       },
       options: {
-        'onClick' : function (evt, item) {
-          if(item[0]['_model'].label){
-            var activePoints = item[0]['_model'].label;
-            FlowRouter.go('/salesreport?contact=' + activePoints);
-          }
+        // 'onClick' : function (evt, item) {
+        //   if(item[0]['_model'].label){
+        //     var activePoints = item[0]['_model'].label;
+        //     FlowRouter.go('/salesreport?contact=' + activePoints);
+        //   }
 
-        },
+        // },
         maintainAspectRatio: false,
         responsive: true,
       tooltips: {

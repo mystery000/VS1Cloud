@@ -18,6 +18,9 @@ Template.top10Suppliers.onCreated(function () {
 Template.top10Suppliers.onRendered(() => {
   const templateObject = Template.instance();
 
+  function chartClickEvent() {
+    FlowRouter.go("/supplierlist");
+  } 
 
   getSupplierPurchases(function (data) {
     setTimeout(function () {
@@ -70,12 +73,7 @@ Template.top10Suppliers.onRendered(() => {
           ],
         },
         options: {
-          onClick: function (evt, item) {
-            if (item[0]["_model"].label) {
-              var activePoints = item[0]["_model"].label;
-              FlowRouter.go("/purchasesreport?contact=" + activePoints);
-            }
-          },
+          onClick: chartClickEvent,
           maintainAspectRatio: false,
           responsive: true,
           tooltips: {

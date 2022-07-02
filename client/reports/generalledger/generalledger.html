@@ -164,11 +164,21 @@
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
+                                    
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
+                                    table th {
+                                        min-width: 170px !important; 
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active customDoubleTableHeading">
                                                 <th>Account Name</th>
                                                 <th class="text-right" style="width: 130px;">Type</th>
                                                 <th class="text-right">No.</th>

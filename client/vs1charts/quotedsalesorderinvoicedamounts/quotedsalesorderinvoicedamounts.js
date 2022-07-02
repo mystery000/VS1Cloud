@@ -29,6 +29,9 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
   let topTenSuppData1 = [];
   let topData = this;
 
+  function chartClickEvent(){
+    FlowRouter.go('/salesreport?daterange=ignore');
+  }
 
   getInvSales(function (data) {
 
@@ -762,12 +765,6 @@ Template.quotedsalesorderinvoicedamounts.onRendered(()=>{
 
         });
     });
-    function chartClickEvent(event, array){
-        if(array[0] != undefined){
-          var activePoints = item[0]['_model'].label;
-          FlowRouter.go('/agedpayables?month=' + activePoints);
-         }
-    }
 
 
 

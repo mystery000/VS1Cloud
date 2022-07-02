@@ -154,6 +154,16 @@
                                     table tr .text-danger a {
                                         color: #e74a3b !important;
                                     }
+                                    table th {
+                                        min-width: 170px !important; 
+                                    }
+                                    
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
                                 </style>
                                 <table class="table table-sm tableExportDetailDiv" id="tableExport" name="tableExport">
                                     <thead>
