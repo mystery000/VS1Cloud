@@ -290,7 +290,9 @@ Template._frequencyModal.onRendered(function () {
     }
 
     cronSetting.buildParsedText();
-    // console.log("Cron task: ", cronSetting);
+
+    console.log("Cron task: ", cronSetting);
+    
     Meteor.call('addCurrencyCron', cronSetting, (error, result) => {
       LoadingOverlay.hide(0);
 
@@ -304,11 +306,7 @@ Template._frequencyModal.onRendered(function () {
         }).then(() => {
           window.open("/currenciessettings", "_self");
         });
-      }
-
-      if(error) {
-        LoadingOverlay.hide(0);
-        //console.log(e);
+      } else if(error) {
         swal({
           title: "Oooops...",
           text: "Couldn't save schedule",

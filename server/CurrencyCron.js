@@ -7,14 +7,14 @@ Meteor.startup(() => {
 Meteor.methods({
   addCurrencyCron: (cronSetting) => {
     const cronId = `currency-update-cron_${cronSetting.id}_${cronSetting.employeeId}`;
-    if (cronSetting.active) {
-      SyncedCron.remove(cronId);
-    }
+    SyncedCron.remove(cronId);
 
     SyncedCron.add({
       name: cronId,
       schedule: function (parser) {
-        return parser.text(cronSetting.toParse);
+        const parsed = parser.text(cronSetting.toParse);
+        console.log(parsed);
+        return parsed;
       },
       job: () => {
         cronSetting.cronJob();

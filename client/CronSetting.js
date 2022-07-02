@@ -35,7 +35,7 @@ export default class CronSetting {
     if (this.type == "Monthly") {
       if (this.months.length > 0) {
         // We on a monthly one
-        text += this.dayNumberOfMonth + " day of the month";
+        text += "every " + this.dayNumberOfMonth + " day of the month";
         text += " " + this.months.join(",");
 
         const date = this.convertToDate(this.startAt);
@@ -61,7 +61,7 @@ export default class CronSetting {
     } else if (this.type == "Weekly") {
       console.log("It is weekly !!");
 
-      text += this.every + " week";
+      text += "every " + this.every + " week";
       text += " on " + this.days;
 
       const date = this.convertToDate(this.startAt);
@@ -91,6 +91,7 @@ export default class CronSetting {
         minutes;
 
       if (this.days.length > 0) {
+      
         // there are days
         text += " on " + this.days.join(",");
       } else {
