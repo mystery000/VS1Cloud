@@ -6,11 +6,13 @@ import { OrganisationService } from "../js/organisation-service";
 import { PurchaseBoardService } from "../js/purchase-service";
 import { SalesBoardService } from '../js/sales-service';
 import { ContactService } from "../contacts/contact-service";
+import { ProductService } from "../product/product-service";
 
 
 let sideBarService = new SideBarService();
 let salesService = new SalesBoardService();
-const contactService = new ContactService();
+let contactService = new ContactService();
+let productService = new ProductService();
 let isDropdown = false;
 let clickedInput = "";
 
@@ -351,6 +353,8 @@ Template.customfieldpop.onRendered(() => {
           var fieldDataID =
             $("#edtSaleCustField" + custFieldNo).attr("custfieldid") || "";
           $("#selectCustFieldID").val(fieldDataID);
+          $('#customFieldDropdownListTitle' + custFieldNo).html(custField.custfieldlabel);
+
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
             $("#customFieldDropdownListModal" + custFieldNo).modal("toggle");
@@ -802,20 +806,23 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField1").attr("custfieldid") || "";
+              console.log('fieldDataName-', fieldDataName)
+              var fieldDataID = $("#edtSaleCustField1").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(1);
 
+              $('#customFieldDropdownListTitle1').html(custFields[0].custfieldlabel);
+              console.log("$('#lblCustomField1').html()------", $('#lblCustomField1').innerhtml)
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customFieldDropdownListModal1").modal("toggle");
               } else {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[0].custfieldlabel
-                  );
+                  $("#newCustomFieldDropdownHeader").text("Edit " + custFields[0].custfieldlabel);
+
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[0].dropdown) {
                     for (let i in custFields[0].dropdown) {
@@ -829,8 +836,8 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
+                    // $("#customFieldDropdownId").val(fieldDataID);
+                    // $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -894,10 +901,13 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
+              console.log('fieldDataName-', fieldDataName)
+
               var fieldDataID = $("#edtSaleCustField2").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(2);
 
+              $('#customFieldDropdownListTitle2').html(custFields[1].custfieldlabel);
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customFieldDropdownListModal2").modal("toggle");
@@ -905,6 +915,8 @@ Template.customfieldpop.onRendered(() => {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
                   $("#newCustomFieldDropdownHeader").text("Edit " + custFields[1].custfieldlabel);
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[1].dropdown) {
                     for (let i in custFields[1].dropdown) {
@@ -918,8 +930,8 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
+                    // $("#customFieldDropdownId").val(fieldDataID);
+                    // $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -983,10 +995,12 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField3").attr("custfieldid") || "";
+              console.log('fieldDataName-', fieldDataName)
+              var fieldDataID = $("#edtSaleCustField3").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(3);
+
+              $('#customFieldDropdownListTitle3').html(custFields[2].custfieldlabel);
 
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
@@ -994,19 +1008,16 @@ Template.customfieldpop.onRendered(() => {
               } else {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[2].custfieldlabel
-                  );
+                  $("#newCustomFieldDropdownHeader").text("Edit " + custFields[2].custfieldlabel);
+
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[2].dropdown) {
                     for (let i in custFields[2].dropdown) {
                       if (custFields[2].dropdown[i].fields.Text === fieldDataName) {
-                        $("#customFieldDropdownId").val(
-                          custFields[2].dropdown[i].fields.ID
-                        );
-                        $("#newCustomFieldDropdownName").val(
-                          custFields[2].dropdown[i].fields.Text
-                        );
+                        $("#customFieldDropdownId").val(custFields[2].dropdown[i].fields.ID);
+                        $("#newCustomFieldDropdownName").val(custFields[2].dropdown[i].fields.Text);
                       }
                     }
                     setTimeout(function () {
@@ -1014,8 +1025,6 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -1161,10 +1170,20 @@ Template.customfieldpop.onRendered(() => {
   };
 
   templateObject.getTLeadExData = function (currentID) {
+    contactService.getOneLeadDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
 
   };
 
   templateObject.getTProductExData = function (currentID) {
+    productService.getOneProductdatavs1(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
 
   };
 
@@ -1251,6 +1270,22 @@ Template.customfieldpop.events({
     let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
     let newCustomFieldDropdownName = $("#newCustomFieldDropdownName").val();
 
+    if (!customFieldDropdownId) {
+      swal({
+        title: "Alert",
+        text: "Please select the item in the list first",
+        type: "info",
+        showCancelButton: false,
+        // confirmButtonText: "Try Again",
+      }).then((result) => {
+        if (result.value) {
+        } else if (result.dismiss === "cancel") {
+        }
+      });
+      $("#newCustomFieldDropdownModal").modal("hide");
+      return;
+    }
+
     $(".fullScreenSpin").css("display", "inline-block");
 
     objDetails1 = {
@@ -1314,7 +1349,9 @@ Template.customfieldpop.events({
     let organisationService = new OrganisationService();
     var url = FlowRouter.current().path;
     let fieldID = parseInt($("#statusId" + data_id).val()) || "";
-    let termsName = $("#newStatus" + data_id).val() || "";
+    let termsName = $("#customFieldText" + data_id).val() || "";
+    // $("#customFieldText2").val(custFields[1].custfieldlabel);
+
     let clickedInput = $("#clickedControl").val();
     let dropDownStatus = $("#isdropDown" + data_id).val();
     let dropDownData = [];
@@ -1684,6 +1721,7 @@ Template.customfieldpop.events({
   },
 
   "click .btnCustomFieldToggleDrop": function (e) {
+    console.log('btnCustomFieldToggleDrop')
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
     let custfieldarr = templateObject.custfields.get();
