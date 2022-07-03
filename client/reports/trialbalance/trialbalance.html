@@ -180,11 +180,21 @@
                                     .tableExportDetailDiv td:first-child {
                                         text-align: left !important;
                                     }
+                                    table th {
+                                        min-width: 190px !important; 
+                                    }
+                                    
+                                    .customDoubleTableHeading + tr th {
+                                        border-right: 1px solid #cbcbcb !important;
+                                    }
+                                    .customDoubleTableHeading + tr th:last-child {
+                                        border-right: none !important;
+                                    }
                                 </style>
                                 <div class="table-responsive">
                                     <table class="table tableExportDetailDiv table-sm" id="tableExport" name="tableExport">
                                         <thead>
-                                            <tr class="table-active">
+                                            <tr class="table-active customDoubleTableHeading">
                                                 <th>Account Name</th>
                                                 <th class="text-right">Account No.</th>
                                                 <th class="text-right">Account</th>
@@ -219,7 +229,7 @@ Debit (Ex)
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.currency }}</th>
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -227,7 +237,7 @@ Debit (Ex)
                                                     {{#if currencyList}}
                                                         {{#each c in currencyList }}
                                                             {{# if c.active}}
-                                                                <th class="text-right" active="{{ c.active }}">{{ c.currency }}</th>
+                                                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
@@ -257,7 +267,7 @@ Debit (Ex)
                                                                                 {{#if currencyList}}
                                                                                     {{#each c in currencyList }}
                                                                                         {{# if c.active}}
-                                                                                            <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                            <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
                                                                                                 <a href="#" style="text-decoration:none!important;">{{convertAmount subItem.value c}}</a>
                                                                                             </td>
                                                                                         {{/if}}
@@ -301,7 +311,7 @@ Debit (Ex)
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
-                                                                                        <td currency="{{c.currency}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
+                                                                                        <td currency="{{c.code}}" currency-id="{{c.id}}" class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value c}} text-danger {{/if}}">
                                                                                             <span class="table-cells"><strong>{{convertAmount subItem.value c}}</strong></span>
                                                                                         </td>
                                                                                     {{/if}}
@@ -350,7 +360,7 @@ Debit (Ex)
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
-                                                                                        <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.currency}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
+                                                                                        <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
                                                                             
                                                                                     {{/if}}
                                                                                 {{/each}}

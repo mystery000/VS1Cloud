@@ -45,11 +45,15 @@ Template.monthlyprofitandloss.onRendered(() => {
   let topTenSuppData1 = [];
   let topData = this;
 
-  function chartClickEvent(event, array) {
-    if (array[0] != undefined) {
-      var activePoints = array[0]["_model"].label;
-      FlowRouter.go("/newprofitandloss?month=" + activePoints);
-    }
+  // function chartClickEvent(event, array) {
+  //   if (array[0] != undefined) {
+  //     var activePoints = array[0]["_model"].label;
+  //     FlowRouter.go("/newprofitandloss?daterange=monthly" + activePoints);
+  //   }
+  // }
+
+  function chartClickEvent() {
+      FlowRouter.go("/newprofitandloss?daterange=monthly");
   }
 
   // setTimeout(function () {

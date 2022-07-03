@@ -25,7 +25,9 @@ Template.expensebreakdown.onRendered(function() {
   let totCreditCount = 0;
   let totBillCount = 0;
   let totPOCount = 0;
-
+  function chartClickEvent() {
+    FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
+  }
   var ctx = document.getElementById("expensebreakdownchart").getContext("2d");
 
   templateObject.displayExpenseChart = async (e) => {
@@ -54,6 +56,7 @@ Template.expensebreakdown.onRendered(function() {
         ],
       },
       options: {
+        'onClick': chartClickEvent,
         maintainAspectRatio: false,
         responsive: true,
         legend: {

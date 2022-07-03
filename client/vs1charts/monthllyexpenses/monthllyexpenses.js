@@ -26,6 +26,9 @@ Template.monthllyexpenses.onRendered(()=>{
   let topTenData1 = [];
   let topTenSuppData1 = [];
   let topData = this;
+  function chartClickEvent() {
+    FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
+  }
 if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
   var currentDate2 = new Date();
   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -155,13 +158,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
             }]
             },
             options: {
-              'onClick' : function (evt, item) {
-                if(item[0]['_model'].label){
-                  var activePoints = item[0]['_model'].label;
-                  FlowRouter.go('/agedpayables?month=' + activePoints);
-                }
-
-              },
+              'onClick' : chartClickEvent,
               maintainAspectRatio: false,
               responsive: true,
             tooltips: {
@@ -308,13 +305,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
             }]
             },
             options: {
-              'onClick' : function (evt, item) {
-                if(item[0]['_model'].label){
-                  var activePoints = item[0]['_model'].label;
-                  FlowRouter.go('/agedpayables?month=' + activePoints);
-                }
-
-              },
+              'onClick' : chartClickEvent,
               maintainAspectRatio: false,
               responsive: true,
             tooltips: {
@@ -562,13 +553,7 @@ var myChart = new Chart(ctx, {
   }]
   },
   options: {
-    'onClick' : function (evt, item) {
-      if(item[0]['_model'].label){
-        var activePoints = item[0]['_model'].label;
-        FlowRouter.go('/agedpayables?month=' + activePoints);
-      }
-
-    },
+    'onClick' : chartClickEvent,
     maintainAspectRatio: false,
     responsive: true,
   tooltips: {

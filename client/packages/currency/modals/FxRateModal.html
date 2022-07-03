@@ -10,7 +10,7 @@
                     {{#if currencies}}
                         {{#each c in currencies}}
                             <span  class="{{ isDefaultCurrency c}} dropdown-item custom-control custom-switch " >
-                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.currency}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.id}}" name="checkbox">
+                                <input checked="{{c.active}}" currency-id="{{c.id}}" type="checkbox" class="custom-control-input currency-selector-js" currency="{{c.code}}" buy-rate="{{c.buyrate}}" sell-rate="{{c.sellrate}}" id="currency_{{c.id}}" name="checkbox">
                                 <label class="custom-control-label" for="currency_{{c.id}}">{{c.currency}} ({{c.code}} - {{c.country}})</label>
                             </span>
                         {{/each}}
@@ -30,6 +30,8 @@
             .hidden {
                 display: none;
             }
+
+           
         </style>
     </div>
 

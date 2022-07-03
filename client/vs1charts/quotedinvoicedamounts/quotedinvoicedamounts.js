@@ -28,6 +28,10 @@ Template.quotedinvoicedamounts.onRendered(() => {
     let topTenData1 = [];
     let topTenSuppData1 = [];
     let topData = this;
+    function chartClickEvent() {
+        // window.location.href = 'http://192.168.0.105:3000/quoteslist?converted=false';
+        FlowRouter.go('/quoteslist?converted=false');
+    }
 
     let checkStatus = localStorage.getItem("quotedinvoicedchart") || true;
     //   if(checkStatus == false || checkStatus == "false") {
@@ -880,12 +884,6 @@ Template.quotedinvoicedamounts.onRendered(() => {
         }, 1000)
     }
 
-    function chartClickEvent(event, array) {
-        if (array[0] != undefined) {
-            var activePoints = item[0]['_model'].label;
-            FlowRouter.go('/agedpayables?month=' + activePoints);
-        }
-    }
 });
 
 Template.quotedinvoicedamounts.events({
