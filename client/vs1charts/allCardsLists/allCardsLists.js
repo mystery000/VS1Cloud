@@ -64,7 +64,7 @@ Template.allCardsLists.onRendered(function () {
                         return card;
                     }
                 });
-                console.log('cardList', cardList)
+                // console.log('cardList', cardList)
             }
             if( cardList.length > 0 ){
                 cardList.forEach((card) => {
