@@ -964,96 +964,8 @@
                                                     <div class="row no-gutters">
                                                         <div class="col">
                                                             <button class="btn btn-primary btnRefreshTerm float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                                            <div><a class="btn btn-primary btnAddTerms" role="button" data-toggle="modal" href="#myModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
-                                                                <div class="modal fade" role="dialog"
-                                                                     tabindex="-1" id="myModal">
-                                                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h4 >
-                                                                                    <div id="add-terms-title" name="add-terms-title" style="float: left;">Add New Term </div>
-                                                                                    <a role="button" data-toggle="modal" href="#helpViewModalAdd"  style="font-size: 20px; padding-left:5px;"> Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
-                
-                                                                                    <!-- Start Help View Modal -->
-                                                                                    <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModalAdd">
-                                                                                        <div class="modal-dialog modal-sm" role="document">
-                                                                                            <div class="modal-content">
-                                                                                                <div class="modal-header" style="padding-bottom: 8px;">
-                                                                                                    <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                                                <div class="modal-body">
-                                                                                                    <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModalAdd" class="btn btn-primary helpModal">View Help Video</a></p>
-                                                                                                    <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=19" target="_blank" class="btn btn-primary">Download Help File</a></p>
-                                                                                                    <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
-                                                                                                    <p class="text-center text-muted" style="margin: 0px;"><a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">Go To Forum</a></p>
-                                                                                                </div>
-                                                                                                <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <!-- End Help View Modal -->
-                                                                                </h4>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                                            </div>
-                                                                            <div class="modal-body" style="background-color: #ededed;">
-                                                                                <input type="hidden" class="form-control" id="edtTermsID" name="edtTermsID" style="display:none;">
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >Days</label>
-                                                                                            <input type="number" class="form-control" style="width: 100px;" id="edtDays" name="edtDays" min="0"></div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Term Name</label>
-                                                                                            <input type="text" class="form-control" style="width: 100px;" id="edtName" name="edtName"></div>
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                                                                                            <input type="text" class="form-control" id="edtDesc" name="edtDesc"></div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM</label>
-                                                                                            {{#if equals includeEOM true}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                                                                                            {{else}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]"><label class="custom-control-label chkBox" for="isEOM"></label></div>
-                                                                                            {{/if}}
-                                                                                        </div>
-                                                                                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM+</label>
-                                                                                            {{#if equals includeEOMPlus true}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]" checked><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                                                                                            {{else}}
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOMPlus" name="group1[]"><label class="custom-control-label chkBox" for="isEOMPlus"></label></div>
-                                                                                            {{/if}}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col-12">
-                                                                                        <div class="form-group" style="margin: 4px 8px;">
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; padding-top: 7px;">
-                                                                                                {{#if equals includeSalesDefault true}}
-                                                                                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]" checked>
-                                                                                                {{else}}
-                                                                                                <input class="custom-control-input chkBox chkCustomerDef" type="checkbox" id="chkCustomerDef" name="group1[]">
-                                                                                                {{/if}}
-                                                                                                <label class="custom-control-label chkBox" for="chkCustomerDef">Customer Default</label>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-12">
-                                                                                        <div class="form-group" style="margin: 4px 8px;">
-                                                                                            <div class="custom-control custom-checkbox chkBox" style="height: 38px; padding-top: 7px;">
-                                                                                                {{#if equals includePurchaseDefault true}}
-                                                                                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]" checked>
-                                                                                                {{else}}
-                                                                                                <input class="custom-control-input chkBox chkSupplierDef" type="checkbox" id="chkSupplierDef" name="group1[]">
-                                                                                                {{/if}}
-                                                                                                <label class="custom-control-label chkBox" for="chkSupplierDef">Supplier Default</label>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer" style="background-color: #ededed;">
-                                                                                <button class="btn btn-success btnSaveTerms" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div><a class="btn btn-primary btnAddTerms" role="button" data-toggle="modal" href="#addTermModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Term<br></a>
+                                                                {{> AddTermModal}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1221,8 +1133,8 @@
                                                                 {{#if termdatatablerecords}}
                                                                 {{#each item in termdatatablerecords}}
                                                                 <tr class="dnd-moved" id="{{item.id}}"  style="cursor: default;">
-                                                                    <td contenteditable="false" class="colName">{{item.termname}}</td>
-                                                                    <td contenteditable="false" class="colIsDays">{{item.termdays}}</td>
+                                                                    <td contenteditable="false" class="colName clickable">{{item.termname}}</td>
+                                                                    <td contenteditable="false" class="colIsDays clickable">{{item.termdays}}</td>
                                                                     <td contenteditable="false" class="colIsEOM text-center" >
                                                                         {{#if equals item.iseom true}}
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iseom-{{item.id}}" checked><label class="custom-control-label chkBox" for="iseom-{{item.id}}"></label></div>
@@ -1237,7 +1149,7 @@
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-{{item.id}}"><label class="custom-control-label chkBox" for="iseomplus-{{item.id}}"></label></div>
                                                                         {{/if}}
                                                                     </td>
-                                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
                                                                     <td contenteditable="false" class="colCustomerDef text-center" >
                                                                         {{#if equals item.isSalesdefault true}}
                                                                         <div class="custom-control custom-checkbox chkBox"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-{{item.id}}" checked><label class="custom-control-label chkBox" for="isSalesdefault-{{item.id}}"></label></div>

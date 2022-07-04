@@ -2383,122 +2383,7 @@ Template.setup.onRendered(function () {
     $("#selectDeleteLineID").val(targetID);
     $("#deleteTermLineModal").modal("toggle");
   });
-  $("#termsList tbody").on(
-    "click",
-    "tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef",
-    function () {
-      var listData = $(this).closest("tr").attr("id");
-      var is7days = false;
-      var is30days = false;
-      var isEOM = false;
-      var isEOMPlus = false;
-      var isSalesDefault = false;
-      var isPurchaseDefault = false;
-      if (listData) {
-        $("#add-terms-title").text("Edit Term ");
-        if (listData !== "") {
-          listData = Number(listData);
-
-          var termsID = listData || "";
-          var termsName =
-            $(event.target).closest("tr").find(".colName").text() || "";
-          var description =
-            $(event.target).closest("tr").find(".colDescription").text() || "";
-          var days =
-            $(event.target).closest("tr").find(".colIsDays").text() || 0;
-          //let isDays = data.fields.IsDays || '';
-          if (
-            $(event.target)
-              .closest("tr")
-              .find(".colIsEOM .chkBox")
-              .is(":checked")
-          ) {
-            isEOM = true;
-          }
-
-          if (
-            $(event.target)
-              .closest("tr")
-              .find(".colIsEOMPlus .chkBox")
-              .is(":checked")
-          ) {
-            isEOMPlus = true;
-          }
-
-          if (
-            $(event.target)
-              .closest("tr")
-              .find(".colCustomerDef .chkBox")
-              .is(":checked")
-          ) {
-            isSalesDefault = true;
-          }
-
-          if (
-            $(event.target)
-              .closest("tr")
-              .find(".colSupplierDef .chkBox")
-              .is(":checked")
-          ) {
-            isPurchaseDefault = true;
-          }
-
-          if (isEOM == true || isEOMPlus == true) {
-            isDays = false;
-          } else {
-            isDays = true;
-          }
-
-          $("#edtTermsID").val(termsID);
-          $("#edtName").val(termsName);
-          $("#edtName").prop("readonly", true);
-          $("#edtDesc").val(description);
-          $("#edtDays").val(days);
-
-          if (isDays == true && days == 0) {
-            templateObject.includeCOD.set(true);
-          } else {
-            templateObject.includeCOD.set(false);
-          }
-
-          if (isDays == true && days == 30) {
-            templateObject.include30Days.set(true);
-          } else {
-            templateObject.include30Days.set(false);
-          }
-
-          if (isEOM == true) {
-            templateObject.includeEOM.set(true);
-          } else {
-            templateObject.includeEOM.set(false);
-          }
-
-          if (isEOMPlus == true) {
-            templateObject.includeEOMPlus.set(true);
-          } else {
-            templateObject.includeEOMPlus.set(false);
-          }
-
-          if (isSalesDefault == true) {
-            templateObject.includeSalesDefault.set(true);
-          } else {
-            templateObject.includeSalesDefault.set(false);
-          }
-
-          if (isPurchaseDefault == true) {
-            templateObject.includePurchaseDefault.set(true);
-          } else {
-            templateObject.includePurchaseDefault.set(false);
-          }
-
-          //});
-
-          $(this).closest("tr").attr("data-target", "#myModal");
-          $(this).closest("tr").attr("data-toggle", "modal");
-        }
-      }
-    }
-  );
+ 
 
   // Step 5 Render functionalities
   const dataTableListEmployee = [];
@@ -5512,6 +5397,122 @@ Template.setup.events({
     ) {
     } else {
       event.preventDefault();
+    }
+  },
+  "click #termsList tbody td.clickable": (event) => {
+    let templateObject = Template.instance();
+    const tr = $(event.currentTarget).parent();
+    var listData = tr.attr("id");
+    var is7days = false;
+    var is30days = false;
+    var isEOM = false;
+    var isEOMPlus = false;
+    var isSalesDefault = false;
+    var isPurchaseDefault = false;
+    if (listData) {
+      $("#add-terms-title").text("Edit Term ");
+      if (listData !== "") {
+        listData = Number(listData);
+
+        var termsID = listData || "";
+        var termsName =
+          $(event.target).closest("tr").find(".colName").text() || "";
+        var description =
+          $(event.target).closest("tr").find(".colDescription").text() || "";
+        var days =
+          $(event.target).closest("tr").find(".colIsDays").text() || 0;
+        //let isDays = data.fields.IsDays || '';
+        if (
+          $(event.target)
+            .closest("tr")
+            .find(".colIsEOM .chkBox")
+            .is(":checked")
+        ) {
+          isEOM = true;
+        }
+
+        if (
+          $(event.target)
+            .closest("tr")
+            .find(".colIsEOMPlus .chkBox")
+            .is(":checked")
+        ) {
+          isEOMPlus = true;
+        }
+
+        if (
+          $(event.target)
+            .closest("tr")
+            .find(".colCustomerDef .chkBox")
+            .is(":checked")
+        ) {
+          isSalesDefault = true;
+        }
+
+        if (
+          $(event.target)
+            .closest("tr")
+            .find(".colSupplierDef .chkBox")
+            .is(":checked")
+        ) {
+          isPurchaseDefault = true;
+        }
+
+        if (isEOM == true || isEOMPlus == true) {
+          isDays = false;
+        } else {
+          isDays = true;
+        }
+
+        $("#edtTermsID").val(termsID);
+        $("#edtName").val(termsName);
+        $("#edtName").prop("readonly", true);
+        $("#edtDesc").val(description);
+        $("#edtDays").val(days);
+
+        if (isDays == true && days == 0) {
+          templateObject.includeCOD.set(true);
+        } else {
+          templateObject.includeCOD.set(false);
+        }
+
+        if (isDays == true && days == 30) {
+          templateObject.include30Days.set(true);
+        } else {
+          templateObject.include30Days.set(false);
+        }
+
+        if (isEOM == true) {
+          templateObject.includeEOM.set(true);
+        } else {
+          templateObject.includeEOM.set(false);
+        }
+
+        if (isEOMPlus == true) {
+          templateObject.includeEOMPlus.set(true);
+        } else {
+          templateObject.includeEOMPlus.set(false);
+        }
+
+        if (isSalesDefault == true) {
+          templateObject.includeSalesDefault.set(true);
+        } else {
+          templateObject.includeSalesDefault.set(false);
+        }
+
+        if (isPurchaseDefault == true) {
+          templateObject.includePurchaseDefault.set(true);
+        } else {
+          templateObject.includePurchaseDefault.set(false);
+        }
+
+        //});
+
+        // $(this).closest("tr").attr("data-target", "#myModal");
+        // $(this).closest("tr").attr("data-toggle", "modal");
+
+        $('#addTermModal').modal('toggle');
+      }
     }
   },
 
