@@ -1938,14 +1938,14 @@ Template.alltaskdatatable.events({
           ID: subTaskID,
           subtasks: [
             {
-              type: "Tprojecttasks",
+              type: "Tprojecttask_subtasks",
               fields: {
                 TaskName: task_name,
                 TaskDescription: task_description,
-                Completed: false,
-                ProjectID: projectID,
-                due_date: due_date,
-                priority: priority,
+                // Completed: false,
+                // ProjectID: projectID,
+                // due_date: due_date,
+                // priority: priority,
               },
             }
           ]
