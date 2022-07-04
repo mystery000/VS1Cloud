@@ -431,12 +431,12 @@ Template.setup.onRendered(function () {
         $(this).addClass("text-danger");
     });
   }
-  $(document).on("click", ".table-remove-rax-rate", function () {
-    event.stopPropagation();
-    var targetID = $(event.target).closest("tr").attr("id"); // table row ID
-    $("#selectDeleteLineID").val(targetID);
-    $("#deleteTaxRateLineModal").modal("toggle");
-  });
+  // $(document).on("click", ".table-remove-rax-rate", function () {
+  //   event.stopPropagation();
+  //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
+  //   $("#selectDeleteLineID").val(targetID);
+  //   $("#deleteTaxRateLineModal").modal("toggle");
+  // });
   templateObject.getTaxRates = function () {
     getVS1Data("TTaxcodeVS1")
       .then(function (dataObject) {
@@ -1562,57 +1562,58 @@ Template.setup.onRendered(function () {
       });
   };
   templateObject.getPaymentMethods();
-  $("#paymentmethodList tbody").on(
-    "click",
-    "tr .colName, tr .colIsCreditCard, tr .colStatus",
-    function () {
-      var listData = $(this).closest("tr").attr("id");
-      var isCreditcard = false;
-      if (listData) {
-        $("#add-paymentmethod-title").text("Edit Payment Method");
-        //$('#isformcreditcard').removeAttr('checked');
-        if (listData !== "") {
-          listData = Number(listData);
-          //taxRateService.getOnePaymentMethod(listData).then(function (data) {
+  // $("#paymentmethodList tbody td.clickable").on(
+  //   "click",
+  //   "tr .colName, tr .colIsCreditCard, tr .colStatus",
+  //   function () {
+  //     var listData = $(this).closest("tr").attr("id");
+  //     var isCreditcard = false;
+  //     if (listData) {
+  //       $("#add-paymentmethod-title").text("Edit Payment Method");
+  //       //$('#isformcreditcard').removeAttr('checked');
+  //       if (listData !== "") {
+  //         listData = Number(listData);
+  //         //taxRateService.getOnePaymentMethod(listData).then(function (data) {
 
-          var paymentMethodID = listData || "";
-          var paymentMethodName =
-            $(event.target).closest("tr").find(".colName").text() || "";
-          // isCreditcard = $(event.target).closest("tr").find(".colName").text() || '';
+  //         var paymentMethodID = listData || "";
+  //         var paymentMethodName =
+  //           $(event.target).closest("tr").find(".colName").text() || "";
+  //         // isCreditcard = $(event.target).closest("tr").find(".colName").text() || '';
 
-          if (
-            $(event.target)
-              .closest("tr")
-              .find(".colIsCreditCard .chkBox")
-              .is(":checked")
-          ) {
-            isCreditcard = true;
-          }
+  //         if (
+  //           $(event.target)
+  //             .closest("tr")
+  //             .find(".colIsCreditCard .chkBox")
+  //             .is(":checked")
+  //         ) {
+  //           isCreditcard = true;
+  //         }
 
-          $("#edtPaymentMethodID").val(paymentMethodID);
-          $("#edtPaymentMethodName").val(paymentMethodName);
+  //         $("#edtPaymentMethodID").val(paymentMethodID);
+  //         $("#edtPaymentMethodName").val(paymentMethodName);
 
-          if (isCreditcard == true) {
-            templateObject.includeCreditCard.set(true);
-            //$('#iscreditcard').prop('checked');
-          } else {
-            templateObject.includeCreditCard.set(false);
-          }
+  //         if (isCreditcard == true) {
+  //           templateObject.includeCreditCard.set(true);
+  //           //$('#iscreditcard').prop('checked');
+  //         } else {
+  //           templateObject.includeCreditCard.set(false);
+  //         }
 
-          //});
+  //         //});
 
-          $(this).closest("tr").attr("data-target", "#btnAddPaymentMethod");
-          $(this).closest("tr").attr("data-toggle", "modal");
-        }
-      }
-    }
-  );
-  $(document).on("click", ".table-remove-payment-method", function () {
-    event.stopPropagation();
-    var targetID = $(event.target).closest("tr").attr("id"); // table row ID
-    $("#selectDeleteLineID").val(targetID);
-    $("#deletePaymentMethodLineModal").modal("toggle");
-  });
+  //         // $(this).closest("tr").attr("data-target", "#btnAddPaymentMethod");
+  //         // $(this).closest("tr").attr("data-toggle", "modal");
+  //         $('#btnAddPaymentMethod').modal("toggle");
+  //       }
+  //     }
+  //   }
+  // );
+  // $(document).on("click", ".table-remove-payment-method", function () {
+  //   event.stopPropagation();
+  //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
+  //   $("#selectDeleteLineID").val(targetID);
+  //   $("#deletePaymentMethodLineModal").modal("toggle");
+  // });
   $(document).ready(function () {
     let url = window.location.href;
     if (url.indexOf("?code") > 0) {
@@ -4924,6 +4925,56 @@ Template.setup.events({
     $("#edtPaymentMethodName").val("");
     templateObject.includeCreditCard.set(false);
   },
+  "click .table-remove-payment-method": (event) => {
+    event.stopPropagation();
+    var targetID = $(event.target).closest("tr").attr("id"); // table row ID
+    $("#selectDeleteLineID").val(targetID);
+    $("#deletePaymentMethodLineModal").modal("toggle");
+  },
+  "click #paymentmethodList tbody td.clickable": (event) => {
+    let templateObject = Template.instance();
+
+    const tr = $(event.currentTarget).parent();
+    var listData = tr.attr("id");
+    var isCreditcard = false;
+    if (listData) {
+      $("#add-paymentmethod-title").text("Edit Payment Method");
+      //$('#isformcreditcard').removeAttr('checked');
+      if (listData !== "") {
+        listData = Number(listData);
+        //taxRateService.getOnePaymentMethod(listData).then(function (data) {
+
+        var paymentMethodID = listData || "";
+        var paymentMethodName =
+          tr.find(".colName").text() || "";
+        // isCreditcard = $(event.target).closest("tr").find(".colName").text() || '';
+
+        if (
+          tr.find(".colIsCreditCard .chkBox")
+            .is(":checked")
+        ) {
+          isCreditcard = true;
+        }
+
+        $("#edtPaymentMethodID").val(paymentMethodID);
+        $("#edtPaymentMethodName").val(paymentMethodName);
+
+        if (isCreditcard == true) {
+          templateObject.includeCreditCard.set(true);
+          //$('#iscreditcard').prop('checked');
+        } else {
+          templateObject.includeCreditCard.set(false);
+        }
+
+        //});
+
+        // $(this).closest("tr").attr("data-target", "#btnAddPaymentMethod");
+        // $(this).closest("tr").attr("data-toggle", "modal");
+        $('#btnAddPaymentMethod').modal("toggle");
+      }
+    }
+  },
+ 
 
   // TODO: Step 4
   // Term settings
