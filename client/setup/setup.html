@@ -346,44 +346,10 @@
                                                         <div class="col">
                                                             <button class="btn btn-primary btnRefreshTaxRate float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 
-                                                            <div><a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#btnAddTaxRate" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
-                                                                <div class="modal fade" role="dialog"
-                                                                     tabindex="-1" id="btnAddTaxRate">
-                                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <!-- <h4 id="add-tax-title" name="add-tax-title">Add New Tax Rate</h4> -->
-                                                                                <h4 style="" ><div id="add-tax-title" name="add-tax-title" style="float: left;">Add New Tax Rate</div>  <a role="button" data-toggle="modal" href="#helpModalTaxRate" class="helpModalTaxRate" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h4>
-                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                                            <div class="modal-body">
-                                                                                <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;">
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Name</label>
-                                                                                            <input type="text" class="form-control" id="edtTaxName" name="edtTaxName">
-                                                                                        </div>
-                                                                                        <div class="form-group" style="margin: 8px;">
-                                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Rate %</label>
-                                                                                            <input type="text" class="form-control" style="width: 110px;" placeholder="0" id="edtTaxRate" name="edtTaxRate">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="row no-gutters">
-                                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                                        <div class="form-group flex-grow-1" style="margin: 8px;">
-                                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                                                                                            <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
-                                                                                        </div>
-                                                                                        <!-- <div class="form-group" style="margin: 8px;"><label>Rate</label><input type="text" class="form-control" style="width: 110px;" placeholder="0 %"></div> -->
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button class="btn btn-success btnSaveTaxRate" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                            <div>
+                                                                <a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
+                                                                
+                                                                {{> AddTaxRateModal}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -564,9 +530,9 @@
                                                                 {{#if datatablerecords}}
                                                                 {{#each item in datatablerecords}}
                                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                    <td contenteditable="false" class="colName">{{item.codename}}</td>
-                                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                                    <td contenteditable="false" class="colRate text-right">{{item.rate}}</td>
+                                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
+                                                                    <td contenteditable="false" class="colRate clickable text-right">{{item.rate}}</td>
                                                                     <td contenteditable="false" class="colPurcDef chkBox text-center" style="width:15px;">
                                                                         <div class="custom-control custom-radio">
                                                                             {{#if equals defaultpurchasetaxcode item.codename}}
@@ -610,6 +576,8 @@
                             </div>
                         </div>
                     </div>
+
+                    {{> DeleteLineModal}}
                 </div>
                 <div class="setup-step setup-step-3" style="display: none;">
                     <div class="container-fluid">

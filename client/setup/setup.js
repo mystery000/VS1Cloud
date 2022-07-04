@@ -5,6 +5,7 @@ import { TaxRateService } from "../settings/settings-service";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import LoadingOverlay from "../LoadingOverlay";
+import { TaxRatesEditListener } from "../settings/tax-rates-setting/tax-rates";
 
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
@@ -418,6 +419,7 @@ Template.setup.onRendered(function () {
       }
     );
   }, 500);
+  TaxRatesEditListener();
 
   function MakeNegative() {
     $("td").each(function () {
@@ -4458,6 +4460,14 @@ Template.setup.events({
         });
         $(".fullScreenSpin").css("display", "none");
       });
+  },
+  "click #taxRatesList td.clickable": (e) => TaxRatesEditListener(e),
+  "click .table-remove-tax-rate": (e) => {
+    e.stopPropagation();
+    const targetID = $(e.target).closest("tr").attr("id"); // table row ID
+    $("#selectDeleteLineID").val(targetID);
+    $("#deleteLineModal").modal("toggle");
+
   },
 
   // TODO: Step 3

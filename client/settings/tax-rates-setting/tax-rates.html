@@ -60,44 +60,9 @@
                                         <div class="col">
                                             <button class="btn btn-primary btnRefresh float-left" type="button" style="margin: 16px 0px; margin-right: 32px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
 
-                                            <div><a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#myModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
-                                                <div class="modal fade" role="dialog"
-                                                     tabindex="-1" id="myModal">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <!-- <h4 id="add-tax-title" name="add-tax-title">Add New Tax Rate</h4> -->
-                                                                <h4 style="" ><div id="add-tax-title" name="add-tax-title" style="float: left;">Add New Tax Rate</div>  <a role="button" data-toggle="modal" href="#helpModalAdd" class="helpModalAdd" style="float: right;"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a></h4>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                                                            <div class="modal-body">
-                                                                <input type="hidden" class="form-control" id="edtTaxID" name="edtTaxID" style="display:none;">
-                                                                <div class="row no-gutters">
-                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Name</label>
-                                                                            <input type="text" class="form-control" id="edtTaxName" name="edtTaxName">
-                                                                        </div>
-                                                                        <div class="form-group" style="margin: 8px;">
-                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Rate %</label>
-                                                                            <input type="text" class="form-control" style="width: 110px;" placeholder="0" id="edtTaxRate" name="edtTaxRate">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row no-gutters">
-                                                                    <div class="col d-xl-flex align-items-xl-end">
-                                                                        <div class="form-group flex-grow-1" style="margin: 8px;">
-                                                                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                                                                            <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
-                                                                        </div>
-                                                                        <!-- <div class="form-group" style="margin: 8px;"><label>Rate</label><input type="text" class="form-control" style="width: 110px;" placeholder="0 %"></div> -->
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-success btnSaveTaxRate" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-                                                                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div>
+                                                <a class="btn btn-primary btnAddTaxRate" role="button" data-toggle="modal" href="#addTaxRateModal" style="margin-top: 16px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Tax Rate<br></a>
+                                                {{> AddTaxRateModal}}
                                             </div>
                                         </div>
                                     </div>
@@ -243,31 +208,12 @@
                                             }
                                         </style>
 
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID"  readonly>
-                                                    <div class="modal-header">
-                                                        <h4>Delete</h4>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">×</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Please click "Delete" to delete tax rate</p>
-
-                                                        <button class="btn btn-danger float-right btnDeleteTaxRate" type="button">
-                                                            <i class="fa fa-close" style="margin-right: 5px;"></i>Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        {{> DeleteLineModal}}
 
                                         <table id="taxRatesList" style="width:100%" class="dataTable table table-hover table-striped table-bordered taxRatesList">
                                             <thead>
                                                 <tr class="dnd-moved">
-                                                    <th class="th colName" style="width:100px">Name</th>
+                                                    <th class="th colName " style="width:100px">Name</th>
                                                     <th class="th colDescription">Description</th>
                                                     <th class="th colRate" style="width:80px">Rate</th>
                                                     <th class="th colPurcDef" style="width:20px">Purchase Default</th>
@@ -279,9 +225,9 @@
                                                 {{#if datatablerecords}}
                                                 {{#each item in datatablerecords}}
                                                 <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                    <td contenteditable="false" class="colName">{{item.codename}}</td>
-                                                    <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                                                    <td contenteditable="false" class="colRate text-right">{{item.rate}}</td>
+                                                    <td contenteditable="false" class="colName clickable">{{item.codename}}</td>
+                                                    <td contenteditable="false" class="colDescription clickable">{{item.description}}</td>
+                                                    <td contenteditable="false" class="colRate text-right clickable">{{item.rate}}</td>
                                                     <td contenteditable="false" class="colPurcDef chkBox text-center" style="width:15px;">
                                                         <div class="custom-control custom-radio">
                                                             {{#if equals defaultpurchasetaxcode item.codename}}
