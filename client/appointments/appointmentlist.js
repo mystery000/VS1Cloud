@@ -437,8 +437,10 @@ Template.appointmentlist.onRendered(async function () {
                   if (data.Params.IgnoreDates == true) {
                       $('#dateFrom').attr('readonly', true);
                       $('#dateTo').attr('readonly', true);
-                      FlowRouter.go('/appointmentlist?ignoredate=true');
+                      //FlowRouter.go('/appointmentlist?ignoredate=true');
                   } else {
+                      $('#dateFrom').attr('readonly', false);
+                      $('#dateTo').attr('readonly', false);
                       $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                       $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                   }
@@ -775,7 +777,7 @@ Template.appointmentlist.onRendered(async function () {
                                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
 
-                               if(checkurlIgnoreDate == 'true'){
+                               if(data.Params.IgnoreDates == true){
                                  sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                    getVS1Data('TAppointmentList').then(function (dataObjectold) {
                                      if(dataObjectold.length == 0){
@@ -867,9 +869,9 @@ Template.appointmentlist.onRendered(async function () {
                           },
                           "fnInitComplete": function () {
                             let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                            //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                                 this.fnPageChange('last');
-                            }
+                            //}
                               $("<button class='btn btn-primary btnRefreshAppointment' type='button' id='btnRefreshAppointment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmentlist_filter");
                               $('.myvarFilterForm').appendTo(".colDateFilter");
                           },
@@ -934,8 +936,10 @@ Template.appointmentlist.onRendered(async function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/appointmentlist?ignoredate=true');
+                    //FlowRouter.go('/appointmentlist?ignoredate=true');
                 } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -1272,7 +1276,7 @@ Template.appointmentlist.onRendered(async function () {
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
 
-                             if(checkurlIgnoreDate == 'true'){
+                             if(data.Params.IgnoreDates == true){
                                sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TAppointmentList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
@@ -1364,9 +1368,9 @@ Template.appointmentlist.onRendered(async function () {
                         },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                               this.fnPageChange('last');
-                          }
+                          //}
                             $("<button class='btn btn-primary btnRefreshAppointment' type='button' id='btnRefreshAppointment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmentlist_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
@@ -1427,8 +1431,10 @@ Template.appointmentlist.onRendered(async function () {
                 if (data.Params.IgnoreDates == true) {
                     $('#dateFrom').attr('readonly', true);
                     $('#dateTo').attr('readonly', true);
-                    FlowRouter.go('/appointmentlist?ignoredate=true');
+                    //FlowRouter.go('/appointmentlist?ignoredate=true');
                 } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
                 }
@@ -1701,7 +1707,7 @@ Template.appointmentlist.onRendered(async function () {
                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
 
-                             if(checkurlIgnoreDate == 'true'){
+                             if(data.Params.IgnoreDates == true){
                                sideBarService.getTAppointmentListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                  getVS1Data('TAppointmentList').then(function (dataObjectold) {
                                    if(dataObjectold.length == 0){
@@ -1793,9 +1799,9 @@ Template.appointmentlist.onRendered(async function () {
                         },
                         "fnInitComplete": function () {
                           let urlParametersPage = FlowRouter.current().queryParams.page;
-                          if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                          //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                               this.fnPageChange('last');
-                          }
+                          //}
                             $("<button class='btn btn-primary btnRefreshAppointment' type='button' id='btnRefreshAppointment' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblappointmentlist_filter");
                             $('.myvarFilterForm').appendTo(".colDateFilter");
                         },
