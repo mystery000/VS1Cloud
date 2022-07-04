@@ -5907,14 +5907,14 @@ Template.setup.events({
       .then(function (data) {
         addVS1Data("TEmployee", JSON.stringify(data))
           .then(function (datareturn) {
-            window.open("/employeelist", "_self");
+            window.open("/setup", "_self");
           })
           .catch(function (err) {
-            window.open("/employeelist", "_self");
+            window.open("/setup", "_self");
           });
       })
       .catch(function (err) {
-        window.open("/employeelist", "_self");
+        window.open("/setup", "_self");
       });
   },
   "click .printConfirmEmployee": function (event) {
