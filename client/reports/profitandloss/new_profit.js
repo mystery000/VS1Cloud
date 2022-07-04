@@ -327,45 +327,47 @@ Template.newprofitandloss.onRendered(function () {
                 roundAmt: RoundAmount
               });
             }
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
-            let totalRoundAmount = Math.round(totalAmount) || 0;
-            if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: "",
-                totalroundamountex: "",
-                periodAmounts: "",
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-              };
-            } else {
-              dataList = {
-                id: accountData[i]["AccountID"] || "",
-                accounttype: accountType || "",
-                accounttypeshort: accountData[i]["AccountType"] || "",
-                accountname: accountData[i]["AccountName"] || "",
-                accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
-                accountno: accountData[i]["AccountNo"] || "",
-                totalamountex: totalAmountEx || 0.0,
-                periodAmounts: periodAmounts,
-                totalroundamountex: totalRoundAmount,
-                name: $.trim(accountData[i]["AccountName"])
-                  .split(" ")
-                  .join("_"),
-                // totaltax: totalTax || 0.00
-              };
-            }
+              let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+              let totalRoundAmount = Math.round(totalAmount) || 0;
+              if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+                dataList = {
+                  id: accountData[i]["AccountID"] || "",
+                  accounttype: accountType || "",
+                  accounttypeshort: accountData[i]["AccountType"] || "",
+                  accountname: accountData[i]["AccountName"] || "",
+                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                  accountno: accountData[i]["AccountNo"] || "",
+                  totalamountex: "",
+                  totalroundamountex: "",
+                  periodAmounts: "",
+                  name: $.trim(accountData[i]["AccountName"])
+                    .split(" ")
+                    .join("_"),
+                };
+              } else {
+                dataList = {
+                  id: accountData[i]["AccountID"] || "",
+                  accounttype: accountType || "",
+                  accounttypeshort: accountData[i]["AccountType"] || "",
+                  accountname: accountData[i]["AccountName"] || "",
+                  accountheaderorder: accountData[i]["AccountHeaderOrder"] || "",
+                  accountno: accountData[i]["AccountNo"] || "",
+                  totalamountex: totalAmountEx || 0.0,
+                  periodAmounts: periodAmounts,
+                  totalroundamountex: totalRoundAmount,
+                  name: $.trim(accountData[i]["AccountName"])
+                    .split(" ")
+                    .join("_"),
+                  // totaltax: totalTax || 0.00
+                };
+              }
 
-            if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
-            } else {
-              records.push(dataList);
-            }
+              if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+              } else {
+                if( totalAmount != 0 ){ 
+                  records.push(dataList);
+                }
+              }
           }
 
           // Set Table Data
@@ -426,6 +428,7 @@ Template.newprofitandloss.onRendered(function () {
               accountType = accountData[i]["Account Type"];
             }
             let periodAmounts = []
+            var totalAmount = accountData[i]["TotalAmountEx"];
             let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
             let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
             periodAmounts.push({
@@ -434,6 +437,7 @@ Template.newprofitandloss.onRendered(function () {
             });
             if( options.departments.length ){
               options.departments.forEach(dept => {
+                totalAmount += accountData[i][dept+"_AmountColumnInc"];
                 let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
                 let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
                 if( i == 0 ){
@@ -480,7 +484,9 @@ Template.newprofitandloss.onRendered(function () {
 
             if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
             } else {
-              records.push(dataList);
+              if( totalAmount != 0 ){ 
+                records.push(dataList);
+              }
             }
           }
 
