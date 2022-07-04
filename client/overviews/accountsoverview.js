@@ -1968,6 +1968,7 @@ Template.accountsoverview.onRendered(function () {
       .text();
     let columnBalClass = $(event.target).attr("class");
     let accountService = new AccountService();
+    addVS1Data('TAccountRunningBalanceReport', []);
     FlowRouter.go("/balancetransactionlist?accountName=" +accountName +"&isTabItem=" +false);
     //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
   });

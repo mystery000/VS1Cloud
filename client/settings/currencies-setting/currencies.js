@@ -171,7 +171,7 @@ Template.currenciessettings.onRendered(function () {
                     },
                     // bStateSave: true,
                     // rowId: 0,
-                    paging: false,
+                    paging: true,
                     //                      "scrollY": "400px",
                     //                      "scrollCollapse": true,
                     info: true,

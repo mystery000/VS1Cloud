@@ -27,6 +27,10 @@ Template.monthlyearnings.onRendered(() => {
     let topTenSuppData1 = [];
     let topData = this;
 
+    function chartClickEvent() {
+        FlowRouter.go("/salesreport?daterange=ignore");
+      } 
+
 //     setTimeout(function () {
 //    let checkStatus = localStorage.getItem("earningschat") || true;
 //       if(checkStatus == false || checkStatus == "false") {
@@ -237,13 +241,7 @@ Template.monthlyearnings.onRendered(() => {
                         ]
                     },
                     options: {
-                        'onClick': function (evt, item) {
-                            //if(item[0]['_model'].label){
-                            //  var activePoints = item[0]['_model'].label;
-                            FlowRouter.go('/agedreceivables');
-                            //}
-
-                        },
+                        'onClick': chartClickEvent,
                         maintainAspectRatio: false,
                         responsive: true,
                         tooltips: {
@@ -424,13 +422,7 @@ Template.monthlyearnings.onRendered(() => {
                     ]
                 },
                 options: {
-                    'onClick': function (evt, item) {
-                        //if(item[0]['_model'].label){
-                        //  var activePoints = item[0]['_model'].label;
-                        FlowRouter.go('/agedreceivables');
-                        //}
-
-                    },
+                    'onClick': chartClickEvent,
                     maintainAspectRatio: false,
                     tooltips: {
                         callbacks: {

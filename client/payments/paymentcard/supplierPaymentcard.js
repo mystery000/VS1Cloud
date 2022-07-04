@@ -560,7 +560,7 @@ Template.supplierpaymentcard.onRendered(() => {
 
 
   
-     function updateTemplate1(object_invoce) {
+    function updateTemplate1(object_invoce) {
         $("#templatePreviewModal").modal("toggle");
         if (object_invoce.length > 0) {
          
@@ -827,7 +827,7 @@ Template.supplierpaymentcard.onRendered(() => {
 
       }
 
-      function updateTemplate(object_invoce) {
+    function updateTemplate(object_invoce) {
     
             
         if (object_invoce.length > 0) {
@@ -6299,7 +6299,15 @@ Template.supplierpaymentcard.onRendered(() => {
     }
 
     exportSalesToPdf1 = function() {
-        let file = "Supplier_payment.pdf";
+
+      
+       
+
+        
+        var source = document.getElementById('html-2-pdfwrapper');
+        let id = $('.printID').attr("id");
+        var pdf = new jsPDF('p', 'pt', 'a4');
+        let file = "Supplier payment-"+id+".pdf";
         var opt = {
             margin: 0,
             filename: file,
@@ -6316,15 +6324,10 @@ Template.supplierpaymentcard.onRendered(() => {
                 orientation: 'portrait'
             }
         };
-
-        
-        var source = document.getElementById('html-2-pdfwrapper');
-        let id = $('.printID').attr("id");
-        var pdf = new jsPDF('p', 'pt', 'a4');
-
+     
         html2pdf().set(opt).from(source).save().then(function (dataObject) {
             if ($('.printID').attr('id') == undefined || $('.printID').attr('id') == "") {
-                $(".btnSave").trigger("click");
+                //$(".btnSave").trigger("click");
                 $('.fullScreenSpin').css('display', 'none');
             } else {
                 document.getElementById('html-2-pdfwrapper').style.display="none";
@@ -6371,7 +6374,7 @@ Template.supplierpaymentcard.onRendered(() => {
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Supplier Payments')
             {
-                file = 'Supplier_payment-' + invoice_data_info.lid + '.pdf';
+                file = 'Supplier payment-' + invoice_data_info.lid + '.pdf';
             }          
            
         }

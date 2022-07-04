@@ -502,11 +502,12 @@ Template.supplierscard.onRendered(function () {
                   
                     setOneSupplierDataEx(data);
                     // add to custom field
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                    }, 5500);
+                    // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                    //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                    //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    // }, 5500);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -517,22 +518,24 @@ Template.supplierscard.onRendered(function () {
                         added = true;
                         setOneSupplierDataEx(useData[i]);
                         // add to custom field
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-                          $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-                          $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-                        }, 5500);
+                    // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                        // }, 5500);
                     }
                 }
                 if(!added) {
                     contactService.getOneSupplierDataEx(supplierID).then(function (data) {
                         setOneSupplierDataEx(data);
                         // add to custom field
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                        }, 5500);
+                        // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        // }, 5500);
                     });
                 }
             }

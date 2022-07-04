@@ -28,6 +28,9 @@ Template.employeecompletedjobs.onRendered(() => {
     const timeSheetList = [];
     let topData = this;
 
+    function chartClickEvent() {
+        FlowRouter.go("/crmoverview?viewcompleted=true");
+    } 
     templateObject.getAllTimeSheetDataClock = function () {
         getVS1Data('TTimeSheet').then(function (dataObject) {
             if (dataObject == 0) {
@@ -105,13 +108,7 @@ Template.employeecompletedjobs.onRendered(() => {
                                 ]
                             },
                             options: {
-                                'onClick': function (evt, item) {
-                                    if (item[0]['_model'].label) {
-                                        var activePoints = item[0]['_model'].label;
-                                        // FlowRouter.go('/salesreport?contact=' + activePoints);
-                                    }
-
-                                },
+                                'onClick': chartClickEvent,
                                 maintainAspectRatio: false,
                                 responsive: true,
                                 tooltips: {
@@ -244,13 +241,7 @@ Template.employeecompletedjobs.onRendered(() => {
                             ]
                         },
                         options: {
-                            'onClick': function (evt, item) {
-                                if (item[0]['_model'].label) {
-                                    var activePoints = item[0]['_model'].label;
-                                    // FlowRouter.go('/salesreport?contact=' + activePoints);
-                                }
-
-                            },
+                            'onClick': chartClickEvent,
                             maintainAspectRatio: false,
                             responsive: true,
                             tooltips: {
@@ -380,13 +371,7 @@ Template.employeecompletedjobs.onRendered(() => {
                             ]
                         },
                         options: {
-                            'onClick': function (evt, item) {
-                                if (item[0]['_model'].label) {
-                                    var activePoints = item[0]['_model'].label;
-                                    // FlowRouter.go('/salesreport?contact=' + activePoints);
-                                }
-
-                            },
+                            'onClick': chartClickEvent,
                             maintainAspectRatio: false,
                             responsive: true,
                             tooltips: {

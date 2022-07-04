@@ -27,6 +27,10 @@ Template.expenseschart.onRendered(()=>{
   let topTenSuppData1 = [];
   let topData = this;
 
+  function chartClickEvent() {
+    FlowRouter.go("/newprofitandloss?daterange=ignore&?show=loss");
+  } 
+
   // let checkStatus = localStorage.getItem("expenseschart") || true;
   // if(checkStatus == false || checkStatus == "false") {
   //   $("#expensechart").addClass('hideelement')
@@ -174,13 +178,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
           }]
           },
           options: {
-            'onClick' : function (evt, item) {
-              if(item[0]['_model'].label){
-                var activePoints = item[0]['_model'].label;
-                FlowRouter.go('/agedpayables?month=' + activePoints);
-              }
-
-            },
+            'onClick' : chartClickEvent,
             maintainAspectRatio: false,
             responsive: true,
           tooltips: {
@@ -331,13 +329,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
             }]
             },
             options: {
-              'onClick' : function (evt, item) {
-                if(item[0]['_model'].label){
-                  var activePoints = item[0]['_model'].label;
-                  FlowRouter.go('/agedpayables?month=' + activePoints);
-                }
-
-              },
+              'onClick' : chartClickEvent,
               maintainAspectRatio: false,
               responsive: true,
             tooltips: {
@@ -585,13 +577,7 @@ if (!localStorage.getItem('VS1PNLPeriodReport_dash')) {
     }]
     },
     options: {
-      'onClick' : function (evt, item) {
-        if(item[0]['_model'].label){
-          var activePoints = item[0]['_model'].label;
-          FlowRouter.go('/agedpayables?month=' + activePoints);
-        }
-
-      },
+      'onClick' : chartClickEvent,
       maintainAspectRatio: false,
       responsive: true,
       tooltips: {

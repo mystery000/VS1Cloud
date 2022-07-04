@@ -4085,11 +4085,11 @@ Template.purchaseordercard.onRendered(() => {
         document.getElementById('html-2-pdfwrapper_new').style.display="block";
         var source = document.getElementById('html-2-pdfwrapper_new');
 
-        let file = "Purchase_order.pdf";
+        let file = "Purchase order.pdf";
         if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
             if(template_title == 'Purchase Orders')
             {
-                file = 'Purchase-Orders-' + quoteData.id + '.pdf';
+                file = 'Purchase Order-' + quoteData.id + '.pdf';
             }
            
         
