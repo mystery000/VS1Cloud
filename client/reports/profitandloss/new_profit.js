@@ -4,14 +4,13 @@ import { UtilityService } from "../../utility-service";
 import layoutEditor from "./layoutEditor";
 import ApiService from "../../js/Api/Module/ApiService";
 import { ProductService } from "../../product/product-service";
-import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout"
-import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields"
+import ProfitLossLayout from "../../js/Api/Model/ProfitLossLayout";
+import ProfitLossLayoutFields from "../../js/Api/Model/ProfitLossLayoutFields";
 import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
 // import jqueryScrollable from "../../js/jquery-sortable"
-
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -36,21 +35,21 @@ Template.newprofitandloss.onCreated(function () {
   templateObject.tcurrencyratehistory = new ReactiveVar([]);
 });
 
-function formatFields( fields, searchkey ){
+function formatFields(fields, searchkey) {
   const groupBy = (array, key) => {
     // Return the end result
     return array.reduce((result, currentValue) => {
-        // If an array already present for key, push it to the array. Else create an array and push the object
-        (result[currentValue[key]] = result[currentValue[key]] || []).push(
-            currentValue
-        );
-        // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
-        return result;
+      // If an array already present for key, push it to the array. Else create an array and push the object
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+      return result;
     }, {}); // empty object is the initial value for result object
   };
 
   // Group by color as key to the person array
-  return groupBy(fields, searchkey );
+  return groupBy(fields, searchkey);
 }
 
 function buildPositions() {
@@ -84,23 +83,37 @@ Template.newprofitandloss.onRendered(function () {
   const templateObject = Template.instance();
   const deptrecords = [];
 
-  templateObject.setReportOptions = async function( compPeriod = 0, formatDateFrom = new Date(),  formatDateTo = new Date() ) {
-      // New Code Start here
-    let fromYear = moment(formatDateFrom).format('YYYY');
-    let toYear = moment(formatDateTo).format('YYYY');
+  templateObject.setReportOptions = async function (
+    compPeriod = 0,
+    formatDateFrom = new Date(),
+    formatDateTo = new Date()
+  ) {
+    // New Code Start here
+    let fromYear = moment(formatDateFrom).format("YYYY");
+    let toYear = moment(formatDateTo).format("YYYY");
     let dateRange = [];
-    if( toYear === fromYear ){
-      dateRange.push( moment(formatDateFrom).format('DD MMM') + '-' + moment(formatDateTo).format('DD MMM') + ' '+ toYear );
-    }else{
-      dateRange.push( moment(formatDateFrom).format('DD MMM YYYY') + '-' + moment(formatDateTo).format('DD MMM YYYY') );
+    if (toYear === fromYear) {
+      dateRange.push(
+        moment(formatDateFrom).format("DD MMM") +
+          "-" +
+          moment(formatDateTo).format("DD MMM") +
+          " " +
+          toYear
+      );
+    } else {
+      dateRange.push(
+        moment(formatDateFrom).format("DD MMM YYYY") +
+          "-" +
+          moment(formatDateTo).format("DD MMM YYYY")
+      );
     }
 
-    let defaultOptions = templateObject.reportOptions.get()
-    if( defaultOptions ){
+    let defaultOptions = templateObject.reportOptions.get();
+    if (defaultOptions) {
       defaultOptions.fromDate = formatDateFrom;
       defaultOptions.toDate = formatDateTo;
       defaultOptions.threcords = dateRange;
-    }else{
+    } else {
       defaultOptions = {
         compPeriod: compPeriod,
         fromDate: formatDateFrom,
@@ -108,12 +121,12 @@ Template.newprofitandloss.onRendered(function () {
         threcords: dateRange,
         departments: [],
         showDecimal: true,
-        showtotal: true
-      }
+        showtotal: true,
+      };
     }
-    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
-  }
+  };
 
   let utilityService = new UtilityService();
   let salesOrderTable;
@@ -127,11 +140,10 @@ Template.newprofitandloss.onRendered(function () {
     fromDateMonth = "0" + (currentDate.getMonth() + 1);
   }
 
-  let imageData= (localStorage.getItem("Image"));
-  if(imageData)
-  {
-      $('#uploadedImage').attr('src', imageData);
-      $('#uploadedImage').attr('width','50%');
+  let imageData = localStorage.getItem("Image");
+  if (imageData) {
+    $("#uploadedImage").attr("src", imageData);
+    $("#uploadedImage").attr("width", "50%");
   }
 
   if (currentDate.getDate() < 10) {
@@ -284,21 +296,31 @@ Template.newprofitandloss.onRendered(function () {
     last_fiscal_year_start + " - " + last_fiscal_year_end
   );
   //display current financial year to current date;
-  let yeartodate = moment().month("january").startOf("month").format("D" + " " + "MMM" + " " + "YYYY");
-  $("#dispCurrFiscYearToDate").append(
-    yeartodate + " - " + monthCurr
-  );
+  let yeartodate = moment()
+    .month("january")
+    .startOf("month")
+    .format("D" + " " + "MMM" + " " + "YYYY");
+  $("#dispCurrFiscYearToDate").append(yeartodate + " - " + monthCurr);
   // get 'financial year' to appear end
 
   templateObject.getProfitandLossReports = async function () {
     const options = await templateObject.reportOptions.get();
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+    let dateFrom =
+      moment(options.fromDate).format("YYYY-MM-DD") ||
+      moment().format("YYYY-MM-DD");
+    let dateTo =
+      moment(options.toDate).format("YYYY-MM-DD") ||
+      moment().format("YYYY-MM-DD");
     // Compare period
-    if ( options.compPeriod ) {
+    if (options.compPeriod) {
       try {
-        let periodMonths = `${options.compPeriod} Month`
-        let data = await reportService.getProfitandLossCompare(dateFrom, dateTo, false, periodMonths)
+        let periodMonths = `${options.compPeriod} Month`;
+        let data = await reportService.getProfitandLossCompare(
+          dateFrom,
+          dateTo,
+          false,
+          periodMonths
+        );
         let records = [];
         options.threcords = [];
         if (data.tprofitandlossperiodcomparereport) {
@@ -312,24 +334,32 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               accountType = accountData[i]["AccountTypeDesc"];
             }
-            let compPeriod = options.compPeriod  + 1;
+            let compPeriod = options.compPeriod + 1;
             let periodAmounts = [];
             let totalAmount = 0;
             for (let counter = 1; counter <= compPeriod; counter++) {
-              if( i == 0 ){
-                options.threcords.push( accountData[i]["DateDesc_" + counter] );
+              if (i == 0) {
+                options.threcords.push(accountData[i]["DateDesc_" + counter]);
               }
-              totalAmount +=  accountData[i]["Amount_" + counter];
-              let AmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["Amount_" + counter] ) || 0.0;
-              let RoundAmount = Math.round(accountData[i]["Amount_" + counter]) || 0;
+              totalAmount += accountData[i]["Amount_" + counter];
+              let AmountEx =
+                utilityService.modifynegativeCurrencyFormat(
+                  accountData[i]["Amount_" + counter]
+                ) || 0.0;
+              let RoundAmount =
+                Math.round(accountData[i]["Amount_" + counter]) || 0;
               periodAmounts.push({
                 decimalAmt: AmountEx,
-                roundAmt: RoundAmount
+                roundAmt: RoundAmount,
               });
             }
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( totalAmount ) || 0.0;
+            let totalAmountEx =
+              utilityService.modifynegativeCurrencyFormat(totalAmount) || 0.0;
             let totalRoundAmount = Math.round(totalAmount) || 0;
-            if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+            if (
+              accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
+              accountType != ""
+            ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
                 accounttype: accountType || "",
@@ -362,7 +392,10 @@ Template.newprofitandloss.onRendered(function () {
               };
             }
 
-            if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+            if (
+              accountData[i]["AccountType"].replace(/\s/g, "") == "" &&
+              accountType == ""
+            ) {
             } else {
               records.push(dataList);
             }
@@ -397,23 +430,40 @@ Template.newprofitandloss.onRendered(function () {
             }, 100);
           }
         }
-      }catch(err) {
+      } catch (err) {
         $(".fullScreenSpin").css("display", "none");
       }
-    }else{
+    } else {
       try {
         options.threcords = [];
-        let fromYear = moment(dateFrom).format('YYYY');
-        let toYear = moment(dateTo).format('YYYY');
+        let fromYear = moment(dateFrom).format("YYYY");
+        let toYear = moment(dateTo).format("YYYY");
         let dateRange = [];
-        if( toYear === fromYear ){
-          dateRange.push( moment(dateFrom).format('DD MMM') + '-' + moment(dateTo).format('DD MMM') + ' '+ toYear );
-        }else{
-          dateRange.push( moment(dateFrom).format('DD MMM YYYY') + '-' + moment(dateTo).format('DD MMM YYYY') );
+        if (toYear === fromYear) {
+          dateRange.push(
+            moment(dateFrom).format("DD MMM") +
+              "-" +
+              moment(dateTo).format("DD MMM") +
+              " " +
+              toYear
+          );
+        } else {
+          dateRange.push(
+            moment(dateFrom).format("DD MMM YYYY") +
+              "-" +
+              moment(dateTo).format("DD MMM YYYY")
+          );
         }
         options.threcords = dateRange;
-        let departments = ( options.departments.length )? options.departments.join(','): '';
-        let data = await reportService.getProfitandLoss(dateFrom, dateTo, false, departments)
+        let departments = options.departments.length
+          ? options.departments.join(",")
+          : "";
+        let data = await reportService.getProfitandLoss(
+          dateFrom,
+          dateTo,
+          false,
+          departments
+        );
         let records = [];
         if (data.profitandlossreport) {
           let accountData = data.profitandlossreport;
@@ -425,27 +475,38 @@ Template.newprofitandloss.onRendered(function () {
             } else {
               accountType = accountData[i]["Account Type"];
             }
-            let periodAmounts = []
-            let totalAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i]["TotalAmountEx"] ) || 0.0;
-            let totalRoundAmount = Math.round(accountData[i]["TotalAmountEx"]) || 0;
+            let periodAmounts = [];
+            let totalAmountEx =
+              utilityService.modifynegativeCurrencyFormat(
+                accountData[i]["TotalAmountEx"]
+              ) || 0.0;
+            let totalRoundAmount =
+              Math.round(accountData[i]["TotalAmountEx"]) || 0;
             periodAmounts.push({
               decimalAmt: totalAmountEx,
-              roundAmt: totalRoundAmount
+              roundAmt: totalRoundAmount,
             });
-            if( options.departments.length ){
-              options.departments.forEach(dept => {
-                let deptAmountEx = utilityService.modifynegativeCurrencyFormat( accountData[i][dept+"_AmountColumnInc"] ) || 0.0;
-                let deptRoundAmount = Math.round(accountData[i][dept+"_AmountColumnInc"]) || 0;
-                if( i == 0 ){
-                  options.threcords.push( dept );
+            if (options.departments.length) {
+              options.departments.forEach((dept) => {
+                let deptAmountEx =
+                  utilityService.modifynegativeCurrencyFormat(
+                    accountData[i][dept + "_AmountColumnInc"]
+                  ) || 0.0;
+                let deptRoundAmount =
+                  Math.round(accountData[i][dept + "_AmountColumnInc"]) || 0;
+                if (i == 0) {
+                  options.threcords.push(dept);
                 }
                 periodAmounts.push({
                   decimalAmt: deptAmountEx,
-                  roundAmt: deptRoundAmount
+                  roundAmt: deptRoundAmount,
                 });
               });
             }
-            if ( accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&  accountType != "" ) {
+            if (
+              accountData[i]["AccountHeaderOrder"].replace(/\s/g, "") == "" &&
+              accountType != ""
+            ) {
               dataList = {
                 id: accountData[i]["AccountID"] || "",
                 accounttype: accountType || "",
@@ -478,7 +539,10 @@ Template.newprofitandloss.onRendered(function () {
               };
             }
 
-            if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
+            if (
+              accountData[i]["AccountType"].replace(/\s/g, "") == "" &&
+              accountType == ""
+            ) {
             } else {
               records.push(dataList);
             }
@@ -514,7 +578,7 @@ Template.newprofitandloss.onRendered(function () {
             }, 500);
           }
         }
-      }catch(error) {
+      } catch (error) {
         $(".fullScreenSpin").css("display", "none");
       }
     }
@@ -526,32 +590,45 @@ Template.newprofitandloss.onRendered(function () {
     var getDateFrom = url.searchParams.get("dateFrom");
     var getLoadDate = url.searchParams.get("dateTo");
     templateObject.setReportOptions(0, getDateFrom, getLoadDate);
-  } else if( url.indexOf("?daterange") > 0 ){
+  } else if (url.indexOf("?daterange") > 0) {
     let currentDate2 = new Date();
-    let fromDate =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    let fromDate = moment(currentDate2)
+      .subtract(3, "months")
+      .format("YYYY-MM-DD");
     let endDate = moment(currentDate2).format("YYYY-MM-DD");
-    if( url.indexOf("?daterange=monthly") ){
-      fromDate = moment().startOf('month').format('YYYY-MM-DD');
-      endDate   = moment().endOf('month').format('YYYY-MM-DD');
+    if (url.indexOf("?daterange=monthly")) {
+      fromDate = moment().startOf("month").format("YYYY-MM-DD");
+      endDate = moment().endOf("month").format("YYYY-MM-DD");
     }
-    if( url.indexOf("?daterange=quarterly") ){
-      fromDate = moment().startOf("Q").format('YYYY-MM-DD');
-      endDate = moment().endOf("Q").format('YYYY-MM-DD');
+    if (url.indexOf("?daterange=quarterly")) {
+      fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+      endDate = moment().endOf("Q").format("YYYY-MM-DD");
     }
-    if( url.indexOf("?daterange=yearly") ){
+    if (url.indexOf("?daterange=yearly")) {
       if (moment().quarter() == 4) {
-        fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
-        endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
-      }else{
-        fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
-        endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
+        fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+        endDate = moment()
+          .add(1, "year")
+          .month("June")
+          .endOf("month")
+          .format("YYYY-MM-DD");
+      } else {
+        fromDate = moment()
+          .subtract(1, "year")
+          .month("July")
+          .startOf("month")
+          .format("YYYY-MM-DD");
+        endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
       }
     }
-    if( url.indexOf("?daterange=ytd") ){
-      fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
+    if (url.indexOf("?daterange=ytd")) {
+      fromDate = moment()
+        .month("january")
+        .startOf("month")
+        .format("YYYY-MM-DD");
       endDate = moment().format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   } else {
     var currentDate2 = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
@@ -561,113 +638,132 @@ Template.newprofitandloss.onRendered(function () {
     //   currentDate2.setMonth(currentDate2.getMonth() - 1);
     // }
 
-    let getDateFrom =  moment(currentDate2).subtract(3,'months').format('YYYY-MM-DD');
+    let getDateFrom = moment(currentDate2)
+      .subtract(3, "months")
+      .format("YYYY-MM-DD");
     templateObject.setReportOptions(defaultPeriod, getDateFrom, getLoadDate);
   }
 
-templateObject.getDepartments = function() {
+  templateObject.getDepartments = function () {
     getVS1Data("TDeptClass")
-        .then(function(dataObject) {
-            if (dataObject.length == 0) {
-                productService.getDepartment().then(function(data) {
-                    //let deptArr = [];
-                    for (let i in data.tdeptclass) {
-                        let deptrecordObj = {
-                            id: data.tdeptclass[i].Id || " ",
-                            department: data.tdeptclass[i].DeptClassName || " ",
-                        };
-                        deptrecords.push(deptrecordObj);
-                        templateObject.deptrecords.set(deptrecords);
-                    }
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tdeptclass;
-                for (let i in useData) {
-                    let deptrecordObj = {
-                        id: useData[i].Id || " ",
-                        department: useData[i].DeptClassName || " ",
-                    };
-                    //deptArr.push(data.tdeptclass[i].DeptClassName);
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-                }
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          productService.getDepartment().then(function (data) {
+            //let deptArr = [];
+            for (let i in data.tdeptclass) {
+              let deptrecordObj = {
+                id: data.tdeptclass[i].Id || " ",
+                department: data.tdeptclass[i].DeptClassName || " ",
+              };
+              deptrecords.push(deptrecordObj);
+              templateObject.deptrecords.set(deptrecords);
             }
-        })
-        .catch(function(err) {
-            productService.getDepartment().then(function(data) {
-                //let deptArr = [];
-                for (let i in data.tdeptclass) {
-                    let deptrecordObj = {
-                        id: data.tdeptclass[i].Id || " ",
-                        department: data.tdeptclass[i].DeptClassName || " ",
-                    };
-                    //deptArr.push(data.tdeptclass[i].DeptClassName);
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-                }
-            });
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tdeptclass;
+          for (let i in useData) {
+            let deptrecordObj = {
+              id: useData[i].Id || " ",
+              department: useData[i].DeptClassName || " ",
+            };
+            //deptArr.push(data.tdeptclass[i].DeptClassName);
+            deptrecords.push(deptrecordObj);
+            templateObject.deptrecords.set(deptrecords);
+          }
+        }
+      })
+      .catch(function (err) {
+        productService.getDepartment().then(function (data) {
+          //let deptArr = [];
+          for (let i in data.tdeptclass) {
+            let deptrecordObj = {
+              id: data.tdeptclass[i].Id || " ",
+              department: data.tdeptclass[i].DeptClassName || " ",
+            };
+            //deptArr.push(data.tdeptclass[i].DeptClassName);
+            deptrecords.push(deptrecordObj);
+            templateObject.deptrecords.set(deptrecords);
+          }
         });
-};
-// templateObject.getAllProductData();
-templateObject.getDepartments();
+      });
+  };
+  // templateObject.getAllProductData();
+  templateObject.getDepartments();
 
-templateObject.getProfitLossLayout = async function() {
-  const profitLossLayoutApi = new ProfitLossLayoutApi();
+  templateObject.getProfitLossLayout = async function () {
+    const profitLossLayoutApi = new ProfitLossLayoutApi();
 
-  const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
+    const profitLossLayoutEndpoint = profitLossLayoutApi.collection.findByName(
       profitLossLayoutApi.collectionNames.TProfitLossLayout
-  );
+    );
 
-  // Fetch list type details
-  profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
+    // Fetch list type details
+    profitLossLayoutEndpoint.url.searchParams.append("ListType", "'Detail'");
 
-  const profitLossLayoutEndResponse =  await profitLossLayoutEndpoint.fetch();
-  if (profitLossLayoutEndResponse.ok == true) {
-    let profitLossLayouts = [];
-    let jsonResponse = await profitLossLayoutEndResponse.json();
-    // handle API json reponse
-    const profitLossLists = ProfitLossLayout.fromList(jsonResponse.tprofitlosslayout);
-    // Save default list
-    templateObject.profitlosslayoutfields.set( profitLossLists );
+    const profitLossLayoutEndResponse = await profitLossLayoutEndpoint.fetch();
+    if (profitLossLayoutEndResponse.ok == true) {
+      let profitLossLayouts = [];
+      let jsonResponse = await profitLossLayoutEndResponse.json();
+      // handle API json reponse
+      const profitLossLists = ProfitLossLayout.fromList(
+        jsonResponse.tprofitlosslayout
+      );
+      // Save default list
+      templateObject.profitlosslayoutfields.set(profitLossLists);
 
-    profitLossLists.filter((item) => {
-      if( item.fields.Level0Order != 0 && item.fields.Level1Order == 0 && item.fields.Level2Order == 0 && item.fields.Level3Order == 0 ){
-        profitLossLayouts.push(item.fields)
-      }
-    });
-    // console.log(profitLossLayouts, parentprofitLossLayouts);
-    let newprofitLossLayouts = [];
-    // Fetch Subchilds According to the Above grouping
-    profitLossLayouts.forEach(function(item){
-        let subAccounts = []
-        let childAccounts = []
-        let Level0Order =  item.Level0Order
-        let ID =  item.ID
+      profitLossLists.filter((item) => {
+        if (
+          item.fields.Level0Order != 0 &&
+          item.fields.Level1Order == 0 &&
+          item.fields.Level2Order == 0 &&
+          item.fields.Level3Order == 0
+        ) {
+          profitLossLayouts.push(item.fields);
+        }
+      });
+      // console.log(profitLossLayouts, parentprofitLossLayouts);
+      let newprofitLossLayouts = [];
+      // Fetch Subchilds According to the Above grouping
+      profitLossLayouts.forEach(function (item) {
+        let subAccounts = [];
+        let childAccounts = [];
+        let Level0Order = item.Level0Order;
+        let ID = item.ID;
         profitLossLists.filter((subitem) => {
-          let subLevel0Order =  subitem.fields.Level0Order
-          let subID =  subitem.fields.ID
-          if (subLevel0Order == Level0Order && ID != subID ) {
+          let subLevel0Order = subitem.fields.Level0Order;
+          let subID = subitem.fields.ID;
+          if (subLevel0Order == Level0Order && ID != subID) {
             subitem.subAccounts = [];
             subAccounts.push(subitem.fields);
           }
         });
 
-        childAccounts = subAccounts.filter(( item ) => {
-          let sLevel0Order =  item.Level0Order
-          let sLevel1Order =  item.Level1Order
-          let sLevel2Order =  item.Level2Order
-          let sID =  item.ID
-          if (sLevel1Order != 0 && sLevel0Order == Level0Order && sLevel2Order == 0 && sID != ID ) {
-            let subSubAccounts = subAccounts.filter(( subitem ) => {
-              let subID =  subitem.ID
-              let subLevel0Order =  subitem.Level0Order
-              let subLevel1Order =  subitem.Level1Order
-              let subLevel2Order =  subitem.Level2Order
-              if( sLevel1Order === subLevel1Order && subLevel0Order == sLevel0Order && sID != subID && subLevel2Order != 0){
+        childAccounts = subAccounts.filter((item) => {
+          let sLevel0Order = item.Level0Order;
+          let sLevel1Order = item.Level1Order;
+          let sLevel2Order = item.Level2Order;
+          let sID = item.ID;
+          if (
+            sLevel1Order != 0 &&
+            sLevel0Order == Level0Order &&
+            sLevel2Order == 0 &&
+            sID != ID
+          ) {
+            let subSubAccounts = subAccounts.filter((subitem) => {
+              let subID = subitem.ID;
+              let subLevel0Order = subitem.Level0Order;
+              let subLevel1Order = subitem.Level1Order;
+              let subLevel2Order = subitem.Level2Order;
+              if (
+                sLevel1Order === subLevel1Order &&
+                subLevel0Order == sLevel0Order &&
+                sID != subID &&
+                subLevel2Order != 0
+              ) {
                 return subitem;
               }
-            })
+            });
             item.subAccounts = subSubAccounts;
             return item;
           }
@@ -680,57 +776,55 @@ templateObject.getProfitLossLayout = async function() {
       });
       templateObject.profitlosslayoutrecords.set(newprofitLossLayouts);
 
-    // handle Dragging and sorting
-    setTimeout(function () {
-
-      var oldContainer;
-      var group = $("ol.nested_with_switch").sortable({
-          group: 'nested',
-          exclude: '.noDrag',
+      // handle Dragging and sorting
+      setTimeout(function () {
+        var oldContainer;
+        var group = $("ol.nested_with_switch").sortable({
+          group: "nested",
+          exclude: ".noDrag",
 
           afterMove: function (placeholder, container) {
-            if(oldContainer != container){
-              if(oldContainer)
-                oldContainer.el.removeClass("active");
-                container.el.addClass("active");
+            if (oldContainer != container) {
+              if (oldContainer) oldContainer.el.removeClass("active");
+              container.el.addClass("active");
               oldContainer = container;
             }
           },
           onDrop: function ($item, container, _super) {
-
             // On drag removing the dragged classs and colleps
-            if($item.parents().hasClass('groupedListNew')) {
-            }else {
-              $item.find('.mainHeadingDiv').removeClass('collapsTogls');
+            if ($item.parents().hasClass("groupedListNew")) {
+            } else {
+              $item.find(".mainHeadingDiv").removeClass("collapsTogls");
             }
-            let siblingClass = $item.siblings().attr('class')
+            let siblingClass = $item.siblings().attr("class");
             $item.removeClass();
             $item.addClass(siblingClass);
-            $item.addClass('selected');
+            $item.addClass("selected");
 
             // for array
             var data = group.sortable("serialize").get();
-            var jsonString = JSON.stringify(data, null, ' ');
+            var jsonString = JSON.stringify(data, null, " ");
             console.log(jsonString);
             // container.el.removeClass("active");
             // _super($item, container);
-          }
+          },
         });
 
-        $('.collepsDiv').click(function(){
-          $(this).parents('.mainHeadingDiv').toggleClass('collapsTogls');
+        $(".collepsDiv").click(function () {
+          $(this).parents(".mainHeadingDiv").toggleClass("collapsTogls");
         });
-        $('.childInner, .mainHeadingDiv').mousedown(function(){
-          $(this).parents('.vertical').find('.selected').removeClass('selected');
-          $(this).parents('.vertical').find('.selected').removeClass('dragged');
-          $(this).parent().addClass('selected');
+        $(".childInner, .mainHeadingDiv").mousedown(function () {
+          $(this)
+            .parents(".vertical")
+            .find(".selected")
+            .removeClass("selected");
+          $(this).parents(".vertical").find(".selected").removeClass("dragged");
+          $(this).parent().addClass("selected");
         });
-
-    }, 1000);
-
-  }
-};
-templateObject.getProfitLossLayout();
+      }, 1000);
+    }
+  };
+  templateObject.getProfitLossLayout();
 
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
@@ -791,7 +885,8 @@ $('.tblAvoid').each(function(){
   //                });
   //            };
   //            sortArray(eLayScreenArr, pnlTblArr);
- /**
+
+  /**
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
@@ -802,26 +897,30 @@ $('.tblAvoid').each(function(){
 
   //templateObject.loadCurrency();
 
-
   templateObject.loadCurrencyHistory = async () => {
     await loadCurrencyHistory();
-  }
+  };
 
   //templateObject.loadCurrencyHistory();
-
 
   LoadingOverlay.hide();
 });
 
 Template.newprofitandloss.events({
-  "click .pnlReportAccount": async function(e){
+  "click .pnlReportAccount": async function (e) {
     let templateObject = Template.instance();
-    addVS1Data('TAccountRunningBalanceReport', []);
-    let accountName = $(e.target).data('account');
+    addVS1Data("TAccountRunningBalanceReport", []);
+    let accountName = $(e.target).data("account");
     const options = await templateObject.reportOptions.get();
-    let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-    FlowRouter.go(`/balancetransactionlist?accountName=${accountName}&toDate=${dateTo}&fromDate=${dateFrom}&isTabItem=false`);
+    let dateTo =
+      moment(options.toDate).format("YYYY-MM-DD") ||
+      moment().format("YYYY-MM-DD");
+    let dateFrom =
+      moment(options.fromDate).format("YYYY-MM-DD") ||
+      moment().format("YYYY-MM-DD");
+    FlowRouter.go(
+      `/balancetransactionlist?accountName=${accountName}&toDate=${dateTo}&fromDate=${dateFrom}&isTabItem=false`
+    );
   },
   "change input[type='checkbox']": (event) => {
     // This should be global
@@ -833,8 +932,7 @@ Template.newprofitandloss.events({
   "click .currency-modal-save": (e) => {
     //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
-   // loadCurrencyHistory();
-
+    // loadCurrencyHistory();
 
     let templateObject = Template.instance();
 
@@ -844,7 +942,7 @@ Template.newprofitandloss.events({
     // Get all selected currencies
     const currencySelected = $(".currency-selector-js:checked");
     let _currencySelectedList = [];
-    if(currencySelected.length > 0) {
+    if (currencySelected.length > 0) {
       $.each(currencySelected, (index, e) => {
         const sellRate = $(e).attr("sell-rate");
         const buyRate = $(e).attr("buy-rate");
@@ -859,7 +957,6 @@ Template.newprofitandloss.events({
       _currency.active = true;
       _currencySelectedList.push(_currency);
     }
-
 
     //console.log("Selected currency list", _currencySelectedList);
 
@@ -925,7 +1022,7 @@ Template.newprofitandloss.events({
       .clone()
       .startOf("year")
       .format("YYYY-MM-DD");
-      addVS1Data('TAccountRunningBalanceReport', []);
+    addVS1Data("TAccountRunningBalanceReport", []);
     //Session.setPersistent('showHeader',true);
     window.open(
       "/balancetransactionlist?accountName=" +
@@ -944,7 +1041,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
     var dateTo = new Date($("#dateTo").datepicker("getDate"));
-    templateObject.setReportOptions(0, dateFrom, dateTo );
+    templateObject.setReportOptions(0, dateFrom, dateTo);
   },
 
   "click .btnRefresh": function () {
@@ -953,37 +1050,41 @@ Template.newprofitandloss.events({
     Meteor._reload.reload();
   },
   "click .btnPrintReport": function (event) {
-
     let values = [];
     let basedOnTypeStorages = Object.keys(localStorage);
     basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-        let employeeId = storage.split('_')[2];
-        return storage.includes('BasedOnType_') && employeeId == Session.get('mySessionEmployeeLoggedID')
+      let employeeId = storage.split("_")[2];
+      return (
+        storage.includes("BasedOnType_") &&
+        employeeId == Session.get("mySessionEmployeeLoggedID")
+      );
     });
     let i = basedOnTypeStorages.length;
     if (i > 0) {
-        while (i--) {
-            values.push(localStorage.getItem(basedOnTypeStorages[i]));
-        }
+      while (i--) {
+        values.push(localStorage.getItem(basedOnTypeStorages[i]));
+      }
     }
-    values.forEach(value => {
-        let reportData = JSON.parse(value);
-        reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-        if (reportData.BasedOnType.includes("P")) {
-            if (reportData.FormID == 1) {
-                let formIds = reportData.FormIDs.split(',');
-                if (formIds.includes("129")) {
-                    reportData.FormID = 129;
-                    Meteor.call('sendNormalEmail', reportData);
-                }
-            } else {
-                if (reportData.FormID == 129)
-                    Meteor.call('sendNormalEmail', reportData);
-            }
+    values.forEach((value) => {
+      let reportData = JSON.parse(value);
+      reportData.HostURL = $(location).attr("protocal")
+        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+        : "http://" + $(location).attr("hostname");
+      if (reportData.BasedOnType.includes("P")) {
+        if (reportData.FormID == 1) {
+          let formIds = reportData.FormIDs.split(",");
+          if (formIds.includes("129")) {
+            reportData.FormID = 129;
+            Meteor.call("sendNormalEmail", reportData);
+          }
+        } else {
+          if (reportData.FormID == 129)
+            Meteor.call("sendNormalEmail", reportData);
         }
+      }
     });
 
-    document.title = 'Profit and Loss Report';
+    document.title = "Profit and Loss Report";
     $(".printReport").print({
       title: document.title + " | Profit and Loss | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor, .excludeButton",
@@ -1035,71 +1136,85 @@ Template.newprofitandloss.events({
     // });
   },
 
-  "click .selPeriod": async function(e){
-    let periods = $(e.target).data('period');
+  "click .selPeriod": async function (e) {
+    let periods = $(e.target).data("period");
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     let defaultOptions = await templateObject.reportOptions.get();
-    if( defaultOptions ){
+    if (defaultOptions) {
       defaultOptions.compPeriod = periods;
       defaultOptions.departments = [];
     }
-    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
   },
 
   //custom selection period number
   "click .btnSaveComparisonPeriods": async function (event) {
-      let periods = $("#comparisonPeriodNum").val();
-      $(".fullScreenSpin").css("display", "block");
-      let templateObject = Template.instance();
-      let defaultOptions = await templateObject.reportOptions.get();
-      if( defaultOptions ){
-        defaultOptions.compPeriod = periods;
-        defaultOptions.departments = [];
-      }
-      await templateObject.reportOptions.set( defaultOptions );
-      await templateObject.getProfitandLossReports();
+    let periods = $("#comparisonPeriodNum").val();
+    $(".fullScreenSpin").css("display", "block");
+    let templateObject = Template.instance();
+    let defaultOptions = await templateObject.reportOptions.get();
+    if (defaultOptions) {
+      defaultOptions.compPeriod = periods;
+      defaultOptions.departments = [];
+    }
+    await templateObject.reportOptions.set(defaultOptions);
+    await templateObject.getProfitandLossReports();
   },
 
   // Current Month
-  "click #thisMonth": function(){
+  "click #thisMonth": function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    let fromDate = moment().startOf('month').format('YYYY-MM-DD');
-    let endDate   = moment().endOf('month').format('YYYY-MM-DD');
-    templateObject.setReportOptions(0, fromDate, endDate );
+    let fromDate = moment().startOf("month").format("YYYY-MM-DD");
+    let endDate = moment().endOf("month").format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
-  "click #thisQuarter": function(){
+  "click #thisQuarter": function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    let fromDate = moment().startOf("Q").format('YYYY-MM-DD');
-    let endDate = moment().endOf("Q").format('YYYY-MM-DD');
-    templateObject.setReportOptions(0, fromDate, endDate );
+    let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+    let endDate = moment().endOf("Q").format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
-  "click #thisFinYear": function(){
+  "click #thisFinYear": function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
     let fromDate = null;
     let endDate = null;
     if (moment().quarter() == 4) {
-      fromDate = moment().month("July").startOf("month").format('YYYY-MM-DD');
-      endDate = moment().add(1, "year").month("June").endOf("month").format('YYYY-MM-DD');
-    }else{
-      fromDate = moment().subtract(1, "year").month("July").startOf("month").format('YYYY-MM-DD');
-      endDate = moment().month("June").endOf("month").format('YYYY-MM-DD');
+      fromDate = moment().month("July").startOf("month").format("YYYY-MM-DD");
+      endDate = moment()
+        .add(1, "year")
+        .month("June")
+        .endOf("month")
+        .format("YYYY-MM-DD");
+    } else {
+      fromDate = moment()
+        .subtract(1, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
-  "click #lastMonth": function(){
+  "click #lastMonth": function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    let fromDate = moment().subtract(1, 'months').startOf('month').format('YYYY-MM-DD')
-    let endDate = moment().subtract(1, 'months').endOf('month').format('YYYY-MM-DD')
-    templateObject.setReportOptions(0, fromDate, endDate );
+    let fromDate = moment()
+      .subtract(1, "months")
+      .startOf("month")
+      .format("YYYY-MM-DD");
+    let endDate = moment()
+      .subtract(1, "months")
+      .endOf("month")
+      .format("YYYY-MM-DD");
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #lastQuarter": function () {
@@ -1107,7 +1222,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #lastFinYear": function () {
@@ -1116,13 +1231,25 @@ Template.newprofitandloss.events({
     let fromDate = null;
     let endDate = null;
     if (moment().quarter() == 4) {
-      fromDate = moment().subtract(1, "year").month("July").startOf("month").format("YYYY-MM-DD");
+      fromDate = moment()
+        .subtract(1, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
       endDate = moment().month("June").endOf("month").format("YYYY-MM-DD");
     } else {
-      fromDate = moment().subtract(2, "year").month("July").startOf("month").format("YYYY-MM-DD");
-      endDate = moment().subtract(1, "year").month("June").endOf("month").format("YYYY-MM-DD");
+      fromDate = moment()
+        .subtract(2, "year")
+        .month("July")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      endDate = moment()
+        .subtract(1, "year")
+        .month("June")
+        .endOf("month")
+        .format("YYYY-MM-DD");
     }
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #monthToDate": function () {
@@ -1130,7 +1257,7 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("M").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #quarterToDate": function () {
@@ -1138,35 +1265,38 @@ Template.newprofitandloss.events({
     let templateObject = Template.instance();
     let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
   "click #finYearToDate": function () {
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    let fromDate = moment().month("january").startOf("month").format("YYYY-MM-DD");
+    let fromDate = moment()
+      .month("january")
+      .startOf("month")
+      .format("YYYY-MM-DD");
     let endDate = moment().format("YYYY-MM-DD");
-    templateObject.setReportOptions(0, fromDate, endDate );
+    templateObject.setReportOptions(0, fromDate, endDate);
   },
 
-  "click .btnDepartmentSelect": async function(){
-    let departments = []
+  "click .btnDepartmentSelect": async function () {
+    let departments = [];
     $(".fullScreenSpin").css("display", "block");
     let templateObject = Template.instance();
-    $('.chkDepartment').each(function(){
-      if( $(this).is(":checked") ){
+    $(".chkDepartment").each(function () {
+      if ($(this).is(":checked")) {
         let dpt = $(this).val();
-        departments.push(dpt)
+        departments.push(dpt);
       }
     });
     let defaultOptions = await templateObject.reportOptions.get();
-    if( defaultOptions ){
+    if (defaultOptions) {
       defaultOptions.compPeriod = 0;
       defaultOptions.departments = departments;
     }
-    await templateObject.reportOptions.set( defaultOptions );
+    await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getProfitandLossReports();
-    $('#myModalDepartment').modal('hide');
+    $("#myModalDepartment").modal("hide");
   },
 
   "click #last12Months": function () {
@@ -1808,12 +1938,12 @@ Template.newprofitandloss.events({
   "click .chkTotal": async function (event) {
     let templateObject = Template.instance();
     let options = await templateObject.reportOptions.get();
-    if( $('.chkTotal').is(':checked') ){
+    if ($(".chkTotal").is(":checked")) {
       options.showtotal = true;
-    }else{
+    } else {
       options.showtotal = false;
     }
-    templateObject.reportOptions.set( options );
+    templateObject.reportOptions.set(options);
     setTimeout(function () {
       $("td a").each(function () {
         if (
@@ -1840,12 +1970,12 @@ Template.newprofitandloss.events({
   "click .chkDecimals": async function (event) {
     let templateObject = Template.instance();
     let options = await templateObject.reportOptions.get();
-    if( $('.chkDecimals').is(':checked') ){
+    if ($(".chkDecimals").is(":checked")) {
       options.showDecimal = true;
-    }else{
+    } else {
       options.showDecimal = false;
     }
-    templateObject.reportOptions.set( options );
+    templateObject.reportOptions.set(options);
     setTimeout(function () {
       $("td a").each(function () {
         if (
@@ -1881,10 +2011,9 @@ Template.newprofitandloss.events({
   },
   "click .rbAccrual": function (event) {
     $(".tglAccBasis").text("Accrual Basis");
-    if ($(".chkAccBasis").is(":checked") ) {
+    if ($(".chkAccBasis").is(":checked")) {
       // $('.chkAccBasis').trigger('click');
       $(".tglAccBasis").text("Accrual Basis");
-
     } else if ($(".chkAccBasis").is(":not(:checked)")) {
       $(".tglAccBasis").text("Accrual Basis");
       $(".chkAccBasis").trigger("click");
@@ -1895,7 +2024,7 @@ Template.newprofitandloss.events({
   },
   "click .rbCash": function (event) {
     $(".tglAccBasis").text("Cash Basis");
-    if ( $(".chkAccBasis").is(":checked") ) {
+    if ($(".chkAccBasis").is(":checked")) {
       $(".tglAccBasis").text("Cash Basis");
     } else if ($(".chkAccBasis").is(":not(:checked)")) {
       $(".tglAccBasis").text("Cash Basis");
@@ -1914,22 +2043,22 @@ Template.newprofitandloss.events({
     // })
     // var numVal = $('.fgr').html().parseInt();
   },
-  "click #savePnLFieldsLayout": function(){
+  "click #savePnLFieldsLayout": function () {
     let templateObject = Template.instance();
-    let groupName = $('#newGroupName').val();
-    if( groupName == '' ){
+    let groupName = $("#newGroupName").val();
+    if (groupName == "") {
       swal({
-        title: 'Please enter group name',
-        type: 'error',
+        title: "Please enter group name",
+        type: "error",
         showCancelButton: false,
-        confirmButtonText: 'Try Again'
-      })
+        confirmButtonText: "Try Again",
+      });
       return false;
     }
-    let accountName = $('#nplPlaceInMoveSelection').val();
+    let accountName = $("#nplPlaceInMoveSelection").val();
     let profitlosslayoutfields = templateObject.profitlosslayoutrecords.get();
     if (profitlosslayoutfields) {
-      if( accountName == 'none' ){
+      if (accountName == "none") {
         profitlosslayoutfields.push({
           Account: "",
           AccountID: 0,
@@ -1949,9 +2078,9 @@ Template.newprofitandloss.events({
           LayoutID: 1,
           LayoutToUse: "",
           Level: "",
-          Level0Group: '',
-          Level1Group: '',
-          Level2Group: '',
+          Level0Group: "",
+          Level1Group: "",
+          Level2Group: "",
           Level0Order: 1,
           Level1Order: 0,
           Level2Order: 0,
@@ -1963,12 +2092,15 @@ Template.newprofitandloss.events({
           Position: 0,
           Recno: 3,
           Up: false,
-          subAccounts: []
+          subAccounts: [],
         });
         $("#newGroupName").val("");
         templateObject.profitlosslayoutrecords.set(profitlosslayoutfields);
-      }else{
-        let updateLayouts = profitlosslayoutfields.filter(function (item, index) {
+      } else {
+        let updateLayouts = profitlosslayoutfields.filter(function (
+          item,
+          index
+        ) {
           if (item.AccountName == accountName) {
             item.subAccounts.push({
               Account: "",
@@ -1989,9 +2121,9 @@ Template.newprofitandloss.events({
               LayoutID: 1,
               LayoutToUse: "",
               Level: "",
-              Level0Group: '',
-              Level1Group: '',
-              Level2Group: '',
+              Level0Group: "",
+              Level1Group: "",
+              Level2Group: "",
               Level0Order: 0,
               Level1Order: 0,
               Level2Order: 0,
@@ -2013,9 +2145,8 @@ Template.newprofitandloss.events({
 
       $("#nplAddGroupScreen").modal("hide");
     }
-
   },
-  "click .saveProfitLossLayouts": async function (){
+  "click .saveProfitLossLayouts": async function () {
     buildPositions();
     // Under progress
     const profitLossLayoutApis = new ProfitLossLayoutApi();
@@ -2032,36 +2163,56 @@ Template.newprofitandloss.events({
 
     let fieldsList = [];
     // Fetch default lists of layout
-    let profitlosslayoutfields = await templateObject.profitlosslayoutfields.get();
+    let profitlosslayoutfields =
+      await templateObject.profitlosslayoutfields.get();
     Array.prototype.forEach.call(profitlosslayoutfields, async (item) => {
-      let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr("position");
-      if( Position != undefined ){
-        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('pSortItems') ){
-          item.fields.Level0Order = parseInt(Position)
-          item.fields.Level1Order = 0
-          item.fields.Level2Order = 0
-          item.fields.Level3Order = 0
+      let Position = $(`[key='layoutFields-${item.fields.ID}']`).attr(
+        "position"
+      );
+      if (Position != undefined) {
+        if (
+          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("pSortItems")
+        ) {
+          item.fields.Level0Order = parseInt(Position);
+          item.fields.Level1Order = 0;
+          item.fields.Level2Order = 0;
+          item.fields.Level3Order = 0;
         }
 
-        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('cSortItems') ){
-          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
-          item.fields.Level0Order = parseInt(level0OrderPos)
-          item.fields.Level1Order = parseInt(Position)
-          item.fields.Level2Order = 0
-          item.fields.Level3Order = 0
+        if (
+          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("cSortItems")
+        ) {
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
+            .parents(".pSortItems")
+            .attr("position");
+          item.fields.Level0Order = parseInt(level0OrderPos);
+          item.fields.Level1Order = parseInt(Position);
+          item.fields.Level2Order = 0;
+          item.fields.Level3Order = 0;
         }
 
-        if( $(`[key='layoutFields-${item.fields.ID}']`).hasClass('scSortItems') ){
-          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".pSortItems").attr('position');
-          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`).parents(".cSortItems").attr('position');
-          item.fields.Level0Order = parseInt(level0OrderPos)
-          item.fields.Level1Order = parseInt(level1OrderPos)
-          item.fields.Level2Order = parseInt(Position)
-          item.fields.Level3Order = 0
+        if (
+          $(`[key='layoutFields-${item.fields.ID}']`).hasClass("scSortItems")
+        ) {
+          let level0OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
+            .parents(".pSortItems")
+            .attr("position");
+          let level1OrderPos = $(`[key='layoutFields-${item.fields.ID}']`)
+            .parents(".cSortItems")
+            .attr("position");
+          item.fields.Level0Order = parseInt(level0OrderPos);
+          item.fields.Level1Order = parseInt(level1OrderPos);
+          item.fields.Level2Order = parseInt(Position);
+          item.fields.Level3Order = 0;
         }
-
       }
-      const ApiResponse = await reportService.updateProfitandLossLayout(item.fields.ID, item.fields.Level0Order, item.fields.Level1Order, item.fields.Level2Order, item.fields.Level3Order);
+      const ApiResponse = await reportService.updateProfitandLossLayout(
+        item.fields.ID,
+        item.fields.Level0Order,
+        item.fields.Level1Order,
+        item.fields.Level2Order,
+        item.fields.Level3Order
+      );
       // console.log(ApiResponse)
       return item;
       // fieldsList.push(item);
@@ -2086,24 +2237,23 @@ Template.newprofitandloss.events({
      * Update all layout fields index DB
      */
     let employeeID = Session.get("mySessionEmployeeLoggedID");
-    let name = $('#nplLayoutName').val();
-    let description = $('#nplLayoutDescr').val();
-    let isdefault = ( $('#npldefaultSettting').is(':checked') )? true: false;
+    let name = $("#nplLayoutName").val();
+    let description = $("#nplLayoutDescr").val();
+    let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
     let layoutLists = {
-       Name: name,
-       Description: description,
-       Isdefault: isdefault,
-       EmployeeID: employeeID,
-       LayoutLists: profitlosslayoutfields
-    }
-    await addVS1Data('TProfitLossEditLayout', JSON.stringify(layoutLists));
+      Name: name,
+      Description: description,
+      Isdefault: isdefault,
+      EmployeeID: employeeID,
+      LayoutLists: profitlosslayoutfields,
+    };
+    await addVS1Data("TProfitLossEditLayout", JSON.stringify(layoutLists));
   },
-  "click .fx-rate-btn": (e) => {
-    loadCurrency();
+  "click .fx-rate-btn": async (e) => {
+    await loadCurrency();
     //loadCurrencyHistory();
-  }
+  },
 });
-
 
 Template.newprofitandloss.helpers({
   convertAmount: (amount, currencyData) => {
@@ -2135,18 +2285,17 @@ Template.newprofitandloss.helpers({
     // console.log("Amount to convert", amount);
     // console.log("currency to convert to", currencyData);
 
-
     // Get the selected date
     let dateTo = $("#dateTo").val();
-    const day = dateTo.split('/')[0];
-    const m = dateTo.split('/')[1];
-    const y = dateTo.split('/')[2];
+    const day = dateTo.split("/")[0];
+    const m = dateTo.split("/")[1];
+    const y = dateTo.split("/")[2];
     dateTo = new Date(y, m, day);
     dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
     // console.log('date to', dateTo);
 
     // Filter by currency code
-    currencyList = currencyList.filter(a => a.Code == currencyData.code);
+    currencyList = currencyList.filter((a) => a.Code == currencyData.code);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -2181,10 +2330,13 @@ Template.newprofitandloss.helpers({
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }); // Add commas
     //console.log("final amount", amount);
-    let convertedAmount = isMinus == true ? `- ${currencyData.symbol} ${amount}` : `${currencyData.symbol} ${amount}`;
+    let convertedAmount =
+      isMinus == true
+        ? `- ${currencyData.symbol} ${amount}`
+        : `${currencyData.symbol} ${amount}`;
     //console.log(convertedAmount);
 
     return convertedAmount;
@@ -2193,7 +2345,7 @@ Template.newprofitandloss.helpers({
     return array.length;
   },
   countActive: (array = []) => {
-    if(array.length == 0) {
+    if (array.length == 0) {
       return 0;
     }
     let activeArray = array.filter((c) => c.active == true);
@@ -2203,7 +2355,6 @@ Template.newprofitandloss.helpers({
     return Template.instance().currencyList.get();
   },
   isNegativeAmount(amount) {
-
     if (Math.sign(amount) === -1) {
       return true;
     }
@@ -2211,14 +2362,14 @@ Template.newprofitandloss.helpers({
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
-    if(array.length == 0) {
+    if (array.length == 0) {
       return false;
     }
     let activeArray = array.filter((c) => c.active == true);
 
-    if(activeArray.length == 1) {
+    if (activeArray.length == 1) {
       //console.log(activeArray[0].currency);
-      if(activeArray[0].code == defaultCurrencyCode) {
+      if (activeArray[0].code == defaultCurrencyCode) {
         return !true;
       } else {
         return !false;
@@ -2233,22 +2384,22 @@ Template.newprofitandloss.helpers({
 
     return activeArray.length > 0;
   },
-  isAccount( layout ){
-    if( layout.AccountID > 1 ){
+  isAccount(layout) {
+    if (layout.AccountID > 1) {
       return true;
     }
-    return false
+    return false;
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
   },
-  reportOptions:() => {
+  reportOptions: () => {
     return Template.instance().reportOptions.get();
   },
-  formatDate( currentDate ){
+  formatDate(currentDate) {
     return moment(currentDate).format("DD/MM/YYYY");
   },
-  profitlosslayoutrecords(){
+  profitlosslayoutrecords() {
     return Template.instance().profitlosslayoutrecords.get();
   },
   records: () => {
@@ -2324,7 +2475,6 @@ Template.registerHelper("noDecimal", function (a) {
   return numOut;
 });
 
-
 // /**
 //  * This function will check each minus and add text-danger to that th
 //  */
@@ -2344,75 +2494,63 @@ Template.registerHelper("noDecimal", function (a) {
 
 // }
 
-
 /**
  *
  */
 async function loadCurrency() {
   let templateObject = Template.instance();
 
-  if(await templateObject.currencyList.get().length == 0) {
+  if ((await templateObject.currencyList.get().length) == 0) {
     LoadingOverlay.show();
 
     let _currencyList = [];
     const result = await taxRateService.getCurrencies();
 
     //taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-           active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
+    // console.log(result);
+    const data = result.tcurrency;
+    //console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
 
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
-        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
-      });
-    
-      // console.log(_currencyList);
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
 
-      templateObject.currencyList.set(_currencyList);
+    // console.log(_currencyList);
 
-      loadCurrencyHistory(templateObject);
-      LoadingOverlay.hide();
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
     //});
   }
+}
 
-
-
-};
-
-function loadCurrencyHistory(templateObject) {
-
-  taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        //console.log(result);
-        const data = result.tcurrencyratehistory;
-        console.log('currencyratehistory', data);
-        templateObject.tcurrencyratehistory.set(data);
-      })
-      .catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        LoadingOverlay.hide();
-        // Meteor._reload.reload();
-      });
-      LoadingOverlay.hide();
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
 }

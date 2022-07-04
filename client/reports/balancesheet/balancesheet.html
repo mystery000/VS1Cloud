@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="row no-gutters">
                                     <button class="btn btn-primary text-nowrap float-left btnRefresh" type="button" style="margin: 8px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button class="btn btn-primary" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i>FX Rates</button>
+                                    <button class="btn btn-primary fx-rate-btn" role="button" data-toggle="modal" data-target="#myModalFXRates" style="margin: 8px;"><i class="fas fa-comment-dollar" style="margin-right: 5px"></i>FX Rates</button>
                                 </div>
 
                             </div>
@@ -219,6 +219,7 @@
 
 
                                                     {{#each value2 in dataArr2}}
+                                                   
                                                         {{#if isOnlyDefaultActive}}
                                                             {{#if isObject value2}}
 
@@ -244,17 +245,9 @@
                                                         {{else}}
 
                                                             {{#if isObject value2}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList }} {{#if isNegativeAmount value2.amount}} text-danger {{/if}}" currency="{{c.code}}">
-                                                                                <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{convertAmount value2.value c}}</a>
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
+                                                                <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2.amount}} text-danger {{/if}}">
+                                                                    <a href="#" class="item-value-{{name}} {{class}}" style="text-decoration:none!important;">{{value2.value}}</a>
+                                                                </td>
 
                                                             {{else}}
                                                                 <td class="text-nowrap text-right Indent1 {{#if isNegativeAmount value2}} text-danger {{/if}}">
@@ -297,16 +290,7 @@
                                                         {{else}}
 
                                                             {{#if isObject item}}
-
-                                                                {{#if currencyList}}
-                                                                    {{#each c in currencyList}}
-                                                                        {{#if c.active}}
-                                                                            <td class="text-nowrap text-right Indent1 __alighnMent{{countActive currencyList}} {{#if isNegativeAmount item.amount}} text-danger {{/if}}" currency="{{c.code}}" style="font-weight: 800;" >
-                                                                                {{convertAmount item.value c}}
-                                                                            </td>
-                                                                        {{/if}}
-                                                                    {{/each}}
-                                                                {{/if}}
+                                                                <td class="text-nowrap {{#if isNegativeAmount item.amount}} text-danger {{/if}}" style="font-weight: 800;">{{item.value}}</td>
 
                                                             {{else}}
                                                                 <td class="text-nowrap {{#if isNegativeAmount item}} text-danger {{/if}}" style="font-weight: 800;">{{item}}</td>
