@@ -1237,7 +1237,7 @@ Template.leadscard.events({
         } else {
             $(".attchment-tooltip").show();
         }
-    },
+    },  
     'click .btnNewLead': function (event) {
         window.open('/leadscard', '_self');
     },
