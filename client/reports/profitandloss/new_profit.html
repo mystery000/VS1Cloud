@@ -625,7 +625,7 @@
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
 
-                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal---5 text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
+                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
                                                                                         {{else}}
@@ -694,7 +694,7 @@
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
 
-                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal--8 text-center {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
+                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal text-center {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
                                                                                         {{else}}
