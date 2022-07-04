@@ -27,9 +27,11 @@ Template.monthlyearnings.onRendered(() => {
     let topTenSuppData1 = [];
     let topData = this;
 
-    function chartClickEvent() {
-        FlowRouter.go("/salesreport?daterange=ignore");
-      } 
+    function chartClickEvent(event, array) {
+        if (array[0] != undefined) {
+            FlowRouter.go("/salesreport?daterange=ignore");
+        }
+      }
 
 //     setTimeout(function () {
 //    let checkStatus = localStorage.getItem("earningschat") || true;
