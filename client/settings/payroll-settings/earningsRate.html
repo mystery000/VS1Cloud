@@ -46,10 +46,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <form class="row" id="earningRateForm">
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtEarningsName">Earnings Name</label>
+                                <input type="hidden" name="earningID" id="earningID" />
                                 <input type="text" class="form-control" id="edtEarningsName">
                             </div>
                         </div>
@@ -99,7 +100,7 @@
                                 <label class="custom-control-label chkBox pointer" for="formCheck-ExemptReportable">Reportable as W1 on Activity Statement</label>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success saveEarningRates"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>

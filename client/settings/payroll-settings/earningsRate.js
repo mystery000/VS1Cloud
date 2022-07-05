@@ -254,21 +254,50 @@ templateObject.getEarnings();
 
     // Standard drop down
     $('.earningLineDropDown').editableSelect();
-    $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {
+    $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let offset = $search.offset();
         let dropDownID = $search.attr('id')
         templateObject.currentDrpDownID.set(dropDownID);
-        let currencyDataName = e.target.value || '';
+        let searchName = e.target.value || '';
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#earningRateForm')[0].reset();
             $('#earningRateSettingsModal').modal('show');
-            console.log('step 1')
         } else {
-            // if (currencyDataName.replace(/\s/g, '') != '') {
-            //     console.log('step 2')
-            // }
-            // console.log('step 2')
-            $('#earningRateSettingsModal').modal('show');
+            if (searchName.replace(/\s/g, '') == '') {
+                $('#earningRateForm')[0].reset();                
+                $('#earningRateSettingsModal').modal('show');
+                return false
+            }
+            let dataObject = await getVS1Data('TEarnings');   
+            if ( dataObject.length == 0) {
+                data = await templateObject.saveCardsLocalDB();
+            }else{
+                data = JSON.parse(dataObject[0].data);
+            }
+            if( data.tearnings.length > 0 ){
+                let tEarnings = data.tearnings.filter((item) => {
+                    if( item.fields.EarningsName == searchName ){
+                        return item;
+                    }
+                });
+                $('#earningRateForm')[0].reset();
+                $('#addEarningsLineModal').modal('hide');                
+                if( tEarnings.length > 0 ){
+                    earningRate = tEarnings[0];
+                    $('#earningID').val(earningRate.fields.ID)
+                    $('#edtEarningsName').val(earningRate.fields.EarningsName)
+                    $('#edtEarningsType').val(earningRate.fields.EarningType)
+                    $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
+                    $('#edtRateType').val(earningRate.fields.EarningsRateType)
+                    $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
+                    $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
+                    $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
+                    $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
+                }
+                $('#earningRateSettingsModal').modal('hide');
+                $('#ordinaryTimeEarningsModal').modal('show');
+            }
         }
     });
 
@@ -278,7 +307,6 @@ templateObject.getEarnings();
         let earningRate = table.find(".colEarningsNames").text()||'';
         $('#' + earningRateID).val(earningRate);
         $('#earningRateSettingsModal').modal('toggle');
-
     });
 
 });
@@ -294,6 +322,10 @@ Template.earningRateSettings.events({
         if (event.keyCode == 13) {
            $(".btnRefreshEarnings").trigger("click");
         }
+    },
+    'click .btnAddordinaryTimeEarnings':function(event){
+        $('#earningRateForm')[0].reset();
+        $('#addEarningsLineModal').modal('hide');
     },
     'click .btnRefreshEarnings':function(event){      
         let templateObject = Template.instance();
@@ -343,7 +375,10 @@ Template.earningRateSettings.events({
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-                            // FlowRouter.go('/payrollrules');
+                            $('#earningRateForm')[0].reset();
+                            $('#edtEarningsName').val(dataSearchName)
+                            $('#earningRateSettingsModal').modal('hide');
+                            $('#ordinaryTimeEarningsModal').modal('show');
                         }
                     });
                 }
@@ -365,15 +400,9 @@ Template.earningRateSettings.events({
         const apiEndpoint = employeePayrolApis.collection.findByName(
             employeePayrolApis.collectionNames.TEarnings
         );
-        // let earningSettings = await getVS1Data('TEarnings');
-        // if( earningSettings.length ){
-        //     let TearningSettings = JSON.parse(earningSettings[0].data);
-        //     useData = Earning.fromList(
-        //         TearningSettings.tearnings
-        //     )
-        // }
 
         let EarningsName = $('#edtEarningsName').val();
+        let ID = $('#earningID').val();
         let EarningsType = $('#edtEarningsType').val();
         let EarningsDisplayName = $('#edtDisplayName').val();
         let EarningsRateType = $('#edtRateType').val();
@@ -387,7 +416,7 @@ Template.earningRateSettings.events({
         let earningRateSetting = new Earning({
             type: 'TEarnings',
             fields: new EarningFields({
-                ID: 0,
+                ID: ID,
                 EarningsName: EarningsName,
                 EarningType: EarningsType,
                 EarningsDisplayName: EarningsDisplayName,
@@ -407,6 +436,7 @@ Template.earningRateSettings.events({
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
+            $('#earningRateForm')[0].reset();
             await templateObject.saveCardsLocalDB();
             await templateObject.getEarnings();
         }
@@ -417,7 +447,6 @@ Template.earningRateSettings.events({
 
 Template.earningRateSettings.helpers({
     datatablerecords: () => {
-        console.log('i am testing')
         return Template.instance().datatablerecords.get();
     }
 });
