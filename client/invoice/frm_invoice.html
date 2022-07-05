@@ -403,7 +403,7 @@
                                     <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
                                     </div>
                                     <p class="bottome-text-fix" style="font-size: 10px; margin-right: 18px; position: absolute;bottom: 0; z-index: 1111;right: 0;">Page 1 of 1</p>
-                                
+
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -1105,6 +1105,19 @@
                                                                 </div>
                                                             </div>
 
+
+                                                            <div class="columnSettings">
+                                                                <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                    <input class="custom-control-input chkUnits" type="checkbox" id="formCheck-09">
+                                                                    <label class="custom-control-label" for="formCheck-09"></label>
+                                                                    <div contenteditable="true" class="groove divcolumn" type="text" value="" valueupdate="">Units</div>
+                                                                </div>
+                                                                <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                    <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                    <input class="custom-range widthElement rngRangeUnits" type="number" style="margin: 8px;" value="" min="0" max="1000">
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </form>
                                                 </div>
@@ -1293,6 +1306,7 @@
                                         <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
                                         <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
                                         <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
+                                        <th class="th colUOM hiddenColumn" style="width: 95px; text-align: left!important;">Units</th>
                                         <!-- <th class="th colAmount " style="width: 110px; text-align: left!important;">Amount</th> -->
                                         {{#if isBatchSerialNoTracking 'true'}}
                                             <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
@@ -1337,6 +1351,7 @@
                                             <!-- <td contenteditable="false" class="lineTaxCode colTaxCode pointer td-input" style=" ">{{item.taxCode}}</td> -->
                                             <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                             <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
+                                            <td contenteditable="false" class="colUOM hiddenColumn"><input class="es-input highlightSelect lineUOM" type="search" value="{{item.uom}}"></td>
                                             {{#if isBatchSerialNoTracking 'true'}}
                                                 <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal" style="margin-left: 40px; font-size: 22px;"></i></td>
                                             {{/if}}
@@ -1509,25 +1524,25 @@
                                 </div>
 
                                 <div class="modal-body">
-                                 
+
                                         <div class="custom-control custom-checkbox" id="print_invoice_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_invoice_second" type="checkbox" id="print_invoice_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label"  for="print_invoice_second">Print Invoice</label>
                                         </div>
-                                     
-                                  
+
+
                                         <div class="custom-control custom-checkbox" id="Invoices_back_orders_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport" checked name="print_Invoices_back_orders_second" type="checkbox" id="print_Invoices_back_orders_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label" for="print_Invoices_back_orders_second">Print Invoice Back Order</label>
-                                        </div>       
-                                      
+                                        </div>
+
                                         <div class="custom-control custom-checkbox" id="print_delivery_option">
                                             <input class="custom-control-input favCheckBox chkBankingReport"   name="print_delivery_docket_second" type="checkbox" id="print_delivery_docket_second" autocomplete="off">
                                             <label style="cursor: pointer;" class="custom-control-label" for="print_delivery_docket_second">Print Delivery Docket</label>
                                         </div>
-                                       
 
-                                 
+
+
 
                                 </div>
 
@@ -1847,7 +1862,7 @@
                     <div style="margin: 0px; padding: 16px; border: none !important; width: 60mm; max-width: 60mm;">
 
                         <h4 class="print-header" style="font-weight: bold; font-size: 26.667px; color: rgb(0 0 0); -webkit-font-smoothing: subpixel-antialiased">Invoice&nbsp;&nbsp;&nbsp; {{invoicerecord.id}}</h4>
-                      
+
                         <div style="display: flex; width: 100%;">
                             <div style="width: 50%; padding-right: 16px;font-weight: bold;">
                                 <label style="margin-bottom: 4px; color: rgb(0 0 0);">Date:</label>
@@ -2050,8 +2065,8 @@
                             <p class="refNumber" style="margin-bottom: 4px; color: rgb(0 0 0);">Ref No:</p>
                             <p class="pdfTerms" style="margin-bottom: 4px; color: rgb(0 0 0);">Due
                                 Date:</p>
-                          
-                            <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>  
+
+                            <p class="showFx" style="margin-bottom: 4px; color: rgb(0 0 0);">FX Currency:</p>
 
                             <p class="link" style="color: rgb(0 0 0);">Pay Link:</p>
 
@@ -2198,7 +2213,7 @@
 
             <div>
                 <p class="applied font-weight-bold" style="font-size: 14px;">Applied $50.00</p>
-             
+
             </div>
             <p class="bottome-text-fix" style="font-size: 10px;
             margin-right: 18px;
@@ -2325,6 +2340,14 @@
         <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
             {{> newtaxratepop}}
         </div>
+
+        <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
+            {{> uomlistpop}}
+        </div>
+        <!--
+        <div class="modal fade" role="dialog" tabindex="-1" id="newUOMModal">
+            {{> newuompop}}
+        </div> -->
         <!-- End Modal Tax Rate -->
     </div>
 

@@ -211,6 +211,9 @@ Template.bankrecon.onRendered(function() {
                         }
                     });
                       $('.fullScreenSpin').css('display', 'none');
+                      $('td').each(function(){
+                          if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+                      });
                   }, 0);
                 }
             } else {
@@ -244,6 +247,9 @@ Template.bankrecon.onRendered(function() {
                       action: function() {
                           $('#tblVS1Dep').DataTable().ajax.reload();
                       }
+                  });
+                  $('td').each(function(){
+                      if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
                   });
                     $('.fullScreenSpin').css('display', 'none');
                 }, 0);
@@ -317,6 +323,9 @@ Template.bankrecon.onRendered(function() {
                           }
                       });
                         $('.fullScreenSpin').css('display', 'none');
+                        $('td').each(function(){
+                            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+                        });
                     }, 0);
                 }
             } else {
@@ -350,6 +359,9 @@ Template.bankrecon.onRendered(function() {
                       action: function() {
                           $('#tblVS1With').DataTable().ajax.reload();
                       }
+                  });
+                  $('td').each(function(){
+                      if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
                   });
                     $('.fullScreenSpin').css('display', 'none');
                 }, 0);

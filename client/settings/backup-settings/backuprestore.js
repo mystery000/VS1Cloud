@@ -20,7 +20,7 @@ Template.backuprestore.onRendered(function(){
   let objDetails = {
       name: "VS1_BackupList",
       databasename:erpGet.ERPDatabase.toLowerCase(),
-      AllDBBackups:true
+      AllDBBackups:false
   };
   var myString = '"jsonin"'+':'+JSON.stringify(objDetails);
 
