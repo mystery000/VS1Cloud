@@ -2009,6 +2009,23 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
+  getUOMVS1() {
+    let options = {
+      ListType: "Detail",
+      select: '[Active]=true ',
+    };
+    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+  }
+
+  getUOMVS1ByName(dataSearchName) {
+    let options = "";
+    options = {
+      ListType: "Detail",
+      select: '[UOMName] f7like "' + dataSearchName + '" and [Active]=true',
+    };
+    return this.getList(this.ERPObjects.TUnitOfMeasure, options);
+  }
+
   getTaxRateVS1() {
     let options = {
       PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
