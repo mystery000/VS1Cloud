@@ -42,7 +42,6 @@ Template.earningRateSettings.onRendered(function() {
 templateObject.saveCardsLocalDB = async () => {
 
     const employeePayrolApis = new EmployeePayrollApi();
-    let employeeID = Session.get("mySessionEmployeeLoggedID");
     // now we have to make the post request to save the data in database
     const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
         employeePayrolApis.collectionNames.TEarnings
@@ -57,48 +56,42 @@ templateObject.saveCardsLocalDB = async () => {
 
     if (employeePayrolEndpointResponse.ok == true) {
         employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-        console.log('employeePayrolEndpointJsonResponse', employeePayrolEndpointJsonResponse)
         await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
-        return true
-    }        
+        return employeePayrolEndpointJsonResponse
+    }  
+    return '';      
 }
 
 
 templateObject.getEarnings = async function(){
     try {
         let data = {};
-        // TO DO DATA FETCHED FROM DATABASE AND PROCESS NEXT TOMMORROW
-        data = await templateObject.saveCardsLocalDB();
+        let splashArrayEarningList = new Array();
         let dataObject = await getVS1Data('TEarnings')   
-        console.log('dataObject', dataObject, data)
-        return false;
-
         if ( dataObject.length == 0) {
-            data = sideBarService.getEarnings(initialBaseDataLoad, 0)
-            addVS1Data('TEarnings', JSON.stringify(data));
+            data = await templateObject.saveCardsLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
-        // if( data.tearnings.length > 0 ){
-        //     for (let i = 0; i < data.tearnings.length; i++) {            
-        //         let dataList = [
-        //             data.tearnings[i].fields.ID || '',
-        //             data.tearnings[i].fields.EarningsName || '',
-        //             data.tearnings[i].fields.EarningType || '',
-        //             data.tearnings[i].fields.EarningsDisplayName || '',
-        //             data.tearnings[i].fields.EarningsRateType||'',
-        //             data.tearnings[i].fields.ExpenseAccount || '',
-        //             data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
-        //             data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-        //             data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
-        //         ];    
-        //         splashArrayEarningList.push(dataList);
-        //     }
-        // }
+        if( data.tearnings.length > 0 ){
+            for (let i = 0; i < data.tearnings.length; i++) {            
+                let dataList = [
+                    data.tearnings[i].fields.ID || '',
+                    data.tearnings[i].fields.EarningsName || '',
+                    data.tearnings[i].fields.EarningType || '',
+                    data.tearnings[i].fields.EarningsDisplayName || '',
+                    data.tearnings[i].fields.EarningsRateType||'',
+                    data.tearnings[i].fields.ExpenseAccount || '',
+                    data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
+                    data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
+                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
+                ];    
+                splashArrayEarningList.push(dataList);
+            }
+        }
         templateObject.datatablerecords.set(splashArrayEarningList);
         $('.fullScreenSpin').css('display', 'none');
         setTimeout(function () {
-            console.log('splashArrayEarningList', splashArrayEarningList)
             $('#tblEarnings').DataTable({  
                 data: splashArrayEarningList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -150,11 +143,9 @@ templateObject.getEarnings = async function(){
                 responsive: true,
                 "order": [[0, "asc"]],
                 action: function () {
-                    console.log('oSettings');
                     $('#tblEarnings').DataTable().ajax.reload();
                 },
                 "fnDrawCallback": function (oSettings) {
-                    console.log('oSettings');
                     $('.paginate_button.page-item').removeClass('disabled');
                     $('#tblEarnings_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
@@ -213,7 +204,6 @@ templateObject.getEarnings = async function(){
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    console.log('sdf');
                     $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
                     $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
                 }
@@ -369,8 +359,7 @@ Template.earningRateSettings.events({
     'click .saveEarningRates': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        let useData = [];
-
+        
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -418,7 +407,8 @@ Template.earningRateSettings.events({
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
-            console.log('jsonResponse', jsonResponse)
+            await templateObject.saveCardsLocalDB();
+            await templateObject.getEarnings();
         }
         $('#ordinaryTimeEarningsModal').modal('hide');
         $('.fullScreenSpin').css('display', 'none');
