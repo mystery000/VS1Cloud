@@ -6,7 +6,10 @@ import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
 import LoadingOverlay from "../LoadingOverlay";
 import { TaxRatesEditListener } from "../settings/tax-rates-setting/tax-rates";
+import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
+import User from "../js/Api/Model/User";
 
+const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
 
@@ -76,9 +79,10 @@ Template.setup.onCreated(() => {
   templateObject.includePurchaseDefault = new ReactiveVar(false);
 
   // Step 5 variables
-  templateObject.employeedatatablerecords = new ReactiveVar([]);
+  // templateObject.employeedatatablerecords = new ReactiveVar([]);
   templateObject.employeetableheaderrecords = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
+  templateObject.currentEmployees = new ReactiveVar([]);
 
   // Step 6 variables
   templateObject.records = new ReactiveVar();
@@ -132,12 +136,14 @@ Template.setup.onRendered(function () {
     for (let i = 0; i < currentStep; i++) {
       if (confirmedSteps.includes(i + 1))
         $(`.setup-stepper li:nth-child(${i + 1})`).addClass("completed");
-        if (isStepActive(i + 1) == true) {
+      if (isStepActive(i + 1) == true) {
         // we need to REMOVE clickDisabled
-        } else {
-        $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass("clickDisabled");
+      } else {
+        $(`.setup-stepper li:nth-child(${i + 1}) a`).removeClass(
+          "clickDisabled"
+        );
         // we need to ADD clickDisabled
-        }
+      }
     }
     if (currentStep !== 9) {
       $(".setup-step-" + currentStep).css("display", "block");
@@ -2383,7 +2389,6 @@ Template.setup.onRendered(function () {
     $("#selectDeleteLineID").val(targetID);
     $("#deleteTermLineModal").modal("toggle");
   });
- 
 
   // Step 5 Render functionalities
   const dataTableListEmployee = [];
@@ -2414,6 +2419,42 @@ Template.setup.onRendered(function () {
       }
     }
   );
+
+  templateObject.loadEmployees = async () => {
+    LoadingOverlay.show();
+    let dataObject = await getVS1Data("TEmployee");
+
+    let employeeList = [];
+
+    /**
+     * if dataObject is empty so we will retrieve it from remote database
+     *
+     */
+    if (dataObject.length == 0) {
+      dataObject = await sideBarService.getAllEmployees(initialBaseDataLoad, 0);
+      await addVS1Data("TEmployee", JSON.stringify(dataObject));
+
+      if (dataObject.temployee) {
+        employeeList = Employee.fromList(dataObject.temployee);
+      }
+    } else {
+      dataObject = JSON.parse(dataObject[0].data);
+      employeeList = Employee.fromList(dataObject.temployee);
+    }
+
+    //await templateObject.employeedatatablerecords.set(employeeList); // all employees
+
+    await templateObject.currentEmployees.set(
+      employeeList.filter((employee) => {
+        return employee.fields.ID == User.getCurrentLoggedUserId();
+      })
+    );
+
+    LoadingOverlay.hide();
+  };
+
+  templateObject.loadEmployees();
+
   templateObject.getEmployees = function () {
     getVS1Data("TEmployee")
       .then(function (dataObject) {
@@ -2451,8 +2492,14 @@ Template.setup.onRendered(function () {
                 //}
               }
 
+              console.log("Employeeeesssss: ", dataTableListEmployee);
+
               templateObject.employeedatatablerecords.set(
                 dataTableListEmployee
+              );
+              console.log(
+                "Employeeeesssss: ",
+                templateObject.employeedatatablerecords.get()
               );
 
               if (templateObject.employeedatatablerecords.get()) {
@@ -2594,12 +2641,12 @@ Template.setup.onRendered(function () {
               $("div.dataTables_filter input").addClass(
                 "form-control form-control-sm"
               );
-              $("#tblEmployeelist tbody").on("click", "tr", function () {
-                var listData = $(this).closest("tr").attr("id");
-                if (listData) {
-                  FlowRouter.go("/employeescard?id=" + listData);
-                }
-              });
+              // $("#tblEmployeelist tbody").on("click", "tr", function () {
+              //   var listData = $(this).closest("tr").attr("id");
+              //   if (listData) {
+              //     FlowRouter.go("/employeescard?id=" + listData);
+              //   }
+              // });
             })
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -2638,6 +2685,11 @@ Template.setup.onRendered(function () {
           }
 
           templateObject.employeedatatablerecords.set(dataTableList);
+
+          console.log(
+            "Employeeeesssss: ",
+            templateObject.employeedatatablerecords.get()
+          );
 
           if (templateObject.employeedatatablerecords.get()) {
             Meteor.call(
@@ -2774,12 +2826,12 @@ Template.setup.onRendered(function () {
           $("div.dataTables_filter input").addClass(
             "form-control form-control-sm"
           );
-          $("#tblEmployeelist tbody").on("click", "tr", function () {
-            var listData = $(this).closest("tr").attr("id");
-            if (listData) {
-              FlowRouter.go("/employeescard?id=" + listData);
-            }
-          });
+          // $("#tblEmployeelist tbody").on("click", "tr", function () {
+          //   var listData = $(this).closest("tr").attr("id");
+          //   if (listData) {
+          //     FlowRouter.go("/employeescard?id=" + listData);
+          //   }
+          // });
         }
       })
       .catch(function (err) {
@@ -2949,12 +3001,12 @@ Template.setup.onRendered(function () {
             $("div.dataTables_filter input").addClass(
               "form-control form-control-sm"
             );
-            $("#tblEmployeelist tbody").on("click", "tr", function () {
-              var listData = $(this).closest("tr").attr("id");
-              if (listData) {
-                FlowRouter.go("/employeescard?id=" + listData);
-              }
-            });
+            // $("#tblEmployeelist tbody").on("click", "tr", function () {
+            //   var listData = $(this).closest("tr").attr("id");
+            //   if (listData) {
+            //     FlowRouter.go("/employeescard?id=" + listData);
+            //   }
+            // });
           })
           .catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -2963,13 +3015,15 @@ Template.setup.onRendered(function () {
           });
       });
   };
-  templateObject.getEmployees();
-  $("#tblEmployeelist tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").attr("id");
-    if (listData) {
-      FlowRouter.go("/employeescard?id=" + listData);
-    }
-  });
+
+  // templateObject.getEmployees();
+
+  // $("#tblEmployeelist tbody").on("click", "tr", function () {
+  //   var listData = $(this).closest("tr").attr("id");
+  //   if (listData) {
+  //     FlowRouter.go("/employeescard?id=" + listData);
+  //   }
+  // });
 
   // Step 6 Render functionalities
   let sideBarService = new SideBarService();
@@ -3424,8 +3478,6 @@ Template.setup.onRendered(function () {
           }
         });
       });
-
-
   };
   templateObject.getAllAccountss();
 
@@ -3435,14 +3487,16 @@ Template.setup.onRendered(function () {
 
   //   $("#displayname").val("hello test");
 });
-function isStepActive (stepId) {
-  let currentStepID = $('.setup-stepper .current a.gotToStepID').attr('data-step-id');
-  if(stepId < currentStepID) {
-    return true
-  }else {
-    return false
+function isStepActive(stepId) {
+  let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
+    "data-step-id"
+  );
+  if (stepId < currentStepID) {
+    return true;
+  } else {
+    return false;
   }
-} 
+}
 Template.setup.events({
   "click #start-wizard": function () {
     $(".first-page").css("display", "none");
@@ -3454,7 +3508,7 @@ Template.setup.events({
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled"); 
+    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
     if (stepId !== 9) {
@@ -3464,18 +3518,18 @@ Template.setup.events({
     }
     let confirmedSteps =
       localStorage.getItem("VS1Cloud_SETUP_CONFIRMED_STEPS") || "";
-      localStorage.setItem(
-        "VS1Cloud_SETUP_CONFIRMED_STEPS",
-        confirmedSteps + (stepId - 1) + ","
-      );
-      localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+    localStorage.setItem(
+      "VS1Cloud_SETUP_CONFIRMED_STEPS",
+      confirmedSteps + (stepId - 1) + ","
+    );
+    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
   },
   "click .btnBack": function (event) {
     let stepId = $(event.target).attr("data-step-id");
     stepId = parseInt(stepId) + 1;
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
-    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled"); 
+    $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     if (stepId !== 9) {
       $(".setup-step-" + stepId).css("display", "block");
@@ -4353,7 +4407,6 @@ Template.setup.events({
     const targetID = $(e.target).closest("tr").attr("id"); // table row ID
     $("#selectDeleteLineID").val(targetID);
     $("#deleteLineModal").modal("toggle");
-
   },
 
   // TODO: Step 3
@@ -4830,14 +4883,10 @@ Template.setup.events({
         //taxRateService.getOnePaymentMethod(listData).then(function (data) {
 
         var paymentMethodID = listData || "";
-        var paymentMethodName =
-          tr.find(".colName").text() || "";
+        var paymentMethodName = tr.find(".colName").text() || "";
         // isCreditcard = $(event.target).closest("tr").find(".colName").text() || '';
 
-        if (
-          tr.find(".colIsCreditCard .chkBox")
-            .is(":checked")
-        ) {
+        if (tr.find(".colIsCreditCard .chkBox").is(":checked")) {
           isCreditcard = true;
         }
 
@@ -4855,11 +4904,10 @@ Template.setup.events({
 
         // $(this).closest("tr").attr("data-target", "#btnAddPaymentMethod");
         // $(this).closest("tr").attr("data-toggle", "modal");
-        $('#btnAddPaymentMethod').modal("toggle");
+        $("#btnAddPaymentMethod").modal("toggle");
       }
     }
   },
- 
 
   // TODO: Step 4
   // Term settings
@@ -5419,14 +5467,10 @@ Template.setup.events({
           $(event.target).closest("tr").find(".colName").text() || "";
         var description =
           $(event.target).closest("tr").find(".colDescription").text() || "";
-        var days =
-          $(event.target).closest("tr").find(".colIsDays").text() || 0;
+        var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
         //let isDays = data.fields.IsDays || '';
         if (
-          $(event.target)
-            .closest("tr")
-            .find(".colIsEOM .chkBox")
-            .is(":checked")
+          $(event.target).closest("tr").find(".colIsEOM .chkBox").is(":checked")
         ) {
           isEOM = true;
         }
@@ -5511,14 +5555,15 @@ Template.setup.events({
         // $(this).closest("tr").attr("data-target", "#myModal");
         // $(this).closest("tr").attr("data-toggle", "modal");
 
-        $('#addTermModal').modal('toggle');
+        $("#addTermModal").modal("toggle");
       }
     }
   },
 
   // TODO: Step 5
-  "click #btnNewEmployee": function (event) {
-    FlowRouter.go("/employeescard");
+  "click #btnNewEmployee": (event) => {
+    // FlowRouter.go("/employeescard");
+    $("#addEmployeeModal").modal("toggle");
   },
   "click .btnAddVS1User": function (event) {
     swal({
@@ -5535,6 +5580,7 @@ Template.setup.events({
         // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
       } else if (result.dismiss === "cancel") {
         FlowRouter.go("/employeescard?addvs1user=true");
+        $("#addEmployeeModal").modal("toggle");
       }
     });
   },
@@ -7979,19 +8025,24 @@ Template.setup.helpers({
   },
 
   // Step 5 helpers
-  employeedatatablerecords: () => {
-    return Template.instance()
-      .employeedatatablerecords.get()
-      .sort(function (a, b) {
-        if (a.employeename == "NA") {
-          return 1;
-        } else if (b.employeename == "NA") {
-          return -1;
-        }
-        return a.employeename.toUpperCase() > b.employeename.toUpperCase()
-          ? 1
-          : -1;
-      });
+  // employeedatatablerecords: () => {
+  //   // WRONG !
+  //   const data = Template.instance().employeedatatablerecords.get();
+  //   console.log("EMployee data: ", data);
+  //   return data;
+  //   data.sort(function (a, b) {
+  //     if (a.employeename == "NA") {
+  //       return 1;
+  //     } else if (b.employeename == "NA") {
+  //       return -1;
+  //     }
+  //     return a.employeename.toUpperCase() > b.employeename.toUpperCase()
+  //       ? 1
+  //       : -1;
+  //   });
+  // },
+  currentEmployees: () => {
+    return Template.instance().currentEmployees.get();
   },
   employeetableheaderrecords: () => {
     return Template.instance().employeetableheaderrecords.get();

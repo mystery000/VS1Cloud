@@ -1317,7 +1317,10 @@
                             </header>
                 
                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
-                
+                                <div class="modal fade" role="dialog" tabindex="-1" id="addEmployeeModal">
+                                    {{> addemployeepop}}
+                                </div>
+
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                                     <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Employee</button>
@@ -1459,22 +1462,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{#if employeedatatablerecords}}
-                                                {{#each item in employeedatatablerecords}}
-                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
+                                                {{#if currentEmployees}}
+                                                {{#each employee in currentEmployees}}
+                                                <tr class="dnd-moved" id="{{employee.fields.ID}}" style="cursor: pointer;">
                                                     <!-- <td contenteditable="false" class="colEmployeeNo" >{{item.id}}</td> -->
-                                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{item.id}}</td>
-                                                    <td contenteditable="false" class="colEmployeeName" >{{item.employeename}}</td>
-                                                    <td contenteditable="false" class="colFirstName">{{item.firstname}}</td>
-                                                    <td contenteditable="false" class="colLastName">{{item.lastname}}</td>
-                                                    <td contenteditable="false" class="colPhone">{{item.phone}}</td>
-                                                    <td contenteditable="false" class="colMobile">{{item.mobile}}</td>
-                                                    <td contenteditable="false" class="colEmail">{{item.email}}</td>
-                                                    <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{item.country}}</td>
-                                                    <td contenteditable="false" class="colCustFld1 hiddenColumn">{{item.custFld1}}</td>
-                                                    <td contenteditable="false" class="colCustFld2 hiddenColumn">{{item.custFld2}}</td>
-                                                    <td contenteditable="false" class="colAddress">{{item.address}}</td>
+                                                    <td contenteditable="false" class="colEmployeeNo hiddenColumn" >{{employee.fields.ID}}</td>
+                                                    <td contenteditable="false" class="colEmployeeName" >{{employee.fields.EmployeeName}}</td>
+                                                    <td contenteditable="false" class="colFirstName">{{employee.fields.FirstName}}</td>
+                                                    <td contenteditable="false" class="colLastName">{{employee.fields.LastName}}</td>
+                                                    <td contenteditable="false" class="colPhone">{{employee.fields.Phone}}</td>
+                                                    <td contenteditable="false" class="colMobile">{{employee.fields.Mobile}}</td>
+                                                    <td contenteditable="false" class="colEmail">{{employee.fields.Email}}</td>
+                                                    <td contenteditable="false" class="colDepartment">{{employee.fields.DefaultClassName}}</td>
+                                                    <td contenteditable="false" class="colCountry hiddenColumn">{{employee.fields.Country}}</td>
+                                                    <td contenteditable="false" class="colCustFld1 hiddenColumn">{{employee.fields.CustFld1}}</td>
+                                                    <td contenteditable="false" class="colCustFld2 hiddenColumn">{{employee.fields.CustFld2}}</td>
+                                                    <td contenteditable="false" class="colAddress">{{employee.fields.Street}}</td>
                                                 </tr>
                                                 {{/each}}
                                                 {{/if}}
@@ -1752,7 +1755,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button>
+                                <!-- <button class="btn btn-primary btnJournalEntries" id="btnJournalEntries" type="button" style="margin: 8px;"><i class="fa fa-book" style="padding-right: 5px;"></i>Journal Entries</button> -->
                             </div>
                             <div class="col-5 d-xl-flex justify-content-xl-end align-items-end">
                                 <style>
