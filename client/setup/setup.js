@@ -5579,7 +5579,7 @@ Template.setup.events({
         $("#employeeListModal").modal("toggle");
         // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
       } else if (result.dismiss === "cancel") {
-        FlowRouter.go("/employeescard?addvs1user=true");
+        // FlowRouter.go("/employeescard?addvs1user=true");
         $("#addEmployeeModal").modal("toggle");
       }
     });
@@ -6186,6 +6186,12 @@ Template.setup.events({
         }
       },
     });
+  },
+  "click #tblEmployeelistpop tr td": (e) => {
+    $(e).preventDefault();
+    console.log(e);
+
+
   },
 
   // TODO: Step 6
