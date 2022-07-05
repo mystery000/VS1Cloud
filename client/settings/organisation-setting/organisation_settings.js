@@ -558,6 +558,7 @@ Template.organisationsettings.events({
     let poPostCode = "";
     let poCountry = "";
     let isDefaultEmail = false;
+    let isChkUSRegionTax = $("#chkusregiontax").is(":checked");
 
     if ($("#chksameaddress").is(":checked")) {
       poAddress = shipAddress;
@@ -605,6 +606,7 @@ Template.organisationsettings.events({
         PoPostcode: poPostCode,
         PoCountry: poCountry,
         TrackEmails: isDefaultEmail,
+        ChkUSRegionTax: isChkUSRegionTax,
       },
     };
     organisationService
@@ -931,6 +933,15 @@ Template.organisationsettings.events({
         });
       }
     });
+  },
+  "change #edtCountry": function (event) {
+    console.log(event.target.value);
+    if (event.target.value == "United States") {
+      $("#chkusregiontax").attr("checked", true);
+    }
+    else {
+      $("#chkusregiontax").removeAttr("checked");
+    }
   },
 });
 
