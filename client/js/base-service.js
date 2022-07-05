@@ -18,7 +18,7 @@ export class BaseService {
     return headers;
   }
   getBaseUrl(){
-          return URLRequest + this.erpGet.ERPIPAddress + ':' + this.erpGet.ERPPort + '/' + this.erpGet.ERPApi + '/';
+    return URLRequest + this.erpGet.ERPIPAddress + ':' + this.erpGet.ERPPort + '/' + this.erpGet.ERPApi + '/';
   }
 
   getPostHeaders() {

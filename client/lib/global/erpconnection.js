@@ -150,7 +150,7 @@ var erpConnection = {
     ERPEmpFormAccessDetail: "TEmployeeFormAccessDetail?ListType=Detail&Select=[TabGroup]=26 and [EmployeeId]=" + "'" + Session.get('mySessionEmployeeLoggedID') + "'",
     getEmpFormAccessDetail: "TEmployeeFormAccessDetail",
     ERPEmpProfilePicture: "TEmployeeAttachment?PropertyList==ID,Attachment,AttachmentName,EmployeeName &select=[EmployeeName]=" + "'" + Session.get('mySessionEmployee') + "'",
-    ERPOrganisationSetting: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails",
+    ERPOrganisationSetting: "TCompanyInfo?PropertyList==ID,GlobalRef,CompanyName,TradingName,CompanyCategory,CompanyNumber,SiteCode,Firstname,LastName,PoBox,PoBox2,PoBox3,PoCity,PoState,PoPostcode,PoCountry,Contact,Address,Address2,Address3,City,State,Postcode,Country,PhoneNumber,Email,Url,MobileNumber,FaxNumber,DvaABN,,ContactEmail,ContactName,abn,Apcano,Bsb,AccountNo,BankBranch,BankCode,Bsb,FileReference,TrackEmails,ChkUSRegionTax",
     ERPCompanyInfo: "TCompanyInfo",
     ERPTaxCodeData: "TTaxCode",
     ERPCountries: "TCountries?PropertyList==ID,GlobalRef,Country,CountryCode,Active&select[Active]=true",
