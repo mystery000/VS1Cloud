@@ -85,6 +85,7 @@ Template.setup.onCreated(() => {
   templateObject.currentEmployees = new ReactiveVar([]);
 
   // Step 6 variables
+  templateObject.accountList = new ReactiveVar([]);
   templateObject.records = new ReactiveVar();
   templateObject.CleintName = new ReactiveVar();
   templateObject.Department = new ReactiveVar();
@@ -5616,133 +5617,134 @@ Template.setup.events({
       $(".btnRefreshEmployees").trigger("click");
     }
   },
-  "click .btnRefreshEmployees": function (event) {
+  "click .btnRefreshEmployee":  (event) => {
     let templateObject = Template.instance();
-    let utilityService = new UtilityService();
-    let tableProductList;
-    const dataTableList = [];
-    var splashArrayInvoiceList = new Array();
-    const lineExtaSellItems = [];
-    $(".fullScreenSpin").css("display", "inline-block");
-    let dataSearchName = $("#tblEmployeelist_filter input").val();
-    if (dataSearchName.replace(/\s/g, "") != "") {
-      sideBarService
-        .getNewEmployeeByNameOrID(dataSearchName)
-        .then(function (data) {
-          $(".btnRefreshEmployees").removeClass("btnSearchAlert");
-          let lineItems = [];
-          let lineItemObj = {};
-          if (data.temployee.length > 0) {
-            for (let i = 0; i < data.temployee.length; i++) {
-              var dataList = {
-                id: data.temployee[i].fields.ID || "",
-                employeeno: data.temployee[i].fields.EmployeeNo || "",
-                employeename: data.temployee[i].fields.EmployeeName || "",
-                firstname: data.temployee[i].fields.FirstName || "",
-                lastname: data.temployee[i].fields.LastName || "",
-                phone: data.temployee[i].fields.Phone || "",
-                mobile: data.temployee[i].fields.Mobile || "",
-                email: data.temployee[i].fields.Email || "",
-                address: data.temployee[i].fields.Street || "",
-                country: data.temployee[i].fields.Country || "",
-                department: data.temployee[i].fields.DefaultClassName || "",
-                custFld1: data.temployee[i].fields.CustFld1 || "",
-                custFld2: data.temployee[i].fields.CustFld2 || "",
-                custFld3: data.temployee[i].fields.CustFld3 || "",
-                custFld4: data.temployee[i].fields.CustFld4 || "",
-              };
+    templateObject.loadEmployees();
+    // let utilityService = new UtilityService();
+    // let tableProductList;
+    // const dataTableList = [];
+    // var splashArrayInvoiceList = new Array();
+    // const lineExtaSellItems = [];
+    // $(".fullScreenSpin").css("display", "inline-block");
+    // let dataSearchName = $("#tblEmployeelist_filter input").val();
+    // if (dataSearchName.replace(/\s/g, "") != "") {
+    //   sideBarService
+    //     .getNewEmployeeByNameOrID(dataSearchName)
+    //     .then(function (data) {
+    //       $(".btnRefreshEmployees").removeClass("btnSearchAlert");
+    //       let lineItems = [];
+    //       let lineItemObj = {};
+    //       if (data.temployee.length > 0) {
+    //         for (let i = 0; i < data.temployee.length; i++) {
+    //           var dataList = {
+    //             id: data.temployee[i].fields.ID || "",
+    //             employeeno: data.temployee[i].fields.EmployeeNo || "",
+    //             employeename: data.temployee[i].fields.EmployeeName || "",
+    //             firstname: data.temployee[i].fields.FirstName || "",
+    //             lastname: data.temployee[i].fields.LastName || "",
+    //             phone: data.temployee[i].fields.Phone || "",
+    //             mobile: data.temployee[i].fields.Mobile || "",
+    //             email: data.temployee[i].fields.Email || "",
+    //             address: data.temployee[i].fields.Street || "",
+    //             country: data.temployee[i].fields.Country || "",
+    //             department: data.temployee[i].fields.DefaultClassName || "",
+    //             custFld1: data.temployee[i].fields.CustFld1 || "",
+    //             custFld2: data.temployee[i].fields.CustFld2 || "",
+    //             custFld3: data.temployee[i].fields.CustFld3 || "",
+    //             custFld4: data.temployee[i].fields.CustFld4 || "",
+    //           };
 
-              if (
-                data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
-              ) {
-                dataTableList.push(dataList);
-              }
-              //}
-            }
+    //           if (
+    //             data.temployee[i].fields.EmployeeName.replace(/\s/g, "") != ""
+    //           ) {
+    //             dataTableList.push(dataList);
+    //           }
+    //           //}
+    //         }
 
-            templateObject.datatablerecords.set(dataTableList);
+    //         templateObject.datatablerecords.set(dataTableList);
 
-            let item = templateObject.datatablerecords.get();
-            $(".fullScreenSpin").css("display", "none");
-            if (dataTableList) {
-              var datatable = $("#tblEmployeelist").DataTable();
-              $("#tblEmployeelist > tbody").empty();
-              for (let x = 0; x < item.length; x++) {
-                $("#tblEmployeelist > tbody").append(
-                  ' <tr class="dnd-moved" id="' +
-                    item[x].id +
-                    '" style="cursor: pointer;">' +
-                    '<td contenteditable="false" class="colEmployeeID">' +
-                    item[x].id +
-                    "</td>" +
-                    '<td contenteditable="false" class="colEmployeeName" >' +
-                    item[x].employeename +
-                    "</td>" +
-                    '<td contenteditable="false" class="colFirstName">' +
-                    item[x].firstname +
-                    "</td>" +
-                    '<td contenteditable="false" class="colLastName" >' +
-                    item[x].lastname +
-                    "</td>" +
-                    '<td contenteditable="false" class="colPhone">' +
-                    item[x].phone +
-                    "</td>" +
-                    '<td contenteditable="false" class="colMobile">' +
-                    item[x].mobile +
-                    "</td>" +
-                    '<td contenteditable="false" class="colEmail">' +
-                    item[x].email +
-                    "</td>" +
-                    '<td contenteditable="false" class="colDepartment">' +
-                    item[x].department +
-                    "</td>" +
-                    '<td contenteditable="false" class="colCountry hiddenColumn">' +
-                    item[x].country +
-                    "</td>" +
-                    '<td contenteditable="false" class="colCustFld1 hiddenColumn">' +
-                    item[x].custFld1 +
-                    "</td>" +
-                    '<td contenteditable="false" class="colCustFld2 hiddenColumn">' +
-                    item[x].custFld2 +
-                    "</td>" +
-                    '<td contenteditable="false" class="colAddress">' +
-                    item[x].address +
-                    "</td>" +
-                    "</tr>"
-                );
-              }
-              $(".dataTables_info").html(
-                "Showing 1 to " +
-                  data.temployee.length +
-                  " of " +
-                  data.temployee.length +
-                  " entries"
-              );
-            }
-          } else {
-            $(".fullScreenSpin").css("display", "none");
-            swal({
-              title: "Question",
-              text: "Employee does not exist, would you like to create it?",
-              type: "question",
-              showCancelButton: true,
-              confirmButtonText: "Yes",
-              cancelButtonText: "No",
-            }).then((result) => {
-              if (result.value) {
-                FlowRouter.go("/employeescard");
-              } else if (result.dismiss === "cancel") {
-                //$('#productListModal').modal('toggle');
-              }
-            });
-          }
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-        });
-    } else {
-      $(".btnRefreshEmployee").trigger("click");
-    }
+    //         let item = templateObject.datatablerecords.get();
+    //         $(".fullScreenSpin").css("display", "none");
+    //         if (dataTableList) {
+    //           var datatable = $("#tblEmployeelist").DataTable();
+    //           $("#tblEmployeelist > tbody").empty();
+    //           for (let x = 0; x < item.length; x++) {
+    //             $("#tblEmployeelist > tbody").append(
+    //               ' <tr class="dnd-moved" id="' +
+    //                 item[x].id +
+    //                 '" style="cursor: pointer;">' +
+    //                 '<td contenteditable="false" class="colEmployeeID">' +
+    //                 item[x].id +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colEmployeeName" >' +
+    //                 item[x].employeename +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colFirstName">' +
+    //                 item[x].firstname +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colLastName" >' +
+    //                 item[x].lastname +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colPhone">' +
+    //                 item[x].phone +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colMobile">' +
+    //                 item[x].mobile +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colEmail">' +
+    //                 item[x].email +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colDepartment">' +
+    //                 item[x].department +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colCountry hiddenColumn">' +
+    //                 item[x].country +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colCustFld1 hiddenColumn">' +
+    //                 item[x].custFld1 +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colCustFld2 hiddenColumn">' +
+    //                 item[x].custFld2 +
+    //                 "</td>" +
+    //                 '<td contenteditable="false" class="colAddress">' +
+    //                 item[x].address +
+    //                 "</td>" +
+    //                 "</tr>"
+    //             );
+    //           }
+    //           $(".dataTables_info").html(
+    //             "Showing 1 to " +
+    //               data.temployee.length +
+    //               " of " +
+    //               data.temployee.length +
+    //               " entries"
+    //           );
+    //         }
+    //       } else {
+    //         $(".fullScreenSpin").css("display", "none");
+    //         swal({
+    //           title: "Question",
+    //           text: "Employee does not exist, would you like to create it?",
+    //           type: "question",
+    //           showCancelButton: true,
+    //           confirmButtonText: "Yes",
+    //           cancelButtonText: "No",
+    //         }).then((result) => {
+    //           if (result.value) {
+    //             FlowRouter.go("/employeescard");
+    //           } else if (result.dismiss === "cancel") {
+    //             //$('#productListModal').modal('toggle');
+    //           }
+    //         });
+    //       }
+    //     })
+    //     .catch(function (err) {
+    //       $(".fullScreenSpin").css("display", "none");
+    //     });
+    // } else {
+    //   $(".btnRefreshEmployee").trigger("click");
+    // }
   },
   "click .resetEmployeeTable": function (event) {
     var getcurrentCloudDetails = CloudUser.findOne({
@@ -5937,32 +5939,32 @@ Template.setup.events({
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel").click();
     $(".fullScreenSpin").css("display", "none");
   },
-  "click .btnRefreshEmployee": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    let templateObject = Template.instance();
-    sideBarService
-      .getAllAppointmentPredList()
-      .then(function (data) {
-        addVS1Data("TAppointmentPreferences", JSON.stringify(data))
-          .then(function (datareturn) {})
-          .catch(function (err) {});
-      })
-      .catch(function (err) {});
-    sideBarService
-      .getAllEmployees(initialBaseDataLoad, 0)
-      .then(function (data) {
-        addVS1Data("TEmployee", JSON.stringify(data))
-          .then(function (datareturn) {
-            window.open("/setup", "_self");
-          })
-          .catch(function (err) {
-            window.open("/setup", "_self");
-          });
-      })
-      .catch(function (err) {
-        window.open("/setup", "_self");
-      });
-  },
+  // "click .btnRefreshEmployee": function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   let templateObject = Template.instance();
+  //   sideBarService
+  //     .getAllAppointmentPredList()
+  //     .then(function (data) {
+  //       addVS1Data("TAppointmentPreferences", JSON.stringify(data))
+  //         .then(function (datareturn) {})
+  //         .catch(function (err) {});
+  //     })
+  //     .catch(function (err) {});
+  //   sideBarService
+  //     .getAllEmployees(initialBaseDataLoad, 0)
+  //     .then(function (data) {
+  //       addVS1Data("TEmployee", JSON.stringify(data))
+  //         .then(function (datareturn) {
+  //           window.open("/setup", "_self");
+  //         })
+  //         .catch(function (err) {
+  //           window.open("/setup", "_self");
+  //         });
+  //     })
+  //     .catch(function (err) {
+  //       window.open("/setup", "_self");
+  //     });
+  // },
   "click .printConfirmEmployee": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblEmployeelist_wrapper .dt-buttons .btntabletopdf").click();
