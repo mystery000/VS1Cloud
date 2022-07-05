@@ -3171,9 +3171,6 @@ Template.employeescard.onRendered(function () {
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
                     $('#earningRateSettingsModal').modal('show');
                 } else {
-                    // if (currencyDataName.replace(/\s/g, '') != '') {
-                    //     console.log('step 2')
-                    // }
                     $('#earningRateSettingsModal').modal('show');
                 }
             });

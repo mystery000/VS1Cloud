@@ -7,6 +7,8 @@ import { AccountService } from "../../accounts/account-service";
 import { RateTypeService } from '../../js/ratetype_service';
 import Earning from '../../js/Api/Model/Earning'
 import EarningFields from '../../js/Api/Model/EarningFields'
+import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
+import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 import 'jquery-editable-select';
 
@@ -35,15 +37,39 @@ Template.earningRateSettings.onRendered(function() {
     $('td').each(function() {
         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
     });
-  };
+};
+
+templateObject.saveCardsLocalDB = async () => {
+
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+        employeePayrolApis.collectionNames.TEarnings
+    );
+
+    employeePayrolEndpoint.url.searchParams.append(
+        "ListType",
+        "'Detail'"
+    );                
+    
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+    if (employeePayrolEndpointResponse.ok == true) {
+        employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+        await addVS1Data('TEarnings', JSON.stringify(employeePayrolEndpointJsonResponse))
+        return employeePayrolEndpointJsonResponse
+    }  
+    return '';      
+}
+
 
 templateObject.getEarnings = async function(){
     try {
         let data = {};
+        let splashArrayEarningList = new Array();
         let dataObject = await getVS1Data('TEarnings')   
         if ( dataObject.length == 0) {
-            data = sideBarService.getEarnings(initialBaseDataLoad, 0)
-            addVS1Data('TEarnings', JSON.stringify(data));
+            data = await templateObject.saveCardsLocalDB();
         }else{
             data = JSON.parse(dataObject[0].data);
         }
@@ -62,188 +88,216 @@ templateObject.getEarnings = async function(){
                 ];    
                 splashArrayEarningList.push(dataList);
             }
-            templateObject.datatablerecords.set(splashArrayEarningList);
-            $('.fullScreenSpin').css('display', 'none');
-            setTimeout(function () {
-                $('#tblEarnings').DataTable({  
-                    data: splashArrayEarningList,
-                    "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    columnDefs: [                              
-                      
-                      {
-                         className: "colEarningsID hiddenColumn",
-                         "targets": [0]
-                       },
-                       {
-                          className: "colEarningsNames",
-                          "targets": [1]
-                       },  
-                       {
-                          className: "colEarningsType",
-                          "targets": [2]
-                       },      
-                       {
-                        className: "colEarningsDisplayName",
-                        "targets": [3]
-                       }, 
-                       {
-                        className: "colEarningsAccounts",
-                        "targets": [4]
-                       },   
-                       {
-                        className: "colEarningsRateType",
-                        "targets": [5]
-                       },
-                       {
-                        className: "colEarningsPAYG hiddenColumn"  ,
-                        "targets": [6]
-                       },  
-                       {
-                        className: "colEarningsSuperannuation hiddenColumn",
-                        "targets": [7]
-                       },  
-                       {
-                        className: "colEarningsReportableasW1 hiddenColumn",
-                        "targets": [8]
-                       }
-                    ],
-                    select: true,
-                    destroy: true,
-                    colReorder: true,
-                    pageLength: initialDatatableLoad,
-                    lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                    info: true,
-                    responsive: true,
-                    "order": [[0, "asc"]],
-                    action: function () {
-                        $('#tblEarnings').DataTable().ajax.reload();
-                    },
-                    "fnDrawCallback": function (oSettings) {
-                        $('.paginate_button.page-item').removeClass('disabled');
-                        $('#tblEarnings_ellipsis').addClass('disabled');
-                        if (oSettings._iDisplayLength == -1) {
-                            if (oSettings.fnRecordsDisplay() > 150) {
-  
-                            }
-                        } else {
-  
-                        }
-                        if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                            $('.paginate_button.page-item.next').addClass('disabled');
-                        }
-  
-                        $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                            .on('click', function () {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                var splashArrayEarningListDupp = new Array();
-                                let dataLenght = oSettings._iDisplayLength;
-                                let customerSearch = $('#tblEarnings_filter input').val();
-  
-                                sideBarService.getEarnings(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-  
-                                    for (let i = 0; i < data.tearnings.length; i++) {              
-                                      var dataList = [
-                                        data.tearnings[i].fields.ID || '',
-                                        data.tearnings[i].fields.EarningsName || '',
-                                        data.tearnings[i].fields.EarningType || '',
-                                        data.tearnings[i].fields.EarningsDisplayName || '',
-                                        data.tearnings[i].fields.EarningsRateType||'',
-                                        data.tearnings[i].fields.ExpenseAccount || '',
-                                        data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
-                                        data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-                                        data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
-                                      ];
-                                      splashArrayEarningList.push(dataList);
-                                    }
-                                    let uniqueChars = [...new Set(splashArrayEarningList)];
-                                    var datatable = $('#tblEarnings').DataTable();
-                                    datatable.clear();
-                                    datatable.rows.add(uniqueChars);
-                                    datatable.draw(false);
-                                    setTimeout(function () {
-                                        $("#tblEarnings").dataTable().fnPageChange('last');
-                                    }, 400);
-
-                                    $('.fullScreenSpin').css('display', 'none');
-  
-  
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-  
-                            });
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    },
-                    "fnInitComplete": function () {
-                        $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
-                        $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
-  
-                    }
-  
-                }).on('page', function () {
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-  
-                }).on('column-reorder', function () {
-  
-                }).on('length.dt', function (e, settings, len) {
-                  //$('.fullScreenSpin').css('display', 'inline-block');
-                  let dataLenght = settings._iDisplayLength;
-                  splashArrayEarningList = [];
-                  if (dataLenght == -1) {
-                    $('.fullScreenSpin').css('display', 'none');
-  
-                  } else {
-                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                          $('.fullScreenSpin').css('display', 'none');
-                      } else {
-                          sideBarService.getEarnings(dataLenght, 0).then(function (dataNonBo) {
-  
-                              addVS1Data('TEarnings', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                  templateObject.resetData(dataNonBo);
-                                  $('.fullScreenSpin').css('display', 'none');
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
-                          }).catch(function (err) {
-                              $('.fullScreenSpin').css('display', 'none');
-                          });
-                      }
-                  }
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                });
-            }, 0);
-        }else{
-            $('.fullScreenSpin').css('display', 'none');
         }
+        templateObject.datatablerecords.set(splashArrayEarningList);
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function () {
+            $('#tblEarnings').DataTable({  
+                data: splashArrayEarningList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [                              
+                    
+                    {
+                        className: "colEarningsID hiddenColumn",
+                        "targets": [0]
+                    },
+                    {
+                        className: "colEarningsNames",
+                        "targets": [1]
+                    },  
+                    {
+                        className: "colEarningsType",
+                        "targets": [2]
+                    },      
+                    {
+                    className: "colEarningsDisplayName",
+                    "targets": [3]
+                    }, 
+                    {
+                    className: "colEarningsAccounts",
+                    "targets": [4]
+                    },   
+                    {
+                    className: "colEarningsRateType",
+                    "targets": [5]
+                    },
+                    {
+                    className: "colEarningsPAYG hiddenColumn"  ,
+                    "targets": [6]
+                    },  
+                    {
+                    className: "colEarningsSuperannuation hiddenColumn",
+                    "targets": [7]
+                    },  
+                    {
+                    className: "colEarningsReportableasW1 hiddenColumn",
+                    "targets": [8]
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblEarnings').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblEarnings_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArrayEarningListDupp = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblEarnings_filter input').val();
+
+                            sideBarService.getEarnings(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+
+                                for (let i = 0; i < data.tearnings.length; i++) {              
+                                    var dataList = [
+                                    data.tearnings[i].fields.ID || '',
+                                    data.tearnings[i].fields.EarningsName || '',
+                                    data.tearnings[i].fields.EarningType || '',
+                                    data.tearnings[i].fields.EarningsDisplayName || '',
+                                    data.tearnings[i].fields.EarningsRateType||'',
+                                    data.tearnings[i].fields.ExpenseAccount || '',
+                                    data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
+                                    data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
+                                    data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
+                                    ];
+                                    splashArrayEarningList.push(dataList);
+                                }
+                                let uniqueChars = [...new Set(splashArrayEarningList)];
+                                var datatable = $('#tblEarnings').DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function () {
+                                    $("#tblEarnings").dataTable().fnPageChange('last');
+                                }, 400);
+
+                                $('.fullScreenSpin').css('display', 'none');
+
+
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddordinaryTimeEarnings' data-dismiss='modal' data-toggle='modal' data-target='#ordinaryTimeEarningsModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEarnings_filter");
+                    $("<button class='btn btn-primary btnRefreshEarnings' type='button' id='btnRefreshEarnings' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEarnings_filter");
+                }
+
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+
+            }).on('column-reorder', function () {
+
+            }).on('length.dt', function (e, settings, len) {
+                //$('.fullScreenSpin').css('display', 'inline-block');
+                let dataLenght = settings._iDisplayLength;
+                splashArrayEarningList = [];
+                if (dataLenght == -1) {
+                $('.fullScreenSpin').css('display', 'none');
+
+                } else {
+                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                        $('.fullScreenSpin').css('display', 'none');
+                    } else {
+                        sideBarService.getEarnings(dataLenght, 0).then(function (dataNonBo) {
+
+                            addVS1Data('TEarnings', JSON.stringify(dataNonBo)).then(function (datareturn) {
+                                templateObject.resetData(dataNonBo);
+                                $('.fullScreenSpin').css('display', 'none');
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+                    }
+                }
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+        }, 0);
     } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
     }
 };
+
+
 templateObject.getEarnings();
 
     // Standard drop down
     $('.earningLineDropDown').editableSelect();
-    $('.earningLineDropDown').editableSelect().on('click.editable-select', function (e, li) {
+    $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let offset = $search.offset();
         let dropDownID = $search.attr('id')
         templateObject.currentDrpDownID.set(dropDownID);
-        let currencyDataName = e.target.value || '';
+        let searchName = e.target.value || '';
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#earningRateForm')[0].reset();
             $('#earningRateSettingsModal').modal('show');
-            console.log('step 1')
         } else {
-            // if (currencyDataName.replace(/\s/g, '') != '') {
-            //     console.log('step 2')
-            // }
-            // console.log('step 2')
-            $('#earningRateSettingsModal').modal('show');
+            if (searchName.replace(/\s/g, '') == '') {
+                $('#earningRateForm')[0].reset();                
+                $('#earningRateSettingsModal').modal('show');
+                return false
+            }
+            let dataObject = await getVS1Data('TEarnings');   
+            if ( dataObject.length == 0) {
+                data = await templateObject.saveCardsLocalDB();
+            }else{
+                data = JSON.parse(dataObject[0].data);
+            }
+            if( data.tearnings.length > 0 ){
+                let tEarnings = data.tearnings.filter((item) => {
+                    if( item.fields.EarningsName == searchName ){
+                        return item;
+                    }
+                });
+                $('#earningRateForm')[0].reset();
+                $('#addEarningsLineModal').modal('hide');                
+                if( tEarnings.length > 0 ){
+                    earningRate = tEarnings[0];
+                    $('#earningID').val(earningRate.fields.ID)
+                    $('#edtEarningsName').val(earningRate.fields.EarningsName)
+                    $('#edtEarningsType').val(earningRate.fields.EarningType)
+                    $('#edtDisplayName').val(earningRate.fields.EarningsDisplayName)
+                    $('#edtRateType').val(earningRate.fields.EarningsRateType)
+                    $('#edtExpenseAccount').val(earningRate.fields.ExpenseAccount)
+                    $('#formCheck-ExemptPAYG').prop('checked', earningRate.fields.EarningsExemptPaygWithholding)
+                    $('#formCheck-ExemptSuperannuation').prop('checked', earningRate.fields.EarningsExemptSuperannuationGuaranteeCont)
+                    $('#formCheck-ExemptReportable').prop('checked', earningRate.fields.EarningsReportableW1onActivityStatement)
+                }
+                $('#earningRateSettingsModal').modal('hide');
+                $('#ordinaryTimeEarningsModal').modal('show');
+            }
         }
     });
 
@@ -253,7 +307,6 @@ templateObject.getEarnings();
         let earningRate = table.find(".colEarningsNames").text()||'';
         $('#' + earningRateID).val(earningRate);
         $('#earningRateSettingsModal').modal('toggle');
-
     });
 
 });
@@ -269,6 +322,10 @@ Template.earningRateSettings.events({
         if (event.keyCode == 13) {
            $(".btnRefreshEarnings").trigger("click");
         }
+    },
+    'click .btnAddordinaryTimeEarnings':function(event){
+        $('#earningRateForm')[0].reset();
+        $('#addEarningsLineModal').modal('hide');
     },
     'click .btnRefreshEarnings':function(event){      
         let templateObject = Template.instance();
@@ -318,7 +375,10 @@ Template.earningRateSettings.events({
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-                            // FlowRouter.go('/payrollrules');
+                            $('#earningRateForm')[0].reset();
+                            $('#edtEarningsName').val(dataSearchName)
+                            $('#earningRateSettingsModal').modal('hide');
+                            $('#ordinaryTimeEarningsModal').modal('show');
                         }
                     });
                 }
@@ -334,16 +394,15 @@ Template.earningRateSettings.events({
     'click .saveEarningRates': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        let useData = [];
-        let earningSettings = await getVS1Data('TEarnings');
-        if( earningSettings.length ){
-            let TearningSettings = JSON.parse(earningSettings[0].data);
-            useData = Earning.fromList(
-                TearningSettings.tearnings
-            )
-        }
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TEarnings
+        );
 
         let EarningsName = $('#edtEarningsName').val();
+        let ID = $('#earningID').val();
         let EarningsType = $('#edtEarningsType').val();
         let EarningsDisplayName = $('#edtDisplayName').val();
         let EarningsRateType = $('#edtRateType').val();
@@ -354,28 +413,33 @@ Template.earningRateSettings.events({
         /**
          * Saving Earning Object in localDB
         */
-        useData.push(
-            new Earning({
-                type: 'TEarnings',
-                fields: new EarningFields({
-                    ID: 0,
-                    EarningsName: EarningsName,
-                    EarningType: EarningsType,
-                    EarningsDisplayName: EarningsDisplayName,
-                    EarningsRateType: EarningsRateType,
-                    ExpenseAccount: ExpenseAccount,
-                    EarningsExemptPaygWithholding: ExemptPAYG,
-                    EarningsExemptSuperannuationGuaranteeCont: ExemptSuperannuation,
-                    EarningsReportableW1onActivityStatement: ExemptReportable,
-                    Active: true
-                })
+        let earningRateSetting = new Earning({
+            type: 'TEarnings',
+            fields: new EarningFields({
+                ID: ID,
+                EarningsName: EarningsName,
+                EarningType: EarningsType,
+                EarningsDisplayName: EarningsDisplayName,
+                EarningsRateType: EarningsRateType,
+                ExpenseAccount: ExpenseAccount,
+                EarningsExemptPaygWithholding: ExemptPAYG,
+                EarningsExemptSuperannuationGuaranteeCont: ExemptSuperannuation,
+                EarningsReportableW1onActivityStatement: ExemptReportable,
+                Active: true
             })
-        )
-        let earningRateSettings = {
-            tearnings: useData
+        });
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(earningRateSetting),
+        });
+    
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#earningRateForm')[0].reset();
+            await templateObject.saveCardsLocalDB();
+            await templateObject.getEarnings();
         }
-        await addVS1Data('TEarnings', JSON.stringify(earningRateSettings));
-        templateObject.getEarnings()
         $('#ordinaryTimeEarningsModal').modal('hide');
         $('.fullScreenSpin').css('display', 'none');
     },
@@ -383,7 +447,6 @@ Template.earningRateSettings.events({
 
 Template.earningRateSettings.helpers({
     datatablerecords: () => {
-        console.log('i am testing')
         return Template.instance().datatablerecords.get();
     }
 });
