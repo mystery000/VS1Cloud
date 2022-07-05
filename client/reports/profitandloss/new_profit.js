@@ -10,7 +10,6 @@ import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
-// import jqueryScrollable from "../../js/jquery-sortable"
 
 
 let utilityService = new UtilityService();

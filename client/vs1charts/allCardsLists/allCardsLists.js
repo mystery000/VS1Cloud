@@ -127,7 +127,7 @@ Template.allCardsLists.onRendered(function () {
         }, 500)    
     };
 
-    // templateObject.activateDraggable();
+    templateObject.activateDraggable();
 
     templateObject.saveCards = async () => {
         $(".fullScreenSpin").css("display", "block");
