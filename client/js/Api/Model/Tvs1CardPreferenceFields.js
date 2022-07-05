@@ -5,7 +5,15 @@ export default class Tvs1CardPreferenceFields {
         CardKey,
         Position,
         TabGroup,
-        Active
+        Active,
+        GlobalRef,
+        ISEmpty,
+        KeyStringFieldName,
+        KeyValue,
+        MsTimeStamp,
+        MsUpdateSiteCode,
+        Recno,
+        UserID
     }){
         this.ID = ID;
         this.EmployeeID = EmployeeID;        
@@ -13,6 +21,14 @@ export default class Tvs1CardPreferenceFields {
         this.Position = Position;
         this.TabGroup = TabGroup;
         this.Active = Active;
+        this.GlobalRef = GlobalRef;
+        this.ISEmpty = ISEmpty;
+        this.KeyStringFieldName = KeyStringFieldName;
+        this.KeyValue = KeyValue;
+        this.MsTimeStamp = MsTimeStamp;
+        this.MsUpdateSiteCode = MsUpdateSiteCode;
+        this.Recno = Recno;
+        this.UserID = UserID;
     }
 }
   

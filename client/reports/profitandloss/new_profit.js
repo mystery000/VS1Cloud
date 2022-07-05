@@ -10,7 +10,6 @@ import ProfitLossLayoutApi from "../../js/Api/ProfitLossLayoutApi";
 import { TaxRateService } from "../../settings/settings-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import GlobalFunctions from "../../GlobalFunctions";
-// import jqueryScrollable from "../../js/jquery-sortable"
 
 
 let utilityService = new UtilityService();
@@ -364,9 +363,9 @@ Template.newprofitandloss.onRendered(function () {
 
               if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
               } else {
-                if( totalAmount != 0 ){ 
-                  records.push(dataList);
-                }
+                  if( dataList.totalroundamountex !== 0 ) {
+                    records.push(dataList);
+                  }
               }
           }
 
@@ -484,7 +483,7 @@ Template.newprofitandloss.onRendered(function () {
 
             if ( accountData[i]["AccountType"].replace(/\s/g, "") == "" && accountType == "" ) {
             } else {
-              if( totalAmount != 0 ){ 
+              if( dataList.totalroundamountex !== 0 ) {
                 records.push(dataList);
               }
             }

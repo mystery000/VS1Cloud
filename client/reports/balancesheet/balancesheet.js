@@ -485,9 +485,14 @@ Template.balancesheetreport.onRendered(() => {
             ];
           }
         }
-        // if ( HeaderAccountTotal != 0 ) {
+        console.log( "SubAccountTotal", SubAccountTotal, "HeaderAccountTotal", HeaderAccountTotal )
+        if( recordObj.dataArr2 ){
+          if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
+            records.push(recordObj);
+          }
+        }else{
           records.push(recordObj);
-        // }
+        }
       }
       // console.log("Records: ", records);
       totalNetAssets = GrandTotalAsset - GrandTotalLiability;

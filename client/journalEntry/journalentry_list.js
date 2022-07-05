@@ -129,8 +129,10 @@ Template.journalentrylist.onRendered(function() {
             if (data.Params.IgnoreDates == true) {
                 $('#dateFrom').attr('readonly', true);
                 $('#dateTo').attr('readonly', true);
-                FlowRouter.go('/journalentrylist?ignoredate=true');
+                //FlowRouter.go('/journalentrylist?ignoredate=true');
             } else {
+                $('#dateFrom').attr('readonly', false);
+                $('#dateTo').attr('readonly', false);
                 $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
                 $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
             }
@@ -277,7 +279,7 @@ Template.journalentrylist.onRendered(function() {
 
                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                           if(checkurlIgnoreDate == 'true'){
+                           if(data.Params.IgnoreDates == true){
                              sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                                getVS1Data('TJournalEntryList').then(function (dataObjectold) {
                                  if(dataObjectold.length == 0){
@@ -346,9 +348,9 @@ Template.journalentrylist.onRendered(function() {
                       },
                       "fnInitComplete": function () {
                         let urlParametersPage = FlowRouter.current().queryParams.page;
-                        if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                        //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                             this.fnPageChange('last');
-                        }
+                        //}
                          $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                          $('.myvarFilterForm').appendTo(".colDateFilter");
                       },
@@ -424,8 +426,10 @@ Template.journalentrylist.onRendered(function() {
           if (data.Params.IgnoreDates == true) {
               $('#dateFrom').attr('readonly', true);
               $('#dateTo').attr('readonly', true);
-              FlowRouter.go('/journalentrylist?ignoredate=true');
+              //FlowRouter.go('/journalentrylist?ignoredate=true');
           } else {
+              $('#dateFrom').attr('readonly', false);
+              $('#dateTo').attr('readonly', false);
               $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
               $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
           }
@@ -572,7 +576,7 @@ Template.journalentrylist.onRendered(function() {
 
                          let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                          let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                         if(checkurlIgnoreDate == 'true'){
+                         if(data.Params.IgnoreDates == true){
                            sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                              getVS1Data('TJournalEntryList').then(function (dataObjectold) {
                                if(dataObjectold.length == 0){
@@ -641,9 +645,9 @@ Template.journalentrylist.onRendered(function() {
                     },
                     "fnInitComplete": function () {
                       let urlParametersPage = FlowRouter.current().queryParams.page;
-                      if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                      //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                           this.fnPageChange('last');
-                      }
+                      //}
                        $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                     },
@@ -714,8 +718,10 @@ Template.journalentrylist.onRendered(function() {
           if (data.Params.IgnoreDates == true) {
               $('#dateFrom').attr('readonly', true);
               $('#dateTo').attr('readonly', true);
-              FlowRouter.go('/journalentrylist?ignoredate=true');
+              //FlowRouter.go('/journalentrylist?ignoredate=true');
           } else {
+              $('#dateFrom').attr('readonly', false);
+              $('#dateTo').attr('readonly', false);
               $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
               $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
           }
@@ -755,37 +761,6 @@ Template.journalentrylist.onRendered(function() {
               }
 
           if(templateObject.datatablerecords.get()){
-
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblJournalList', function(error, result){
-            if(error){
-
-            }else{
-              if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                  let customcolumn = result.customFields;
-                  let columData = customcolumn[i].label;
-                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                  let hiddenColumn = customcolumn[i].hidden;
-                  let columnClass = columHeaderUpdate.split('.')[1];
-                  let columnWidth = customcolumn[i].width;
-                  let columnindex = customcolumn[i].index + 1;
-
-                  if(hiddenColumn == true){
-
-                    $("."+columnClass+"").addClass('hiddenColumn');
-                    $("."+columnClass+"").removeClass('showColumn');
-                  }else if(hiddenColumn == false){
-                    $("."+columnClass+"").removeClass('hiddenColumn');
-                    $("."+columnClass+"").addClass('showColumn');
-                  }
-
-                }
-              }
-
-            }
-            });
-
-
             setTimeout(function () {
               MakeNegative();
             }, 100);
@@ -862,7 +837,7 @@ Template.journalentrylist.onRendered(function() {
 
                          let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                          let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                         if(checkurlIgnoreDate == 'true'){
+                         if(data.Params.IgnoreDates == true){
                            sideBarService.getTJournalEntryListData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
                              getVS1Data('TJournalEntryList').then(function (dataObjectold) {
                                if(dataObjectold.length == 0){
@@ -931,9 +906,9 @@ Template.journalentrylist.onRendered(function() {
                     },
                     "fnInitComplete": function () {
                       let urlParametersPage = FlowRouter.current().queryParams.page;
-                      if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
+                      //if (urlParametersPage || FlowRouter.current().queryParams.ignoredate) {
                           this.fnPageChange('last');
-                      }
+                      //}
                        $("<button class='btn btn-primary btnRefreshJournalEntry' type='button' id='btnRefreshJournalEntry' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblJournalList_filter");
                        $('.myvarFilterForm').appendTo(".colDateFilter");
                     },
@@ -1009,7 +984,7 @@ Template.journalentrylist.onRendered(function() {
   templateObject.getAllFilterJournalEntryData = function(fromDate, toDate, ignoreDate) {
       sideBarService.getTJournalEntryListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
           addVS1Data('TJournalEntryList', JSON.stringify(data)).then(function(datareturn) {
-              window.open('/journalentrylist?toDate=' + toDate + '&fromDate=' + fromDate + '&ignoredate=' + ignoreDate, '_self');
+            location.reload();
           }).catch(function(err) {
               location.reload();
           });
@@ -1026,7 +1001,8 @@ Template.journalentrylist.onRendered(function() {
           $('#dateFrom').attr('readonly', true);
           $('#dateTo').attr('readonly', true);
       } else {
-
+          $('#dateFrom').attr('readonly', false);
+          $('#dateTo').attr('readonly', false);
           $("#dateFrom").val(urlParametersDateFrom != '' ? moment(urlParametersDateFrom).format("DD/MM/YYYY") : urlParametersDateFrom);
           $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
       }
