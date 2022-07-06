@@ -371,6 +371,9 @@ Template.organisationsettings.helpers({
   iscompanyemail: () => {
     return Template.instance().iscompanyemail.get();
   },
+  isChkUSRegionTax: () => {
+    return Template.instance().isChkUSRegionTax.get();
+  },
   checkCountryABN: () => {
     let countryABNValue = "ABN";
     if (LoggedCountry == "South Africa") {

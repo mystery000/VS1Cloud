@@ -54,4 +54,8 @@ export class OrganisationService extends BaseService {
     };
     return this.getList(this.ERPObjects.TemployeePicture, options);
   }
+
+  getChkUSRegionTaxSetting() {
+    return this.GET(this.erpGet.ERPUSRegionTaxSetting);
+  }
 }
