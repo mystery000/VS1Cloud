@@ -4,14 +4,33 @@ import { CountryService } from "../js/country-service";
 import { TaxRateService } from "../settings/settings-service";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
+import { PurchaseBoardService } from '../js/purchase-service';
 import LoadingOverlay from "../LoadingOverlay";
 import { TaxRatesEditListener } from "../settings/tax-rates-setting/tax-rates";
 import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
 import User from "../js/Api/Model/User";
+import { AccountService } from "../accounts/account-service";
+import "jquery-editable-select";
 
 const employeeId = User.getCurrentLoggedUserId();
 let organisationService = new OrganisationService();
 let sideBarService = new SideBarService();
+// let purchaseService = new PurchaseBoardService();
+
+function MakeNegative() {
+  $("td").each(function () {
+    if (
+      $(this)
+        .text()
+        .indexOf("-" + Currency) >= 0
+    )
+      $(this).addClass("text-danger");
+  });
+}
+
+function getCurrentStep() {
+  return localStorage.getItem("VS1Cloud_SETUP_STEP");
+}
 
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
@@ -52,6 +71,9 @@ Template.setup.onCreated(() => {
   templateObject.iscompanyemail.set(false);
 
   // Step 2 variables
+  templateObject.taxRates = new ReactiveVar([]);
+  templateObject.taxRatesHeader = new ReactiveVar([]);
+
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.defaultpurchasetaxcode = new ReactiveVar();
@@ -86,6 +108,8 @@ Template.setup.onCreated(() => {
 
   // Step 6 variables
   templateObject.accountList = new ReactiveVar([]);
+  templateObject.accountTypes = new ReactiveVar([]);
+
   templateObject.records = new ReactiveVar();
   templateObject.CleintName = new ReactiveVar();
   templateObject.Department = new ReactiveVar();
@@ -128,6 +152,7 @@ Template.setup.onRendered(function () {
 
   // Get step local storage variable and set step
   const currentStep = localStorage.getItem("VS1Cloud_SETUP_STEP");
+
   if (currentStep !== null) {
     $(".first-page").css("display", "none");
     $(".main-setup").css("display", "flex");
@@ -153,10 +178,7 @@ Template.setup.onRendered(function () {
       $(".setup-complete").css("display", "block");
     }
   }
-
-  // Step 1 Render functionalities
-  let countries = [];
-  var countryService = new CountryService();
+  console.log("Current step: ", currentStep);
 
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
@@ -359,8 +381,6 @@ Template.setup.onRendered(function () {
     //     $(".fullScreenSpin").css("display", "none");
     //   });
   };
-  templateObject.getOrganisationDetails();
-
   templateObject.getCountryData = function () {
     getVS1Data("TCountries")
       .then(function (dataObject) {
@@ -392,12 +412,19 @@ Template.setup.onRendered(function () {
         });
       });
   };
+
+  // Step 1 Render functionalities
+  let countries = [];
+  var countryService = new CountryService();
+
+  templateObject.getOrganisationDetails();
+
   templateObject.getCountryData();
 
   // Step 2 Render functionalities
   let taxRateService = new TaxRateService();
   const dataTableList = [];
-  const tableHeaderList = [];
+
   let purchasetaxcode = "";
   let salestaxcode = "";
   templateObject.defaultpurchasetaxcode.set(loggedTaxCodePurchaseInc);
@@ -428,555 +455,728 @@ Template.setup.onRendered(function () {
   }, 500);
   TaxRatesEditListener();
 
-  function MakeNegative() {
-    $("td").each(function () {
-      if (
-        $(this)
-          .text()
-          .indexOf("-" + Currency) >= 0
-      )
-        $(this).addClass("text-danger");
-    });
-  }
   // $(document).on("click", ".table-remove-rax-rate", function () {
   //   event.stopPropagation();
   //   var targetID = $(event.target).closest("tr").attr("id"); // table row ID
   //   $("#selectDeleteLineID").val(targetID);
   //   $("#deleteTaxRateLineModal").modal("toggle");
   // });
-  templateObject.getTaxRates = function () {
-    getVS1Data("TTaxcodeVS1")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          taxRateService
-            .getTaxRateVS1()
-            .then(function (data) {
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + "%";
-                var dataList = {
-                  id: data.ttaxcodevs1[i].Id || "",
-                  codename: data.ttaxcodevs1[i].CodeName || "-",
-                  description: data.ttaxcodevs1[i].Description || "-",
-                  region: data.ttaxcodevs1[i].RegionName || "-",
-                  rate: taxRate || "-",
-                };
 
-                dataTableList.push(dataList);
-                //}
-              }
+  templateObject.loadTaxRates = async () => {
+    LoadingOverlay.show();
+    let data;
+    let tableHeaderList = [];
+    let _taxRatesHeaders = [];
+    let dataObject = await getVS1Data("TTaxcodeVS1");
+    let _taxRateList = [];
 
-              templateObject.datatablerecords.set(dataTableList);
+    if (dataObject.length == 0) {
+      data = await taxRateService.getTaxRateVS1();
+    } else {
+      data = JSON.parse(dataObject[0].data);
+    }
 
-              if (templateObject.datatablerecords.get()) {
-                Meteor.call(
-                  "readPrefMethod",
-                  Session.get("mycloudLogonID"),
-                  "taxRatesList",
-                  function (error, result) {
-                    if (error) {
-                    } else {
-                      if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                          let customcolumn = result.customFields;
-                          let columData = customcolumn[i].label;
-                          let columHeaderUpdate = customcolumn[
-                            i
-                          ].thclass.replace(/ /g, ".");
-                          let hiddenColumn = customcolumn[i].hidden;
-                          let columnClass = columHeaderUpdate.split(".")[1];
-                          let columnWidth = customcolumn[i].width;
-                          let columnindex = customcolumn[i].index + 1;
+    if (data.ttaxcodevs1) {
+      data.ttaxcodevs1.forEach((rate) => {
+        let taxRate = (rate.Rate * 100).toFixed(2) + "%";
+        var dataList = {
+          id: rate.Id || "",
+          codename: rate.CodeName || "-",
+          description: rate.Description || "-",
+          region: rate.RegionName || "-",
+          rate: taxRate || "-",
+        };
 
-                          if (hiddenColumn == true) {
-                            $("." + columnClass + "").addClass("hiddenColumn");
-                            $("." + columnClass + "").removeClass("showColumn");
-                          } else if (hiddenColumn == false) {
-                            $("." + columnClass + "").removeClass(
-                              "hiddenColumn"
-                            );
-                            $("." + columnClass + "").addClass("showColumn");
-                          }
-                        }
-                      }
-                    }
+        _taxRateList.push(dataList);
+      });
+
+      await templateObject.taxRates.set(_taxRateList);
+
+      if (await templateObject.taxRates.get()) {
+        Meteor.call(
+          "readPrefMethod",
+          Session.get("mycloudLogonID"),
+          "taxRatesList",
+          function (error, result) {
+            if (error) {
+            } else {
+              if (result) {
+                for (let i = 0; i < result.customFields.length; i++) {
+                  let customcolumn = result.customFields;
+                  let columData = customcolumn[i].label;
+                  let columHeaderUpdate = customcolumn[i].thclass.replace(
+                    / /g,
+                    "."
+                  );
+                  let hiddenColumn = customcolumn[i].hidden;
+                  let columnClass = columHeaderUpdate.split(".")[1];
+                  let columnWidth = customcolumn[i].width;
+                  let columnindex = customcolumn[i].index + 1;
+
+                  if (hiddenColumn == true) {
+                    $("." + columnClass + "").addClass("hiddenColumn");
+                    $("." + columnClass + "").removeClass("showColumn");
+                  } else if (hiddenColumn == false) {
+                    $("." + columnClass + "").removeClass("hiddenColumn");
+                    $("." + columnClass + "").addClass("showColumn");
                   }
-                );
-
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
+                }
               }
-
-              $(".fullScreenSpin").css("display", "none");
-              setTimeout(function () {
-                $("#taxRatesList")
-                  .DataTable({
-                    columnDefs: [
-                      {
-                        type: "date",
-                        targets: 0,
-                      },
-                      {
-                        orderable: false,
-                        targets: -1,
-                      },
-                    ],
-                    sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                    buttons: [
-                      {
-                        extend: "excelHtml5",
-                        text: "",
-                        download: "open",
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "taxratelist_" + moment().format(),
-                        orientation: "portrait",
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                      {
-                        extend: "print",
-                        download: "open",
-                        className: "btntabletopdf hiddenColumn",
-                        text: "",
-                        title: "Tax Rate List",
-                        filename: "taxratelist_" + moment().format(),
-                        exportOptions: {
-                          columns: ":visible",
-                        },
-                      },
-                    ],
-                    select: true,
-                    destroy: true,
-                    // colReorder: true,
-                    colReorder: {
-                      fixedColumnsRight: 1,
-                    },
-                    // bStateSave: true,
-                    // rowId: 0,
-                    // pageLength: 25,
-                    paging: false,
-                    //                      "scrollY": "400px",
-                    //                      "scrollCollapse": true,
-                    info: true,
-                    responsive: true,
-                    order: [[0, "asc"]],
-                    action: function () {
-                      $("#taxRatesList").DataTable().ajax.reload();
-                    },
-                    fnDrawCallback: function (oSettings) {
-                      setTimeout(function () {
-                        MakeNegative();
-                      }, 100);
-                    },
-                  })
-                  .on("page", function () {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                    let draftRecord = templateObject.datatablerecords.get();
-                    templateObject.datatablerecords.set(draftRecord);
-                  })
-                  .on("column-reorder", function () {})
-                  .on("length.dt", function (e, settings, len) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  });
-
-                // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-                $(".fullScreenSpin").css("display", "none");
-              }, 0);
-
-              var columns = $("#taxRatesList th");
-              let sTible = "";
-              let sWidth = "";
-              let sIndex = "";
-              let sVisible = "";
-              let columVisible = false;
-              let sClass = "";
-              $.each(columns, function (i, v) {
-                if (v.hidden == false) {
-                  columVisible = true;
-                }
-                if (v.className.includes("hiddenColumn")) {
-                  columVisible = false;
-                }
-                sWidth = v.style.width.replace("px", "");
-
-                let datatablerecordObj = {
-                  sTitle: v.innerText || "",
-                  sWidth: sWidth || "",
-                  sIndex: v.cellIndex || "",
-                  sVisible: columVisible || false,
-                  sClass: v.className || "",
-                };
-                tableHeaderList.push(datatablerecordObj);
-              });
-              templateObject.tableheaderrecords.set(tableHeaderList);
-              $("div.dataTables_filter input").addClass(
-                "form-control form-control-sm"
-              );
-            })
-            .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.ttaxcodevs1;
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < useData.length; i++) {
-            let taxRate = (useData[i].Rate * 100).toFixed(2) + "%";
-            var dataList = {
-              id: useData[i].Id || "",
-              codename: useData[i].CodeName || "-",
-              description: useData[i].Description || "-",
-              region: useData[i].RegionName || "-",
-              rate: taxRate || "-",
-            };
-
-            dataTableList.push(dataList);
-            //}
+            }
           }
+        );
 
-          templateObject.datatablerecords.set(dataTableList);
+        setTimeout(function () {
+          MakeNegative();
+        }, 100);
+      }
 
-          if (templateObject.datatablerecords.get()) {
-            Meteor.call(
-              "readPrefMethod",
-              Session.get("mycloudLogonID"),
-              "taxRatesList",
-              function (error, result) {
-                if (error) {
-                } else {
-                  if (result) {
-                    for (let i = 0; i < result.customFields.length; i++) {
-                      let customcolumn = result.customFields;
-                      let columData = customcolumn[i].label;
-                      let columHeaderUpdate = customcolumn[i].thclass.replace(
-                        / /g,
-                        "."
-                      );
-                      let hiddenColumn = customcolumn[i].hidden;
-                      let columnClass = columHeaderUpdate.split(".")[1];
-                      let columnWidth = customcolumn[i].width;
-                      let columnindex = customcolumn[i].index + 1;
-
-                      if (hiddenColumn == true) {
-                        $("." + columnClass + "").addClass("hiddenColumn");
-                        $("." + columnClass + "").removeClass("showColumn");
-                      } else if (hiddenColumn == false) {
-                        $("." + columnClass + "").removeClass("hiddenColumn");
-                        $("." + columnClass + "").addClass("showColumn");
-                      }
-                    }
-                  }
-                }
-              }
-            );
-
-            setTimeout(function () {
-              MakeNegative();
-            }, 100);
-          }
-
-          $(".fullScreenSpin").css("display", "none");
-          setTimeout(function () {
-            $("#taxRatesList")
-              .DataTable({
-                columnDefs: [
-                  {
-                    type: "date",
-                    targets: 0,
-                  },
-                  {
-                    orderable: false,
-                    targets: -1,
-                  },
-                ],
-                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                buttons: [
-                  {
-                    extend: "excelHtml5",
-                    text: "",
-                    download: "open",
-                    className: "btntabletocsv hiddenColumn",
-                    filename: "taxratelist_" + moment().format(),
-                    orientation: "portrait",
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                  {
-                    extend: "print",
-                    download: "open",
-                    className: "btntabletopdf hiddenColumn",
-                    text: "",
-                    title: "Tax Rate List",
-                    filename: "taxratelist_" + moment().format(),
-                    exportOptions: {
-                      columns: ":visible",
-                    },
-                  },
-                ],
-                select: true,
-                destroy: true,
-                // colReorder: true,
-                colReorder: {
-                  fixedColumnsRight: 1,
+      setTimeout(() => {
+        $("#taxRatesList")
+          .DataTable({
+            columnDefs: [
+              {
+                type: "date",
+                targets: 0,
+              },
+              {
+                orderable: false,
+                targets: -1,
+              },
+            ],
+            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+            buttons: [
+              {
+                extend: "excelHtml5",
+                text: "",
+                download: "open",
+                className: "btntabletocsv hiddenColumn",
+                filename: "taxratelist_" + moment().format(),
+                orientation: "portrait",
+                exportOptions: {
+                  columns: ":visible",
                 },
-                // bStateSave: true,
-                // rowId: 0,
-                // pageLength: 25,
-                paging: false,
-                //          "scrollY": "400px",
-                //          "scrollCollapse": true,
-                info: true,
-                responsive: true,
-                order: [[0, "asc"]],
-                action: function () {
-                  $("#taxRatesList").DataTable().ajax.reload();
+              },
+              {
+                extend: "print",
+                download: "open",
+                className: "btntabletopdf hiddenColumn",
+                text: "",
+                title: "Tax Rate List",
+                filename: "taxratelist_" + moment().format(),
+                exportOptions: {
+                  columns: ":visible",
                 },
-                fnDrawCallback: function (oSettings) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                },
-              })
-              .on("page", function () {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-                let draftRecord = templateObject.datatablerecords.get();
-                templateObject.datatablerecords.set(draftRecord);
-              })
-              .on("column-reorder", function () {})
-              .on("length.dt", function (e, settings, len) {
-                setTimeout(function () {
-                  MakeNegative();
-                }, 100);
-              });
-
-            // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-            $(".fullScreenSpin").css("display", "none");
-          }, 0);
-
-          var columns = $("#taxRatesList th");
-          let sTible = "";
-          let sWidth = "";
-          let sIndex = "";
-          let sVisible = "";
-          let columVisible = false;
-          let sClass = "";
-          $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-              columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-              columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-              sTitle: v.innerText || "",
-              sWidth: sWidth || "",
-              sIndex: v.cellIndex || "",
-              sVisible: columVisible || false,
-              sClass: v.className || "",
-            };
-            tableHeaderList.push(datatablerecordObj);
-          });
-          templateObject.tableheaderrecords.set(tableHeaderList);
-          $("div.dataTables_filter input").addClass(
-            "form-control form-control-sm"
-          );
-        }
-      })
-      .catch(function (err) {
-        taxRateService
-          .getTaxRateVS1()
-          .then(function (data) {
-            let lineItems = [];
-            let lineItemObj = {};
-            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-              let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + "%";
-              var dataList = {
-                id: data.ttaxcodevs1[i].Id || "",
-                codename: data.ttaxcodevs1[i].CodeName || "-",
-                description: data.ttaxcodevs1[i].Description || "-",
-                region: data.ttaxcodevs1[i].RegionName || "-",
-                rate: taxRate || "-",
-              };
-
-              dataTableList.push(dataList);
-              //}
-            }
-
-            templateObject.datatablerecords.set(dataTableList);
-
-            if (templateObject.datatablerecords.get()) {
-              Meteor.call(
-                "readPrefMethod",
-                Session.get("mycloudLogonID"),
-                "taxRatesList",
-                function (error, result) {
-                  if (error) {
-                  } else {
-                    if (result) {
-                      for (let i = 0; i < result.customFields.length; i++) {
-                        let customcolumn = result.customFields;
-                        let columData = customcolumn[i].label;
-                        let columHeaderUpdate = customcolumn[i].thclass.replace(
-                          / /g,
-                          "."
-                        );
-                        let hiddenColumn = customcolumn[i].hidden;
-                        let columnClass = columHeaderUpdate.split(".")[1];
-                        let columnWidth = customcolumn[i].width;
-                        let columnindex = customcolumn[i].index + 1;
-
-                        if (hiddenColumn == true) {
-                          $("." + columnClass + "").addClass("hiddenColumn");
-                          $("." + columnClass + "").removeClass("showColumn");
-                        } else if (hiddenColumn == false) {
-                          $("." + columnClass + "").removeClass("hiddenColumn");
-                          $("." + columnClass + "").addClass("showColumn");
-                        }
-                      }
-                    }
-                  }
-                }
-              );
-
+              },
+            ],
+            select: true,
+            destroy: true,
+            // colReorder: true,
+            colReorder: {
+              fixedColumnsRight: 1,
+            },
+            // bStateSave: true,
+            // rowId: 0,
+            // pageLength: 25,
+            paging: false,
+            //                      "scrollY": "400px",
+            //                      "scrollCollapse": true,
+            info: true,
+            responsive: true,
+            order: [[0, "asc"]],
+            action: function () {
+              $("#taxRatesList").DataTable().ajax.reload();
+            },
+            fnDrawCallback: function (oSettings) {
               setTimeout(function () {
                 MakeNegative();
               }, 100);
-            }
-
-            $(".fullScreenSpin").css("display", "none");
-            setTimeout(function () {
-              $("#taxRatesList")
-                .DataTable({
-                  columnDefs: [
-                    {
-                      type: "date",
-                      targets: 0,
-                    },
-                    {
-                      orderable: false,
-                      targets: -1,
-                    },
-                  ],
-                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  buttons: [
-                    {
-                      extend: "excelHtml5",
-                      text: "",
-                      download: "open",
-                      className: "btntabletocsv hiddenColumn",
-                      filename: "taxratelist_" + moment().format(),
-                      orientation: "portrait",
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                    {
-                      extend: "print",
-                      download: "open",
-                      className: "btntabletopdf hiddenColumn",
-                      text: "",
-                      title: "Tax Rate List",
-                      filename: "taxratelist_" + moment().format(),
-                      exportOptions: {
-                        columns: ":visible",
-                      },
-                    },
-                  ],
-                  select: true,
-                  destroy: true,
-                  // colReorder: true,
-                  colReorder: {
-                    fixedColumnsRight: 1,
-                  },
-                  // bStateSave: true,
-                  // rowId: 0,
-                  // pageLength: 25,
-                  paging: false,
-                  //                    "scrollY": "400px",
-                  //                    "scrollCollapse": true,
-                  info: true,
-                  responsive: true,
-                  order: [[0, "asc"]],
-                  action: function () {
-                    $("#taxRatesList").DataTable().ajax.reload();
-                  },
-                  fnDrawCallback: function (oSettings) {
-                    setTimeout(function () {
-                      MakeNegative();
-                    }, 100);
-                  },
-                })
-                .on("page", function () {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                  let draftRecord = templateObject.datatablerecords.get();
-                  templateObject.datatablerecords.set(draftRecord);
-                })
-                .on("column-reorder", function () {})
-                .on("length.dt", function (e, settings, len) {
-                  setTimeout(function () {
-                    MakeNegative();
-                  }, 100);
-                });
-
-              // $('#taxRatesList').DataTable().column( 0 ).visible( true );
-              $(".fullScreenSpin").css("display", "none");
-            }, 0);
-
-            var columns = $("#taxRatesList th");
-            let sTible = "";
-            let sWidth = "";
-            let sIndex = "";
-            let sVisible = "";
-            let columVisible = false;
-            let sClass = "";
-            $.each(columns, function (i, v) {
-              if (v.hidden == false) {
-                columVisible = true;
-              }
-              if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-              }
-              sWidth = v.style.width.replace("px", "");
-
-              let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.cellIndex || "",
-                sVisible: columVisible || false,
-                sClass: v.className || "",
-              };
-              tableHeaderList.push(datatablerecordObj);
-            });
-            templateObject.tableheaderrecords.set(tableHeaderList);
-            $("div.dataTables_filter input").addClass(
-              "form-control form-control-sm"
-            );
+            },
           })
-          .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
+          .on("page", function () {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+            let draftRecord = templateObject.taxRates.get();
+            templateObject.taxRates.set(draftRecord);
+          })
+          .on("column-reorder", function () {})
+          .on("length.dt", function (e, settings, len) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
           });
+      }, 0);
+
+      var columns = $("#taxRatesList th");
+      let sTible = "";
+      let sWidth = "";
+      let sIndex = "";
+      let sVisible = "";
+      let columVisible = false;
+      let sClass = "";
+      $.each(columns, function (i, v) {
+        if (v.hidden == false) {
+          columVisible = true;
+        }
+        if (v.className.includes("hiddenColumn")) {
+          columVisible = false;
+        }
+        sWidth = v.style.width.replace("px", "");
+
+        let datatablerecordObj = {
+          sTitle: v.innerText || "",
+          sWidth: sWidth || "",
+          sIndex: v.cellIndex || "",
+          sVisible: columVisible || false,
+          sClass: v.className || "",
+        };
+        _taxRatesHeaders.push(datatablerecordObj);
       });
+      templateObject.taxRatesHeader.set(_taxRatesHeaders);
+      $("div.dataTables_filter input").addClass("form-control form-control-sm");
+    }
+
+    console.log("Final taxRates: ", await templateObject.taxRates.get());
+
+    LoadingOverlay.hide();
   };
-  templateObject.getTaxRates();
+
+  templateObject.loadTaxRates();
+
+  // templateObject.getTaxRates = function () {
+  //   getVS1Data("TTaxcodeVS1")
+  //     .then(function (dataObject) {
+  //       if (dataObject.length == 0) {
+  //         taxRateService
+  //           .getTaxRateVS1()
+  //           .then(function (data) {
+  //             let lineItems = [];
+  //             let lineItemObj = {};
+  //             for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+  //               let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + "%";
+  //               var dataList = {
+  //                 id: data.ttaxcodevs1[i].Id || "",
+  //                 codename: data.ttaxcodevs1[i].CodeName || "-",
+  //                 description: data.ttaxcodevs1[i].Description || "-",
+  //                 region: data.ttaxcodevs1[i].RegionName || "-",
+  //                 rate: taxRate || "-",
+  //               };
+
+  //               dataTableList.push(dataList);
+  //               //}
+  //             }
+
+  //             templateObject.taxRates.set(dataTableList);
+
+  //             if (templateObject.taxRates.get()) {
+  //               Meteor.call(
+  //                 "readPrefMethod",
+  //                 Session.get("mycloudLogonID"),
+  //                 "taxRatesList",
+  //                 function (error, result) {
+  //                   if (error) {
+  //                   } else {
+  //                     if (result) {
+  //                       for (let i = 0; i < result.customFields.length; i++) {
+  //                         let customcolumn = result.customFields;
+  //                         let columData = customcolumn[i].label;
+  //                         let columHeaderUpdate = customcolumn[
+  //                           i
+  //                         ].thclass.replace(/ /g, ".");
+  //                         let hiddenColumn = customcolumn[i].hidden;
+  //                         let columnClass = columHeaderUpdate.split(".")[1];
+  //                         let columnWidth = customcolumn[i].width;
+  //                         let columnindex = customcolumn[i].index + 1;
+
+  //                         if (hiddenColumn == true) {
+  //                           $("." + columnClass + "").addClass("hiddenColumn");
+  //                           $("." + columnClass + "").removeClass("showColumn");
+  //                         } else if (hiddenColumn == false) {
+  //                           $("." + columnClass + "").removeClass(
+  //                             "hiddenColumn"
+  //                           );
+  //                           $("." + columnClass + "").addClass("showColumn");
+  //                         }
+  //                       }
+  //                     }
+  //                   }
+  //                 }
+  //               );
+
+  //               setTimeout(function () {
+  //                 MakeNegative();
+  //               }, 100);
+  //             }
+
+  //             $(".fullScreenSpin").css("display", "none");
+  //             setTimeout(function () {
+  //               $("#taxRatesList")
+  //                 .DataTable({
+  //                   columnDefs: [
+  //                     {
+  //                       type: "date",
+  //                       targets: 0,
+  //                     },
+  //                     {
+  //                       orderable: false,
+  //                       targets: -1,
+  //                     },
+  //                   ],
+  //                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+  //                   buttons: [
+  //                     {
+  //                       extend: "excelHtml5",
+  //                       text: "",
+  //                       download: "open",
+  //                       className: "btntabletocsv hiddenColumn",
+  //                       filename: "taxratelist_" + moment().format(),
+  //                       orientation: "portrait",
+  //                       exportOptions: {
+  //                         columns: ":visible",
+  //                       },
+  //                     },
+  //                     {
+  //                       extend: "print",
+  //                       download: "open",
+  //                       className: "btntabletopdf hiddenColumn",
+  //                       text: "",
+  //                       title: "Tax Rate List",
+  //                       filename: "taxratelist_" + moment().format(),
+  //                       exportOptions: {
+  //                         columns: ":visible",
+  //                       },
+  //                     },
+  //                   ],
+  //                   select: true,
+  //                   destroy: true,
+  //                   // colReorder: true,
+  //                   colReorder: {
+  //                     fixedColumnsRight: 1,
+  //                   },
+  //                   // bStateSave: true,
+  //                   // rowId: 0,
+  //                   // pageLength: 25,
+  //                   paging: false,
+  //                   //                      "scrollY": "400px",
+  //                   //                      "scrollCollapse": true,
+  //                   info: true,
+  //                   responsive: true,
+  //                   order: [[0, "asc"]],
+  //                   action: function () {
+  //                     $("#taxRatesList").DataTable().ajax.reload();
+  //                   },
+  //                   fnDrawCallback: function (oSettings) {
+  //                     setTimeout(function () {
+  //                       MakeNegative();
+  //                     }, 100);
+  //                   },
+  //                 })
+  //                 .on("page", function () {
+  //                   setTimeout(function () {
+  //                     MakeNegative();
+  //                   }, 100);
+  //                   let draftRecord = templateObject.taxRates.get();
+  //                   templateObject.taxRates.set(draftRecord);
+  //                 })
+  //                 .on("column-reorder", function () {})
+  //                 .on("length.dt", function (e, settings, len) {
+  //                   setTimeout(function () {
+  //                     MakeNegative();
+  //                   }, 100);
+  //                 });
+
+  //               // $('#taxRatesList').DataTable().column( 0 ).visible( true );
+  //               $(".fullScreenSpin").css("display", "none");
+  //             }, 0);
+
+  //             var columns = $("#taxRatesList th");
+  //             let sTible = "";
+  //             let sWidth = "";
+  //             let sIndex = "";
+  //             let sVisible = "";
+  //             let columVisible = false;
+  //             let sClass = "";
+  //             $.each(columns, function (i, v) {
+  //               if (v.hidden == false) {
+  //                 columVisible = true;
+  //               }
+  //               if (v.className.includes("hiddenColumn")) {
+  //                 columVisible = false;
+  //               }
+  //               sWidth = v.style.width.replace("px", "");
+
+  //               let datatablerecordObj = {
+  //                 sTitle: v.innerText || "",
+  //                 sWidth: sWidth || "",
+  //                 sIndex: v.cellIndex || "",
+  //                 sVisible: columVisible || false,
+  //                 sClass: v.className || "",
+  //               };
+  //               tableHeaderList.push(datatablerecordObj);
+  //             });
+  //             templateObject.taxRatesHeader.set(tableHeaderList);
+  //             $("div.dataTables_filter input").addClass(
+  //               "form-control form-control-sm"
+  //             );
+  //           })
+  //           .catch(function (err) {
+  //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //             $(".fullScreenSpin").css("display", "none");
+  //             // Meteor._reload.reload();
+  //           });
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         let useData = data.ttaxcodevs1;
+  //         let lineItems = [];
+  //         let lineItemObj = {};
+  //         for (let i = 0; i < useData.length; i++) {
+  //           let taxRate = (useData[i].Rate * 100).toFixed(2) + "%";
+  //           var dataList = {
+  //             id: useData[i].Id || "",
+  //             codename: useData[i].CodeName || "-",
+  //             description: useData[i].Description || "-",
+  //             region: useData[i].RegionName || "-",
+  //             rate: taxRate || "-",
+  //           };
+
+  //           dataTableList.push(dataList);
+  //           //}
+  //         }
+
+  //         templateObject.taxRates.set(dataTableList);
+
+  //         if (templateObject.taxRates.get()) {
+  //           Meteor.call(
+  //             "readPrefMethod",
+  //             Session.get("mycloudLogonID"),
+  //             "taxRatesList",
+  //             function (error, result) {
+  //               if (error) {
+  //               } else {
+  //                 if (result) {
+  //                   for (let i = 0; i < result.customFields.length; i++) {
+  //                     let customcolumn = result.customFields;
+  //                     let columData = customcolumn[i].label;
+  //                     let columHeaderUpdate = customcolumn[i].thclass.replace(
+  //                       / /g,
+  //                       "."
+  //                     );
+  //                     let hiddenColumn = customcolumn[i].hidden;
+  //                     let columnClass = columHeaderUpdate.split(".")[1];
+  //                     let columnWidth = customcolumn[i].width;
+  //                     let columnindex = customcolumn[i].index + 1;
+
+  //                     if (hiddenColumn == true) {
+  //                       $("." + columnClass + "").addClass("hiddenColumn");
+  //                       $("." + columnClass + "").removeClass("showColumn");
+  //                     } else if (hiddenColumn == false) {
+  //                       $("." + columnClass + "").removeClass("hiddenColumn");
+  //                       $("." + columnClass + "").addClass("showColumn");
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           );
+
+  //           setTimeout(function () {
+  //             MakeNegative();
+  //           }, 100);
+  //         }
+
+  //         $(".fullScreenSpin").css("display", "none");
+  //         setTimeout(function () {
+  //           $("#taxRatesList")
+  //             .DataTable({
+  //               columnDefs: [
+  //                 {
+  //                   type: "date",
+  //                   targets: 0,
+  //                 },
+  //                 {
+  //                   orderable: false,
+  //                   targets: -1,
+  //                 },
+  //               ],
+  //               sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+  //               buttons: [
+  //                 {
+  //                   extend: "excelHtml5",
+  //                   text: "",
+  //                   download: "open",
+  //                   className: "btntabletocsv hiddenColumn",
+  //                   filename: "taxratelist_" + moment().format(),
+  //                   orientation: "portrait",
+  //                   exportOptions: {
+  //                     columns: ":visible",
+  //                   },
+  //                 },
+  //                 {
+  //                   extend: "print",
+  //                   download: "open",
+  //                   className: "btntabletopdf hiddenColumn",
+  //                   text: "",
+  //                   title: "Tax Rate List",
+  //                   filename: "taxratelist_" + moment().format(),
+  //                   exportOptions: {
+  //                     columns: ":visible",
+  //                   },
+  //                 },
+  //               ],
+  //               select: true,
+  //               destroy: true,
+  //               // colReorder: true,
+  //               colReorder: {
+  //                 fixedColumnsRight: 1,
+  //               },
+  //               // bStateSave: true,
+  //               // rowId: 0,
+  //               // pageLength: 25,
+  //               paging: false,
+  //               //          "scrollY": "400px",
+  //               //          "scrollCollapse": true,
+  //               info: true,
+  //               responsive: true,
+  //               order: [[0, "asc"]],
+  //               action: function () {
+  //                 $("#taxRatesList").DataTable().ajax.reload();
+  //               },
+  //               fnDrawCallback: function (oSettings) {
+  //                 setTimeout(function () {
+  //                   MakeNegative();
+  //                 }, 100);
+  //               },
+  //             })
+  //             .on("page", function () {
+  //               setTimeout(function () {
+  //                 MakeNegative();
+  //               }, 100);
+  //               let draftRecord = templateObject.datatablerecords.get();
+  //               templateObject.datatablerecords.set(draftRecord);
+  //             })
+  //             .on("column-reorder", function () {})
+  //             .on("length.dt", function (e, settings, len) {
+  //               setTimeout(function () {
+  //                 MakeNegative();
+  //               }, 100);
+  //             });
+
+  //           // $('#taxRatesList').DataTable().column( 0 ).visible( true );
+  //           $(".fullScreenSpin").css("display", "none");
+  //         }, 0);
+
+  //         var columns = $("#taxRatesList th");
+  //         let sTible = "";
+  //         let sWidth = "";
+  //         let sIndex = "";
+  //         let sVisible = "";
+  //         let columVisible = false;
+  //         let sClass = "";
+  //         $.each(columns, function (i, v) {
+  //           if (v.hidden == false) {
+  //             columVisible = true;
+  //           }
+  //           if (v.className.includes("hiddenColumn")) {
+  //             columVisible = false;
+  //           }
+  //           sWidth = v.style.width.replace("px", "");
+
+  //           let datatablerecordObj = {
+  //             sTitle: v.innerText || "",
+  //             sWidth: sWidth || "",
+  //             sIndex: v.cellIndex || "",
+  //             sVisible: columVisible || false,
+  //             sClass: v.className || "",
+  //           };
+  //           tableHeaderList.push(datatablerecordObj);
+  //         });
+  //         templateObject.tableheaderrecords.set(tableHeaderList);
+  //         $("div.dataTables_filter input").addClass(
+  //           "form-control form-control-sm"
+  //         );
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       taxRateService
+  //         .getTaxRateVS1()
+  //         .then(function (data) {
+  //           let lineItems = [];
+  //           let lineItemObj = {};
+  //           for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+  //             let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2) + "%";
+  //             var dataList = {
+  //               id: data.ttaxcodevs1[i].Id || "",
+  //               codename: data.ttaxcodevs1[i].CodeName || "-",
+  //               description: data.ttaxcodevs1[i].Description || "-",
+  //               region: data.ttaxcodevs1[i].RegionName || "-",
+  //               rate: taxRate || "-",
+  //             };
+
+  //             dataTableList.push(dataList);
+  //             //}
+  //           }
+
+  //           templateObject.datatablerecords.set(dataTableList);
+
+  //           if (templateObject.datatablerecords.get()) {
+  //             Meteor.call(
+  //               "readPrefMethod",
+  //               Session.get("mycloudLogonID"),
+  //               "taxRatesList",
+  //               function (error, result) {
+  //                 if (error) {
+  //                 } else {
+  //                   if (result) {
+  //                     for (let i = 0; i < result.customFields.length; i++) {
+  //                       let customcolumn = result.customFields;
+  //                       let columData = customcolumn[i].label;
+  //                       let columHeaderUpdate = customcolumn[i].thclass.replace(
+  //                         / /g,
+  //                         "."
+  //                       );
+  //                       let hiddenColumn = customcolumn[i].hidden;
+  //                       let columnClass = columHeaderUpdate.split(".")[1];
+  //                       let columnWidth = customcolumn[i].width;
+  //                       let columnindex = customcolumn[i].index + 1;
+
+  //                       if (hiddenColumn == true) {
+  //                         $("." + columnClass + "").addClass("hiddenColumn");
+  //                         $("." + columnClass + "").removeClass("showColumn");
+  //                       } else if (hiddenColumn == false) {
+  //                         $("." + columnClass + "").removeClass("hiddenColumn");
+  //                         $("." + columnClass + "").addClass("showColumn");
+  //                       }
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             );
+
+  //             setTimeout(function () {
+  //               MakeNegative();
+  //             }, 100);
+  //           }
+
+  //           $(".fullScreenSpin").css("display", "none");
+  //           setTimeout(function () {
+  //             $("#taxRatesList")
+  //               .DataTable({
+  //                 columnDefs: [
+  //                   {
+  //                     type: "date",
+  //                     targets: 0,
+  //                   },
+  //                   {
+  //                     orderable: false,
+  //                     targets: -1,
+  //                   },
+  //                 ],
+  //                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+  //                 buttons: [
+  //                   {
+  //                     extend: "excelHtml5",
+  //                     text: "",
+  //                     download: "open",
+  //                     className: "btntabletocsv hiddenColumn",
+  //                     filename: "taxratelist_" + moment().format(),
+  //                     orientation: "portrait",
+  //                     exportOptions: {
+  //                       columns: ":visible",
+  //                     },
+  //                   },
+  //                   {
+  //                     extend: "print",
+  //                     download: "open",
+  //                     className: "btntabletopdf hiddenColumn",
+  //                     text: "",
+  //                     title: "Tax Rate List",
+  //                     filename: "taxratelist_" + moment().format(),
+  //                     exportOptions: {
+  //                       columns: ":visible",
+  //                     },
+  //                   },
+  //                 ],
+  //                 select: true,
+  //                 destroy: true,
+  //                 // colReorder: true,
+  //                 colReorder: {
+  //                   fixedColumnsRight: 1,
+  //                 },
+  //                 // bStateSave: true,
+  //                 // rowId: 0,
+  //                 // pageLength: 25,
+  //                 paging: false,
+  //                 //                    "scrollY": "400px",
+  //                 //                    "scrollCollapse": true,
+  //                 info: true,
+  //                 responsive: true,
+  //                 order: [[0, "asc"]],
+  //                 action: function () {
+  //                   $("#taxRatesList").DataTable().ajax.reload();
+  //                 },
+  //                 fnDrawCallback: function (oSettings) {
+  //                   setTimeout(function () {
+  //                     MakeNegative();
+  //                   }, 100);
+  //                 },
+  //               })
+  //               .on("page", function () {
+  //                 setTimeout(function () {
+  //                   MakeNegative();
+  //                 }, 100);
+  //                 let draftRecord = templateObject.datatablerecords.get();
+  //                 templateObject.datatablerecords.set(draftRecord);
+  //               })
+  //               .on("column-reorder", function () {})
+  //               .on("length.dt", function (e, settings, len) {
+  //                 setTimeout(function () {
+  //                   MakeNegative();
+  //                 }, 100);
+  //               });
+
+  //             // $('#taxRatesList').DataTable().column( 0 ).visible( true );
+  //             $(".fullScreenSpin").css("display", "none");
+  //           }, 0);
+
+  //           var columns = $("#taxRatesList th");
+  //           let sTible = "";
+  //           let sWidth = "";
+  //           let sIndex = "";
+  //           let sVisible = "";
+  //           let columVisible = false;
+  //           let sClass = "";
+  //           $.each(columns, function (i, v) {
+  //             if (v.hidden == false) {
+  //               columVisible = true;
+  //             }
+  //             if (v.className.includes("hiddenColumn")) {
+  //               columVisible = false;
+  //             }
+  //             sWidth = v.style.width.replace("px", "");
+
+  //             let datatablerecordObj = {
+  //               sTitle: v.innerText || "",
+  //               sWidth: sWidth || "",
+  //               sIndex: v.cellIndex || "",
+  //               sVisible: columVisible || false,
+  //               sClass: v.className || "",
+  //             };
+  //             tableHeaderList.push(datatablerecordObj);
+  //           });
+  //           templateObject.tableheaderrecords.set(tableHeaderList);
+  //           $("div.dataTables_filter input").addClass(
+  //             "form-control form-control-sm"
+  //           );
+  //         })
+  //         .catch(function (err) {
+  //           // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //           $(".fullScreenSpin").css("display", "none");
+  //           // Meteor._reload.reload();
+  //         });
+  //     });
+  // };
+  // templateObject.getTaxRates();
 
   // Step 3 Render functionalities
   let dataTableListPaymentMethod = [];
@@ -3029,9 +3229,298 @@ Template.setup.onRendered(function () {
   // Step 6 Render functionalities
   let sideBarService = new SideBarService();
   let utilityService = new UtilityService();
+  let accountService = new AccountService();
   var splashArrayAccountList = new Array();
   var currentLoc = FlowRouter.current().route.path;
   let accBalance = 0;
+
+  templateObject.loadAccountTypes = () => {
+    let accountTypeList = [];
+    getVS1Data("TAccountType")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
+          accountService.getAccountTypeCheck().then(function (data) {
+            for (let i = 0; i < data.taccounttype.length; i++) {
+              let accounttyperecordObj = {
+                accounttypename: data.taccounttype[i].AccountTypeName || " ",
+                description: data.taccounttype[i].OriginalDescription || " ",
+              };
+              accountTypeList.push(accounttyperecordObj);
+            }
+            templateObject.accountTypes.set(accountTypeList);
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.taccounttype;
+
+          for (let i = 0; i < useData.length; i++) {
+            let accounttyperecordObj = {
+              accounttypename: useData[i].AccountTypeName || " ",
+              description: useData[i].OriginalDescription || " ",
+            };
+            accountTypeList.push(accounttyperecordObj);
+          }
+          templateObject.accountTypes.set(accountTypeList);
+        }
+      })
+      .catch(function (err) {
+        accountService.getAccountTypeCheck().then(function (data) {
+          for (let i = 0; i < data.taccounttype.length; i++) {
+            let accounttyperecordObj = {
+              accounttypename: data.taccounttype[i].AccountTypeName || " ",
+              description: data.taccounttype[i].OriginalDescription || " ",
+            };
+            accountTypeList.push(accounttyperecordObj);
+          }
+          templateObject.accountTypes.set(accountTypeList);
+        });
+      });
+  };
+  templateObject.loadAccountTypes();
+
+  templateObject.loadAccountList = async () => {
+    LoadingOverlay.show();
+    let _accountList = [];
+
+    let dataObject = await getVS1Data("TAccountVS1");
+    if (dataObject.length === 0) {
+      dataObject = await sideBarService.getAccountListVS1();
+      await addVS1Data("TAccountVS1", JSON.stringify(dataObject));
+    } else {
+      dataObject = JSON.parse(dataObject[0].data);
+    }
+    if (dataObject.taccountvs1) {
+      data = dataObject;
+      console.log("account listing: ", dataObject.taccountvs1);
+      // _accountList = dataObject.taccountvs1;
+
+      // data.taccountvs1.forEach((el) => {
+      //   if (!isNaN(el.fields.Balance)) {
+      //     accBalance =
+      //       utilityService.modifynegativeCurrencyFormat(
+      //         el.fields.Balance
+      //       ) || 0.0;
+      //   } else {
+      //     accBalance = Currency + "0.00";
+      //   }
+      //   var dataList = [
+      //     el.fields.AccountName || "-",
+      //     el.fields.Description || "",
+      //     el.fields.AccountNumber || "",
+      //     el.fields.AccountTypeName || "",
+      //     accBalance,
+      //     el.fields.TaxCode || "",
+      //     el.fields.ID || "",
+      //   ];
+      //   if (currentLoc === "/billcard") {
+      //     if (
+      //       el.fields.AccountTypeName !== "AP" &&
+      //       el.fields.AccountTypeName !== "AR" &&
+      //       el.fields.AccountTypeName !== "CCARD" &&
+      //       el.fields.AccountTypeName !== "BANK"
+      //     ) {
+      //       _accountList.push(dataList);
+      //     }
+      //   } else if (currentLoc === "/journalentrycard") {
+      //     if (
+      //       el.fields.AccountTypeName !== "AP" &&
+      //       el.fields.AccountTypeName !== "AR"
+      //     ) {
+      //       _accountList.push(dataList);
+      //     }
+      //   } else if (currentLoc === "/chequecard") {
+      //     if (
+      //       el.fields.AccountTypeName === "EQUITY" ||
+      //       el.fields.AccountTypeName === "BANK" ||
+      //       el.fields.AccountTypeName === "CCARD" ||
+      //       el.fields.AccountTypeName === "COGS" ||
+      //       el.fields.AccountTypeName === "EXP" ||
+      //       el.fields.AccountTypeName === "FIXASSET" ||
+      //       el.fields.AccountTypeName === "INC" ||
+      //       el.fields.AccountTypeName === "LTLIAB" ||
+      //       el.fields.AccountTypeName === "OASSET" ||
+      //       el.fields.AccountTypeName === "OCASSET" ||
+      //       el.fields.AccountTypeName === "OCLIAB" ||
+      //       el.fields.AccountTypeName === "EXEXP" ||
+      //       el.fields.AccountTypeName === "EXINC"
+      //     ) {
+      //       _accountList.push(dataList);
+      //     }
+      //   } else if (
+      //     currentLoc === "/paymentcard" ||
+      //     currentLoc === "/supplierpaymentcard"
+      //   ) {
+      //     if (
+      //       el.fields.AccountTypeName === "BANK" ||
+      //       el.fields.AccountTypeName === "CCARD" ||
+      //       el.fields.AccountTypeName === "OCLIAB"
+      //     ) {
+      //       _accountList.push(dataList);
+      //     }
+      //   } else if (
+      //     currentLoc === "/bankrecon" ||
+      //     currentLoc === "/newbankrecon"
+      //   ) {
+      //     if (
+      //       el.fields.AccountTypeName === "BANK" ||
+      //       el.fields.AccountTypeName === "CCARD"
+      //     ) {
+      //       _accountList.push(dataList);
+      //     }
+      //   } else {
+      //     _accountList.push(dataList);
+      //   }
+
+      // });
+
+      let fullAccountTypeName = "";
+      let accBalance = "";
+
+      data.taccountvs1.forEach((account) => {
+        // if (accountTypeList) {
+        //   for (var j = 0; j < accountTypeList.length; j++) {
+        //     if (
+        //       account.fields.AccountTypeName ===
+        //       accountTypeList[j].accounttypename
+        //     ) {
+        //       fullAccountTypeName = accountTypeList[j].description || "";
+        //     }
+        //   }
+        // }
+
+        if (!isNaN(account.fields.Balance)) {
+          accBalance =
+            utilityService.modifynegativeCurrencyFormat(
+              account.fields.Balance
+            ) || 0.0;
+        } else {
+          accBalance = Currency + "0.00";
+        }
+        var dataList = {
+          id: account.fields.ID || "",
+          accountname: account.fields.AccountName || "",
+          description: account.fields.Description || "",
+          accountnumber: account.fields.AccountNumber || "",
+          accounttypename:
+            fullAccountTypeName || account.fields.AccountTypeName,
+          accounttypeshort: account.fields.AccountTypeName || "",
+          taxcode: account.fields.TaxCode || "",
+          bankaccountname: account.fields.BankAccountName || "",
+          bankname: account.fields.BankName || "",
+          bsb: account.fields.BSB || "",
+          bankaccountnumber: account.fields.BankAccountNumber || "",
+          swiftcode: account.fields.Extra || "",
+          routingNo: account.BankCode || "",
+          apcanumber: account.fields.BankNumber || "",
+          balance: accBalance || 0.0,
+          isheader: account.fields.IsHeader || false,
+          cardnumber: account.fields.CarNumber || "",
+          expirydate: account.fields.ExpiryDate || "",
+          cvc: account.fields.CVC || "",
+        };
+        _accountList.push(dataList);
+      });
+
+      templateObject.accountList.set(_accountList);
+
+      console.log(
+        "Final account list: ",
+        _accountList,
+        templateObject.accountList.get()
+      );
+    }
+
+    setTimeout(function () {
+      // //$.fn.dataTable.moment('DD/MM/YY');
+      $("#tblAccountOverview")
+        .DataTable({
+          columnDefs: [
+            // { type: 'currency', targets: 4 }
+          ],
+          select: true,
+          destroy: true,
+          colReorder: true,
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          buttons: [
+            {
+              extend: "csvHtml5",
+              text: "",
+              download: "open",
+              className: "btntabletocsv hiddenColumn",
+              filename: "accountoverview_" + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+            {
+              extend: "print",
+              download: "open",
+              className: "btntabletopdf hiddenColumn",
+              text: "",
+              title: "Accounts Overview",
+              filename: "Accounts Overview_" + moment().format(),
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+            {
+              extend: "excelHtml5",
+              title: "",
+              download: "open",
+              className: "btntabletoexcel hiddenColumn",
+              filename: "accountoverview_" + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+              // ,
+              // customize: function ( win ) {
+              //   $(win.document.body).children("h1:first").remove();
+              // }
+            },
+          ],
+          // bStateSave: true,
+          // rowId: 0,
+          pageLength: initialDatatableLoad,
+          lengthMenu: [
+            [initialDatatableLoad, -1],
+            [initialDatatableLoad, "All"],
+          ],
+          info: true,
+          responsive: true,
+          order: [[0, "asc"]],
+          // "aaSorting": [[1,'desc']],
+          action: function () {
+            $("#tblAccountOverview").DataTable().ajax.reload();
+          },
+          fnDrawCallback: function (oSettings) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          },
+        })
+        .on("page", function () {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+          let draftRecord = templateObject.accountList.get();
+          templateObject.accountList.set(draftRecord);
+        })
+        .on("column-reorder", function () {})
+        .on("length.dt", function (e, settings, len) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        });
+      // $('.fullScreenSpin').css('display','none');
+    }, 10);
+
+    LoadingOverlay.hide();
+  };
+
+  templateObject.loadAccountList();
+
   templateObject.getAllAccountss = function () {
     getVS1Data("TAccountVS1")
       .then(function (dataObject) {
@@ -3480,7 +3969,208 @@ Template.setup.onRendered(function () {
         });
       });
   };
-  templateObject.getAllAccountss();
+
+  templateObject.loadAllTaxCodes = async () => {
+    let dataObject = await getVS1Data("TTaxcodeVS1");
+    let data =
+      dataObject.length == 0
+        ? await productService.getTaxCodesVS1()
+        : JSON.parse(dataObject[0].data);
+    let splashArrayTaxRateList = [];
+    let taxCodesList = [];
+
+    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+      let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+      var dataList = [
+        data.ttaxcodevs1[i].Id || "",
+        data.ttaxcodevs1[i].CodeName || "",
+        data.ttaxcodevs1[i].Description || "-",
+        taxRate || 0,
+      ];
+
+      let taxcoderecordObj = {
+        codename: data.ttaxcodevs1[i].CodeName || " ",
+        coderate: taxRate || " ",
+      };
+
+      taxCodesList.push(taxcoderecordObj);
+
+      splashArrayTaxRateList.push(dataList);
+    }
+    templateObject.taxraterecords.set(taxCodesList);
+
+    if (splashArrayTaxRateList) {
+      $("#tblTaxRate").DataTable({
+        data: splashArrayTaxRateList,
+        sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        columnDefs: [
+          {
+            orderable: false,
+            targets: 0,
+          },
+          {
+            className: "taxName",
+            targets: [1],
+          },
+          {
+            className: "taxDesc",
+            targets: [2],
+          },
+          {
+            className: "taxRate text-right",
+            targets: [3],
+          },
+        ],
+        colReorder: true,
+
+        pageLength: initialDatatableLoad,
+        lengthMenu: [
+          [initialDatatableLoad, -1],
+          [initialDatatableLoad, "All"],
+        ],
+        info: true,
+        responsive: true,
+        fnDrawCallback: function (oSettings) {
+          // $('.dataTables_paginate').css('display', 'none');
+        },
+        fnInitComplete: function () {
+          $(
+            "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
+          ).insertAfter("#tblTaxRate_filter");
+          $(
+            "<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+          ).insertAfter("#tblTaxRate_filter");
+        },
+      });
+    }
+  };
+
+  setTimeout(() => {
+    templateObject.loadAllTaxCodes();
+  }, 100);
+
+  $("#tblAccountOverview tbody").on(
+    "click",
+    "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
+    function () {
+      var listData = $(this).closest("tr").attr("id");
+      var tabletaxtcode = $(event.target)
+        .closest("tr")
+        .find(".colTaxCode")
+        .text();
+      var accountName = $(event.target)
+        .closest("tr")
+        .find(".colAccountName")
+        .text();
+      let columnBalClass = $(event.target).attr("class");
+      // let accountService = new AccountService();
+
+      // if(columnBalClass.indexOf("colBalance") != -1){
+      //     window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
+      // }else{
+
+      if (listData) {
+        $("#add-account-title").text("Edit Account Details");
+        $("#edtAccountName").attr("readonly", true);
+        $("#sltAccountType").attr("readonly", true);
+        $("#sltAccountType").attr("disabled", "disabled");
+        if (listData !== "") {
+          listData = Number(listData);
+          //accountService.getOneAccount(listData).then(function (data) {
+
+          var accountid = listData || "";
+          var accounttype =
+            $(event.target)
+              .closest("tr")
+              .find(".colType")
+              .attr("accounttype") || "";
+          var accountname =
+            $(event.target).closest("tr").find(".colAccountName").text() || "";
+          var accountno =
+            $(event.target).closest("tr").find(".colAccountNo").text() || "";
+          var taxcode =
+            $(event.target).closest("tr").find(".colTaxCode").text() || "";
+          var accountdesc =
+            $(event.target).closest("tr").find(".colDescription").text() || "";
+          var bankaccountname =
+            $(event.target).closest("tr").find(".colBankAccountName").text() ||
+            "";
+          var bankname =
+            localStorage.getItem("vs1companyBankName") ||
+            $(event.target).closest("tr").find(".colBankName").text() ||
+            "";
+          var bankbsb =
+            $(event.target).closest("tr").find(".colBSB").text() || "";
+          var bankacountno =
+            $(event.target).closest("tr").find(".colBankAccountNo").text() ||
+            "";
+
+          var swiftCode =
+            $(event.target).closest("tr").find(".colExtra").text() || "";
+          var routingNo =
+            $(event.target).closest("tr").find(".colAPCANumber").text() || "";
+
+          var showTrans =
+            $(event.target)
+              .closest("tr")
+              .find(".colAPCANumber")
+              .attr("checkheader") || false;
+
+          var cardnumber =
+            $(event.target).closest("tr").find(".colCardNumber").text() || "";
+          var cardexpiry =
+            $(event.target).closest("tr").find(".colExpiryDate").text() || "";
+          var cardcvc =
+            $(event.target).closest("tr").find(".colCVC").text() || "";
+
+          if (accounttype === "BANK") {
+            $(".isBankAccount").removeClass("isNotBankAccount");
+            $(".isCreditAccount").addClass("isNotCreditAccount");
+          } else if (accounttype === "CCARD") {
+            $(".isCreditAccount").removeClass("isNotCreditAccount");
+            $(".isBankAccount").addClass("isNotBankAccount");
+          } else {
+            $(".isBankAccount").addClass("isNotBankAccount");
+            $(".isCreditAccount").addClass("isNotCreditAccount");
+          }
+
+          $("#edtAccountID").val(accountid);
+          $("#sltAccountType").val(accounttype);
+          $("#edtAccountName").val(accountname);
+          $("#edtAccountNo").val(accountno);
+          $("#sltTaxCode").val(taxcode);
+          $("#txaAccountDescription").val(accountdesc);
+          $("#edtBankAccountName").val(bankaccountname);
+          $("#edtBSB").val(bankbsb);
+          $("#edtBankAccountNo").val(bankacountno);
+          $("#swiftCode").val(swiftCode);
+          $("#routingNo").val(routingNo);
+          $("#edtBankName").val(bankname);
+
+          $("#edtCardNumber").val(cardnumber);
+          $("#edtExpiryDate").val(
+            cardexpiry ? moment(cardexpiry).format("DD/MM/YYYY") : ""
+          );
+          $("#edtCvc").val(cardcvc);
+
+          if (showTrans == "true") {
+            $(".showOnTransactions").prop("checked", true);
+          } else {
+            $(".showOnTransactions").prop("checked", false);
+          }
+          //});
+
+          $(this).closest("tr").attr("data-target", "#addNewAccount");
+          $(this).closest("tr").attr("data-toggle", "modal");
+        }
+
+        // window.open('/invoicecard?id=' + listData,'_self');
+      }
+      //}
+    }
+  );
+
+  //templateObject.getAllAccountss();
 
   // Step 7 Render functionalities
   // Step 8 Render functionalities
@@ -5617,7 +6307,7 @@ Template.setup.events({
       $(".btnRefreshEmployees").trigger("click");
     }
   },
-  "click .btnRefreshEmployee":  (event) => {
+  "click .btnRefreshEmployee": (event) => {
     let templateObject = Template.instance();
     templateObject.loadEmployees();
     // let utilityService = new UtilityService();
@@ -6192,8 +6882,6 @@ Template.setup.events({
   "click #tblEmployeelistpop tr td": (e) => {
     $(e).preventDefault();
     console.log(e);
-
-
   },
 
   // TODO: Step 6
@@ -6643,24 +7331,24 @@ Template.setup.events({
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectLineID").val(targetID);
   },
-  "click .printConfirmAccount": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    $("#html-2-pdfwrapper").css("display", "block");
-    $(".pdfCustomerName").html($("#edtSupplierName").val());
-    $(".pdfCustomerAddress").html(
-      $("#txabillingAddress")
-        .val()
-        .replace(/[\r\n]/g, "<br />")
-    );
-    $("#printcomment").html(
-      $("#txaComment")
-        .val()
-        .replace(/[\r\n]/g, "<br />")
-    );
-    var ponumber = $("#ponumber").val() || ".";
-    $(".po").text(ponumber);
-    exportSalesToPdf();
-  },
+  // "click .printConfirmAccount": function (event) {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   $("#html-2-pdfwrapper").css("display", "block");
+  //   $(".pdfCustomerName").html($("#edtSupplierName").val());
+  //   $(".pdfCustomerAddress").html(
+  //     $("#txabillingAddress")
+  //       .val()
+  //       .replace(/[\r\n]/g, "<br />")
+  //   );
+  //   $("#printcomment").html(
+  //     $("#txaComment")
+  //       .val()
+  //       .replace(/[\r\n]/g, "<br />")
+  //   );
+  //   var ponumber = $("#ponumber").val() || ".";
+  //   $(".po").text(ponumber);
+  //   exportSalesToPdf();
+  // },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineAmount": function (
     event
   ) {
@@ -6693,530 +7381,533 @@ Template.setup.events({
       event.preventDefault();
     }
   },
-  "click .btnSaveAccount": function (event) {
-    let templateObject = Template.instance();
-    let suppliername = $("#edtSupplierName");
-    let purchaseService = new PurchaseBoardService();
-    if (suppliername.val() === "") {
-      swal("Supplier has not been selected!", "", "warning");
-      e.preventDefault();
-    } else {
-      $(".fullScreenSpin").css("display", "inline-block");
-      var splashLineArray = [];
-      let lineItemsForm = [];
-      let lineItemObjForm = {};
-      $("#tblCreditLine > tbody > tr").each(function () {
-        var lineID = this.id;
-        let tdaccount = $("#" + lineID + " .lineAccountName").text();
-        let tddmemo = $("#" + lineID + " .lineMemo").text();
-        let tdamount = $("#" + lineID + " .lineAmount").val();
-        let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
-        let tdtaxCode = $("#" + lineID + " .lineTaxCode").text();
+  // "click .btnSaveAccount": function (event) {
+  //   let templateObject = Template.instance();
+  //   let suppliername = $("#edtSupplierName");
+  //   let purchaseService = new PurchaseBoardService();
+  //   if (suppliername.val() === "") {
+  //     swal("Supplier has not been selected!", "", "warning");
+  //     e.preventDefault();
+  //   } else {
+  //     $(".fullScreenSpin").css("display", "inline-block");
+  //     var splashLineArray = [];
+  //     let lineItemsForm = [];
+  //     let lineItemObjForm = {};
+  //     $("#tblCreditLine > tbody > tr").each(function () {
+  //       var lineID = this.id;
+  //       let tdaccount = $("#" + lineID + " .lineAccountName").text();
+  //       let tddmemo = $("#" + lineID + " .lineMemo").text();
+  //       let tdamount = $("#" + lineID + " .lineAmount").val();
+  //       let tdtaxrate = $("#" + lineID + " .lineTaxRate").text();
+  //       let tdtaxCode = $("#" + lineID + " .lineTaxCode").text();
 
-        if (tdaccount !== "") {
-          lineItemObjForm = {
-            type: "TCreditLine",
-            fields: {
-              AccountName: tdaccount || "",
-              ProductDescription: tddmemo || "",
+  //       if (tdaccount !== "") {
+  //         lineItemObjForm = {
+  //           type: "TCreditLine",
+  //           fields: {
+  //             AccountName: tdaccount || "",
+  //             ProductDescription: tddmemo || "",
 
-              LineCost: Number(tdamount.replace(/[^0-9.-]+/g, "")) || 0,
-              LineTaxCode: tdtaxCode || "",
-              LineClassName: $("#sltDept").val() || defaultDept,
-            },
-          };
-          lineItemsForm.push(lineItemObjForm);
-          splashLineArray.push(lineItemObjForm);
-        }
-      });
-      let getchkcustomField1 = true;
-      let getchkcustomField2 = true;
-      let getcustomField1 = $(".customField1Text").html();
-      let getcustomField2 = $(".customField2Text").html();
-      if ($("#formCheck-one").is(":checked")) {
-        getchkcustomField1 = false;
-      }
-      if ($("#formCheck-two").is(":checked")) {
-        getchkcustomField2 = false;
-      }
+  //             LineCost: Number(tdamount.replace(/[^0-9.-]+/g, "")) || 0,
+  //             LineTaxCode: tdtaxCode || "",
+  //             LineClassName: $("#sltDept").val() || defaultDept,
+  //           },
+  //         };
+  //         lineItemsForm.push(lineItemObjForm);
+  //         splashLineArray.push(lineItemObjForm);
+  //       }
+  //     });
+  //     let getchkcustomField1 = true;
+  //     let getchkcustomField2 = true;
+  //     let getcustomField1 = $(".customField1Text").html();
+  //     let getcustomField2 = $(".customField2Text").html();
+  //     if ($("#formCheck-one").is(":checked")) {
+  //       getchkcustomField1 = false;
+  //     }
+  //     if ($("#formCheck-two").is(":checked")) {
+  //       getchkcustomField2 = false;
+  //     }
 
-      let supplier = $("#edtSupplierName").val();
-      let supplierEmail = $("#edtSupplierEmail").val();
-      let billingAddress = $("#txabillingAddress").val();
+  //     let supplier = $("#edtSupplierName").val();
+  //     let supplierEmail = $("#edtSupplierEmail").val();
+  //     let billingAddress = $("#txabillingAddress").val();
 
-      var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-      var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+  //     // var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+  //     // var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));  
+      
+  //     var saledateTime = new Date();
+  //     var duedateTime = new Date();
 
-      let saleDate =
-        saledateTime.getFullYear() +
-        "-" +
-        (saledateTime.getMonth() + 1) +
-        "-" +
-        saledateTime.getDate();
-      let dueDate =
-        duedateTime.getFullYear() +
-        "-" +
-        (duedateTime.getMonth() + 1) +
-        "-" +
-        duedateTime.getDate();
+  //     let saleDate =
+  //       saledateTime.getFullYear() +
+  //       "-" +
+  //       (saledateTime.getMonth() + 1) +
+  //       "-" +
+  //       saledateTime.getDate();
+  //     let dueDate =
+  //       duedateTime.getFullYear() +
+  //       "-" +
+  //       (duedateTime.getMonth() + 1) +
+  //       "-" +
+  //       duedateTime.getDate();
 
-      let poNumber = $("#ponumber").val();
-      let reference = $("#edtRef").val();
-      let termname = $("#sltTerms").val();
-      let departement = $("#sltVia").val();
-      let shippingAddress = $("#txaShipingInfo").val();
-      let comments = $("#txaComment").val();
-      let pickingInfrmation = $("#txapickmemo").val();
+  //     let poNumber = $("#ponumber").val();
+  //     let reference = $("#edtRef").val();
+  //     let termname = $("#sltTerms").val();
+  //     let departement = $("#sltVia").val();
+  //     let shippingAddress = $("#txaShipingInfo").val();
+  //     let comments = $("#txaComment").val();
+  //     let pickingInfrmation = $("#txapickmemo").val();
 
-      let saleCustField1 = $("#edtSaleCustField1").val();
-      let saleCustField2 = $("#edtSaleCustField2").val();
-      let orderStatus = $("#edtStatus").val();
+  //     let saleCustField1 = $("#edtSaleCustField1").val();
+  //     let saleCustField2 = $("#edtSaleCustField2").val();
+  //     let orderStatus = $("#edtStatus").val();
 
-      var url = FlowRouter.current().path;
-      var getso_id = url.split("?id=");
-      var currentCredit = getso_id[getso_id.length - 1];
-      let uploadedItems = templateObject.uploadedFiles.get();
-      var currencyCode = $("#sltCurrency").val() || CountryAbbr;
-      var objDetails = "";
-      if (getso_id[1]) {
-        currentCredit = parseInt(currentCredit);
-        objDetails = {
-          type: "TCredit",
-          fields: {
-            ID: currentCredit,
-            SupplierName: supplier,
-            ForeignExchangeCode: currencyCode,
-            Lines: splashLineArray,
-            OrderTo: billingAddress,
-            Deleted: false,
+  //     var url = FlowRouter.current().path;
+  //     var getso_id = url.split("?id=");
+  //     var currentCredit = getso_id[getso_id.length - 1];
+  //     let uploadedItems = templateObject.uploadedFiles.get();
+  //     var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+  //     var objDetails = "";
+  //     if (getso_id[1]) {
+  //       currentCredit = parseInt(currentCredit);
+  //       objDetails = {
+  //         type: "TCredit",
+  //         fields: {
+  //           ID: currentCredit,
+  //           SupplierName: supplier,
+  //           ForeignExchangeCode: currencyCode,
+  //           Lines: splashLineArray,
+  //           OrderTo: billingAddress,
+  //           Deleted: false,
 
-            OrderDate: saleDate,
+  //           OrderDate: saleDate,
 
-            SupplierInvoiceNumber: poNumber,
-            ConNote: reference,
-            TermsName: termname,
-            Shipping: departement,
-            ShipTo: shippingAddress,
-            Comments: comments,
+  //           SupplierInvoiceNumber: poNumber,
+  //           ConNote: reference,
+  //           TermsName: termname,
+  //           Shipping: departement,
+  //           ShipTo: shippingAddress,
+  //           Comments: comments,
 
-            SalesComments: pickingInfrmation,
+  //           SalesComments: pickingInfrmation,
 
-            OrderStatus: $("#sltStatus").val(),
-          },
-        };
-      } else {
-        objDetails = {
-          type: "TCredit",
-          fields: {
-            SupplierName: supplier,
-            ForeignExchangeCode: currencyCode,
-            Lines: splashLineArray,
-            OrderTo: billingAddress,
-            OrderDate: saleDate,
-            Deleted: false,
+  //           OrderStatus: $("#sltStatus").val(),
+  //         },
+  //       };
+  //     } else {
+  //       objDetails = {
+  //         type: "TCredit",
+  //         fields: {
+  //           SupplierName: supplier,
+  //           ForeignExchangeCode: currencyCode,
+  //           Lines: splashLineArray,
+  //           OrderTo: billingAddress,
+  //           OrderDate: saleDate,
+  //           Deleted: false,
 
-            SupplierInvoiceNumber: poNumber,
-            ConNote: reference,
-            TermsName: termname,
-            Shipping: departement,
-            ShipTo: shippingAddress,
-            Comments: comments,
+  //           SupplierInvoiceNumber: poNumber,
+  //           ConNote: reference,
+  //           TermsName: termname,
+  //           Shipping: departement,
+  //           ShipTo: shippingAddress,
+  //           Comments: comments,
 
-            SalesComments: pickingInfrmation,
+  //           SalesComments: pickingInfrmation,
 
-            OrderStatus: $("#sltStatus").val(),
-          },
-        };
-      }
+  //           OrderStatus: $("#sltStatus").val(),
+  //         },
+  //       };
+  //     }
 
-      purchaseService
-        .saveCredit(objDetails)
-        .then(function (objDetails) {
-          var supplierID = $("#edtSupplierEmail").attr("supplierid");
+  //     purchaseService
+  //       .saveCredit(objDetails)
+  //       .then(function (objDetails) {
+  //         var supplierID = $("#edtSupplierEmail").attr("supplierid");
 
-          $("#html-2-pdfwrapper").css("display", "block");
-          $(".pdfCustomerName").html($("#edtSupplierEmail").val());
-          $(".pdfCustomerAddress").html(
-            $("#txabillingAddress")
-              .val()
-              .replace(/[\r\n]/g, "<br />")
-          );
-          var ponumber = $("#ponumber").val() || ".";
-          $(".po").text(ponumber);
-          async function addAttachment() {
-            let attachment = [];
-            let templateObject = Template.instance();
+  //         $("#html-2-pdfwrapper").css("display", "block");
+  //         $(".pdfCustomerName").html($("#edtSupplierEmail").val());
+  //         $(".pdfCustomerAddress").html(
+  //           $("#txabillingAddress")
+  //             .val()
+  //             .replace(/[\r\n]/g, "<br />")
+  //         );
+  //         var ponumber = $("#ponumber").val() || ".";
+  //         $(".po").text(ponumber);
+  //         async function addAttachment() {
+  //           let attachment = [];
+  //           let templateObject = Template.instance();
 
-            let invoiceId = objDetails.fields.ID;
-            let encodedPdf = await generatePdfForMail(invoiceId);
-            let pdfObject = "";
-            var reader = new FileReader();
-            reader.readAsDataURL(encodedPdf);
-            reader.onloadend = function () {
-              var base64data = reader.result;
-              base64data = base64data.split(",")[1];
+  //           let invoiceId = objDetails.fields.ID;
+  //           let encodedPdf = await generatePdfForMail(invoiceId);
+  //           let pdfObject = "";
+  //           var reader = new FileReader();
+  //           reader.readAsDataURL(encodedPdf);
+  //           reader.onloadend = function () {
+  //             var base64data = reader.result;
+  //             base64data = base64data.split(",")[1];
 
-              pdfObject = {
-                filename: "Credit " + invoiceId + ".pdf",
-                content: base64data,
-                encoding: "base64",
-              };
-              attachment.push(pdfObject);
+  //             pdfObject = {
+  //               filename: "Credit " + invoiceId + ".pdf",
+  //               content: base64data,
+  //               encoding: "base64",
+  //             };
+  //             attachment.push(pdfObject);
 
-              let erpInvoiceId = objDetails.fields.ID;
+  //             let erpInvoiceId = objDetails.fields.ID;
 
-              let mailFromName = Session.get("vs1companyName");
-              let mailFrom =
-                localStorage.getItem("VS1OrgEmail") ||
-                localStorage.getItem("VS1AdminUserName");
-              let customerEmailName = $("#edtSupplierName").val();
-              let checkEmailData = $("#edtSupplierEmail").val();
+  //             let mailFromName = Session.get("vs1companyName");
+  //             let mailFrom =
+  //               localStorage.getItem("VS1OrgEmail") ||
+  //               localStorage.getItem("VS1AdminUserName");
+  //             let customerEmailName = $("#edtSupplierName").val();
+  //             let checkEmailData = $("#edtSupplierEmail").val();
 
-              let grandtotal = $("#grandTotal").html();
-              let amountDueEmail = $("#totalBalanceDue").html();
-              let emailDueDate = $("#dtDueDate").val();
-              let mailSubject =
-                "Credit " +
-                erpInvoiceId +
-                " from " +
-                mailFromName +
-                " for " +
-                customerEmailName;
-              let mailBody =
-                "Hi " +
-                customerEmailName +
-                ",\n\n Here's puchase order " +
-                erpInvoiceId +
-                " for  " +
-                grandtotal +
-                "." +
-                "\n\nThe amount outstanding of " +
-                amountDueEmail +
-                " is due on " +
-                emailDueDate +
-                "." +
-                "\n\nIf you have any questions, please let us know : " +
-                mailFrom +
-                ".\n\nThanks,\n" +
-                mailFromName;
+  //             let grandtotal = $("#grandTotal").html();
+  //             let amountDueEmail = $("#totalBalanceDue").html();
+  //             let emailDueDate = $("#dtDueDate").val();
+  //             let mailSubject =
+  //               "Credit " +
+  //               erpInvoiceId +
+  //               " from " +
+  //               mailFromName +
+  //               " for " +
+  //               customerEmailName;
+  //             let mailBody =
+  //               "Hi " +
+  //               customerEmailName +
+  //               ",\n\n Here's puchase order " +
+  //               erpInvoiceId +
+  //               " for  " +
+  //               grandtotal +
+  //               "." +
+  //               "\n\nThe amount outstanding of " +
+  //               amountDueEmail +
+  //               " is due on " +
+  //               emailDueDate +
+  //               "." +
+  //               "\n\nIf you have any questions, please let us know : " +
+  //               mailFrom +
+  //               ".\n\nThanks,\n" +
+  //               mailFromName;
 
-              var htmlmailBody =
-                '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
-                "    <tr>" +
-                '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
-                '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
-                "        </td>" +
-                "    </tr>" +
-                "    <tr>" +
-                '        <td style="padding: 40px 30px 40px 30px;">' +
-                '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                "                <tr>" +
-                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
-                "                        Hello there <span>" +
-                customerEmailName +
-                "</span>," +
-                "                    </td>" +
-                "                </tr>" +
-                "                <tr>" +
-                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                "                        Please find credit <span>" +
-                erpInvoiceId +
-                "</span> attached below." +
-                "                    </td>" +
-                "                </tr>" +
-                "                <tr>" +
-                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                "                        The amount outstanding of <span>" +
-                amountDueEmail +
-                "</span> is due on <span>" +
-                emailDueDate +
-                "</span>" +
-                "                    </td>" +
-                "                </tr>" +
-                "                <tr>" +
-                '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
-                "                        Kind regards," +
-                "                        <br>" +
-                "                        " +
-                mailFromName +
-                "" +
-                "                    </td>" +
-                "                </tr>" +
-                "            </table>" +
-                "        </td>" +
-                "    </tr>" +
-                "    <tr>" +
-                '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
-                '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
-                "                <tr>" +
-                '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
-                "                        If you have any question, please do not hesitate to contact us." +
-                "                    </td>" +
-                '                    <td align="right">' +
-                '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' +
-                mailFrom +
-                '">Contact Us</a>' +
-                "                    </td>" +
-                "                </tr>" +
-                "            </table>" +
-                "        </td>" +
-                "    </tr>" +
-                "</table>";
+  //             var htmlmailBody =
+  //               '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
+  //               "    <tr>" +
+  //               '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
+  //               '            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" alt="VS1 Cloud" width="250px" style="display: block;" />' +
+  //               "        </td>" +
+  //               "    </tr>" +
+  //               "    <tr>" +
+  //               '        <td style="padding: 40px 30px 40px 30px;">' +
+  //               '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+  //               "                <tr>" +
+  //               '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;">' +
+  //               "                        Hello there <span>" +
+  //               customerEmailName +
+  //               "</span>," +
+  //               "                    </td>" +
+  //               "                </tr>" +
+  //               "                <tr>" +
+  //               '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+  //               "                        Please find credit <span>" +
+  //               erpInvoiceId +
+  //               "</span> attached below." +
+  //               "                    </td>" +
+  //               "                </tr>" +
+  //               "                <tr>" +
+  //               '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
+  //               "                        The amount outstanding of <span>" +
+  //               amountDueEmail +
+  //               "</span> is due on <span>" +
+  //               emailDueDate +
+  //               "</span>" +
+  //               "                    </td>" +
+  //               "                </tr>" +
+  //               "                <tr>" +
+  //               '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
+  //               "                        Kind regards," +
+  //               "                        <br>" +
+  //               "                        " +
+  //               mailFromName +
+  //               "" +
+  //               "                    </td>" +
+  //               "                </tr>" +
+  //               "            </table>" +
+  //               "        </td>" +
+  //               "    </tr>" +
+  //               "    <tr>" +
+  //               '        <td bgcolor="#00a3d3" style="padding: 30px 30px 30px 30px;">' +
+  //               '            <table border="0" cellpadding="0" cellspacing="0" width="100%">' +
+  //               "                <tr>" +
+  //               '                    <td width="50%" style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;">' +
+  //               "                        If you have any question, please do not hesitate to contact us." +
+  //               "                    </td>" +
+  //               '                    <td align="right">' +
+  //               '                        <a style="border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; background-color: #4CAF50;" href="mailto:' +
+  //               mailFrom +
+  //               '">Contact Us</a>' +
+  //               "                    </td>" +
+  //               "                </tr>" +
+  //               "            </table>" +
+  //               "        </td>" +
+  //               "    </tr>" +
+  //               "</table>";
 
-              if (
-                $(".chkEmailCopy").is(":checked") &&
-                $(".chkEmailRep").is(":checked")
-              ) {
-                Meteor.call(
-                  "sendEmail",
-                  {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: checkEmailData,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/creditlist?success=true");
-                    } else {
-                    }
-                  }
-                );
+  //             if (
+  //               $(".chkEmailCopy").is(":checked") &&
+  //               $(".chkEmailRep").is(":checked")
+  //             ) {
+  //               Meteor.call(
+  //                 "sendEmail",
+  //                 {
+  //                   from: "" + mailFromName + " <" + mailFrom + ">",
+  //                   to: checkEmailData,
+  //                   subject: mailSubject,
+  //                   text: "",
+  //                   html: htmlmailBody,
+  //                   attachments: attachment,
+  //                 },
+  //                 function (error, result) {
+  //                   if (error && error.error === "error") {
+  //                     FlowRouter.go("/creditlist?success=true");
+  //                   } else {
+  //                   }
+  //                 }
+  //               );
 
-                Meteor.call(
-                  "sendEmail",
-                  {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: mailFrom,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/creditlist?success=true");
-                    } else {
-                      $("#html-2-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text:
-                          "Email Sent To Supplier: " +
-                          checkEmailData +
-                          " and User: " +
-                          mailFrom +
-                          "",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) {
-                          FlowRouter.go("/creditlist?success=true");
-                        } else if (result.dismiss === "cancel") {
-                        }
-                      });
+  //               Meteor.call(
+  //                 "sendEmail",
+  //                 {
+  //                   from: "" + mailFromName + " <" + mailFrom + ">",
+  //                   to: mailFrom,
+  //                   subject: mailSubject,
+  //                   text: "",
+  //                   html: htmlmailBody,
+  //                   attachments: attachment,
+  //                 },
+  //                 function (error, result) {
+  //                   if (error && error.error === "error") {
+  //                     FlowRouter.go("/creditlist?success=true");
+  //                   } else {
+  //                     $("#html-2-pdfwrapper").css("display", "none");
+  //                     swal({
+  //                       title: "SUCCESS",
+  //                       text:
+  //                         "Email Sent To Supplier: " +
+  //                         checkEmailData +
+  //                         " and User: " +
+  //                         mailFrom +
+  //                         "",
+  //                       type: "success",
+  //                       showCancelButton: false,
+  //                       confirmButtonText: "OK",
+  //                     }).then((result) => {
+  //                       if (result.value) {
+  //                         FlowRouter.go("/creditlist?success=true");
+  //                       } else if (result.dismiss === "cancel") {
+  //                       }
+  //                     });
 
-                      $(".fullScreenSpin").css("display", "none");
-                    }
-                  }
-                );
-              } else if ($(".chkEmailCopy").is(":checked")) {
-                Meteor.call(
-                  "sendEmail",
-                  {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: checkEmailData,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/creditlist?success=true");
-                    } else {
-                      $("#html-2-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text: "Email Sent To Supplier: " + checkEmailData + " ",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) {
-                          FlowRouter.go("/creditlist?success=true");
-                        } else if (result.dismiss === "cancel") {
-                        }
-                      });
+  //                     $(".fullScreenSpin").css("display", "none");
+  //                   }
+  //                 }
+  //               );
+  //             } else if ($(".chkEmailCopy").is(":checked")) {
+  //               Meteor.call(
+  //                 "sendEmail",
+  //                 {
+  //                   from: "" + mailFromName + " <" + mailFrom + ">",
+  //                   to: checkEmailData,
+  //                   subject: mailSubject,
+  //                   text: "",
+  //                   html: htmlmailBody,
+  //                   attachments: attachment,
+  //                 },
+  //                 function (error, result) {
+  //                   if (error && error.error === "error") {
+  //                     FlowRouter.go("/creditlist?success=true");
+  //                   } else {
+  //                     $("#html-2-pdfwrapper").css("display", "none");
+  //                     swal({
+  //                       title: "SUCCESS",
+  //                       text: "Email Sent To Supplier: " + checkEmailData + " ",
+  //                       type: "success",
+  //                       showCancelButton: false,
+  //                       confirmButtonText: "OK",
+  //                     }).then((result) => {
+  //                       if (result.value) {
+  //                         FlowRouter.go("/creditlist?success=true");
+  //                       } else if (result.dismiss === "cancel") {
+  //                       }
+  //                     });
 
-                      $(".fullScreenSpin").css("display", "none");
-                    }
-                  }
-                );
-              } else if ($(".chkEmailRep").is(":checked")) {
-                Meteor.call(
-                  "sendEmail",
-                  {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: mailFrom,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/creditlist?success=true");
-                    } else {
-                      $("#html-2-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text: "Email Sent To User: " + mailFrom + " ",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) {
-                          FlowRouter.go("/creditlist?success=true");
-                        } else if (result.dismiss === "cancel") {
-                        }
-                      });
+  //                     $(".fullScreenSpin").css("display", "none");
+  //                   }
+  //                 }
+  //               );
+  //             } else if ($(".chkEmailRep").is(":checked")) {
+  //               Meteor.call(
+  //                 "sendEmail",
+  //                 {
+  //                   from: "" + mailFromName + " <" + mailFrom + ">",
+  //                   to: mailFrom,
+  //                   subject: mailSubject,
+  //                   text: "",
+  //                   html: htmlmailBody,
+  //                   attachments: attachment,
+  //                 },
+  //                 function (error, result) {
+  //                   if (error && error.error === "error") {
+  //                     FlowRouter.go("/creditlist?success=true");
+  //                   } else {
+  //                     $("#html-2-pdfwrapper").css("display", "none");
+  //                     swal({
+  //                       title: "SUCCESS",
+  //                       text: "Email Sent To User: " + mailFrom + " ",
+  //                       type: "success",
+  //                       showCancelButton: false,
+  //                       confirmButtonText: "OK",
+  //                     }).then((result) => {
+  //                       if (result.value) {
+  //                         FlowRouter.go("/creditlist?success=true");
+  //                       } else if (result.dismiss === "cancel") {
+  //                       }
+  //                     });
 
-                      $(".fullScreenSpin").css("display", "none");
-                    }
-                  }
-                );
-              } else {
-                FlowRouter.go("/creditlist?success=true");
-              }
-            };
-          }
-          addAttachment();
+  //                     $(".fullScreenSpin").css("display", "none");
+  //                   }
+  //                 }
+  //               );
+  //             } else {
+  //               FlowRouter.go("/creditlist?success=true");
+  //             }
+  //           };
+  //         }
+  //         addAttachment();
 
-          function generatePdfForMail(invoiceId) {
-            return new Promise((resolve, reject) => {
-              let templateObject = Template.instance();
+  //         function generatePdfForMail(invoiceId) {
+  //           return new Promise((resolve, reject) => {
+  //             let templateObject = Template.instance();
 
-              let completeTabRecord;
-              let doc = new jsPDF("p", "pt", "a4");
-              doc.setFontSize(18);
-              var source = document.getElementById("html-2-pdfwrapper");
-              doc.addHTML(source, function () {
-                resolve(doc.output("blob"));
-              });
-            });
-          }
+  //             let completeTabRecord;
+  //             let doc = new jsPDF("p", "pt", "a4");
+  //             doc.setFontSize(18);
+  //             var source = document.getElementById("html-2-pdfwrapper");
+  //             doc.addHTML(source, function () {
+  //               resolve(doc.output("blob"));
+  //             });
+  //           });
+  //         }
 
-          if (supplierID !== " ") {
-            let supplierEmailData = {
-              type: "TSupplier",
-              fields: {
-                ID: supplierID,
-                Email: supplierEmail,
-              },
-            };
-          }
+  //         if (supplierID !== " ") {
+  //           let supplierEmailData = {
+  //             type: "TSupplier",
+  //             fields: {
+  //               ID: supplierID,
+  //               Email: supplierEmail,
+  //             },
+  //           };
+  //         }
 
-          var getcurrentCloudDetails = CloudUser.findOne({
-            _id: Session.get("mycloudLogonID"),
-            clouddatabaseID: Session.get("mycloudLogonDBID"),
-          });
-          if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-              var clientID = getcurrentCloudDetails._id;
-              var clientUsername = getcurrentCloudDetails.cloudUsername;
-              var clientEmail = getcurrentCloudDetails.cloudEmail;
-              var checkPrefDetails = CloudPreference.findOne({
-                userid: clientID,
-                PrefName: "creditcard",
-              });
+  //         var getcurrentCloudDetails = CloudUser.findOne({
+  //           _id: Session.get("mycloudLogonID"),
+  //           clouddatabaseID: Session.get("mycloudLogonDBID"),
+  //         });
+  //         if (getcurrentCloudDetails) {
+  //           if (getcurrentCloudDetails._id.length > 0) {
+  //             var clientID = getcurrentCloudDetails._id;
+  //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+  //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+  //             var checkPrefDetails = CloudPreference.findOne({
+  //               userid: clientID,
+  //               PrefName: "creditcard",
+  //             });
 
-              if (checkPrefDetails) {
-                CloudPreference.update(
-                  {
-                    _id: checkPrefDetails._id,
-                  },
-                  {
-                    $set: {
-                      username: clientUsername,
-                      useremail: clientEmail,
-                      PrefGroup: "purchaseform",
-                      PrefName: "creditcard",
-                      published: true,
-                      customFields: [
-                        {
-                          index: "1",
-                          label: getcustomField1,
-                          hidden: getchkcustomField1,
-                        },
-                        {
-                          index: "2",
-                          label: getcustomField2,
-                          hidden: getchkcustomField2,
-                        },
-                      ],
-                      updatedAt: new Date(),
-                    },
-                  },
-                  function (err, idTag) {
-                    if (err) {
-                    } else {
-                    }
-                  }
-                );
-              } else {
-                CloudPreference.insert(
-                  {
-                    userid: clientID,
-                    username: clientUsername,
-                    useremail: clientEmail,
-                    PrefGroup: "purchaseform",
-                    PrefName: "creditcard",
-                    published: true,
-                    customFields: [
-                      {
-                        index: "1",
-                        label: getcustomField1,
-                        hidden: getchkcustomField1,
-                      },
-                      {
-                        index: "2",
-                        label: getcustomField2,
-                        hidden: getchkcustomField2,
-                      },
-                    ],
-                    createdAt: new Date(),
-                  },
-                  function (err, idTag) {
-                    if (err) {
-                    } else {
-                    }
-                  }
-                );
-              }
-            }
-          } else {
-          }
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-            } else if (result.dismiss === "cancel") {
-            }
-          });
+  //             if (checkPrefDetails) {
+  //               CloudPreference.update(
+  //                 {
+  //                   _id: checkPrefDetails._id,
+  //                 },
+  //                 {
+  //                   $set: {
+  //                     username: clientUsername,
+  //                     useremail: clientEmail,
+  //                     PrefGroup: "purchaseform",
+  //                     PrefName: "creditcard",
+  //                     published: true,
+  //                     customFields: [
+  //                       {
+  //                         index: "1",
+  //                         label: getcustomField1,
+  //                         hidden: getchkcustomField1,
+  //                       },
+  //                       {
+  //                         index: "2",
+  //                         label: getcustomField2,
+  //                         hidden: getchkcustomField2,
+  //                       },
+  //                     ],
+  //                     updatedAt: new Date(),
+  //                   },
+  //                 },
+  //                 function (err, idTag) {
+  //                   if (err) {
+  //                   } else {
+  //                   }
+  //                 }
+  //               );
+  //             } else {
+  //               CloudPreference.insert(
+  //                 {
+  //                   userid: clientID,
+  //                   username: clientUsername,
+  //                   useremail: clientEmail,
+  //                   PrefGroup: "purchaseform",
+  //                   PrefName: "creditcard",
+  //                   published: true,
+  //                   customFields: [
+  //                     {
+  //                       index: "1",
+  //                       label: getcustomField1,
+  //                       hidden: getchkcustomField1,
+  //                     },
+  //                     {
+  //                       index: "2",
+  //                       label: getcustomField2,
+  //                       hidden: getchkcustomField2,
+  //                     },
+  //                   ],
+  //                   createdAt: new Date(),
+  //                 },
+  //                 function (err, idTag) {
+  //                   if (err) {
+  //                   } else {
+  //                   }
+  //                 }
+  //               );
+  //             }
+  //           }
+  //         } else {
+  //         }
+  //       })
+  //       .catch(function (err) {
+  //         swal({
+  //           title: "Oooops...",
+  //           text: err,
+  //           type: "error",
+  //           showCancelButton: false,
+  //           confirmButtonText: "Try Again",
+  //         }).then((result) => {
+  //           if (result.value) {
+  //           } else if (result.dismiss === "cancel") {
+  //           }
+  //         });
 
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }
-  },
+  //         $(".fullScreenSpin").css("display", "none");
+  //       });
+  //   }
+  // },
   "click .chkAccountName": function (event) {
     if ($(event.target).is(":checked")) {
       $(".colAccountName").css("display", "table-cell");
@@ -7890,6 +8581,30 @@ Template.setup.events({
     } else {
     }
   },
+  "click .exportbtn": (e) => {
+    const type = $(e.currentTarget).attr("data-target");
+    if (type) {
+      LoadingOverlay.show();
+      jQuery(`${type} .dt-buttons .btntabletocsv`).click();
+      LoadingOverlay.hide();
+    }
+  },
+  "click .exportbtnExcel": (e) => {
+    const type = $(e.currentTarget).attr("data-target");
+    if (type) {
+      LoadingOverlay.show();
+      jQuery(`${type} .dt-buttons .btntabletoexcel`).click();
+      LoadingOverlay.hide();
+    }
+  },
+  "click .printConfirm": (e) => {
+    const type = $(e.currentTarget).attr("data-target");
+    if (type) {
+      LoadingOverlay.show();
+      jQuery(`${type} .dt-buttons .btntabletopdf`).click();
+      LoadingOverlay.hide();
+    }
+  },
 
   // TODO: Step 7
   // TODO: Step 8
@@ -7903,6 +8618,27 @@ Template.setup.helpers({
   },
 
   // Step 2 helpers
+  taxRates: () => {
+    let data = Template.instance().taxRates.get();
+
+    console.log("Helper", data);
+    data = data.sort(function (a, b) {
+      if (a.codename == "NA") {
+        return 1;
+      } else if (b.codename == "NA") {
+        return -1;
+      }
+      return a.codename.toUpperCase().split("")[0] >
+        b.codename.toUpperCase().split("")[0]
+        ? 1
+        : -1;
+      // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
+    });
+
+    console.log("Helper sorted", data);
+
+    return data;
+  },
   datatablerecords: () => {
     return Template.instance()
       .datatablerecords.get()
@@ -8063,6 +8799,30 @@ Template.setup.helpers({
   },
 
   // Step 6 helpers
+  bsbRegionName: () => {
+    let bsbname = "Branch Code";
+    if (Session.get("ERPLoggedCountry") === "Australia") {
+      bsbname = "BSB";
+    }
+    return bsbname;
+  },
+  accountTypes: () => {
+    return Template.instance()
+      .accountTypes.get()
+      .sort(function (a, b) {
+        if (a.description === "NA") {
+          return 1;
+        } else if (b.description === "NA") {
+          return -1;
+        }
+        return a.description.toUpperCase() > b.description.toUpperCase()
+          ? 1
+          : -1;
+      });
+  },
+  accountList: () => {
+    return Template.instance().accountList.get();
+  },
   creditrecord: () => {
     return Template.instance().creditrecord.get();
   },
