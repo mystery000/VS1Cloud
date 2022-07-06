@@ -4,7 +4,7 @@ import { CountryService } from "../js/country-service";
 import { TaxRateService } from "../settings/settings-service";
 import { SideBarService } from "../js/sidebar-service";
 import { UtilityService } from "../utility-service";
-import { PurchaseBoardService } from '../js/purchase-service';
+import { PurchaseBoardService } from "../js/purchase-service";
 import LoadingOverlay from "../LoadingOverlay";
 import { TaxRatesEditListener } from "../settings/tax-rates-setting/tax-rates";
 import Employee, { EmployeeFields } from "../js/Api/Model/Employee";
@@ -142,6 +142,8 @@ Template.setup.onCreated(() => {
   templateObject.statusrecords = new ReactiveVar([]);
 
   // Step 7 variables
+  templateObject.customerList = new ReactiveVar([]);
+  templateObject.customerListHeaders = new ReactiveVar([]);
   // Step 8 variables
   // Step 9 variables
 });
@@ -4173,11 +4175,268 @@ Template.setup.onRendered(function () {
   //templateObject.getAllAccountss();
 
   // Step 7 Render functionalities
+
+  templateObject.loadDefaultCustomer = async () => {
+    let dataObject = await getVS1Data("TCustomerVS1");
+    let data =
+      dataObject.length == 0
+        ? await sideBarService.getAllCustomersDataVS1(initialBaseDataLoad, 0)
+        : JSON.parse(dataObject[0].data);
+
+    let _customerList = [];
+    let _customerListHeaders = [];
+
+
+    for (let i = 0; i < data.tcustomervs1.length; i++) {
+      let arBalance =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tcustomervs1[i].fields.ARBalance
+        ) || 0.0;
+      let creditBalance =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tcustomervs1[i].fields.CreditBalance
+        ) || 0.0;
+      let balance =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tcustomervs1[i].fields.Balance
+        ) || 0.0;
+      let creditLimit =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tcustomervs1[i].fields.CreditLimit
+        ) || 0.0;
+      let salesOrderBalance =
+        utilityService.modifynegativeCurrencyFormat(
+          data.tcustomervs1[i].fields.SalesOrderBalance
+        ) || 0.0;
+      var dataList = {
+        id: data.tcustomervs1[i].fields.ID || "",
+        company: data.tcustomervs1[i].fields.Companyname || "",
+        contactname: data.tcustomervs1[i].fields.ContactName || "",
+        phone: data.tcustomervs1[i].fields.Phone || "",
+        arbalance: arBalance || 0.0,
+        creditbalance: creditBalance || 0.0,
+        balance: balance || 0.0,
+        creditlimit: creditLimit || 0.0,
+        salesorderbalance: salesOrderBalance || 0.0,
+        email: data.tcustomervs1[i].fields.Email || "",
+        job: data.tcustomervs1[i].fields.JobName || "",
+        accountno: data.tcustomervs1[i].fields.AccountNo || "",
+        clientno: data.tcustomervs1[i].fields.ClientNo || "",
+        jobtitle: data.tcustomervs1[i].fields.JobTitle || "",
+        notes: data.tcustomervs1[i].fields.Notes || "",
+        country: data.tcustomervs1[i].fields.Country || "",
+      };
+
+      _customerList.push(dataList);
+      //}
+    }
+
+    function MakeNegative() {
+      // TDs = document.getElementsByTagName('td');
+      // for (var i=0; i<TDs.length; i++) {
+      // var temp = TDs[i];
+      // if (temp.firstChild.nodeValue.indexOf('-'+Currency) == 0){
+      // temp.className = "text-danger";
+      // }
+      // }
+
+      $("td").each(function () {
+        if (
+          $(this)
+            .text()
+            .indexOf("-" + Currency) >= 0
+        )
+          $(this).addClass("text-danger");
+      });
+    }
+
+    console.log("Customer list", _customerList);
+
+    await templateObject.customerList.set(_customerList);
+
+    if (await templateObject.customerList.get()) {
+      Meteor.call(
+        "readPrefMethod",
+        Session.get("mycloudLogonID"),
+        "tblCustomerlist",
+        function (error, result) {
+          if (error) {
+          } else {
+            if (result) {
+              for (let i = 0; i < result.customFields.length; i++) {
+                let customcolumn = result.customFields;
+                let columData = customcolumn[i].label;
+                let columHeaderUpdate = customcolumn[i].thclass.replace(
+                  / /g,
+                  "."
+                );
+                let hiddenColumn = customcolumn[i].hidden;
+                let columnClass = columHeaderUpdate.split(".")[1];
+                let columnWidth = customcolumn[i].width;
+                let columnindex = customcolumn[i].index + 1;
+
+                if (hiddenColumn == true) {
+                  $("." + columnClass + "").addClass("hiddenColumn");
+                  $("." + columnClass + "").removeClass("showColumn");
+                } else if (hiddenColumn == false) {
+                  $("." + columnClass + "").removeClass("hiddenColumn");
+                  $("." + columnClass + "").addClass("showColumn");
+                }
+              }
+            }
+          }
+        }
+      );
+
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+
+    $(".fullScreenSpin").css("display", "none");
+    setTimeout(function () {
+      $("#tblCustomerlist")
+        .DataTable({
+          sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+          buttons: [
+            {
+              extend: "csvHtml5",
+              text: "",
+              download: "open",
+              className: "btntabletocsv hiddenColumn",
+              filename: "customeroverview_" + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+            {
+              extend: "print",
+              download: "open",
+              className: "btntabletopdf hiddenColumn",
+              text: "",
+              title: "Customer List",
+              filename: "Customer List - " + moment().format(),
+              exportOptions: {
+                columns: ":visible",
+                stripHtml: false,
+              },
+            },
+            {
+              extend: "excelHtml5",
+              title: "",
+              download: "open",
+              className: "btntabletoexcel hiddenColumn",
+              filename: "Customer List - " + moment().format(),
+              orientation: "portrait",
+              exportOptions: {
+                columns: ":visible",
+              },
+            },
+          ],
+          select: true,
+          destroy: true,
+          colReorder: true,
+          // bStateSave: true,
+          // rowId: 0,
+          pageLength: initialDatatableLoad,
+          lengthMenu: [
+            [initialDatatableLoad, -1],
+            [initialDatatableLoad, "All"],
+          ],
+          info: true,
+          responsive: true,
+          order: [[1, "asc"]],
+          action: function () {
+            $("#tblCustomerlist").DataTable().ajax.reload();
+          },
+          fnDrawCallback: function (oSettings) {
+            setTimeout(function () {
+              MakeNegative();
+            }, 100);
+          },
+          fnInitComplete: function () {
+            $(
+              "<button class='btn btn-primary btnRefreshCustomers' type='button' id='btnRefreshCustomers' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+            ).insertAfter("#tblCustomerlist_filter");
+          },
+        })
+        .on("page", function () {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+          let draftRecord = templateObject.customerList.get();
+          templateObject.customerList.set(draftRecord);
+        })
+        .on("column-reorder", function () {})
+        .on("length.dt", function (e, settings, len) {
+          setTimeout(function () {
+            MakeNegative();
+          }, 100);
+        });
+
+      // $('#tblCustomerlist').DataTable().column( 0 ).visible( true );
+      $(".fullScreenSpin").css("display", "none");
+    }, 0);
+
+
+    var columns = $("#tblCustomerlist th");
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function (i, v) {
+      if (v.hidden == false) {
+        columVisible = true;
+      }
+      if (v.className.includes("hiddenColumn")) {
+        columVisible = false;
+      }
+      sWidth = v.style.width.replace("px", "");
+      let datatablerecordObj = {
+        sTitle: v.innerText || "",
+        sWidth: sWidth || "",
+        sIndex: v.cellIndex || "",
+        sVisible: columVisible || false,
+        sClass: v.className || "",
+      };
+      _customerListHeaders.push(datatablerecordObj);
+    });
+    templateObject.customerListHeaders.set(_customerListHeaders);
+    $("div.dataTables_filter input").addClass("form-control form-control-sm");
+    $("#tblCustomerlist tbody").on("click", "tr", function () {
+      var listData = $(this).closest("tr").attr("id");
+      var transactiontype = $(this).closest("tr").attr("isjob");
+      var url = FlowRouter.current().path;
+      if (listData) {
+        if (url.indexOf("?type") > 0) {
+          if (transactiontype != "") {
+            FlowRouter.go("/customerscard?jobid=" + listData + "&transTab=job");
+          } else {
+            FlowRouter.go("/customerscard?id=" + listData + "&transTab=job");
+          }
+        } else {
+          if (transactiontype != "") {
+            FlowRouter.go("/customerscard?jobid=" + listData);
+          } else {
+            FlowRouter.go("/customerscard?id=" + listData);
+          }
+        }
+      }
+    });
+  };
+
+  templateObject.loadDefaultCustomer();
+
+  templateObject.loadCustomerList = () => {};
   // Step 8 Render functionalities
   // Step 9 Render functionalities
 
   //   $("#displayname").val("hello test");
 });
+
 function isStepActive(stepId) {
   let currentStepID = $(".setup-stepper .current a.gotToStepID").attr(
     "data-step-id"
@@ -4188,6 +4447,7 @@ function isStepActive(stepId) {
     return false;
   }
 }
+
 Template.setup.events({
   "click #start-wizard": function () {
     $(".first-page").css("display", "none");
@@ -7433,8 +7693,8 @@ Template.setup.events({
   //     let billingAddress = $("#txabillingAddress").val();
 
   //     // var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
-  //     // var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));  
-      
+  //     // var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
+
   //     var saledateTime = new Date();
   //     var duedateTime = new Date();
 
@@ -8607,8 +8867,20 @@ Template.setup.events({
   },
 
   // TODO: Step 7
+  "click #btnNewCustomer": (e) => {
+    const target = $(e.currentTarget).attr("data-toggle");
+    $(target).modal("toggle");
+  },
   // TODO: Step 8
+  "click #btnNewSupplier": (e) => {
+    
+    $($(e.currentTarget).attr("data-toggle")).modal("toggle");
+  },
   // TODO: Step 9
+
+  "click .btnRefresh": () => {
+    Meteor._reload.reload();
+  },
 });
 
 Template.setup.helpers({
@@ -8926,7 +9198,15 @@ Template.setup.helpers({
   },
 
   // Step 7 helpers
+
+  customerList : () => {
+    return Template.instance().customerList.get();
+  },
+  customerListHeaders: () => {
+    return Template.instance().customerListHeaders.get();
+  }
   // Step 8 helpers
+
   // Step 9 helpers
 });
 

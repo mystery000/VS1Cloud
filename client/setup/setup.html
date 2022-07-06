@@ -2044,22 +2044,29 @@
                 
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button id="btnNewCustomer" name="btnNewCustomer" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
+                                    <button id="btnNewCustomer" data-toggle="#addCustomerModal" name="btnNewCustomer" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Customer</button>
+                                </div>
+
+                                <div >
+
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+                                        {{> addcustomerpop}}
+                                    </div>
                                 </div>
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                                     <div class="btn-group groupExport" style="margin: 16px;">
-                                        <button class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
+                                        <button data-target="#tblCustomerlist_wrapper" class="btn btn-primary exportbtnExcel" type="button"><i class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
                                         <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
                                         <div role="menu" class="dropdown-menu">
-                                            <a role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
-                                            <a role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
+                                            <a data-target="#tblCustomerlist_wrapper" role="presentation" class="dropdown-item exportbtnExcel" id="exportbtnExcel" href="#">Export Excel</a>
+                                            <a data-target="#tblCustomerlist_wrapper" role="presentation" class="dropdown-item exportbtn" id="exportbtn" href="#">Export CSV</a>
                                         </div>
                                     </div>
                                     <!-- <button class="btn btn-primary export" type="button" style="margin: 16px; background-color: #00A3D3;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button> -->
                                     <div>
-                                        <button style="margin: 16px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                                        <button style="margin: 16px;" class="btn btn-primary" role="button" data-toggle="modal" href="#importModal_step7"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step7">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -2123,9 +2130,101 @@
                                     </div>
                 
                                     <!-- <button class="btn btn-primary float-right" type="button" style="margin: 16px;" id="" name=""><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button> -->
-                                    <button class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
+                                    <button data-target="#tblCustomerlist_wrapper" class="btn btn-primary printConfirm" type="button" style="margin: 16px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                                    <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#opensettings_step7" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a>
                                 </div>
+                                    <div>
+                                        <div class="modal fade" role="dialog" tabindex="-1" id="opensettings_step7">
+                                            <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                                                    <div class="modal-body">
+                                                        <div>
+                                                            {{#if customerListHeaders}}
+                                                            <form class="d-xl-flex align-items-xl-center">
+                                                                <div class="flex-grow-1">
+                                                                    <style>
+                                                                        .groove {
+                                                                            border-style: solid;
+                                                                            border-width: 1px;
+                                                                            width: 200px;
+                                                                            padding: 2px;
+                                                                            border-radius: .35rem;
+                                                                            font-size: 1rem;
+                                                                        }
+                                                                        .custom-control-label{
+                                                                            position: absolute;
+                                                                        }
+                                                                        .rngRange {
+                                                                            position: relative;
+                                                                            display: flex;
+                                                                            flex-direction: column;
+                                                                            width: 100%;
+                                                                            pointer-events: auto;
+                                                                            background-color: rgb(255, 255, 255);
+                                                                            background-clip: padding-box;
+                                                                            border: 1px solid rgb(133, 135, 150);
+                                                                            border-radius: .3rem;
+                                                                            border-style: solid;
+                                                                            border-width: 1px;
+                                                                            padding: 2px;
+                                                                            border-radius: .35rem;
+                                                                            color: rgb(128, 128, 128);
+                                                                            height:inherit!important;
+                                                                        }
+                                                                        @media only screen and (max-width: 480px) {
+                                                                            .modal.show .modal-dialog{
+                                                                                float: inherit!important;
+                                                                                left: inherit!important;
+                                                                                top: auto!important;
+                    
+                                                                            }
+                                                                        }
+                                                                    </style>
+                                                                    {{#each item in customerListHeaders}}
+                                                                    {{#if equals item.sTitle "id"}}
+                                                                    {{else}}
+                    
+                                                                    <div id="{{item.sIndex}}" class="columnSettings">
+                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                            <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}" value="{{item.sTitle}}">
+                                                                            <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
+                                                                            <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
+                                                                        </div>
+                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;font-size: 1rem;">
+                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width: <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>--></label>
+                                                                            <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
+                                                                            <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
+                                                                        </div>
+                                                                    </div>
+                    
+                                                                    {{#if equals item.sVisible true}}
+                                                                    <script>
+                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").attr("checked","checked");
+                                                                    </script>
+                                                                    {{else}}
+                                                                    <script>
+                                                                        $("#"+ {{item.sIndex}} +".chkDatatable").removeAttr("checked");
+                                                                    </script>
+                                                                    {{/if}}
+                    
+                                                                    {{/if}}
+                                                                    {{/each}}
+                                                                </div>
+                                                            </form>
+                                                            {{/if}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                        <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                                        <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                 
                             </div>
                 
@@ -2183,8 +2282,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {{#if datatablerecords}}
-                                                {{#each item in datatablerecords}}
+                                                {{#if customerList}}
+                                                {{#each item in customerList}}
                                                 <tr class="dnd-moved" id="{{item.id}}" isjob="{{item.job}}" style="cursor: pointer;">
                                                     <td contenteditable="false" class="colCustomerID hiddenColumn" >{{item.id}}</td>
                                                     <td contenteditable="false" class="colCompany" >{{item.company}}</td>
@@ -2216,6 +2315,7 @@
                                             <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 16px;" data-step-id="7">Confirm</button>
                                         </div>
                                     </div>
+                                  
                                 </div>
                             </div>
                         </div>
@@ -2254,14 +2354,17 @@
                                         }
                                     </style>
                 
-                                    <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
+                                   
+                                </h1>
+                                <div>
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="opensettings_step8">
                                         <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                                                 <div class="modal-body">
                                                     <div>
-                                                        {{#if tableheaderrecords}}
+                                                        {{#if customerListHeaders}}
                                                         <form class="d-xl-flex align-items-xl-center">
                                                             <div class="flex-grow-1">
                                                                 <style>
@@ -2302,7 +2405,7 @@
                                                                         }
                                                                     }
                                                                 </style>
-                                                                {{#each item in tableheaderrecords}}
+                                                                {{#each item in customerListHeaders}}
                                                                 {{#if equals item.sTitle "id"}}
                                                                 {{else}}
                 
@@ -2344,14 +2447,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                </h1>
+
+                                    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
+                                        {{> addsupplierpop}}
+                                    </div>
+                                </div>
                             </header>
                 
                             <div class="row d-xl-flex flex-row justify-content-xl-center m-0" style="padding: 0px 20px 20px 20px; background-color: #ededed;">
                 
                                 <div class="col float-left flex-grow-1">
                                     <button class="btn btn-primary btnRefresh" type="button" style="margin: 16px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
+                                    <button data-toggle="#addSupplierModal" id="btnNewSupplier" name="btnNewSupplier" class="btn btn-primary" type="button" style="margin: 16px;"><i class="icon ion-plus" style="padding-right: 5px;"></i>New Supplier</button>
                                 </div>
                 
                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
