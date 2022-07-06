@@ -121,6 +121,37 @@ Template.new_salesorder.onRendered(() => {
         yearRange: "-90:+10",
     });
 
+
+    templateObject.getTemplateInfo = function() {
+
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+                var sales_orders = data.fields.sales_orders;
+                var delivery_docket = data.fields.delivery_docket;
+
+                console.log(sales_orders);
+
+                $("[id='Sales Order_"+sales_orders+"']").attr("checked", "checked");
+                $("[id='Delivery Docket_"+delivery_docket+"']").attr("checked", "checked");
+               
+            }
+    
+
+        });
+
+   };
+
+
+   templateObject.getTemplateInfo();
+
     templateObject.generateInvoiceData = function (template_title,number) {
         object_invoce = [];
          switch (template_title) {
@@ -7872,6 +7903,63 @@ Template.new_salesorder.events({
    
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
+        
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+
+                var bill =data.fields.bill;         
+                var credits =  data.fields.credits;
+                var customer_payment = data.fields.customer_payment;
+                var invoices = data.fields.invoices;
+                var invoices_back_order =  data.fields.invoices_back_order;
+                var purchase_orderbill = data.fields.purchase_order;
+                var quotes =   data.fields.quotes;
+                var refunds = data.fields.refunds;
+                var sales_orders = $('input[name="Sales Order"]:checked').val();
+                var supplier_payments = data.fields.supplier_payments;
+                var statements = data.fields.statements;
+                var customer_statement =  data.fields.customer_statement;
+                var delivery_docket =  $('input[name="Delivery Docket"]:checked').val();
+               
+                var print_options  =  {
+                    type:"TemplateSettings",
+                    fields:{                              
+                               client_id:loggedCompany,
+                               bill:bill,
+                               credits:credits,
+                               customer_payment:customer_payment,
+                               customer_statement:customer_statement,
+                               invoices:invoices,
+                               invoices_back_order:invoices_back_order,
+                               purchase_order:purchase_orderbill,
+                               quotes:quotes,
+                               refunds:refunds,
+                               sales_orders:sales_orders,
+                               supplier_payments:supplier_payments,
+                               statements:statements,
+                               delivery_docket:delivery_docket,
+                          }
+              
+              
+                          
+                  }
+
+                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
+
+            }
+    
+
+        });
+
+
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());

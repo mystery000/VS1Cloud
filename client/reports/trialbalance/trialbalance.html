@@ -97,6 +97,7 @@
                                 <style>
                                     #uploadedImage {
                                         margin: 0 auto !important;
+                                        width: 100%;
                                     }
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage" src="assets/img/VS1.png">
@@ -181,9 +182,9 @@
                                         text-align: left !important;
                                     }
                                     .tableExportDetailDiv th {
-                                        min-width: 190px !important; 
+                                        min-width: 190px !important;
                                     }
-                                    
+
                                     .customDoubleTableHeading + tr th {
                                         border-right: 1px solid #cbcbcb !important;
                                     }
@@ -241,7 +242,7 @@ Debit (Ex)
                                                             {{/if}}
                                                         {{/each}}
                                                     {{/if}}
-                                                
+
                                                 </tr>
                                             {{/if}}
                                         </thead>
@@ -263,7 +264,7 @@ Debit (Ex)
 
                                                                         {{#if isOnlyDefaultActive }}
                                                                             {{#if isObject subItem}}
-                                                                        
+
                                                                                 {{#if currencyList}}
                                                                                     {{#each c in currencyList }}
                                                                                         {{# if c.active}}
@@ -275,7 +276,7 @@ Debit (Ex)
                                                                                 {{/if}}
 
                                                                             {{else}}
-                                                                            
+
                                                                                 <td class="Total1Indented MenuLeft text-nowrap Indent1">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
                                                                                 </td>
@@ -287,9 +288,9 @@ Debit (Ex)
                                                                                 <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem.value}}</a>
                                                                                 </td>
-                                                                               
+
                                                                             {{else}}
-                                                                                
+
                                                                                 <td class="Total1Indented MenuLeft text-nowrap Indent1 {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                     <a href="#" style="text-decoration:none!important;">{{subItem}}</a>
                                                                                 </td>
@@ -297,7 +298,7 @@ Debit (Ex)
                                                                             {{/if}}
 
                                                                         {{/if}}
-                                                                   
+
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
@@ -307,7 +308,7 @@ Debit (Ex)
                                                                 {{#each subItem in total.dataArr}}
                                                                     {{#if isOnlyDefaultActive }}
                                                                         {{#if isObject subItem}}
-                                                                    
+
                                                                             {{#if currencyList}}
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
@@ -319,7 +320,7 @@ Debit (Ex)
                                                                             {{/if}}
 
                                                                         {{else}}
-                                                                        
+
                                                                             <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                 <span class="table-cells"><strong>{{subItem}}</strong></span>
                                                                             </td>
@@ -328,14 +329,14 @@ Debit (Ex)
 
                                                                     {{else}}
                                                                         {{#if isObject subItem}}
-                                                                          
+
                                                                             <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem.value}} text-danger {{/if}}">
                                                                                 <span class="table-cells"><strong>{{subItem.value}}</strong></span>
                                                                             </td>
-                                                                        
+
                                                                         {{else}}
-                                                                            
-                                                                       
+
+
                                                                             <td class="Total1Indented MenuLeft TotalField {{#if isNegativeAmount subItem}} text-danger {{/if}}">
                                                                                 <span class="table-cells"><strong>{{subItem}}</strong></span>
                                                                             </td>
@@ -344,7 +345,7 @@ Debit (Ex)
                                                                         {{/if}}
 
                                                                     {{/if}}
-                                                                   
+
                                                                 {{/each}}
                                                             </tr>
                                                         {{/each}}
@@ -353,7 +354,7 @@ Debit (Ex)
                                                 {{#if grandrecords}}
                                                     <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
                                                         {{#each subItem in grandrecords}}
-                                                        
+
                                                                 {{#if isOnlyDefaultActive }}
 
                                                                         {{#if isObject subItem}}
@@ -361,24 +362,24 @@ Debit (Ex)
                                                                                 {{#each c in currencyList }}
                                                                                     {{# if c.active}}
                                                                                         <td class="{{#if isNegativeAmount subItem.value c}} text-danger {{/if}}" currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount subItem.value c}}</td>
-                                                                            
+
                                                                                     {{/if}}
                                                                                 {{/each}}
                                                                             {{/if}}
                                                                         {{else}}
                                                                             <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                        
+
 
                                                                         {{/if}}
 
                                                                 {{else}}
                                                                     {{#if isObject subItem}}
                                                                         <td class="{{#if isNegativeAmount subItem.value}} text-danger {{/if}}">{{subItem.value}}</td>
-                                                                        
+
                                                                     {{else}}
                                                                         <td class="{{#if isNegativeAmount subItem}} text-danger {{/if}}" >{{subItem}}</td>
-                                                                        
-                                                                        
+
+
                                                                     {{/if}}
 
                                                                 {{/if}}

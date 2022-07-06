@@ -44,11 +44,27 @@ export class RateTypeService extends BaseService {
   getOneGroupTypeByName(dataSearchName){
     let options = {
       ListType:"Detail",
-      select: '[Description]="'+dataSearchName+'"'
+      select: '[Groupdesc]="'+dataSearchName+'"'
     };
-    return this.getList(this.ERPObjects.TVs1TabGroups, options);
+    return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
  }
 
+ checkGroupByName(dataSearchName)
+ {
+    let options = {
+      ListType:"Detail",
+      select: '[Groupdesc]="'+dataSearchName+'"'
+    };
+   return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
+
+ }
+
+ saveGroupType(data)
+{ 
+  
+  return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
+
+}
   getOneFundTypeByName(dataSearchName){
     let options = {
       ListType:"Detail",
