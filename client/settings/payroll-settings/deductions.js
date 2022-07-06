@@ -333,7 +333,7 @@ Template.deductionSettings.onRendered(function() {
 })
 
 Template.deductionSettings.events({
-    'keyup #tblEarnings_filter input': function (event) {
+    'keyup #tblDeductions_filter input': function (event) {
         if($(event.target).val() != ''){
           $(".btnRefreshDeductions").addClass('btnSearchAlert');
         }else{
@@ -343,42 +343,47 @@ Template.deductionSettings.events({
            $(".btnRefreshDeductions").trigger("click");
         }
     },
-    'click .btnAddordinaryTimeEarnings':function(event){
+    'click .btnAddordinaryTimeDeductions':function(event){
         $('#deductionRateForm')[0].reset();
         $('#noneModal').modal('hide');
     },
     'click .btnSearchAlert':function(event){      
         let templateObject = Template.instance();
-        var splashArrayEarningList = new Array();
+        var splashArrayDeductionList = new Array();
         const lineExtaSellItems = [];
         $('.fullScreenSpin').css('display', 'inline-block');
-        let dataSearchName = $('#tblEarnings_filter input').val();
+        let dataSearchName = $('#tblDeductions_filter input').val();
         if (dataSearchName.replace(/\s/g, '') != '') {
-            sideBarService.getEarnings(dataSearchName).then(function (data) {
-                $(".btnRefreshEarnings").removeClass('btnSearchAlert');
+            sideBarService.getDeduction(dataSearchName).then(function (data) {
+                $(".btnRefreshDeductions").removeClass('btnSearchAlert');
                 let lineItems = [];
-                if (data.tearnings.length > 0) {
-                    for (let i = 0; i < data.tearnings.length; i++) {              
-                        let dataList = [
-                          data.tearnings[i].fields.ID || '',
-                          data.tearnings[i].fields.EarningsName || '',
-                          data.tearnings[i].fields.EarningType || '',
-                          data.tearnings[i].fields.EarningsDisplayName || '',
-                          data.tearnings[i].fields.EarningsRateType||'',
-                          data.tearnings[i].fields.ExpenseAccount || '',
-                          data.tearnings[i].fields.EarningsExemptPaygWithholding || '',
-                          data.tearnings[i].fields.EarningsExemptSuperannuationGuaranteeCont || '',
-                          data.tearnings[i].fields.EarningsReportableW1onActivityStatement || ''
+                if (data.tdeduction.length > 0) {
+                    for (let j = 0; j < dataObjectnew.tdeduction.length; j++) {
+
+                        let allowanceAmount = utilityService.modifynegativeCurrencyFormat(dataObjectnew.tdeduction[j].fields.Amount) || 0.00;
+
+                        var dataListCustomerDupp = [
+                          dataObjectnewdataObjectnew.tdeduction[i].fields.ID || 0,
+                          dataObjectnew.tdeduction[i].fields.Description || '-',
+                          dataObjectnew.tdeduction[i].fields.DeductionType || '',
+                          dataObjectnew.tdeduction[i].fields.DisplayIn || '',
+                          allowanceAmount || 0.00,
+                          dataObjectnew.tdeduction[i].fields.Accountname || '',
+                          dataObjectnew.tdeduction[i].fields.Accountid || 0,
+                          dataObjectnew.tdeduction[i].fields.Payrolltaxexempt || false,
+                          dataObjectnewdataObjectnew.tdeduction[i].fields.Superinc || false,
+                          dataObjectnew.tdeduction[i].fields.Workcoverexempt || false,
                         ];
-                        splashArrayEarningList.push(dataList);
+
+                        splashArrayDeductionList.push(dataListCustomerDupp);
                     }
-                    let uniqueChars = [...new Set(splashArrayEarningList)];
-                    var datatable = $('#tblEarnings').DataTable();
+                    let uniqueChars = [...new Set(splashArrayDeductionList)];
+                    var datatable = $('#tblDeductions').DataTable();
                     datatable.clear();
                     datatable.rows.add(uniqueChars);
                     datatable.draw(false);
                     setTimeout(function () {
-                        $("#tblEarnings").dataTable().fnPageChange('last');
+                        $("#tblDeductions").dataTable().fnPageChange('last');
                     }, 400);
 
                     $('.fullScreenSpin').css('display', 'none');
@@ -388,17 +393,17 @@ Template.deductionSettings.events({
     
                     swal({
                         title: 'Question',
-                        text: "Earning Rate does not exist, would you like to create it?",
+                        text: "Deduction Rate does not exist, would you like to create it?",
                         type: 'question',
                         showCancelButton: true,
                         confirmButtonText: 'Yes',
                         cancelButtonText: 'No'
                     }).then((result) => {
                         if (result.value) {
-                            $('#earningRateForm')[0].reset();
-                            $('#edtEarningsName').val(dataSearchName)
+                            $('#deductionRateForm')[0].reset();
+                            $('#edtDeductionName').val(dataSearchName)
                             $('#deductionSettingsModal').modal('hide');
-                            $('#ordinaryTimeEarningsModal').modal('show');
+                            $('#noneModal').modal('show');
                         }
                     });
                 }
@@ -411,55 +416,67 @@ Template.deductionSettings.events({
         }
 
     },
-    'click .saveEarningRates': async function (event) {
+    'click .btnSaveDeduction': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
         
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
         const apiEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TEarnings
+            employeePayrolApis.collectionNames.TDeduction
         );
 
-        let EarningsName = $('#edtEarningsName').val();
-        let ID = $('#earningID').val();
-        let EarningsType = $('#edtEarningsType').val();
-        let EarningsDisplayName = $('#edtDisplayName').val();
-        let EarningsRateType = $('#edtRateType').val();
-        let ExpenseAccount = $('#edtExpenseAccount').val();
-        let ExemptPAYG = ( $('#formCheck-ExemptPAYG').is(':checked') )? true: false;
-        let ExemptSuperannuation = ( $('#formCheck-ExemptSuperannuation').is(':checked') )? true: false;
-        let ExemptReportable = ( $('#formCheck-ExemptReportable').is(':checked') )? true: false;
+        let isTaxexempt = false;
+        let isIsWorkPlacegiving = false;
+        let isUnionfees = false;
+        let deductionType = $('#edtDeductionType').val();
+        if(deductionType == 'None'){
+          isTaxexempt = true;
+        }else if(deductionType == 'WorkplaceGiving'){
+          isIsWorkPlacegiving = true;
+        }else if(deductionType == 'UnionAssociationFees'){
+          isUnionfees = true;
+        }
+        let deductionID = $('#edtDeductionID').val();
+        let deductionAccount = $('#edtDeductionAccount').val();
+        let deductionAccountID = $('#edtDeductionAccountID').val();
+        let ExemptPAYG = ( $('#formCheck-ReducesPAYGDeduction').is(':checked') )? true: false;
+        let ExemptSuperannuation = ( $('#formCheck-ReducesSuperannuationDeduction').is(':checked') )? true: false;
+        let ExemptReportable = ( $('#formCheck-ExcludedDeduction').is(':checked') )? true: false;
         /**
          * Saving Earning Object in localDB
         */
-        let earningRateSetting = new Earning({
-            type: 'TEarnings',
-            fields: new EarningFields({
-                ID: ID,
-                EarningsName: EarningsName,
-                EarningType: EarningsType,
-                EarningsDisplayName: EarningsDisplayName,
-                EarningsRateType: EarningsRateType,
-                ExpenseAccount: ExpenseAccount,
-                EarningsExemptPaygWithholding: ExemptPAYG,
-                EarningsExemptSuperannuationGuaranteeCont: ExemptSuperannuation,
-                EarningsReportableW1onActivityStatement: ExemptReportable,
-                Active: true
-            })
-        });
+        
+        let deductionRateSettings = {
+            type: "TDeduction",
+            fields: {
+                ID: parseInt(deductionID),
+                Active: true,
+                Accountid: deductionAccountID,
+                Accountname: deductionAccount,
+                IsWorkPlacegiving:isIsWorkPlacegiving,
+                Taxexempt:isTaxexempt,
+                Unionfees:isUnionfees,
+                Description: deductionName,
+                DisplayIn: displayName,
+                // Superinc: ExemptSuperannuation,
+                // Workcoverexempt: ExemptReportable,
+                // Payrolltaxexempt: ExemptPAYG
+            }
+        };
+
         const ApiResponse = await apiEndpoint.fetch(null, {
             method: "POST",
             headers: ApiService.getPostHeaders(),
-            body: JSON.stringify(earningRateSetting),
+            body: JSON.stringify(deductionRateSettings),
         });
     
         if (ApiResponse.ok == true) {
             const jsonResponse = await ApiResponse.json();
-            $('#earningRateForm')[0].reset();
+            $('#deductionRateForm')[0].reset();
             await templateObject.saveDataLocalDB();
-            await templateObject.getEarnings();
-            $('#ordinaryTimeEarningsModal').modal('hide');
+            await templateObject.getDeductions();
+            $('#noneModal').modal('hide');
             $('.fullScreenSpin').css('display', 'none');
         }else{
             $('.fullScreenSpin').css('display', 'none');
