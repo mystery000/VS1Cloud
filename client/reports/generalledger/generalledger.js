@@ -4,6 +4,7 @@ import { UtilityService } from "../../utility-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import GlobalFunctions from "../../GlobalFunctions";
+import moment from "moment";
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
@@ -43,12 +44,16 @@ Template.generalledger.onRendered(() => {
     $("#uploadedImage").attr("width", "50%");
   }
 
+  let prevMonth = moment().subtract(1, 'months').format('MM')
+
+  console.log( prevMonth )
+
   if (currentDate.getDate() < 10) {
     fromDateDay = "0" + currentDate.getDate();
   }
   // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + ;
   var fromDate =
-    fromDateDay + "/" + fromDateMonth + "/" + currentDate.getFullYear();
+    fromDateDay + "/" + prevMonth + "/" + currentDate.getFullYear();
   templateObject.dateAsAt.set(begunDate);
   const dataTableList = [];
   const deptrecords = [];
