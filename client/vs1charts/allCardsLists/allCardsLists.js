@@ -116,12 +116,13 @@ Template.allCardsLists.onRendered(function () {
                 stop: async (event, ui) => {
                     // console.log($(ui.item[0]));
                     console.log("Dropped the sortable chart");
-
-                    // Here we rebuild positions tree in html
-                    await ChartHandler.buildCardPositions();
-                    // Here we save card list
-                    templateObject.saveCards()
-                    $(".fullScreenSpin").css("display", "none");
+                    if( $(ui.item[0]).hasClass("dimmedChart") == false ){
+                        // Here we rebuild positions tree in html
+                        await ChartHandler.buildCardPositions();
+                        // Here we save card list
+                        templateObject.saveCards();
+                        $(".fullScreenSpin").css("display", "none");
+                    }
                 },
             }).disableSelection();    
         }, 500)    

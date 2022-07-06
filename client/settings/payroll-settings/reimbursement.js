@@ -8,7 +8,7 @@ let utilityService = new UtilityService();
 Template.reimbursementSettings.onCreated(function() {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.datatableallowancerecords = new ReactiveVar([]);
+  templateObject.datatableReimbursementrecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
@@ -32,25 +32,18 @@ Template.reimbursementSettings.onRendered(function() {
  
     getVS1Data('TReimbursement').then(function(dataObject) {
         if (dataObject.length == 0) {
-             sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
+             sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (data) {
               addVS1Data('TReimbursement', JSON.stringify(data));
               let lineItems = [];
               let lineItemObj = {};
-              for (let i = 0; i < data.treimbursement.length; i++) {
-                
-                  var dataListAllowance = [
+              for (let i = 0; i < data.treimbursement.length; i++) {                
+                    var dataListReimbursement = [
                       data.treimbursement[i].fields.ID || '',
                       data.treimbursement[i].fields.ReimbursementName || 0,
                       data.treimbursement[i].fields.ReimbursementAccount || 0,
-                     '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                  ];
-
-                  splashArrayReisument.push(dataListAllowance);
+                    ];
+                  splashArrayReisument.push(dataListReimbursement);
               }
-
-        
-
-
               setTimeout(function () {
                   MakeNegative();
               }, 100);
@@ -72,11 +65,6 @@ Template.reimbursementSettings.onRendered(function() {
                            {
                               className: "colReimbursementAccount",
                               "targets": [2]
-                           },                        
-                           {
-                              className: "colDeleterei",
-                              "orderable": false,
-                              "targets": -1
                            }
                       ],
                       select: true,
@@ -115,14 +103,13 @@ Template.reimbursementSettings.onRendered(function() {
 
                                     for (let i = 0; i < data.treimbursement.length; i++) {
                 
-                                        var dataListAllowance = [
+                                        var dataListReimbursement = [
                                             data.treimbursement[i].fields.ID || '',
                                             data.treimbursement[i].fields.ReimbursementName || 0,
                                             data.treimbursement[i].fields.ReimbursementAccount || 0,
-                                           '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                         ];
                       
-                                        splashArrayReisument.push(dataListAllowance);
+                                        splashArrayReisument.push(dataListReimbursement);
                                     }
 
                                               let uniqueChars = [...new Set(splashArrayReisument)];
@@ -145,12 +132,11 @@ Template.reimbursementSettings.onRendered(function() {
                           setTimeout(function () {
                               MakeNegative();
                           }, 100);
-                      },
-                      "fnInitComplete": function () {
-                        //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                        //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-                      }
+                    },
+                    "fnInitComplete": function () {
+                        $("<button class='btn btn-primary btnAddNewReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
+                        $("<button class='btn btn-primary btnRefreshReimbursement' type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
+                    }
 
                   }).on('page', function () {
                       setTimeout(function () {
@@ -206,14 +192,14 @@ Template.reimbursementSettings.onRendered(function() {
           let lineItemObj = {};
           for (let i = 0; i < data.treimbursement.length; i++) {
                 
-            var dataListAllowance = [
+            var dataListReimbursement = [
                 data.treimbursement[i].fields.ID || '',
                 data.treimbursement[i].fields.ReimbursementName || 0,
                 data.treimbursement[i].fields.ReimbursementAccount || 0,
                '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
             ];
 
-            splashArrayReisument.push(dataListAllowance);
+            splashArrayReisument.push(dataListReimbursement);
         }
     
 
@@ -282,14 +268,14 @@ Template.reimbursementSettings.onRendered(function() {
 
                                 for (let i = 0; i < data.treimbursement.length; i++) {
                 
-                                    var dataListAllowance = [
+                                    var dataListReimbursement = [
                                         data.treimbursement[i].fields.ID || '',
                                         data.treimbursement[i].fields.ReimbursementName || 0,
                                         data.treimbursement[i].fields.ReimbursementAccount || 0,
                                        '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                     ];
                     
-                                    splashArrayReisument.push(dataListAllowance);
+                                    splashArrayReisument.push(dataListReimbursement);
                                   }
 
                                           let uniqueChars = [...new Set(splashArrayReisument)];
@@ -314,8 +300,8 @@ Template.reimbursementSettings.onRendered(function() {
                       }, 100);
                   },
                   "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                      $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                      $("<button class='btn btn-primary btnAddNewReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
+                      $("<button class='btn btn-primary btnRefreshReimbursement' type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
 
                   }
 
@@ -369,14 +355,14 @@ Template.reimbursementSettings.onRendered(function() {
           let lineItemObj = {};
           for (let i = 0; i < data.treimbursement.length; i++) {
                 
-            var dataListAllowance = [
+            var dataListReimbursement = [
                 data.treimbursement[i].fields.ID || '',
                 data.treimbursement[i].fields.ReimbursementName || 0,
                 data.treimbursement[i].fields.ReimbursementAccount || 0,
                '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
             ];
 
-            splashArrayReisument.push(dataListAllowance);
+            splashArrayReisument.push(dataListReimbursement);
         }
   
 
@@ -444,14 +430,14 @@ Template.reimbursementSettings.onRendered(function() {
 
                                 for (let i = 0; i < data.treimbursement.length; i++) {
                 
-                                    var dataListAllowance = [
+                                    var dataListReimbursement = [
                                         data.treimbursement[i].fields.ID || '',
                                         data.treimbursement[i].fields.ReimbursementName || 0,
                                         data.treimbursement[i].fields.ReimbursementAccount || 0,
                                        '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                     ];
                     
-                                    splashArrayReisument.push(dataListAllowance);
+                                    splashArrayReisument.push(dataListReimbursement);
                                 }
 
                                      let uniqueChars = [...new Set(splashArrayReisument)];
@@ -476,8 +462,8 @@ Template.reimbursementSettings.onRendered(function() {
                       }, 100);
                   },
                   "fnInitComplete": function () {
-                    //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                    //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                      $("<button class='btn btn-primary btnAddNewReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
+                      $("<button class='btn btn-primary btnRefreshReimbursement' type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
 
                   }
 
@@ -530,5 +516,38 @@ Template.reimbursementSettings.onRendered(function() {
 
 };
 templateObject.getReimbursement();
+
+$('.reimbursementDropDown').editableSelect();
+$('.reimbursementDropDown').editableSelect()
+    .on('click.editable-select', function (e, li) {
+        let $search = $(this);
+        let dropDownID = $search.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
+        let offset = $search.offset();
+        let currencyDataName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#reimbursementSettingsModal').modal('show');
+        } else {
+            if (currencyDataName.replace(/\s/g, '') != '') {
+                // console.log('step 2')
+            }
+            $('#reimbursementSettingsModal').modal('show');
+        }
+    });
+
+//On Click Superannuation List
+$(document).on("click", "#tblReimbursements tbody tr", function (e) {
+    var table = $(this);
+    let name = table.find(".colReimbursementName").text()||'';
+    let ID = table.find(".colReimbursementID").text()||'';
+    let account = table.find(".colReimbursementAccount").text()||'';
+    let searchFilterID = templateObject.currentDrpDownID.get()
+    $('#' + searchFilterID).val(name);
+    $('#' + searchFilterID + 'ID').val(ID);
+    if( searchFilterID == 'reimbursementTypeSelect'){
+        $('#controlExpenseAccount').val(account)
+    }
+    $('#reimbursementSettingsModal').modal('toggle');
+});
 
 })
