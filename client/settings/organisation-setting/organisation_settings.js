@@ -183,6 +183,9 @@ Template.organisationsettings.onRendered(function () {
     if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
       templateObject.isChkUSRegionTax.set(true);
       $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
+    } else {
+      $(".chkusregiontax-col").hide();
     }
 
     if (
@@ -367,6 +370,9 @@ Template.organisationsettings.helpers({
   },
   iscompanyemail: () => {
     return Template.instance().iscompanyemail.get();
+  },
+  isChkUSRegionTax: () => {
+    return Template.instance().isChkUSRegionTax.get();
   },
   checkCountryABN: () => {
     let countryABNValue = "ABN";
@@ -945,9 +951,11 @@ Template.organisationsettings.events({
   "change #edtCountry": function (event) {
     if (event.target.value == "United States") {
       $("#chkusregiontax").prop("checked", true);
+      $(".chkusregiontax-col").show();
     }
     else {
       $("#chkusregiontax").prop("checked", false);
+      $(".chkusregiontax-col").hide();
     }
   },
 });

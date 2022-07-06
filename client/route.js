@@ -988,6 +988,15 @@ authenticatedRoutes.route('/taxratesettings', {
     }
 });
 
+authenticatedRoutes.route('/subtaxessetting', {
+    name: 'subTaxesSetting',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'subTaxesSetting'
+        });
+    }
+});
+
 authenticatedRoutes.route('/generalledger', {
     name: 'generalledger',
     action() {
