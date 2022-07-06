@@ -1,8 +1,10 @@
 import { BaseService } from "../js/base-service.js";
 export class OrganisationService extends BaseService {
+
   getOrganisationDetail() {
     return this.GET(this.erpGet.ERPOrganisationSetting);
   }
+
   saveOrganisationSetting(data) {
     return this.POST(this.ERPObjects.TCompanyInfo, data);
   }
@@ -27,15 +29,15 @@ export class OrganisationService extends BaseService {
   }
 
   saveCompanyLogo(data) {
-      return this.POST(this.ERPObjects.TcompLogo, data);
+    return this.POST(this.ERPObjects.TcompLogo, data);
   }
 
   getCheckTcompLogoData() {
-      let options = {
-          PropertyList: "Id,MIMEEncodedPicture,ImageName,Pictype,ImageTypes",
-          LimitCount:"'1'"
-      };
-      return this.getList(this.ERPObjects.TcompLogo, options);
+    let options = {
+      PropertyList: "Id,MIMEEncodedPicture,ImageName,Pictype,ImageTypes",
+      LimitCount: "'1'"
+    };
+    return this.getList(this.ERPObjects.TcompLogo, options);
   }
 
   getCompanyInfo() {

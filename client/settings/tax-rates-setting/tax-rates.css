@@ -772,3 +772,18 @@
 #upd_taxName{
     border-radius: inherit;
 }
+
+@media screen and (max-width: 420px) {
+    .btnRefresh {
+        margin-bottom: 0px;
+    }
+    .btnAddTaxRate {
+        margin-bottom: 16px;
+    }
+    .btnOpenSettings {
+        float: right;
+    }
+    .card-body {
+        padding: 0.75rem !important;
+    }
+}
