@@ -20,34 +20,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
-  getNewGroupListVS1() {
+  getNewGroupListVS1(limitcount, limitfrom) {
     let options = "";
-    options = {
-      ListType: "Detail",
-      //select: "[Active]=true"
-    };
-    // if(limitcount == 'All'){
-    //    options = {
-    //      ListType: "Detail",
-    //      select: "[Active]=true"
-    //     };
-    // }else{
-    //   options = {
+   
+    if(limitcount == 'All'){
+       options = {
+         ListType: "Detail",
+       
+        };
+    }else{
+      options = {
 
-    //      ListType: "Detail",
-    //      select: "[Active]=true",
-    //      LimitCount:'"'+limitcount+'"',
-    //      LimitFrom:'"'+limitfrom+'"'
-    //  };
-    // }
-    return this.getList(this.ERPObjects.TVs1TabGroups, options);
+         ListType: "Detail",
+
+     };
+    }
+    return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
   }
 
-  // getAllCurrencies()
-  // {
-  //   return this.getList('https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/aud.json');
 
-  // }
 
   getAllFundType() {
     let options = {};
@@ -74,6 +65,19 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TPayrollOrganization, options);
   }
 
+  saveGroupType(data)
+  { 
+    
+    return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
+  
+  }
+  getOneGroupTypeByName(dataSearchName){
+    let options = {
+      ListType:"Detail",
+      select: '[Description]="'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
+ }
   getOrdinarytimeEarning(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -353,7 +357,7 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: '[Superfund] f7like "' + dataSearchName + '"',
     };
-    return this.getList(this.ERPObjects.TSuperannuation, options);
+    return this.getList(this.ERPObjects.TVS1Superannuation, options);
   }
 
   getAllowanceByName(dataSearchName) {
@@ -2114,6 +2118,23 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TOrdinaryTimeEarnings, options);
   }
 
+
+  getvs1superannuationBonusesCommissions(limitcount, limitfrom)
+  {
+    let options = "";
+    if (limitcount == "All") {
+      options = {
+        ListType: "Detail",
+      };
+    } else {
+      options = {
+        ListType: "Detail",
+       
+      };
+    }
+    return this.getList(this.ERPObjects.TEarningsBonusesCommissions, options);
+
+  }
   getDeduction(limitcount, limitfrom) {
     let options = "";
     if (limitcount == "All") {
@@ -2812,7 +2833,7 @@ export class SideBarService extends BaseService {
       };
     }
 
-    return this.getList(this.ERPObjects.TSuperannuation, options);
+    return this.getList(this.ERPObjects.TVS1Superannuation, options);
   }
 
   getSuperType() {

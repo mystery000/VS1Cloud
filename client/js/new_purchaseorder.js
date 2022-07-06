@@ -97,6 +97,31 @@ Template.purchaseordercard.onRendered(() => {
     const contactService = new ContactService();
 
 
+    templateObject.getTemplateInfo = function() {
+
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+                var purchase_orderbill = data.fields.purchase_order;
+                $("[id='Purchase Orders_"+purchase_orderbill+"']").attr("checked", "checked");
+            }
+    
+
+        });
+
+   };
+
+
+   templateObject.getTemplateInfo();
+
+
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
     
         title = $(this).parent().attr("data-id");
@@ -6153,6 +6178,65 @@ Template.purchaseordercard.events({
    
         var printTemplate = [];
         $('.fullScreenSpin').css('display', 'inline-block');
+        
+        getVS1Data('TemplateSettings').then(function(dataObject) {
+
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data;
+            let lineItems = [];
+            let lineItemObj = {};
+
+
+            if(data.fields)
+            {
+
+                var bill =data.fields.bill;         
+                var credits =  data.fields.credits;
+                var customer_payment = data.fields.customer_payment;
+                var invoices = data.fields.invoices;
+                var invoices_back_order =  data.fields.invoices_back_order;
+                var purchase_orderbill = $('input[name="Purchase Orders"]:checked').val();
+                var quotes = data.fields.quotes;
+                var refunds = data.fields.refunds;
+                var sales_orders = data.fields.sales_orders;
+                var supplier_payments = data.fields.supplier_payments;
+                var statements = data.fields.statements;
+                var customer_statement =  data.fields.customer_statement;
+                var delivery_docket =  data.fields.delivery_docket;
+               
+                var print_options  =  {
+                    type:"TemplateSettings",
+                    fields:{                              
+                               client_id:loggedCompany,
+                               bill:bill,
+                               credits:credits,
+                               customer_payment:customer_payment,
+                               customer_statement:customer_statement,
+                               invoices:invoices,
+                               invoices_back_order:invoices_back_order,
+                               purchase_order:purchase_orderbill,
+                               quotes:quotes,
+                               refunds:refunds,
+                               sales_orders:sales_orders,
+                               supplier_payments:supplier_payments,
+                               statements:statements,
+                               delivery_docket:delivery_docket,
+                          }
+              
+              
+                          
+                  }
+
+                  addVS1Data("TemplateSettings", JSON.stringify(print_options));
+
+            }
+    
+
+        });
+
+
+
+
         $('#html-2-pdfwrapper-new').css('display', 'block');
         if ($('.edtCustomerEmail').val() != "") {
             $('.pdfCustomerName').html($('#edtCustomerName').val());

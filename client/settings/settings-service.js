@@ -121,7 +121,7 @@ export class TaxRateService extends BaseService {
         let options = {
             select: "[Superfund]='" + Superannuation + "'"
         };
-        return this.getList(this.ERPObjects.TSuperannuation, options);
+        return this.getList(this.ERPObjects.TVS1Superannuation, options);
     }
 
     checkfundTypeByName(description)
@@ -405,7 +405,7 @@ export class TaxRateService extends BaseService {
         return this.POST(this.ERPObjects.TPayrollCalendars, data);
     }
     saveSuperannuation(data) {
-        return this.POST(this.ERPObjects.TSuperannuation, data);
+        return this.POST(this.ERPObjects.TVS1Superannuation, data);
     }
 
     saveReimbursement(data)
@@ -564,6 +564,32 @@ export class TaxRateService extends BaseService {
             select: "[Active]=true",
         };
             return this.getList(this.ERPObjects.TEmployee,options);
+        }
+
+
+        getOneGroupTypeByName(dataSearchName){
+            let options = {
+              ListType:"Detail",
+              select: '[Groupdesc]="'+dataSearchName+'"'
+            };
+            return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
+         }
+        
+         checkGroupByName(dataSearchName)
+         {
+            let options = {
+              ListType:"Detail",
+              select: '[Groupdesc]="'+dataSearchName+'"'
+            };
+           return this.getList(this.ERPObjects.TPayrollHolidayGroup, options);
+        
+         }
+        
+         saveGroupType(data)
+        { 
+          
+          return this.POST(this.ERPObjects.TPayrollHolidayGroup,data);
+        
         }
 
 }
