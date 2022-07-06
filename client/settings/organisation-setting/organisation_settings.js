@@ -41,6 +41,9 @@ Template.organisationsettings.onCreated(() => {
 
   templateObject.iscompanyemail = new ReactiveVar();
   templateObject.iscompanyemail.set(false);
+
+  templateObject.isChkUSRegionTax = new ReactiveVar();
+  templateObject.isChkUSRegionTax.set(false);
 });
 
 Template.organisationsettings.onRendered(function () {
@@ -176,6 +179,11 @@ Template.organisationsettings.onRendered(function () {
         mainData.PoCountry +
         "</option>"
     );
+
+    if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
+      templateObject.isChkUSRegionTax.set(true);
+      $("#chkusregiontax").prop("checked", true);
+    }
 
     if (
       mainData.Address == mainData.PoBox &&
@@ -935,12 +943,11 @@ Template.organisationsettings.events({
     });
   },
   "change #edtCountry": function (event) {
-    console.log(event.target.value);
     if (event.target.value == "United States") {
-      $("#chkusregiontax").attr("checked", true);
+      $("#chkusregiontax").prop("checked", true);
     }
     else {
-      $("#chkusregiontax").removeAttr("checked");
+      $("#chkusregiontax").prop("checked", false);
     }
   },
 });
