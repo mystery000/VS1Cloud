@@ -28,13 +28,20 @@ function MakeNegative() {
   });
 }
 
+const numberOfSteps = 10;
+
 function getCurrentStep() {
   return localStorage.getItem("VS1Cloud_SETUP_STEP");
 }
 
+function setCurrentStep(stepId) {
+  return localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+}
+
 Template.setup.onCreated(() => {
   const templateObject = Template.instance();
-  templateObject.stepNumber = new ReactiveVar(0);
+  templateObject.stepNumber = new ReactiveVar(1);
+  templateObject.steps = new ReactiveVar([]);
 
   // Step 1 Variables
   templateObject.iscompanyemail = new ReactiveVar();
@@ -72,7 +79,7 @@ Template.setup.onCreated(() => {
 
   // Step 2 variables
   templateObject.taxRates = new ReactiveVar([]);
-  templateObject.taxRatesHeader = new ReactiveVar([]);
+  // templateObject.taxRatesHeaders = new ReactiveVar([]);
 
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -143,21 +150,36 @@ Template.setup.onCreated(() => {
 
   // Step 7 variables
   templateObject.customerList = new ReactiveVar([]);
-  templateObject.customerListHeaders = new ReactiveVar([]);
+  // templateObject.customerListHeaders = new ReactiveVar([]);
 
   // Step 8 variables
   templateObject.supplierList = new ReactiveVar([]);
-  templateObject.supplierListHeaders = new ReactiveVar([]);
+  // templateObject.supplierListHeaders = new ReactiveVar([]);
 
   // Step 9 variables
+  templateObject.inventoryList = new ReactiveVar([]);
 });
 
 Template.setup.onRendered(function () {
   $(".fullScreenSpin").css("display", "none");
   const templateObject = Template.instance();
-
   // Get step local storage variable and set step
-  const currentStep = localStorage.getItem("VS1Cloud_SETUP_STEP");
+  const currentStep = getCurrentStep();
+
+  templateObject.loadSteps = () => {
+    let _steps = [];
+    for (let i = 1; i <= numberOfSteps; i++) {
+      _steps.push({
+        id: i,
+        index: i,
+        active: currentStep == i ? true : false,
+        clickable: i < currentStep ? !true : !false,
+      });
+    }
+    templateObject.steps.set(_steps);
+  };
+
+  templateObject.loadSteps();
 
   if (currentStep !== null) {
     $(".first-page").css("display", "none");
@@ -177,7 +199,7 @@ Template.setup.onRendered(function () {
         // we need to ADD clickDisabled
       }
     }
-    if (currentStep !== 9) {
+    if (currentStep !== numberOfSteps) {
       $(".setup-step-" + currentStep).css("display", "block");
       $(`.setup-stepper li:nth-child(${currentStep})`).addClass("current");
     } else {
@@ -551,30 +573,6 @@ Template.setup.onRendered(function () {
               },
             ],
             sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-            buttons: [
-              {
-                extend: "excelHtml5",
-                text: "",
-                download: "open",
-                className: "btntabletocsv hiddenColumn",
-                filename: "taxratelist_" + moment().format(),
-                orientation: "portrait",
-                exportOptions: {
-                  columns: ":visible",
-                },
-              },
-              {
-                extend: "print",
-                download: "open",
-                className: "btntabletopdf hiddenColumn",
-                text: "",
-                title: "Tax Rate List",
-                filename: "taxratelist_" + moment().format(),
-                exportOptions: {
-                  columns: ":visible",
-                },
-              },
-            ],
             select: true,
             destroy: true,
             // colReorder: true,
@@ -604,6 +602,7 @@ Template.setup.onRendered(function () {
               MakeNegative();
             }, 100);
             let draftRecord = templateObject.taxRates.get();
+            // console.log('Page', draftRecord);
             templateObject.taxRates.set(draftRecord);
           })
           .on("column-reorder", function () {})
@@ -614,32 +613,6 @@ Template.setup.onRendered(function () {
           });
       }, 0);
 
-      var columns = $("#taxRatesList th");
-      let sTible = "";
-      let sWidth = "";
-      let sIndex = "";
-      let sVisible = "";
-      let columVisible = false;
-      let sClass = "";
-      $.each(columns, function (i, v) {
-        if (v.hidden == false) {
-          columVisible = true;
-        }
-        if (v.className.includes("hiddenColumn")) {
-          columVisible = false;
-        }
-        sWidth = v.style.width.replace("px", "");
-
-        let datatablerecordObj = {
-          sTitle: v.innerText || "",
-          sWidth: sWidth || "",
-          sIndex: v.cellIndex || "",
-          sVisible: columVisible || false,
-          sClass: v.className || "",
-        };
-        _taxRatesHeaders.push(datatablerecordObj);
-      });
-      templateObject.taxRatesHeader.set(_taxRatesHeaders);
       $("div.dataTables_filter input").addClass("form-control form-control-sm");
     }
 
@@ -4382,31 +4355,31 @@ Template.setup.onRendered(function () {
       $(".fullScreenSpin").css("display", "none");
     }, 0);
 
-    var columns = $("#tblCustomerlist th");
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      _customerListHeaders.push(datatablerecordObj);
-    });
-    templateObject.customerListHeaders.set(_customerListHeaders);
+    // var columns = $("#tblCustomerlist th");
+    // let sTible = "";
+    // let sWidth = "";
+    // let sIndex = "";
+    // let sVisible = "";
+    // let columVisible = false;
+    // let sClass = "";
+    // $.each(columns, function (i, v) {
+    //   if (v.hidden == false) {
+    //     columVisible = true;
+    //   }
+    //   if (v.className.includes("hiddenColumn")) {
+    //     columVisible = false;
+    //   }
+    //   sWidth = v.style.width.replace("px", "");
+    //   let datatablerecordObj = {
+    //     sTitle: v.innerText || "",
+    //     sWidth: sWidth || "",
+    //     sIndex: v.cellIndex || "",
+    //     sVisible: columVisible || false,
+    //     sClass: v.className || "",
+    //   };
+    //   _customerListHeaders.push(datatablerecordObj);
+    // });
+    // templateObject.customerListHeaders.set(_customerListHeaders);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
     $("#tblCustomerlist tbody").on("click", "tr", function () {
       var listData = $(this).closest("tr").attr("id");
@@ -4445,50 +4418,51 @@ Template.setup.onRendered(function () {
     let _supplierList = [];
     let _supplierListHeaers = [];
 
-    for (let i = 0; i < data.tsuppliervs1.length; i++) {
-      let arBalance =
-        utilityService.modifynegativeCurrencyFormat(
-          useData[i].fields.APBalance
-        ) || 0.0;
-      let creditBalance =
-        utilityService.modifynegativeCurrencyFormat(
-          useData[i].fields.ExcessAmount
-        ) || 0.0;
-      let balance =
-        utilityService.modifynegativeCurrencyFormat(
-          useData[i].fields.Balance
-        ) || 0.0;
-      let creditLimit =
-        utilityService.modifynegativeCurrencyFormat(
-          useData[i].fields.SupplierCreditLimit
-        ) || 0.0;
-      let salesOrderBalance =
-        utilityService.modifynegativeCurrencyFormat(
-          useData[i].fields.Balance
-        ) || 0.0;
-      var dataList = {
-        id: useData[i].fields.ID || "",
-        company: useData[i].fields.ClientName || "",
-        contactname: useData[i].fields.ContactName || "",
-        phone: useData[i].fields.Phone || "",
-        arbalance: arBalance || 0.0,
-        creditbalance: creditBalance || 0.0,
-        balance: balance || 0.0,
-        creditlimit: creditLimit || 0.0,
-        salesorderbalance: salesOrderBalance || 0.0,
-        email: useData[i].fields.Email || "",
-        accountno: useData[i].fields.AccountNo || "",
-        clientno: useData[i].fields.ClientNo || "",
-        jobtitle: useData[i].fields.JobTitle || "",
-        notes: useData[i].fields.Notes || "",
-        country: useData[i].fields.Country || "",
-      };
+    if (data.tsuppliervs1) {
+      data.tsuppliervs1.forEach((supplier) => {
+        let arBalance =
+          utilityService.modifynegativeCurrencyFormat(
+            supplier.fields.APBalance
+          ) || 0.0;
+        let creditBalance =
+          utilityService.modifynegativeCurrencyFormat(
+            supplier.fields.ExcessAmount
+          ) || 0.0;
+        let balance =
+          utilityService.modifynegativeCurrencyFormat(
+            supplier.fields.Balance
+          ) || 0.0;
+        let creditLimit =
+          utilityService.modifynegativeCurrencyFormat(
+            supplier.fields.SupplierCreditLimit
+          ) || 0.0;
+        let salesOrderBalance =
+          utilityService.modifynegativeCurrencyFormat(
+            supplier.fields.Balance
+          ) || 0.0;
+        var dataList = {
+          id: supplier.fields.ID || "",
+          company: supplier.fields.ClientName || "",
+          contactname: supplier.fields.ContactName || "",
+          phone: supplier.fields.Phone || "",
+          arbalance: arBalance || 0.0,
+          creditbalance: creditBalance || 0.0,
+          balance: balance || 0.0,
+          creditlimit: creditLimit || 0.0,
+          salesorderbalance: salesOrderBalance || 0.0,
+          email: supplier.fields.Email || "",
+          accountno: supplier.fields.AccountNo || "",
+          clientno: supplier.fields.ClientNo || "",
+          jobtitle: supplier.fields.JobTitle || "",
+          notes: supplier.fields.Notes || "",
+          country: supplier.fields.Country || "",
+        };
 
-      dataTableList.push(dataList);
-      //}
+        _supplierList.push(dataList);
+      });
     }
 
-    await templateObject.supplierList.set(dataTableList);
+    await templateObject.supplierList.set(_supplierList);
 
     if (await templateObject.supplierList.get()) {
       Meteor.call(
@@ -4719,31 +4693,31 @@ Template.setup.onRendered(function () {
       }, 10);
     }
 
-    var columns = $("#tblSupplierlist th");
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      _supplierListHeaers.push(datatablerecordObj);
-    });
-    templateObject.supplierListHeaders.set(_supplierListHeaers);
+    // var columns = $("#tblSupplierlist th");
+    // let sTible = "";
+    // let sWidth = "";
+    // let sIndex = "";
+    // let sVisible = "";
+    // let columVisible = false;
+    // let sClass = "";
+    // $.each(columns, function (i, v) {
+    //   if (v.hidden == false) {
+    //     columVisible = true;
+    //   }
+    //   if (v.className.includes("hiddenColumn")) {
+    //     columVisible = false;
+    //   }
+    //   sWidth = v.style.width.replace("px", "");
+    //   let datatablerecordObj = {
+    //     sTitle: v.innerText || "",
+    //     sWidth: sWidth || "",
+    //     sIndex: v.cellIndex || "",
+    //     sVisible: columVisible || false,
+    //     sClass: v.className || "",
+    //   };
+    //   _supplierListHeaers.push(datatablerecordObj);
+    // });
+    // templateObject.supplierListHeaders.set(_supplierListHeaers);
     $("div.dataTables_filter input").addClass("form-control form-control-sm");
     $("#tblSupplierlist tbody").on("click", "tr", function () {
       var listData = $(this).closest("tr").attr("id");
@@ -4757,6 +4731,94 @@ Template.setup.onRendered(function () {
 
   // Step 9 Render functionalities
 
+  templateObject.loadInventory = async () => {
+    let _inventoryList = [];
+    let dataObject = await getVS1Data("TProductVS1");
+
+    let data =
+      dataObject.length == 0
+        ? await sideBarService.getNewProductListVS1(initialBaseDataLoad, 0)
+        : JSON.parse(dataObject[0].data);
+
+    if (data.tproductvs1) {
+      addVS1Data("TProductVS1", JSON.stringify(data));
+   
+      //localStorage.setItem('VS1ProductList', JSON.stringify(data)||'');
+      let lineItems = [];
+      let lineItemObj = {};
+      let departmentData = "";
+      let departmentDataLoad = "";
+      let prodQtyData = 0;
+      let prodQtyDataLoad = 0;
+      let deptStatus = "";
+      let checkIfSerialorLot = "";
+      //let getDepartmentData = templateObject.productdeptrecords.get();
+      var dataList = {};
+      //if((deptname == 'undefined') || (deptname == 'All')){
+      departmentData = "All";
+      for (let i = 0; i < data.tproductvs1.length; i++) {
+        let availableQty = 0;
+        let onBOOrder = 0;
+        if (data.tproductvs1[i].fields.ProductClass != null) {
+          for (
+            let a = 0;
+            a < data.tproductvs1[i].fields.ProductClass.length;
+            a++
+          ) {
+            availableQty +=
+              data.tproductvs1[i].fields.ProductClass[a].fields
+                .AvailableQuantity || 0;
+          }
+        }
+        if (data.tproductvs1[i].fields.SNTracking == true) {
+          checkIfSerialorLot =
+            '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+        } else if (data.tproductvs1[i].fields.Batch == true) {
+          checkIfSerialorLot =
+            '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+        } else {
+          checkIfSerialorLot =
+            '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+        }
+
+        onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
+        var dataList = [
+          data.tproductvs1[i].fields.ID || "",
+          data.tproductvs1[i].fields.ProductName || "-",
+          data.tproductvs1[i].fields.SalesDescription || "",
+          availableQty,
+          0,
+          onBOOrder,
+          data.tproductvs1[i].fields.TotalQtyInStock,
+          data.tproductvs1[i].fields.TotalQtyOnOrder,
+          utilityService.modifynegativeCurrencyFormat(
+            Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
+          ),
+          utilityService.modifynegativeCurrencyFormat(
+            Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) / 100
+          ),
+          utilityService.modifynegativeCurrencyFormat(
+            Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100
+          ),
+          utilityService.modifynegativeCurrencyFormat(
+            Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100
+          ),
+          checkIfSerialorLot || "",
+          data.tproductvs1[i].fields.BARCODE || "",
+          departmentData,
+          data.tproductvs1[i].fields.PurchaseDescription || "",
+          data.tproductvs1[i].fields.CUSTFLD1 || "",
+          data.tproductvs1[i].fields.CUSTFLD2 || "",
+        ];
+        _inventoryList.push(dataList);
+      }
+
+      templateObject.inventoryList.set(_inventoryList);
+    }
+
+  };
+
+  templateObject.loadInventory();
   //   $("#displayname").val("hello test");
 });
 
@@ -4785,7 +4847,7 @@ Template.setup.events({
     $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).addClass("completed");
-    if (stepId !== 9) {
+    if (stepId !== numberOfSteps) {
       $(".setup-step-" + stepId).css("display", "block");
     } else {
       $(".setup-complete").css("display", "block");
@@ -4805,7 +4867,7 @@ Template.setup.events({
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     $(`.setup-stepper li:nth-child(${stepId}) a`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId - 1})`).removeClass("current");
-    if (stepId !== 9) {
+    if (stepId !== numberOfSteps) {
       $(".setup-step-" + stepId).css("display", "block");
     } else {
       $(".setup-complete").css("display", "flex");
@@ -4813,19 +4875,21 @@ Template.setup.events({
     localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
   },
   "click .gotToStepID": function (event) {
+    let templateObj = Template.instance();
     let stepId = $(event.target).attr("data-step-id");
-    stepId = parseInt(stepId) + 1;
+    stepId = parseInt(stepId);
     $(".setup-step").css("display", "none");
     $(`.setup-stepper li`).removeClass("current");
     // $(`.setup-stepper li`).removeClass("clickDisabled");
     $(`.setup-stepper li:nth-child(${stepId})`).addClass("current");
     // $(`.setup-stepper li:nth-child(n+${stepId})`).addClass("clickDisabled");
-    if (stepId !== 9) {
+    if (stepId !== numberOfSteps) {
       $(".setup-step-" + stepId).css("display", "block");
     } else {
       $(".setup-complete").css("display", "flex");
     }
-    localStorage.setItem("VS1Cloud_SETUP_STEP", stepId);
+    setCurrentStep(stepId);
+    templateObj.loadSteps();
   },
   "click #launchBtn": function () {
     window.location.href = "/";
@@ -9206,12 +9270,18 @@ Template.setup.events({
 });
 
 Template.setup.helpers({
+  steps: () => {
+    return Template.instance().steps.get();
+  },
   // Step 1 helpers
   countryList: () => {
     return Template.instance().countryData.get();
   },
 
   // Step 2 helpers
+  // taxRatesHeaders : () => {
+  //   return Template.instance().taxRatesHeaders.get();
+  // },
   taxRates: () => {
     let data = Template.instance().taxRates.get();
 
@@ -9524,18 +9594,21 @@ Template.setup.helpers({
   customerList: () => {
     return Template.instance().customerList.get();
   },
-  customerListHeaders: () => {
-    return Template.instance().customerListHeaders.get();
-  },
+  // customerListHeaders: () => {
+  //   return Template.instance().customerListHeaders.get();
+  // },
   // Step 8 helpers
   supplierList: () => {
-    return Template.instance().customerList.get();
+    return Template.instance().supplierList.get();
   },
-  supplierListHeaders: () => {
-    return Template.instance().customerListHeaders.get();
-  },
+  // supplierListHeaders: () => {
+  //   return Template.instance().customerListHeaders.get();
+  // },
 
   // Step 9 helpers
+  inventoryList: () => {
+    return Template.instance().inventoryList.get();
+  }
 });
 
 Template.registerHelper("equals", function (a, b) {
