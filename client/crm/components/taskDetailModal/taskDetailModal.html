@@ -144,7 +144,24 @@
                   aria-labelledby="nav-subtasks-tab">
                   <div class="row no-gutters">
                     <div class="subtask-row col-12">
-
+                      <div class="table-responsive">
+                        <table id="tblSubtaskDatatable" name="tblSubtaskDatatable" style="width:100%"
+                          class="dataTable table table-hover table-striped table-bordered tblSubtaskDatatable">
+                          <thead>
+                            <tr class="dnd-moved">
+                              <th class="th colCompleteTask" style="width: 2%;">
+                              </th>
+                              <th class="th colDate no-modal">Date</th>
+                              <th class="th colTaskName no-modal">Task</th>
+                              <th class="th colTaskDesc no-modal" style="display: none;">Description</th>
+                              <th class="th colTaskLabels no-modal" style="display: none;">Labels</th>
+                              <th class="th colTaskActions no-modal">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
 
                     <div class="col-12">
