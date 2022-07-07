@@ -4813,7 +4813,232 @@ Template.setup.onRendered(function () {
         _inventoryList.push(dataList);
       }
 
-      templateObject.inventoryList.set(_inventoryList);
+      // templateObject.inventoryList.set(_inventoryList);
+
+      if(_inventoryList) {
+        setTimeout(function() {
+          $("#tblInventory").dataTable({
+                  data: _inventoryList,
+                  sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+
+                  columnDefs: [{
+                          className: "colProductID hiddenColumn",
+                          targets: [0],
+                      },
+                      {
+                          className: "colProductName",
+                          targets: [1],
+                      },
+                      {
+                          className: "colSalesDescription",
+                          targets: [2],
+                      },
+                      {
+                          className: "colAvailable text-right",
+                          targets: [3],
+                      },
+                      {
+                          className: "colOnSO text-right",
+                          targets: [4],
+                      },
+                      {
+                          className: "colOnBO text-right",
+                          targets: [5],
+                      },
+                      {
+                          className: "colInStock text-right",
+                          targets: [6],
+                      },
+                      {
+                          className: "colOnOrder text-right",
+                          targets: [7],
+                      },
+                      {
+                          className: "colCostPrice hiddenColumn text-right",
+                          targets: [8],
+                      },
+                      {
+                          className: "colCostPriceInc  text-right",
+                          targets: [9],
+                      },
+                      {
+                          className: "colSalePrice hiddenColumn text-right",
+                          targets: [10],
+                      },
+                      {
+                          className: "colSalePriceInc  text-right",
+                          targets: [11],
+                      },
+                      {
+                          className: "colSerialNo  text-center hiddenColumn",
+                          targets: [12],
+                      },
+                      {
+                          className: "colBarcode hiddenColumn",
+                          targets: [13],
+                      },
+                      {
+                          className: "colDepartment hiddenColumn",
+                          targets: [14],
+                      },
+                      {
+                          className: "colPurchaseDescription hiddenColumn",
+                          targets: [15],
+                      },
+                      {
+                          className: "colProdCustField1 hiddenColumn",
+                          targets: [16],
+                      },
+                      {
+                          className: "colProdCustField2 hiddenColumn",
+                          targets: [17],
+                      },
+                  ],
+                  select: true,
+                  destroy: true,
+                  colReorder: true,
+                  buttons: [{
+                          extend: "excelHtml5",
+                          text: "",
+                          download: "open",
+                          className: "btntabletocsv hiddenColumn",
+                          filename: "inventory_" + moment().format(),
+                          orientation: "portrait",
+                          exportOptions: {
+                              columns: ":visible",
+                          },
+                      },
+                      {
+                          extend: "print",
+                          download: "open",
+                          className: "btntabletopdf hiddenColumn",
+                          text: "",
+                          title: "Inventory List",
+                          filename: "inventory_" + moment().format(),
+                          exportOptions: {
+                              columns: ":visible",
+                          },
+                      },
+                  ],
+                  // bStateSave: true,
+                  // rowId: 0,
+                  // paging: false,
+                  // "scrollY": "800px",
+                  // "scrollCollapse": true,
+                  pageLength: initialBaseDataLoad,
+                  lengthMenu: [
+                      [initialBaseDataLoad, -1],
+                      [initialBaseDataLoad, "All"],
+                  ],
+                  info: true,
+                  responsive: true,
+                  order: [
+                      [0, "asc"]
+                  ],
+                  action: function() {
+                      $("#tblInventory").DataTable().ajax.reload();
+                  },
+                  fnDrawCallback: function(oSettings) {
+                      $(".paginate_button.page-item").removeClass("disabled");
+                      $("#tblInventory_ellipsis").addClass("disabled");
+                      if (oSettings._iDisplayLength == -1) {
+                          if (oSettings.fnRecordsDisplay() > 150) {}
+                          $(".fullScreenSpin").css("display", "inline-block");
+                          setTimeout(function() {
+                              $(".fullScreenSpin").css("display", "none");
+                          }, 100);
+                      } else {}
+                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                          $(".paginate_button.page-item.next").addClass("disabled");
+                      }
+
+                      $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
+                          $(".fullScreenSpin").css("display", "inline-block");
+                          let dataLenght = oSettings._iDisplayLength;
+                          let customerSearch = $("#tblInventory_filter input").val();
+                          sideBarService.getNewProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+                                  for (let i = 0; i < dataObjectnew.tproductvs1.length; i++) {
+                                    let availableQty = 0;
+                                    let onBOOrder = 0;
+                                    if(dataObjectnew.tproductvs1[i].fields.ProductClass != null){
+                                    for (let a = 0; a < dataObjectnew.tproductvs1[i].fields.ProductClass.length; a++) {
+                                         availableQty += dataObjectnew.tproductvs1[i].fields.ProductClass[a].fields.AvailableQuantity||0;
+                                     };
+                                   };
+                                     if(dataObjectnew.tproductvs1[i].fields.SNTracking == true){
+                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+                                      }else if(dataObjectnew.tproductvs1[i].fields.Batch == true){
+                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+                                      }else{
+                                        checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+                                      }
+                                      var dataListDupp = [
+                                          dataObjectnew.tproductvs1[i].fields.ID || "",
+                                          dataObjectnew.tproductvs1[i].fields.ProductName || "-",
+                                          dataObjectnew.tproductvs1[i].fields.SalesDescription || "",
+                                          availableQty,
+                                          0,
+                                          onBOOrder,
+                                          dataObjectnew.tproductvs1[i].fields.TotalQtyInStock,
+                                          dataObjectnew.tproductvs1[i].fields.TotalQtyOnOrder,
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.BuyQty1CostInc * 100) /100),
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                                          utilityService.modifynegativeCurrencyFormat(Math.floor(dataObjectnew.tproductvs1[i].fields.SellQty1PriceInc * 100) /100),
+                                          checkIfSerialorLot||'',
+                                          dataObjectnew.tproductvs1[i].fields.BARCODE || "",
+                                          departmentData,
+                                          dataObjectnew.tproductvs1[i].fields.PurchaseDescription || "",
+                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD1 || "",
+                                          dataObjectnew.tproductvs1[i].fields.CUSTFLD2 || "",
+                                      ];
+                                      splashArrayProductList.push(dataListDupp);
+                                  }
+                                  let uniqueChars = [...new Set(splashArrayProductList)];
+                                  var datatable = $("#tblInventory").DataTable();
+                                  datatable.clear();
+                                  datatable.rows.add(uniqueChars);
+                                  datatable.draw(false);
+                                  setTimeout(function() {
+                                      $("#tblInventory").dataTable().fnPageChange("last");
+                                  }, 400);
+
+                                  $(".fullScreenSpin").css("display", "none");
+                              })
+                              .catch(function(err) {
+                                  $(".fullScreenSpin").css("display", "none");
+                              });
+                      });
+                      setTimeout(function() {
+                          MakeNegative();
+                      }, 100);
+                  },
+                  fnInitComplete: function() {
+                      $(
+                          "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                      ).insertAfter("#tblInventory_filter");
+                  },
+              }).on("length.dt", function(e, settings, len) {
+                  $(".fullScreenSpin").css("display", "inline-block");
+                  let dataLenght = settings._iDisplayLength;
+                  // splashArrayProductList = [];
+                  if (dataLenght == -1) {
+                      $(".fullScreenSpin").css("display", "none");
+                  } else {
+                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+                          $(".fullScreenSpin").css("display", "none");
+                      } else {
+                          $(".fullScreenSpin").css("display", "none");
+                      }
+                  }
+              });
+
+            $(".fullScreenSpin").css("display", "none");
+            $("div.dataTables_filter input").addClass(
+                "form-control form-control-sm"
+            );
+        }, 0);
+      }
     }
 
   };
