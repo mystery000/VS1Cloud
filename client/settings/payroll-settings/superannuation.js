@@ -1,6 +1,8 @@
 import '../../lib/global/indexdbstorage.js';
 import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
+import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
+import ApiService from "../../js/Api/Module/ApiService";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -28,422 +30,39 @@ Template.superannuationSettings.onRendered(function() {
     });
   };
 
-  templateObject.getSuperannuationData = function(){
-       
-    getVS1Data('TSuperannuation').then(function(dataObject) {
-        if (dataObject.length == 0) {
-             sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TSuperannuation', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-            
-              for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
-                  var dataListAllowance = [
-                      data.tsuperannuation[i].fields.ID || '',
-                      data.tsuperannuation[i].fields.Superfund || '',
-                      data.tsuperannuation[i].fields.Supertypeid || '',
-                      data.tsuperannuation[i].fields.Employeeid || '',
-                      'Key Missing',
-                      'Key Missing',
-                      'Key Missing',
-                      data.tsuperannuation[i].fields.Accountno || '',
-                      'Key Missing',
-                    //   '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                  ];
+  templateObject.saveDataLocalDB = async function(){
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+        employeePayrolApis.collectionNames.TSuperannuation
+    );
 
-                  splashArraySuperannuationList.push(dataListAllowance);
-              }
-
-        
-
-
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblSuperannuation').DataTable({
-
-                      data: splashArraySuperannuationList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [                              
-                        
-                           {
-                             className: "colSuperannuationID hiddenColumn",
-                             "targets": [0]
-                           },
-                           {
-                              className: "colSuperannuationName",
-                              "targets": [1]
-                           },  
-                           {
-                              className: "colSuperannuationType",
-                              "targets": [2]
-                           },  
-                           {
-                            className: "colEmployerNum",
-                            "targets": [3]
-                           },  
-                           {
-                            className: "colabn",
-                            "targets": [4]
-                           },  
-                           {
-                            className: "colservicealias",
-                            "targets": [5]
-                           },  
-                           {
-                            className: "colbsb",
-                            "targets": [6]
-                           },  
-                           {
-                            className: "colaccountnumber",
-                            "targets": [7]
-                           },  
-                           {
-                            className: "colaccountname",
-                            "targets": [8]
-                           },  
-                                               
-                        //    {
-                        //       className: "colDeletesup",
-                        //       "orderable": false,
-                        //       "targets": -1
-                        //    }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblSuperannuation').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblSuperannuation_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArraySuperannuationListDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblSuperannuation_filter input').val();
-
-                                  sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
-                                        var dataListAllowance = [
-                                            data.tsuperannuation[i].fields.ID || '',
-                                            data.tsuperannuation[i].fields.Superfund || '',
-                                            data.tsuperannuation[i].fields.Supertypeid || '',
-                                            data.tsuperannuation[i].fields.Employeeid || '',
-                                            'Key Missing',
-                                            'Key Missing',
-                                            'Key Missing',
-                                            data.tsuperannuation[i].fields.Accountno || '',
-                                            'Key Missing',
-                                            // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-                      
-                                        splashArraySuperannuationList.push(dataListAllowance);
-                                    }
-
-                                              let uniqueChars = [...new Set(splashArraySuperannuationList)];
-                                              var datatable = $('#tblSuperannuation').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblSuperannuation").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              $('.fullScreenSpin').css('display', 'none');
-
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                        //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                        //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArraySuperannuationList = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else {
-                            sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-          });
-        }else{
-
-          let data = JSON.parse(dataObject[0].data);    
-         
-          let useData = data;
-          let lineItems = [];
-          let lineItemObj = {};
-
-          for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
-            
-            var dataListAllowance = [
-                data.tsuperannuation[i].fields.ID || '',
-                data.tsuperannuation[i].fields.Superfund || '',
-                data.tsuperannuation[i].fields.Supertypeid || '',
-                data.tsuperannuation[i].fields.Employeeid || '',
-                'Key Missing',
-                'Key Missing',
-                'Key Missing',
-                data.tsuperannuation[i].fields.Accountno || '',
-                'Key Missing',
-                // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ];
-
-            splashArraySuperannuationList.push(dataListAllowance);
-        }
+    employeePayrolEndpoint.url.searchParams.append(
+        "ListType",
+        "'Detail'"
+    );                
     
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
+    if (employeePayrolEndpointResponse.ok == true) {
+        employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+        await addVS1Data('TSuperannuation', JSON.stringify(employeePayrolEndpointJsonResponse))
+        return employeePayrolEndpointJsonResponse
+    }  
+    return '';
+};
 
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblSuperannuation').DataTable({
-
-                  data: splashArraySuperannuationList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [                              
-                        
-                    {
-                      className: "colSuperannuationID hiddenColumn",
-                      "targets": [0]
-                    },
-                    {
-                       className: "colSuperannuationName",
-                       "targets": [1]
-                    },  
-                    {
-                       className: "colSuperannuationType",
-                       "targets": [2]
-                    },  
-                    {
-                     className: "colEmployerNum",
-                     "targets": [3]
-                    },  
-                    {
-                     className: "colabn",
-                     "targets": [4]
-                    },  
-                    {
-                     className: "colservicealias",
-                     "targets": [5]
-                    },  
-                    {
-                     className: "colbsb",
-                     "targets": [6]
-                    },  
-                    {
-                     className: "colaccountnumber",
-                     "targets": [7]
-                    },  
-                    {
-                     className: "colaccountname",
-                     "targets": [8]
-                    },  
-                                        
-                    // {
-                    //    className: "colDeletesup",
-                    //    "orderable": false,
-                    //    "targets": -1
-                    // }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblSuperannuation').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblSuperannuation_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArraySuperannuationListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#splashArraySuperannuationList_filter input').val();
-
-                              sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                 for (let i = 0; i < data.tsuperannuation.length; i++) {
-                
-                                    var dataListAllowance = [
-                                        data.tsuperannuation[i].fields.ID || '',
-                                        data.tsuperannuation[i].fields.Superfund || '',
-                                        data.tsuperannuation[i].fields.Supertypeid || '',
-                                        data.tsuperannuation[i].fields.Employeeid || '',
-                                        'Key Missing',
-                                        'Key Missing',
-                                        'Key Missing',
-                                        data.tsuperannuation[i].fields.Accountno || '',
-                                        'Key Missing',
-                                        // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                    ];
-                    
-                                    splashArraySuperannuationList.push(dataListAllowance);
-                                  }
-                                          let uniqueChars = [...new Set(splashArraySuperannuationList)];
-                                          var datatable = $('#tblSuperannuation').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblSuperannuation").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          $('.fullScreenSpin').css('display', 'none');
-
-
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
-
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                      $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
-
-                  }
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArraySuperannuationList = [];
-                if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    } else {
-                        sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
-
-                            addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-
-
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          $('.fullScreenSpin').css('display', 'none');
-
+templateObject.getSuperannuationData = async function(){
+    try {
+        let data = {};
+        let splashArraySuperannuationList = new Array();
+        let dataObject = await getVS1Data('TSuperannuation')  
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveDataLocalDB();
+        }else{
+            data = JSON.parse(dataObject[0].data);
         }
-    }).catch(function(err) {
-      sideBarService.getSuperannuation(initialBaseDataLoad, 0).then(function (data) {
-          addVS1Data('TSuperannuation', JSON.stringify(data));
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < data.tsuperannuation.length; i++) {
+        for (let i = 0; i < data.tsuperannuation.length; i++) {
                 
             var dataListAllowance = [
                 data.tsuperannuation[i].fields.ID || '',
@@ -455,23 +74,28 @@ Template.superannuationSettings.onRendered(function() {
                 'Key Missing',
                 data.tsuperannuation[i].fields.Accountno || '',
                 'Key Missing',
-                // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
             ];
 
             splashArraySuperannuationList.push(dataListAllowance);
-          }
-  
+        }
+
+          function MakeNegative() {
+              $('td').each(function () {
+                  if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+              });
+          };
+
 
           setTimeout(function () {
               MakeNegative();
           }, 100);
-          setTimeout(function () {
-              $('#tblSuperannuation').DataTable({
-
-                  data: splashArraySuperannuationList,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [                              
-                        
+        templateObject.datatablerecords.set(splashArraySuperannuationList);
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function () {
+            $('#tblSuperannuation').DataTable({  
+                data: splashArraySuperannuationList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
                     {
                       className: "colSuperannuationID hiddenColumn",
                       "targets": [0]
@@ -485,69 +109,63 @@ Template.superannuationSettings.onRendered(function() {
                        "targets": [2]
                     },  
                     {
-                     className: "colEmployerNum",
-                     "targets": [3]
+                        className: "colEmployerNum",
+                        "targets": [3]
                     },  
                     {
-                     className: "colabn",
-                     "targets": [4]
+                        className: "colabn",
+                        "targets": [4]
                     },  
                     {
-                     className: "colservicealias",
-                     "targets": [5]
+                        className: "colservicealias",
+                        "targets": [5]
                     },  
                     {
-                     className: "colbsb",
-                     "targets": [6]
+                        className: "colbsb",
+                        "targets": [6]
                     },  
                     {
-                     className: "colaccountnumber",
-                     "targets": [7]
+                        className: "colaccountnumber",
+                        "targets": [7]
                     },  
                     {
-                     className: "colaccountname",
-                     "targets": [8]
+                        className: "colaccountname",
+                        "targets": [8]
                     },  
-                                        
-                    // {
-                    //    className: "colDeletesup",
-                    //    "orderable": false,
-                    //    "targets": -1
-                    // }
-               ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblSuperannuation').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblSuperannuation_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblSuperannuation').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblSuperannuation_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
 
-                          }
-                      } else {
+                        }
+                    } else {
 
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
 
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArraySuperannuationListDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblLeave_filter input').val();
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArraySuperannuationListDupp = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblSuperannuation_filter input').val();
 
-                              sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
+                            sideBarService.getSuperannuation(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
                                 for (let i = 0; i < data.tsuperannuation.length; i++) {
                 
@@ -561,52 +179,50 @@ Template.superannuationSettings.onRendered(function() {
                                         'Key Missing',
                                         data.tsuperannuation[i].fields.Accountno || '',
                                         'Key Missing',
-                                        // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                     ];
-                    
+                  
                                     splashArraySuperannuationList.push(dataListAllowance);
-                                  }
+                                }
 
-                                     let uniqueChars = [...new Set(splashArraySuperannuationList)];
-                                     var datatable = $('#tblSuperannuation').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblSuperannuation").dataTable().fnPageChange('last');
-                                          }, 400);
+                                let uniqueChars = [...new Set(splashArraySuperannuationList)];
+                                var datatable = $('#tblSuperannuation').DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function () {
+                                    $("#tblSuperannuation").dataTable().fnPageChange('last');
+                                }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                $('.fullScreenSpin').css('display', 'none');
 
 
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
 
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                    //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                    //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddordinaryTimeSuperannuation' data-dismiss='modal' data-toggle='modal' data-target='#newSuperannuationFundModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblSuperannuation_filter");
+                    $("<button class='btn btn-primary btnRefreshSuperannuation type='button' id='btnRefreshSuperannuation' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblSuperannuation_filter");
+                }
 
-                  }
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
 
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
+            }).on('column-reorder', function () {
 
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
+            }).on('length.dt', function (e, settings, len) {
                 //$('.fullScreenSpin').css('display', 'inline-block');
                 let dataLenght = settings._iDisplayLength;
                 splashArraySuperannuationList = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                $('.fullScreenSpin').css('display', 'none');
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
@@ -615,7 +231,7 @@ Template.superannuationSettings.onRendered(function() {
                         sideBarService.getSuperannuation(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TSuperannuation', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
+                                // templateObject.resetData(dataNonBo);
                                 $('.fullScreenSpin').css('display', 'none');
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -625,57 +241,235 @@ Template.superannuationSettings.onRendered(function() {
                         });
                     }
                 }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-
-
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-          $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+        }, 0);
+    } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-
+    }   
 };
 
 templateObject.getSuperannuationData();
 
 $('.superannuationDropDown').editableSelect();
 $('.superannuationDropDown').editableSelect()
-    .on('click.editable-select', function (e, li) {
+    .on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
         templateObject.currentDrpDownID.set(dropDownID);
         let offset = $search.offset();
-        let currencyDataName = e.target.value || '';
+        let searchName = e.target.value || '';
         if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#superannuationSettingsModal').modal('show');
         } else {
-            if (currencyDataName.replace(/\s/g, '') != '') {
-                // console.log('step 2')
+            if (searchName.replace(/\s/g, '') == '') {               
+                $('#superannuationSettingsModal').modal('show');
+                return false
             }
-            $('#superannuationSettingsModal').modal('show');
+            let dataObject = await getVS1Data('TSuperannuation');   
+            if ( dataObject.length == 0) {
+                data = await templateObject.saveDataLocalDB();
+            }else{
+                data = JSON.parse(dataObject[0].data);
+            }
+            if( data.tsuperannuation.length > 0 ){
+                let tSuperannuation = data.tsuperannuation.filter((item) => {
+                    if( item.fields.Description == searchName ){
+                        return item;
+                    }
+                });
+                
+                if( tSuperannuation.length > 0 ){
+                    if( tsuperannuation[0].fields.Supertypeid == 'Self-Managed Superannuation Fund')
+                    {
+                        $('#acountabmandelectronic').css('display','block');
+                        $('#accountbsb').css('display','block');
+                        $('#account_name').css('display','block');
+                    }else{
+                        $('#acountabmandelectronic').css('display','none');
+                        $('#accountbsb').css('display','none');
+                        $('#account_name').css('display','none');
+                    }
+                    
+                    $('#newSuperannuationFundId').val(tSuperannuation[0].fields.ID);
+                    $('#edtFundType').val(tSuperannuation[0].fields.area);
+                    $('#edtFundName').val(tSuperannuation[0].fields.Superfund);
+                    $('#edtelectronicsalias').val(tSuperannuation[0].fields.ElectronicsServiceAddressAlias);
+                    $('#edtEmployerNumber').val(tSuperannuation[0].fields.Employeeid);
+                    $('#edtaccountnumber').val(tSuperannuation[0].fields.Accountno);
+                    $('#edtbsb').val(tSuperannuation[0].fields.BSB);
+                    $('#edtaccountname').val(tSuperannuation[0].fields.AccountName);
+                }
+                $('#superannuationSettingsModal').modal('hide');
+                $('#newSuperannuationFundModal').modal('show');
+            }
         }
     });
 
-//On Click Superannuation List
-$(document).on("click", "#tblSuperannuation tbody tr", function (e) {
-    var table = $(this);
-    let name = table.find(".colSuperannuationName").text()||'';
-    let ID = table.find(".colSuperannuationID").text()||'';            
-    let account = table.find(".colaccountname").text()||'';
-    let searchFilterID = templateObject.currentDrpDownID.get()
-    $('#' + searchFilterID).val(name);
-    $('#' + searchFilterID + 'ID').val(ID);
-    if( searchFilterID == 'superannuationFund'){
-        $('#expenseSuperannuationAccount').val(account)
-    }
-    $('#superannuationSettingsModal').modal('toggle');
-});
+    //On Click Superannuation List
+    $(document).on("click", "#tblSuperannuation tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colSuperannuationName").text()||'';
+        let ID = table.find(".colSuperannuationID").text()||'';            
+        let account = table.find(".colaccountname").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        if( searchFilterID == 'superannuationFund'){
+            $('#expenseSuperannuationAccount').val(account)
+        }
+        $('#superannuationSettingsModal').modal('toggle');
+    });
 
 })
+
+Template.superannuationSettings.events({
+    'keyup #tblSuperannuation_filter input': function (event) {
+        if($(event.target).val() != ''){
+          $(".btnRefreshSuperannuation").addClass('btnSearchAlert');
+        }else{
+          $(".btnRefreshSuperannuation").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+           $(".btnRefreshSuperannuation").trigger("click");
+        }
+    },
+    'click .btnAddordinaryTimeSuperannuation':function(event){
+        $('#superannuationRateForm')[0].reset();
+        $('#newSuperannuationFundModal').modal('hide');
+    },
+    'click .btnSearchAlert':function(event){      
+        let templateObject = Template.instance();
+        var splashArraySuperannuationList = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('#tblSuperannuation_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            sideBarService.getSuperannuation(dataSearchName).then(function (data) {
+                $(".btnRefreshSuperannuation").removeClass('btnSearchAlert');
+                let lineItems = [];
+                if (data.tsuperannuation.length > 0) {
+                    for (let i = 0; i < data.tsuperannuation.length; i++) {                
+                        var dataListAllowance = [
+                            data.tsuperannuation[i].fields.ID || '',
+                            data.tsuperannuation[i].fields.Superfund || '',
+                            data.tsuperannuation[i].fields.Supertypeid || '',
+                            data.tsuperannuation[i].fields.Employeeid || '',
+                            'Key Missing',
+                            'Key Missing',
+                            'Key Missing',
+                            data.tsuperannuation[i].fields.Accountno || '',
+                            'Key Missing',
+                        ];      
+                        splashArraySuperannuationList.push(dataListAllowance);
+                    }
+                    let uniqueChars = [...new Set(splashArraySuperannuationList)];
+                    var datatable = $('#tblSuperannuation').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function () {
+                        $("#tblSuperannuation").dataTable().fnPageChange('last');
+                    }, 400);
+
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                    swal({
+                        title: 'Question',
+                        text: "Superannuation Rate does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#superannuationRateForm')[0].reset();
+                            $('#edtFundName').val(dataSearchName)
+                            $('#superannuationSettingsModal').modal('hide');
+                            $('#newSuperannuationFundModal').modal('show');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+    
+          $(".btnRefresh").trigger("click");
+        }
+
+    },
+    'click .saveSuperannuation': async function (event) {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TSuperannuation
+        );
+
+        let id  = $('#newSuperannuationFundId').val() || 0;
+        let fundType = $('#edtFundType').val() || '';
+        let fundName = $('#edtFundName').val() || '';
+        let abn  = $('#edtabn').val() || '';
+        let edtelectronicsalias = $('#edtelectronicsalias').val() || '';
+        let employeNumber = $('#edtEmployerNumber').val() || '';
+        let edtbsb = $('#edtbsb').val() || '';
+        let edtaccountnumber = $('#edtaccountnumber').val() || '';
+        let edtaccountname = $('#edtaccountname').val() || '';
+        let fundtypeid = $('#fundtypeid').val();
+        /**
+         * Saving Earning Object in localDB
+        */
+        
+        let superannuationRateSettings = {
+            type: "TSuperannuation",
+            fields: {
+                ID: parseInt(id),
+                Superfund:fundName,
+                Employeeid:parseInt(employeNumber),
+                area:fundType,
+                Supertypeid:fundtypeid,
+                ABN:abn,
+                AccountName:edtaccountname,
+                Accountno:edtaccountnumber,
+                ElectronicsServiceAddressAlias:edtelectronicsalias,
+                BSB:edtbsb,
+                Clientid:Session.get('mySessionEmployeeLoggedID'),
+                Amount:1,
+                DepartmentName:defaultDept,
+                Allclasses:true,
+            }
+        };
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(superannuationRateSettings),
+        });
+    
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#superannuationRateForm')[0].reset();
+            await templateObject.saveDataLocalDB();
+            await templateObject.getSuperannuationData();
+            $('#newSuperannuationFundModal').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    },
+});
+
+Template.superannuationSettings.helpers({
+    datatablerecords: () => {
+        return Template.instance().datatablerecords.get();
+    }
+});
+
