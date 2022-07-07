@@ -9,6 +9,8 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
+
 Template.generalledger.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.records = new ReactiveVar([]);
@@ -683,63 +685,19 @@ Template.generalledger.onRendered(() => {
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
 
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
-        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
-      });
-
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-    });
-
-  templateObject.loadCurrency();
-
-  templateObject.loadCurrencyHistory = () => {
-    taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        //console.log(result);
-        const data = result.tcurrencyratehistory;
-        // console.log(data);
-        // console.log("Currency list: ",data);
-
-        templateObject.tcurrencyratehistory.set(data);
-      })
-      .catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
-        // Meteor._reload.reload();
-      });
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
   };
 
-  templateObject.loadCurrencyHistory();
+  //templateObject.loadCurrency();
+
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
+  };
+
+  //templateObject.loadCurrencyHistory();
+
 });
 
 Template.generalledger.events({
@@ -773,9 +731,7 @@ Template.generalledger.events({
         _currencySelectedList.push(_currency);
       });
     } else {
-      let _currency = _currencyList.find(
-        (c) => c.code == defaultCurrencyCode
-      );
+      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
       _currency.active = true;
       _currencySelectedList.push(_currency);
     }
@@ -816,7 +772,7 @@ Template.generalledger.events({
       .startOf("year")
       .format("YYYY-MM-DD");
     //Session.setPersistent('showHeader',true);
-    addVS1Data('TAccountRunningBalanceReport', []);
+    addVS1Data("TAccountRunningBalanceReport", []);
     window.open(
       "/balancetransactionlist?accountName=" +
         accountName +
@@ -1223,6 +1179,10 @@ Template.generalledger.events({
       $(".table tbody tr").show();
     }
   },
+  "click .fx-rate-btn": async (e) => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+  }
 });
 
 Template.generalledger.helpers({
@@ -1300,8 +1260,7 @@ Template.generalledger.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate =
-      currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
 
     // console.log(currencyData.currency, defaultCurrencyCode, currencyData.currency == defaultCurrencyCode);
     // console.log('first elem', firstElem.BuyRate);
@@ -1309,7 +1268,7 @@ Template.generalledger.helpers({
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }); // Add commas
     //console.log("final amount", amount);
     let convertedAmount =
@@ -1324,6 +1283,9 @@ Template.generalledger.helpers({
     return array.length;
   },
   countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
   },
@@ -1332,13 +1294,16 @@ Template.generalledger.helpers({
   },
   isNegativeAmount(amount) {
     if (Math.sign(amount) === -1) {
-     //console.log("The amount is: ", amount);
+      //console.log("The amount is: ", amount);
       return true;
     }
     return false;
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
+      return false;
+    }
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
@@ -1398,3 +1363,64 @@ Template.registerHelper("notEquals", function (a, b) {
 Template.registerHelper("containsequals", function (a, b) {
   return a.indexOf(b) >= 0;
 });
+
+/**
+ *
+ */
+ async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+
+    //taxRateService.getCurrencies().then((result) => {
+    // console.log(result);
+    const data = result.tcurrency;
+    //console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
+
+    // console.log(_currencyList);
+
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
+    //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}

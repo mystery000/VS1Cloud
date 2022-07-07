@@ -4,6 +4,7 @@ export class MonthlyFrequencyModel {
     this.ofMonths = ofMonths;
     this.startDate = startDate;
     this.startTime = startTime;
+    this.type = "Monthly";
   }
 
   getDate() {
@@ -24,6 +25,8 @@ export class WeeklyFrequencyModel {
     this.everyWeeks = everyWeeks;
     this.startDate = startDate;
     this.startTime = startTime;
+    this.type = "Weekly";
+
   }
 
   getDate() {
@@ -44,6 +47,8 @@ export class DailyFrequencyModel {
     this.every = every;
     this.startDate = startDate;
     this.startTime = startTime;
+    this.type = "Daily";
+
   }
 
   getDate() {
@@ -62,6 +67,8 @@ export class OneTimeOnlyFrequencyModel {
   constructor({ startTime, startDate }) {
     this.startDate = startDate;
     this.startTime = startTime;
+    this.type = "OneTime";
+
   }
 
   getDate() {
@@ -78,6 +85,8 @@ export class OneTimeOnlyFrequencyModel {
 
 export class OnEventFrequencyModel {
   constructor({ onLogin, onLogout }) {
+    this.type = "OnEvent";
+
     this.onLogin = onLogin;
     this.onLogout = onLogout;
   }

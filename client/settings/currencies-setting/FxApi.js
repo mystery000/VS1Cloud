@@ -2,12 +2,19 @@ export default class FxApi {
   static ApiID = "webinfy166640657";
   static ApiKey = "peorsc7t96poaf2k8t1segj0u2";
   static encodedApiKey =
-    "d2ViaW5meTY0MTY4MjM4Mzo5N3F0MWVsaG90aW1jdGs2bzhidDRkZm44aA==";
+    "d2ViaW55Zmk2MzU1NjQ4MDg6czluZnFia3BjaTBpMzNrMnZybDJwOTZ2dm4=";
 
   constructor() {
     console.log("Fx Api Loaded");
   }
 
+  /**
+   * 
+   * @param {String} to 
+   * @param {String} from 
+   * @param {float} amount 
+   * @returns {{buy: float, sell: float}} 
+   */
   async getExchangeRate(to = "EUR", from = "AUD", amount = 1) {
     try {
       const response = await fetch(

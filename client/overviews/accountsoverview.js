@@ -15,7 +15,7 @@ Template.accountsoverview.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
-  templateObject.accounttyperecords = new ReactiveVar([]);
+  templateObject.accountTypes = new ReactiveVar([]);
   templateObject.taxraterecords = new ReactiveVar([]);
 
   templateObject.selectedFile = new ReactiveVar();
@@ -89,45 +89,7 @@ Template.accountsoverview.onRendered(function () {
     }
   );
 
-  getVS1Data("TAccountType")
-    .then(function (dataObject) {
-      if (dataObject.length === 0) {
-        accountService.getAccountTypeCheck().then(function (data) {
-          for (let i = 0; i < data.taccounttype.length; i++) {
-            let accounttyperecordObj = {
-              accounttypename: data.taccounttype[i].AccountTypeName || " ",
-              description: data.taccounttype[i].OriginalDescription || " ",
-            };
-            accountTypeList.push(accounttyperecordObj);
-          }
-          templateObject.accounttyperecords.set(accountTypeList);
-        });
-      } else {
-        let data = JSON.parse(dataObject[0].data);
-        let useData = data.taccounttype;
-
-        for (let i = 0; i < useData.length; i++) {
-          let accounttyperecordObj = {
-            accounttypename: useData[i].AccountTypeName || " ",
-            description: useData[i].OriginalDescription || " ",
-          };
-          accountTypeList.push(accounttyperecordObj);
-        }
-        templateObject.accounttyperecords.set(accountTypeList);
-      }
-    })
-    .catch(function (err) {
-      accountService.getAccountTypeCheck().then(function (data) {
-        for (let i = 0; i < data.taccounttype.length; i++) {
-          let accounttyperecordObj = {
-            accounttypename: data.taccounttype[i].AccountTypeName || " ",
-            description: data.taccounttype[i].OriginalDescription || " ",
-          };
-          accountTypeList.push(accounttyperecordObj);
-        }
-        templateObject.accounttyperecords.set(accountTypeList);
-      });
-    });
+ 
 
   templateObject.getAllTaxCodes = function () {
     getVS1Data("TTaxcodeVS1")
@@ -1973,128 +1935,128 @@ Template.accountsoverview.onRendered(function () {
     //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
   });
 
-  $(document).ready(function () {
-    setTimeout(function () {
-      $("#sltTaxCode").editableSelect();
-      $("#sltTaxCode")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          var taxSelected = "sales";
-          var offset = $earch.offset();
-          var taxRateDataName = e.target.value || "";
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            // X button 16px wide?
-            $("#taxRateListModal").modal("toggle");
-          } else {
-            if (taxRateDataName.replace(/\s/g, "") !== "") {
-              $(".taxcodepopheader").text("Edit Tax Rate");
-              getVS1Data("TTaxcodeVS1")
-                .then(function (dataObject) {
-                  if (dataObject.length === 0) {
-                    purchaseService
-                      .getTaxCodesVS1()
-                      .then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                          if (
-                            data.ttaxcodevs1[i].CodeName === taxRateDataName
-                          ) {
-                            $("#edtTaxNamePop").attr("readonly", true);
-                            let taxRate = (
-                              data.ttaxcodevs1[i].Rate * 100
-                            ).toFixed(2);
-                            var taxRateID = data.ttaxcodevs1[i].Id || "";
-                            var taxRateName =
-                              data.ttaxcodevs1[i].CodeName || "";
-                            var taxRateDesc =
-                              data.ttaxcodevs1[i].Description || "";
-                            $("#edtTaxID").val(taxRateID);
-                            $("#edtTaxNamePop").val(taxRateName);
-                            $("#edtTaxRatePop").val(taxRate);
-                            $("#edtTaxDescPop").val(taxRateDesc);
-                            setTimeout(function () {
-                              $("#newTaxRateModal").modal("toggle");
-                            }, 100);
-                          }
-                        }
-                      })
-                      .catch(function (err) {
-                        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                        $(".fullScreenSpin").css("display", "none");
-                        // Meteor._reload.reload();
-                      });
-                  } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.ttaxcodevs1;
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    $(".taxcodepopheader").text("Edit Tax Rate");
-                    for (let i = 0; i < useData.length; i++) {
-                      if (useData[i].CodeName === taxRateDataName) {
-                        $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (useData[i].Rate * 100).toFixed(2);
-                        var taxRateID = useData[i].Id || "";
-                        var taxRateName = useData[i].CodeName || "";
-                        var taxRateDesc = useData[i].Description || "";
-                        $("#edtTaxID").val(taxRateID);
-                        $("#edtTaxNamePop").val(taxRateName);
-                        $("#edtTaxRatePop").val(taxRate);
-                        $("#edtTaxDescPop").val(taxRateDesc);
-                        //setTimeout(function() {
-                        $("#newTaxRateModal").modal("toggle");
-                        //}, 500);
-                      }
-                    }
-                  }
-                })
-                .catch(function (err) {
-                  purchaseService
-                    .getTaxCodesVS1()
-                    .then(function (data) {
-                      let lineItems = [];
-                      let lineItemObj = {};
-                      for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                          $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (
-                            data.ttaxcodevs1[i].Rate * 100
-                          ).toFixed(2);
-                          var taxRateID = data.ttaxcodevs1[i].Id || "";
-                          var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc =
-                            data.ttaxcodevs1[i].Description || "";
-                          $("#edtTaxID").val(taxRateID);
-                          $("#edtTaxNamePop").val(taxRateName);
-                          $("#edtTaxRatePop").val(taxRate);
-                          $("#edtTaxDescPop").val(taxRateDesc);
-                          setTimeout(function () {
-                            $("#newTaxRateModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                      $(".fullScreenSpin").css("display", "none");
-                      // Meteor._reload.reload();
-                    });
-                });
-            } else {
-              $("#taxRateListModal").modal("toggle");
-            }
-          }
-        });
-    }, 1000);
+  // $(document).ready(function () {
+  //   setTimeout(function () {
+  //     $("#sltTaxCode").editableSelect();
+  //     $("#sltTaxCode")
+  //       .editableSelect()
+  //       .on("click.editable-select", function (e, li) {
+  //         var $earch = $(this);
+  //         var taxSelected = "sales";
+  //         var offset = $earch.offset();
+  //         var taxRateDataName = e.target.value || "";
+  //         if (e.pageX > offset.left + $earch.width() - 8) {
+  //           // X button 16px wide?
+  //           $("#taxRateListModal").modal("toggle");
+  //         } else {
+  //           if (taxRateDataName.replace(/\s/g, "") !== "") {
+  //             $(".taxcodepopheader").text("Edit Tax Rate");
+  //             getVS1Data("TTaxcodeVS1")
+  //               .then(function (dataObject) {
+  //                 if (dataObject.length === 0) {
+  //                   purchaseService
+  //                     .getTaxCodesVS1()
+  //                     .then(function (data) {
+  //                       let lineItems = [];
+  //                       let lineItemObj = {};
+  //                       for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+  //                         if (
+  //                           data.ttaxcodevs1[i].CodeName === taxRateDataName
+  //                         ) {
+  //                           $("#edtTaxNamePop").attr("readonly", true);
+  //                           let taxRate = (
+  //                             data.ttaxcodevs1[i].Rate * 100
+  //                           ).toFixed(2);
+  //                           var taxRateID = data.ttaxcodevs1[i].Id || "";
+  //                           var taxRateName =
+  //                             data.ttaxcodevs1[i].CodeName || "";
+  //                           var taxRateDesc =
+  //                             data.ttaxcodevs1[i].Description || "";
+  //                           $("#edtTaxID").val(taxRateID);
+  //                           $("#edtTaxNamePop").val(taxRateName);
+  //                           $("#edtTaxRatePop").val(taxRate);
+  //                           $("#edtTaxDescPop").val(taxRateDesc);
+  //                           setTimeout(function () {
+  //                             $("#newTaxRateModal").modal("toggle");
+  //                           }, 100);
+  //                         }
+  //                       }
+  //                     })
+  //                     .catch(function (err) {
+  //                       // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //                       $(".fullScreenSpin").css("display", "none");
+  //                       // Meteor._reload.reload();
+  //                     });
+  //                 } else {
+  //                   let data = JSON.parse(dataObject[0].data);
+  //                   let useData = data.ttaxcodevs1;
+  //                   let lineItems = [];
+  //                   let lineItemObj = {};
+  //                   $(".taxcodepopheader").text("Edit Tax Rate");
+  //                   for (let i = 0; i < useData.length; i++) {
+  //                     if (useData[i].CodeName === taxRateDataName) {
+  //                       $("#edtTaxNamePop").attr("readonly", true);
+  //                       let taxRate = (useData[i].Rate * 100).toFixed(2);
+  //                       var taxRateID = useData[i].Id || "";
+  //                       var taxRateName = useData[i].CodeName || "";
+  //                       var taxRateDesc = useData[i].Description || "";
+  //                       $("#edtTaxID").val(taxRateID);
+  //                       $("#edtTaxNamePop").val(taxRateName);
+  //                       $("#edtTaxRatePop").val(taxRate);
+  //                       $("#edtTaxDescPop").val(taxRateDesc);
+  //                       //setTimeout(function() {
+  //                       $("#newTaxRateModal").modal("toggle");
+  //                       //}, 500);
+  //                     }
+  //                   }
+  //                 }
+  //               })
+  //               .catch(function (err) {
+  //                 purchaseService
+  //                   .getTaxCodesVS1()
+  //                   .then(function (data) {
+  //                     let lineItems = [];
+  //                     let lineItemObj = {};
+  //                     for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+  //                       if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+  //                         $("#edtTaxNamePop").attr("readonly", true);
+  //                         let taxRate = (
+  //                           data.ttaxcodevs1[i].Rate * 100
+  //                         ).toFixed(2);
+  //                         var taxRateID = data.ttaxcodevs1[i].Id || "";
+  //                         var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+  //                         var taxRateDesc =
+  //                           data.ttaxcodevs1[i].Description || "";
+  //                         $("#edtTaxID").val(taxRateID);
+  //                         $("#edtTaxNamePop").val(taxRateName);
+  //                         $("#edtTaxRatePop").val(taxRate);
+  //                         $("#edtTaxDescPop").val(taxRateDesc);
+  //                         setTimeout(function () {
+  //                           $("#newTaxRateModal").modal("toggle");
+  //                         }, 100);
+  //                       }
+  //                     }
+  //                   })
+  //                   .catch(function (err) {
+  //                     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+  //                     $(".fullScreenSpin").css("display", "none");
+  //                     // Meteor._reload.reload();
+  //                   });
+  //               });
+  //           } else {
+  //             $("#taxRateListModal").modal("toggle");
+  //           }
+  //         }
+  //       });
+  //   }, 1000);
 
-    $(document).on("click", "#tblTaxRate tbody tr", function (e) {
-      var table = $(this);
-      let lineTaxCode = table.find(".taxName").text();
-      $("#sltTaxCode").val(lineTaxCode);
-      $("#taxRateListModal").modal("toggle");
-    });
-  });
+  //   $(document).on("click", "#tblTaxRate tbody tr", function (e) {
+  //     var table = $(this);
+  //     let lineTaxCode = table.find(".taxName").text();
+  //     $("#sltTaxCode").val(lineTaxCode);
+  //     $("#taxRateListModal").modal("toggle");
+  //   });
+  // });
 });
 
 Template.accountsoverview.events({
@@ -3303,9 +3265,9 @@ Template.accountsoverview.helpers({
       PrefName: "tblAccountOverview",
     });
   },
-  accounttyperecords: () => {
+  accountTypes: () => {
     return Template.instance()
-      .accounttyperecords.get()
+      .accountTypes.get()
       .sort(function (a, b) {
         if (a.description === "NA") {
           return 1;
