@@ -208,6 +208,16 @@ authenticatedRoutes.route('/dashboard', {
     }
 });
 
+
+authenticatedRoutes.route('/dashboard-sales-manager', {
+    name: 'dashboard',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'dashboard'
+        });
+    }
+});
+
 authenticatedRoutes.route('/appointments', {
     name: 'appointments',
     action() {
