@@ -1608,11 +1608,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#sltStatus').val(data.fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -1954,11 +1955,12 @@ Template.new_quote.onRendered(() => {
                                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                 $('#sltStatus').val(useData[d].fields.SalesStatus);
 
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                                }, 2500);
+                                // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                                // }, 2500);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -2231,11 +2233,12 @@ Template.new_quote.onRendered(() => {
                                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                                 $('#sltStatus').val(data.fields.SalesStatus);
 
-                                setTimeout(function () {
-                                  $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                                  $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                                  $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                                }, 2500);
+                                // tempcode
+                                // setTimeout(function () {
+                                //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                                //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                                //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                                // }, 2500);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -2516,11 +2519,12 @@ Template.new_quote.onRendered(() => {
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#sltStatus').val(data.fields.SalesStatus);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                                // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -2987,11 +2991,12 @@ Template.new_quote.onRendered(() => {
                         $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#sltStatus').val(data.fields.SalesStatus);
 
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                          $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                          $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                        }, 2500);
+                                // tempcode
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                        //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                        //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                        // }, 2500);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3291,11 +3296,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                             $('#sltStatus').val(useData[d].fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (useData[d].fields.Attachments) {
@@ -3571,11 +3577,12 @@ Template.new_quote.onRendered(() => {
                             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#sltStatus').val(data.fields.SalesStatus);
 
-                            setTimeout(function () {
-                              $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                              $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                              $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                            }, 2500);
+                                // tempcode
+                            // setTimeout(function () {
+                            //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                            //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                            //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                            // }, 2500);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -3871,11 +3878,13 @@ Template.new_quote.onRendered(() => {
                     templateObject.CleintName.set(data.fields.CustomerName);
                     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
                     $('#sltStatus').val(data.fields.SalesStatus);
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
-                      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
-                      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
-                    }, 2500);
+
+                                // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+                    //   $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+                    //   $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+                    // }, 2500);
 
                     templateObject.attachmentCount.set(0);
                     if (data.fields.Attachments) {
@@ -6117,45 +6126,45 @@ Template.new_quote.events({
         
     },
     
-    'click .btnAddNewCustField': function(event) {
-      let templateObject = Template.instance();
-        let isDropDown = true;
-        let statusvalID = $("#selectCustFieldID").val()||'';
-        $("#statusId1").val(statusvalID);
-        $('#isdropDown').val(isDropDown);
-        $('#newCustomFieldPop').modal('toggle');
-        $('#customFieldList').modal('toggle');
-        let custfieldarr = templateObject.custfields.get();
-        if(custfieldarr[0].id == statusvalID){
-          if(Array.isArray(custfieldarr[0].dropdown)) {
-              // $('.btnAddNewTextBox').nextAll().remove();
-              //$('.customText').val(custfieldarr[0].dropdown[0].fields.Text);
-              for(let x = 0; x < custfieldarr[0].dropdown.length; x++) {
-                  $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-                                      '<div class="col-10">'+
-                                          '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown[x].fields.ID+'" value="'+ custfieldarr[0].dropdown[x].fields.Text+'" autocomplete="off">'+
-                                      '</div>'+
-                                      '<div class="col-2">'+
-                                          '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-                                      '</div>'+
-                                  '</div>');
-              }
+    // 'click .btnAddNewCustField': function(event) {
+    //   let templateObject = Template.instance();
+    //     let isDropDown = true;
+    //     let statusvalID = $("#selectCustFieldID").val()||'';
+    //     $("#statusId1").val(statusvalID);
+    //     $('#isdropDown').val(isDropDown);
+    //     $('#newCustomFieldPop').modal('toggle');
+    //     $('#customFieldList').modal('toggle');
+    //     let custfieldarr = templateObject.custfields.get();
+    //     if(custfieldarr[0].id == statusvalID){
+    //       if(Array.isArray(custfieldarr[0].dropdown)) {
+    //           // $('.btnAddNewTextBox').nextAll().remove();
+    //           //$('.customText').val(custfieldarr[0].dropdown[0].fields.Text);
+    //           for(let x = 0; x < custfieldarr[0].dropdown.length; x++) {
+    //               $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
+    //                                   '<div class="col-10">'+
+    //                                       '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown[x].fields.ID+'" value="'+ custfieldarr[0].dropdown[x].fields.Text+'" autocomplete="off">'+
+    //                                   '</div>'+
+    //                                   '<div class="col-2">'+
+    //                                       '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
+    //                                   '</div>'+
+    //                               '</div>');
+    //           }
 
-          } else if(Object.keys(custfieldarr[0].dropdown).length > 0) {
-              // $('.btnAddNewTextBox').nextAll().remove();
-               $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
-                                      '<div class="col-10">'+
-                                          '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown.fields.ID+'" value="'+ custfieldarr[0].dropdown.fields.Text+'" autocomplete="off">'+
-                                      '</div>'+
-                                      '<div class="col-2">'+
-                                          '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
-                                      '</div>'+
-                                  '</div>');
+    //       } else if(Object.keys(custfieldarr[0].dropdown).length > 0) {
+    //           // $('.btnAddNewTextBox').nextAll().remove();
+    //            $('.dropDownSection').append('<div class="row textBoxSection" id="textBoxSection" style="padding:5px; display:none;">'+
+    //                                   '<div class="col-10">'+
+    //                                       '<input type="text" style="" name="customText" class="form-control customText" token="'+custfieldarr[0].dropdown.fields.ID+'" value="'+ custfieldarr[0].dropdown.fields.Text+'" autocomplete="off">'+
+    //                                   '</div>'+
+    //                                   '<div class="col-2">'+
+    //                                       '<button type="button" class="btn btn-danger btn-rounded btnRemoveDropOptions" autocomplete="off"><i class="fa fa-remove"></i></button>'+
+    //                                   '</div>'+
+    //                               '</div>');
 
-          }
-        }
+    //       }
+    //     }
 
-    },
+    // },
     'click #edtCustomerName': function(event) {
         $('#edtCustomerName').select();
         $('#edtCustomerName').editableSelect();

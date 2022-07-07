@@ -1029,11 +1029,12 @@ Template.customerscard.onRendered(function () {
                 contactService.getOneCustomerDataEx(customerID).then(function (data) {
                     setOneCustomerDataEx(data);
                     // add to custom field
-                    setTimeout(function () {
-                      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                    }, 5500);
+                    // tempcode
+                    // setTimeout(function () {
+                    //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                    //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                    //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                    // }, 5500);
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -1042,12 +1043,13 @@ Template.customerscard.onRendered(function () {
                 for (let i = 0; i < useData.length; i++) {
                     if (parseInt(useData[i].fields.ID) == parseInt(customerID)) {
 
-// add to custom field
-                      setTimeout(function () {
-                        $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
-                        $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
-                        $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
-                      }, 5500);
+                    // add to custom field
+                    // tempcode
+                      // setTimeout(function () {
+                      //   $('#edtSaleCustField1').val(useData[i].fields.CUSTFLD1);
+                      //   $('#edtSaleCustField2').val(useData[i].fields.CUSTFLD2);
+                      //   $('#edtSaleCustField3').val(useData[i].fields.CUSTFLD3);
+                      // }, 5500);
 
                         added = true;
                         setOneCustomerDataEx(useData[i]);
@@ -1060,12 +1062,13 @@ Template.customerscard.onRendered(function () {
                 if (!added) {
                     contactService.getOneCustomerDataEx(customerID).then(function (data) {
                         setOneCustomerDataEx(data);
+                        // tempcode
                         // add to custom field
-                        setTimeout(function () {
-                          $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
-                          $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
-                          $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
-                        }, 5500);
+                        // setTimeout(function () {
+                        //   $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+                        //   $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+                        //   $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+                        // }, 5500);
                     });
                 }
             }

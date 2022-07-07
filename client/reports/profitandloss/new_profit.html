@@ -404,7 +404,7 @@
                                     <div class="form-group" style="margin: 8px; display: inline-flex;">
                                         <input type="text" class="form-control" id="selectedDateRange" aria-describedby="basic-addon2" style="max-width: 160px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; display: none;" readonly>
                                         <div class="input-group-append">
-                                            <button type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-calendar-alt"></i></button>
+                                            <button style="z-index: 1;" type=" button" class="btn btn-link dropdown-toggle" id="btnSltDateRange" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="far fa-calendar-alt"></i></button>
                                             <style>
                                                 .dropdown-toggle::after {
                                                     display: none;
@@ -490,7 +490,7 @@
                                .customProfitLossTable tr td.text-danger {
                                     color: #e74a3b !important;
                                 }
-                                table th {
+                                .customProfitLossTable table th {
                                     min-width: 170px !important; 
                                 }
                             </style>
@@ -625,7 +625,7 @@
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
 
-                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal---5 text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
+                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal text-right {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
                                                                                         {{else}}
@@ -694,7 +694,7 @@
                                                                             {{#each c in currencyList }}
                                                                                 {{# if c.active}}
 
-                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal--8 text-center {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
+                                                                                    <td currency="{{c.code}}" class="fgr fgrtotal text-center {{#if isNegativeAmount itemamount.roundAmt}} text-danger {{/if}}">
                                                                                         {{#if reportOptions.showDecimal }}
                                                                                         {{convertAmount itemamount.decimalAmt c}}
                                                                                         {{else}}

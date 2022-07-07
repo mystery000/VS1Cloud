@@ -4,10 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>Superannuation List</h4>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> -->
-                    <div class="dropdown float-right">
-                        <button type="button" class="btn btn-primary float-right closeModel" data-toggle="modal" data-target="#newSuperannuationFundModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Superannuation Fund</button>
-                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="card-body p-1 rounded">
@@ -51,10 +48,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <form class="row" id="superannuationRateForm">
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtFundType">Type</label>
+                                <input type="hidden" id="newSuperannuationFundId">
                                 <select class="form-control edtFundType" id="edtFundType" >
                                     <option value="regulated">Regulated Superannuation Fund</option>
                                     <option value="selfmanged">Self-Managed Superannuation Fund</option>
@@ -94,12 +92,12 @@
                             <h4><strong>Bank Account</strong></h4>
                             <div class="row">
                                    <div class="col-6">
-                                    <label for="edtbsb">BSB</label>
-                                    <input type="text" class="form-control" id="edtbsb">
+                                        <label for="edtbsb">BSB</label>
+                                        <input type="text" class="form-control" id="edtbsb">
                                    </div>
                                    <div class="col-6">
-                                    <label for="edtaccountnumber">Account Number</label>
-                                    <input type="text" class="form-control" id="edtaccountnumber">
+                                        <label for="edtaccountnumber">Account Number</label>
+                                        <input type="text" class="form-control" id="edtaccountnumber">
                                    </div>
                             </div>
                         </div>
@@ -107,7 +105,7 @@
                             <label for="edtaccountname">Account Name</label>
                             <input type="text" class="form-control" id="edtaccountname">
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success saveSuperannuation"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>

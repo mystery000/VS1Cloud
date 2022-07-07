@@ -4,17 +4,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4>Deductions List</h4>
-                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> -->
-                    <div class="dropdown float-right">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownDeductionButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Add
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" style="min-width: 210px" aria-labelledby="dropdownDeductionButton">
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#noneModal">None</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#workplaceGivingModal">Workplace Giving</a>
-                            <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#unionAssociationFeesModal">Union / Association Fees</a>
-                        </div>
-                    </div>
+                    <a class="dropdown-item closeModel pointer" data-toggle="modal" data-target="#noneModal">None</a>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <!-- <input type="hidden" style="width: 100%; display:none;" id="deductionID" name="deductionID" /> -->
@@ -62,7 +53,7 @@
                 </div>
                 <div class="modal-body">
                   <input type="hidden" class="form-control" id="edtDeductionID" name="edtDeductionID">
-                    <div class="row">
+                    <form class="row" id="deductionRateForm">
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtDeductionName">Deduction Name</label>
@@ -70,11 +61,15 @@
                             </div>
                         </div>
                         <div class="col-12">
-                          <div class="form-group">
-                              <label for="edtDeductionAmount">Amount</label>
-                              <input type="text" class="form-control" id="edtDeductionAmount" name="edtDeductionAmount">
-                          </div>
-                      </div>
+                            <div class="form-group">
+                                <label for="edtDeductionName">Deduction Type</label>
+                                <select name="edtDeductionType" class="form-control" id="edtDeductionType">
+                                    <option value="Nones">Nones</option>
+                                    <option value="Workplace Giving">Workplace Giving</option>
+                                    <option value="Union / Association Fees">Union / Association Fees</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtDeductionAccount">Account</label>
@@ -96,104 +91,10 @@
                                 <label class="custom-control-label chkBox pointer" for="formCheck-ExcludedDeduction">Excluded from W1 on Activity Statement</label>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success btnSaveDeduction"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="workplaceGivingModal" tabindex="-1" role="dialog" aria-labelledby="workplaceGivingLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="workplaceGivingLabel">Workplace Giving</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="edtDeductionName">Deduction Name</label>
-                                <input type="text" class="form-control" id="edtDeductionName">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="edtWorkplaceGivingAccount">Account</label>
-                                <input type="text" class="form-control" id="edtWorkplaceGivingAccount">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesPAYGWorkplaceGiving" value="workplaceGiving1">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesPAYGWorkplaceGiving">Reduces PAYG Withholding</label>
-                            </div>
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesSuperannuationWorkplaceGiving" value="workplaceGiving2">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesSuperannuationWorkplaceGiving">Reduces Superannuation Guarantee Contribution</label>
-                            </div>
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExcludedWorkplaceGiving" value="workplaceGiving3">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ExcludedWorkplaceGiving">Excluded from W1 on Activity Statement</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="unionAssociationFeesModal" tabindex="-1" role="dialog" aria-labelledby="unionAssociationFeesLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="unionAssociationFeesLabel">Union / Association Fees</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="edtDeductionNameUnion">Deduction Name</label>
-                                <input type="text" class="form-control" id="edtDeductionNameUnion">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <label for="edtWorkplaceGivingAccountUnion">Account</label>
-                                <input type="text" class="form-control" id="edtWorkplaceGivingAccountUnion">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesPAYGUnion" value="unionAssociationFees1">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesPAYGUnion">Reduces PAYG Withholding</label>
-                            </div>
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ReducesSuperannuationUnion" value="unionAssociationFees2">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ReducesSuperannuationUnion">Reduces Superannuation Guarantee Contribution</label>
-                            </div>
-                            <div class="custom-control custom-switch pointer">
-                                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExcludedUnion" value="unionAssociationFees3">
-                                <label class="custom-control-label chkBox pointer" for="formCheck-ExcludedUnion">Excluded from W1 on Activity Statement</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                 </div>
             </div>

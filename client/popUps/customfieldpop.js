@@ -4,10 +4,18 @@ import { SideBarService } from "../js/sidebar-service";
 import { Random } from "meteor/random";
 import { OrganisationService } from "../js/organisation-service";
 import { PurchaseBoardService } from "../js/purchase-service";
+import { SalesBoardService } from '../js/sales-service';
+import { ContactService } from "../contacts/contact-service";
+import { ProductService } from "../product/product-service";
+
 
 let sideBarService = new SideBarService();
+let salesService = new SalesBoardService();
+let contactService = new ContactService();
+let productService = new ProductService();
 let isDropdown = false;
 let clickedInput = "";
+
 Template.customfieldpop.onCreated(() => {
   const templateObject = Template.instance();
   templateObject.custfields = new ReactiveVar([]);
@@ -16,8 +24,8 @@ Template.customfieldpop.onCreated(() => {
 Template.customfieldpop.onRendered(() => {
   const templateObject = Template.instance();
 
-  const custField = [];
-  let count = 1;
+  // const custField = [];
+  // let count = 1;
 
   $("#sltCustomOne1").editableSelect();
   $("#sltCustomOne2").editableSelect();
@@ -243,10 +251,6 @@ Template.customfieldpop.onRendered(() => {
 
   });
 
-  templateObject.loadInitCustomFieldsList = function () {
-    templateObject.getCustomFieldsList('init');
-  };
-
   templateObject.drawDropDownListTable = function (data_id) {
     let fieldsData = templateObject.custfields.get();
     splashArrayClientTypeList1 = [];
@@ -255,15 +259,13 @@ Template.customfieldpop.onRendered(() => {
     if (fieldsData.length > 0) {
       for (let i = 0; i < fieldsData.length; i++) {
         if (Array.isArray(fieldsData[i].dropdown)) {
-          if (fieldsData[i].dropdown.length > 0) {
-            if (data_id - 1 == i) {
-              for (let x = 0; x < fieldsData[i].dropdown.length; x++) {
-                var dataList = [
-                  fieldsData[i].dropdown[x].fields.ID || "",
-                  fieldsData[i].dropdown[x].fields.Text || "",
-                ];
-                splashArrayClientTypeList1.push(dataList);
-              }
+          if (data_id - 1 == i) {
+            for (let x = 0; x < fieldsData[i].dropdown.length; x++) {
+              var dataList = [
+                fieldsData[i].dropdown[x].fields.ID || "",
+                fieldsData[i].dropdown[x].fields.Text || "",
+              ];
+              splashArrayClientTypeList1.push(dataList);
             }
           }
         } else if (
@@ -351,6 +353,8 @@ Template.customfieldpop.onRendered(() => {
           var fieldDataID =
             $("#edtSaleCustField" + custFieldNo).attr("custfieldid") || "";
           $("#selectCustFieldID").val(fieldDataID);
+          $('#customFieldDropdownListTitle' + custFieldNo).html(custField.custfieldlabel);
+
           if (e.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
             $("#customFieldDropdownListModal" + custFieldNo).modal("toggle");
@@ -438,8 +442,6 @@ Template.customfieldpop.onRendered(() => {
       listType = "ltLeads";
     } else if (url.includes("/productview")) {
       listType = "ltProducts";
-    } else if (url.includes("/supplierscard")) {
-      listType = "ltSupplier";
     } else if (
       url.includes("/purchaseordercard") ||
       url.includes("/billcard") ||
@@ -492,18 +494,18 @@ Template.customfieldpop.onRendered(() => {
 
         templateObject.custfields.set(custFields);
         if (type == 'init') {
-          templateObject.initCustomFieldsList();
+          templateObject.initCustomFieldsList(custFields);
         } else {
           templateObject.drawDropDownListTable(type)
         }
       })
   }
 
-  templateObject.initCustomFieldsList = function () {
+  templateObject.initCustomFieldsList = function (custFields) {
 
-
-    if (templateObject.custfields.get()) {
-      let custFields = templateObject.custfields.get();
+    if (custFields) {
+      // if (templateObject.custfields.get()) {
+      //   let custFields = templateObject.custfields.get();
       //Custom Field 1
       if (custFields[0].active) {
         $(".checkbox1div").css("display", "block");
@@ -673,7 +675,7 @@ Template.customfieldpop.onRendered(() => {
             $("#edtSaleCustField" + custFieldNo).attr("datatype", "ftString");
             var splashArrayCustomFieldList = new Array();
             if (custField.dropdown != null) {
-              if (custField.dropdown.length > 0) {
+              if (Array.isArray(custField.dropdown)) {
                 for (let x = 0; x < custField.dropdown.length; x++) {
                   var dataList = [
                     custField.dropdown[x].fields.ID || "",
@@ -727,18 +729,6 @@ Template.customfieldpop.onRendered(() => {
                 ],
                 info: true,
                 responsive: true,
-                // fnInitComplete: function () {
-                //   $(
-                //     "<button class='btn btn-primary btnAddNewCustField' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>"
-                //   ).insertAfter(
-                //     "#customFieldDropdownTable" + custFieldNo + "_filter"
-                //   );
-                //   $(
-                //     "<button class='btn btn-primary btnRefreshCustomField' type='button' id='btnRefreshCustomField' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                //   ).insertAfter(
-                //     "#customFieldDropdownTable" + custFieldNo + "_filter"
-                //   );
-                // },
 
                 fnInitComplete: function () {
                   $("<button class='btn btn-primary btnAddNewCustField' data-id='" + custFieldNo + "' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus' data-id='" + custFieldNo + "'></i></button>"
@@ -766,7 +756,6 @@ Template.customfieldpop.onRendered(() => {
 
         // initialize custom field dropdown list/////////////////
         custFieldNo = 0;
-        let custField = custFields[0];
         if (
           custFields[0].datatype == "ftString" &&
           custFields[0].iscombo == true
@@ -788,7 +777,7 @@ Template.customfieldpop.onRendered(() => {
           $("#edtSaleCustField1").attr("datatype", "ftString");
           var splashArrayCustomFieldList = new Array();
           if (custFields[0].dropdown != null) {
-            if (custFields[0].dropdown.length > 0) {
+            if (Array.isArray(custFields[0].dropdown)) {
               for (let x = 0; x < custFields[0].dropdown.length; x++) {
                 var dataList = [
                   custFields[0].dropdown[x].fields.ID || "",
@@ -817,20 +806,23 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField1").attr("custfieldid") || "";
+              console.log('fieldDataName-', fieldDataName)
+              var fieldDataID = $("#edtSaleCustField1").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(1);
 
+              $('#customFieldDropdownListTitle1').html(custFields[0].custfieldlabel);
+              console.log("$('#lblCustomField1').html()------", $('#lblCustomField1').innerhtml)
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customFieldDropdownListModal1").modal("toggle");
               } else {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[0].custfieldlabel
-                  );
+                  $("#newCustomFieldDropdownHeader").text("Edit " + custFields[0].custfieldlabel);
+
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[0].dropdown) {
                     for (let i in custFields[0].dropdown) {
@@ -844,8 +836,8 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
+                    // $("#customFieldDropdownId").val(fieldDataID);
+                    // $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -859,7 +851,6 @@ Template.customfieldpop.onRendered(() => {
             });
         }
 
-        custField = custFields[1];
         if (
           custFields[1].datatype == "ftString" &&
           custFields[1].iscombo == true
@@ -881,7 +872,7 @@ Template.customfieldpop.onRendered(() => {
           $("#edtSaleCustField2").attr("datatype", "ftString");
           var splashArrayCustomFieldList = new Array();
           if (custFields[1].dropdown != null) {
-            if (custFields[1].dropdown.length > 0) {
+            if (Array.isArray(custFields[1].dropdown)) {
               for (let x = 0; x < custFields[1].dropdown.length; x++) {
                 var dataList = [
                   custFields[1].dropdown[x].fields.ID || "",
@@ -910,10 +901,13 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
+              console.log('fieldDataName-', fieldDataName)
+
               var fieldDataID = $("#edtSaleCustField2").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(2);
 
+              $('#customFieldDropdownListTitle2').html(custFields[1].custfieldlabel);
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
                 $("#customFieldDropdownListModal2").modal("toggle");
@@ -921,6 +915,8 @@ Template.customfieldpop.onRendered(() => {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
                   $("#newCustomFieldDropdownHeader").text("Edit " + custFields[1].custfieldlabel);
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[1].dropdown) {
                     for (let i in custFields[1].dropdown) {
@@ -934,8 +930,8 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
+                    // $("#customFieldDropdownId").val(fieldDataID);
+                    // $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -949,7 +945,6 @@ Template.customfieldpop.onRendered(() => {
             });
         }
 
-        custField = custFields[2];
         if (
           custFields[2].datatype == "ftString" &&
           custFields[2].iscombo == true
@@ -971,7 +966,7 @@ Template.customfieldpop.onRendered(() => {
           $("#edtSaleCustField3").attr("datatype", "ftString");
           var splashArrayCustomFieldList = new Array();
           if (custFields[2].dropdown != null) {
-            if (custFields[2].dropdown.length > 0) {
+            if (Array.isArray(custFields[2].dropdown)) {
               for (let x = 0; x < custFields[2].dropdown.length; x++) {
                 var dataList = [
                   custFields[2].dropdown[x].fields.ID || "",
@@ -1000,10 +995,12 @@ Template.customfieldpop.onRendered(() => {
               var $earch = $(this);
               var offset = $earch.offset();
               var fieldDataName = e.target.value || "";
-              var fieldDataID =
-                $("#edtSaleCustField3").attr("custfieldid") || "";
+              console.log('fieldDataName-', fieldDataName)
+              var fieldDataID = $("#edtSaleCustField3").attr("custfieldid") || "";
               $("#selectCustFieldID").val(fieldDataID);
               $("#selectCustFieldNumber").val(3);
+
+              $('#customFieldDropdownListTitle3').html(custFields[2].custfieldlabel);
 
               if (e.pageX > offset.left + $earch.width() - 8) {
                 // X button 16px wide?
@@ -1011,19 +1008,16 @@ Template.customfieldpop.onRendered(() => {
               } else {
                 if (fieldDataName.replace(/\s/g, "") != "") {
 
-                  $("#newCustomFieldDropdownHeader").text(
-                    "Edit " + custFields[2].custfieldlabel
-                  );
+                  $("#newCustomFieldDropdownHeader").text("Edit " + custFields[2].custfieldlabel);
+
+                  $("#customFieldDropdownId").val('');
+                  $("#newCustomFieldDropdownName").val(fieldDataName);
 
                   if (custFields[2].dropdown) {
                     for (let i in custFields[2].dropdown) {
                       if (custFields[2].dropdown[i].fields.Text === fieldDataName) {
-                        $("#customFieldDropdownId").val(
-                          custFields[2].dropdown[i].fields.ID
-                        );
-                        $("#newCustomFieldDropdownName").val(
-                          custFields[2].dropdown[i].fields.Text
-                        );
+                        $("#customFieldDropdownId").val(custFields[2].dropdown[i].fields.ID);
+                        $("#newCustomFieldDropdownName").val(custFields[2].dropdown[i].fields.Text);
                       }
                     }
                     setTimeout(function () {
@@ -1031,8 +1025,6 @@ Template.customfieldpop.onRendered(() => {
                       $("#newCustomFieldDropdownModal").modal("toggle");
                     }, 200);
                   } else {
-                    $("#customFieldDropdownId").val(fieldDataID);
-                    $("#newCustomFieldDropdownName").val(fieldDataName);
 
                     setTimeout(function () {
                       $(".fullScreenSpin").css("display", "none");
@@ -1047,25 +1039,156 @@ Template.customfieldpop.onRendered(() => {
         }
 
         var url = FlowRouter.current().path;
-        if (
-          url.includes("/invoicecard") ||
-          url.includes("/salesordercard") ||
-          url.includes("/quotecard") ||
-          url.includes("/refundcard")
-        ) {
-        } else if (url.includes("/chequecard")) {
-          templateObject.getChequeData();
+        let getso_id = url.split("?id=");
+        let currentID = getso_id[getso_id.length - 1];
+        currentID = parseInt(currentID);
+
+        if (url.includes("/invoicecard")) {
+          listType = "ltSales";
+          templateObject.getTInvoiceExData(currentID);
+        } else if (url.includes("/salesordercard")) {
+          listType = "ltSales";
+          templateObject.getTSalesOrderExData(currentID);
+        } else if (url.includes("/quotecard")) {
+          listType = "ltSales";
+          templateObject.getTQuoteExData(currentID);
+        } else if (url.includes("/refundcard")) {
+          listType = "ltSales";
+          templateObject.getTRefundSaleData(currentID);
+        } else if (url.includes("/customerscard")) {
+          // how to handle job???
+          // getso_id = url.split("?jobid=");
+          // currentID = getso_id[getso_id.length - 1];
+          // currentID = parseInt(currentID);
+
+          listType = "ltCustomer";
+          templateObject.getTCustomerExData(currentID);
+        } else if (url.includes("/supplierscard")) {
+          listType = "ltSupplier";
+          templateObject.getTSupplierExData(currentID);
+        } else if (url.includes("/employeescard")) {
+          listType = "ltContact";
+          templateObject.getTEmployeeExData(currentID);
+        } else if (url.includes("/leadscard")) {
+          listType = "ltLeads";
+          templateObject.getTLeadExData(currentID);
+        } else if (url.includes("/productview")) {
+          listType = "ltProducts";
+          templateObject.getTProductExData(currentID);
+        } else if (
+          url.includes("/purchaseordercard") ||
+          url.includes("/billcard") ||
+          url.includes("/creditcard") ||
+          url.includes("/chequecard") ||
+          url.includes("/depositcard")) {
+          // customfield tempcode
+          listType = "ltOrderLines";
+          templateObject.getChequeData(currentID);
         }
+
       }, 1500);
       ////////////////////
     }
   };
 
-  templateObject.getChequeData = function () {
-    var url = FlowRouter.current().path;
-    let getso_id = url.split("?id=");
-    let currentCheque = getso_id[getso_id.length - 1];
-    currentCheque = parseInt(currentCheque);
+  templateObject.getTInvoiceExData = function (currentID) {
+    salesService.getOneInvoicedataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+    })
+    // tempcode disable until resolve save delay issue
+    // getVS1Data('TInvoiceEx').then(function (dataObject) {
+    //   if (dataObject.length == 0) {
+    //     salesService.getOneInvoicedataEx(currentID).then(function (data) {
+    //       $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+    //       $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+    //       $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+    //     })
+    //   } else {
+    //     let data = JSON.parse(dataObject[0].data);
+    //     let useData = data.tinvoiceex;
+    //     for (let d = 0; d < useData.length; d++) {
+    //       if (parseInt(useData[d].fields.ID) === currentID) {
+    //         $('#edtSaleCustField1').val(useData[d].fields.SaleCustField1);
+    //         $('#edtSaleCustField2').val(useData[d].fields.SaleCustField2);
+    //         $('#edtSaleCustField3').val(useData[d].fields.SaleCustField3);
+    //       }
+    //     }
+
+    //   }
+    // }).catch(function (err) {
+    // });
+  };
+
+  templateObject.getTSalesOrderExData = function (currentID) {
+    salesService.getOneSalesOrderdataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+    })
+  };
+
+  templateObject.getTQuoteExData = function (currentID) {
+    salesService.getOneQuotedataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+    })
+  };
+
+  templateObject.getTRefundSaleData = function (currentID) {
+    salesService.getRefundSales(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.SaleCustField1);
+      $('#edtSaleCustField2').val(data.fields.SaleCustField2);
+      $('#edtSaleCustField3').val(data.fields.SaleCustField3);
+    })
+  };
+
+  templateObject.getTSupplierExData = function (currentID) {
+    contactService.getOneSupplierDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
+  };
+
+  templateObject.getTCustomerExData = function (currentID) {
+    contactService.getOneCustomerDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
+  };
+
+  templateObject.getTEmployeeExData = function (currentID) {
+    contactService.getOneEmployeeDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CustFld1);
+      $('#edtSaleCustField2').val(data.fields.CustFld2);
+      $('#edtSaleCustField3').val(data.fields.CustFld3);
+    });
+  };
+
+  templateObject.getTLeadExData = function (currentID) {
+    contactService.getOneLeadDataEx(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
+
+  };
+
+  templateObject.getTProductExData = function (currentID) {
+    productService.getOneProductdatavs1(currentID).then(function (data) {
+      $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
+      $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
+      $('#edtSaleCustField3').val(data.fields.CUSTFLD3);
+    });
+
+  };
+
+  // tempcode ltOrder type is not ready on backend
+  templateObject.getChequeData = function (currentCheque) {
 
     let purchaseService = new PurchaseBoardService();
     let lines = {};
@@ -1134,7 +1257,7 @@ Template.customfieldpop.onRendered(() => {
   };
 
   setTimeout(function () {
-    templateObject.loadInitCustomFieldsList();
+    templateObject.getCustomFieldsList('init');
   }, 500);
 
   ///////
@@ -1146,6 +1269,22 @@ Template.customfieldpop.events({
     let organisationService = new OrganisationService();
     let customFieldDropdownId = $("#customFieldDropdownId").val() ? parseInt($("#customFieldDropdownId").val()) : 0;
     let newCustomFieldDropdownName = $("#newCustomFieldDropdownName").val();
+
+    if (!customFieldDropdownId) {
+      swal({
+        title: "Alert",
+        text: "Please select the item in the list first",
+        type: "info",
+        showCancelButton: false,
+        // confirmButtonText: "Try Again",
+      }).then((result) => {
+        if (result.value) {
+        } else if (result.dismiss === "cancel") {
+        }
+      });
+      $("#newCustomFieldDropdownModal").modal("hide");
+      return;
+    }
 
     $(".fullScreenSpin").css("display", "inline-block");
 
@@ -1210,7 +1349,9 @@ Template.customfieldpop.events({
     let organisationService = new OrganisationService();
     var url = FlowRouter.current().path;
     let fieldID = parseInt($("#statusId" + data_id).val()) || "";
-    let termsName = $("#newStatus" + data_id).val() || "";
+    let termsName = $("#customFieldText" + data_id).val() || "";
+    // $("#customFieldText2").val(custFields[1].custfieldlabel);
+
     let clickedInput = $("#clickedControl").val();
     let dropDownStatus = $("#isdropDown" + data_id).val();
     let dropDownData = [];
@@ -1580,6 +1721,7 @@ Template.customfieldpop.events({
   },
 
   "click .btnCustomFieldToggleDrop": function (e) {
+    console.log('btnCustomFieldToggleDrop')
     const templateObject = Template.instance();
     let data_id = e.target.dataset.id;
     let custfieldarr = templateObject.custfields.get();
@@ -2179,14 +2321,14 @@ Template.customfieldpop.helpers({
     return Template.instance().custfields.get();
   },
 });
-Template.registerHelper("equals", function (a, b) {
-  return a === b;
-});
+// Template.registerHelper("equals", function (a, b) {
+//   return a === b;
+// });
 
-Template.registerHelper("notEquals", function (a, b) {
-  return a != b;
-});
+// Template.registerHelper("notEquals", function (a, b) {
+//   return a != b;
+// });
 
-Template.registerHelper("containsequals", function (a, b) {
-  return a.indexOf(b) >= 0;
-});
+// Template.registerHelper("containsequals", function (a, b) {
+//   return a.indexOf(b) >= 0;
+// });
