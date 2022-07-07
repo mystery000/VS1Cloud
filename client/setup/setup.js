@@ -4756,69 +4756,77 @@ Template.setup.onRendered(function () {
       var dataList = {};
       //if((deptname == 'undefined') || (deptname == 'All')){
       departmentData = "All";
-      for (let i = 0; i < data.tproductvs1.length; i++) {
-        let availableQty = 0;
-        let onBOOrder = 0;
-        if (data.tproductvs1[i].fields.ProductClass != null) {
-          for (
-            let a = 0;
-            a < data.tproductvs1[i].fields.ProductClass.length;
-            a++
-          ) {
-            availableQty +=
-              data.tproductvs1[i].fields.ProductClass[a].fields
-                .AvailableQuantity || 0;
-          }
-        }
-        if (data.tproductvs1[i].fields.SNTracking == true) {
-          checkIfSerialorLot =
-            '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-        } else if (data.tproductvs1[i].fields.Batch == true) {
-          checkIfSerialorLot =
-            '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
-        } else {
-          checkIfSerialorLot =
-            '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
-        }
 
-        onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
-        var dataList = [
-          data.tproductvs1[i].fields.ID || "",
-          data.tproductvs1[i].fields.ProductName || "-",
-          data.tproductvs1[i].fields.SalesDescription || "",
-          availableQty,
-          0,
-          onBOOrder,
-          data.tproductvs1[i].fields.TotalQtyInStock,
-          data.tproductvs1[i].fields.TotalQtyOnOrder,
-          utilityService.modifynegativeCurrencyFormat(
-            Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-          ),
-          utilityService.modifynegativeCurrencyFormat(
-            Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) / 100
-          ),
-          utilityService.modifynegativeCurrencyFormat(
-            Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100
-          ),
-          utilityService.modifynegativeCurrencyFormat(
-            Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100
-          ),
-          checkIfSerialorLot || "",
-          data.tproductvs1[i].fields.BARCODE || "",
-          departmentData,
-          data.tproductvs1[i].fields.PurchaseDescription || "",
-          data.tproductvs1[i].fields.CUSTFLD1 || "",
-          data.tproductvs1[i].fields.CUSTFLD2 || "",
-        ];
-        _inventoryList.push(dataList);
-      }
+      data.tproductvs1.forEach((product) => {
+        _inventoryList.push({...product.fields});
+      })
+     
+      console.log("Inventory list", _inventoryList);
 
-      // templateObject.inventoryList.set(_inventoryList);
+       templateObject.inventoryList.set(_inventoryList);
 
-      if(_inventoryList) {
+
+      //  for (let i = 0; i < data.tproductvs1.length; i++) {
+      //   let availableQty = 0;
+      //   let onBOOrder = 0;
+      //   if (data.tproductvs1[i].fields.ProductClass != null) {
+      //     for (
+      //       let a = 0;
+      //       a < data.tproductvs1[i].fields.ProductClass.length;
+      //       a++
+      //     ) {
+      //       availableQty +=
+      //         data.tproductvs1[i].fields.ProductClass[a].fields
+      //           .AvailableQuantity || 0;
+      //     }
+      //   }
+      //   if (data.tproductvs1[i].fields.SNTracking == true) {
+      //     checkIfSerialorLot =
+      //       '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+      //   } else if (data.tproductvs1[i].fields.Batch == true) {
+      //     checkIfSerialorLot =
+      //       '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+      //   } else {
+      //     checkIfSerialorLot =
+      //       '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+      //   }
+
+      //   onBOOrder = data.tproductvs1[i].fields.TotalQtyInStock - availableQty;
+      //   var dataList = [
+      //     data.tproductvs1[i].fields.ID || "",
+      //     data.tproductvs1[i].fields.ProductName || "-",
+      //     data.tproductvs1[i].fields.SalesDescription || "",
+      //     availableQty,
+      //     0,
+      //     onBOOrder,
+      //     data.tproductvs1[i].fields.TotalQtyInStock,
+      //     data.tproductvs1[i].fields.TotalQtyOnOrder,
+      //     utilityService.modifynegativeCurrencyFormat(
+      //       Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
+      //     ),
+      //     utilityService.modifynegativeCurrencyFormat(
+      //       Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) / 100
+      //     ),
+      //     utilityService.modifynegativeCurrencyFormat(
+      //       Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100
+      //     ),
+      //     utilityService.modifynegativeCurrencyFormat(
+      //       Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100
+      //     ),
+      //     checkIfSerialorLot || "",
+      //     data.tproductvs1[i].fields.BARCODE || "",
+      //     departmentData,
+      //     data.tproductvs1[i].fields.PurchaseDescription || "",
+      //     data.tproductvs1[i].fields.CUSTFLD1 || "",
+      //     data.tproductvs1[i].fields.CUSTFLD2 || "",
+      //   ];
+      //   _inventoryList.push(dataList);
+      // }
+
+      if(templateObject.inventoryList.get()) {
         setTimeout(function() {
           $("#tblInventory").dataTable({
-                  data: _inventoryList,
+                  // data: _inventoryList,
                   sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
 
                   columnDefs: [{
