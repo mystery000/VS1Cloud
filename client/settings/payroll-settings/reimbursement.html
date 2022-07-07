@@ -42,10 +42,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <form class="row" id="reimbursementRateForm">
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="edtReimbursementName">Reimbursement Name</label>
+                                <input type="hidden" id="res_id">
                                 <input type="text" class="form-control" id="edtReimbursementName">
                             </div>
                         </div>
@@ -55,8 +56,7 @@
                                 <input type="search" class="form-control" id="edtReimbursementAccount">
                             </div>
                         </div>
-                        
-                    </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success newreiumbursement"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>

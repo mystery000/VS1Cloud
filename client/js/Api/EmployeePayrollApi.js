@@ -13,7 +13,9 @@ export default class EmployeePayrollApi {
     this.collectionNames = {
         TEmployeepaysettings: "TEmployeepaysettings",
         TEarnings: "TEarnings",
-        TDeduction: "TDeduction"
+        TDeduction: "TDeduction",
+        TSuperannuation: "TSuperannuation",
+        TReimbursement: "TReimbursement"
     };
 
     this.collection = new ApiCollection([
@@ -30,6 +32,16 @@ export default class EmployeePayrollApi {
         new ApiEndpoint({
           name: this.collectionNames.TDeduction,
           url: ApiService.getBaseUrl({ endpoint: "TDeduction" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TSuperannuation,
+          url: ApiService.getBaseUrl({ endpoint: "TSuperannuation" }),
+          headers: ApiService.getHeaders()
+        }),
+        new ApiEndpoint({
+          name: this.collectionNames.TReimbursement,
+          url: ApiService.getBaseUrl({ endpoint: "TReimbursement" }),
           headers: ApiService.getHeaders()
         })
     ]);
