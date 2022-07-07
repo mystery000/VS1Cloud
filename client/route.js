@@ -988,11 +988,11 @@ authenticatedRoutes.route('/taxratesettings', {
     }
 });
 
-authenticatedRoutes.route('/subtaxessetting', {
-    name: 'subTaxesSetting',
+authenticatedRoutes.route('/subtaxsettings', {
+    name: 'subTaxesSettings',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'subTaxesSetting'
+            yield: 'subTaxesSettings'
         });
     }
 });

@@ -393,7 +393,7 @@ Template.sidenav.onRendered(function() {
                 $('#sidenavpayroll .nav-link').removeClass('active');
             } else if ((currentLoc == "/settings") ||
                        (currentLoc == "/accesslevel") || (currentLoc == "/companyappsettings") || (currentLoc == "/organisationsettings") ||
-                       (currentLoc == "/taxratesettings") || (currentLoc == "/currenciessettings") ||
+                       (currentLoc == "/taxratesettings") || (currentLoc == "/subtaxsettings") || (currentLoc == "/currenciessettings") ||
                        (currentLoc == "/departmentSettings") || (currentLoc == "/termsettings") ||
                        (currentLoc == "/paymentmethodSettings")) {
                 $('#sidenavaccounts').removeClass('active');

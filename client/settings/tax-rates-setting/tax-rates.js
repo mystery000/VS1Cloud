@@ -578,8 +578,10 @@ $('div.dataTables_filter input').addClass('form-control form-control-sm');
       if (mainData.ChkUSRegionTax || mainData.Country == "United States") {
         templateObject.isChkUSRegionTax.set(true);
         $(".btnSubTaxes").show();
+        $("#edtTaxRate").prop("disabled", true);
       } else {
         $(".btnSubTaxes").hide();
+        $("#edtTaxRate").prop("disabled", false);
       }
       templateObject.getTaxRates();
     });
@@ -1081,7 +1083,7 @@ Template.taxRatesSettings.events({
         $('#edtTaxDesc').val('');
     },
     'click .btnSubTaxes': function () {
-      window.open("/subtaxessetting", "_self");
+      FlowRouter.go('/subtaxsettings');
     },
     'click .btnDeleteTaxRate': function () {
       let taxRateService = new TaxRateService();

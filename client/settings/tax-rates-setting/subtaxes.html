@@ -1,4 +1,4 @@
-<template name="subTaxesSetting">
+<template name="subTaxesSettings">
     <div class="container-fluid">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -62,6 +62,27 @@
                                                                     <div class="form-group flex-grow-1" style="margin: 8px;">
                                                                         <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
                                                                         <input type="text" class="form-control" id="edtTaxDesc" name="edtTaxDesc">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row no-gutters">
+                                                                <div class="col d-xl-flex align-items-xl-end">
+                                                                    <div class="form-group flex-grow-1" style="margin: 8px;">
+                                                                        <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Category</label>
+                                                                        <div class="form-group align-items-xl-end">
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-city" value="coty" checked><label class="form-check-label" for="opt-city">City</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-state" value="state" checked><label class="form-check-label" for="opt-state">State</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-country" value="country" checked><label class="form-check-label" for="opt-country">Country</label>
+                                                                            </div>
+                                                                            <div class="form-check form-check-inline">
+                                                                                <input type="radio" class="form-check-input" name="optTaxCategory" id="opt-other" value="other" checked><label class="form-check-label" for="opt-other">Other</label>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -461,13 +461,16 @@
     margin-left: 11px;
 }
 
+#myModal .modal-lg {
+    max-width: 80%;
+}
+
 #myModal .modal-footer {
     padding: 15px;
     text-align: right;
     border-top: 0;
     background: #fbfbfb;
 }
-
 
 #myModal .taxComponents span {
     float: right;
