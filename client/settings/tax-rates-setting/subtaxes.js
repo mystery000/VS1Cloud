@@ -2,21 +2,21 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
-Template.subTaxesSetting.onCreated(function () {
+Template.subTaxesSettings.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
 });
 
-Template.subTaxesSetting.onRendered(function () {
-  $('.fullScreenSpin').css('display', 'inline-block');
+Template.subTaxesSettings.onRendered(function () {
+  // $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
   const dataTableList = [];
   const tableHeaderList = [];
 });
 
 
-Template.subTaxesSetting.events({
+Template.subTaxesSettings.events({
   'click #btnNewInvoice': function (event) {
     // FlowRouter.go('/invoicecard');
   },
@@ -211,7 +211,7 @@ Template.subTaxesSetting.events({
   }
 });
 
-Template.subTaxesSetting.helpers({
+Template.subTaxesSettings.helpers({
   datatablerecords: () => {
     return Template.instance().datatablerecords.get().sort(function (a, b) {
       if (a.codename == 'NA') {
