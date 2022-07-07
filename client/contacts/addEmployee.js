@@ -1538,7 +1538,6 @@ Template.employeescard.onRendered(function () {
                                 let empEmail = '';
                                 let overideset = useData[i].fields.CustFld14;
 
-                                console.log('useData[i]--->',useData[i])
 
                             // tempcode
                               //   setTimeout(function () {// add to custom field 

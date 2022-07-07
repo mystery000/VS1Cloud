@@ -556,7 +556,7 @@
                                                                 margin-top: 20px;
                                                             }
                                                         </style>
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[0].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkProductName" type="checkbox" id="formCheck-01" checked="">
                                                                 <label class="custom-control-label" for="formCheck-01"></label>
@@ -568,7 +568,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[1].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkDescription" type="checkbox" id="formCheck-02" checked="">
                                                                 <label class="custom-control-label" for="formCheck-02"></label>
@@ -580,7 +580,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[2].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="">
                                                                 <label class="custom-control-label" for="formCheck-03"></label>
@@ -592,7 +592,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[3].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkUnitPrice" type="checkbox" id="formCheck-04" checked="">
                                                                 <label class="custom-control-label" for="formCheck-04"></label>
@@ -604,7 +604,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[4].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkCostPrice" type="checkbox" id="formCheck-07">
                                                                 <label class="custom-control-label" for="formCheck-07"></label>
@@ -616,7 +616,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[5].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkSalesLinesCustField1" type="checkbox" id="formCheck-08">
                                                                 <label class="custom-control-label" for="formCheck-08"></label>
@@ -628,7 +628,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[6].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkTaxRate" type="checkbox" id="formCheck-05">
                                                                 <label class="custom-control-label" for="formCheck-05"></label>
@@ -640,7 +640,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[7].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                 <input class="custom-control-input chkTaxCode" type="checkbox" id="formCheck-06" checked="">
                                                                 <label class="custom-control-label" for="formCheck-06"></label>
@@ -652,23 +652,23 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[8].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-06" checked="">
-                                                                <label class="custom-control-label" for="formCheck-06"></label>
+                                                                <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-16" checked="">
+                                                                <label class="custom-control-label" for="formCheck-16"></label>
                                                                 <div contenteditable="true" class="groove divcolumn" type="text" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].label}}{{else}}Amount{{/if}}" valueupdate="th.colAmount">{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].label}}{{else}}Amount{{/if}}</div>
-                                                            </div>
+                                                            </div> 
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                 <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                             </div>
                                                         </div>
 
-                                                        <div class="columnSettings">
+                                                        <div class="columnSettings displaySettings" custid="{{custfields.[9].id}}">
                                                             <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-09" checked="">
+                                                                <input class="custom-control-input chkTaxAmount" type="checkbox" id="formCheck-09" checked="">
                                                                 <label class="custom-control-label" for="formCheck-09"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="" valueupdate="">Tax Amount</div>
+                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="" valueupdate="th.colTaxAmount">Tax Amount</div>
                                                             </div>
                                                             <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                 <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
@@ -838,7 +838,6 @@
                                     <th class="th colProductName" style="width: 300px;">Product Name</th>
                                     <th class="th colDescription">Description</th>
                                     <th class="th colQty" style="width: 75px;">Qty</th>
-                                    <!-- <th class="th colUnitPrice" style="width: 110px; text-align: left!important;">Unit Price</th> -->
                                     <th class="th colUnitPrice colUnitPriceEx" style="width: 115px; text-align: left!important;">Unit Price (Ex) <i class="fas fa-random"></i></th>
                                     <th class="th colUnitPrice colUnitPriceInc hiddenColumn" style="width: 115px; text-align: left!important;">Unit Price (Inc) <i class="fas fa-random fa-trans"></i></th>
 
@@ -850,10 +849,9 @@
                                     <th class="th colTaxAmount " style="width: 95px; text-align: left!important;">Tax Amt</th>
                                     {{#if isBatchSerialNoTracking 'true'}}
                                         <th class="th colSerialNo" style="width: 124px;">Serial/Lot No</th>
-                                    {{/if}}
-                                    <!-- <th class="th colAmount " style="width: 110px; text-align: left!important;">Amount</th> -->
+                                    {{/if}} 
                                     <th class="th colAmount colAmountEx" style="width: 140px; text-align: left!important;">Amount (Ex) <i class="fas fa-random"></i></th>
-                                    <th class="th colAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
+                                    <th class="th colTaxAmount colAmountInc hiddenColumn" style="width: 140px; text-align: left!important;">Amount (Inc) <i class="fas fa-random fa-trans"></i></th>
                                     <!-- <th class="th">Tax Price</th> -->
                                     <th class="th" style="width: 25px;"></th>
                                 </tr>
@@ -864,27 +862,24 @@
                                     <!-- <td contenteditable="false" class="lineProductName colProductName pointer" prodid=' '>{{item.item}}</td> -->
                                     <td contenteditable="false" class="colProductName"><input class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}" ></td>
                                     <td contenteditable="true" class="lineProductDesc colDescription">{{item.description}}</td>
-                                    <!--                                    <td contenteditable="true" class="lineQty colQty" style="text-align: right!important;" type="number">{{item.quantity}}</td>-->
-                                    <td><input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
+                                    <td class="colQty"><input class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
                                     <!--                                    <td contenteditable="true" class="lineUnitPrice colUnitPrice" style="text-align: right!important;">{{item.unitPrice}}</td>-->
                                     <!-- <td><input class="lineUnitPrice colUnitPrice highlightInput" type="text" value="{{item.unitPrice}}"></td> -->
-                                    <td class="colUnitPriceEx"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
-                                    <td class="colUnitPriceInc hiddenColumn"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
+                                    <td class="colUnitPriceEx colUnitPrice"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceExChange" type="text" value="{{item.unitPrice}}"></td>
+                                    <td class="colUnitPriceInc colUnitPrice hiddenColumn"><input class="lineUnitPrice colUnitPrice highlightInput colUnitPriceIncChange" type="text" value="{{item.unitPriceInc}}"></td>
 
                                     <td contenteditable="false" class="lineDiscount colDiscount" style="text-align: right!important;">{{item.DiscountPercent}}</td>
                                     <!--                                    <td contenteditable="true" class="lineCostPrice colCostPrice hiddenColumn" style="text-align: right!important;">{{item.lineCost}}</td>-->
-                                    <td class="hiddenColumn"><input class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
+                                    <td class="hiddenColumn colCostPrice"><input class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"></td>
                                     <td contenteditable="true" class="lineSalesLinesCustField1 colSalesLinesCustField1 hiddenColumn">{{item.SalesLinesCustField1}}</td>
                                     <td contenteditable="false" class="lineTaxRate colTaxRate pointer hiddenColumn" style="text-align: right!important;">{{item.taxRate}}</td>
-                                    <!-- <td contenteditable="false" class="lineTaxCode colTaxCode pointer td-input" style=" ">{{item.taxCode}}</td> -->
                                     <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
                                     <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer" style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                                     {{#if isBatchSerialNoTracking 'true'}}
                                         <td class="th colSerialNo"><i class="fas fa-plus-square text-success btnSnLotmodal"  style="margin-left: 40px; font-size: 22px;" ></i></td>
-                                    {{/if}}
-                                    <!-- <td contenteditable="false" class="lineAmt colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td> -->
+                                    {{/if}} 
                                     <td contenteditable="false" class="lineAmt colAmountEx colAmount" style="text-align: right!important;">{{item.TotalAmt}}</td>
-                                    <td contenteditable="false" class="lineAmt colAmountInc colAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
+                                    <td contenteditable="false" class="lineAmt colAmountInc colTaxAmount hiddenColumn" style="text-align: right!important;">{{item.TotalAmtInc}}</td>
                                     <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
                                 </tr>
                                 {{/each}}

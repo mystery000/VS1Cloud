@@ -189,16 +189,6 @@ Template.crmoverview.events({
     e.stopPropagation();
   },
 
-  // open task detail modal
-  "click .openEditTaskModal": function (e) {
-    if (!e.target.classList.contains("no-modal")) {
-
-      let id = e.target.dataset.id;
-      let type = e.target.dataset.ttype;
-      openEditTaskModal(id, type);
-    }
-  },
-
   // add comment
   "click .btnCrmAddComment": function (e) {
     let taskID = $("#txtCrmTaskID").val();
@@ -816,15 +806,13 @@ function openEditTaskModal(id, type) {
         //     "</span>";
         // }
         $("#taskmodalLabels").html(taskmodalLabels);
-        // console.log('selected_record.subtasks-', typeof selected_record.subtasks)
         let subtasks = "";
-        if (false) {
-          // if(typeof selected_record.subtasks == 'object' || Array.isArray(selected_record.subtasks))
-          // if (selected_record.subtasks) {
+        if (selected_record.subtasks) {
+        if (typeof selected_record.subtasks == 'object' || Array.isArray(selected_record.subtasks)) {
           if (selected_record.subtasks.fields != undefined) {
             let subtask = selected_record.subtasks.fields;
-            let sub_due_date = subtask.SubTaskDate
-              ? moment(subtask.SubTaskDate).format("D MMM")
+            let sub_due_date = subtask.due_date
+              ? moment(subtask.due_date).format("D MMM")
               : "";
             subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
                 <div class="row justify-content-between">
@@ -836,7 +824,7 @@ function openEditTaskModal(id, type) {
                         id="subtaskitem_${subtask.ID}" value="">
                       <label class="custom-control-label chkBox pointer" for="subtaskitem_${subtask.ID}"></label>
                     </div>
-                    <span class="taskName">${subtask.SubTaskName}</span>
+                    <span class="taskName">${subtask.TaskName}</span>
                   </div>
                   <div style="display: inline-flex;">
                     <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
@@ -865,8 +853,8 @@ function openEditTaskModal(id, type) {
           } else {
             selected_record.subtasks.forEach((item) => {
               let subtask = item.fields;
-              let sub_due_date = subtask.SubTaskDate
-                ? moment(subtask.SubTaskDate).format("D MMM")
+              let sub_due_date = subtask.due_date
+                ? moment(subtask.due_date).format("D MMM")
                 : "";
               subtasks += `<div class="col-12 taskCol subtaskCol" id="subtask_${subtask.ID}">
                   <div class="row justify-content-between">
@@ -878,7 +866,7 @@ function openEditTaskModal(id, type) {
                           id="subtaskitem_${subtask.ID}" value="">
                         <label class="custom-control-label chkBox pointer" for="subtaskitem_${subtask.ID}"></label>
                       </div>
-                      <span class="taskName">${subtask.SubTaskName}</span>
+                      <span class="taskName">${subtask.TaskName}</span>
                     </div>
                     <div style="display: inline-flex;">
                       <i class="far fa-edit taskActionButton" data-toggle="tooltip" data-placement="bottom"
@@ -907,23 +895,24 @@ function openEditTaskModal(id, type) {
             });
           }
         }
-        $(".subtask-row").html(subtasks);
+      }
+      $(".subtask-row").html(subtasks);
 
-        let comments = "";
-        if (selected_record.comments) {
-          if (selected_record.comments.fields != undefined) {
-            let comment = selected_record.comments.fields;
-            let comment_date = comment.CommentsDate
-              ? moment(comment.CommentsDate).format("MMM D h:mm A")
-              : "";
-            let commentUserArry =
-              comment.EnteredBy.toUpperCase().split(" ");
-            let commentUser =
-              commentUserArry.length > 1
-                ? commentUserArry[0].charAt(0) +
-                commentUserArry[1].charAt(0)
-                : commentUserArry[0].charAt(0);
-            comments = `
+      let comments = "";
+      if (selected_record.comments) {
+        if (selected_record.comments.fields != undefined) {
+          let comment = selected_record.comments.fields;
+          let comment_date = comment.CommentsDate
+            ? moment(comment.CommentsDate).format("MMM D h:mm A")
+            : "";
+          let commentUserArry =
+            comment.EnteredBy.toUpperCase().split(" ");
+          let commentUser =
+            commentUserArry.length > 1
+              ? commentUserArry[0].charAt(0) +
+              commentUserArry[1].charAt(0)
+              : commentUserArry[0].charAt(0);
+          comments = `
                 <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
                   <div class="row commentRow">
                     <div class="col-1">
@@ -943,20 +932,20 @@ function openEditTaskModal(id, type) {
                   </div>
                 </div>
                 `;
-          } else {
-            selected_record.comments.forEach((item) => {
-              let comment = item.fields;
-              let comment_date = comment.CommentsDate
-                ? moment(comment.CommentsDate).format("MMM D h:mm A")
-                : "";
-              let commentUserArry =
-                comment.EnteredBy.toUpperCase().split(" ");
-              let commentUser =
-                commentUserArry.length > 1
-                  ? commentUserArry[0].charAt(0) +
-                  commentUserArry[1].charAt(0)
-                  : commentUserArry[0].charAt(0);
-              comments += `
+        } else {
+          selected_record.comments.forEach((item) => {
+            let comment = item.fields;
+            let comment_date = comment.CommentsDate
+              ? moment(comment.CommentsDate).format("MMM D h:mm A")
+              : "";
+            let commentUserArry =
+              comment.EnteredBy.toUpperCase().split(" ");
+            let commentUser =
+              commentUserArry.length > 1
+                ? commentUserArry[0].charAt(0) +
+                commentUserArry[1].charAt(0)
+                : commentUserArry[0].charAt(0);
+            comments += `
                   <div class="col-12 taskComment" style="padding: 16px 32px;" id="taskComment_${comment.ID}">
                     <div class="row commentRow">
                       <div class="col-1">
@@ -976,15 +965,72 @@ function openEditTaskModal(id, type) {
                     </div>
                   </div>
                   `;
-            });
-          }
+          });
         }
-        $(".task-comment-row").html(comments);
+      }
+      $(".task-comment-row").html(comments);
 
-        let activities = "";
-        if (selected_record.activity) {
-          if (selected_record.activity.fields != undefined) {
-            let activity = selected_record.activity.fields;
+      let activities = "";
+      if (selected_record.activity) {
+        if (selected_record.activity.fields != undefined) {
+          let activity = selected_record.activity.fields;
+          let day = "";
+          if (
+            moment().format("YYYY-MM-DD") ==
+            moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+          ) {
+            day = " ‧ Today";
+          } else if (
+            moment().add(-1, "day").format("YYYY-MM-DD") ==
+            moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
+          ) {
+            day = " . Yesterday";
+          }
+          let activityDate =
+            moment(activity.ActivityDateStartd).format("MMM D") +
+            day +
+            " . " +
+            moment(activity.ActivityDateStartd).format("ddd");
+
+          let commentUserArry =
+            activity.EnteredBy.toUpperCase().split(" ");
+          let commentUser =
+            commentUserArry.length > 1
+              ? commentUserArry[0].charAt(0) +
+              commentUserArry[1].charAt(0)
+              : commentUserArry[0].charAt(0);
+
+          activities = `
+                <div class="row" style="padding: 16px;">
+                  <div class="col-12">
+                    <span class="activityDate">${activityDate}</span>
+                  </div>
+                  <hr style="width: 100%; margin: 8px 16px;" />
+                  <div class="col-1">
+                    <div class="commentUser">${commentUser}</div>
+                  </div>
+                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
+                    <div class="row">
+                      <span class="activityName">${activity.EnteredBy
+            } </span> <span class="activityAction">${activity.ActivityName
+            } </span>  
+                    </div>
+                    <div class="row">
+                      <span class="activityComment">${activity.ActivityDescription
+            }</span>
+                    </div>
+                    <div class="row">
+                      <span class="activityTime">${moment(
+              activity.ActivityDateStartd
+            ).format("h:mm A")}</span>
+                    </div>
+                  </div>
+                  <hr style="width: 100%; margin: 16px;" />
+                </div>
+                `;
+        } else {
+          selected_record.activity.forEach((item) => {
+            let activity = item.fields;
             let day = "";
             if (
               moment().format("YYYY-MM-DD") ==
@@ -1012,63 +1058,6 @@ function openEditTaskModal(id, type) {
                 : commentUserArry[0].charAt(0);
 
             activities = `
-                <div class="row" style="padding: 16px;">
-                  <div class="col-12">
-                    <span class="activityDate">${activityDate}</span>
-                  </div>
-                  <hr style="width: 100%; margin: 8px 16px;" />
-                  <div class="col-1">
-                    <div class="commentUser">${commentUser}</div>
-                  </div>
-                  <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
-                    <div class="row">
-                      <span class="activityName">${activity.EnteredBy
-              } </span> <span class="activityAction">${activity.ActivityName
-              } </span>  
-                    </div>
-                    <div class="row">
-                      <span class="activityComment">${activity.ActivityDescription
-              }</span>
-                    </div>
-                    <div class="row">
-                      <span class="activityTime">${moment(
-                activity.ActivityDateStartd
-              ).format("h:mm A")}</span>
-                    </div>
-                  </div>
-                  <hr style="width: 100%; margin: 16px;" />
-                </div>
-                `;
-          } else {
-            selected_record.activity.forEach((item) => {
-              let activity = item.fields;
-              let day = "";
-              if (
-                moment().format("YYYY-MM-DD") ==
-                moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-              ) {
-                day = " ‧ Today";
-              } else if (
-                moment().add(-1, "day").format("YYYY-MM-DD") ==
-                moment(activity.ActivityDateStartd).format("YYYY-MM-DD")
-              ) {
-                day = " . Yesterday";
-              }
-              let activityDate =
-                moment(activity.ActivityDateStartd).format("MMM D") +
-                day +
-                " . " +
-                moment(activity.ActivityDateStartd).format("ddd");
-
-              let commentUserArry =
-                activity.EnteredBy.toUpperCase().split(" ");
-              let commentUser =
-                commentUserArry.length > 1
-                  ? commentUserArry[0].charAt(0) +
-                  commentUserArry[1].charAt(0)
-                  : commentUserArry[0].charAt(0);
-
-              activities = `
                   <div class="row" style="padding: 16px;">
                     <div class="col-12">
                       <span class="activityDate">${activityDate}</span>
@@ -1080,65 +1069,65 @@ function openEditTaskModal(id, type) {
                     <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                       <div class="row">
                         <span class="activityName">${activity.EnteredBy
-                } </span> <span class="activityAction">${activity.ActivityName
-                } </span>  
+              } </span> <span class="activityAction">${activity.ActivityName
+              } </span>  
                       </div>
                       <div class="row">
                         <span class="activityComment">${activity.ActivityDescription
-                }</span>
+              }</span>
                       </div>
                       <div class="row">
                         <span class="activityTime">${moment(
-                  activity.ActivityDateStartd
-                ).format("h:mm A")}</span>
+                activity.ActivityDateStartd
+              ).format("h:mm A")}</span>
                       </div>
                     </div>
                     <hr style="width: 100%; margin: 16px;" />
                   </div>
                   `;
-            });
-          }
+          });
         }
-        $(".task-activity-row").html(activities);
-
-        if (type == "comment") {
-          $("#nav-comments-tab").click();
-        } else {
-          $("#nav-subtasks-tab").click();
-        }
-
-        $("#chkPriority0").prop("checked", false);
-        $("#chkPriority1").prop("checked", false);
-        $("#chkPriority2").prop("checked", false);
-        $("#chkPriority3").prop("checked", false);
-        $("#chkPriority" + selected_record.priority).prop("checked", true);
-
-        $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_3"
-        );
-        $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_2"
-        );
-        $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_1"
-        );
-        $(".taskModalActionFlagDropdown").removeClass(
-          "task_modal_priority_0"
-        );
-        $(".taskModalActionFlagDropdown").addClass(
-          "task_modal_priority_" + selected_record.priority
-        );
-
-        $("#taskDetailModal").modal("toggle");
-      } else {
-        swal("Cannot edit this task", "", "warning");
-        return;
       }
-    })
-    .catch(function (err) {
-      $(".fullScreenSpin").css("display", "none");
+      $(".task-activity-row").html(activities);
 
-      swal(err, "", "error");
-      return;
-    });
+      if (type == "comment") {
+        $("#nav-comments-tab").click();
+      } else {
+        $("#nav-subtasks-tab").click();
+      }
+
+      $("#chkPriority0").prop("checked", false);
+      $("#chkPriority1").prop("checked", false);
+      $("#chkPriority2").prop("checked", false);
+      $("#chkPriority3").prop("checked", false);
+      $("#chkPriority" + selected_record.priority).prop("checked", true);
+
+      $(".taskModalActionFlagDropdown").removeClass(
+        "task_modal_priority_3"
+      );
+      $(".taskModalActionFlagDropdown").removeClass(
+        "task_modal_priority_2"
+      );
+      $(".taskModalActionFlagDropdown").removeClass(
+        "task_modal_priority_1"
+      );
+      $(".taskModalActionFlagDropdown").removeClass(
+        "task_modal_priority_0"
+      );
+      $(".taskModalActionFlagDropdown").addClass(
+        "task_modal_priority_" + selected_record.priority
+      );
+
+      $("#taskDetailModal").modal("toggle");
+    } else {
+      swal("Cannot edit this task", "", "warning");
+        return;
+    }
+    })
+    .catch (function (err) {
+  $(".fullScreenSpin").css("display", "none");
+
+  swal(err, "", "error");
+  return;
+});
 }
