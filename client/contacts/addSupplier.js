@@ -145,10 +145,10 @@ Template.supplierscard.onRendered(function () {
         });
     }
 
-    templateObject.getOverviewAPData = function (supplierName) {
-        getVS1Data('TAPReport').then(function (dataObject) {
+    templateObject.getOverviewAPData = function (supplierName,supplierID) {
+        getVS1Data('TAPReport1').then(function (dataObject) {
             if(dataObject.length === 0){
-                paymentService.getOverviewAPDetails().then(function (data) {
+                paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
                     setOverviewAPDetails(data, supplierName);
                 });
             }else{
@@ -156,7 +156,7 @@ Template.supplierscard.onRendered(function () {
                 setOverviewAPDetails(data, supplierName);
             }
         }).catch(function (err) {
-            paymentService.getOverviewAPDetails().then(function (data) {
+            paymentService.getOverviewAPDetailsSupp(supplierID).then(function (data) {
                 setOverviewAPDetails(data, supplierName);
             });
         });
@@ -263,27 +263,6 @@ Template.supplierscard.onRendered(function () {
         }
         templateObject.datatablerecords.set(dataTableList);
         if(templateObject.datatablerecords.get()){
-            Meteor.call('readPrefMethod',Session.get('mycloudLogonID'),'tblTransactionlist', function(error, result){
-                if (error) {
-
-                } else {
-                    if (result) {
-                        for (let i = 0; i < result.customFields.length; i++) {
-                            let customcolumn = result.customFields;
-                            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                            let hiddenColumn = customcolumn[i].hidden;
-                            let columnClass = columHeaderUpdate.split('.')[1];
-                            if(hiddenColumn === true){
-                                $("."+columnClass+"").addClass('hiddenColumn');
-                                $("."+columnClass+"").removeClass('showColumn');
-                            }else if(hiddenColumn === false){
-                                $("."+columnClass+"").removeClass('hiddenColumn');
-                                $("."+columnClass+"").addClass('showColumn');
-                            }
-                        }
-                    }
-                }
-            });
             setTimeout(function () {
                 MakeNegative();
             }, 100);
@@ -414,7 +393,7 @@ Template.supplierscard.onRendered(function () {
         templateObject.preferredPaymentList.set(preferredPayments);
     }
     templateObject.getPreferredPaymentList();
-    
+
     templateObject.getTermsList = function () {
         getVS1Data('TTermsVS1').then(function (dataObject) {
             if(dataObject.length === 0){
@@ -499,7 +478,7 @@ Template.supplierscard.onRendered(function () {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
             if (dataObject.length === 0){
                 contactService.getOneSupplierDataEx(supplierID).then(function (data) {
-                  
+
                     setOneSupplierDataEx(data);
                     // add to custom field
                     // tempcode
@@ -631,7 +610,7 @@ Template.supplierscard.onRendered(function () {
         } else {
             $('#isformcontractor').removeAttr("checked");
         }
-        templateObject.getOverviewAPData(data.fields.ClientName);
+        templateObject.getOverviewAPData(data.fields.ClientName,data.fields.ID);
         templateObject.records.set(lineItemObj);
         /* START attachment */
         templateObject.attachmentCount.set(0);
@@ -1939,7 +1918,7 @@ Template.supplierscard.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
- 
+
 });
 
 Template.supplierscard.helpers({

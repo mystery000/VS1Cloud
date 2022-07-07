@@ -222,13 +222,13 @@ Template.profitandlosschart.onRendered(()=>{
   });
 
   Template.profitlossreport.events({
-    'click td a':function (event) {
+    'click td a':async function (event) {
         let id= $(event.target).closest('tr').attr('id').split("item-value-");
         var accountName =id[1].split('_').join(' ');
         let toDate= moment($('#dateTo').val()).clone().endOf('month').format('YYYY-MM-DD');
         let fromDate= moment($('#dateFrom').val()).clone().startOf('year').format('YYYY-MM-DD');
         //Session.setPersistent('showHeader',true);
-        addVS1Data('TAccountRunningBalanceReport', []);
+        await addVS1Data('TAccountRunningBalanceReport', []);
         FlowRouter.go('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false);
     },
     'click .btnRefresh': function () {
