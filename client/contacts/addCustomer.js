@@ -1113,7 +1113,6 @@ Template.customerscard.onRendered(function () {
         });
     };
     function setOneCustomerDataEx(data) {
-        // console.log(data);
         let lineItems = [];
         let lineItemObj = {
             id: data.fields.ID || '',
@@ -2803,7 +2802,6 @@ Template.customerscard.events({
     },
 
     'click .btnOpenSettings': function (event) {
-      console.log('btnOpenSettings---')
     },
 
     'click .btnSaveSettings': function (event) {

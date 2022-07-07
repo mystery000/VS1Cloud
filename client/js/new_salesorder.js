@@ -712,7 +712,6 @@ Template.new_salesorder.onRendered(() => {
           }else{
             $("#templatePreviewModal .invoiceNumber").show();
           }
-          console.log("invoice number==",object_invoce[0]["invoicenumber"])
           $("#templatePreviewModal .io").text(object_invoce[0]["invoicenumber"]);
 
           if(object_invoce[0]["refnumber"] == ""){
@@ -7889,8 +7888,6 @@ Template.new_salesorder.events({
                 printTemplate.push('Delivery Docket');
            }
              
-             console.log(printTemplate);
-      
             if(printTemplate.length > 0) {
                   
                   for(var i = 0; i < printTemplate.length; i++)
