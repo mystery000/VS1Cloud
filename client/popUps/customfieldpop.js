@@ -1992,6 +1992,7 @@ Template.customfieldpop.events({
             IsCombo: "false",
           },
         };
+        console.log('list type=>', listType)
 
         organisationService
           .saveCustomField(objDetails1)
@@ -2128,6 +2129,8 @@ Template.customfieldpop.events({
             },
           };
         }
+
+    console.log('list type=>', objDetails1)
 
         organisationService
           .saveCustomField(objDetails1)
