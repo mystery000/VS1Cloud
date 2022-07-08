@@ -5,7 +5,7 @@ import { OrganisationService } from "../../js/organisation-service";
 import '../../lib/global/indexdbstorage.js';
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
-Template.taxRatesSettings.onCreated(function () {
+Template.taxRatesSettings.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -1076,23 +1076,10 @@ Template.taxRatesSettings.events({
                 } else if (result.dismiss === "cancel") {
                 }
               });
-            }).catch(function (err) {
-              swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-              }).then((result) => {
-                if (result.value) {
-                  Meteor._reload.reload();
-                } else if (result.dismiss === 'cancel') {
-
-                }
-              });
-              $('.fullScreenSpin').css('display', 'none');
+              $(".fullScreenSpin").css("display", "none");
             });
-        }).catch(function (err) {
+        })
+        .catch(function (err) {
           objDetails = {
             type: "TTaxcode",
             fields: {
