@@ -71,8 +71,11 @@
                     </div>
                 </div>
 
+                {{> customfieldDroppop}}
+                {{> customfieldpop}}
+                
                 <!-- Start {{> optionCustomFiled}} -->
-                <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
+                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="myModal4">
                     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -126,7 +129,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- END  -->
             
                 <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
@@ -838,6 +841,14 @@
                                                     <div class="form-group">
                                                         <label class="lblCustomField2">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[1].label}}{{else}}CustField2{{/if}}<br></label>
                                                         <input class="form-control form-control" type="text" id="edtSaleCustField2" name="edtSaleCustField2" value="{{purchaseorderrecord.saleCustField2}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="three box checkbox3div" style="{{#if salesCloudPreferenceRec}}{{#if equals salesCloudPreferenceRec.customFields.[2].hidden false}}display:block{{else}}display:none{{/if}}{{else}}display:none{{/if}}">
+                                                    <div class="form-group">
+                                                        <label class="lblCustomField3">{{#if salesCloudPreferenceRec}}{{salesCloudPreferenceRec.customFields.[2].label}}{{else}}CustField3{{/if}}<br></label>
+                                                        <input class="form-control form-control" type="text" id="edtSaleCustField3" name="edtSaleCustField3" value="{{purchaseorderrecord.saleCustField3}}">
                                                     </div>
                                                 </div>
                                             </div>
