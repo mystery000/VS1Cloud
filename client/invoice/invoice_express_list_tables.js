@@ -182,6 +182,7 @@ Template.invoicelist.onRendered(function () {
                             salestatus: salestatus || '',
                             custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                             custfield2: data.tinvoicelist[i].SaleCustField2 || '',
+                            custfield3: data.tinvoicelist[i].SaleCustField3 || '',
                             comments: data.tinvoicelist[i].Comments || '',
                             // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
@@ -418,6 +419,7 @@ Template.invoicelist.onRendered(function () {
                     let sIndex = "";
                     let sVisible = "";
                     let columVisible = false;
+                    let isCustomField = false;
                     let sClass = "";
                     $.each(columns, function (i, v) {
                         if (v.hidden == false) {
@@ -426,6 +428,13 @@ Template.invoicelist.onRendered(function () {
                         if ((v.className.includes("hiddenColumn"))) {
                             columVisible = false;
                         }
+
+                        if ((v.className.includes("customFieldColumn"))) {
+                          isCustomField = true;
+                        } else {
+                          isCustomField = false;
+                        }
+
                         sWidth = v.style.width.replace('px', "");
 
                         let datatablerecordObj = {
@@ -433,6 +442,7 @@ Template.invoicelist.onRendered(function () {
                             sWidth: sWidth || '',
                             sIndex: v.cellIndex || '',
                             sVisible: columVisible || false,
+                            sCustomField: isCustomField || false,
                             sClass: v.className || ''
                         };
                         tableHeaderList.push(datatablerecordObj);
@@ -456,6 +466,7 @@ Template.invoicelist.onRendered(function () {
                     $('.fullScreenSpin').css('display', 'none');
                     // Meteor._reload.reload();
                 });
+                templateObject.getCustomFieldData();
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data;
@@ -497,6 +508,8 @@ Template.invoicelist.onRendered(function () {
                         salestatus: salestatus || '',
                         custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                         custfield2: data.tinvoicelist[i].SaleCustField2 || '',
+                        custfield3: data.tinvoicelist[i].SaleCustField3 || '',
+                        custfield: data.tinvoicelist[i].SaleCustField || '',
                         comments: data.tinvoicelist[i].Comments || '',
                         // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
@@ -733,6 +746,8 @@ Template.invoicelist.onRendered(function () {
                 let sVisible = "";
                 let columVisible = false;
                 let sClass = "";
+                let isCustomField = false;
+
                 $.each(columns, function (i, v) {
                     if (v.hidden == false) {
                         columVisible = true;
@@ -742,11 +757,18 @@ Template.invoicelist.onRendered(function () {
                     }
                     sWidth = v.style.width.replace('px', "");
 
+                    if ((v.className.includes("customFieldColumn"))) {
+                      isCustomField = true;
+                    } else {
+                      isCustomField = false;
+                    }
+
                     let datatablerecordObj = {
                         sTitle: v.innerText || '',
                         sWidth: sWidth || '',
                         sIndex: v.cellIndex || '',
                         sVisible: columVisible || false,
+                        sCustomField: isCustomField || false,
                         sClass: v.className || ''
                     };
                     tableHeaderList.push(datatablerecordObj);
@@ -764,6 +786,8 @@ Template.invoicelist.onRendered(function () {
                       }
                     }
                 });
+
+                templateObject.getCustomFieldData();
 
             }
         }).catch(function (err) {
@@ -807,6 +831,7 @@ Template.invoicelist.onRendered(function () {
                       salestatus: salestatus || '',
                       custfield1: data.tinvoicelist[i].SaleCustField1 || '',
                       custfield2: data.tinvoicelist[i].SaleCustField2 || '',
+                      custfield3: data.tinvoicelist[i].SaleCustField3 || '',
                       comments: data.tinvoicelist[i].Comments || '',
                       // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
@@ -823,33 +848,72 @@ Template.invoicelist.onRendered(function () {
 
               if (templateObject.datatablerecords.get()) {
 
-                  Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoicelist', function (error, result) {
-                      if (error) {}
-                      else {
-                          if (result) {
-                              for (let i = 0; i < result.customFields.length; i++) {
-                                  let customcolumn = result.customFields;
-                                  let columData = customcolumn[i].label;
-                                  let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                  let hiddenColumn = customcolumn[i].hidden;
-                                  let columnClass = columHeaderUpdate.split('.')[1];
-                                  let columnWidth = customcolumn[i].width;
-                                  let columnindex = customcolumn[i].index + 1;
+                // sideBarService
+                // .getAllCustomFields()
+                // .then(function (data) {
+                //   for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+                //     if (data.tcustomfieldlist[x].fields.ListType == listType) {
+                //       customData = {
+                //         active: data.tcustomfieldlist[x].fields.Active || false,
+                //         id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+                //         custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+                //         datatype: data.tcustomfieldlist[x].fields.DataType || "",
+                //         isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+                //         iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+                //         dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+                //       };
+                //       custFields.push(customData);
+                //     }
+                //   }
+                // })
 
-                                  if (hiddenColumn == true) {
 
-                                      $("." + columnClass + "").addClass('hiddenColumn');
-                                      $("." + columnClass + "").removeClass('showColumn');
-                                  } else if (hiddenColumn == false) {
-                                      $("." + columnClass + "").removeClass('hiddenColumn');
-                                      $("." + columnClass + "").addClass('showColumn');
-                                  }
+                // if (custFields) {
+                //   // if (templateObject.custfields.get()) {
+                //   //   let custFields = templateObject.custfields.get();
+                //   //Custom Field 1
+                //   if (custFields[0].active) {
+                //     $(".checkbox1div").css("display", "block");
+                //     $("#formCheck-customOne").prop("checked", true);
+                //   }
 
-                              }
-                          }
+                //   if (custFields[1].active) {
+                //     $(".checkbox2div").css("display", "block");
+                //     $("#formCheck-customTwo").prop("checked", true);
+                //   }
+                //   if (custFields[2].active) {
+                //     $(".checkbox3div").css("display", "block");
+                //     $("#formCheck-customThree").prop("checked", true);
+                //   }
+                // }
 
-                      }
-                  });
+                  // Meteor.call('readPrefMethod', Session.get('mycloudLogonID'), 'tblInvoicelist', function (error, result) {
+                  //     if (error) {}
+                  //     else {
+                  //         if (result) {
+                  //             for (let i = 0; i < result.customFields.length; i++) {
+                  //                 let customcolumn = result.customFields;
+                  //                 let columData = customcolumn[i].label;
+                  //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+                  //                 let hiddenColumn = customcolumn[i].hidden;
+                  //                 let columnClass = columHeaderUpdate.split('.')[1];
+                  //                 let columnWidth = customcolumn[i].width;
+                  //                 let columnindex = customcolumn[i].index + 1;
+
+                  //                 if (hiddenColumn == true) {
+
+                  //                     $("." + columnClass + "").addClass('hiddenColumn');
+                  //                     $("." + columnClass + "").removeClass('showColumn');
+                  //                 } else if (hiddenColumn == false) {
+                  //                     $("." + columnClass + "").removeClass('hiddenColumn');
+                  //                     $("." + columnClass + "").addClass('showColumn');
+                  //                 }
+
+                  //             }
+                  //         }
+
+                  //     }
+                  // });
 
                   setTimeout(function () {
                       MakeNegative();
@@ -1044,6 +1108,7 @@ Template.invoicelist.onRendered(function () {
               let sVisible = "";
               let columVisible = false;
               let sClass = "";
+              let isCustomField = false;
               $.each(columns, function (i, v) {
                   if (v.hidden == false) {
                       columVisible = true;
@@ -1053,11 +1118,18 @@ Template.invoicelist.onRendered(function () {
                   }
                   sWidth = v.style.width.replace('px', "");
 
+                  if ((v.className.includes("customFieldColumn"))) {
+                    isCustomField = true;
+                  } else {
+                    isCustomField = false;
+                  }
+
                   let datatablerecordObj = {
                       sTitle: v.innerText || '',
                       sWidth: sWidth || '',
                       sIndex: v.cellIndex || '',
                       sVisible: columVisible || false,
+                      sCustomField: isCustomField || false,
                       sClass: v.className || ''
                   };
                   tableHeaderList.push(datatablerecordObj);
@@ -1076,12 +1148,87 @@ Template.invoicelist.onRendered(function () {
                   }
               });
 
+              templateObject.getCustomFieldData();
+
           }).catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
               $('.fullScreenSpin').css('display', 'none');
               // Meteor._reload.reload();
           });
         });
+    }
+
+    templateObject.getCustomFieldData = function() {
+
+      let custFields = [];
+      let customData = {};
+
+      sideBarService
+      .getAllCustomFields()
+      .then(function (data) {
+        for (let x = 0; x < data.tcustomfieldlist.length; x++) {
+          if (data.tcustomfieldlist[x].fields.ListType == 'ltSales') {
+            customData = {
+              active: data.tcustomfieldlist[x].fields.Active || false,
+              id: parseInt(data.tcustomfieldlist[x].fields.ID) || 0,
+              custfieldlabel: data.tcustomfieldlist[x].fields.Description || "",
+              datatype: data.tcustomfieldlist[x].fields.DataType || "",
+              isempty: data.tcustomfieldlist[x].fields.ISEmpty || false,
+              iscombo: data.tcustomfieldlist[x].fields.IsCombo || false,
+              dropdown: data.tcustomfieldlist[x].fields.Dropdown || null,
+            };
+            custFields.push(customData);
+          }
+        }
+
+        if (custFields.length < 3) {
+          let remainder = 3 - custFields.length;
+          let getRemCustomFields = parseInt(custFields.length); 
+          for (let r = 0; r < remainder; r++) {
+            getRemCustomFields++;
+            customData = {
+              active: false,
+              id: "",
+              custfieldlabel: "Custom Field " + getRemCustomFields,
+              datatype: "",
+              isempty: true,
+              iscombo: false,
+            };
+            // count++;
+            custFields.push(customData);
+          }
+        }
+        if (custFields) { 
+          $(".colCustFieldHeader1").html(custFields[0].custfieldlabel);
+          $(".colCustFieldHeader2").html(custFields[1].custfieldlabel);
+          $(".colCustFieldHeader3").html(custFields[2].custfieldlabel);
+
+          if (custFields[0].active) {
+            $(".colSaleCustField1").removeClass('hiddenColumn');
+            $(".colSaleCustField1").addClass('showColumn');
+          } else {
+            $(".colSaleCustField1").addClass('hiddenColumn');
+            $(".colSaleCustField1").removeClass('showColumn');
+          }
+    
+          if (custFields[1].active) {
+            $(".colSaleCustField2").removeClass('hiddenColumn');
+            $(".colSaleCustField2").addClass('showColumn');
+          } else {
+            $(".colSaleCustField2").addClass('hiddenColumn');
+            $(".colSaleCustField2").removeClass('showColumn');
+          }
+
+          if (custFields[2].active) {
+            $(".colSaleCustField3").removeClass('hiddenColumn');
+            $(".colSaleCustField3").addClass('showColumn');
+          } else {
+            $(".colSaleCustField3").addClass('hiddenColumn');
+            $(".colSaleCustField3").removeClass('showColumn');
+          }
+        }
+      })
+
     }
 
     templateObject.getAllInvoiceData();
@@ -1170,6 +1317,7 @@ Template.invoicelist.events({
                             salestatus: salestatus || '',
                             custfield1: data.tinvoiceex[i].fields.SaleCustField1 || '',
                             custfield2: data.tinvoiceex[i].fields.SaleCustField2 || '',
+                            custfield3: data.tinvoiceex[i].fields.SaleCustField3 || '',
                             comments: data.tinvoiceex[i].fields.Comments || '',
                             // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
 
@@ -1204,8 +1352,9 @@ Template.invoicelist.events({
                                 '<td contenteditable="false" class="colPaid" style="text-align: right!important;">' + item[x].totalpaid + '</td>' +
                                 '<td contenteditable="false" class="colBalanceOutstanding" style="text-align: right!important;">' + item[x].totaloustanding + '</td>' +
                                 '<td contenteditable="false" class="colStatus">' + item[x].salestatus + '</td>' +
-                                '<td contenteditable="false" class="colSaleCustField1 hiddenColumn">' + item[x].custfield1 + '</td>' +
-                                '<td contenteditable="false" class="colSaleCustField2 hiddenColumn">' + item[x].custfield2 + '</td>' +
+                                '<td contenteditable="false" class="colSaleCustField1 customFieldColumn hiddenColumn">' + item[x].custfield1 + '</td>' +
+                                '<td contenteditable="false" class="colSaleCustField2 customFieldColumn hiddenColumn">' + item[x].custfield2 + '</td>' +
+                                '<td contenteditable="false" class="colSaleCustField3 customFieldColumn hiddenColumn">' + item[x].custfield3 + '</td>' +
                                 '<td contenteditable="false" class="colEmployee hiddenColumn">' + item[x].employee + '</td>' +
                                 '<td contenteditable="false" class="colComments">' + item[x].comments + '</td>' +
                                 '</tr>');
@@ -1413,6 +1562,7 @@ Template.invoicelist.events({
         let sVisible = "";
         let columVisible = false;
         let sClass = "";
+        let isCustomField = false;
         $.each(columns, function (i, v) {
             if (v.hidden == false) {
                 columVisible = true;
@@ -1422,11 +1572,18 @@ Template.invoicelist.events({
             }
             sWidth = v.style.width.replace('px', "");
 
+            if ((v.className.includes("customFieldColumn"))) {
+              isCustomField = true;
+            } else {
+              isCustomField = false;
+            }
+
             let datatablerecordObj = {
                 sTitle: v.innerText || '',
                 sWidth: sWidth || '',
                 sIndex: v.cellIndex || '',
                 sVisible: columVisible || false,
+                sCustomField: isCustomField || false,
                 sClass: v.className || ''
             };
             tableHeaderList.push(datatablerecordObj);

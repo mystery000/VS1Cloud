@@ -243,6 +243,10 @@ openDb = function (dbName) {
       db.createObjectStore('TCRMTaskList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TCRMLabelList', { keyPath: "EmployeeEmail" });
       db.createObjectStore('TProfitLossEditLayout', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TemplateSettings', { keyPath: "EmployeeEmail" });
+      db.createObjectStore('TVS1Superannuation',{ keyPath: "EmployeeEmail"});
+      db.createObjectStore('TPayrollHolidayGroup',{ keyPath: "EmployeeEmail"});
+
     };
     dbReq.onerror = (event) => reject(new Error('Failed to open DB'));
   });

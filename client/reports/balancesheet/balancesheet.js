@@ -10,6 +10,7 @@ let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
+let taxRateService = new TaxRateService();
 
 Template.balancesheetreport.onCreated(function () {
   const templateObject = Template.instance();
@@ -134,20 +135,39 @@ Template.balancesheetreport.onRendered(() => {
           .join("_");
 
         let SubAccountTotal = data.balancesheetreport[i]["Sub Account Total"];
-
         if (SubAccountTotal !== 0) {
-          SubAccountTotal =
-            utilityService.modifynegativeCurrencyFormat(SubAccountTotal);
+          SubAccountTotal = utilityService.modifynegativeCurrencyFormat(SubAccountTotal);
         } else {
           SubAccountTotal = " ";
         }
-        let HeaderAccountTotal =
-          data.balancesheetreport[i]["Header Account Total"];
-        let TotalCurrentAsset_Liability =
-          data.balancesheetreport[i]["Total Current Asset & Liability"];
-        let TotalAsset_Liability =
-          data.balancesheetreport[i]["Total Asset & Liability"];
+
+        let HeaderAccountTotal = data.balancesheetreport[i]["Header Account Total"];
+        if (HeaderAccountTotal !== 0) {
+            HeaderAccountTotal = utilityService.modifynegativeCurrencyFormat(HeaderAccountTotal);
+          } else {
+              HeaderAccountTotal = " ";
+          }
+
+        let TotalCurrentAsset_Liability = data.balancesheetreport[i]["Total Current Asset & Liability"];
+        if (TotalCurrentAsset_Liability !== 0) {
+          TotalCurrentAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalCurrentAsset_Liability);
+        } else {
+          TotalCurrentAsset_Liability = " ";
+        }
+
+        let TotalAsset_Liability = data.balancesheetreport[i]["Total Asset & Liability"];
+        if (TotalAsset_Liability !== 0) {
+          TotalAsset_Liability = utilityService.modifynegativeCurrencyFormat(TotalAsset_Liability);
+        } else {
+          TotalAsset_Liability = " ";
+        }
+        
         let AccountTree = data.balancesheetreport[i]["Account Tree"];
+        // if (AccountTree !== 0) {
+        //   AccountTree = utilityService.modifynegativeCurrencyFormat(AccountTree);
+        // } else {
+        //   AccountTree = " ";
+        // }
         recordObj.selected = false;
 
         /**
@@ -182,16 +202,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
 
@@ -213,16 +226,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
             ,
           ];
@@ -243,16 +249,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
 
@@ -272,16 +271,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "FixedAsset") {
@@ -303,16 +295,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TOTALASSETS") {
@@ -327,16 +312,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalAsset_Liability
-                ) || "",
+              value: TotalAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
             },
           ];
 
@@ -360,16 +338,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TotalAccountsPayable") {
@@ -384,16 +355,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
+              value: HeaderAccountTotal || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (
@@ -410,16 +374,8 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  HeaderAccountTotal
-                ) || "",
-              amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  )
-                ) || "",
+              value: HeaderAccountTotal || "",
+              amount: utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
             },
           ];
         } else if (
@@ -436,16 +392,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (AccountTree.replace(/\s/g, "") == "TotalCapital/Equity") {
@@ -460,16 +409,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalCurrentAsset_Liability
-                ) || "",
+              value: TotalCurrentAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalCurrentAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalCurrentAsset_Liability) || "",
             },
           ];
         } else if (
@@ -486,16 +428,9 @@ Template.balancesheetreport.onRendered(() => {
             },
             {
               type: "amount",
-              value:
-                utilityService.modifynegativeCurrencyFormat(
-                  TotalAsset_Liability
-                ) || "",
+              value:TotalAsset_Liability || "",
               amount:
-                utilityService.convertSubstringParseFloat(
-                  utilityService.modifynegativeCurrencyFormat(
-                    TotalAsset_Liability
-                  )
-                ) || "",
+                utilityService.convertSubstringParseFloat(TotalAsset_Liability) || "",
             },
           ];
 
@@ -527,16 +462,9 @@ Template.balancesheetreport.onRendered(() => {
               },
               {
                 type: "amount",
-                value:
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                value: HeaderAccountTotal || "",
                 amount:
-                  utilityService.convertSubstringParseFloat(
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    )
-                  ) || "",
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
           } else {
@@ -551,22 +479,21 @@ Template.balancesheetreport.onRendered(() => {
               },
               {
                 type: "amount",
-                value:
-                  utilityService.modifynegativeCurrencyFormat(
-                    HeaderAccountTotal
-                  ) || "",
+                value: HeaderAccountTotal || "",
                 amount:
-                  utilityService.convertSubstringParseFloat(
-                    utilityService.modifynegativeCurrencyFormat(
-                      HeaderAccountTotal
-                    )
-                  ) || "",
+                  utilityService.convertSubstringParseFloat(HeaderAccountTotal) || "",
               },
             ];
           }
         }
-
-        records.push(recordObj);
+        console.log( "SubAccountTotal", SubAccountTotal, "HeaderAccountTotal", HeaderAccountTotal )
+        if( recordObj.dataArr2 ){
+          if ( HeaderAccountTotal.replace(/\s/g, "") || SubAccountTotal.replace(/\s/g, "") ) {
+            records.push(recordObj);
+          }
+        }else{
+          records.push(recordObj);
+        }
       }
       // console.log("Records: ", records);
       totalNetAssets = GrandTotalAsset - GrandTotalLiability;
@@ -1479,7 +1406,6 @@ Template.balancesheetreport.onRendered(() => {
   }
   $("#search_list").click(function () {
     let balanceDate = $("#balanceDate").val();
-
     var SegsBalDate = balanceDate.split(" ");
     var months = [
       "January",
@@ -1555,64 +1481,18 @@ Template.balancesheetreport.onRendered(() => {
    * Step 1 : We need to get currencies (TCurrency) so we show or hide sub collumns
    * So we have a showable list of currencies to toggle
    */
-  let _currencyList = [];
-  templateObject.loadCurrency = () =>
-    taxRateService.getCurrencies().then((result) => {
-      // console.log(result);
-      const data = result.tcurrency;
-      //console.log(data);
-      for (let i = 0; i < data.length; i++) {
-        // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
-        var dataList = {
-          id: data[i].Id || "",
-          code: data[i].Code || "-",
-          currency: data[i].Currency || "NA",
-          symbol: data[i].CurrencySymbol || "NA",
-          buyrate: data[i].BuyRate || "-",
-          sellrate: data[i].SellRate || "-",
-          country: data[i].Country || "NA",
-          description: data[i].CurrencyDesc || "-",
-          ratelastmodified: data[i].RateLastModified || "-",
-          active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
-          //active: false,
-          // createdAt: new Date(data[i].MsTimeStamp) || "-",
-          // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
-        };
 
-        _currencyList.push(dataList);
-        //}
-      }
-      _currencyList = _currencyList.sort((a, b) => {
-        return a.currency.split("")[0].toLowerCase().localeCompare(b.currency.split("")[0].toLowerCase()) 
-      });
-      // console.log(_currencyList);
-
-      templateObject.currencyList.set(_currencyList);
-
-      // $(`.currency-selector-js[currency=${defaultCurrencyCode}]`).parent().css('display', "none");
-    });
-
-  templateObject.loadCurrency();
-
-  templateObject.loadCurrencyHistory = () => {
-    taxRateService
-      .getCurrencyHistory()
-      .then((result) => {
-        //console.log(result);
-        const data = result.tcurrencyratehistory;
-        // console.log(data);
-        // console.log("Currency list: ",data);
-
-        templateObject.tcurrencyratehistory.set(data);
-      })
-      .catch(function (err) {
-        // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-        $(".fullScreenSpin").css("display", "none");
-        // Meteor._reload.reload();
-      });
+  templateObject.loadCurrency = async () => {
+    await loadCurrency();
   };
 
-  templateObject.loadCurrencyHistory();
+  //templateObject.loadCurrency();
+
+  templateObject.loadCurrencyHistory = async () => {
+    await loadCurrencyHistory();
+  };
+
+  //templateObject.loadCurrencyHistory();
 
   LoadingOverlay.hide();
 });
@@ -1622,6 +1502,8 @@ function sortByAlfa(a, b) {
 Template.balancesheetreport.helpers({
   convertAmount: (amount, currencyData) => {
     let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
+
+    console.log(amount);
 
     // console.log("Amount to covert", amount);
     if (!amount || amount.trim() == "") {
@@ -1665,6 +1547,13 @@ Template.balancesheetreport.helpers({
 
     // Filter by currency code
     currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // console.log("Currency list 1: ", currencyList);
+
+    // if(currencyList.length == 0) {
+    //   currencyList = Template.instance().currencyList.get();
+    //   currencyList = currencyList.filter((a) => a.Code == currencyData.code);
+    // }
+    // console.log("Currency list 2: ", currencyList);
 
     // Sort by the closest date
     currencyList = currencyList.sort((a, b) => {
@@ -1695,18 +1584,17 @@ Template.balancesheetreport.helpers({
     // console.log("Closests currency", firstElem);
     // console.log("Currency list: ", currencyList);
 
-    let rate =
-      currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
+    let rate = currencyData.code == defaultCurrencyCode ? 1 : firstElem.BuyRate; // Must used from tcurrecyhistory
     //amount = amount + 0.36;
     amount = parseFloat(amount * rate); // Multiply by the rate
     amount = Number(amount).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     }); // Add commas
     //console.log("final amount", amount);
 
     // amount = amount.toLocaleString();
-   // console.log(amount, Number(amount).toLocaleString("en-US"));
+    // console.log(amount, Number(amount).toLocaleString("en-US"));
     let convertedAmount =
       isMinus == true
         ? `- ${currencyData.symbol} ${amount}`
@@ -1719,6 +1607,9 @@ Template.balancesheetreport.helpers({
     return array.length;
   },
   countActive: (array) => {
+    if (array.length == 0) {
+      return 0;
+    }
     let activeArray = array.filter((c) => c.active == true);
     return activeArray.length;
   },
@@ -1733,6 +1624,9 @@ Template.balancesheetreport.helpers({
   },
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
+    if (array.length == 0) {
+      return false;
+    }
     let activeArray = array.filter((c) => c.active == true);
 
     if (activeArray.length == 1) {
@@ -1830,9 +1724,7 @@ Template.balancesheetreport.events({
         _currencySelectedList.push(_currency);
       });
     } else {
-      let _currency = _currencyList.find(
-        (c) => c.code == defaultCurrencyCode
-      );
+      let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
       _currency.active = true;
       _currencySelectedList.push(_currency);
     }
@@ -1944,7 +1836,7 @@ Template.balancesheetreport.events({
           records.push(obj);
           obj = ["", "", ""];
         }
-        records.push(obj);
+          records.push(obj);
       }
       let header = [];
       let footer = [];
@@ -2305,6 +2197,10 @@ Template.balancesheetreport.events({
       $(".table tbody tr").show();
     }
   },
+  "click .fx-rate-btn": async (e) => {
+    await loadCurrency();
+    //loadCurrencyHistory();
+  },
 });
 
 Template.registerHelper("equal", function (a, b) {
@@ -2342,3 +2238,64 @@ Template.registerHelper("noDecimal", function (a) {
   let numOut = parseInt(numIn);
   return numOut;
 });
+
+/**
+ *
+ */
+async function loadCurrency() {
+  let templateObject = Template.instance();
+
+  if ((await templateObject.currencyList.get().length) == 0) {
+    LoadingOverlay.show();
+
+    let _currencyList = [];
+    const result = await taxRateService.getCurrencies();
+
+    //taxRateService.getCurrencies().then((result) => {
+    // console.log(result);
+    const data = result.tcurrency;
+    //console.log(data);
+    for (let i = 0; i < data.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        id: data[i].Id || "",
+        code: data[i].Code || "-",
+        currency: data[i].Currency || "NA",
+        symbol: data[i].CurrencySymbol || "NA",
+        buyrate: data[i].BuyRate || "-",
+        sellrate: data[i].SellRate || "-",
+        country: data[i].Country || "NA",
+        description: data[i].CurrencyDesc || "-",
+        ratelastmodified: data[i].RateLastModified || "-",
+        active: data[i].Code == defaultCurrencyCode ? true : false, // By default if AUD then true
+        //active: false,
+        // createdAt: new Date(data[i].MsTimeStamp) || "-",
+        // formatedCreatedAt: formatDateToString(new Date(data[i].MsTimeStamp))
+      };
+
+      _currencyList.push(dataList);
+      //}
+    }
+    _currencyList = _currencyList.sort((a, b) => {
+      return a.currency
+        .split("")[0]
+        .toLowerCase()
+        .localeCompare(b.currency.split("")[0].toLowerCase());
+    });
+
+    // console.log(_currencyList);
+
+    templateObject.currencyList.set(_currencyList);
+
+    await loadCurrencyHistory(templateObject);
+    LoadingOverlay.hide();
+    //});
+  }
+}
+
+async function loadCurrencyHistory(templateObject) {
+  let result = await taxRateService.getCurrencyHistory();
+  const data = result.tcurrencyratehistory;
+  templateObject.tcurrencyratehistory.set(data);
+  LoadingOverlay.hide();
+}

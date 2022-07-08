@@ -1,6 +1,8 @@
 import '../../lib/global/indexdbstorage.js';
 import {SideBarService} from '../../js/sidebar-service';
 import { UtilityService } from "../../utility-service";
+import EmployeePayrollApi from '../../js/Api/EmployeePayrollApi'
+import ApiService from "../../js/Api/Module/ApiService";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -8,7 +10,7 @@ let utilityService = new UtilityService();
 Template.reimbursementSettings.onCreated(function() {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
-  templateObject.datatableallowancerecords = new ReactiveVar([]);
+  templateObject.datatableReimbursementrecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
   templateObject.Ratetypes = new ReactiveVar([]);
@@ -28,472 +30,160 @@ Template.reimbursementSettings.onRendered(function() {
     });
   };
 
-  templateObject.getReimbursement = function(){
- 
-    getVS1Data('TReimbursement').then(function(dataObject) {
-        if (dataObject.length == 0) {
-             sideBarService.getCalender(initialBaseDataLoad, 0).then(function (data) {
-              addVS1Data('TReimbursement', JSON.stringify(data));
-              let lineItems = [];
-              let lineItemObj = {};
-              for (let i = 0; i < data.treimbursement.length; i++) {
-                
-                  var dataListAllowance = [
-                      data.treimbursement[i].fields.ID || '',
-                      data.treimbursement[i].fields.ReimbursementName || 0,
-                      data.treimbursement[i].fields.ReimbursementAccount || 0,
-                     '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                  ];
+    templateObject.saveDataLocalDB = async function(){
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TReimbursement
+        );
 
-                  splashArrayReisument.push(dataListAllowance);
-              }
-
+        employeePayrolEndpoint.url.searchParams.append(
+            "ListType",
+            "'Detail'"
+        );                
         
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
+        if (employeePayrolEndpointResponse.ok == true) {
+            employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            await addVS1Data('TReimbursement', JSON.stringify(employeePayrolEndpointJsonResponse))
+            return employeePayrolEndpointJsonResponse
+        }  
+        return '';
+    };
 
-              setTimeout(function () {
-                  MakeNegative();
-              }, 100);
-              setTimeout(function () {
-                  $('#tblReimbursements').DataTable({
-
-                      data: splashArrayCalenderList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      columnDefs: [                              
-                        
-                        {
-                             className: "colReimbursementID hiddenColumn",
-                             "targets": [0]
-                           },
-                           {
-                              className: "colReimbursementName",
-                              "targets": [1]
-                           },  
-                           {
-                              className: "colReimbursementAccount",
-                              "targets": [2]
-                           },                        
-                           {
-                              className: "colDeleterei",
-                              "orderable": false,
-                              "targets": -1
-                           }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[0, "asc"]],
-                      action: function () {
-                          $('#tblReimbursements').DataTable().ajax.reload();
-                      },
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblReimbursements_ellipsis').addClass('disabled');
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  var splashArrayReisumentDupp = new Array();
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblReimbursements_filter input').val();
-
-                                  sideBarService.getReimbursement(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                    for (let i = 0; i < data.treimbursement.length; i++) {
-                
-                                        var dataListAllowance = [
-                                            data.treimbursement[i].fields.ID || '',
-                                            data.treimbursement[i].fields.ReimbursementName || 0,
-                                            data.treimbursement[i].fields.ReimbursementAccount || 0,
-                                           '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                        ];
-                      
-                                        splashArrayReisument.push(dataListAllowance);
-                                    }
-
-                                              let uniqueChars = [...new Set(splashArrayReisument)];
-                                              var datatable = $('#tblReimbursements').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblReimbursements").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              $('.fullScreenSpin').css('display', 'none');
-
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-
-                              });
-                          setTimeout(function () {
-                              MakeNegative();
-                          }, 100);
-                      },
-                      "fnInitComplete": function () {
-                        //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblPayCalendars_filter");
-                        //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#ttblPayCalendars_filter");
-
-                      }
-
-                  }).on('page', function () {
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-
-                  }).on('column-reorder', function () {
-
-                  }).on('length.dt', function (e, settings, len) {
-                    //$('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    splashArrayReisument = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-
-                    } else {
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else {
-                            sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
-
-                                addVS1Data('tblReimbursements', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                    templateObject.resetData(dataNonBo);
-                                    $('.fullScreenSpin').css('display', 'none');
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }
-                    }
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  });
-
-
-              }, 0);
-
-              $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-              $('.fullScreenSpin').css('display', 'none');
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display', 'none');
-          });
+  templateObject.getReimbursement = async function(){
+    try {
+        let data = {};
+        let splashArrayReisument = new Array();
+        let dataObject = await getVS1Data('TReimbursement')  
+        if ( dataObject.length == 0) {
+            data = await templateObject.saveDataLocalDB();
         }else{
-
-          let data = JSON.parse(dataObject[0].data);
-
-          let useData = data;
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < data.treimbursement.length; i++) {
-                
-            var dataListAllowance = [
+            data = JSON.parse(dataObject[0].data);
+        }
+        for (let i = 0; i < data.treimbursement.length; i++) {                
+            var dataListReimbursement = [
                 data.treimbursement[i].fields.ID || '',
                 data.treimbursement[i].fields.ReimbursementName || 0,
                 data.treimbursement[i].fields.ReimbursementAccount || 0,
-               '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
             ];
 
-            splashArrayReisument.push(dataListAllowance);
+            splashArrayReisument.push(dataListReimbursement);
         }
-    
 
+        function MakeNegative() {
+            $('td').each(function () {
+                if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+            });
+        };
 
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblReimbursements').DataTable({
-
-                  data: splashArrayReisument,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [                              
-                        
+        setTimeout(function () {
+            MakeNegative();
+        }, 100);
+        templateObject.datatablerecords.set(splashArrayReisument);
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function () {
+            $('#tblReimbursements').DataTable({  
+                data: splashArrayReisument,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
                     {
-                         className: "colReimbursementID hiddenColumn",
-                         "targets": [0]
-                       },
-                       {
-                          className: "colReimbursementName",
-                          "targets": [1]
-                       },  
-                       {
-                          className: "colReimbursementAccount",
-                          "targets": [2]
-                       },                        
-                       {
-                          className: "colDeleterei",
-                          "orderable": false,
-                          "targets": -1
-                       }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblReimbursements').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblReimbursements_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayReisumentDuppDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblReimbursements_filter input').val();
-
-                              sideBarService.getReimbursement(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                for (let i = 0; i < data.treimbursement.length; i++) {
-                
-                                    var dataListAllowance = [
-                                        data.treimbursement[i].fields.ID || '',
-                                        data.treimbursement[i].fields.ReimbursementName || 0,
-                                        data.treimbursement[i].fields.ReimbursementAccount || 0,
-                                       '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                    ];
-                    
-                                    splashArrayReisument.push(dataListAllowance);
-                                  }
-
-                                          let uniqueChars = [...new Set(splashArrayReisument)];
-                                          var datatable = $('#tblReimbursements').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblReimbursements").dataTable().fnPageChange('last');
-                                          }, 400);
-
-                                          $('.fullScreenSpin').css('display', 'none');
-
-
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
-
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                      $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                      $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
-
-                  }
-
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
-                //$('.fullScreenSpin').css('display', 'inline-block');
-                let dataLenght = settings._iDisplayLength;
-                splashArrayCalenderList = [];
-                if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
-
-                } else {
-                    if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                        $('.fullScreenSpin').css('display', 'none');
-                    } else {
-                        sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
-
-                            addVS1Data('TReimbursement', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
-                                $('.fullScreenSpin').css('display', 'none');
-                            }).catch(function (err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        }).catch(function (err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
+                        className: "colReimbursementID hiddenColumn",
+                        "targets": [0]
+                    },
+                    {
+                        className: "colReimbursementName",
+                        "targets": [1]
+                    },  
+                    {
+                        className: "colReimbursementAccount",
+                        "targets": [2]
                     }
-                }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                info: true,
+                responsive: true,
+                "order": [[0, "asc"]],
+                action: function () {
+                    $('#tblReimbursements').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblReimbursements_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
 
+                        }
+                    } else {
 
-          }, 0);
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
 
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-          $('.fullScreenSpin').css('display', 'none');
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            var splashArrayReisumentDupp = new Array();
+                            let dataLenght = oSettings._iDisplayLength;
+                            let customerSearch = $('#tblReimbursements_filter input').val();
 
-        }
-    }).catch(function(err) {
-      sideBarService.getReimbursement(initialBaseDataLoad, 0).then(function (data) {
-          addVS1Data('TReimbursement', JSON.stringify(data));
-          let lineItems = [];
-          let lineItemObj = {};
-          for (let i = 0; i < data.treimbursement.length; i++) {
-                
-            var dataListAllowance = [
-                data.treimbursement[i].fields.ID || '',
-                data.treimbursement[i].fields.ReimbursementName || 0,
-                data.treimbursement[i].fields.ReimbursementAccount || 0,
-               '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ];
+                            sideBarService.getReimbursement(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
 
-            splashArrayReisument.push(dataListAllowance);
-        }
-  
-
-          setTimeout(function () {
-              MakeNegative();
-          }, 100);
-          setTimeout(function () {
-              $('#tblReimbursements').DataTable({
-
-                  data: splashArrayReisument,
-                  "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                  columnDefs: [                              
-                        
-                    {
-                         className: "colReimbursementID hiddenColumn",
-                         "targets": [0]
-                       },
-                       {
-                          className: "colReimbursementName",
-                          "targets": [1]
-                       },  
-                       {
-                          className: "colReimbursementAccount",
-                          "targets": [2]
-                       },                        
-                       {
-                          className: "colDeleterei",
-                          "orderable": false,
-                          "targets": -1
-                       }
-                  ],
-                  select: true,
-                  destroy: true,
-                  colReorder: true,
-                  pageLength: initialDatatableLoad,
-                  lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                  info: true,
-                  responsive: true,
-                  "order": [[0, "asc"]],
-                  action: function () {
-                      $('#tblReimbursements').DataTable().ajax.reload();
-                  },
-                  "fnDrawCallback": function (oSettings) {
-                      $('.paginate_button.page-item').removeClass('disabled');
-                      $('#tblReimbursements_ellipsis').addClass('disabled');
-                      if (oSettings._iDisplayLength == -1) {
-                          if (oSettings.fnRecordsDisplay() > 150) {
-
-                          }
-                      } else {
-
-                      }
-                      if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                          $('.paginate_button.page-item.next').addClass('disabled');
-                      }
-
-                      $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                          .on('click', function () {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              var splashArrayReisumentDupp = new Array();
-                              let dataLenght = oSettings._iDisplayLength;
-                              let customerSearch = $('#tblReimbursements_filter input').val();
-
-                              sideBarService.getReimbursement(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (data) {
-
-                                for (let i = 0; i < data.treimbursement.length; i++) {
-                
-                                    var dataListAllowance = [
+                                for (let i = 0; i < data.treimbursement.length; i++) {                
+                                    var dataListReimbursement = [
                                         data.treimbursement[i].fields.ID || '',
                                         data.treimbursement[i].fields.ReimbursementName || 0,
                                         data.treimbursement[i].fields.ReimbursementAccount || 0,
-                                       '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
                                     ];
-                    
-                                    splashArrayReisument.push(dataListAllowance);
+
+                                    splashArrayReisument.push(dataListReimbursement);
                                 }
 
-                                     let uniqueChars = [...new Set(splashArrayReisument)];
-                                     var datatable = $('#tblReimbursements').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(uniqueChars);
-                                          datatable.draw(false);
-                                          setTimeout(function () {
-                                            $("#tblReimbursements").dataTable().fnPageChange('last');
-                                          }, 400);
+                                let uniqueChars = [...new Set(splashArrayReisument)];
+                                var datatable = $('#tblReimbursements').DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function () {
+                                    $("#tblReimbursements").dataTable().fnPageChange('last');
+                                }, 400);
 
-                                          $('.fullScreenSpin').css('display', 'none');
+                                $('.fullScreenSpin').css('display', 'none');
 
 
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
 
-                          });
-                      setTimeout(function () {
-                          MakeNegative();
-                      }, 100);
-                  },
-                  "fnInitComplete": function () {
-                    //   $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#newPayCalendarModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
-                    //   $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
+                        });
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                "fnInitComplete": function () {
+                    $("<button class='btn btn-primary btnAddordinaryTimeReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newReimbursementFundModal' type='button' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblReimbursements_filter");
+                    $("<button class='btn btn-primary btnRefreshReimbursement type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 14px; margin-left: 8px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReimbursements_filter");
+                }
 
-                  }
+            }).on('page', function () {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
 
-              }).on('page', function () {
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
+            }).on('column-reorder', function () {
 
-              }).on('column-reorder', function () {
-
-              }).on('length.dt', function (e, settings, len) {
+            }).on('length.dt', function (e, settings, len) {
                 //$('.fullScreenSpin').css('display', 'inline-block');
                 let dataLenght = settings._iDisplayLength;
                 splashArrayReisument = [];
                 if (dataLenght == -1) {
-                  $('.fullScreenSpin').css('display', 'none');
+                $('.fullScreenSpin').css('display', 'none');
 
                 } else {
                     if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
@@ -502,7 +192,7 @@ Template.reimbursementSettings.onRendered(function() {
                         sideBarService.getReimbursement(dataLenght, 0).then(function (dataNonBo) {
 
                             addVS1Data('TReimbursement', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                templateObject.resetData(dataNonBo);
+                                // templateObject.resetData(dataNonBo);
                                 $('.fullScreenSpin').css('display', 'none');
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
@@ -512,23 +202,196 @@ Template.reimbursementSettings.onRendered(function() {
                         });
                     }
                 }
-                  setTimeout(function () {
-                      MakeNegative();
-                  }, 100);
-              });
-
-
-          }, 0);
-
-          $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-          $('.fullScreenSpin').css('display', 'none');
-      }).catch(function (err) {
+                setTimeout(function () {
+                    MakeNegative();
+                }, 100);
+            });
+        }, 0);
+    } catch (error) {
         $('.fullScreenSpin').css('display', 'none');
-      });
-    });
-
+    } 
 };
+
 templateObject.getReimbursement();
 
-})
+$('.reimbursementDropDown').editableSelect();
+$('.reimbursementDropDown').editableSelect()
+    .on('click.editable-select', async function (e, li) {
+        let $search = $(this);
+        let dropDownID = $search.attr('id')
+        templateObject.currentDrpDownID.set(dropDownID);
+        let offset = $search.offset();
+        let searchName = e.target.value || '';
+        if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#reimbursementSettingsModal').modal('show');
+        } else {
+            if (searchName.replace(/\s/g, '') == '') {               
+                $('#reimbursementSettingsModal').modal('show');
+                return false
+            }
+            let dataObject = await getVS1Data('TReimbursement');   
+            if ( dataObject.length == 0) {
+                data = await templateObject.saveDataLocalDB();
+            }else{
+                data = JSON.parse(dataObject[0].data);
+            }
+            if( data.treimbursement.length > 0 ){
+                let tReimbursement = data.treimbursement.filter((item) => {
+                    if( item.fields.Description == searchName ){
+                        return item;
+                    }
+                });
+                
+                if( tReimbursement.length > 0 ){
+                    $('#res_id').val(tReimbursement[0].fields.ID) || 0 ;
+                    $('#edtReimbursementName').val(tReimbursement[0].fields.ReimbursementName) || '';
+                    $('#edtReimbursementAccount').val(tReimbursement[0].fields.ReimbursementAccount) || '';
+                }
+                $('#reimbursementSettingsModal').modal('hide');
+                $('#newReimbursementModal').modal('show');
+            }
+        }
+    });
+
+    //On Click Reimbursement List
+    $(document).on("click", "#tblReimbursements tbody tr", function (e) {
+        var table = $(this);
+        let name = table.find(".colReimbursementName").text()||'';
+        let ID = table.find(".colReimbursementID").text()||'';
+        let account = table.find(".colReimbursementAccount").text()||'';
+        let searchFilterID = templateObject.currentDrpDownID.get()
+        $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID + 'ID').val(ID);
+        if( searchFilterID == 'reimbursementTypeSelect'){
+            $('#controlExpenseAccount').val(account)
+        }
+        $('#reimbursementSettingsModal').modal('toggle');
+    });
+
+});
+Template.reimbursementSettings.events({
+    'keyup #tblReimbursements_filter input': function (event) {
+        if($(event.target).val() != ''){
+          $(".btnRefreshReimbursement").addClass('btnSearchAlert');
+        }else{
+          $(".btnRefreshReimbursement").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+           $(".btnRefreshReimbursement").trigger("click");
+        }
+    },
+    'click .btnAddordinaryTimeReimbursement':function(event){
+        $('#reimbursementRateForm')[0].reset();
+        $('#newReimbursementModal').modal('hide');
+    },
+    'click .btnSearchAlert':function(event){      
+        let templateObject = Template.instance();
+        var splashArrayReisument = new Array();
+        const lineExtaSellItems = [];
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let dataSearchName = $('#tblReimbursements_filter input').val();
+        if (dataSearchName.replace(/\s/g, '') != '') {
+            sideBarService.getReimbursement(dataSearchName).then(function (data) {
+                $(".btnRefreshReimbursement").removeClass('btnSearchAlert');
+                let lineItems = [];
+                if (data.treimbursement.length > 0) {
+                    for (let i = 0; i < data.treimbursement.length; i++) {                
+                        var dataListReimbursement = [
+                            data.treimbursement[i].fields.ID || '',
+                            data.treimbursement[i].fields.ReimbursementName || 0,
+                            data.treimbursement[i].fields.ReimbursementAccount || 0,
+                        ];
+
+                        splashArrayReisument.push(dataListReimbursement);
+                    }
+                    let uniqueChars = [...new Set(splashArrayReisument)];
+                    var datatable = $('#tblReimbursements').DataTable();
+                    datatable.clear();
+                    datatable.rows.add(uniqueChars);
+                    datatable.draw(false);
+                    setTimeout(function () {
+                        $("#tblReimbursements").dataTable().fnPageChange('last');
+                    }, 400);
+
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+    
+                    swal({
+                        title: 'Question',
+                        text: "Reimbursement Rate does not exist, would you like to create it?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: 'No'
+                    }).then((result) => {
+                        if (result.value) {
+                            $('#reimbursementRateForm')[0].reset();
+                            $('#edtReimbursementName').val(dataSearchName)
+                            $('#reimbursementSettingsModal').modal('hide');
+                            $('#newReimbursementModal').modal('show');
+                        }
+                    });
+                }
+            }).catch(function (err) {
+                $('.fullScreenSpin').css('display', 'none');
+            });
+        } else {
+    
+          $(".btnRefresh").trigger("click");
+        }
+
+    },
+    'click .newreiumbursement': async function (event) {
+        let templateObject = Template.instance();
+        $('.fullScreenSpin').css('display', 'inline-block');
+        
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const apiEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TReimbursement
+        );
+
+        let oldres_id = $('#res_id').val() || 0 ;
+        let reimbursementname = $('#edtReimbursementName').val() || '';
+        let account = $('#edtReimbursementAccount').val() || '';
+        /**
+         * Saving Earning Object in localDB
+        */
+        
+        let reimbursementRateSettings = {
+            type: "TReimbursement",
+            fields: {
+                ID: parseInt(oldres_id),
+                ReimbursementName:reimbursementname,
+                ReimbursementAccount:account,
+                ReimbursementActive:true,
+            }
+        };
+
+        const ApiResponse = await apiEndpoint.fetch(null, {
+            method: "POST",
+            headers: ApiService.getPostHeaders(),
+            body: JSON.stringify(reimbursementRateSettings),
+        });
+    
+        if (ApiResponse.ok == true) {
+            const jsonResponse = await ApiResponse.json();
+            $('#reimbursementRateForm')[0].reset();
+            await templateObject.saveDataLocalDB();
+            await templateObject.getReimbursement();
+            $('#newReimbursementModal').modal('hide');
+            $('.fullScreenSpin').css('display', 'none');
+        }else{
+            $('.fullScreenSpin').css('display', 'none');
+        }
+    },
+});
+
+Template.reimbursementSettings.helpers({
+    datatablerecords: () => {
+        return Template.instance().datatablerecords.get();
+    }
+});
+
